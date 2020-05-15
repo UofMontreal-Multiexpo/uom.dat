@@ -1,0 +1,5 @@
+# Files and folders relating to R and RStudio environment
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
