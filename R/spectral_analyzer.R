@@ -138,8 +138,8 @@ setMethod(f = "initialize",
 
 #' Constructeur d'objet SpectralAnalyzer.
 #' @param observations Liste des éléments retrouvés pour chaque observation.
-#'  Liste sous la forme \code{list( list( CODE = numeric(), NAME = factor(), YEAR = numeric ) )}.
-#'  Chaque observation est alors une liste sous la forme \code{list( CODE = numeric(), NAME = factor(), YEAR = numeric )}
+#'  Liste sous la forme \code{list( list( CODE = character(), NAME = character(), YEAR = numeric ) )}.
+#'  Chaque observation est alors une liste sous la forme \code{list( CODE = character(), NAME = character(), YEAR = numeric )}
 #'  où \code{CODE} et \code{NAME} sont associés pour identifier un élément.
 #' @param items Data.frame associant une ou plusieurs catégories à un élément (\code{items$item}).
 #'  La valeur \code{NULL} par défaut précise qu'aucune catégorie n'est définie.
@@ -747,7 +747,7 @@ setMethod(f = "list_separate_patterns",
                                 substr(x, start = 2, stop = nchar(x) - 1)
                               })
             patterns = strsplit(patterns, ",")
-            patterns = lapply(patterns, as.numeric)
+            patterns = lapply(patterns, as.character)
             
             # Rassemblement des motifs dans une data.frame
             patterns_df = data.frame(pattern = numeric(length(patterns)))
