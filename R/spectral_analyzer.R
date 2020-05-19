@@ -106,7 +106,7 @@ setMethod(f = "initialize",
                                                    .Object@Class$STATUS_EMERGENT, .Object@Class$STATUS_LATENT)
             
             # Initialisation des attributs utiles à la construction d'un spectrosome
-            cat("*** Step 1/10:  Enumeration of separate observations pear year... ")
+            cat("*** Step 1/10:  Enumeration of separate observations per year... ")
             display_time( list_obs_per_year(.Object) )
             cat("\n*** Step 2/10:  Enumeration of the nodes and calculation of the number of occurrence... ")
             display_time( list_separate_obs(.Object) )
@@ -120,7 +120,7 @@ setMethod(f = "initialize",
             display_time( list_separate_patterns(.Object, target, count, min_length, max_length) )
             cat("\n*** Step 6/10:  Linking nodes to patterns... ")
             display_time( list_patterns_by_obs(.Object) )
-            cat("\n*** Step 7/10:  Characterization of patterns pear year... ")
+            cat("\n*** Step 7/10:  Characterization of patterns per year... ")
             display_time( list_patterns_per_year(.Object) )
             cat("\n*** Step 8/10:  Calculation of pattern characteristics... ")
             display_time( compute_patterns_characteristics(.Object) )
