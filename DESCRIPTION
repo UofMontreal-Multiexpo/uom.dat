@@ -1,0 +1,21 @@
+Package: oedb.analysis.tools
+Type: Package
+Title: Occupational Exposure Databases Analysis Tools for Multiexposure
+Version: 0.1.0
+Author@R: c(
+    person("Gauthier", "Magnin", email = "gauthier.magnin@gmail.com", role = c("aut", "cre")),
+    person("Delphine", "Bosson-Rieutort", email = "delphine.bosson-rieutort@umontreal.ca", role = "aut"))
+Author: Gauthier Magnin [aut, cre],
+    Delphine Bosson-Rieutort [aut]
+Maintainer: Gauthier Magnin <gauthier.magnin@gmail.com>
+Description: R processing, analysis and visualization tools for occupational exposure
+    databases, especially for multiexposure. Main analytical approaches are
+    Frequent Itemset Mining, Association Rules, Clustering and Spectrosome.
+License: Undefined
+Encoding: UTF-8
+LazyData: false
+Depends: R (>= 3.5.0)
+Imports:
+    arules,
+    statnet
+RoxygenNote: 7.1.0
