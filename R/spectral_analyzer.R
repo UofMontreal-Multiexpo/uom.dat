@@ -464,8 +464,8 @@ setMethod(f = "list_obs_per_year",
                                             nodes = nodes_list, years = nodes_year, obs = observation,
                                             function(index, nodes, years, obs) {
                                               (length(nodes[[index]]) == length(obs$CODE)
-                                               && length(setdiff(nodes[[index]], obs$CODE)) == 0 
-                                               && years[[index]] == obs$YEAR)
+                                               && years[[index]] == obs$YEAR
+                                               && length(setdiff(nodes[[index]], obs$CODE)) == 0)
                                             })]
               
               if (length(index) == 0) {
