@@ -450,45 +450,35 @@ setMethod(f = "list_obs_per_year",
             # Nom de l'objet pour modification interne dans l'environnement parent
             object_name = deparse(substitute(object))
             
-            # Noeuds et leurs caractéristiques
-            nodes_list = list()
-            nodes_weight = c()
-            nodes_year = c()
+            
+            # Conversion de la liste d'observations en une data.frame
+            obs_df = data.frame(year = sapply(object@observations, "[[", "YEAR"))
+            obs_df$node = sapply(object@observations, "[[", "CODE")
+            
+            # Concaténation des identifiants des éléments (nécessaire pour la fonction "table")
+            obs_df$node = sapply(obs_df$node, paste0, collapse = "-")
             
             # Liste les ensembles distincts d'éléments parmi les différentes observations
-            for(i in seq_along(object@observations)) {
-              observation = object@observations[[i]]
-              
-              # Cherche si l'ensemble d'éléments correspondant à l'observation a déjà été rencontré
-              index = seq_along(nodes_list)[tapply(seq_along(nodes_list), seq_along(nodes_list),
-                                            nodes = nodes_list, years = nodes_year, obs = observation,
-                                            function(index, nodes, years, obs) {
-                                              (length(nodes[[index]]) == length(obs$CODE)
-                                               && years[[index]] == obs$YEAR
-                                               && length(setdiff(nodes[[index]], obs$CODE)) == 0)
-                                            })]
-              
-              if (length(index) == 0) {
-                # Ajout de ce groupe d'éléments
-                nodes_list = append(nodes_list, list(observation$CODE))
-                nodes_weight = append(nodes_weight, 1)
-                nodes_year = append(nodes_year, observation$YEAR)
-              } else {
-                # Incrémentation du nombre de fois que ce groupe a été rencontré
-                nodes_weight[index] = nodes_weight[index] + 1
-              }
-            }
+            # et calcul le nombre d'occurrences de chacun
+            nodes_df = as.data.frame(table(obs_df), stringsAsFactors = FALSE)
+            nodes_df = subset(nodes_df, Freq != 0)
             
-            # Rassemblement des groupes d'éléments, de leurs poids et longueurs dans une même data frame
-            nodes_df = data.frame(weight = nodes_weight, year = nodes_year)
-            nodes_df$node = sapply(nodes_list, c)
-            nodes_df$length = sapply(nodes_list, length)
+            # Rétablissement des types et redécomposition des éléments composant chaque noeud
+            nodes_df$year = as.numeric(nodes_df$year)
+            nodes_df$node = as.character(nodes_df$node)
+            nodes_df$node = sapply(nodes_df$node, strsplit, split = "-")
             
-            # Changement de l'ordre des colonnes, tri des éléments dans chaque noeud, tri par longueur et année
+            # Calcul de la longueur de chaque noeud
+            nodes_df$length = sapply(nodes_df$node, length)
+            
+            # Renommage des colonnes et changement de leur ordre
+            colnames(nodes_df) = c("year", "node", "weight", "length")
             nodes_df = nodes_df[, c("node", "year", "weight", "length")]
+            
+            # Tri des éléments dans chaque noeud, tri par longueur, poids et année
             nodes_df$node = lapply(nodes_df$node, function(vec) { vec[order(vec)] } )
             nodes_df = nodes_df[order(sapply(nodes_df$node, '[[', 1)),]
-            nodes_df = nodes_df[order(nodes_df$length, nodes_df$year, decreasing = TRUE), ]
+            nodes_df = nodes_df[order(nodes_df$length, nodes_df$weight, nodes_df$year, decreasing = TRUE), ]
             
             # Regroupement des noeuds dont les éléments sont identiques
             subset_list = lapply(unique(nodes_df$node), lists = nodes_df, function(searched_list, lists) {
@@ -496,6 +486,9 @@ setMethod(f = "list_obs_per_year",
             })
             nodes_df = data.frame()
             for (i in seq_along(subset_list)) { nodes_df = rbind(nodes_df, subset_list[[i]]) }
+            
+            # Suppression des noms de la liste de noeuds (redondance avec contenu et doublons de noms)
+            names(nodes_df$node) = NULL
             
             # Définition de l'attribut et retour
             object@nodes_per_year = nodes_df
