@@ -6,6 +6,7 @@
 setClassUnion("listORarray", c("list", "array"))
 
 #' Classe d'objet S4 permettant une analyse spectrale.
+#' 
 #' @slot observations Liste des éléments retrouvés pour chaque observation.
 #' @slot items Ensemble des codes des différents éléments retrouvés dans les observations.
 #' @slot items_categories Catégories associées aux différents éléments observés.
@@ -25,6 +26,7 @@ setClassUnion("listORarray", c("list", "array"))
 #' @slot patterns_links Ensemble des liens entre les motifs et caractéristiques de ces liens.
 #' @slot Class Liste des attributs de classe (indépendants de l'instance).
 #' @author Gauthier Magnin
+#' @export
 setClass(Class = "SpectralAnalyzer",
          representation = representation(
            
@@ -137,6 +139,7 @@ setMethod(f = "initialize",
 
 
 #' Constructeur d'objet SpectralAnalyzer.
+#' 
 #' @param observations Liste des éléments retrouvés pour chaque observation.
 #'  Liste sous la forme \code{list( list( CODE = character(), NAME = character(), YEAR = numeric ) )}.
 #'  Chaque observation est alors une liste sous la forme \code{list( CODE = character(), NAME = character(), YEAR = numeric )}
@@ -156,6 +159,7 @@ setMethod(f = "initialize",
 #' @param status_limit Intervalle de temps pour lequel caractériser le statut des motifs par rapport à la période totale d'observations (nombre d'années).
 #' @return Nouvel objet de classe SpectralAnalyzer.
 #' @author Gauthier Magnin
+#' @export
 spectral.analyzer = function(observations, items = NULL, target = "closed frequent itemsets", count = 1, min_length = 1, max_length = Inf, status_limit = 2) {
   
   # Installation des packages nécessaires au fonctionnement
@@ -188,7 +192,9 @@ spectral.analyzer = function(observations, items = NULL, target = "closed freque
 #### Fonctions indépendantes de la classe SpectralAnalyzer, utiles à l'affichage ####
 
 #' Convertit une période en secondes en une chaîne de caractères.
+#' 
 #' Exemples du format de la châine retournée : 1d 02h 25m 47s ; 01m 05s ; 19s.
+#' 
 #' @param t Numeric - Temps à convertir en secondes.
 #' @return Chaîne de caractère attendue.
 dhms = function(t){
@@ -211,15 +217,18 @@ dhms = function(t){
 }
 
 #' Évalue une expression et affiche le temps écoulé selon le format défini par la fonction \code{dhms}.
+#' 
 #' Un appel au garbage collector est effectué avant le chronométrage.
+#' 
 #' @param expr Expression R valide à chronométrer.
-#' @seealso \code{dhms}.
+#' @seealso \code{\link{dhms}}.
 display_time = function(expr) {
   t = system.time(expr)
   cat(paste0("[", dhms(t[3]), "]"))
 }
 
 #' Change la première lettre d'une chaîne de caractères en une majuscule.
+#' 
 #' @param s Chaîne de caractères à modifier.
 #' @return La chaîne de caractères fournie par l'argument \code{s}, commençant par une majuscule.
 cap = function(s) {
@@ -439,7 +448,9 @@ setGeneric(name = "extract_nodes_from_category", def = function(object, category
 
 #' Identifie les observations distinctes par année et calcule le nombre de recrutement
 #' de chacune de ces observations.
+#' 
 #' La data.frame résultante est associée à l'attribut \code{nodes_per_year}.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @return Data.frame des observations distinctes, par année, et de leurs caractéristiques (longueur et poids).
 #' @author Gauthier Magnin
@@ -499,7 +510,9 @@ setMethod(f = "list_obs_per_year",
 
 #' Identifie les observations distinctes et calcule le nombre de recrutement
 #' de chacune de ces observations.
+#' 
 #' La data.frame résultante est associée à l'attribut \code{nodes}.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @return Data.frame des observations distinctes et de leurs caractéristiques (longueur et poids).
 #' @author Gauthier Magnin
@@ -536,7 +549,9 @@ setMethod(f = "list_separate_obs",
 #### Méthodes de calculs utiles à la construction d'un spectrosome ####
 
 #' Compte le nombre d'éléments en commun entre chacun des noeuds ou des motifs.
+#' 
 #' La matrice résultante est associée à l'attribut \code{n_links} ou \code{p_links} respectivement.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément pour lequel compter les liens (noeuds ou motifs).
 #'  Choix parmi \code{c("nodes", "patterns")}.
@@ -576,7 +591,9 @@ setMethod(f = "count_links",
 
 
 #' Identifie les liens selon les éléments en commun, entre les noeuds ou les motifs.
+#' 
 #' La data.frame résultante est associée à l'attribut \code{nodes_links} ou \code{patterns_links} respectivement.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément pour lequel compter les liens (noeuds ou motifs).
 #'  Choix parmi \code{c("nodes", "patterns")}.
@@ -694,7 +711,9 @@ setMethod(f = "search_links",
 #### Méthodes de calculs utiles à la construction des motifs ####
 
 #' Identifie l'ensemble des motifs distincts générés à partir des observations.
+#' 
 #' La data.frame résultante est associée à l'attribut \code{patterns}.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param target Type de motifs à énumérer.
 #'  Choix parmi \code{c("frequent itemsets", "closed frequent itemsets", "maximally frequent itemsets")}.
@@ -759,7 +778,9 @@ setMethod(f = "list_separate_patterns",
 
 
 #' Associe à chaque observation distincte les motifs qui y sont inclus.
+#' 
 #' La matrice résultante est associée à l'attribut \code{obs_patterns}.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @return Matrice de booléens dans laquelle les lignes correspondent aux observations et les colones aux motifs.
 #' @author Gauthier Magnin
@@ -798,7 +819,9 @@ setMethod(f = "list_patterns_by_obs",
 
 
 #' Compte le nombre d'apparition de chaque motif selon l'année.
+#' 
 #' La matrice résultante est associée à l'attribut \code{patterns_per_year}.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @return Matrice des poids de chaque motif dans laquelle les lignes correspondent aux motifs et les colonnes aux années.
 #' @author Gauthier Magnin
@@ -839,7 +862,9 @@ setMethod(f = "list_patterns_per_year",
 
 
 #' Calcule les caractéristiques des différents motifs (fréquence, poids, ordre, spécificté, caractère dynamique).
+#' 
 #' La data.frame résultante est associée à l'attribut \code{patterns}.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @return Data.frame dans laquelle une ligne est une association entre un motif et ses caractéristiques.
 #' @author Gauthier Magnin
@@ -883,8 +908,10 @@ setMethod(f = "compute_patterns_characteristics",
 
 
 #' Calcule la spécificité de l'information portée par chaque motif.
+#' 
 #' La spécificité correspond au caractère d'un motif spécifique d'une combinaison particulière
 #'  ou ubiquitaire et permettant la formation de nombreux agrégats.
+#'  
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns Liste des motifs dont la spécificité est à calculer.
 #' @param frequencies Vecteur des fréquences associées aux motifs contenus dans \code{patterns}.
@@ -931,8 +958,10 @@ setMethod(f = "compute_specificity",
 
 
 #' Calcule l'indice de recrutement de chaque motif pour une période donnée.
+#' 
 #' Cet indice informe sur la proportion et l'importance du recrutement d'un motif en tenant compte
 #'  du recrutement des autres motifs.
+#'  
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns Liste des motifs dont l'indice de recrutement est à calculer.
 #' @param t Année de fin de la période, c'est-à-dire, date à laquelle caractériser le motif.
@@ -1003,7 +1032,10 @@ setMethod(f = "compute_reporting_indexes",
 
 
 #' Vérifie la validité des valeurs des paramètres donnés en arguments pour le calcul d'indices de recrutement.
+#' 
 #' Adapte leurs valeurs si elles n'entrent pas dans l'intervalle adéquate et affiche un message d'information.
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
 #' @param t Année de fin de la période, c'est-à-dire, date à laquelle caractériser le motif.
 #'  \code{NULL} indique que la caractérisation doit se faire par rapport à la dernière année
 #'  couverte par les observations.
@@ -1056,8 +1088,10 @@ setMethod(f = "check_params_for_RI",
 
 
 #' Calcule les limites temporelles utilisées pour caractériser les motifs.
+#' 
 #' La première correspond à l'indice de recrutement calculé sur \code{first_limit} années.
 #' La seconde correspond à l'indice de recrutement calculé sur la période définie par les paramètres \code{t} et \code{period}.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns Liste des motifs dont les limites sont à calculer.
 #' @param first_limit Intervalle de temps sur lequel calculer la première limite (nombre d'années).
@@ -1091,6 +1125,7 @@ setMethod(f = "compute_reporting_indexes_limits",
 
 
 #' Calcule le nombre de motifs permettant d'expliquer l'essentiel des indices de recrutement.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param reporting_indexes Indices de recrutement associées aux motifs.
 #' @return Seuil calculé.
@@ -1108,8 +1143,10 @@ setMethod(f = "compute_ksi_threshold",
 
 
 #' Calcule la valeur limite séparant deux statuts dynamiques par rapport aux indices de recrutement.
+#' 
 #' Les motifs sont ordonnés par ordre décroissant de leur valeur d'indice de recrutement et séparé en 
 #' deux parties par le seuil \code{ksi}.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param reporting_indexes Indices de recrutement associées aux motifs.
 #' @param ksi Nombre de motifs à considérer avant de fixer le seuil.
@@ -1136,6 +1173,7 @@ setMethod(f = "compute_ri_threshold",
 
 
 #' Définit le statut dynamique de chaque motif.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns Liste des motifs dont le statut dynamique est à définir.
 #' @param status_limit Intervalle de temps sur lequel caractériser le statut des motifs
@@ -1186,6 +1224,7 @@ setMethod(f = "define_dynamic_status",
 #### Méthodes de création de graphiques de type spectre ####
 
 #' Construit un graphique de type spectre et l'enregistre dans un fichier au format PDF.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Ensemble des caractéristiques des motifs dont le spectre est à tracer.
 #' @param path Chemin du dossier dans lequel enregistrer le graphique.
@@ -1199,6 +1238,7 @@ setMethod(f = "define_dynamic_status",
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
+#' @export
 setMethod(f = "spectrum_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns") {
@@ -1243,6 +1283,7 @@ setMethod(f = "spectrum_chart",
 
 
 #' Dessine un graphique de type spectre.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Ensemble des caractéristiques des motifs dont le spectre est à tracer.
 #' @param weights_by_node_type Data.frame contenant, pour chaque motif, son poids dans des noeuds complexes et son poids dans des noeuds simples.
@@ -1313,11 +1354,14 @@ setMethod(f = "create_spectrum_chart",
 
 
 #' Calcule les distributions des poids et longueurs des noeuds contenant un motif, pour chaque motif.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns Liste des motifs dont les distributions sont à calculer.
 #' @return Liste contenant :
-#'  \item La distribution, pour chaque motif, des poids des noeuds dans lequel il est inclus.
-#'  \item La distribution, pour chaque motif, des longueurs des noeuds dans lequel il est inclus.
+#'  \itemize{
+#'    \item{} {La distribution, pour chaque motif, des poids des noeuds dans lequel il est inclus.}
+#'    \item{} {La distribution, pour chaque motif, des longueurs des noeuds dans lequel il est inclus.}
+#'  }
 #' @author Gauthier Magnin
 setMethod(f = "compute_pattern_distribution_in_nodes",
           signature = "SpectralAnalyzer",
@@ -1345,8 +1389,10 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #### Méthodes de création de graphiques de type spectrosome ####
 
 #' Construit un ou plusieurs graphiques de type spectrosome et les enregistre au format PNG.
+#' 
 #' @details Si des catégories sont associées aux items, chaque catégorie génère un spectrosome.
 #'  Le nom de la catégorie est ajouté à la fin du nom du fichier.
+#'  
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément pour lequel construire le spectrosome (noeuds ou motifs).
 #'  Choix parmi \code{c("nodes", "patterns")}.
@@ -1364,14 +1410,17 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'  Si \code{nb_graph} est supérieur à \code{1}, un numéro est ajouté automatiquement à la fin du nom du fichier.
 #' @param title Titre du graphique.
 #' @return Liste contenant :
-#'  \item Data.frame des noeuds ou motifs et caractéristiques utilisées, associés aux identifiants des sommets du graphe.
-#'  \item Data.frame des informations relatives aux arêtes du graphe.
+#'  \itemize{
+#'    \item{} {Data.frame des noeuds ou motifs et caractéristiques utilisées, associés aux identifiants des sommets du graphe.}
+#'    \item{} {Data.frame des informations relatives aux arêtes du graphe.}
+#'  }
 #' 
 #' @author Delphine Bosson-Rieutort
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
+#' @export
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities)) {
@@ -1642,6 +1691,7 @@ setMethod(f = "spectrosome_chart",
 
 
 #' Identifie et affiche les noms des clusters sur le graphe fourni en argument.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param graph Graphe généré par la fonction \code{\link[sna]{gplot}}
 #' @param links Liens des motifs utilisés pour générer \code{graph}.
@@ -1707,6 +1757,7 @@ setMethod(f = "cluster_text",
 
 
 #' Identifie le cluster associé à l'item fourni en argument et en dessine un spectrosome.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément pour rechercher un cluster (noeuds ou motifs).
 #'  Choix parmi \code{c("nodes", "patterns")}.
@@ -1722,10 +1773,13 @@ setMethod(f = "cluster_text",
 #'  Par défaut, le titre dépend des arguments \code{entities} et \code{item}.
 #'  Exemple de titre par défaut : \code{"Node cluster of 25"}.
 #' @return \code{NULL} si aucun ou un seul noeud ou motif contient l'item recherché. Sinon, liste contenant :
-#'  \item Data.frame des noeuds ou motifs et caractéristiques utilisées, associés aux identifiants des sommets du graphe.
-#'  \item Data.frame des informations relatives aux arêtes du graphe.
+#'  \itemize{
+#'    \item{} {Data.frame des noeuds ou motifs et caractéristiques utilisées, associés aux identifiants des sommets du graphe.}
+#'    \item{} {Data.frame des informations relatives aux arêtes du graphe.}
+#'  }
 #' @seealso \code{\link{spectrosome_chart}}
 #' @author Gauthier Magnin
+#' @export
 setMethod(f = "cluster_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
@@ -1753,6 +1807,7 @@ setMethod(f = "cluster_chart",
 #### Méthodes de recherche et d'enregistrement ####
 
 #' Enregistre au format CSV un ensemble de caractéristiques de noeuds ou motifs.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément associé aux caractéristiques (noeuds ou motifs).
 #'  Choix parmi \code{c("nodes", "patterns")}.
@@ -1760,6 +1815,7 @@ setMethod(f = "cluster_chart",
 #' @param ... Arguments fournis à la fonction \code{write.csv2}.
 #' @seealso \code{\link[utils]{write.csv2}}
 #' @author Gauthier Magnin
+#' @export
 setMethod(f = "save_characteristics",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, characteristics, ...) {
@@ -1790,6 +1846,7 @@ setMethod(f = "save_characteristics",
 
 
 #' Extrait les motifs contenant un ou plusieurs items recherchés.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Data.frame des caractéristiques des motifs.
 #' @param items Éléments recherchés (un ou plusieurs).
@@ -1798,6 +1855,7 @@ setMethod(f = "save_characteristics",
 #'  \code{"any"} exprime qu'au moins un des éléments recherchés doit faire partie d'un motif pour que ce motif soit extrait.
 #' @return Sous-ensemble de la data.frame fournie en argument pour les motifs correspondant au critère de recherche.
 #' @author Gauthier Magnin
+#' @export
 setMethod(f = "extract_patterns_from_items",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, items, target = "all") {
@@ -1813,6 +1871,7 @@ setMethod(f = "extract_patterns_from_items",
 
 
 #' Extrait les motifs satisfaisant un critère de recherche.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Data.frame des caractéristiques des motifs.
 #' @param characteristic Nom de la caractéristique sur laquelle faire la recherche.
@@ -1828,6 +1887,7 @@ setMethod(f = "extract_patterns_from_items",
 #'  \code{"GE"} : La valeur de la caractéristique du motif doit être supérieure ou égale à la valeur recherchée (Greater than or Equal).
 #' @return Sous-ensemble de la data.frame fournie en argument pour les motifs satisfaisant le critère de recherche.
 #' @author Gauthier Magnin
+#' @export
 setMethod(f = "extract_patterns_from_characteristic",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, characteristic, value, condition = "EQ") {
@@ -1847,6 +1907,7 @@ setMethod(f = "extract_patterns_from_characteristic",
 
 
 #' Extrait les motifs dont le statut correspond à une valeur recherchée.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Data.frame des caractéristiques des motifs.
 #' @param value Valeur de statut recherché (une ou plusieurs).
@@ -1856,6 +1917,7 @@ setMethod(f = "extract_patterns_from_characteristic",
 #'  \code{"NE"} : Le statut du motif doit être différente des valeurs recherchées (Not Equal).
 #' @return Sous-ensemble de la data.frame fournie en argument pour les motifs satisfaisant le critère de recherche.
 #' @author Gauthier Magnin
+#' @export
 setMethod(f = "extract_patterns_from_status",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, value, condition = "EQ") {
@@ -1868,6 +1930,7 @@ setMethod(f = "extract_patterns_from_status",
 
 
 #' Extrait les noeuds contenant un ou plusieurs items recherchés.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param nodes_characteristics Data.frame des caractéristiques des noeuds.
 #' @param items Éléments recherchés (un ou plusieurs).
@@ -1876,6 +1939,7 @@ setMethod(f = "extract_patterns_from_status",
 #'  \code{"any"} exprime qu'au moins un des éléments recherchés doit faire partie d'un noeud pour que ce noeud soit extrait.
 #' @return Sous-ensemble de la data.frame fournie en argument pour les noeuds correspondant au critère de recherche.
 #' @author Gauthier Magnin
+#' @export
 setMethod(f = "extract_nodes_from_items",
           signature = "SpectralAnalyzer",
           definition = function(object, nodes_characteristics, items, target = "all") {
@@ -1890,6 +1954,7 @@ setMethod(f = "extract_nodes_from_items",
           })
 
 #' Extrait les noeuds satisfaisant un critère de recherche.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param nodes_characteristics Data.frame des caractéristiques des noeuds.
 #' @param characteristic Nom de la caractéristique sur laquelle faire la recherche.
@@ -1905,6 +1970,7 @@ setMethod(f = "extract_nodes_from_items",
 #'  \code{"GE"} : La valeur de la caractéristique du noeud doit être supérieure ou égale à la valeur recherchée (Greater than or Equal).
 #' @return Sous-ensemble de la data.frame fournie en argument pour les noeuds satisfaisant le critère de recherche.
 #' @author Gauthier Magnin
+#' @export
 setMethod(f = "extract_nodes_from_characteristic",
           signature = "SpectralAnalyzer",
           definition = function(object, nodes_characteristics, characteristic, value, condition = "EQ") {
@@ -1924,7 +1990,9 @@ setMethod(f = "extract_nodes_from_characteristic",
 
 
 #' Vérifie que les paramètres fournis correspondent à une catégorie existante.
+#' 
 #' Affiche un message d'erreur si ce n'est pas le cas.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param category Nom ou numéro de la catégorie à laquelle accéder (numérotée selon l'ordre des colonnes de \code{object["items_categories"]}).
 #' @param value Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.
@@ -1950,6 +2018,7 @@ setMethod(f = "check_acces_for_category",
 
 
 #' Extrait les motifs correspondant à une valeur de catégorie recherchée
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param category Nom ou numéro de la catégorie à laquelle accéder (numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).
 #' @param value Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.
@@ -1958,6 +2027,7 @@ setMethod(f = "check_acces_for_category",
 #'  \code{"edges"} : recherche de motifs générant un lien correspondant à la catégorie recherchée.
 #' @return Data.frame des motifs correspondant aux critères de recherche.
 #' @author Gauthier Magnin
+#' @export
 setMethod(f = "extract_patterns_from_category",
           signature = "SpectralAnalyzer",
           definition = function(object, category, value, target) {
@@ -1985,6 +2055,7 @@ setMethod(f = "extract_patterns_from_category",
 
 
 #' Extrait les noeuds correspondant à une valeur de catégorie recherchée
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param category Nom ou numéro de la catégorie à laquelle accéder (numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).
 #' @param value Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.
@@ -1993,6 +2064,7 @@ setMethod(f = "extract_patterns_from_category",
 #'  \code{"edges"} : recherche de noeuds générant un lien corresopndant à la catégorie recherchée.
 #' @return Data.frame des noeuds correspondant aux critères de recherche.
 #' @author Gauthier Magnin
+#' @export
 setMethod(f = "extract_nodes_from_category",
           signature = "SpectralAnalyzer",
           definition = function(object, category, value, target) {
