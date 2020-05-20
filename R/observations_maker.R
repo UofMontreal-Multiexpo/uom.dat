@@ -1,4 +1,5 @@
 
+#### Fonctions de structuration d'observations ####
 
 #' Regroupe des prélèvements sous forme d'observations.
 #' 
@@ -235,6 +236,9 @@ turn_interventions_into_observations = function(measures, additional = NULL) {
   return(observations)
 }
 
+
+
+#### Fonctions de recherche dans une structure d'observations ####
 
 #' Extrait les observations correspondant à un ou plusieurs items recherchés.
 #' 

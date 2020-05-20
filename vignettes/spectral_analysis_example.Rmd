@@ -11,8 +11,9 @@ output: html_notebook
 
 ## 1.1. Loading functions, classes and data
 
-Loading the class allowing spectral analysis...
+Loading the class allowing spectral analysis and other functions necessary for its operation...
 ```{r}
+source("../R/utils.R", encoding = "UTF-8")
 source("../R/spectral_analyzer.R", encoding = "UTF-8")
 ```
 
