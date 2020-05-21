@@ -571,94 +571,82 @@ setMethod(f = "search_links",
               entities_links = object@p_links
             } else stop("entities must be \"nodes\" or \"patterns\".")
             
-            # Liste qui contiendront les liens entre les éléments
-            links = list()
-            no_links = list()
             
-            nb_links = 0
-            nb_no_links = 0
+            # Recherche des identifiants des éléments liés
+            linked_indexes = which(apply(entities_links, 1,
+                                         function(x) sum(x) != x[parent.frame()$i[]]))
+            names(linked_indexes) = NULL
+            
+            # Utilisation de la propriété de symétrie de la matrice pour compter le nombre de liens
+            nb_links = (sum(entities_links != 0) - nrow(entities_links)) / 2
+            links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == "patterns", 6, 5))
+            
+            link_counter = 0
+            loop_index = 0
             
             # Recherche des liens entre chaque paire d'éléments à lier
-            for(i in seq_len(length(to_link) - 1)) {
-              # Si l'élément à un lien avec d'autres éléments
-              if (sum(entities_links[i, ]) > entities_links[i, i]) {
-                
-                for(j in seq(i + 1, length(to_link))) {
-                  if (entities_links[i, j] != 0) {
-                    # Nouveau lien identifié
-                    nb_links = nb_links + 1
-                    intersection = intersect(to_link[[i]], to_link[[j]])
-                    
-                    # Élément i, élément j, numero de lien, items en communs, nb items en communs, (année d'apparition du lien)
-                    if (entities == "patterns") {
-                      links[[nb_links]] = c(i, j, nb_links,
-                                            paste(intersection, collapse = '/'), entities_links[i, j],
-                                            max(object@patterns[i, "year"], object@patterns[j, "year"]))
-                    } else {
-                      links[[nb_links]] = c(i, j, nb_links, paste(intersection, collapse = '/'), entities_links[i, j])
-                    }
-                  }
+            for(i in linked_indexes[1:(length(linked_indexes) - 1)]) {
+              loop_index = loop_index + 1
+              
+              for(j in linked_indexes[(loop_index + 1):length(linked_indexes)]) {
+                if (entities_links[i, j] != 0) {
+                  # Nouveau lien identifié
+                  link_counter = link_counter + 1
+                  intersection = intersect(to_link[[i]], to_link[[j]])
                   
+                  # Élément i, élément j, numéro de lien, items en communs, nb items en communs (, année d'apparition du lien)
+                  if (entities == "patterns") {
+                    links[link_counter, ] = c(i, j, link_counter,
+                                              paste(intersection, collapse = '/'), entities_links[i, j],
+                                              max(object@patterns[i, "year"], object@patterns[j, "year"]))
+                  } else {
+                    links[link_counter, ] = c(i, j, link_counter, paste(intersection, collapse = '/'), entities_links[i, j])
+                  }
                 }
-              } else {
-                # Nouvel élément isolé identifié si aucun lien
-                nb_no_links = nb_no_links + 1
-                if (entities == "patterns") {
-                  no_links[[nb_no_links]] = c(i, i, nb_no_links, "I", 0, object@patterns[i, "year"])
-                } else {
-                  no_links[[nb_no_links]] = c(i, i, nb_no_links, "I", 0)
-                }
               }
             }
             
-            # Vérification si le dernier élément est isolé
-            if (sum(entities_links[length(to_link), ]) == entities_links[length(to_link), length(to_link)]) {
-              nb_no_links = nb_no_links + 1
-              if (entities == "patterns") {
-                no_links[[nb_no_links]] = c(length(to_link), length(to_link), nb_no_links, "I", 0,
-                                            object@patterns[i, "year"])
-              } else {
-                no_links[[nb_no_links]] = c(length(to_link), length(to_link), nb_no_links, "I", 0)
-              }
+            
+            # Recherche des éléments isolés
+            isolated_indexes = which(apply(entities_links, 1,
+                                           function(x) sum(x) == x[parent.frame()$i[]]))
+            names(isolated_indexes) = NULL
+            
+            # Matrice des éléments isolés qui complète celle des paires de éléments liés
+            if (length(isolated_indexes) != 0) {
+              no_links = t(sapply(isolated_indexes, entity = entities, id0 = nb_links,
+                                  function(x, entity, id0) {
+                                    if (entities == "patterns") {
+                                      return(c(x, x, id0 + parent.frame()$i[], "I", 0, object@patterns[parent.frame()$i[], "year"]))
+                                    }
+                                    return(c(x, x, id0 + parent.frame()$i[], "I", 0))
+                                  }))
+            } else {
+              # Matrice vide pour la fusion qui suit (sans avoir à tester aucune des deux)
+              no_links = matrix(NA, nrow = 0, ncol = ifelse(entities == "patterns", 6, 5))
             }
             
-            # Fusion des deux listes en une data.frame unique
             
-            # Si des liens ont été identifiés
-            if (length(links) != 0) {
-              # list -> matrix -> data.frame
-              links = as.data.frame(do.call(rbind, links), stringsAsFactors = FALSE)
-              if (entities == "patterns") {
-                colnames(links) = c("Source", "Target", "ID", "items", "weight", "year")
-                class(links$year) = "integer"
-              } else {
-                colnames(links) = c("Source", "Target", "ID", "items", "weight")
-              }
-              rownames(links) = NULL
-              class(links$Source) = class(links$Target) = class(links$ID) = class(links$weight) = "integer"
-            }
+            # Fusion des listes en une data frame unique
+            merged = as.data.frame(rbind(links, no_links), stringsAsFactors = FALSE)
             
-            # Si des noeuds isolés ont été identifiés
-            if (length(no_links) != 0) {
-              # list -> matrix -> data.frame
-              no_links = as.data.frame(do.call(rbind, no_links), stringsAsFactors = FALSE)
-              if (entities == "patterns") {
-                colnames(no_links) = c("Source", "Target", "ID", "items", "weight", "year")
-                class(no_links$year) = "integer"
-              } else {
-                colnames(no_links) = c("Source", "Target", "ID", "items", "weight")
-              }
-              rownames(no_links) = NULL
-              no_links$ID = seq(nb_links + 1, nb_links + nb_no_links)
-              class(no_links$Source) = class(no_links$Target) = class(no_links$weight) = "integer"
+            # Affectation de noms de colonnes et rétablissement des types
+            if (entities == "patterns") {
+              colnames(merged) = c("Source", "Target", "ID", "items", "weight", "year")
+              class(merged$year) = "integer"
+            } else {
+              colnames(merged) = c("Source", "Target", "ID", "items", "weight")
             }
+            rownames(merged) = NULL
+            class(merged$Source) = class(merged$Target) = class(merged$ID) = class(merged$weight) = "integer"
+            
             
             # Définition de l'attribut et retour
-            if (entities == "nodes") object@nodes_links = rbind(links, no_links)
-            else if (entities == "patterns") object@patterns_links = rbind(links, no_links)
+            if (entities == "nodes") object@nodes_links = merged
+            else if (entities == "patterns") object@patterns_links = merged
             assign(object_name, object, envir = parent.frame())
             return(invisible(object@nodes_links))
-          }) 
+          })
 
 
 
