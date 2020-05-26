@@ -109,7 +109,7 @@ setMethod(f = "initialize",
             names(.Object@Class$STATUS_COLORS) = c(.Object@Class$STATUS_PERSISTENT, .Object@Class$STATUS_DECLINING,
                                                    .Object@Class$STATUS_EMERGENT, .Object@Class$STATUS_LATENT)
             
-            # Initialisation des attributs utiles à la construction d'un spectrosome
+            # Initialisation des attributs utiles à la construction d'un spectrosome des noeuds
             cat("*** Step 1/10:  Enumeration of separate observations per year... ")
             display_time( list_obs_per_year(.Object) )
             cat("\n*** Step 2/10:  Enumeration of the nodes and calculation of the number of occurrence... ")
@@ -416,9 +416,9 @@ setMethod(f = "list_obs_per_year",
             object_name = deparse(substitute(object))
             
             
-            # Conversion de la liste d'observations en une data.frame
+            # Conversion de la liste d'observations en une data.frame (et tri des éléments de chaque liste)
             obs_df = data.frame(year = sapply(object@observations, "[[", "YEAR"))
-            obs_df$node = sapply(object@observations, "[[", "CODE")
+            obs_df$node = sapply(sapply(object@observations, "[[", "CODE"), sort)
             
             # Concaténation des identifiants des éléments (nécessaire pour la fonction "table")
             obs_df$node = sapply(obs_df$node, paste0, collapse = "-")
@@ -440,8 +440,7 @@ setMethod(f = "list_obs_per_year",
             colnames(nodes_df) = c("year", "node", "weight", "length")
             nodes_df = nodes_df[, c("node", "year", "weight", "length")]
             
-            # Tri des éléments dans chaque noeud, tri par longueur, poids et année
-            nodes_df$node = lapply(nodes_df$node, function(vec) { vec[order(vec)] } )
+            # Tri par longueur, poids et année
             nodes_df = nodes_df[order(sapply(nodes_df$node, '[[', 1)),]
             nodes_df = nodes_df[order(nodes_df$length, nodes_df$weight, nodes_df$year, decreasing = TRUE), ]
             
