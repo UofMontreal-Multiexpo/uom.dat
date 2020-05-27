@@ -479,17 +479,24 @@ setMethod(f = "list_separate_obs",
             # Noeuds par année et caractéristiques
             nodes_per_year = object@nodes_per_year
             
-            # Calcul du poids total pour chaque observation (ou noeud) distincte
-            separate_obs = unique(nodes_per_year$node)
-            nodes_weight = sapply(separate_obs, nodes = nodes_per_year,
-                                  function(vec, nodes) {
-                                    sum(nodes$weight[nodes$node %in% list(vec)])
-                                  })
             
-            # Rassemblement des noeuds et de leurs caractéristiques
-            nodes_df = data.frame(node = sapply(list(separate_obs), c),
-                                  length = sapply(separate_obs, length),
-                                  weight = nodes_weight)
+            # Concaténation des identifiants des éléments pour faciliter la comparaison des observations
+            pasted_nodes = sapply(nodes_per_year$node, paste0, collapse = "-")
+            
+            # Calcul du poids total pour chaque noeud (= chaque observation distincte)
+            nodes_df = aggregate(nodes_per_year$weight,
+                                 by = list(pasted_nodes),
+                                 FUN = sum)
+            
+            # Renommage des colonnes et redécomposition des éléments de chaque noeud
+            colnames(nodes_df) = c("node", "weight")
+            nodes_df$node = sapply(nodes_df$node, strsplit, split = "-")
+            
+            # Recalcul de la longueur de chaque noeud et tri par longueur puis par poids
+            nodes_df$length = sapply(nodes_df$node, length)
+            nodes_df = nodes_df[, c("node", "length", "weight")]
+            nodes_df = nodes_df[order(nodes_df$length, nodes_df$weight, decreasing = TRUE),]
+            rownames(nodes_df) = NULL
             
             # Définition de l'attribut et retour
             object@nodes = nodes_df
