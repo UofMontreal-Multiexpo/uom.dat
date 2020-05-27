@@ -430,18 +430,14 @@ setMethod(f = "list_obs_per_year",
             
             # Rétablissement des types et redécomposition des éléments composant chaque noeud
             nodes_df$year = as.numeric(nodes_df$year)
-            nodes_df$node = as.character(nodes_df$node)
             nodes_df$node = sapply(nodes_df$node, strsplit, split = "-")
             
             # Calcul de la longueur de chaque noeud
             nodes_df$length = sapply(nodes_df$node, length)
             
-            # Renommage des colonnes et changement de leur ordre
+            # Renommage des colonnes, changement de leur ordre et tri par longueur, poids et année
             colnames(nodes_df) = c("year", "node", "weight", "length")
             nodes_df = nodes_df[, c("node", "year", "weight", "length")]
-            
-            # Tri par longueur, poids et année
-            nodes_df = nodes_df[order(sapply(nodes_df$node, '[[', 1)),]
             nodes_df = nodes_df[order(nodes_df$length, nodes_df$weight, nodes_df$year, decreasing = TRUE), ]
             
             # Regroupement des noeuds dont les éléments sont identiques
