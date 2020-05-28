@@ -2,6 +2,13 @@
 NULL
 
 
+# État d'activation du mode débogage
+DEBUG_MODE = FALSE
+# Définit l'étape jusqu'à laquelle effectuer l'analyse avant d'arrêter le processus
+UP_TO_STEP = Inf
+
+
+
 #### Attributs et constructeur ####
 
 # Création d'une classe correspondant à 2 types
@@ -113,28 +120,49 @@ setMethod(f = "initialize",
                                                    .Object@Class$STATUS_EMERGENT, .Object@Class$STATUS_LATENT)
             
             # Initialisation des attributs utiles à la construction d'un spectrosome des noeuds
+            
             cat("*** Step 1/10:  Enumeration of separate observations per year... ")
             display_time( list_obs_per_year(.Object) )
+            if (DEBUG_MODE && UP_TO_STEP == 1) { validObject(.Object); return(.Object) }
+            
             cat("\n*** Step 2/10:  Enumeration of the nodes and calculation of the number of occurrence... ")
             display_time( list_separate_obs(.Object) )
+            if (DEBUG_MODE && UP_TO_STEP == 2) { validObject(.Object); return(.Object) }
+            
             cat("\n*** Step 3/10:  Counting the links between nodes... ")
             display_time( count_links(.Object, "nodes") )
+            if (DEBUG_MODE && UP_TO_STEP == 3) { validObject(.Object); return(.Object) }
+            
             cat("\n*** Step 4/10:  Elaboration of links between nodes... ")
             display_time( search_links(.Object, "nodes") )
+            if (DEBUG_MODE && UP_TO_STEP == 4) { validObject(.Object); return(.Object) }
+            
             
             # Initialisation des attributs utiles à la construction d'un spectre
+            
             cat("\n*** Step 5/10:  Enumeration of separate patterns...\n")
             display_time( list_separate_patterns(.Object, target, count, min_length, max_length) )
+            if (DEBUG_MODE && UP_TO_STEP == 5) { validObject(.Object); return(.Object) }
+            
             cat("\n*** Step 6/10:  Linking nodes to patterns... ")
             display_time( list_patterns_by_obs(.Object) )
+            if (DEBUG_MODE && UP_TO_STEP == 6) { validObject(.Object); return(.Object) }
+            
             cat("\n*** Step 7/10:  Characterization of patterns per year... ")
             display_time( list_patterns_per_year(.Object) )
+            if (DEBUG_MODE && UP_TO_STEP == 7) { validObject(.Object); return(.Object) }
+            
             cat("\n*** Step 8/10:  Calculation of pattern characteristics... ")
             display_time( compute_patterns_characteristics(.Object) )
+            if (DEBUG_MODE && UP_TO_STEP == 8) { validObject(.Object); return(.Object) }
+            
             
             # Initialisation des attributs utiles à la construction d'un spectrosome des motifs
+            
             cat("\n*** Step 9/10:  Counting the links between patterns... ")
             display_time( count_links(.Object, "patterns") )
+            if (DEBUG_MODE && UP_TO_STEP == 9) { validObject(.Object); return(.Object) }
+            
             cat("\n*** Step 10/10: Elaboration of links between patterns... ")
             display_time( search_links(.Object, "patterns") )
             
