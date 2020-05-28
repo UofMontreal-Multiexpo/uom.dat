@@ -58,8 +58,11 @@ setClass(Class = "SpectralAnalyzer",
          ),
          validity = function(object) {
            
+           # Validation du système de codage des items
+           if(any(grepl("/", object@items))) stop("Item codes must not contain the character \"/\".")
+           
            # Vérification des paramètres d'initialisation
-           if(object@count < 1)  stop("count must be greater than zero.")
+           if(object@count < 1) stop("count must be greater than zero.")
            if(object@min_length < 1) stop("min_length must be greater than zero.")
            if(object@max_length < object@min_length) stop("max_length must be greater than or equal to min_length.")
            if(object@status_limit < 1) stop("status_limit must be greater than zero.")
@@ -144,8 +147,9 @@ setMethod(f = "initialize",
 #' 
 #' @param observations Liste des éléments retrouvés pour chaque observation.
 #'  Liste sous la forme \code{list( list( CODE = character(), NAME = character(), YEAR = numeric ) )}.
-#'  Chaque observation est alors une liste sous la forme \code{list( CODE = character(), NAME = character(), YEAR = numeric )}
+#'  Chaque observation est une liste sous la forme \code{list( CODE = character(), NAME = character(), YEAR = numeric )}
 #'  où \code{CODE} et \code{NAME} sont associés pour identifier un élément.
+#'  Les valeurs de \code{CODE} ne doivent pas contenir le caractère "/".
 #' @param items Data.frame associant une ou plusieurs catégories à un élément (\code{items$item}).
 #'  La valeur \code{NULL} par défaut précise qu'aucune catégorie n'est définie.
 #' @param target Type de motifs à énumérer.
@@ -421,7 +425,7 @@ setMethod(f = "list_obs_per_year",
             obs_df$node = sapply(sapply(object@observations, "[[", "CODE"), sort)
             
             # Concaténation des identifiants des éléments (nécessaire pour la fonction "table")
-            obs_df$node = sapply(obs_df$node, paste0, collapse = "-")
+            obs_df$node = sapply(obs_df$node, paste0, collapse = "/")
             
             # Calcul de la distribution des ensembles distincts d'items par année
             nodes_df = as.data.frame(table(obs_df), stringsAsFactors = FALSE)
@@ -429,7 +433,7 @@ setMethod(f = "list_obs_per_year",
             
             # Rétablissement des types et redécomposition des éléments composant chaque noeud (nécessaire pour calculer "length")
             nodes_df$year = as.numeric(nodes_df$year)
-            nodes_df$node = sapply(nodes_df$node, strsplit, split = "-")
+            nodes_df$node = sapply(nodes_df$node, strsplit, split = "/")
             
             # Calcul de la longueur de chaque noeud
             nodes_df$length = sapply(nodes_df$node, length)
@@ -441,7 +445,7 @@ setMethod(f = "list_obs_per_year",
             
             
             # Reconcaténation des identifiants des éléments (pour rendre le dernier tri plus rapide)
-            nodes_df$node = sapply(nodes_df$node, paste0, collapse = "-")
+            nodes_df$node = sapply(nodes_df$node, paste0, collapse = "/")
             
             # Regroupement des noeuds dont les éléments sont identiques
             subset_list = lapply(unique(nodes_df$node), lists = nodes_df, function(searched_list, lists) {
@@ -450,7 +454,7 @@ setMethod(f = "list_obs_per_year",
             nodes_df = do.call("rbind", subset_list)
             
             # Redécomposition des éléments composant chaque noeud
-            nodes_df$node = unname(sapply(nodes_df$node, strsplit, split = "-"))
+            nodes_df$node = unname(sapply(nodes_df$node, strsplit, split = "/"))
             
             # Définition de l'attribut et retour
             object@nodes_per_year = nodes_df
@@ -479,7 +483,7 @@ setMethod(f = "list_separate_obs",
             
             
             # Concaténation des identifiants des éléments pour faciliter la comparaison des observations
-            pasted_nodes = sapply(nodes_per_year$node, paste0, collapse = "-")
+            pasted_nodes = sapply(nodes_per_year$node, paste0, collapse = "/")
             
             # Calcul du poids total pour chaque noeud (= chaque observation distincte)
             nodes_df = aggregate(nodes_per_year$weight,
@@ -488,7 +492,7 @@ setMethod(f = "list_separate_obs",
             
             # Renommage des colonnes et redécomposition des éléments de chaque noeud
             colnames(nodes_df) = c("node", "weight")
-            nodes_df$node = sapply(nodes_df$node, strsplit, split = "-")
+            nodes_df$node = sapply(nodes_df$node, strsplit, split = "/")
             
             # Recalcul de la longueur de chaque noeud et tri par longueur puis par poids
             nodes_df$length = sapply(nodes_df$node, length)
@@ -601,10 +605,10 @@ setMethod(f = "search_links",
                   # Élément i, élément j, numéro de lien, items en communs, nb items en communs (, année d'apparition du lien)
                   if (entities == "patterns") {
                     links[link_counter, ] = c(i, j, link_counter,
-                                              paste(intersection, collapse = '/'), entities_links[i, j],
+                                              paste(intersection, collapse = "/"), entities_links[i, j],
                                               max(object@patterns[i, "year"], object@patterns[j, "year"]))
                   } else {
-                    links[link_counter, ] = c(i, j, link_counter, paste(intersection, collapse = '/'), entities_links[i, j])
+                    links[link_counter, ] = c(i, j, link_counter, paste(intersection, collapse = "/"), entities_links[i, j])
                   }
                 }
               }
