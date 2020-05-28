@@ -191,78 +191,53 @@ setGeneric(name = "reset", def = function(object, from = 1){ standardGeneric("re
 #' @export
 setMethod(f = "reset",
           signature = "SpectralAnalyzer",
-          definition = function(object, from = 1){
+          definition = function(object, from = 1) {
             
             # Nom de l'objet pour modification interne dans l'environnement parent
             object_name = deparse(substitute(object))
             
+            # Matrice des instructions à effectuer et descriptions, pour chaque étape
+            steps = matrix(c(
+              
+              # Initialisation des attributs utiles à la construction d'un spectrosome des noeuds
+                "*** Step 1/10:  Enumeration of separate observations per year... ",
+                expression(  list_obs_per_year(object)  ),
+                "\n*** Step 2/10:  Enumeration of the nodes and calculation of the number of occurrence... ",
+                expression(  list_separate_obs(object)  ),
+                "\n*** Step 3/10:  Counting the links between nodes... ",
+                expression(  count_links(object, "nodes")  ),
+                "\n*** Step 4/10:  Elaboration of links between nodes... ",
+                expression(  search_links(object, "nodes")  ),
+                
+              # Initialisation des attributs utiles à la construction d'un spectre
+                "\n*** Step 5/10:  Enumeration of separate patterns... ",
+                expression(  list_separate_patterns(object, object@target, object@count,
+                                                    object@min_length, object@max_length)  ),
+                "\n*** Step 6/10:  Linking nodes to patterns... ",
+                expression(  list_patterns_by_obs(object)  ),
+                "\n*** Step 7/10:  Characterization of patterns per year... ",
+                expression(  list_patterns_per_year(object)  ),
+                "\n*** Step 8/10:  Calculation of pattern characteristics... ",
+                expression(  compute_patterns_characteristics(object)  ),
+                
+              # Initialisation des attributs utiles à la construction d'un spectrosome des motifs
+                "\n*** Step 9/10:  Counting the links between patterns... ",
+                expression(  count_links(object, "patterns")  ),
+                "\n*** Step 10/10: Elaboration of links between patterns... ",
+                expression(  search_links(object, "patterns")  )
+                
+              ), ncol = 2, nrow = 10, byrow = TRUE)
             
-            # Initialisation des attributs utiles à la construction d'un spectrosome des noeuds
+            # Étapes à réaliser effectivement
+            steps_todo = (from <= seq(nrow(steps))) & (!DEBUG_MODE | seq(nrow(steps)) <= UP_TO_STEP)
             
-            if (from == 1) {
-              cat("*** Step 1/10:  Enumeration of separate observations per year... ")
-              display_time( list_obs_per_year(object) )
-              if (DEBUG_MODE && UP_TO_STEP == 1) { assign(object_name, object, envir = parent.frame()); return() }
+            # Réalisation
+            for (i in seq(nrow(steps))) {
+              if (steps_todo[i]) {
+                cat(steps[i, 1][[1]])
+                eval(parse(text = paste("display_time(", steps[i, 2], ")")))
+              }
             }
-            
-            if (from <= 2) {
-              cat("\n*** Step 2/10:  Enumeration of the nodes and calculation of the number of occurrence... ")
-              display_time( list_separate_obs(object) )
-              if (DEBUG_MODE && UP_TO_STEP == 2) { assign(object_name, object, envir = parent.frame()); return() }
-            }
-            
-            if (from <= 3) {
-              cat("\n*** Step 3/10:  Counting the links between nodes... ")
-              display_time( count_links(object, "nodes") )
-              if (DEBUG_MODE && UP_TO_STEP == 3) { assign(object_name, object, envir = parent.frame()); return() }
-            }
-            
-            if (from <= 4) {
-              cat("\n*** Step 4/10:  Elaboration of links between nodes... ")
-              display_time( search_links(object, "nodes") )
-              if (DEBUG_MODE && UP_TO_STEP == 4) { assign(object_name, object, envir = parent.frame()); return() }
-            }
-            
-            # Initialisation des attributs utiles à la construction d'un spectre
-            
-            if (from <= 5) {
-              cat("\n*** Step 5/10:  Enumeration of separate patterns...\n")
-              display_time( list_separate_patterns(object, object@target, object@count, object@min_length, object@max_length) )
-              if (DEBUG_MODE && UP_TO_STEP == 5) { assign(object_name, object, envir = parent.frame()); return() }
-            }
-            
-            if (from <= 6) {
-              cat("\n*** Step 6/10:  Linking nodes to patterns... ")
-              display_time( list_patterns_by_obs(object) )
-              if (DEBUG_MODE && UP_TO_STEP == 6) { assign(object_name, object, envir = parent.frame()); return() }
-            }
-            
-            if (from <= 7) {
-              cat("\n*** Step 7/10:  Characterization of patterns per year... ")
-              display_time( list_patterns_per_year(object) )
-              if (DEBUG_MODE && UP_TO_STEP == 7) { assign(object_name, object, envir = parent.frame()); return() }
-            }
-            
-            if (from <= 8) {
-              cat("\n*** Step 8/10:  Calculation of pattern characteristics... ")
-              display_time( compute_patterns_characteristics(object) )
-              if (DEBUG_MODE && UP_TO_STEP == 8) { assign(object_name, object, envir = parent.frame()); return() }
-            }
-            
-            
-            # Initialisation des attributs utiles à la construction d'un spectrosome des motifs
-            
-            if (from <= 9) {
-              cat("\n*** Step 9/10:  Counting the links between patterns... ")
-              display_time( count_links(object, "patterns") )
-              if (DEBUG_MODE && UP_TO_STEP == 9) { assign(object_name, object, envir = parent.frame()); return() }
-            }
-            
-            if (from <= 10) {
-              cat("\n*** Step 10/10: Elaboration of links between patterns... ")
-              display_time( search_links(object, "patterns") )
-            }
-            
             
             # Redéfinition de l'objet
             assign(object_name, object, envir = parent.frame())
