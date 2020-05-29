@@ -582,18 +582,15 @@ setMethod(f = "count_links",
             else if (entities == "patterns") to_link = object@patterns$pattern
             else stop("entities must be \"nodes\" or \"patterns\".")
             
-            n_intersections = matrix(nrow = length(to_link), ncol = length(to_link))
+            # Compte le nombre d'items en commun pour chaque paire d'éléments à lier
+            n_intersections = crossprod(table(stack(to_link)))
             
-            # Compte le nombre d'éléments en commun pour chaque paire d'éléments à lier
-            for(i in seq_along(to_link)) {
-              for(j in seq(i, length(to_link))) {
-                n_intersections[i, j] = length(intersect(to_link[[i]], to_link[[j]]))
-                n_intersections[j, i] = n_intersections[i, j]
-              }
-            }
-            
-            # Nommage des colonnes et lignes par les noeuds correspondants
+            # Nommage des colonnes et lignes par les itemsets correspondants
+            dimnames(n_intersections) = NULL
             colnames(n_intersections) = rownames(n_intersections) = to_link
+            
+            # Minimisation de la taille en mémoire
+            class(n_intersections) = "integer"
             
             # Définition de l'attribut et retour
             if (entities == "nodes") object@n_links = n_intersections
