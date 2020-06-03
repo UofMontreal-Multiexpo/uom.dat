@@ -628,7 +628,7 @@ setMethod(f = "search_links",
             } else stop("entities must be \"nodes\" or \"patterns\".")
             
             
-            # Recherche des identifiants des éléments liés
+            # Recherche des indices des éléments liés
             linked_indexes = which(apply(entities_links, 1,
                                          function(x) sum(x) != x[parent.frame()$i[]]))
             names(linked_indexes) = NULL
@@ -672,7 +672,7 @@ setMethod(f = "search_links",
             if (length(isolated_indexes) != 0) {
               no_links = t(sapply(isolated_indexes, entity = entities, id0 = nb_links,
                                   function(x, entity, id0) {
-                                    if (entities == "patterns") {
+                                    if (entity == "patterns") {
                                       return(c(x, x, id0 + parent.frame()$i[], "I", 0, object@patterns[parent.frame()$i[], "year"]))
                                     }
                                     return(c(x, x, id0 + parent.frame()$i[], "I", 0))
