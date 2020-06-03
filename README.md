@@ -10,6 +10,15 @@ The development of these tools is part of a research study led by **Jérôme Lav
 Main analytical approaches are *Frequent Itemset Mining*, *Association Rules*, *Clustering* and *Spectrosome*.
 
 
+## Documentation
+
+In addition to the documentation of the functions included in the **man** folder, the **vignettes** folder contains:
+
+* An example of analysis, presented in the file `spectral_analysis_example.nb.html`.
+
+* A presentation of the data structures used by the `SpectralAnalyzer` class (attributes, function parameters and function returns) in the  file `Attribute_and_method_types.pdf`.
+
+
 ## Authors
 
 * [**Gauthier Magnin**](https://fr.linkedin.com/in/gauthier-magnin) - R programmer analyst.
