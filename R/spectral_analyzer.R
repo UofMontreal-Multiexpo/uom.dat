@@ -843,7 +843,7 @@ setMethod(f = "list_patterns_per_year",
             # Initialisation de la matrice des poids des motifs par année
             ppy = matrix(data = 0, nrow = length(object@patterns$pattern),
                                    ncol = length(unique(object@nodes_per_year$year)))
-            colnames(ppy) = rev(unique(object@nodes_per_year$year))
+            colnames(ppy) = sort(unique(object@nodes_per_year$year))
             
             # Rangement des poids dans la matrice
             for (i in seq_along(weights)) {
