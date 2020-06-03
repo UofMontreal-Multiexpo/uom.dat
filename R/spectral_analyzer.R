@@ -648,7 +648,7 @@ setMethod(f = "search_links",
                 if (entities_links[i, j] != 0) {
                   # Nouveau lien identifié
                   link_counter = link_counter + 1
-                  intersection = intersect(to_link[[i]], to_link[[j]])
+                  intersection = to_link[[j]][to_link[[j]] %in% to_link[[i]]]
                   
                   # Élément i, élément j, numéro de lien, items en communs, nb items en communs (, année d'apparition du lien)
                   if (entities == "patterns") {
