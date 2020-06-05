@@ -74,7 +74,8 @@ observations1 = turn_interventions_into_observations(db, additional)
 
 # Print the number of observations
 cat(length(observations1), "observations.\n")
-
+```
+```{r}
 # Print one observation to see what it looks like
 observations1[2]
 ```
@@ -85,7 +86,8 @@ observations2 = make_observations(db, 2, workplace_situations, additional = addi
 
 # Print the number of observations
 cat(length(observations2), "observations.\n")
-
+```
+```{r}
 # Print one observation
 observations2[2]
 ```
@@ -96,7 +98,8 @@ observations3 = make_observations(db, 3, variable_names = variable_names, additi
 
 # Print the number of observations
 cat(length(observations3), "observations.\n")
-
+```
+```{r}
 # Print one observation
 observations3[2]
 ```
@@ -107,7 +110,8 @@ observations4 = make_observations(db, 1, workplace_situations, variable_names, a
 
 # Print the number of observations
 cat(length(observations4), "observations.\n")
-
+```
+```{r}
 # Print one observation
 observations4[2]
 ```
@@ -140,13 +144,16 @@ families[is.na(families)] = "Unknown"
 
 # Print the number of separate substances
 cat(length(agents), "substances.\n")
-
+```
+```{r}
 # Print ID of all substances found in the observations
 agents
-
+```
+```{r}
 # Print the number of separate families
 cat(length(unique(families)), "families.\n")
-
+```
+```{r}
 # Print name of all families of substances found in the observations
 unique(families)
 ```
@@ -167,7 +174,7 @@ Add other variables to the data frame to associate additional categories.
 
 ### 1.3.2. Instanciation of the object in charge of the analysis
 
-Use of the default values (see *spectral_analyser.R* file, *spectral.analyzer()* function)...
+Use of the default values (see the documentation for function *spectral.analyzer()* or the function itself in file *spectral_analyser.R*)...
 ```{r}
 sa_object = spectral.analyzer(observations, items = categories)
 ```
@@ -652,8 +659,12 @@ Families associated with specific set of substances
 ```{r}
 # Categories of two substances: for example 497 and 3146
 categories[categories$item %in% c(497, 3146), ]
+```
+```{r}
 # Categories of the substances of one specific pattern from the whole set of patterns
 categories[categories$item %in% sa_object["patterns"]$pattern[[2]], ]
+```
+```{r}
 # Or from one specific pattern from a spectrosome resulting from a previous filter
 categories[categories$item %in% spectrosome[["vertices"]]$pattern[[1]], ]
 ```

@@ -49,7 +49,7 @@ setClass(Class = "SpectralAnalyzer",
            max_length = "numeric",
            status_limit = "numeric",
            
-           nodes_per_year = "data.frame",
+           nodes_per_year = "matrix",
            nodes = "data.frame",
            n_links = "matrix",
            nodes_links = "data.frame",
@@ -458,7 +458,7 @@ setGeneric(name = "extract_nodes_from_category", def = function(object, category
 #' Identifie les observations distinctes par année et calcule le nombre de recrutement
 #' de chacune de ces observations.
 #' 
-#' La data.frame résultante est associée à l'attribut \code{nodes_per_year}.
+#' La matrice résultante est associée à l'attribut \code{nodes_per_year}.
 #' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @return Data.frame des observations distinctes, par année, et de leurs caractéristiques (longueur et poids).
@@ -471,11 +471,11 @@ setMethod(f = "list_obs_per_year",
             object_name = deparse(substitute(object))
             
             
-            # Conversion de la liste d'observations en une data.frame (et tri des éléments de chaque observation)
+            # Conversion de la liste d'observations en une data.frame (et tri des items de chaque observation)
             obs_df = data.frame(year = sapply(object@observations, "[[", "YEAR"))
             obs_df$node = sapply(sapply(object@observations, "[[", "CODE"), sort)
             
-            # Concaténation des identifiants des éléments (nécessaire pour la fonction "table")
+            # Concaténation des identifiants des items (nécessaire pour la fonction "table")
             obs_df$node = sapply(obs_df$node, paste0, collapse = "/")
             
             # Calcul de la distribution des ensembles distincts d'items par année
@@ -486,31 +486,29 @@ setMethod(f = "list_obs_per_year",
             nodes_df$year = as.numeric(nodes_df$year)
             nodes_df$node = sapply(nodes_df$node, strsplit, split = "/")
             
-            # Calcul de la longueur de chaque noeud
-            nodes_df$length = sapply(nodes_df$node, length)
-            
             # Renommage des colonnes, changement de leur ordre et tri par longueur, poids et année
-            colnames(nodes_df) = c("year", "node", "weight", "length")
-            nodes_df = nodes_df[, c("node", "year", "weight", "length")]
-            nodes_df = nodes_df[order(nodes_df$length, nodes_df$weight, nodes_df$year, decreasing = TRUE), ]
+            colnames(nodes_df) = c("year", "node", "weight")
+            nodes_df = nodes_df[, c("node", "year", "weight")]
+            nodes_df = nodes_df[order(sapply(nodes_df$node, length),
+                                      nodes_df$weight,
+                                      nodes_df$year, decreasing = TRUE), ]
             
-            
-            # Reconcaténation des identifiants des éléments (pour rendre le dernier tri plus rapide)
+            # Reconcaténation des identifiants des éléments (pour rendre la transformation qui suit plus rapide)
             nodes_df$node = sapply(nodes_df$node, paste0, collapse = "/")
+            nodes_order = unique(nodes_df$node)
             
-            # Regroupement des noeuds dont les éléments sont identiques
-            subset_list = lapply(unique(nodes_df$node), lists = nodes_df, function(searched_list, lists) {
-              subset(lists, node == searched_list)
-            })
-            nodes_df = do.call("rbind", subset_list)
+            # Transformation de la data.frame en une matrice des poids
+            nodes_mat = with(nodes_df, tapply(weight, list(node, year), sum))
+            nodes_mat[is.na(nodes_mat)] = 0
             
-            # Redécomposition des éléments composant chaque noeud
-            nodes_df$node = unname(sapply(nodes_df$node, strsplit, split = "/"))
+            # Réapplication de l'ordre précédemment calculé et redécomposition des éléments des noeuds
+            nodes_mat = nodes_mat[nodes_order, ]
+            rownames(nodes_mat) = sapply(rownames(nodes_mat), strsplit, split = "/")
             
             # Définition de l'attribut et retour
-            object@nodes_per_year = nodes_df
+            object@nodes_per_year = nodes_mat
             assign(object_name, object, envir = parent.frame())
-            return(invisible(nodes_df))
+            return(invisible(nodes_mat))
           })
 
 
@@ -529,26 +527,26 @@ setMethod(f = "list_separate_obs",
             # Nom de l'objet pour modification interne dans l'environnement parent
             object_name = deparse(substitute(object))
             
-            # Noeuds par année et caractéristiques
+            # Poids des noeuds par année
             nodes_per_year = object@nodes_per_year
             
-            
-            # Concaténation des identifiants des éléments pour faciliter la comparaison des observations
-            pasted_nodes = sapply(nodes_per_year$node, paste0, collapse = "/")
-            
             # Calcul du poids total pour chaque noeud (= chaque observation distincte)
-            nodes_df = aggregate(nodes_per_year$weight,
-                                 by = list(pasted_nodes),
-                                 FUN = sum)
+            nodes_df = data.frame("weight" = unname(rowSums(nodes_per_year)))
+            nodes_df$node = lapply(strsplit(rownames(nodes_per_year), 'c\\("|", "|")'),
+                                   function(node) {
+                                     if(length(node) > 1) { return(node[-1]) }
+                                     return(node)
+                                   })
             
-            # Renommage des colonnes et redécomposition des éléments de chaque noeud
-            colnames(nodes_df) = c("node", "weight")
-            nodes_df$node = sapply(nodes_df$node, strsplit, split = "/")
-            
-            # Recalcul de la longueur de chaque noeud et tri par longueur puis par poids
+            # Calcul de la longueur de chaque noeud et réordonnement des colonnes
             nodes_df$length = sapply(nodes_df$node, length)
             nodes_df = nodes_df[, c("node", "length", "weight")]
-            nodes_df = nodes_df[order(nodes_df$length, nodes_df$weight, decreasing = TRUE),]
+            
+            # Tri par longueur et poids décroissants puis par ordre alphanumérique croissant
+            nodes_df = nodes_df[order(nodes_df$length,
+                                      nodes_df$weight,
+                                      order(order(sapply(nodes_df$node, paste0, collapse = "/"), decreasing = TRUE)),
+                                      decreasing = TRUE), ]
             rownames(nodes_df) = NULL
             
             # Définition de l'attribut et retour
@@ -583,6 +581,7 @@ setMethod(f = "count_links",
             else stop("entities must be \"nodes\" or \"patterns\".")
             
             # Compte le nombre d'items en commun pour chaque paire d'éléments à lier
+            names(to_link) = sapply(to_link, paste0, collapse = "/")
             n_intersections = crossprod(table(stack(to_link)))
             
             # Nommage des colonnes et lignes par les itemsets correspondants
@@ -830,27 +829,23 @@ setMethod(f = "list_patterns_per_year",
             # Nom de l'objet pour modification interne dans l'environnement parent
             object_name = deparse(substitute(object))
             
+            # Poids des noeuds par année
+            nodes_per_year = object@nodes_per_year
             
-            weights = tapply(seq_along(object@patterns$pattern), seq_along(object@patterns$pattern), function(p) {
+            # Calcul des poids par année pour chaque motif
+            weights = lapply(seq_along(object@patterns$pattern), function(p) {
               # Sélection des noeuds associées au motif
               nodes_names = object@obs_patterns[, p]
-              nodes = subset(object@nodes_per_year,
-                             as.character(object@nodes_per_year$node) %in% names(nodes_names[nodes_names == TRUE]))
+              nodes = nodes_per_year[rownames(nodes_per_year) %in% names(nodes_names[nodes_names]), ]
+              
               # Somme des poids selon l'année
-              aggregate(nodes$weight, by = list(nodes$year), sum)
+              if (is.matrix(nodes)) { return(colSums(nodes)) }
+              return(nodes)
             })
             
-            # Initialisation de la matrice des poids des motifs par année
-            ppy = matrix(data = 0, nrow = length(object@patterns$pattern),
-                                   ncol = length(unique(object@nodes_per_year$year)))
-            colnames(ppy) = sort(unique(object@nodes_per_year$year))
-            
-            # Rangement des poids dans la matrice
-            for (i in seq_along(weights)) {
-              ppy[i, as.character(weights[[i]][, 1])] = weights[[i]][, 2]
-            }
+            # Matrice des poids des motifs par année
+            ppy = do.call(rbind, weights)
             rownames(ppy) = object@patterns$pattern
-            
             
             # Définition de l'attribut et retour
             object@patterns_per_year = ppy
@@ -985,8 +980,8 @@ setMethod(f = "compute_reporting_indexes",
             period = params$period
             
             # Années maximale et minimale
-            max_year = max(object@nodes_per_year$year)
-            min_year = min(object@nodes_per_year$year)
+            max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
+            min_year = as.numeric(colnames(object@nodes_per_year)[1])
             
             # Liste des motifs et ensembles des motifs par année
             ppy = object@patterns_per_year
@@ -1048,8 +1043,8 @@ setMethod(f = "check_params_for_RI",
           definition = function(object, t, period) {
             
             # Années maximale et minimale
-            max_year = max(object@nodes_per_year$year)
-            min_year = min(object@nodes_per_year$year)
+            max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
+            min_year = as.numeric(colnames(object@nodes_per_year)[1])
             
             # Validation du premier paramètre
             if (is.null(t) || t > max_year) {
