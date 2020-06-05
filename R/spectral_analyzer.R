@@ -475,35 +475,23 @@ setMethod(f = "list_obs_per_year",
             obs_df = data.frame(year = sapply(object@observations, "[[", "YEAR"))
             obs_df$node = sapply(sapply(object@observations, "[[", "CODE"), sort)
             
-            # Concaténation des identifiants des items (nécessaire pour la fonction "table")
+            # Concaténation des identifiants des items (nécessaire pour la fonction "table" et un tri plus rapide)
             obs_df$node = sapply(obs_df$node, paste0, collapse = "/")
             
-            # Calcul de la distribution des ensembles distincts d'items par année
+            # Calcul de la distribution des ensembles distincts d'items par année et conversion en matrice
             nodes_df = as.data.frame(table(obs_df), stringsAsFactors = FALSE)
-            nodes_df = subset(nodes_df, Freq != 0)
+            nodes_mat = with(nodes_df, tapply(Freq, list(node, year), sum))
             
-            # Rétablissement des types et redécomposition des éléments composant chaque noeud (nécessaire pour calculer "length")
-            nodes_df$year = as.numeric(nodes_df$year)
-            nodes_df$node = sapply(nodes_df$node, strsplit, split = "/")
+            # Redécomposition des items composant chaque noeud pour pouvoir calculer leur longueur
+            nodes = strsplit(rownames(nodes_mat), split = "/")
             
-            # Renommage des colonnes, changement de leur ordre et tri par longueur, poids et année
-            colnames(nodes_df) = c("year", "node", "weight")
-            nodes_df = nodes_df[, c("node", "year", "weight")]
-            nodes_df = nodes_df[order(sapply(nodes_df$node, length),
-                                      nodes_df$weight,
-                                      nodes_df$year, decreasing = TRUE), ]
-            
-            # Reconcaténation des identifiants des éléments (pour rendre la transformation qui suit plus rapide)
-            nodes_df$node = sapply(nodes_df$node, paste0, collapse = "/")
-            nodes_order = unique(nodes_df$node)
-            
-            # Transformation de la data.frame en une matrice des poids
-            nodes_mat = with(nodes_df, tapply(weight, list(node, year), sum))
-            nodes_mat[is.na(nodes_mat)] = 0
-            
-            # Réapplication de l'ordre précédemment calculé et redécomposition des éléments des noeuds
-            nodes_mat = nodes_mat[nodes_order, ]
-            rownames(nodes_mat) = sapply(rownames(nodes_mat), strsplit, split = "/")
+            # Tri par longueur et poids total décroissants puis par ordre alphanumérique
+            the_order = order(sapply(nodes, length),
+                              rowSums(nodes_mat),
+                              order(order(rownames(nodes_mat), decreasing = TRUE)),
+                              decreasing = TRUE)
+            nodes_mat = nodes_mat[the_order, ]
+            rownames(nodes_mat) = nodes[the_order]
             
             # Définition de l'attribut et retour
             object@nodes_per_year = nodes_mat
@@ -542,7 +530,7 @@ setMethod(f = "list_separate_obs",
             nodes_df$length = sapply(nodes_df$node, length)
             nodes_df = nodes_df[, c("node", "length", "weight")]
             
-            # Tri par longueur et poids décroissants puis par ordre alphanumérique croissant
+            # Tri par longueur et poids décroissants puis par ordre alphanumérique
             nodes_df = nodes_df[order(nodes_df$length,
                                       nodes_df$weight,
                                       order(order(sapply(nodes_df$node, paste0, collapse = "/"), decreasing = TRUE)),
