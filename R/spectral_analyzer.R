@@ -777,27 +777,21 @@ setMethod(f = "list_patterns_by_obs",
             object_name = deparse(substitute(object))
             
             
-            associations = tapply(seq_along(object@patterns$pattern), seq_along(object@patterns$pattern),
-                                  # Pour chaque motif
-                                  function(p) {
-                                    tapply(seq_along(object@nodes$node), seq_along(object@nodes$node), p = p,
-                                           # Pour chaque noeud
-                                           function(n, p) {
-                                             pattern = object@patterns$pattern[[p]]
-                                             obs = object@nodes$node[[n]]
-                                             
-                                             # Vrai si le motif est inclus dans le noeud
-                                             return(all(pattern %in% obs))
+            # Pour chaque motif et chaque noeud, recherche si le motif est inclus dans le noeud
+            associations = sapply(object@patterns$pattern,
+                                  function(pattern) {
+                                    sapply(object@nodes$node, pattern = pattern,
+                                           function(node, pattern) {
+                                             return(all(pattern %in% node))
                                            })
                                   })
             
-            # Conversion des listes en une matrice
-            object@obs_patterns = do.call("cbind", associations)
-            rownames(object@obs_patterns) = object@nodes$node
-            colnames(object@obs_patterns) = object@patterns$pattern
-            
+            # Renommage des lignes et colonnes
+            rownames(associations) = object@nodes$node
+            colnames(associations) = object@patterns$pattern
             
             # Définition de l'attribut et retour
+            object@obs_patterns = associations
             assign(object_name, object, envir = parent.frame())
             return(invisible(object@obs_patterns))
           })
