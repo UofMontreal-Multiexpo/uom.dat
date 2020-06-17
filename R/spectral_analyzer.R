@@ -1688,21 +1688,6 @@ setMethod(f = "cluster_text",
           signature = "SpectralAnalyzer",
           definition = function(object, graph, links){
             
-            # Fonction d'ombrage de texte
-            shadowtext <- function(x, y = NULL, labels, col="black", bg="white",
-                                   theta = seq(pi/4, 2*pi, length.out = 16), r = 0.3, ... ) {
-              
-              xy <- xy.coords(x,y)
-              xo <- r * strwidth('A')
-              yo <- r * strheight('A')
-              
-              for (i in theta) {
-                text( xy$x + cos(i)*xo, xy$y + sin(i)*yo, labels, col = bg, ... )
-              }
-              text(xy$x, xy$y, labels, col = col, ... )
-              
-            }
-            
             # Calcul des coordonnées des milieux des liaisons
             coordS = graph[links[, 1], 1:2] # Coordonnées des 'sources'
             coordT = graph[links[, 2], 1:2] # Coordonnées des 'targets'
@@ -1738,7 +1723,8 @@ setMethod(f = "cluster_text",
             #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'élément.
             
             # Affichage des noms des "clusters" retenus
-            shadowtext(coordX[, 2], coordY[, 2], clusters, col = "black", font = ifelse(clusters %in% clusters[1:5], 2, 1), cex = 0.9)
+            shadowtext(coordX[, 2], coordY[, 2], clusters,
+                       col = "black", bg = "white", font = ifelse(clusters %in% clusters[1:5], 2, 1), cex = 0.9)
           })
 
 

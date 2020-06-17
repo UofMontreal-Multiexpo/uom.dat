@@ -46,3 +46,32 @@ display_time = function(expr) {
 cap = function(s) {
   return(paste0(toupper(substring(s, 1, 1)), substring(s, 2)))
 }
+
+
+#' Ombrage de texte
+#' 
+#' Affiche du texte en y ajoutant un contour d'une autre couleur.
+#' Le contour est créé en affichant d'abord le texte avec la seconde couleur plusieurs fois
+#'  et avec de légers décalages.
+#' 
+#' @param x,y Coordonnées du texte à afficher.
+#' @param labels Texte à afficher.
+#' @param col Couleur du texte.
+#' @param bg Couleur du contour.
+#' @param theta Angles à utiliser pour créer le contour.
+#' @param r Taille du contour.
+shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
+                       theta = seq(pi/4, 2*pi, length.out = 16), r = 0.3, ...) {
+  
+  xy = xy.coords(x,y)
+  xo = r * strwidth('A')
+  yo = r * strheight('A')
+  
+  # Draw background text with small shift in x and y in background colour
+  for (i in theta) {
+    text(xy$x + cos(i)*xo, xy$y + sin(i)*yo, labels, col = bg, ...)
+  }
+  # Draw actual text in exact xy position in foreground colour
+  text(xy$x, xy$y, labels, col = col, ...)
+}
+
