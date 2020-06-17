@@ -1903,9 +1903,9 @@ setMethod(f = "create_tree_chart",
                  xaxt = "n", yaxt = "n", bty = "n",
                  xaxs = "i", yaxs = "i")
             
-            # Espace à gauche pour affichage des items et du titre "Length"
+            # Espace à gauche pour affichage des items et du titre "Order"
             # et à droite pour afficher la dernière taille de motif s'il n'y a qu'un seul motif de cette taille
-            text_area = max(strwidth(as.character(items_category$item)), strwidth("Length")) + 1
+            text_area = max(strwidth(as.character(items_category$item)), strwidth("Order")) + 1
             data_area = nrow(patterns_characteristics) + length(unique(patterns_characteristics$order)) + strwidth(1)
             
             # Option "new" pour ne pas générer une page blanche à cause du premier plot
@@ -1930,7 +1930,7 @@ setMethod(f = "create_tree_chart",
             
             # Titre taille des motifs
             text(0, nrow(items_category) + 1.5,
-                 "Length", col = "black", cex = 1.05, adj = c(1, 0.5))
+                 "Order", col = "black", cex = 1.05, adj = c(1, 0.5))
             
             
             # Effectifs cumulés des tailles des motifs
@@ -1958,7 +1958,7 @@ setMethod(f = "create_tree_chart",
                 text(x = (m - 1 + which(names(order_cumfreq) == as.character(order_nb)) - 1) +
                            (order_cumfreq[as.character(order_nb)] - m + 1 + 1) / 2,
                      y = nrow(items_category) + 1.5,
-                     order_nb, col = "black", cex = 1.05)
+                     as.roman(order_nb), col = "black", cex = 1.05)
               }
               
               # Ordonnées (y) des items du motif (m)
