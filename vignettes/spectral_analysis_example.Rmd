@@ -378,6 +378,33 @@ spectrosome[["edges"]]
 ```
 
 
+### 3.1.3. Multi-association tree
+
+Creation of the multi-association tree...
+```{r}
+tree = tree_chart(sa_object, sa_object["patterns"], "ID",
+                  cutoff = 17,
+                  path = directory,
+                  name = "multi-association_tree.pdf",
+                  title = "Multi-association tree")
+```
+![Fig. 6 : Multi-association tree.](./img/multi-association_tree.png)
+**Note that too many values for the displayed category or too long names prevent the legend from being displayed correcly, hence the use of the cutoff parameter to reduce the size of these values.**
+
+Saving pattern characteristics in a CSV file...
+```{r}
+save_characteristics(sa_object, "patterns",
+                     tree,
+                     file = paste0(directory, "multi-association_tree.csv"),
+                     row.names = FALSE)
+
+tree
+```
+![](./img/multi-association_tree_patterns.png)
+
+See that only patterns with an order value greater than 1 are plotted on this kind of chart.
+
+
 
 ## 3.2. Extraction of a cluster of patterns
 
@@ -391,7 +418,7 @@ cluster = cluster_chart(sa_object, "patterns", item,
 ```
 **Note that no graphic is created and *cluster* is *NULL* if none or only one pattern contains the desired substance (which is here the substance having the code *3146*).**
 
-![Fig. 6: Pattern cluster of 3146.](./output/spec_patterns/pattern_cluster_of_3146.png)
+![Fig. 7: Pattern cluster of 3146.](./output/spec_patterns/pattern_cluster_of_3146.png)
 
 Saving vertex characteristics in CSV format...
 ```{r}
@@ -446,7 +473,7 @@ spectrum = spectrum_chart(sa_object, patterns,
                          name = paste0("spectrum_of_patterns-w", min_weight, ".pdf"),
                          title = paste("Spectrum with weight filter"))
 ```
-![Fig. 7: Spectrum of patterns with weigh filter.](./img/spectrum_of_patterns_w3.png)
+![Fig. 8: Spectrum of patterns with weigh filter.](./img/spectrum_of_patterns_w3.png)
 
 Associated spectrosome...
 ```{r}
@@ -455,7 +482,7 @@ spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
                                 name = paste0("spectrosome_of_patterns-w", min_weight, ".png"),
                                 title = "Spectrosome with weight filter")
 ```
-![Fig. 8: Spectrosome of the patterns with weight filter.](./output/spec_filter/spectrosome_of_patterns-w3.png)
+![Fig. 9: Spectrosome of the patterns with weight filter.](./output/spec_filter/spectrosome_of_patterns-w3.png)
 
 
 ## 4.2. Example of pattern status filter
@@ -480,7 +507,7 @@ spectrum = spectrum_chart(sa_object, patterns,
                          name = paste0("spectrum_of_patterns-", value, ".pdf"),
                          title = paste("Spectrum with status filter"))
 ```
-![Fig. 9: Spectrum of patterns with stauts filter.](./img/spectrum_of_patterns_persistent.png)
+![Fig. 10: Spectrum of patterns with stauts filter.](./img/spectrum_of_patterns_persistent.png)
 
 Associated spectrosome...
 ```{r}
@@ -489,7 +516,7 @@ spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
                                 name = paste0("spectrosome_of_patterns-", value, ".png"),
                                 title = "Spectrosome with status filter")
 ```
-![Fig. 10: Spectrosome of the patterns with status filter.](./output/spec_filter/spectrosome_of_patterns-Persistent.png)
+![Fig. 11: Spectrosome of the patterns with status filter.](./output/spec_filter/spectrosome_of_patterns-Persistent.png)
 
 
 
@@ -525,7 +552,7 @@ spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
                                 name = paste0(name, ".png"),
                                 title = "Spectrosome of category Chrome")
 ```
-![Fig. 11: Spectrosome of the patterns containing at least one substance related to the family named "Chrome".](./output/spec_family/spectrosome_of_patterns-Chrome-vertices.png)
+![Fig. 12: Spectrosome of the patterns containing at least one substance related to the family named "Chrome".](./output/spec_family/spectrosome_of_patterns-Chrome-vertices.png)
 
 Saving vertex characteristics in a CSV file...
 ```{r}
@@ -577,7 +604,7 @@ spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
                                 name = paste0(name, ".png"),
                                 title = paste("Spectrosome of category Chrome"))
 ```
-![Fig. 12: Spectrosome of the patterns generating at least one link related to the family named "Chrome".](./output/spec_family/spectrosome_of_patterns-Chrome-edges.png)
+![Fig. 13: Spectrosome of the patterns generating at least one link related to the family named "Chrome".](./output/spec_family/spectrosome_of_patterns-Chrome-edges.png)
 
 
 

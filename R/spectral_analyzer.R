@@ -365,6 +365,7 @@ setGeneric(name = "count_links", def = function(object, entities){ standardGener
 setGeneric(name = "search_links", def = function(object, entities){ standardGeneric("search_links") })
 # lockBinding("search_links", .GlobalEnv)
 
+
 # Méthodes de calculs utiles à la construction des motifs
 
 setGeneric(name = "list_separate_patterns", def = function(object, target, count = 1, min_length = 1, max_length = Inf){ standardGeneric("list_separate_patterns") })
@@ -400,6 +401,7 @@ setGeneric(name = "compute_ri_threshold", def = function(object, reporting_index
 setGeneric(name = "define_dynamic_status", def = function(object, patterns, status_limit, t = NULL, period = Inf){ standardGeneric("define_dynamic_status") })
 # lockBinding("define_dynamic_status", .GlobalEnv)
 
+
 # Méthodes de création de graphiques de type spectre
 
 setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns"){ standardGeneric("spectrum_chart") })
@@ -411,6 +413,7 @@ setGeneric(name = "create_spectrum_chart", def = function(object, patterns_chara
 setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object, patterns){ standardGeneric("compute_pattern_distribution_in_nodes") })
 # lockBinding("compute_pattern_distribution_in_nodes", .GlobalEnv)
 
+
 # Méthodes de création de graphiques de type spectrosome
 
 setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities)){ standardGeneric("spectrosome_chart") })
@@ -421,6 +424,14 @@ setGeneric(name = "cluster_text", def = function(object, graph, links){ standard
 
 setGeneric(name = "cluster_chart", def = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)){ standardGeneric("cluster_chart") })
 # lockBinding("cluster_chart", .GlobalEnv)
+
+
+# Méthodes de création de graphiques de type arbre de la multi-association
+
+setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, display_text = NULL, cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
+
+setGeneric(name = "create_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, cutoff = NULL, display_text = NULL, title = "Multi-association tree"){ standardGeneric("create_tree_chart") })
+
 
 # Méthodes de recherche et d'enregistrement
 
@@ -1775,6 +1786,234 @@ setMethod(f = "cluster_chart",
                              " (", nrow(nop), " ", substr(entities, 1, nchar(entities) - 1), ")."))
               return(NULL)
             }
+          })
+
+
+
+#### Méthodes de création de graphiques de type arbre de la multi-association ####
+
+#' Construit un graphique de type arbre de la multi-association et l'enregistre dans un fichier au
+#' format PDF.
+#' 
+#' @details Si des catégories sont associées aux items, chaque catégorie génère un arbre.
+#'  Le nom de la catégorie est ajouté à la fin du nom du fichier.
+#' Les motifs d'ordre 1 ne sont pas dessinés. Seuls les items inclus dans les motifs d'ordre supérieur
+#'  le sont.
+#' Les motifs sont triés selon leurs poids.
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
+#' @param patterns_characteristics Ensemble des caractéristiques des motifs dont l'arbre est à tracer.
+#' @param display_text Texte à afficher sur le graphique à côté des motifs.
+#'  Choix entre les identifiants \code{"ID"} des motifs ou l'une des caractéristiques (\code{"weight"},
+#'  \code{"frequency"}, \code{"specificity"}, \code{"year"}, \code{"status"}).
+#'  Par défaut (valeur \code{NULL}), aucun texte n'est affiché.
+#' @param cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
+#' @param path Chemin du dossier dans lequel enregistrer le graphique.
+#'  Par défaut, le graphique est enregistré dans le répertoire de travail.
+#' @param name Nom (avec extension) du fichier dans lequel enregistrer le graphique.
+#' @param title Titre du graphique.
+#' @return Data.frame des motifs représentées sur le graphique, associés à leurs caractéristiques et
+#'  identifiants visibles sur le graphique si \code{display_text = "ID"}.
+#' 
+#' @author Delphine Bosson-Rieutort
+#' @author Gauthier Magnin
+#' @export
+setMethod(f = "tree_chart",
+          signature = "SpectralAnalyzer",
+          definition = function(object, patterns_characteristics, display_text = NULL, cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
+            
+            if (substring(path, nchar(path)) != "/") path = paste0(path, "/")
+            
+            # Motifs d'ordre > 1, triés par taille croissant, puis par poids décroissant
+            pat_charac = patterns_characteristics[patterns_characteristics$order != 1, ]
+            pat_charac = pat_charac[order(pat_charac$order,
+                                          max(pat_charac$weight) - pat_charac$weight), ]
+            pat_charac$ID = seq(nrow(pat_charac))
+            
+            # Ensemble des items distincts parmi les motifs, associés d'une catégorie
+            items_cat = data.frame(item = unique(unlist(pat_charac$pattern)))
+            
+            # Une variante du graphique par catégorie
+            nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
+            
+            for (c in seq(nb_categories)) {
+              
+              # S'il n'y a pas de catégorie
+              if (length(object@items_categories) == 0) {
+                # Tri des items alphanumériquement
+                items_cat$category = NA
+                items_cat = items_cat[order(items_cat$item), ]
+                category = NULL
+              } else {
+                # Tri des items selon une catégorie
+                items_cat$category = object@items_categories[as.character(items_cat$item), c]
+                items_cat = items_cat[order(items_cat$category), ]
+                category = colnames(object@items_categories)[c]
+              }
+              rownames(items_cat) = NULL
+              
+              # Nom du graphique en fonction de la catégorie
+              file_name = ifelse(nb_categories == 1,
+                                 name,
+                                 sub(".pdf", paste0("-", category, ".pdf"), name))
+              
+              # Traçage du graphique dans un fichier PDF
+              pdf(paste0(path, file_name), 14, 10, paper = "a4r", pointsize = 11)
+              create_tree_chart(object, pat_charac, items_cat, category, cutoff, display_text, title)
+              dev.off()
+            }
+            
+            # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
+            return(pat_charac[, c(ncol(pat_charac), seq(ncol(pat_charac)-1))])
+          })
+
+#' Dessine un grahpique de type arbre de la multi-association.
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
+#' @param patterns_characteristics Ensemble des caractéristiques des motifs dont l'arbre est à tracer.
+#' @param items_category Data.frame des items et d'une catégorie associée.
+#' @param category Nom de la catégorie à représenter sur l'arbre.
+#' @param cutoff Nombre limite de caractères à afficher dans la légende concernant la catégorie représentée.
+#' @param display_text Texte à afficher sur le graphique à côté des motifs.
+#'  Choix entre les identifiants \code{"ID"} des motifs ou l'une des caractéristiques (\code{"weight"},
+#'  \code{"frequency"}, \code{"specificity"}, \code{"year"}, \code{"status"}).
+#'  Par défaut (valeur \code{NULL}), aucun texte n'est affiché.
+#' @param title Titre du graphique.
+#' 
+#' @author Delphine Bosson-Rieutort
+#' @author Gauthier Magnin
+setMethod(f = "create_tree_chart",
+          signature = "SpectralAnalyzer",
+          definition = function(object, patterns_characteristics, items_category, category = NULL, cutoff = NULL, display_text = NULL, title = "Multi-association tree") {
+            
+            # Définition des marges
+            par(mar = c(3, 2.1, 1.1, 2.1))
+            
+            # Préparation de la position des items sur le graphique (x = 0 ; y = ordre décroissant)
+            items_category$x = 0
+            items_category$y = rev(seq(nrow(items_category)))
+            
+            # Initialisation de la zone graphique
+            plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
+                       data.frame(x = rep(0, 3), y = seq(3) + nrow(items_category))), # + 3 pour placer du texte
+                 xlim = c(-max(nchar(as.character(items_category$item))) - 1,
+                          nrow(patterns_characteristics) + length(unique(patterns_characteristics$order))),
+                 ylim = c(0, nrow(items_category) + 3),
+                 col = "white", pch = 20,
+                 xaxt = "n", yaxt = "n", bty = "n",
+                 xaxs = "i", yaxs = "i")
+            
+            # Espace à gauche pour affichage des items et du titre "Length"
+            # et à droite pour afficher la dernière taille de motif s'il n'y a qu'un seul motif de cette taille
+            text_area = max(strwidth(as.character(items_category$item)), strwidth("Length")) + 1
+            data_area = nrow(patterns_characteristics) + length(unique(patterns_characteristics$order)) + strwidth(1)
+            
+            # Option "new" pour ne pas générer une page blanche à cause du premier plot
+            par(new = TRUE)
+            
+            # Réinitialisation de la zone graphique en considérant la taille d'un caractère (strwidth, dépend du graphique)
+            plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
+                       data.frame(x = rep(0, 3), y = seq(3) + nrow(items_category))), # + 3 pour placer du texte
+                 xlim = c(-text_area, data_area),
+                 ylim = c(-strwidth(1, cex = 0.5), # Taille d'un caractère pour affichage d'une caractéristique
+                          nrow(items_category) + 3),
+                 col = "white", pch = 20,
+                 xaxt = "n", yaxt = "n", bty = "n",
+                 xaxs = "i", yaxs = "i")
+            title(main = title, line = 0.35, cex.main = 1.3)
+            
+            # Traçage des lignes horizontales
+            for (y_i in items_category$y) {
+              segments(x0 = 0, x1 = data_area - strwidth(1), y0 = y_i,
+                       lwd = 0.02, lty = 3, col = "gray85")
+            }
+            
+            # Titre taille des motifs
+            text(0, nrow(items_category) + 1.5,
+                 "Length", col = "black", cex = 1.05, adj = c(1, 0.5))
+            
+            
+            # Effectifs cumulés des tailles des motifs
+            order_cumfreq = cumsum(table(patterns_characteristics$order))
+            
+            # Préparation des couleurs des lignes séparatrices
+            vcolor = c("white", rep("black", length(order_cumfreq)-1))
+            names(vcolor) = names(order_cumfreq)
+            width = -1
+            
+            # Pour chaque motif à dessiner
+            for (m in 1:nrow(patterns_characteristics)) {
+              
+              # Nouvelle taille de motifs
+              if (m %in% (1 + c(0, order_cumfreq))) {
+                order_nb = patterns_characteristics$order[m]
+                width = width + 1
+                
+                # Séparation verticale et affichage de la taille des prochains motifs
+                abline(v = width,
+                       col = vcolor[as.character(order_nb)], lwd = 0.5, lty = "dotted")
+                # Positionnement en X : (nombres de motifs et de lignes déjà placés - la première placée à 0)
+                #                       + (nombre de motifs de la même taille
+                #                          + 1 espace entre dernier motif et prochaine ligne) / 2
+                text(x = (m - 1 + which(names(order_cumfreq) == as.character(order_nb)) - 1) +
+                           (order_cumfreq[as.character(order_nb)] - m + 1 + 1) / 2,
+                     y = nrow(items_category) + 1.5,
+                     order_nb, col = "black", cex = 1.05)
+              }
+              
+              # Ordonnées (y) des items du motif (m)
+              y_m = sort(items_category[match(patterns_characteristics[m, "pattern"][[1]], items_category$item), "y"])
+              
+              # Segment vertical entre les premier et dernier items du motif
+              lines(c(width + 1, width + 1),
+                    c(y_m[1], y_m[length(y_m)]),
+                    lwd = 1.2, lty = 1, col = "black")
+              
+              # Traçage de segments horizontaux pour les items du motif
+              for (y in y_m) {
+                lines(c(width + 0.5, width + 1), c(y, y),
+                      lwd = 1.2, lty = 1, col = "black", pch = 20, cex = 0.8)
+              }
+              
+              # Affichage de l'identifiant ou de l'une des caractéristiques du motif
+              if (!is.null(display_text)) {
+                text(0.75 + width, y_m[1] - 0.25,
+                     patterns_characteristics[m, display_text],
+                     cex = 0.5, col = "black", srt = 90, adj = 1)
+              }
+              
+              width = width + 1
+            }
+            
+            
+            # Couleurs de catégorie
+            if (!is.null(category)) {
+              category_colors = rainbow(length(unique(items_category$category)))
+              names(category_colors) = unique(items_category$category)
+              
+              final_colors = category_colors[match(items_category$category, names(category_colors))]
+              
+              # Légende de catégorie
+              if (is.null(cutoff)) {
+                category_legend = unique(items_category$category)
+              } else {
+                category_legend = substr(unique(items_category$category), 1, cutoff)
+              }
+              legend("bottom", xpd = NA, bty = "n", inset = c(0, -0.09),
+                     title = cap(category), cex = 0.85,
+                     legend = category_legend,
+                     col = category_colors,
+                     pch = 20, ncol = ceiling(length(category_legend) / 2))
+            } else {
+              final_colors = "black"
+            }
+            
+            # Pointage et affichage des items
+            points(items_category[, c("x", "y")],
+                   col = final_colors, pch = 20)
+            text(items_category$x, items_category$y, items_category$item,
+                 cex = 0.75, pos = 2,
+                 col = final_colors)
           })
 
 
