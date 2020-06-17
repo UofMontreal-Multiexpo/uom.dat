@@ -1853,7 +1853,7 @@ setMethod(f = "tree_chart",
             return(pat_charac[, c(ncol(pat_charac), seq(ncol(pat_charac)-1))])
           })
 
-#' Dessine un grahpique de type arbre de la multi-association.
+#' Dessine un graphique de type arbre de la multi-association.
 #' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Ensemble des caractéristiques des motifs dont l'arbre est à tracer.
@@ -1954,8 +1954,7 @@ setMethod(f = "create_tree_chart",
               lines(c(width + 1, width + 1),
                     c(y_m[1], y_m[length(y_m)]),
                     lwd = 1.2, lty = 1, col = "black")
-              
-              # Traçage de segments horizontaux pour les items du motif
+              # Segments horizontaux pour les items du motif
               for (y in y_m) {
                 lines(c(width + 0.5, width + 1), c(y, y),
                       lwd = 1.2, lty = 1, col = "black", pch = 20, cex = 0.8)
@@ -1965,8 +1964,12 @@ setMethod(f = "create_tree_chart",
               if (!is.null(display_text)) {
                 text(0.75 + width, y_m[1] - 0.25,
                      patterns_characteristics[m, display_text],
-                     cex = 0.5, col = "black", srt = 90, adj = 1)
+                     col = "black", cex = 0.5, srt = 90, adj = 1)
               }
+              # Affichage du statut du motif
+              points(0.75 + width, y_m[length(y_m)] + 0.25,
+                     cex = 0.5, pch = 15,
+                     col = object@Class$STATUS_COLORS[patterns_characteristics$status[m]])
               
               width = width + 1
             }
@@ -2000,6 +2003,12 @@ setMethod(f = "create_tree_chart",
             text(items_category$x, items_category$y, items_category$item,
                  cex = 0.75, pos = 2,
                  col = final_colors)
+            
+            # Légende des statuts
+            legend("topright", bty = "n", horiz = TRUE, xpd = NA, inset = c(-0.02, -0.04),
+                   pch = 15, cex = 0.85,
+                   col = object@Class$STATUS_COLORS,
+                   legend = names(object@Class$STATUS_COLORS))
           })
 
 
