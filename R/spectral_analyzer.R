@@ -1403,7 +1403,9 @@ setMethod(f = "spectrosome_chart",
                 nop_links = object@nodes_links
                 not_identical = FALSE
               } else {
-                nop_links = subset(object@nodes_links, apply(object@nodes_links[, 1:2], 1, function(x) { all(x %in% rownames(characteristics)) }))
+                # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
+                nop_links = object@nodes_links[object@nodes_links$Source %in% rownames(characteristics)
+                                               & object@nodes_links$Target %in% rownames(characteristics), ]
                 not_identical = TRUE
                 
                 # Identification des nouveaux noeuds isolés
@@ -1432,7 +1434,9 @@ setMethod(f = "spectrosome_chart",
                 nop_links = object@patterns_links
                 not_identical = FALSE
               } else {
-                nop_links = subset(object@patterns_links, apply(object@patterns_links[, 1:2], 1, function(x) { all(x %in% rownames(characteristics)) }))
+                # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
+                nop_links = object@patterns_links[object@patterns_links$Source %in% rownames(characteristics)
+                                                  & object@patterns_links$Target %in% rownames(characteristics), ]
                 not_identical = TRUE
                 
                 # Identification des nouveaux motifs isolés
