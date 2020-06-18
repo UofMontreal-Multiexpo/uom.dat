@@ -352,81 +352,60 @@ setReplaceMethod(f = "[",
 # Méthodes de calculs utiles à la construction des noeuds
 
 setGeneric(name = "list_obs_per_year", def = function(object){ standardGeneric("list_obs_per_year") })
-# lockBinding("list_obs_per_year", .GlobalEnv)
 
 setGeneric(name = "list_separate_obs", def = function(object){ standardGeneric("list_separate_obs") })
-# lockBinding("list_separate_obs", .GlobalEnv)
+
 
 # Méthodes de calculs utiles à la construction d'un spectrosome
 
 setGeneric(name = "count_links", def = function(object, entities){ standardGeneric("count_links") })
-# lockBinding("count_links", .GlobalEnv)
 
 setGeneric(name = "search_links", def = function(object, entities){ standardGeneric("search_links") })
-# lockBinding("search_links", .GlobalEnv)
 
 
 # Méthodes de calculs utiles à la construction des motifs
 
 setGeneric(name = "list_separate_patterns", def = function(object, target, count = 1, min_length = 1, max_length = Inf){ standardGeneric("list_separate_patterns") })
-# lockBinding("list_separate_patterns", .GlobalEnv)
 
 setGeneric(name = "list_patterns_by_obs", def = function(object){ standardGeneric("list_patterns_by_obs") })
-# lockBinding("list_patterns_by_obs", .GlobalEnv)
 
 setGeneric(name = "list_patterns_per_year", def = function(object){ standardGeneric("list_patterns_per_year") })
-# lockBinding("list_patterns_per_year", .GlobalEnv)
 
 setGeneric(name = "compute_patterns_characteristics", def = function(object){ standardGeneric("compute_patterns_characteristics") })
-# lockBinding("compute_patterns_characteristics", .GlobalEnv)
 
 setGeneric(name = "compute_specificity", def = function(object, patterns, frequencies, weights){ standardGeneric("compute_specificity") })
-# lockBinding("compute_specificity", .GlobalEnv)
 
 setGeneric(name = "compute_reporting_indexes", def = function(object, patterns, t = NULL, period = Inf){ standardGeneric("compute_reporting_indexes") })
-# lockBinding("compute_reporting_indexes", .GlobalEnv)
 
 setGeneric(name = "check_params_for_RI", def = function(object, t, period){ standardGeneric("check_params_for_RI") })
-# lockBinding("check_params_for_RI", .GlobalEnv)
 
 setGeneric(name = "compute_reporting_indexes_limits", def = function(object, patterns, first_limit, t = NULL, period = Inf){ standardGeneric("compute_reporting_indexes_limits") })
-# lockBinding("compute_reporting_indexes_limits", .GlobalEnv)
 
 setGeneric(name = "compute_ksi_threshold", def = function(object, reporting_indexes){ standardGeneric("compute_ksi_threshold") })
-# lockBinding("compute_ksi_threshold", .GlobalEnv)
 
 setGeneric(name = "compute_ri_threshold", def = function(object, reporting_indexes, ksi = NULL){ standardGeneric("compute_ri_threshold") })
-# lockBinding("compute_ri_threshold", .GlobalEnv)
 
 setGeneric(name = "define_dynamic_status", def = function(object, patterns, status_limit, t = NULL, period = Inf){ standardGeneric("define_dynamic_status") })
-# lockBinding("define_dynamic_status", .GlobalEnv)
 
 
 # Méthodes de création de graphiques de type spectre
 
 setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns"){ standardGeneric("spectrum_chart") })
-# lockBinding("spectrum_chart", .GlobalEnv)
 
 setGeneric(name = "create_spectrum_chart", def = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns"){ standardGeneric("create_spectrum_chart") })
-# lockBinding("create_spectrum_chart", .GlobalEnv)
 
 setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object, patterns){ standardGeneric("compute_pattern_distribution_in_nodes") })
-# lockBinding("compute_pattern_distribution_in_nodes", .GlobalEnv)
 
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs relatifs
 
 setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities)){ standardGeneric("spectrosome_chart") })
-# lockBinding("spectrosome_chart", .GlobalEnv)
 
 setGeneric(name = "cluster_text", def = function(object, graph, links){ standardGeneric("cluster_text") })
-# lockBinding("cluster_text", .GlobalEnv)
 
 setGeneric(name = "cluster_chart", def = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)){ standardGeneric("cluster_chart") })
-# lockBinding("cluster_chart", .GlobalEnv)
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
-
 
 
 # Méthodes de création de graphiques de type arbre de la multi-association
@@ -439,31 +418,22 @@ setGeneric(name = "create_tree_chart", def = function(object, patterns_character
 # Méthodes de recherche et d'enregistrement
 
 setGeneric(name = "save_characteristics", def = function(object, entities, characteristics, ...){ standardGeneric("save_characteristics") })
-# lockBinding("save_characteristics", .GlobalEnv)
 
 setGeneric(name = "extract_patterns_from_items", def = function(object, patterns_characteristics, items, target = "all"){ standardGeneric("extract_patterns_from_items") })
-# lockBinding("extract_patterns_from_items", .GlobalEnv)
 
 setGeneric(name = "extract_patterns_from_characteristic", def = function(object, patterns_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_patterns_from_characteristic") })
-# lockBinding("extract_patterns_from_characteristic", .GlobalEnv)
 
 setGeneric(name = "extract_patterns_from_status", def = function(object, patterns_characteristics, value, condition = "EQ"){ standardGeneric("extract_patterns_from_status") })
-# lockBinding("extract_patterns_from_status", .GlobalEnv)
 
 setGeneric(name = "extract_nodes_from_items", def = function(object, nodes_characteristics, items, target = "all"){ standardGeneric("extract_nodes_from_items") })
-# lockBinding("extract_nodes_from_items", .GlobalEnv)
 
 setGeneric(name = "extract_nodes_from_characteristic", def = function(object, nodes_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_nodes_from_characteristic") })
-# lockBinding("extract_nodes_from_characteristic", .GlobalEnv)
 
 setGeneric(name = "check_acces_for_category", def = function(object, category, value){ standardGeneric("check_acces_for_category") })
-# lockBinding("check_acces_for_category", .GlobalEnv)
 
 setGeneric(name = "extract_patterns_from_category", def = function(object, category, value, target){ standardGeneric("extract_patterns_from_category") })
-# lockBinding("extract_patterns_from_category", .GlobalEnv)
 
 setGeneric(name = "extract_nodes_from_category", def = function(object, category, value, target){ standardGeneric("extract_nodes_from_category") })
-# lockBinding("extract_nodes_from_category", .GlobalEnv)
 
 
 
