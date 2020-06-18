@@ -414,7 +414,7 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 # lockBinding("compute_pattern_distribution_in_nodes", .GlobalEnv)
 
 
-# Méthodes de création de graphiques de type spectrosome
+# Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs relatifs
 
 setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities)){ standardGeneric("spectrosome_chart") })
 # lockBinding("spectrosome_chart", .GlobalEnv)
@@ -424,6 +424,9 @@ setGeneric(name = "cluster_text", def = function(object, graph, links){ standard
 
 setGeneric(name = "cluster_chart", def = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)){ standardGeneric("cluster_chart") })
 # lockBinding("cluster_chart", .GlobalEnv)
+
+setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
+
 
 
 # Méthodes de création de graphiques de type arbre de la multi-association
@@ -1773,6 +1776,32 @@ setMethod(f = "cluster_chart",
               return(NULL)
             }
           })
+
+
+#' Densité d'un réseau
+#' 
+#' Calcule la densité du graphe comme étant le ratio entre le nombre de liens identifiés
+#'  et le nombre maximal de liens possibles.
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
+#' @param links Data.frame des liens (ou arêtes) extraits d'un spectrosome.
+#' @return Densité calculée.
+#' @author Gauthier Magnin
+#' @export
+setMethod(f = "network_density",
+          signature = "SpectralAnalyzer",
+          definition = function(object, links) {
+            
+            # Nombre d'arêtes et de sommets
+            nb_edges = nrow(links) - sum(links$weight == 0)
+            nb_vertices = length(unique(c(links$Source, links$Target)))
+            
+            # Nombre maximal d'arêtes (1 entre chaque paire de sommets, sans boucle)
+            nb_edges_max = nb_vertices * (nb_vertices - 1) / 2
+            
+            return(nb_edges / nb_edges_max)
+          })
+
 
 
 

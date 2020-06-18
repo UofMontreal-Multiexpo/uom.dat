@@ -377,6 +377,11 @@ write.csv2(spectrosome[["edges"]],
 spectrosome[["edges"]]
 ```
 
+```{r}
+# Print the network density
+cat("Network density:", network_density(sa_object, spectrosome[["edges"]]))
+```
+
 
 ### 3.1.3. Multi-association tree
 
@@ -517,6 +522,10 @@ spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
                                 title = "Spectrosome with status filter")
 ```
 ![Fig. 11: Spectrosome of the patterns with status filter.](./output/spec_filter/spectrosome_of_patterns-Persistent.png)
+```{r}
+# Print the network density
+cat("Network density:", network_density(sa_object, spectrosome[["edges"]]))
+```
 
 
 
