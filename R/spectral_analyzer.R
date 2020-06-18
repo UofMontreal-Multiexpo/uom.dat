@@ -716,12 +716,10 @@ setMethod(f = "list_separate_patterns",
                           minlen = min_length,
                           maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length), 
                           target = target)
-            capture.output(
+            invisible(capture.output({
               result <- eclat(transact, parameter = params)
-            )
-            capture.output(
-              res <- inspect(result, linebreak = FALSE)
-            )
+              res <- inspect(result, linebreak = FALSE) # Permet aussi d'obtenir le support
+            }))
             
             # Exraction des motifs issus du résultat puis transformation
             patterns = res$items
