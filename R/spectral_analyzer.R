@@ -407,6 +407,8 @@ setGeneric(name = "cluster_chart", def = function(object, entities, item, vertex
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
+setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("degree") })
+
 
 # Méthodes de création de graphiques de type arbre de la multi-association
 
@@ -1370,9 +1372,11 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param title Titre du graphique.
 #' @return Liste contenant :
 #'  \itemize{
-#'    \item{} {Data.frame des noeuds ou motifs et caractéristiques utilisées, associés aux identifiants des sommets du graphe.}
+#'    \item{} {Data.frame des noeuds ou motifs et caractéristiques utilisées,
+#'             associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
 #'    \item{} {Data.frame des informations relatives aux arêtes du graphe.}
 #'  }
+#' @seealso \code{\link{degree}}
 #' 
 #' @author Delphine Bosson-Rieutort
 #' @author Gauthier Magnin
@@ -1647,8 +1651,11 @@ setMethod(f = "spectrosome_chart",
               }
             }
             
-            # Noeuds ou motifs, caractéristiques et identifiants sur le graphique
-            return(list(vertices = data.frame(ID = vertices_id, characteristics),
+            # Calcul du degré de chaque sommet dans le graphe
+            degrees = sapply(vertices_id, function(ID) degree(object, ID, nop_links))
+            
+            # Noeuds ou motifs, caractéristiques, identifiants sur le graphique et degrés dans le graphe
+            return(list(vertices = data.frame(ID = vertices_id, characteristics, degree = degrees),
                         edges = nop_links))
           })
 
@@ -1723,10 +1730,11 @@ setMethod(f = "cluster_text",
 #'  Exemple de titre par défaut : \code{"Node cluster of 25"}.
 #' @return \code{NULL} si aucun ou un seul noeud ou motif contient l'item recherché. Sinon, liste contenant :
 #'  \itemize{
-#'    \item{} {Data.frame des noeuds ou motifs et caractéristiques utilisées, associés aux identifiants des sommets du graphe.}
+#'    \item{} {Data.frame des noeuds ou motifs et caractéristiques utilisées,
+#'             associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
 #'    \item{} {Data.frame des informations relatives aux arêtes du graphe.}
 #'  }
-#' @seealso \code{\link{spectrosome_chart}}
+#' @seealso \code{\link{spectrosome_chart}}, \code{\link{degree}}
 #' @author Gauthier Magnin
 #' @export
 setMethod(f = "cluster_chart",
@@ -1776,6 +1784,24 @@ setMethod(f = "network_density",
             return(nb_edges / nb_edges_max)
           })
 
+
+#' Degré d'un sommet
+#' 
+#' Calcule le degré d'un sommet dans un graphe, c'est-à-dire, le nombre de sommets
+#'  auxquels il est adjacent.
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
+#' @param ID Identifiant du sommet (noeud ou motif) dont le degré est à calculer.
+#' @param links Data.frame des liens (ou arêtes) extraits d'un spectrosome.
+#' @return Degré du sommet.
+#' @author Gauthier Magnin
+#' @export
+setMethod(f = "degree",
+          signature = "SpectralAnalyzer",
+          definition = function(object, ID, links) {
+            
+            return(sum(xor(links$Source == ID, links$Target == ID)))
+          })
 
 
 

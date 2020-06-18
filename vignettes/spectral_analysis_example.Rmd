@@ -266,8 +266,12 @@ save_characteristics(sa_object, "nodes",
                      spectrosome[["vertices"]],
                      file = paste0(directory, "spectrosome_of_nodes-vertices.csv"),
                      row.names = FALSE)
-# Actually the vertices of this spectrosome are exactly the nodes already saved before as "sao.nodes.csv" in section 1.4.
+
+spectrosome[["vertices"]]
 ```
+![](./img/nodes_vertices.png)
+
+The vertices of this spectrosome are actually the nodes already saved before as *sao.nodes.csv* in section 1.4., but the new data frame also lists the identifiers of the vertices in the graph as well as their degrees (i.e. the number of adjacent vertices).
 
 Saving edges characteristics as well...
 ```{r}
@@ -306,7 +310,6 @@ cluster[["vertices"]]
 ```
 ![](./img/node_cluster_3146_vertices.png)
 
-
 Saving edges characteristics as well...
 ```{r}
 write.csv2(cluster[["edges"]],
@@ -338,13 +341,14 @@ spectrum = spectrum_chart(sa_object, sa_object["patterns"],
 ```
 ![Fig. 4: Spectrum of patterns.](./img/spectrum_of_patterns.png)
 
+Patterns presented in this spectrum are the ones already saved before as "sao.patterns.csv" in section 1.4.
+
 Saving pattern characteristics in a CSV file...
 ```{r}
 save_characteristics(sa_object, "patterns",
                      spectrum,
                      file = paste0(directory, "spectrum_of_patterns.csv"),
                      row.names = FALSE)
-# Patterns presented in this spectrum are the ones already saved before as "sao.patterns.csv" in section 1.4.
 ```
 
 
@@ -394,6 +398,7 @@ tree = tree_chart(sa_object, sa_object["patterns"], "ID",
                   title = "Multi-association tree")
 ```
 ![Fig. 6 : Multi-association tree.](./img/multi-association_tree.png)
+
 **Note that too many values for the displayed category or too long names prevent the legend from being displayed correcly, hence the use of the cutoff parameter to reduce the size of these values.**
 
 Saving pattern characteristics in a CSV file...
@@ -435,7 +440,6 @@ save_characteristics(sa_object, "patterns",
 cluster[["vertices"]]
 ```
 ![](./img/pattern_cluster_3146_vertices.png)
-
 
 Saving edges characteristics as well...
 ```{r}
@@ -615,8 +619,6 @@ spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
 ```
 ![Fig. 13: Spectrosome of the patterns generating at least one link related to the family named "Chrome".](./output/spec_family/spectrosome_of_patterns-Chrome-edges.png)
 
-
-
 Saving vertex characteristics in a CSV file...
 ```{r}
 save_characteristics(sa_object, "patterns",
@@ -665,7 +667,6 @@ extract_items(observations,
               info_names = c("METIER", "TACHE"),
               info_values = c(44121004, "A5440"))
 ```
-
 
 Search for situations associated with a desired substance...
 ```{r}
