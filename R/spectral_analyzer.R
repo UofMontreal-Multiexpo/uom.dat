@@ -1351,6 +1351,8 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' 
 #' @details Si des catégories sont associées aux items, chaque catégorie génère un spectrosome.
 #'  Le nom de la catégorie est ajouté à la fin du nom du fichier.
+#' Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
+#'  liens simples, elles apparaîssent dans la légende en dessous de "Mixt", sans couleur.
 #'  
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément pour lequel construire le spectrosome (noeuds ou motifs).
@@ -1493,45 +1495,56 @@ setMethod(f = "spectrosome_chart",
                   categories_colors[[category]] = character(0)
                   links_colors[[category]] = rep("white", nrow(nop_links))
                   
-                } else {
-                  if (length(levels(object@items_categories[, category])) > 1) {
+                } else if (length(levels(object@items_categories[, category])) > 1) {
                     
-                    # Catégories associées aux liens
-                    categories_links = lapply(strsplit(nop_links[, "items"], "/"),
-                                              function(x) sort(unique(as.character(object@items_categories[x, category]))))
-                    categories_links = unlist(lapply(categories_links, function(x) {
-                      if (length(x) == 1) return(x)
-                      if (length(x) > 1) return("Mixt")
-                      return("Isolated")
-                    }))
-                    
-                    # Pour la légende, extraction des catégories qui génèrent effectivement des liens (même si faisant partie des mixtes)
-                    unique_items_links = unique(unlist(strsplit(nop_links[nop_links[, "items"] != "I", "items"], "/")))
-                    unique_cl = sort(as.character(unique(object@items_categories[unique_items_links, category])))
-                    
-                    categories_colors[[category]] = c(rainbow(length(unique_cl)), "black", "white")
-                    names(categories_colors[[category]]) = c(unique_cl, "Mixt", "Isolated")
-                    
-                  } else if(length(levels(object@items_categories[, category])) == 1) {
-                    # Une unique catégorie
-                    categories_colors[[category]] = c("black", "white")
-                    names(categories_colors[[category]]) = c(levels(object@items_categories[, category]), "Isolated")
-                    
-                    categories_links = ifelse(nop_links[, "items"] == "I", "Isolated", levels(object@items_categories[, category]))
-                    
-                  } else {
-                    stop("The categories associated with the items must be factor type and it must have at least one factor.")
-                  }
+                  # Catégories associées aux liens
+                  categories_links = lapply(strsplit(nop_links[, "items"], "/"),
+                                            function(x) sort(unique(as.character(object@items_categories[x, category]))))
+                  category_values = unique(unlist(categories_links))
+                  categories_links = unlist(lapply(categories_links, function(x) {
+                    if (length(x) == 1) return(x)
+                    if (length(x) > 1) return("Mixt")
+                    return("Isolated")
+                  }))
                   
+                  # Séparation des valeurs de la catégorie qui sont uniquement inclus dans des liens mixtes
+                  category_mixed = sort(setdiff(category_values, unique(unlist(categories_links))))
+                  category_not_mixed = sort(setdiff(category_values, category_mixed))
+                  
+                  categories_colors[[category]] = c(rainbow(length(category_not_mixed)), "black", "white")
+                  names(categories_colors[[category]]) = c(category_not_mixed, "Mixt", "Isolated")
+                  
+                  # Couleurs des liens tracés sur le graphique
                   links_colors[[category]] = categories_colors[[category]][categories_links]
                   
                   # Retrait du noir associé aux liens mixtes s'il n'y en a pas et retrait du blanc
                   # associé aux isolés, pour ne pas les afficher ultérieurement dans la légende
-                  if (!("Mixt" %in% categories_links)) {
+                  if (length(category_mixed) == 0) {
                     categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-2)]
                   } else {
                     categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
+                    
+                    # Ajout des valeurs de catégorie inclus uniquement dans des liens mixtes
+                    new_names = c(names(categories_colors[[category]]), category_mixed)
+                    categories_colors[[category]] = append(categories_colors[[category]], rep("white", length(category_mixed)))
+                    names(categories_colors[[category]]) = new_names
                   }
+                  
+                } else if(length(levels(object@items_categories[, category])) == 1) {
+                  # Une unique catégorie
+                  categories_colors[[category]] = c("black", "white")
+                  names(categories_colors[[category]]) = c(levels(object@items_categories[, category]), "Isolated")
+                  
+                  categories_links = ifelse(nop_links[, "items"] == "I", "Isolated", levels(object@items_categories[, category]))
+                  
+                  # Couleurs des liens tracés sur le graphique
+                  links_colors[[category]] = categories_colors[[category]][categories_links]
+                  
+                  # Retrait du blanc associé aux isolés pour ne pas l'afficher ultérieurement dans la légende
+                  categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
+                  
+                } else {
+                  stop("The categories associated with the items must be factor type and it must have at least one factor.")
                 }
               }
             }
