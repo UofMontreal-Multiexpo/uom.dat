@@ -1518,6 +1518,9 @@ setMethod(f = "spectrosome_chart",
                 }
                 
                 links_colors[[category]] = categories_colors[[category]][categories_links]
+                
+                # Retrait du blanc associé aux isolés pour ne pas l'afficher ultérieurement dans la légende
+                categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
               }
             }
             
