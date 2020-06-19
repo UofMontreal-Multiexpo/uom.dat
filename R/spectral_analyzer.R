@@ -1488,39 +1488,51 @@ setMethod(f = "spectrosome_chart",
               # Pour chaque type de catégorie
               for (category in seq_len(ncol(object@items_categories))) {
                 
-                if (length(levels(object@items_categories[, category])) > 1) {
-                  
-                  # Catégories associées aux liens
-                  categories_links = lapply(strsplit(nop_links[, "items"], "/"),
-                                            function(x) sort(unique(as.character(object@items_categories[x, category]))))
-                  categories_links = unlist(lapply(categories_links, function(x) {
-                    if (length(x) == 1) return(x)
-                    if (length(x) > 1) return("Mixt")
-                    return("Isolated")
-                  }))
-                  
-                  # Pour la légende, extraction des catégories qui génèrent effectivement des liens (même si faisant partie de "Mixt")
-                  unique_items_links = unique(unlist(strsplit(nop_links[nop_links[, "items"] != "I", "items"], "/")))
-                  unique_cl = sort(as.character(unique(object@items_categories[unique_items_links, category])))
-                  
-                  categories_colors[[category]] = c(rainbow(length(unique_cl)), "black", "white")
-                  names(categories_colors[[category]]) = c(unique_cl, "Mixt", "Isolated")
-                  
-                } else if(length(levels(object@items_categories[, category])) == 1) {
-                  # Une unique catégorie
-                  categories_colors[[category]] = c("black", "white")
-                  names(categories_colors[[category]]) = c(levels(object@items_categories[, category]), "Isolated")
-                  
-                  categories_links = ifelse(nop_links[, "items"] == "I", "Isolated", levels(object@items_categories[, category]))
+                # S'il n'y a aucun lien
+                if (sum(nop_links$weight != 0) == 0) {
+                  categories_colors[[category]] = character(0)
+                  links_colors[[category]] = rep("white", nrow(nop_links))
                   
                 } else {
-                  stop("The categories associated with the items must be factor type and it must have at least one factor.")
+                  if (length(levels(object@items_categories[, category])) > 1) {
+                    
+                    # Catégories associées aux liens
+                    categories_links = lapply(strsplit(nop_links[, "items"], "/"),
+                                              function(x) sort(unique(as.character(object@items_categories[x, category]))))
+                    categories_links = unlist(lapply(categories_links, function(x) {
+                      if (length(x) == 1) return(x)
+                      if (length(x) > 1) return("Mixt")
+                      return("Isolated")
+                    }))
+                    
+                    # Pour la légende, extraction des catégories qui génèrent effectivement des liens (même si faisant partie des mixtes)
+                    unique_items_links = unique(unlist(strsplit(nop_links[nop_links[, "items"] != "I", "items"], "/")))
+                    unique_cl = sort(as.character(unique(object@items_categories[unique_items_links, category])))
+                    
+                    categories_colors[[category]] = c(rainbow(length(unique_cl)), "black", "white")
+                    names(categories_colors[[category]]) = c(unique_cl, "Mixt", "Isolated")
+                    
+                  } else if(length(levels(object@items_categories[, category])) == 1) {
+                    # Une unique catégorie
+                    categories_colors[[category]] = c("black", "white")
+                    names(categories_colors[[category]]) = c(levels(object@items_categories[, category]), "Isolated")
+                    
+                    categories_links = ifelse(nop_links[, "items"] == "I", "Isolated", levels(object@items_categories[, category]))
+                    
+                  } else {
+                    stop("The categories associated with the items must be factor type and it must have at least one factor.")
+                  }
+                  
+                  links_colors[[category]] = categories_colors[[category]][categories_links]
+                  
+                  # Retrait du noir associé aux liens mixtes s'il n'y en a pas et retrait du blanc
+                  # associé aux isolés, pour ne pas les afficher ultérieurement dans la légende
+                  if (!("Mixt" %in% categories_links)) {
+                    categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-2)]
+                  } else {
+                    categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
+                  }
                 }
-                
-                links_colors[[category]] = categories_colors[[category]][categories_links]
-                
-                # Retrait du blanc associé aux isolés pour ne pas l'afficher ultérieurement dans la légende
-                categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
               }
             }
             
@@ -1540,7 +1552,7 @@ setMethod(f = "spectrosome_chart",
               
               # Légende associée
               legend_1 = c(paste(names(object@Class$STATUS_COLORS), paste0("(", count_status, ")")),
-                           '-----', expression("Single items"), expression("Multiple items"))
+                           "", expression("Single items"), expression("Multiple items"))
               col_1 = c(object@Class$STATUS_COLORS, "white", "black", "black")
             }
             
@@ -1634,8 +1646,8 @@ setMethod(f = "spectrosome_chart",
                 
                 # Légende des liens uniquement si des catégories existent
                 if(length(object@items_categories) != 0) {
-                  legend = c(legend_1, '-----', names(categories_colors[[j]]))
-                  col = c(col_1, 'white', categories_colors[[j]])
+                  legend = c(legend_1, "", names(categories_colors[[j]]))
+                  col = c(col_1, "white", categories_colors[[j]])
                 }
                 
                 legend("topleft", bty = "n", xpd = NA, pt.cex = legend_pt.cex, pch = legend_pch,
