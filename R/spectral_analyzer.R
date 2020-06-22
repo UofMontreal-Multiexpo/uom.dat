@@ -130,10 +130,9 @@ setMethod(f = "initialize",
 #' Constructeur d'objet SpectralAnalyzer.
 #' 
 #' @param observations Liste des éléments retrouvés pour chaque observation.
-#'  Liste sous la forme \code{list( list( CODE = character(), NAME = character(), YEAR = numeric ) )}.
-#'  Chaque observation est une liste sous la forme \code{list( CODE = character(), NAME = character(), YEAR = numeric )}
-#'  où \code{CODE} et \code{NAME} sont associés pour identifier un élément.
+#'  Chaque observation est elle-même une liste sous la forme \code{list( CODE = character(), YEAR = numeric )}.
 #'  Les valeurs de \code{CODE} ne doivent pas contenir le caractère "/".
+#'  Une observation peut contenir des informations supplémentaires quelconques.
 #' @param items Data.frame associant une ou plusieurs catégories à un élément (\code{items$item}).
 #'  La valeur \code{NULL} par défaut précise qu'aucune catégorie n'est définie.
 #' @param target Type de motifs à énumérer.
