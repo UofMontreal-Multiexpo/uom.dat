@@ -437,6 +437,8 @@ setGeneric(name = "extract_patterns_from_category", def = function(object, categ
 
 setGeneric(name = "extract_nodes_from_category", def = function(object, category, value, target){ standardGeneric("extract_nodes_from_category") })
 
+setGeneric(name = "extract_links", def = function(object, entities, characteristics){ standardGeneric("extract_links") })
+
 
 
 #### Méthodes de calculs utiles à la construction des noeuds ####
@@ -1388,11 +1390,15 @@ setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities)) {
             
-            if (entities != "nodes" & entities != "patterns")
+            if (entities != "nodes" && entities != "patterns")
               stop("entities must be \"nodes\" or \"patterns\".")
             
             if (nrow(characteristics) < 2)
               stop("\"characteristics\" must have at least 2 rows to draw a spectrosome.")
+            
+            
+            # Extraction des liens pour les éléments à visualiser (nop_links = nodes or patterns links)
+            nop_links = extract_links(object, entities, characteristics)
             
             if (entities == "nodes") {
               # Renommage d'une colonne pour plus tard (cf. vertices_shapes)
@@ -1402,65 +1408,17 @@ setMethod(f = "spectrosome_chart",
               nop_subtitle_1 = "\nNodes:"
               nop_subtitle_3 = "; Isolated nodes:"
               
-              # Extraction des liens pour les noeuds à visualiser (nop_links = nodes or patterns links)
-              if(identical(object@nodes, characteristics)) {
-                nop_links = object@nodes_links
-                not_identical = FALSE
-              } else {
-                # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
-                nop_links = object@nodes_links[object@nodes_links$Source %in% rownames(characteristics)
-                                               & object@nodes_links$Target %in% rownames(characteristics), ]
-                not_identical = TRUE
-                
-                # Identification des nouveaux noeuds isolés
-                isolated = tapply(rownames(characteristics), seq_len(nrow(characteristics)), function(x) {
-                                    if (!(x %in% unlist(nop_links[, 1:2]))) {
-                                      c(x, x, nrow(nop_links), "I", 0)
-                                    }
-                                  })
-                # S'il y en a, ajout à l'ensemble des liens/sommets
-                if (sum(sapply(isolated, function(x) !is.null(x))) != 0) {
-                  no_links = do.call(rbind, isolated)
-                  colnames(no_links) = c("Source", "Target", "ID", "items", "weight")
-                  nop_links = rbind(nop_links, no_links, stringsAsFactors = FALSE)
-                  class(nop_links$Source) = class(nop_links$Target) = class(nop_links$weight) = "integer"
-                  nop_links$ID = seq_len(nrow(nop_links))
-                }
-              }
+              not_identical = !identical(object@nodes, characteristics)
               
             } else if (entities == "patterns") {
               # Texte affiché sur le graphique
               nop_subtitle_1 = "\nPatterns:"
               nop_subtitle_3 = "; Isolated patterns:"
               
-              # Extraction des liens pour les motifs à visualiser (nop_links = nodes or patterns links)
-              if(identical(object@patterns, characteristics)) {
-                nop_links = object@patterns_links
-                not_identical = FALSE
-              } else {
-                # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
-                nop_links = object@patterns_links[object@patterns_links$Source %in% rownames(characteristics)
-                                                  & object@patterns_links$Target %in% rownames(characteristics), ]
-                not_identical = TRUE
-                
-                # Identification des nouveaux motifs isolés
-                isolated = tapply(rownames(characteristics), seq_len(nrow(characteristics)), function(x) {
-                                    if (!(x %in% unlist(nop_links[, 1:2]))) {
-                                      c(x, x, nrow(nop_links), "I", 0, object@patterns[x, "year"])
-                                    }
-                                  })
-                # S'il y en a, ajout à l'ensemble des liens/sommets
-                if (sum(sapply(isolated, function(x) !is.null(x))) != 0) {
-                  no_links = do.call(rbind, isolated)
-                  colnames(no_links) = c("Source", "Target", "ID", "items", "weight", "year")
-                  nop_links = rbind(nop_links, no_links, stringsAsFactors = FALSE)
-                  class(nop_links$Source) = class(nop_links$Target) = class(nop_links$weight) = class(nop_links$year) = "integer"
-                  nop_links$ID = seq_len(nrow(nop_links))
-                }
-              }
+              not_identical = !identical(object@patterns, characteristics)
             }
             
-            # Identifiants des motifs/sommets du graphe
+            # Identifiants des sommets du graphe
             vertices_id = seq(nrow(characteristics))
             
             if (not_identical) {
@@ -1476,7 +1434,7 @@ setMethod(f = "spectrosome_chart",
             vertices_names = network.vertex.names(network_data)
             
             
-            # Couleurs et légendes pour chaque catégories existantes
+            # Couleurs et légendes pour chaque catégorie existante
             categories_colors = list()
             links_colors = list()
             
@@ -1666,9 +1624,8 @@ setMethod(f = "spectrosome_chart",
                 legend("topleft", bty = "n", xpd = NA, pt.cex = legend_pt.cex, pch = legend_pch,
                        legend = legend, col = col)
                 
-                # S'il y a bien des liens
+                # S'il y a bien des liens, identification et affichage des noms des clusters
                 if (length(which(nop_links[, "items"] != "I"))) {
-                  # Identification et affichage des noms des clusters
                   cluster_text(object, spectrosome, nop_links)
                 }
                 
@@ -2354,3 +2311,66 @@ setMethod(f = "extract_nodes_from_category",
             }
           })
 
+
+#' Extraction de liens
+#' 
+#' Extrait de l'ensemble des liens ceux correspondant aux éléments recherchées.
+#' 
+#' @details Si parmi les noeuds ou motifs, certains deviennent isolés du fait que les autres éléments
+#'  auxquels ils sont normalement liés ne font pas partie de \code{characteristics}, ces noeuds ou
+#'  motifs sont ajoutés à la fin de la data.frame de retour.
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
+#' @param entities Type d'élément pour lequel rechercher les liens.
+#'  Choix parmi \code{c("nodes", "patterns")}.
+#' @param characteristics Ensemble des caractéristiques des noeuds ou motifs dont les liens sont à rechercher.
+#' @return Data.frame associant les noeuds ou motifs liés.
+#' @author Gauthier Magnin
+#' @export
+setMethod(f = "extract_links",
+          signature = "SpectralAnalyzer",
+          definition = function(object, entities, characteristics) {
+            
+            if (entities != "nodes" && entities != "patterns")
+              stop("entities must be \"nodes\" or \"patterns\".")
+            
+            # Si les liens recherchés correspondent à l'intégralité des liens
+            if (entities == "nodes" && identical(object@nodes, characteristics)) {
+              return(object@nodes_links)
+            }
+            if (entities == "patterns" && identical(object@patterns, characteristics)) {
+              return(object@patterns_links)
+            }
+            
+            # Sinon...
+            search_nodes = (entities == "nodes")
+            all_links = if(search_nodes) object@nodes_links else object@patterns_links
+            
+            # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
+            # (nop_links = nodes or patterns links)
+            nop_links = all_links[all_links$Source %in% rownames(characteristics)
+                                  & all_links$Target %in% rownames(characteristics), ]
+            
+            # Identification des nouveaux sommets isolés
+            isolated = lapply(rownames(characteristics),
+                              function(x) {
+                                if (!(x %in% unlist(nop_links[, 1:2]))) {
+                                  if (search_nodes) return(c(x, x, nrow(nop_links), "I", 0))
+                                  return(c(x, x, nrow(nop_links), "I", 0, object@patterns[x, "year"]))
+                                }
+                                return(NULL)
+                              })
+            
+            # S'il y en a, ajout à l'ensemble des liens/sommets
+            if (any(sapply(isolated, function(x) !is.null(x)))) {
+              no_links = do.call(rbind, isolated)
+              colnames(no_links) = colnames(nop_links)
+              nop_links = rbind(nop_links, no_links, stringsAsFactors = FALSE)
+              class(nop_links$Source) = class(nop_links$Target) = class(nop_links$weight) = "integer"
+              if(!search_nodes) class(nop_links$year) = "integer"
+              nop_links$ID = seq_len(nrow(nop_links))
+            }
+            
+            return(nop_links)
+          })
+          
