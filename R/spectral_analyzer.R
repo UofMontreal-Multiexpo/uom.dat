@@ -78,7 +78,7 @@ setClass(Class = "SpectralAnalyzer",
            if (!all(tapply(seq_len(ncol(object@items_categories)),
                            seq_len(ncol(object@items_categories)),
                            function(c) is.factor(object@items_categories[, c])))) {
-             stop("The categories associated with the items must be factor type.");
+             stop("The categories associated with the items must be factor type.")
            }
            
            return(TRUE)
@@ -1405,15 +1405,15 @@ setMethod(f = "spectrosome_chart",
               colnames(characteristics)[colnames(characteristics) == "length"] = "order"
               
               # Texte affiché sur le graphique
-              nop_subtitle_1 = "\nNodes:"
-              nop_subtitle_3 = "; Isolated nodes:"
+              nop_subtitle_1 = "\nNodes: "
+              nop_subtitle_3 = "; Isolated nodes: "
               
               not_identical = !identical(object@nodes, characteristics)
               
             } else if (entities == "patterns") {
               # Texte affiché sur le graphique
-              nop_subtitle_1 = "\nPatterns:"
-              nop_subtitle_3 = "; Isolated patterns:"
+              nop_subtitle_1 = "\nPatterns: "
+              nop_subtitle_3 = "; Isolated patterns: "
               
               not_identical = !identical(object@patterns, characteristics)
             }
@@ -1600,8 +1600,8 @@ setMethod(f = "spectrosome_chart",
                 
                 # Titre du graphique
                 title(main = title, cex.main = 1.5)
-                title(main = paste(nop_subtitle_1, nrow(characteristics),
-                                   "; Links:", length(which(nop_links[, "items"] != "I")),
+                title(main = paste0(nop_subtitle_1, nrow(characteristics),
+                                   "; Links: ", length(which(nop_links[, "items"] != "I")),
                                    nop_subtitle_3, length(isolates(network_data))),
                       font.main = 4, line = -0.5)
                 
