@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{cluster_chart,SpectralAnalyzer-method}
 \alias{cluster_chart,SpectralAnalyzer-method}
-\title{Identifie le cluster associé à l'item fourni en argument et en dessine un spectrosome.}
+\alias{cluster_chart}
+\title{Cluster : sous-graphe du spectrosome}
 \usage{
 \S4method{cluster_chart}{SpectralAnalyzer}(
   object,
@@ -17,13 +18,19 @@
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{entities}{Type d'élément pour rechercher un cluster (noeuds ou motifs).
-Choix parmi \code{c("nodes", "patterns")}.}
+\item{entities}{Type d'élément pour rechercher un cluster (nœuds ou motifs).
+Choix parmi \code{"nodes"}, \code{"patterns"}.}
 
-\item{item}{Code de l'item dont le cluster est à identifier.}
+\item{item}{Code de l'item dont le cluster est à mettre en évidence.}
 
 \item{vertex_size}{Façon dont les tailles des sommets du graphe doivent être définies.
-Choix parmi \code{c("relative", "grouped", "absolute", "equal")}. Cf. \code{\link{spectrosome_chart}}}
+Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
+\describe{
+  \item{\code{"relative"}}{La taille d'un sommet dépend de l'intervalle de valeurs des différents poids.}
+  \item{\code{"grouped"}}{Les poids des motifs sont regroupés selon des intervalles. À chaque intervalle correspond une taille.}
+  \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
+  \item{\code{"equal"}}{Les sommets ont tous la même taille.}
+}}
 
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}
@@ -37,17 +44,19 @@ Par défaut, le titre dépend des arguments \code{entities} et \code{item}.
 Exemple de titre par défaut : \code{"Node cluster of 25"}.}
 }
 \value{
-\code{NULL} si aucun ou un seul noeud ou motif contient l'item recherché. Sinon, liste contenant :
- \itemize{
-   \item{} {Data.frame des noeuds ou motifs et caractéristiques utilisées, associés aux identifiants des sommets du graphe.}
-   \item{} {Data.frame des informations relatives aux arêtes du graphe.}
+\code{NULL} si aucun ou un seul nœud ou motif contient l'item recherché. \cr
+ Sinon, liste contenant :
+ \describe{
+   \item{\code{vertices}}{Data frame des nœuds ou motifs et caractéristiques utilisées,
+                          associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
+   \item{\code{edges}}{Data frame des informations relatives aux arêtes du graphe.}
  }
 }
 \description{
 Identifie le cluster associé à l'item fourni en argument et en dessine un spectrosome.
 }
 \seealso{
-\code{\link{spectrosome_chart}}
+\code{\link{spectrosome_chart}}, \code{\link{degree}}.
 }
 \author{
 Gauthier Magnin

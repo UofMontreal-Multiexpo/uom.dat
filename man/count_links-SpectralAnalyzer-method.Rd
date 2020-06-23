@@ -2,22 +2,25 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{count_links,SpectralAnalyzer-method}
 \alias{count_links,SpectralAnalyzer-method}
-\title{Compte le nombre d'éléments en commun entre chacun des noeuds ou des motifs.}
+\alias{count_links}
+\title{Comptage des liens}
 \usage{
 \S4method{count_links}{SpectralAnalyzer}(object, entities)
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{entities}{Type d'élément pour lequel compter les liens (noeuds ou motifs).
-Choix parmi \code{c("nodes", "patterns")}.}
+\item{entities}{Type d'élément pour lequel compter les liens (nœuds ou motifs).
+Choix parmi \code{"nodes"}, \code{"patterns"}.}
 }
 \value{
-Matrice du nombre de liens entre chaque noeud ou motif (matrice d'adjacence).
+Invisible. Matrice d'adjacence : matrice du nombre de liens entre chaque nœud ou motif.
 }
 \description{
-La matrice résultante est associée à l'attribut \code{n_links} ou \code{p_links} respectivement.
+Compte le nombre d'éléments en commun entre chaque nœud ou motif.
+La matrice résultante est assignée à l'attribut \code{n_links} ou \code{p_links} respectivement.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

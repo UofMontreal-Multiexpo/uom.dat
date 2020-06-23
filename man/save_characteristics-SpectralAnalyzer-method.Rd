@@ -2,25 +2,26 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{save_characteristics,SpectralAnalyzer-method}
 \alias{save_characteristics,SpectralAnalyzer-method}
-\title{Enregistre au format CSV un ensemble de caractéristiques de noeuds ou motifs.}
+\alias{save_characteristics}
+\title{Enregistrement de nœuds ou de motifs}
 \usage{
 \S4method{save_characteristics}{SpectralAnalyzer}(object, entities, characteristics, ...)
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{entities}{Type d'élément associé aux caractéristiques (noeuds ou motifs).
-Choix parmi \code{c("nodes", "patterns")}.}
+\item{entities}{Type d'élément associé aux caractéristiques (nœuds ou motifs).
+Choix parmi \code{"nodes"}, \code{"patterns"}.}
 
-\item{characteristics}{Data.frame des caractéristiques des noeuds ou des motifs.}
+\item{characteristics}{Data frame des caractéristiques des nœuds ou des motifs.}
 
-\item{...}{Arguments fournis à la fonction \code{write.csv2}.}
+\item{...}{Arguments supplémentaires fournis à la fonction \code{\link[utils:write.table]{utils::write.csv2}}.}
 }
 \description{
-Enregistre au format CSV un ensemble de caractéristiques de noeuds ou motifs.
+Enregistre au format CSV un ensemble de nœuds ou motifs ainsi que leurs caractéristiques.
 }
 \seealso{
-\code{\link[utils]{write.csv2}}
+\code{\link[utils:write.table]{utils::write.csv2}}.
 }
 \author{
 Gauthier Magnin

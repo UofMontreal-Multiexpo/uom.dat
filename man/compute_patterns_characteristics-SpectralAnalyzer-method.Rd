@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{compute_patterns_characteristics,SpectralAnalyzer-method}
 \alias{compute_patterns_characteristics,SpectralAnalyzer-method}
-\title{Calcule les caractéristiques des différents motifs (fréquence, poids, ordre, spécificté, caractère dynamique).}
+\alias{compute_patterns_characteristics}
+\title{Calcul des caractéristiques des motifs}
 \usage{
 \S4method{compute_patterns_characteristics}{SpectralAnalyzer}(object)
 }
@@ -10,10 +11,12 @@
 \item{object}{Objet de classe SpectralAnalyzer.}
 }
 \value{
-Data.frame dans laquelle une ligne est une association entre un motif et ses caractéristiques.
+Invisible. Data frame dans laquelle une ligne est une association entre un motif
+ et ses caractéristiques.
 }
 \description{
-La data.frame résultante est associée à l'attribut \code{patterns}.
+Calcule les caractéristiques des différents motifs (fréquence, poids, ordre, spécificté, caractère dynamique).
+La data frame résultante est assignée à l'attribut \code{patterns}.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
@@ -23,3 +26,4 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

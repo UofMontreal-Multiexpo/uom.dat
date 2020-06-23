@@ -2,7 +2,7 @@
 % Please edit documentation in R/observations_maker.R
 \name{extract_observations_from_information}
 \alias{extract_observations_from_information}
-\title{Extrait les observations correspondant à un ou plusieurs critères de recherche.}
+\title{Recherche d'observations}
 \usage{
 extract_observations_from_information(observations, info_names, info_values)
 }
@@ -21,6 +21,7 @@ Extrait les observations correspondant à un ou plusieurs critères de recherche
 }
 \examples{
 extract_observations_from_information(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
+
 }
 \author{
 Gauthier Magnin

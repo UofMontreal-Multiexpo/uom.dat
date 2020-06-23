@@ -2,7 +2,7 @@
 % Please edit documentation in R/observations_maker.R
 \name{make_obs_from_unspecified_situations}
 \alias{make_obs_from_unspecified_situations}
-\title{Regroupe des prélèvements sous forme d'observations.}
+\title{Regroupement de prélèvements}
 \usage{
 make_obs_from_unspecified_situations(
   measures,
@@ -21,9 +21,11 @@ make_obs_from_unspecified_situations(
 Liste des observations identifiées.
 }
 \description{
+Regroupe des prélèvements sous forme d'observations.
 Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail.
 Ces situations sont décrites par les combinaisons de variables dont les noms sont définis en paramètres.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

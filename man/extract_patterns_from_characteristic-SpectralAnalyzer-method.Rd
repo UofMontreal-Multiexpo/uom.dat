@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{extract_patterns_from_characteristic,SpectralAnalyzer-method}
 \alias{extract_patterns_from_characteristic,SpectralAnalyzer-method}
-\title{Extrait les motifs satisfaisant un critère de recherche.}
+\alias{extract_patterns_from_characteristic}
+\title{Recherche de motifs par caractéristique}
 \usage{
 \S4method{extract_patterns_from_characteristic}{SpectralAnalyzer}(
   object,
@@ -15,27 +16,33 @@
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{patterns_characteristics}{Data.frame des caractéristiques des motifs.}
+\item{patterns_characteristics}{Data frame des motifs et de leurs caractéristiques.}
 
 \item{characteristic}{Nom de la caractéristique sur laquelle faire la recherche.
-Choix parmi \code{c("year", "frequency", "weight", "order", "specificity")}.}
+Choix parmi \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}.}
 
 \item{value}{Valeur recherchée pour la caractéristique spécifiée par l'argument \code{characteristic}.}
 
 \item{condition}{Condition de la recherche.
-Choix parmi \code{c("EQ", "NE", "LT", "GT", "LE", "GE")}.
-\code{"EQ"} : La valeur de la caractéristique du motif doit être égale à la valeur recherchée (Equal).
-\code{"NE"} : La valeur de la caractéristique du motif doit être différente de la valeur recherchée (Not Equal).
-\code{"LT"} : La valeur de la caractéristique du motif doit être inférieure à la valeur recherchée (Less Than).
-\code{"GT"} : La valeur de la caractéristique du motif doit être supérieure à la valeur recherchée (Greater Than).
-\code{"LE"} : La valeur de la caractéristique du motif doit être inférieure ou égale à la valeur recherchée (Less than or Equal).
-\code{"GE"} : La valeur de la caractéristique du motif doit être supérieure ou égale à la valeur recherchée (Greater than or Equal).}
+Choix parmi \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
+\describe{
+  \item{\code{"EQ"}}{\strong{EQ}ual : la valeur de la caractéristique doit être égale à celle recherchée.}
+  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual : la valeur de la caractéristique doit être différente de celle recherchée.}
+  \item{\code{"LT"}}{\strong{L}ess \strong{T}han : la valeur de la caractéristique doit être inférieure à celle recherchée.}
+  \item{\code{"GT"}}{\strong{G}reater \strong{T}han : la valeur de la caractéristique doit être supérieure à celle recherchée.}
+  \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual : la valeur de la caractéristique doit être inférieure ou égale à celle recherchée.}
+  \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual : la valeur de la caractéristique doit être supérieure ou égale à celle recherchée.}
+}}
 }
 \value{
-Sous-ensemble de la data.frame fournie en argument pour les motifs satisfaisant le critère de recherche.
+Sous-ensemble de la data frame fournie en argument contant les motifs satisfaisant le critère de recherche.
 }
 \description{
-Extrait les motifs satisfaisant un critère de recherche.
+Extrait les motifs satisfaisant un critère de recherche relatif à une caractéristique.
+}
+\seealso{
+\code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_status}},
+         \code{\link{extract_patterns_from_category}}.
 }
 \author{
 Gauthier Magnin

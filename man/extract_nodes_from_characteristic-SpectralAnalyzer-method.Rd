@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{extract_nodes_from_characteristic,SpectralAnalyzer-method}
 \alias{extract_nodes_from_characteristic,SpectralAnalyzer-method}
-\title{Extrait les noeuds satisfaisant un critère de recherche.}
+\alias{extract_nodes_from_characteristic}
+\title{Recherche de nœuds par caractéristique}
 \usage{
 \S4method{extract_nodes_from_characteristic}{SpectralAnalyzer}(
   object,
@@ -15,27 +16,32 @@
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{nodes_characteristics}{Data.frame des caractéristiques des noeuds.}
+\item{nodes_characteristics}{Data frame des nœuds et de leurs caractéristiques.}
 
 \item{characteristic}{Nom de la caractéristique sur laquelle faire la recherche.
-Choix parmi \code{c("length", "weight")}.}
+Choix parmi \code{"length"}, \code{"weight"}.}
 
 \item{value}{Valeur recherchée pour la caractéristique spécifiée par l'argument \code{characteristic}.}
 
 \item{condition}{Condition de la recherche.
-Choix parmi \code{c("EQ", "NE", "LT", "GT", "LE", "GE")}.
-\code{"EQ"} : La valeur de la caractéristique du noeud doit être égale à la valeur recherchée (Equal).
-\code{"NE"} : La valeur de la caractéristique du noeud doit être différente de la valeur recherchée (Not Equal).
-\code{"LT"} : La valeur de la caractéristique du noeud doit être inférieure à la valeur recherchée (Less Than).
-\code{"GT"} : La valeur de la caractéristique du noeud doit être supérieure à la valeur recherchée (Greater Than).
-\code{"LE"} : La valeur de la caractéristique du noeud doit être inférieure ou égale à la valeur recherchée (Less than or Equal).
-\code{"GE"} : La valeur de la caractéristique du noeud doit être supérieure ou égale à la valeur recherchée (Greater than or Equal).}
+Choix parmi \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
+\describe{
+  \item{\code{"EQ"}}{\strong{EQ}ual : la valeur de la caractéristique doit être égale à celle recherchée.}
+  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual : la valeur de la caractéristique doit être différente de celle recherchée.}
+  \item{\code{"LT"}}{\strong{L}ess \strong{T}han : la valeur de la caractéristique doit être inférieure à celle recherchée.}
+  \item{\code{"GT"}}{\strong{G}reater \strong{T}han : la valeur de la caractéristique doit être supérieure à celle recherchée.}
+  \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual : la valeur de la caractéristique doit être inférieure ou égale à celle recherchée.}
+  \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual : la valeur de la caractéristique doit être supérieure ou égale à celle recherchée.}
+}}
 }
 \value{
-Sous-ensemble de la data.frame fournie en argument pour les noeuds satisfaisant le critère de recherche.
+Sous-ensemble de la data.frame fournie en argument pour les nœuds satisfaisant le critère de recherche.
 }
 \description{
-Extrait les noeuds satisfaisant un critère de recherche.
+Extrait les nœuds satisfaisant un critère de recherche.
+}
+\seealso{
+\code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_category}}.
 }
 \author{
 Gauthier Magnin

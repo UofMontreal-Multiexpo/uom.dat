@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{compute_reporting_indexes_limits,SpectralAnalyzer-method}
 \alias{compute_reporting_indexes_limits,SpectralAnalyzer-method}
-\title{Calcule les limites temporelles utilisées pour caractériser les motifs.}
+\alias{compute_reporting_indexes_limits}
+\title{Calcul de RI à des limites temporelles}
 \usage{
 \S4method{compute_reporting_indexes_limits}{SpectralAnalyzer}(
   object,
@@ -24,14 +25,15 @@
 couverte par les observations.}
 
 \item{period}{Intervalle de temps sur lequel faire le calcul (nombre d'années).
-Si \code{t = 2015} et \code{period = 3}, alors le calcul est fait sur la période [2013 - 2015].
-\code{Inf} indique que la période considérée couvre un intervalle commençant de la date de la 
-plus ancienne observation et termine à l'année t.}
+Si \code{t = 2015} et \code{period = 2}, alors le calcul est fait sur la période [2014 - 2015].
+\code{Inf} indique que la période considérée couvre un intervalle commençant à la date de la 
+plus ancienne observation et terminant à l'année \code{t}.}
 }
 \value{
-Data.frame associant à chaque motif ses deux limites.
+Data frame associant à chaque motif ses deux limites.
 }
 \description{
+Calcule les indices de recrutement aux limites temporelles utilisées pour caractériser les motifs.
 La première correspond à l'indice de recrutement calculé sur \code{first_limit} années.
 La seconde correspond à l'indice de recrutement calculé sur la période définie par les paramètres \code{t} et \code{period}.
 }
@@ -40,6 +42,10 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
+\seealso{
+\code{\link{compute_reporting_indexes}}.
+}
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

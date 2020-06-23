@@ -2,16 +2,22 @@
 % Please edit documentation in R/utils.R
 \name{dhms}
 \alias{dhms}
-\title{Convertit une période en secondes en une chaîne de caractères.}
+\title{Décomposition d'un temps}
 \usage{
 dhms(t)
 }
 \arguments{
-\item{t}{Numeric - Temps à convertir en secondes.}
+\item{t}{Numeric. Temps à convertir, en secondes.}
 }
 \value{
-Chaîne de caractère attendue.
+Chaîne de caractère correspondant au temps converti.
 }
 \description{
-Exemples du format de la châine retournée : 1d 02h 25m 47s ; 01m 05s ; 19s.
+Convertit en une chaîne de caractères une période définie en secondes.
+Exemples du format de la chaîne retournée : 1d 02h 25m 47s ; 01m 05s ; 19s.
 }
+\references{
+Stack Overflow topic :
+ \href{https://stackoverflow.com/questions/27312292/convert-seconds-to-days-hoursminutesseconds}{Convert seconds to days:hours:minutes:seconds}
+}
+\keyword{internal}

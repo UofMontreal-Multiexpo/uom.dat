@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{list_separate_patterns,SpectralAnalyzer-method}
 \alias{list_separate_patterns,SpectralAnalyzer-method}
-\title{Identifie l'ensemble des motifs distincts générés à partir des observations.}
+\alias{list_separate_patterns}
+\title{Énumération des motifs}
 \usage{
 \S4method{list_separate_patterns}{SpectralAnalyzer}(
   object,
@@ -16,7 +17,7 @@
 \item{object}{Objet de classe SpectralAnalyzer.}
 
 \item{target}{Type de motifs à énumérer.
-Choix parmi \code{c("frequent itemsets", "closed frequent itemsets", "maximally frequent itemsets")}.}
+Choix parmi \code{"frequent itemsets"}, \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets")}.}
 
 \item{count}{Nombre minimal d'apparition d'un motif pour être considéré comme "fréquent", et par conséquent, conservé.}
 
@@ -26,14 +27,17 @@ Choix parmi \code{c("frequent itemsets", "closed frequent itemsets", "maximally 
 La valeur \code{Inf} par défaut correspond à une recherche de motifs sans limite maximale de taille.}
 }
 \value{
-Data.frame dans laquelle une ligne est une association entre un motif et sa fréquence dans l'ensemble des observations.
+Invisible. Data frame dans laquelle une ligne est une association entre un motif et sa
+ fréquence dans l'ensemble des observations.
 }
 \description{
-La data.frame résultante est associée à l'attribut \code{patterns}.
+Identifie l'ensemble des motifs distincts générés à partir des observations.
+La data frame résultante est assignée à l'attribut \code{patterns}.
 }
 \seealso{
-\code{\link[arules]{APparameter}}
+[arules:ASparameter-class]{arules::APparameter}
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

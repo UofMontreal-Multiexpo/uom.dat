@@ -2,26 +2,33 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{extract_nodes_from_category,SpectralAnalyzer-method}
 \alias{extract_nodes_from_category,SpectralAnalyzer-method}
-\title{Extrait les noeuds correspondant à une valeur de catégorie recherchée}
+\alias{extract_nodes_from_category}
+\title{Recherche de nœuds par catégorie}
 \usage{
 \S4method{extract_nodes_from_category}{SpectralAnalyzer}(object, category, value, target)
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{category}{Nom ou numéro de la catégorie à laquelle accéder (numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).}
+\item{category}{Nom ou numéro de la catégorie sur laquelle effectuer la recherche
+(numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).}
 
 \item{value}{Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.}
 
-\item{target}{Condition pour qu'un noeud soit extrait. Choix parmi \code{c("vertices", "edges")}.
-\code{"vertices"} : recherche des noeuds contenant un item associé à la catégorie recherchée.
-\code{"edges"} : recherche de noeuds générant un lien corresopndant à la catégorie recherchée.}
+\item{target}{Condition pour qu'un nœud soit extrait. Choix parmi \code{"vertices"}, \code{"edges"}.
+\describe{
+  \item{\code{"vertices"}}{Recherche des nœuds contenant un item associé à la valeur de catégorie recherchée.}
+  \item{\code{"edges"}}{Recherche de nœuds générant un lien corresopndant à la valeur de catégorie recherchée.}
+}}
 }
 \value{
-Data.frame des noeuds correspondant aux critères de recherche.
+Data frame des nœuds correspondant aux critères de recherche.
 }
 \description{
-Extrait les noeuds correspondant à une valeur de catégorie recherchée
+Extrait les nœuds correspondant à une valeur de catégorie recherchée
+}
+\seealso{
+\code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_characteristic}}.
 }
 \author{
 Gauthier Magnin

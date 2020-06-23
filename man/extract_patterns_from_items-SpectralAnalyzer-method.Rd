@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{extract_patterns_from_items,SpectralAnalyzer-method}
 \alias{extract_patterns_from_items,SpectralAnalyzer-method}
-\title{Extrait les motifs contenant un ou plusieurs items recherchés.}
+\alias{extract_patterns_from_items}
+\title{Recherche de motifs par item}
 \usage{
 \S4method{extract_patterns_from_items}{SpectralAnalyzer}(
   object,
@@ -14,19 +15,25 @@
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{patterns_characteristics}{Data.frame des caractéristiques des motifs.}
+\item{patterns_characteristics}{Data frame des motifs et de leurs caractéristiques.}
 
 \item{items}{Éléments recherchés (un ou plusieurs).}
 
-\item{target}{Condition pour qu'un motif soit extrait. Choix parmi \code{c("all", "any")}.
-\code{"all"} exprime que l'intégralité des éléments recherchés doivent faire partie d'un motif pour que ce motif soit extrait.
-\code{"any"} exprime qu'au moins un des éléments recherchés doit faire partie d'un motif pour que ce motif soit extrait.}
+\item{target}{Condition pour qu'un motif soit extrait. Choix parmi \code{"all"}, \code{"any"}.
+\describe{
+  \item{\code{"all"}}{L'intégralité des éléments recherchés doivent faire partie d'un motif pour que ce motif soit extrait.}
+  \item{\code{"any"}}{Au moins un des éléments recherchés doit faire partie d'un motif pour que ce motif soit extrait.}
+}}
 }
 \value{
-Sous-ensemble de la data.frame fournie en argument pour les motifs correspondant au critère de recherche.
+Sous-ensemble de la data frame fournie en argument contenant les motifs correspondant au critère de recherche.
 }
 \description{
 Extrait les motifs contenant un ou plusieurs items recherchés.
+}
+\seealso{
+\code{\link{extract_patterns_from_characteristic}}, \code{\link{extract_patterns_from_status}},
+         \code{\link{extract_patterns_from_category}}.
 }
 \author{
 Gauthier Magnin

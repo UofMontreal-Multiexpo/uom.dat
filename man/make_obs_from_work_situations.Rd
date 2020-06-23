@@ -2,7 +2,7 @@
 % Please edit documentation in R/observations_maker.R
 \name{make_obs_from_work_situations}
 \alias{make_obs_from_work_situations}
-\title{Regroupe des prélèvements sous forme d'observations.}
+\title{Regroupement de prélèvements}
 \usage{
 make_obs_from_work_situations(measures, work_situations, additional = NULL)
 }
@@ -16,13 +16,15 @@ make_obs_from_work_situations(measures, work_situations, additional = NULL)
 \value{
 Liste contenant :
  \itemize{
-   \item{} {La liste des observations identifiées.}
-   \item{} {Un vecteur spécifiant pour chaque ligne de \code{measures} si elle a été intégrée dans une observation.}
+   \item{La liste des observations identifiées.}
+   \item{Un vecteur spécifiant pour chaque ligne de \code{measures} si elle a été intégrée dans une observation.}
  }
 }
 \description{
+Regroupe des prélèvements sous forme d'observations.
 Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

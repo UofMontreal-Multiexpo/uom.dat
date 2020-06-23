@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{compute_ksi_threshold,SpectralAnalyzer-method}
 \alias{compute_ksi_threshold,SpectralAnalyzer-method}
-\title{Calcule le nombre de motifs permettant d'expliquer l'essentiel des indices de recrutement.}
+\alias{compute_ksi_threshold}
+\title{Calcul de seuil ksi}
 \usage{
 \S4method{compute_ksi_threshold}{SpectralAnalyzer}(object, reporting_indexes)
 }
@@ -22,6 +23,11 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
+\seealso{
+\code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
+         \code{\link{compute_ri_threshold}}.
+}
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

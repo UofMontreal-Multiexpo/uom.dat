@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{define_dynamic_status,SpectralAnalyzer-method}
 \alias{define_dynamic_status,SpectralAnalyzer-method}
-\title{Définit le statut dynamique de chaque motif.}
+\alias{define_dynamic_status}
+\title{Attribution de statut dynamique}
 \usage{
 \S4method{define_dynamic_status}{SpectralAnalyzer}(object, patterns, status_limit, t = NULL, period = Inf)
 }
@@ -19,12 +20,12 @@ par rapport à la période définie par les paramètres \code{t} et \code{period
 couverte par les observations.}
 
 \item{period}{Intervalle de temps à considérer pour caractériser le motif (nombre d'années).
-Si \code{t = 2015} et \code{period = 3}, alors le calcul est fait sur la période [2013 - 2015].
-\code{Inf} indique que la période considérée couvre un intervalle commençant de la date de la 
-plus ancienne observation et termine à l'année t.}
+Si \code{t = 2015} et \code{period = 2}, alors le calcul est fait sur la période [2014 - 2015].
+\code{Inf} indique que la période considérée couvre un intervalle commençant à la date de la 
+plus ancienne observation et terminant à l'année \code{t}.}
 }
 \value{
-Data.frame associant à chaque motif son statut dynamique.
+Data frame associant à chaque motif son statut dynamique.
 }
 \description{
 Définit le statut dynamique de chaque motif.
@@ -34,6 +35,11 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
+\seealso{
+\code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
+         \code{\link{compute_ksi_threshold}}, \code{\link{compute_ri_threshold}}.
+}
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

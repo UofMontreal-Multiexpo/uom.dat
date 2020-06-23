@@ -2,7 +2,7 @@
 % Please edit documentation in R/observations_maker.R
 \name{make_observations}
 \alias{make_observations}
-\title{Regroupe des prélèvements sous forme d'observations.}
+\title{Regroupement de prélèvements}
 \usage{
 make_observations(
   measures,
@@ -15,13 +15,15 @@ make_observations(
 \arguments{
 \item{measures}{Ensemble de mesures de prélèvements.}
 
-\item{mode}{Mode de création des observations. Choix parmi \code{c(1, 2, 3)}.
-\code{1} Construction d'observations à partir des situations décrites par \code{work_situations}
- et des situations existantes à partir de combinaisons de \code{variable_names} qui ne seraient pas
- décrites dans \code{work_situations}.
-\code{2} Construction d'observations uniquement à partir des situations décrites par \code{work_situations}.
- Les prélèvements restants sont ignorés.
-\code{3} Construction d'observations uniquement à partir des combinaisons de \code{variable_names}.}
+\item{mode}{Mode de création des observations. Choix parmi \code{1}, \code{2}, \code{3}.
+\describe{
+ \item{\code{1}}{Construction d'observations à partir des situations décrites par \code{work_situations}
+  et des situations existantes à partir de combinaisons de \code{variable_names} qui ne seraient pas
+  décrites dans \code{work_situations}.}
+\item{\code{2}}{Construction d'observations uniquement à partir des situations décrites par \code{work_situations}.
+  Les prélèvements restants sont ignorés.}
+\item{\code{3}}{Construction d'observations uniquement à partir des combinaisons de \code{variable_names}.}
+}}
 
 \item{work_situations}{Description de situations de travail.}
 
@@ -33,10 +35,11 @@ make_observations(
 Liste des observations identifiées.
 }
 \description{
+Regroupe des prélèvements sous forme d'observations.
 Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail
  lors d'une même intervention.
 Les situations connues sont décrites par l'argument \code{work_situations}.
-Les situations non-connues sont décrites par les combinaisons existantes des variables dont les noms sont
+Les situations non connues sont décrites par les combinaisons existantes des variables dont les noms sont
  définis par l'argument \code{variable_names}.
 }
 \author{

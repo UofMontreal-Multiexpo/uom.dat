@@ -2,7 +2,7 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{spectral.analyzer}
 \alias{spectral.analyzer}
-\title{Constructeur d'objet SpectralAnalyzer.}
+\title{Constructeur d'Analyseur Spectral}
 \usage{
 spectral.analyzer(
   observations,
@@ -16,18 +16,18 @@ spectral.analyzer(
 }
 \arguments{
 \item{observations}{Liste des éléments retrouvés pour chaque observation.
-Liste sous la forme \code{list( list( CODE = character(), NAME = character(), YEAR = numeric ) )}.
-Chaque observation est alors une liste sous la forme \code{list( CODE = character(), NAME = character(), YEAR = numeric )}
-où \code{CODE} et \code{NAME} sont associés pour identifier un élément.}
+Chaque observation est elle-même une liste sous la forme \code{list( CODE = character(), YEAR = numeric )}.
+Les valeurs de \code{CODE} ne doivent pas contenir le caractère "/".
+Une observation peut contenir des informations supplémentaires quelconques.}
 
-\item{items}{Data.frame associant une ou plusieurs catégories à un élément (\code{items$item}).
+\item{items}{Data frame associant une ou plusieurs catégories à un élément (colonne \code{item}).
 La valeur \code{NULL} par défaut précise qu'aucune catégorie n'est définie.}
 
 \item{target}{Type de motifs à énumérer.
-Choix parmi \code{c("frequent itemsets", "closed frequent itemsets", "maximally frequent itemsets")}.
-Par défaut, \code{"closed frequent itemsets"} fournissant une synthèse des motifs fréquents
+Choix parmi \code{"frequent itemsets"}, \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
+Par défaut, \code{"closed frequent itemsets"}, fournissant une synthèse des motifs fréquents
 de sorte à économiser l'espace mémoire nécessaire.
-Pour énumérer l'intégralité des motifs possibles, utiliser "frequent itemsets".}
+Pour énumérer l'intégralité des motifs possibles, utiliser \code{"frequent itemsets"}.}
 
 \item{count}{Nombre minimal d'apparition d'un motif pour être considéré comme "fréquent", et par conséquent, conservé.}
 
@@ -39,13 +39,13 @@ La valeur \code{Inf} par défaut correspond à une recherche de motifs sans limi
 \item{status_limit}{Intervalle de temps pour lequel caractériser le statut des motifs par rapport à la période totale d'observations (nombre d'années).}
 }
 \value{
-Nouvel objet de classe SpectralAnalyzer.
+Nouvel objet de classe \code{\link{SpectralAnalyzer}}.
 }
 \description{
-Constructeur d'objet SpectralAnalyzer.
+Construit un objet de classe SpectralAnalyzer.
 }
 \seealso{
-\code{\link[arules]{APparameter}}
+\code{\link[arules:ASparameter-class]{arules::APparameter}}.
 }
 \author{
 Gauthier Magnin

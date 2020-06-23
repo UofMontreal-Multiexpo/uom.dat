@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{spectrum_chart,SpectralAnalyzer-method}
 \alias{spectrum_chart,SpectralAnalyzer-method}
-\title{Construit un graphique de type spectre et l'enregistre dans un fichier au format PDF.}
+\alias{spectrum_chart}
+\title{Spectre des motifs}
 \usage{
 \S4method{spectrum_chart}{SpectralAnalyzer}(
   object,
@@ -25,7 +26,7 @@ Par défaut, le graphique est enregistré dans le répertoire de travail.}
 \item{title}{Titre du graphique.}
 }
 \value{
-Data.frame des motifs et caractéristiques utilisées, associés aux identifiants visibles sur le graphique.
+Data frame des motifs et caractéristiques utilisées, associés aux identifiants visibles sur le graphique.
 }
 \description{
 Construit un graphique de type spectre et l'enregistre dans un fichier au format PDF.
@@ -36,7 +37,5 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \author{
-Delphine Bosson-Rieutort
-
-Gauthier Magnin
+Delphine Bosson-Rieutort, Gauthier Magnin
 }

@@ -2,24 +2,27 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{search_links,SpectralAnalyzer-method}
 \alias{search_links,SpectralAnalyzer-method}
-\title{Identifie les liens selon les éléments en commun, entre les noeuds ou les motifs.}
+\alias{search_links}
+\title{Élaboration des liens}
 \usage{
 \S4method{search_links}{SpectralAnalyzer}(object, entities)
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{entities}{Type d'élément pour lequel compter les liens (noeuds ou motifs).
-Choix parmi \code{c("nodes", "patterns")}.}
+\item{entities}{Type d'élément pour lequel compter les liens (nœuds ou motifs).
+Choix parmi \code{"nodes"}, \code{"patterns"}.}
 }
 \value{
-Data.frame associant certaines caractéristiques aux paires de noeuds ou motifs liés.
+Invisible. Data frame détaillant les liens entre les paires de nœuds ou de motifs.
+ Les nœuds ou motifs isolés (c'est-à-dire sans lien avec aucune autre entité) apparaîssent au bas
+ de la data frame.
 }
 \description{
-La data.frame résultante est associée à l'attribut \code{nodes_links} ou \code{patterns_links} respectivement.
+Identifie les liens selon les éléments en commun, entre les nœuds ou les motifs.
+La data frame résultante est assignée à l'attribut \code{nodes_links} ou \code{patterns_links} respectivement.
 }
 \author{
-Delphine Bosson-Rieutort
-
-Gauthier Magnin
+Delphine Bosson-Rieutort, Gauthier Magnin
 }
+\keyword{internal}

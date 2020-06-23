@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{create_spectrum_chart,SpectralAnalyzer-method}
 \alias{create_spectrum_chart,SpectralAnalyzer-method}
-\title{Dessine un graphique de type spectre.}
+\alias{create_spectrum_chart}
+\title{Spectre des motifs}
 \usage{
 \S4method{create_spectrum_chart}{SpectralAnalyzer}(
   object,
@@ -16,7 +17,8 @@
 
 \item{patterns_characteristics}{Ensemble des caractéristiques des motifs dont le spectre est à tracer.}
 
-\item{weights_by_node_type}{Data.frame contenant, pour chaque motif, son poids dans des noeuds complexes et son poids dans des noeuds simples.}
+\item{weights_by_node_type}{Data frame contenant, pour chaque motif, son poids dans des nœuds complexes
+et son poids dans des nœuds simples.}
 
 \item{title}{Titre du graphique.}
 }
@@ -28,8 +30,10 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
-\author{
-Delphine Bosson-Rieutort
-
-Gauthier Magnin
+\seealso{
+\code{\link{spectrum_chart}}, \code{\link{compute_pattern_distribution_in_nodes}}.
 }
+\author{
+Delphine Bosson-Rieutort, Gauthier Magnin
+}
+\keyword{internal}

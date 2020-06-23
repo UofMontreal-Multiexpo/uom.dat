@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{cap}
 \alias{cap}
-\title{Change la première lettre d'une chaîne de caractères en une majuscule.}
+\title{Capitalise une chaîne de caractères}
 \usage{
 cap(s)
 }
@@ -15,3 +15,4 @@ La chaîne de caractères fournie par l'argument \code{s}, commençant par une m
 \description{
 Change la première lettre d'une chaîne de caractères en une majuscule.
 }
+\keyword{internal}

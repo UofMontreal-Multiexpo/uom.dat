@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{display_time}
 \alias{display_time}
-\title{Évalue une expression et affiche le temps écoulé selon le format défini par la fonction \code{dhms}.}
+\title{Affiche un temps d'exécution}
 \usage{
 display_time(expr)
 }
@@ -10,8 +10,13 @@ display_time(expr)
 \item{expr}{Expression R valide à chronométrer.}
 }
 \description{
+Évalue une expression et affiche le temps écoulé selon le format défini par la fonction \code{dhms}.
+Exemples du format de la chaîne retournée : [1d 02h 25m 47s] ; [01m 05s] ; [19s].
+}
+\details{
 Un appel au garbage collector est effectué avant le chronométrage.
 }
 \seealso{
 \code{\link{dhms}}.
 }
+\keyword{internal}

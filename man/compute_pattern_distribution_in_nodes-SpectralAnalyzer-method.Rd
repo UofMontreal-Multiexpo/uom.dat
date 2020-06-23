@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{compute_pattern_distribution_in_nodes,SpectralAnalyzer-method}
 \alias{compute_pattern_distribution_in_nodes,SpectralAnalyzer-method}
-\title{Calcule les distributions des poids et longueurs des noeuds contenant un motif, pour chaque motif.}
+\alias{compute_pattern_distribution_in_nodes}
+\title{Distribution des motifs parmi les nœuds}
 \usage{
 \S4method{compute_pattern_distribution_in_nodes}{SpectralAnalyzer}(object, patterns)
 }
@@ -13,14 +14,15 @@
 }
 \value{
 Liste contenant :
- \itemize{
-   \item{} {La distribution, pour chaque motif, des poids des noeuds dans lequel il est inclus.}
-   \item{} {La distribution, pour chaque motif, des longueurs des noeuds dans lequel il est inclus.}
+ \describe{
+   \item{\code{weight_distribution}}{La distribution, pour chaque motif, des poids des nœuds dans lequel ils sont inclus.}
+   \item{\code{length_distribution}}{La distribution, pour chaque motif, des longueurs des nœuds dans lequel ils sont inclus.}
  }
 }
 \description{
-Calcule les distributions des poids et longueurs des noeuds contenant un motif, pour chaque motif.
+Calcule les distributions des poids et longueurs des nœuds dans lesquels sont inclus chaque motif.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

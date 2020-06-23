@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{compute_reporting_indexes,SpectralAnalyzer-method}
 \alias{compute_reporting_indexes,SpectralAnalyzer-method}
-\title{Calcule l'indice de recrutement de chaque motif pour une période donnée.}
+\alias{compute_reporting_indexes}
+\title{Calcul d'indice de recrutement}
 \usage{
 \S4method{compute_reporting_indexes}{SpectralAnalyzer}(object, patterns, t = NULL, period = Inf)
 }
@@ -17,13 +18,14 @@ couverte par les observations.}
 
 \item{period}{Intervalle de temps sur lequel calculer l'indice de recrutement (nombre d'années).
 Si \code{t = 2015} et \code{period = 2}, alors le calcul est fait sur la période [2014 - 2015].
-\code{Inf} indique que la période considérée couvre un intervalle commençant de la date de la 
-plus ancienne observation et termine à l'année t.}
+\code{Inf} indique que la période considérée couvre un intervalle commençant à la date de la 
+plus ancienne observation et terminant à l'année \code{t}.}
 }
 \value{
-Data.frame associant un indice de recrutement à chaque motif.
+Data frame associant un indice de recrutement à chaque motif.
 }
 \description{
+Calcule l'indice de recrutement de chaque motif pour une période donnée.
 Cet indice informe sur la proportion et l'importance du recrutement d'un motif en tenant compte
  du recrutement des autres motifs.
 }
@@ -32,6 +34,10 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
+\seealso{
+\code{\link{compute_reporting_indexes_limits}}.
+}
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{compute_ri_threshold,SpectralAnalyzer-method}
 \alias{compute_ri_threshold,SpectralAnalyzer-method}
-\title{Calcule la valeur limite séparant deux statuts dynamiques par rapport aux indices de recrutement.}
+\alias{compute_ri_threshold}
+\title{Calcul de seuil de RI}
 \usage{
 \S4method{compute_ri_threshold}{SpectralAnalyzer}(object, reporting_indexes, ksi = NULL)
 }
@@ -18,14 +19,20 @@ Est calculé si valeur \code{NULL}.}
 Seuil calculé.
 }
 \description{
-Les motifs sont ordonnés par ordre décroissant de leur valeur d'indice de recrutement et séparé en 
-deux parties par le seuil \code{ksi}.
+Calcule la valeur limite séparant deux statuts dynamiques par rapport aux indices de recrutement.
+Les motifs sont ordonnés par ordre décroissant de leur valeur d'indice de recrutement et séparé 
+par le seuil \code{ksi}.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
+\seealso{
+\code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
+         \code{\link{compute_ksi_threshold}}.
+}
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

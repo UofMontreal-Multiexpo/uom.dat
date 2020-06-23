@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{compute_specificity,SpectralAnalyzer-method}
 \alias{compute_specificity,SpectralAnalyzer-method}
-\title{Calcule la spécificité de l'information portée par chaque motif.}
+\alias{compute_specificity}
+\title{Calcul de spécificité}
 \usage{
 \S4method{compute_specificity}{SpectralAnalyzer}(object, patterns, frequencies, weights)
 }
@@ -19,6 +20,7 @@
 Vecteur contenant la spécificité de chaque motif contenu dans \code{patterns}.
 }
 \description{
+Calcule la spécificité de l'information portée par chaque motif.
 La spécificité correspond au caractère d'un motif spécifique d'une combinaison particulière
  ou ubiquitaire et permettant la formation de nombreux agrégats.
 }
@@ -30,3 +32,4 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

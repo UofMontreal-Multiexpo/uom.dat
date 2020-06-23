@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{spectrosome_chart,SpectralAnalyzer-method}
 \alias{spectrosome_chart,SpectralAnalyzer-method}
-\title{Construit un ou plusieurs graphiques de type spectrosome et les enregistre au format PNG.}
+\alias{spectrosome_chart}
+\title{Spectrosome}
 \usage{
 \S4method{spectrosome_chart}{SpectralAnalyzer}(
   object,
@@ -18,19 +19,21 @@
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{entities}{Type d'élément pour lequel construire le spectrosome (noeuds ou motifs).
-Choix parmi \code{c("nodes", "patterns")}.}
+\item{entities}{Type d'élément pour lequel construire le spectrosome (nœuds ou motifs).
+Choix parmi \code{"nodes"}, \code{"patterns"}.}
 
-\item{characteristics}{Ensemble des caractéristiques des noeuds ou motifs dont le spectrosome est à tracer.}
+\item{characteristics}{Ensemble des caractéristiques des nœuds ou motifs dont le spectrosome est à tracer.}
 
 \item{nb_graph}{Nombre de graphes à générer et enregistrer.}
 
 \item{vertex_size}{Façon dont les tailles des sommets du graphe doivent être définies.
-Choix parmi \code{c("relative", "grouped", "absolute", "equal")}.
-\code{"relative"} : la taille d'un sommet dépend de l'intervalle de valeurs des différents poids.
-\code{"grouped"} : les poids des motifs sont regroupés selon des intervalles. À chaque intervalle correspond une taille.
-\code{"absolute"} : la taille d'un sommet est définie directement en fonction du poids du motif.
-\code{"equal"} : les sommets ont tous la même taille.}
+Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
+\describe{
+  \item{\code{"relative"}}{La taille d'un sommet dépend de l'intervalle de valeurs des différents poids.}
+  \item{\code{"grouped"}}{Les poids des motifs sont regroupés selon des intervalles. À chaque intervalle correspond une taille.}
+  \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
+  \item{\code{"equal"}}{Les sommets ont tous la même taille.}
+}}
 
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}
@@ -42,9 +45,10 @@ Si \code{nb_graph} est supérieur à \code{1}, un numéro est ajouté automatiqu
 }
 \value{
 Liste contenant :
- \itemize{
-   \item{} {Data.frame des noeuds ou motifs et caractéristiques utilisées, associés aux identifiants des sommets du graphe.}
-   \item{} {Data.frame des informations relatives aux arêtes du graphe.}
+ \describe{
+   \item{\code{vertices}}{Data frame des nœuds ou motifs et caractéristiques utilisées,
+                          associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
+   \item{\code{edges}}{Data frame des informations relatives aux arêtes du graphe.}
  }
 }
 \description{
@@ -53,14 +57,18 @@ Construit un ou plusieurs graphiques de type spectrosome et les enregistre au fo
 \details{
 Si des catégories sont associées aux items, chaque catégorie génère un spectrosome.
  Le nom de la catégorie est ajouté à la fin du nom du fichier.
+
+Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
+ liens simples, elles apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
+\seealso{
+\code{\link{degree}}.
+}
 \author{
-Delphine Bosson-Rieutort
-
-Gauthier Magnin
+Delphine Bosson-Rieutort, Gauthier Magnin
 }

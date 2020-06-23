@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{check_acces_for_category,SpectralAnalyzer-method}
 \alias{check_acces_for_category,SpectralAnalyzer-method}
-\title{Vérifie que les paramètres fournis correspondent à une catégorie existante.}
+\alias{check_acces_for_category}
+\title{Validation de paramètres de recherche par catégorie}
 \usage{
 \S4method{check_acces_for_category}{SpectralAnalyzer}(object, category, value)
 }
@@ -14,8 +15,13 @@
 \item{value}{Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.}
 }
 \description{
+Vérifie que les paramètres fournis correspondent à une catégorie existante.
 Affiche un message d'erreur si ce n'est pas le cas.
+}
+\seealso{
+\code{\link{extract_patterns_from_category}}, \code{\link{extract_nodes_from_category}}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

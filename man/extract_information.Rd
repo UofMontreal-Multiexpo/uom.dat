@@ -2,25 +2,27 @@
 % Please edit documentation in R/observations_maker.R
 \name{extract_information}
 \alias{extract_information}
-\title{Extrait les informations associées aux observations qui contiennent l'ensemble d'items recherché.}
+\title{Recherche d'informations}
 \usage{
 extract_information(observations, items, info_names)
 }
 \arguments{
 \item{observations}{Liste des observations sur lesquels effectuer la recherche.}
 
-\item{items}{Éléments recherchés (un ou plusieurs).}
+\item{items}{Élément(s) recherché(s).}
 
 \item{info_names}{Noms des informations à extraire des observations.}
 }
 \value{
-Vecteur (si un seul type d'information à extraire) ou matrice des informations correspondant à la recherche.
+Vecteur ou matrice des informations correspondant à la recherche.
+ Vecteur si un seul type d'information est à extraire. Matrice sinon.
 }
 \description{
-Extrait les informations associées aux observations qui contiennent l'ensemble d'items recherché.
+Extrait les informations associées aux observations qui contiennent un ensemble d'items recherché.
 }
 \examples{
 extract_information(observations, 27, c("METIER", "TACHE"))
+
 }
 \author{
 Gauthier Magnin

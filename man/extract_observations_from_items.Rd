@@ -2,18 +2,20 @@
 % Please edit documentation in R/observations_maker.R
 \name{extract_observations_from_items}
 \alias{extract_observations_from_items}
-\title{Extrait les observations correspondant à un ou plusieurs items recherchés.}
+\title{Recherche d'observations}
 \usage{
 extract_observations_from_items(observations, items, target = "all")
 }
 \arguments{
 \item{observations}{Liste des observations sur lesquels effectuer la recherche.}
 
-\item{items}{Éléments recherchés (un ou plusieurs).}
+\item{items}{Élément(s) recherché(s).}
 
-\item{target}{Condition pour qu'une observation soit extraite. Choix parmi \code{c("all", "any")}.
-\code{"all"} exprime que l'intégralité des items recherchés doivent faire partie d'une observation pour que cette observation soit extraite.
-\code{"any"} exprime qu'au moins un des items recherchés doit faire partie d'une observation pour que cette observation soit extraite.}
+\item{target}{Condition pour qu'une observation soit extraite. Choix parmi \code{"all"}, \code{"any"}.
+\describe{
+ \item{\code{"all"}}{L'intégralité des items recherchés doivent faire partie d'une observation pour que cette observation soit extraite.}
+ \item{\code{"any"}}{Au moins un des items recherchés doit faire partie d'une observation pour que cette observation soit extraite.}
+}}
 }
 \value{
 Sous-ensemble de la liste d'observations correspondant aux critères de recherche.

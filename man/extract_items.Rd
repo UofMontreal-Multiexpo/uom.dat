@@ -2,7 +2,7 @@
 % Please edit documentation in R/observations_maker.R
 \name{extract_items}
 \alias{extract_items}
-\title{Extrait les items associés aux observations correspondant à un ou plusieurs critères de recherche.}
+\title{Recherche d'items}
 \usage{
 extract_items(observations, info_names, info_values)
 }
@@ -14,13 +14,14 @@ extract_items(observations, info_names, info_values)
 \item{info_values}{Valeurs recherchées pour les informations décrite par l'argument \code{info_names}.}
 }
 \value{
-Data.frame (code et nom) des items correspondant à la recherche.
+Data frame (code et nom) des items correspondant à la recherche.
 }
 \description{
 Extrait les items associés aux observations correspondant à un ou plusieurs critères de recherche.
 }
 \examples{
 extract_items(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
+
 }
 \author{
 Gauthier Magnin

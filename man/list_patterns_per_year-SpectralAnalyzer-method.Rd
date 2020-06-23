@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{list_patterns_per_year,SpectralAnalyzer-method}
 \alias{list_patterns_per_year,SpectralAnalyzer-method}
-\title{Compte le nombre d'apparition de chaque motif selon l'année.}
+\alias{list_patterns_per_year}
+\title{Dénombrement des motifs par année}
 \usage{
 \S4method{list_patterns_per_year}{SpectralAnalyzer}(object)
 }
@@ -10,11 +11,14 @@
 \item{object}{Objet de classe SpectralAnalyzer.}
 }
 \value{
-Matrice des poids de chaque motif dans laquelle les lignes correspondent aux motifs et les colonnes aux années.
+Invisible. Matrice des poids de chaque motif, par année.
+ Les lignes correspondent aux motifs. Les colonnes correspondent aux années.
 }
 \description{
-La matrice résultante est associée à l'attribut \code{patterns_per_year}.
+Compte le nombre d'apparitions de chaque motif selon l'année.
+La matrice résultante est assignée à l'attribut \code{patterns_per_year}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

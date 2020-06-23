@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{list_patterns_by_obs,SpectralAnalyzer-method}
 \alias{list_patterns_by_obs,SpectralAnalyzer-method}
-\title{Associe à chaque observation distincte les motifs qui y sont inclus.}
+\alias{list_patterns_by_obs}
+\title{Liaison des nœuds aux motifs}
 \usage{
 \S4method{list_patterns_by_obs}{SpectralAnalyzer}(object)
 }
@@ -10,11 +11,15 @@
 \item{object}{Objet de classe SpectralAnalyzer.}
 }
 \value{
-Matrice de booléens dans laquelle les lignes correspondent aux observations et les colones aux motifs.
+Invisible. Matrice de booléens dans laquelle les lignes correspondent aux observations
+ et les colones aux motifs.
+ Une case ayant la valeur \code{TRUE} signifie que le motif est inclus dans l'observation (ou le nœud).
 }
 \description{
-La matrice résultante est associée à l'attribut \code{obs_patterns}.
+Associe à chaque observation distincte (c'est-à-dire, chaque nœud) les motifs qui y sont inclus.
+La matrice résultante est assignée à l'attribut \code{obs_patterns}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

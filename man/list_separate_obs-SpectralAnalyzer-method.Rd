@@ -2,8 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{list_separate_obs,SpectralAnalyzer-method}
 \alias{list_separate_obs,SpectralAnalyzer-method}
-\title{Identifie les observations distinctes et calcule le nombre de recrutement
-de chacune de ces observations.}
+\alias{list_separate_obs}
+\title{Énumération des nœuds}
 \usage{
 \S4method{list_separate_obs}{SpectralAnalyzer}(object)
 }
@@ -11,11 +11,15 @@ de chacune de ces observations.}
 \item{object}{Objet de classe SpectralAnalyzer.}
 }
 \value{
-Data.frame des observations distinctes et de leurs caractéristiques (longueur et poids).
+Invisible. Data frame des observations distinctes et de leurs caractéristiques
+ (longueur et poids).
 }
 \description{
-La data.frame résultante est associée à l'attribut \code{nodes}.
+Identifie les observations distinctes et calcule la taille et le nombre de recrutements
+de chacune de ces observations.
+La data frame résultante est assignée à l'attribut \code{nodes}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/observations_maker.R
 \name{turn_interventions_into_observations}
 \alias{turn_interventions_into_observations}
-\title{Regroupe des prélèvements sous forme d'observations.}
+\title{Regroupement de prélèvements}
 \usage{
 turn_interventions_into_observations(measures, additional = NULL)
 }
@@ -15,6 +15,7 @@ turn_interventions_into_observations(measures, additional = NULL)
 Liste des observations identifiées.
 }
 \description{
+Regroupe des prélèvements sous forme d'observations.
 Les substances retrouvées dans une même intervention sont regroupées en une même observation.
 }
 \author{

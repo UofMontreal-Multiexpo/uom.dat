@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{check_params_for_RI,SpectralAnalyzer-method}
 \alias{check_params_for_RI,SpectralAnalyzer-method}
-\title{Vérifie la validité des valeurs des paramètres donnés en arguments pour le calcul d'indices de recrutement.}
+\alias{check_params_for_RI}
+\title{Validation de paramètres de calcul de RI}
 \usage{
 \S4method{check_params_for_RI}{SpectralAnalyzer}(object, t, period)
 }
@@ -14,16 +15,21 @@
 couverte par les observations.}
 
 \item{period}{Intervalle de temps sur lequel calculer l'indice de recrutement (nombre d'années).
-Si \code{t = 2015} et \code{period = 3}, alors le calcul est fait sur la période [2013 - 2015].
-\code{Inf} indique que la période considérée couvre un intervalle commençant de la date de la 
-plus ancienne observation et termine à l'année t.}
+Si \code{t = 2015} et \code{period = 2}, alors le calcul est fait sur la période [2014 - 2015].
+\code{Inf} indique que la période considérée couvre un intervalle commençant à la date de la 
+plus ancienne observation et terminant à l'année \code{t}.}
 }
 \value{
 Liste contenant la valeur finale de \code{t} et celle de \code{period}.
 }
 \description{
+Vérifie la validité des valeurs des paramètres donnés en arguments pour le calcul d'indices de recrutement.
 Adapte leurs valeurs si elles n'entrent pas dans l'intervalle adéquate et affiche un message d'information.
+}
+\seealso{
+\code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

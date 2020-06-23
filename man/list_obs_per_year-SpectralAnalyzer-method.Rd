@@ -2,8 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{list_obs_per_year,SpectralAnalyzer-method}
 \alias{list_obs_per_year,SpectralAnalyzer-method}
-\title{Identifie les observations distinctes par année et calcule le nombre de recrutement
-de chacune de ces observations.}
+\alias{list_obs_per_year}
+\title{Dénombrement des observations par année}
 \usage{
 \S4method{list_obs_per_year}{SpectralAnalyzer}(object)
 }
@@ -11,11 +11,15 @@ de chacune de ces observations.}
 \item{object}{Objet de classe SpectralAnalyzer.}
 }
 \value{
-Data.frame des observations distinctes, par année, et de leurs caractéristiques (longueur et poids).
+Invisible. Matrice du nombre d'occurrences de chaque observation distincte, par année.
+ Les lignes correspondent aux observations. Les colonnes correspondent aux années.
 }
 \description{
-La data.frame résultante est associée à l'attribut \code{nodes_per_year}.
+Identifie les observations distinctes par année et calcule le nombre de recrutements
+de chacune de ces observations.
+La matrice résultante est assignée à l'attribut \code{nodes_per_year}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

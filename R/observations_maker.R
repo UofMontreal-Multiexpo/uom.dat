@@ -1,26 +1,30 @@
 
 #### Fonctions de structuration d'observations ####
 
-#' Regroupe des prélèvements sous forme d'observations.
+#' Regroupement de prélèvements
 #' 
+#' Regroupe des prélèvements sous forme d'observations.
 #' Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail
 #'  lors d'une même intervention.
 #' Les situations connues sont décrites par l'argument \code{work_situations}.
-#' Les situations non-connues sont décrites par les combinaisons existantes des variables dont les noms sont
+#' Les situations non connues sont décrites par les combinaisons existantes des variables dont les noms sont
 #'  définis par l'argument \code{variable_names}.
 #' 
 #' @param measures Ensemble de mesures de prélèvements.
-#' @param mode Mode de création des observations. Choix parmi \code{c(1, 2, 3)}.
-#'  \code{1} Construction d'observations à partir des situations décrites par \code{work_situations}
-#'   et des situations existantes à partir de combinaisons de \code{variable_names} qui ne seraient pas
-#'   décrites dans \code{work_situations}.
-#'  \code{2} Construction d'observations uniquement à partir des situations décrites par \code{work_situations}.
-#'   Les prélèvements restants sont ignorés.
-#'  \code{3} Construction d'observations uniquement à partir des combinaisons de \code{variable_names}.
+#' @param mode Mode de création des observations. Choix parmi \code{1}, \code{2}, \code{3}.
+#'  \describe{
+#'   \item{\code{1}}{Construction d'observations à partir des situations décrites par \code{work_situations}
+#'    et des situations existantes à partir de combinaisons de \code{variable_names} qui ne seraient pas
+#'    décrites dans \code{work_situations}.}
+#'  \item{\code{2}}{Construction d'observations uniquement à partir des situations décrites par \code{work_situations}.
+#'    Les prélèvements restants sont ignorés.}
+#'  \item{\code{3}}{Construction d'observations uniquement à partir des combinaisons de \code{variable_names}.}
+#'  }
 #' @param work_situations Description de situations de travail.
 #' @param variable_names Noms des variables à prendre en compte pour considérer une situation de travail.
 #' @param additional Noms des informations à conserver lors de la constitution des observations.
 #' @return Liste des observations identifiées.
+#' 
 #' @author Gauthier Magnin
 #' @export
 make_observations = function(measures, mode, work_situations = NULL, variable_names = NULL, additional = NULL) {
@@ -61,8 +65,9 @@ make_observations = function(measures, mode, work_situations = NULL, variable_na
 }
 
 
-#' Regroupe des prélèvements sous forme d'observations.
+#' Regroupement de prélèvements
 #' 
+#' Regroupe des prélèvements sous forme d'observations.
 #' Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail.
 #' 
 #' @param measures Ensemble de mesures de prélèvements.
@@ -70,10 +75,12 @@ make_observations = function(measures, mode, work_situations = NULL, variable_na
 #' @param additional Noms des informations à conserver lors de la constitution des observations.
 #' @return Liste contenant :
 #'  \itemize{
-#'    \item{} {La liste des observations identifiées.}
-#'    \item{} {Un vecteur spécifiant pour chaque ligne de \code{measures} si elle a été intégrée dans une observation.}
+#'    \item{La liste des observations identifiées.}
+#'    \item{Un vecteur spécifiant pour chaque ligne de \code{measures} si elle a été intégrée dans une observation.}
 #'  }
+#' 
 #' @author Gauthier Magnin
+#' @keywords internal
 make_obs_from_work_situations = function(measures, work_situations, additional = NULL) {
   
   # Vecteur spécifiant pour chaque prélèvement s'il a été traité ou non
@@ -138,16 +145,19 @@ make_obs_from_work_situations = function(measures, work_situations, additional =
 }
 
 
-#' Regroupe des prélèvements sous forme d'observations.
+#' Regroupement de prélèvements
 #' 
+#' Regroupe des prélèvements sous forme d'observations.
 #' Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail.
 #' Ces situations sont décrites par les combinaisons de variables dont les noms sont définis en paramètres.
 #' 
 #' @param measures Ensemble de mesures de prélèvements.
 #' @param variable_names Noms des variables à prendre en compte pour considérer une situation de travail.
 #' @param additional Noms des informations à conserver lors de la constitution des observations.
-#' @return  Liste des observations identifiées.
+#' @return Liste des observations identifiées.
+#' 
 #' @author Gauthier Magnin
+#' @keywords internal
 make_obs_from_unspecified_situations = function(measures, variable_names, additional = NULL) {
   
   # Liste qui contiendra les observations construites
@@ -202,13 +212,15 @@ make_obs_from_unspecified_situations = function(measures, variable_names, additi
 }
 
 
-#' Regroupe des prélèvements sous forme d'observations.
+#' Regroupement de prélèvements
 #' 
+#' Regroupe des prélèvements sous forme d'observations.
 #' Les substances retrouvées dans une même intervention sont regroupées en une même observation.
 #' 
 #' @param measures Ensemble de mesures de prélèvements.
 #' @param additional Noms des informations à conserver lors de la constitution des observations.
 #' @return Liste des observations identifiées.
+#' 
 #' @author Gauthier Magnin
 #' @export
 turn_interventions_into_observations = function(measures, additional = NULL) {
@@ -240,14 +252,19 @@ turn_interventions_into_observations = function(measures, additional = NULL) {
 
 #### Fonctions de recherche dans une structure d'observations ####
 
+#' Recherche d'observations
+#' 
 #' Extrait les observations correspondant à un ou plusieurs items recherchés.
 #' 
 #' @param observations Liste des observations sur lesquels effectuer la recherche.
-#' @param items Éléments recherchés (un ou plusieurs).
-#' @param target Condition pour qu'une observation soit extraite. Choix parmi \code{c("all", "any")}.
-#'  \code{"all"} exprime que l'intégralité des items recherchés doivent faire partie d'une observation pour que cette observation soit extraite.
-#'  \code{"any"} exprime qu'au moins un des items recherchés doit faire partie d'une observation pour que cette observation soit extraite.
+#' @param items Élément(s) recherché(s).
+#' @param target Condition pour qu'une observation soit extraite. Choix parmi \code{"all"}, \code{"any"}.
+#'  \describe{
+#'   \item{\code{"all"}}{L'intégralité des items recherchés doivent faire partie d'une observation pour que cette observation soit extraite.}
+#'   \item{\code{"any"}}{Au moins un des items recherchés doit faire partie d'une observation pour que cette observation soit extraite.}
+#'  }
 #' @return Sous-ensemble de la liste d'observations correspondant aux critères de recherche.
+#' 
 #' @author Gauthier Magnin
 #' @export
 extract_observations_from_items = function(observations, items, target = "all") {
@@ -265,13 +282,18 @@ extract_observations_from_items = function(observations, items, target = "all") 
 }
 
 
+#' Recherche d'observations
+#' 
 #' Extrait les observations correspondant à un ou plusieurs critères de recherche.
 #' 
 #' @param observations Liste des observations sur lesquels effectuer la recherche.
 #' @param info_names Noms des informations contenues dans les observations, sur lesquels la recherche doit être faite.
 #' @param info_values Valeurs recherchées pour les informations décrite par l'argument \code{info_names}.
 #' @return Sous-ensemble de la liste d'observations correspondant aux critères de recherche.
-#' @examples extract_observations_from_information(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
+#' 
+#' @examples
+#' extract_observations_from_information(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
+#' 
 #' @author Gauthier Magnin
 #' @export
 extract_observations_from_information = function(observations, info_names, info_values) {
@@ -287,13 +309,18 @@ extract_observations_from_information = function(observations, info_names, info_
 }
 
 
+#' Recherche d'items
+#' 
 #' Extrait les items associés aux observations correspondant à un ou plusieurs critères de recherche.
 #' 
 #' @param observations Liste des observations sur lesquels effectuer la recherche.
 #' @param info_names Noms des informations contenues dans les observations, sur lesquels la recherche doit être faite.
 #' @param info_values Valeurs recherchées pour les informations décrite par l'argument \code{info_names}.
-#' @return Data.frame (code et nom) des items correspondant à la recherche.
-#' @examples extract_items(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
+#' @return Data frame (code et nom) des items correspondant à la recherche.
+#' 
+#' @examples
+#' extract_items(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
+#' 
 #' @author Gauthier Magnin
 #' @export
 extract_items = function(observations, info_names, info_values) {
@@ -312,13 +339,19 @@ extract_items = function(observations, info_names, info_values) {
 }
 
 
-#' Extrait les informations associées aux observations qui contiennent l'ensemble d'items recherché.
+#' Recherche d'informations
+#' 
+#' Extrait les informations associées aux observations qui contiennent un ensemble d'items recherché.
 #' 
 #' @param observations Liste des observations sur lesquels effectuer la recherche.
-#' @param items Éléments recherchés (un ou plusieurs).
+#' @param items Élément(s) recherché(s).
 #' @param info_names Noms des informations à extraire des observations.
-#' @return Vecteur (si un seul type d'information à extraire) ou matrice des informations correspondant à la recherche.
-#' @examples extract_information(observations, 27, c("METIER", "TACHE"))
+#' @return Vecteur ou matrice des informations correspondant à la recherche.
+#'  Vecteur si un seul type d'information est à extraire. Matrice sinon.
+#' 
+#' @examples
+#' extract_information(observations, 27, c("METIER", "TACHE"))
+#' 
 #' @author Gauthier Magnin
 #' @export
 extract_information = function(observations, items, info_names) {

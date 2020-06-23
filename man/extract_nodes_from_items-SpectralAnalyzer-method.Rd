@@ -2,26 +2,32 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{extract_nodes_from_items,SpectralAnalyzer-method}
 \alias{extract_nodes_from_items,SpectralAnalyzer-method}
-\title{Extrait les noeuds contenant un ou plusieurs items recherchés.}
+\alias{extract_nodes_from_items}
+\title{Recherche de nœuds par item}
 \usage{
 \S4method{extract_nodes_from_items}{SpectralAnalyzer}(object, nodes_characteristics, items, target = "all")
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{nodes_characteristics}{Data.frame des caractéristiques des noeuds.}
+\item{nodes_characteristics}{Data frame des nœuds et de leurs caractéristiques.}
 
 \item{items}{Éléments recherchés (un ou plusieurs).}
 
-\item{target}{Condition pour qu'un noeud soit extrait. Choix parmi \code{c("all", "any")}.
-\code{"all"} exprime que l'intégralité des éléments recherchés doivent faire partie d'un noeud pour que ce noeud soit extrait.
-\code{"any"} exprime qu'au moins un des éléments recherchés doit faire partie d'un noeud pour que ce noeud soit extrait.}
+\item{target}{Condition pour qu'un nœud soit extrait. Choix parmi \code{"all"}, \code{"any"}.
+\describe{
+  \item{\code{"all"}}{L'intégralité des éléments recherchés doivent faire partie d'un nœud pour que ce nœud soit extrait.}
+  \item{\code{"any"}}{Au moins un des éléments recherchés doit faire partie d'un nœud pour que ce nœud soit extrait.}
+}}
 }
 \value{
-Sous-ensemble de la data.frame fournie en argument pour les noeuds correspondant au critère de recherche.
+Sous-ensemble de la data frame fournie en argument contenant les nœuds correspondant au critère de recherche.
 }
 \description{
-Extrait les noeuds contenant un ou plusieurs items recherchés.
+Extrait les nœuds contenant un ou plusieurs items recherchés.
+}
+\seealso{
+\code{\link{extract_nodes_from_characteristic}}, \code{\link{extract_nodes_from_category}}.
 }
 \author{
 Gauthier Magnin

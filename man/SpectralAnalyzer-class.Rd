@@ -3,7 +3,8 @@
 \docType{class}
 \name{SpectralAnalyzer-class}
 \alias{SpectralAnalyzer-class}
-\title{Classe d'objet S4 permettant une analyse spectrale.}
+\alias{SpectralAnalyzer}
+\title{Analyseur Spectral}
 \description{
 Classe d'objet S4 permettant une analyse spectrale.
 }
@@ -28,11 +29,11 @@ Classe d'objet S4 permettant une analyse spectrale.
 
 \item{\code{nodes_per_year}}{Nombre de recrutements de chaque observation par année.}
 
-\item{\code{nodes}}{Ensemble des noeuds, c'est-à-dire ensemble des observations distinctes.}
+\item{\code{nodes}}{Ensemble des nœuds, c'est-à-dire ensemble des observations distinctes.}
 
-\item{\code{n_links}}{Ensemble des poids des liens entre les noeuds.}
+\item{\code{n_links}}{Ensemble des poids des liens entre les nœuds.}
 
-\item{\code{nodes_links}}{Ensemble des liens entre les noeuds et caractéristiques de ces liens.}
+\item{\code{nodes_links}}{Ensemble des liens entre les nœuds et caractéristiques de ces liens.}
 
 \item{\code{obs_patterns}}{Ensemble des motifs associés à chaque observation disctincte.}
 

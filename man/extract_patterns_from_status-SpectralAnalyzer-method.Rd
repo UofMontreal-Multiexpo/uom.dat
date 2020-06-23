@@ -2,7 +2,8 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{extract_patterns_from_status,SpectralAnalyzer-method}
 \alias{extract_patterns_from_status,SpectralAnalyzer-method}
-\title{Extrait les motifs dont le statut correspond à une valeur recherchée.}
+\alias{extract_patterns_from_status}
+\title{Recherche de motifs par statut}
 \usage{
 \S4method{extract_patterns_from_status}{SpectralAnalyzer}(
   object,
@@ -14,20 +15,26 @@
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{patterns_characteristics}{Data.frame des caractéristiques des motifs.}
+\item{patterns_characteristics}{Data frame des motifs et de leurs caractéristiques.}
 
 \item{value}{Valeur de statut recherché (une ou plusieurs).}
 
 \item{condition}{Condition de la recherche.
-Choix parmi \code{c("EQ", "NE")}.
-\code{"EQ"} : Le statut du motif doit être l'une des valeurs recherchées (Equal).
-\code{"NE"} : Le statut du motif doit être différente des valeurs recherchées (Not Equal).}
+Choix parmi \code{"EQ"}, \code{"NE"}.
+\describe{
+  \item{\code{"EQ"}}{\strong{EQ}ual : le statut du motif doit être l'une des valeurs recherchées.}
+  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual : le statut du motif doit être différente des valeurs recherchées.}
+}}
 }
 \value{
-Sous-ensemble de la data.frame fournie en argument pour les motifs satisfaisant le critère de recherche.
+Sous-ensemble de la data frame fournie en argument contenant les motifs satisfaisant le critère de recherche.
 }
 \description{
 Extrait les motifs dont le statut correspond à une valeur recherchée.
+}
+\seealso{
+\code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_characteristic}},
+         \code{\link{extract_patterns_from_category}}.
 }
 \author{
 Gauthier Magnin

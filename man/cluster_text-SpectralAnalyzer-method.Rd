@@ -2,22 +2,25 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{cluster_text,SpectralAnalyzer-method}
 \alias{cluster_text,SpectralAnalyzer-method}
-\title{Identifie et affiche les noms des clusters sur le graphe fourni en argument.}
+\alias{cluster_text}
+\title{Affichage des noms des clusters}
 \usage{
 \S4method{cluster_text}{SpectralAnalyzer}(object, graph, links)
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{graph}{Graphe généré par la fonction \code{\link[sna]{gplot}}}
+\item{graph}{Graphe généré par la fonction \code{\link[sna:gplot]{sna::gplot}}.}
 
 \item{links}{Liens des motifs utilisés pour générer \code{graph}.}
 }
 \description{
 Identifie et affiche les noms des clusters sur le graphe fourni en argument.
 }
-\author{
-Delphine Bosson-Rieutort
-
-Gauthier Magnin
+\seealso{
+\code{\link{spectrosome_chart}}, \code{\link[sna:gplot]{sna::gplot}}.
 }
+\author{
+Delphine Bosson-Rieutort, Gauthier Magnin
+}
+\keyword{internal}
