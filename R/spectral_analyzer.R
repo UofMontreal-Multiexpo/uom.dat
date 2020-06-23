@@ -160,24 +160,15 @@ setMethod(f = "initialize",
 spectral.analyzer = function(observations, items = NULL, target = "closed frequent itemsets", count = 1, min_length = 1, max_length = Inf, status_limit = 2) {
   
   # Installation des packages nécessaires au fonctionnement
-  packages = c("arules", "statnet")
+  # Utile uniquement si les fonctions sont chargées sans charger le package (mode dev)
+  packages = c("arules", "network", "sna")
+  new_packages = packages[!(packages %in% installed.packages()[, "Package"])]
   
-  new_packages = packages[!(packages %in% installed.packages()[,"Package"])]
   if(length(new_packages) != 0) { 
-    cat("Installing packages:", paste(new_packages, collapse = ", "), "\n")
+    cat("Installing required packages:", paste(new_packages, collapse = ", "), "\n")
     install.packages(new_packages)
   }
   
-  # Chargement des packages nécessaires au fonctionnement
-  if(!("package:arules" %in% search())) {
-    cat("Loading package: arules\n")
-    library("arules")
-  }
-  if(!("package:statnet" %in% search())) {
-    cat("Loading package: statnet\n")
-    library("statnet")
-  }
-
   # Instanciation avec ou sans la liste des items et des catégories associées
   ifelse(is.null(items),
     return(new(Class = "SpectralAnalyzer", observations = observations, target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)),
@@ -742,7 +733,7 @@ setMethod(f = "list_separate_patterns",
             labels = as.character(object@items)
             
             # Transformation en objet itemMatrix puis en objet transaction : une ligne par observation, une colonne par item
-            item_matrix = encode(data, labels)
+            item_matrix = arules::encode(data, labels)
             transact = as(item_matrix, "transactions")
             
             # Énumération des motifs recherchés
@@ -751,8 +742,8 @@ setMethod(f = "list_separate_patterns",
                           maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length), 
                           target = target)
             invisible(capture.output({
-              result <- eclat(transact, parameter = params)
-              res <- inspect(result, linebreak = FALSE) # Permet aussi d'obtenir le support
+              result <- arules::eclat(transact, parameter = params)
+              res <- arules::inspect(result, linebreak = FALSE) # Permet aussi d'obtenir le support
             }))
             
             # Exraction des motifs issus du résultat puis transformation
@@ -1528,8 +1519,8 @@ setMethod(f = "spectrosome_chart",
             
             # Réseau généré avec statnet
             links = as.matrix(nop_links[, 1:2], ncol = 2)
-            network_data = network(links, directed = FALSE, matrix.type = "edgelist")
-            vertices_names = network.vertex.names(network_data)
+            network_data = network::network(links, directed = FALSE, matrix.type = "edgelist")
+            vertices_names = network::network.vertex.names(network_data)
             
             
             # Couleurs et légendes pour chaque catégorie existante
@@ -1682,25 +1673,28 @@ setMethod(f = "spectrosome_chart",
                 png(paste0(path, file_name), 950, 700)
                 par(mar = c(2,0.5,4,0.5))
                 
+                # Duplication de la fonction utilisée par l'argument "mode" de la fonction sna::gplot
+                # pour fonctionner sans avoir à charger le package
+                gplot.layout.fruchtermanreingold = sna::gplot.layout.fruchtermanreingold
                 # Dessin du graphe
-                spectrosome = gplot(network_data, gmode = "graph",
-                                    mode = "fruchtermanreingold",
-                                    coord = spectrosome,
-                                    layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10))),
-                                    displaylabels = TRUE,
-                                    label.pos = 0,
-                                    boxed.labels = TRUE,
-                                    displayisolates = TRUE,
-                                    vertex.sides = vertices_shapes,
-                                    vertex.cex = vertices_sizes,
-                                    vertex.col = vertices_colors,
-                                    edge.col = links_colors[[j]])
+                spectrosome = sna::gplot(network_data, gmode = "graph",
+                                         mode = "fruchtermanreingold",
+                                         coord = spectrosome,
+                                         layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10))),
+                                         displaylabels = TRUE,
+                                         label.pos = 0,
+                                         boxed.labels = TRUE,
+                                         displayisolates = TRUE,
+                                         vertex.sides = vertices_shapes,
+                                         vertex.cex = vertices_sizes,
+                                         vertex.col = vertices_colors,
+                                         edge.col = links_colors[[j]])
                 
                 # Titre du graphique
                 title(main = title, cex.main = 1.5)
                 title(main = paste0(nop_subtitle_1, nrow(characteristics),
                                    "; Links: ", length(which(nop_links[, "items"] != "I")),
-                                   nop_subtitle_3, length(isolates(network_data))),
+                                   nop_subtitle_3, length(sna::isolates(network_data))),
                       font.main = 4, line = -0.5)
                 
                 # Légende du graphique
@@ -2193,7 +2187,7 @@ setMethod(f = "save_characteristics",
             characteristics[, column] = unlist(itemsets)
             
             # Enregistrement des données
-            write.csv2(x = characteristics, ...)
+            utils::write.csv2(x = characteristics, ...)
           })
 
 
