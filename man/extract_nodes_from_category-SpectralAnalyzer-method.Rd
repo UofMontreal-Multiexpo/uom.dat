@@ -5,10 +5,18 @@
 \alias{extract_nodes_from_category}
 \title{Recherche de nœuds par catégorie}
 \usage{
-\S4method{extract_nodes_from_category}{SpectralAnalyzer}(object, category, value, target)
+\S4method{extract_nodes_from_category}{SpectralAnalyzer}(
+  object,
+  nodes_characteristics,
+  category,
+  value,
+  target
+)
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
+
+\item{nodes_characteristics}{Data frame des nœuds et de leurs caractéristiques.}
 
 \item{category}{Nom ou numéro de la catégorie sur laquelle effectuer la recherche
 (numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).}

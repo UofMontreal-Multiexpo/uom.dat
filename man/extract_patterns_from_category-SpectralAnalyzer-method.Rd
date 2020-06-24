@@ -5,10 +5,18 @@
 \alias{extract_patterns_from_category}
 \title{Recherche de motifs par catégorie}
 \usage{
-\S4method{extract_patterns_from_category}{SpectralAnalyzer}(object, category, value, target)
+\S4method{extract_patterns_from_category}{SpectralAnalyzer}(
+  object,
+  patterns_characteristics,
+  category,
+  value,
+  target
+)
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
+
+\item{patterns_characteristics}{Data frame des motifs et de leurs caractéristiques.}
 
 \item{category}{Nom ou numéro de la catégorie sur laquelle effectuer la recherche
 (numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).}

@@ -433,9 +433,9 @@ setGeneric(name = "extract_nodes_from_characteristic", def = function(object, no
 
 setGeneric(name = "check_acces_for_category", def = function(object, category, value){ standardGeneric("check_acces_for_category") })
 
-setGeneric(name = "extract_patterns_from_category", def = function(object, category, value, target){ standardGeneric("extract_patterns_from_category") })
+setGeneric(name = "extract_patterns_from_category", def = function(object, patterns_characteristics, category, value, target){ standardGeneric("extract_patterns_from_category") })
 
-setGeneric(name = "extract_nodes_from_category", def = function(object, category, value, target){ standardGeneric("extract_nodes_from_category") })
+setGeneric(name = "extract_nodes_from_category", def = function(object, nodes_characteristics, category, value, target){ standardGeneric("extract_nodes_from_category") })
 
 setGeneric(name = "extract_links", def = function(object, entities, characteristics){ standardGeneric("extract_links") })
 
@@ -2455,6 +2455,7 @@ setMethod(f = "check_acces_for_category",
 #' Extrait les motifs correspondant à une valeur de catégorie recherchée
 #' 
 #' @param object Objet de classe SpectralAnalyzer.
+#' @param patterns_characteristics Data frame des motifs et de leurs caractéristiques.
 #' @param category Nom ou numéro de la catégorie sur laquelle effectuer la recherche
 #'  (numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).
 #' @param value Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.
@@ -2472,7 +2473,7 @@ setMethod(f = "check_acces_for_category",
 #' @export
 setMethod(f = "extract_patterns_from_category",
           signature = "SpectralAnalyzer",
-          definition = function(object, category, value, target) {
+          definition = function(object, patterns_characteristics, category, value, target) {
             
             # Validation des paramètres
             if (!(target %in% c("vertices", "edges"))) stop("target must be \"vertices\" or \"edges\".")
@@ -2482,16 +2483,18 @@ setMethod(f = "extract_patterns_from_category",
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
               # Extraction des motifs contenant ces items
-              return(extract_patterns_from_items(object, object@patterns, items, target = "any"))
+              return(extract_patterns_from_items(object, patterns_characteristics, items, target = "any"))
               
             } else if (target == "edges") {
+              # Recherche de l'ensemble de liens correspondant aux motifs
+              links = extract_links(object, "patterns", patterns_characteristics)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
-              categories_links = lapply(strsplit(object@patterns_links[, "items"], "/"),
+              categories_links = lapply(strsplit(links$items, "/"),
                                         function(x) sort(unique(as.character(object@items_categories[x, category]))))
               # Extraction des liens qui correspondent à la valeur de catégorie recherchée
-              links = object@patterns_links[sapply(categories_links, function(x) value %in% x), ]
+              links = links[sapply(categories_links, function(x) value %in% x), ]
               # Récupération des motifs associés
-              return(object@patterns[unique(unlist(links[, 1:2])), ])
+              return(patterns_characteristics[unique(unlist(links[, 1:2])), ])
             }
           })
 
@@ -2501,6 +2504,7 @@ setMethod(f = "extract_patterns_from_category",
 #' Extrait les nœuds correspondant à une valeur de catégorie recherchée
 #' 
 #' @param object Objet de classe SpectralAnalyzer.
+#' @param nodes_characteristics Data frame des nœuds et de leurs caractéristiques.
 #' @param category Nom ou numéro de la catégorie sur laquelle effectuer la recherche
 #'  (numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).
 #' @param value Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.
@@ -2517,7 +2521,7 @@ setMethod(f = "extract_patterns_from_category",
 #' @export
 setMethod(f = "extract_nodes_from_category",
           signature = "SpectralAnalyzer",
-          definition = function(object, category, value, target) {
+          definition = function(object, nodes_characteristics, category, value, target) {
             
             # Validation des paramètres
             if (!(target %in% c("vertices", "edges"))) stop("target must be \"vertices\" or \"edges\".")
@@ -2527,16 +2531,18 @@ setMethod(f = "extract_nodes_from_category",
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
               # Extraction des noeuds contenant ces items
-              return(extract_nodes_from_items(object, object@nodes, items, target = "any"))
+              return(extract_nodes_from_items(object, nodes_characteristics, items, target = "any"))
               
             } else if (target == "edges") {
+              # Recherche de l'ensemble de liens correspondant aux motifs
+              links = extract_links(object, "nodes", nodes_characteristics)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
-              categories_links = lapply(strsplit(object@nodes_links[, "items"], "/"),
+              categories_links = lapply(strsplit(links$items, "/"),
                                         function(x) sort(unique(as.character(object@items_categories[x, category]))))
               # Extraction des liens qui correspondent à la valeur de catégorie recherchée
-              links = object@nodes_links[sapply(categories_links, function(x) value %in% x), ]
+              links = links[sapply(categories_links, function(x) value %in% x), ]
               # Récupération des noeuds associés
-              return(object@nodes[unique(unlist(links[, 1:2])), ])
+              return(nodes_characteristics[unique(unlist(links[, 1:2])), ])
             }
           })
 
