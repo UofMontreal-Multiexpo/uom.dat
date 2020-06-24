@@ -1875,12 +1875,18 @@ setMethod(f = "cluster_chart",
           definition = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
                                                                                                   title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...) {
             
+            # Vérifie qu'un seul item est mentionné
+            if (length(item) != 1 && entities == "nodes")
+              stop("item must refer to only one item. For more, check out the functions extract_nodes_from_items and spectrosome_chart.")
+            if (length(item) != 1 && entities == "patterns")
+              stop("item must refer to only one item. For more, check out the functions extract_patterns_from_items and spectrosome_chart.")
+            
             # Extraction des noeuds ou motifs contenant l'item recherché (nop = nodes or patterns)
             if (entities == "nodes") nop = extract_nodes_from_items(object, object@nodes, item)
             else if (entities == "patterns") nop = extract_patterns_from_items(object, object@patterns, item)
             else stop("entities must be \"nodes\" or \"patterns\".")
             
-            # Pas de cluster à construire si un seul noeud/motif contient l'item
+            # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
             if (nrow(nop) > 1) {
               # Construction du spectrosome associé  
               return(spectrosome_chart(object, entities, nop, vertex_size = vertex_size, path = path, name = name, title = title, ...))
