@@ -12,7 +12,8 @@
   vertex_size = "relative",
   path = getwd(),
   name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
-  title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)
+  title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
+  ...
 )
 }
 \arguments{
@@ -42,6 +43,9 @@ Exemple de nom par défaut : \code{"node_cluster_of_25"}.}
 \item{title}{Titre du graphique.
 Par défaut, le titre dépend des arguments \code{entities} et \code{item}.
 Exemple de titre par défaut : \code{"Node cluster of 25"}.}
+
+\item{...}{Arguments supplémentaires fournis à la fonction \code{\link[sna:gplot]{sna::gplot}}
+pour le traçage du graphe. Cf. section Details.}
 }
 \value{
 \code{NULL} si aucun ou un seul nœud ou motif contient l'item recherché. \cr
@@ -55,8 +59,24 @@ Exemple de titre par défaut : \code{"Node cluster of 25"}.}
 \description{
 Identifie le cluster associé à l'item fourni en argument et en dessine un spectrosome.
 }
+\details{
+Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
+ Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
+Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
+ \code{gmode}, \code{coord}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
+Les paramètres suivants, pouvant être redéfinis, ont pour valeurs :
+ \itemize{
+   \item{\code{mode = "fruchtermanreingold"}}
+   \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
+     où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.}
+   \item{\code{displaylabels = TRUE}}
+   \item{\code{label.pos = 0}}
+   \item{\code{boxed.labels = TRUE}}
+   \item{\code{displayisolates = TRUE}}
+ }
+}
 \seealso{
-\code{\link{spectrosome_chart}}, \code{\link{degree}}.
+\code{\link{spectrosome_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 }
 \author{
 Gauthier Magnin

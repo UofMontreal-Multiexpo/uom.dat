@@ -1764,7 +1764,8 @@ setMethod(f = "spectrosome_chart",
 #' Identifie et affiche les noms des clusters sur le graphe fourni en argument.
 #' 
 #' @param object Objet de classe SpectralAnalyzer.
-#' @param graph Graphe généré par la fonction \code{\link[sna:gplot]{sna::gplot}}.
+#' @param graph Graphe généré par la fonction \code{\link[sna:gplot]{sna::gplot}} :
+#'  "A two-column matrix containing the vertex positions as x,y coordinates.".
 #' @param links Liens des motifs utilisés pour générer \code{graph}.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin

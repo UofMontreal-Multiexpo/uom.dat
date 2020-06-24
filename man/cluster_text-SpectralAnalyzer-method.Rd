@@ -10,7 +10,8 @@
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
 
-\item{graph}{Graphe généré par la fonction \code{\link[sna:gplot]{sna::gplot}}.}
+\item{graph}{Graphe généré par la fonction \code{\link[sna:gplot]{sna::gplot}} :
+"A two-column matrix containing the vertex positions as x,y coordinates.".}
 
 \item{links}{Liens des motifs utilisés pour générer \code{graph}.}
 }
