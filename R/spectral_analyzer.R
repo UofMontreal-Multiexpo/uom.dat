@@ -427,13 +427,13 @@ setGeneric(name = "extract_patterns_from_characteristic", def = function(object,
 
 setGeneric(name = "extract_patterns_from_status", def = function(object, patterns_characteristics, value, condition = "EQ"){ standardGeneric("extract_patterns_from_status") })
 
-setGeneric(name = "extract_nodes_from_items", def = function(object, nodes_characteristics, items, target = "all"){ standardGeneric("extract_nodes_from_items") })
-
-setGeneric(name = "extract_nodes_from_characteristic", def = function(object, nodes_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_nodes_from_characteristic") })
+setGeneric(name = "extract_patterns_from_category", def = function(object, patterns_characteristics, category, value, target){ standardGeneric("extract_patterns_from_category") })
 
 setGeneric(name = "check_acces_for_category", def = function(object, category, value){ standardGeneric("check_acces_for_category") })
 
-setGeneric(name = "extract_patterns_from_category", def = function(object, patterns_characteristics, category, value, target){ standardGeneric("extract_patterns_from_category") })
+setGeneric(name = "extract_nodes_from_items", def = function(object, nodes_characteristics, items, target = "all"){ standardGeneric("extract_nodes_from_items") })
+
+setGeneric(name = "extract_nodes_from_characteristic", def = function(object, nodes_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_nodes_from_characteristic") })
 
 setGeneric(name = "extract_nodes_from_category", def = function(object, nodes_characteristics, category, value, target){ standardGeneric("extract_nodes_from_category") })
 
@@ -2234,6 +2234,162 @@ setMethod(f = "save_characteristics",
           })
 
 
+#' Recherche de nœuds par item
+#' 
+#' Extrait les nœuds contenant un ou plusieurs items recherchés.
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
+#' @param nodes_characteristics Data frame des nœuds et de leurs caractéristiques.
+#' @param items Éléments recherchés (un ou plusieurs).
+#' @param target Condition pour qu'un nœud soit extrait. Choix parmi \code{"all"}, \code{"any"}.
+#'  \describe{
+#'    \item{\code{"all"}}{L'intégralité des éléments recherchés doivent faire partie d'un nœud pour que ce nœud soit extrait.}
+#'    \item{\code{"any"}}{Au moins un des éléments recherchés doit faire partie d'un nœud pour que ce nœud soit extrait.}
+#'  }
+#' @return Sous-ensemble de la data frame fournie en argument contenant les nœuds correspondant au critère de recherche.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{extract_nodes_from_characteristic}}, \code{\link{extract_nodes_from_category}}.
+#' @aliases extract_nodes_from_items
+#' @export
+setMethod(f = "extract_nodes_from_items",
+          signature = "SpectralAnalyzer",
+          definition = function(object, nodes_characteristics, items, target = "all") {
+            
+            if (!(target %in% c("all", "any"))) stop("target must be \"all\" or \"any\".")
+            
+            if (target == "all") func = all
+            else if (target == "any") func = any
+            
+            return(subset(nodes_characteristics, sapply(nodes_characteristics$node,
+                                                        function(x) func(items %in% x))))
+          })
+
+
+#' Recherche de nœuds par caractéristique
+#' 
+#' Extrait les nœuds satisfaisant un critère de recherche.
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
+#' @param nodes_characteristics Data frame des nœuds et de leurs caractéristiques.
+#' @param characteristic Nom de la caractéristique sur laquelle faire la recherche.
+#'  Choix parmi \code{"length"}, \code{"weight"}.
+#' @param value Valeur recherchée pour la caractéristique spécifiée par l'argument \code{characteristic}.
+#' @param condition Condition de la recherche.
+#'  Choix parmi \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
+#'  \describe{
+#'    \item{\code{"EQ"}}{\strong{EQ}ual : la valeur de la caractéristique doit être égale à celle recherchée.}
+#'    \item{\code{"NE"}}{\strong{N}ot \strong{E}qual : la valeur de la caractéristique doit être différente de celle recherchée.}
+#'    \item{\code{"LT"}}{\strong{L}ess \strong{T}han : la valeur de la caractéristique doit être inférieure à celle recherchée.}
+#'    \item{\code{"GT"}}{\strong{G}reater \strong{T}han : la valeur de la caractéristique doit être supérieure à celle recherchée.}
+#'    \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual : la valeur de la caractéristique doit être inférieure ou égale à celle recherchée.}
+#'    \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual : la valeur de la caractéristique doit être supérieure ou égale à celle recherchée.}
+#'  }
+#' @return Sous-ensemble de la data.frame fournie en argument pour les nœuds satisfaisant le critère de recherche.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_category}}.
+#' @aliases extract_nodes_from_characteristic
+#' @export
+setMethod(f = "extract_nodes_from_characteristic",
+          signature = "SpectralAnalyzer",
+          definition = function(object, nodes_characteristics, characteristic, value, condition = "EQ") {
+            
+            if (!(characteristic %in% c("length", "weight")))
+              stop("characteristic must be one of c(\"length\", \"weight\").")
+            
+            switch(EXPR = condition,
+                   "EQ" = { return(nodes_characteristics[nodes_characteristics[characteristic] == value, ]) },
+                   "NE" = { return(nodes_characteristics[nodes_characteristics[characteristic] != value, ]) },
+                   "LT" = { return(nodes_characteristics[nodes_characteristics[characteristic] < value, ]) },
+                   "GT" = { return(nodes_characteristics[nodes_characteristics[characteristic] > value, ]) },
+                   "LE" = { return(nodes_characteristics[nodes_characteristics[characteristic] <= value, ]) },
+                   "GE" = { return(nodes_characteristics[nodes_characteristics[characteristic] >= value, ]) },
+                   stop("value must be one of c(\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\")."))
+          })
+
+
+#' Recherche de nœuds par catégorie
+#' 
+#' Extrait les nœuds correspondant à une valeur de catégorie recherchée
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
+#' @param nodes_characteristics Data frame des nœuds et de leurs caractéristiques.
+#' @param category Nom ou numéro de la catégorie sur laquelle effectuer la recherche
+#'  (numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).
+#' @param value Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.
+#' @param target Condition pour qu'un nœud soit extrait. Choix parmi \code{"vertices"}, \code{"edges"}.
+#'  \describe{
+#'    \item{\code{"vertices"}}{Recherche des nœuds contenant un item associé à la valeur de catégorie recherchée.}
+#'    \item{\code{"edges"}}{Recherche de nœuds générant un lien corresopndant à la valeur de catégorie recherchée.}
+#'  }
+#' @return Data frame des nœuds correspondant aux critères de recherche.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_characteristic}}.
+#' @aliases extract_nodes_from_category
+#' @export
+setMethod(f = "extract_nodes_from_category",
+          signature = "SpectralAnalyzer",
+          definition = function(object, nodes_characteristics, category, value, target) {
+            
+            # Validation des paramètres
+            if (!(target %in% c("vertices", "edges"))) stop("target must be \"vertices\" or \"edges\".")
+            check_acces_for_category(object, category, value)
+            
+            if (target == "vertices") {
+              # Recherche des items correspondant à la catégorie recherchée
+              items = rownames(subset(object@items_categories, object@items_categories[category] == value))
+              # Extraction des noeuds contenant ces items
+              return(extract_nodes_from_items(object, nodes_characteristics, items, target = "any"))
+              
+            } else if (target == "edges") {
+              # Recherche de l'ensemble de liens correspondant aux motifs
+              links = extract_links(object, "nodes", nodes_characteristics)
+              # Valeurs associées à chaque lien pour le type de catégorie recherché
+              categories_links = lapply(strsplit(links$items, "/"),
+                                        function(x) sort(unique(as.character(object@items_categories[x, category]))))
+              # Extraction des liens qui correspondent à la valeur de catégorie recherchée
+              links = links[sapply(categories_links, function(x) value %in% x), ]
+              # Récupération des noeuds associés
+              return(nodes_characteristics[unique(unlist(links[, 1:2])), ])
+            }
+          })
+
+
+#' Validation de paramètres de recherche par catégorie
+#' 
+#' Vérifie que les paramètres fournis correspondent à une catégorie existante.
+#' Affiche un message d'erreur si ce n'est pas le cas.
+#' 
+#' @param object Objet de classe SpectralAnalyzer.
+#' @param category Nom ou numéro de la catégorie à laquelle accéder (numérotée selon l'ordre des colonnes de \code{object["items_categories"]}).
+#' @param value Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{extract_patterns_from_category}}, \code{\link{extract_nodes_from_category}}.
+#' @aliases check_acces_for_category
+#' @keywords internal
+setMethod(f = "check_acces_for_category",
+          signature = "SpectralAnalyzer",
+          definition = function(object, category, value) {
+            
+            # Vérification que le type de catégorie recherché existe
+            if (is.character(category) & !(category %in% colnames(object@items_categories))) {
+              stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
+                                                      collapse = ", ") ,".")
+            } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
+              stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
+            }
+            
+            # Vérification que la valeur de la catégorie recherchée existe
+            if (!(value %in% levels(object@items_categories[, category]))) {
+              stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
+                                                   collapse = ", ") ,".")
+            }
+          })
+
+
 #' Recherche de motifs par item
 #' 
 #' Extrait les motifs contenant un ou plusieurs items recherchés.
@@ -2342,114 +2498,6 @@ setMethod(f = "extract_patterns_from_status",
           })
 
 
-#' Recherche de nœuds par item
-#' 
-#' Extrait les nœuds contenant un ou plusieurs items recherchés.
-#' 
-#' @param object Objet de classe SpectralAnalyzer.
-#' @param nodes_characteristics Data frame des nœuds et de leurs caractéristiques.
-#' @param items Éléments recherchés (un ou plusieurs).
-#' @param target Condition pour qu'un nœud soit extrait. Choix parmi \code{"all"}, \code{"any"}.
-#'  \describe{
-#'    \item{\code{"all"}}{L'intégralité des éléments recherchés doivent faire partie d'un nœud pour que ce nœud soit extrait.}
-#'    \item{\code{"any"}}{Au moins un des éléments recherchés doit faire partie d'un nœud pour que ce nœud soit extrait.}
-#'  }
-#' @return Sous-ensemble de la data frame fournie en argument contenant les nœuds correspondant au critère de recherche.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{extract_nodes_from_characteristic}}, \code{\link{extract_nodes_from_category}}.
-#' @aliases extract_nodes_from_items
-#' @export
-setMethod(f = "extract_nodes_from_items",
-          signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics, items, target = "all") {
-            
-            if (!(target %in% c("all", "any"))) stop("target must be \"all\" or \"any\".")
-            
-            if (target == "all") func = all
-            else if (target == "any") func = any
-            
-            return(subset(nodes_characteristics, sapply(nodes_characteristics$node,
-                                                        function(x) func(items %in% x))))
-          })
-
-
-#' Recherche de nœuds par caractéristique
-#' 
-#' Extrait les nœuds satisfaisant un critère de recherche.
-#' 
-#' @param object Objet de classe SpectralAnalyzer.
-#' @param nodes_characteristics Data frame des nœuds et de leurs caractéristiques.
-#' @param characteristic Nom de la caractéristique sur laquelle faire la recherche.
-#'  Choix parmi \code{"length"}, \code{"weight"}.
-#' @param value Valeur recherchée pour la caractéristique spécifiée par l'argument \code{characteristic}.
-#' @param condition Condition de la recherche.
-#'  Choix parmi \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
-#'  \describe{
-#'    \item{\code{"EQ"}}{\strong{EQ}ual : la valeur de la caractéristique doit être égale à celle recherchée.}
-#'    \item{\code{"NE"}}{\strong{N}ot \strong{E}qual : la valeur de la caractéristique doit être différente de celle recherchée.}
-#'    \item{\code{"LT"}}{\strong{L}ess \strong{T}han : la valeur de la caractéristique doit être inférieure à celle recherchée.}
-#'    \item{\code{"GT"}}{\strong{G}reater \strong{T}han : la valeur de la caractéristique doit être supérieure à celle recherchée.}
-#'    \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual : la valeur de la caractéristique doit être inférieure ou égale à celle recherchée.}
-#'    \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual : la valeur de la caractéristique doit être supérieure ou égale à celle recherchée.}
-#'  }
-#' @return Sous-ensemble de la data.frame fournie en argument pour les nœuds satisfaisant le critère de recherche.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_category}}.
-#' @aliases extract_nodes_from_characteristic
-#' @export
-setMethod(f = "extract_nodes_from_characteristic",
-          signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics, characteristic, value, condition = "EQ") {
-            
-            if (!(characteristic %in% c("length", "weight")))
-              stop("characteristic must be one of c(\"length\", \"weight\").")
-            
-            switch(EXPR = condition,
-                   "EQ" = { return(nodes_characteristics[nodes_characteristics[characteristic] == value, ]) },
-                   "NE" = { return(nodes_characteristics[nodes_characteristics[characteristic] != value, ]) },
-                   "LT" = { return(nodes_characteristics[nodes_characteristics[characteristic] < value, ]) },
-                   "GT" = { return(nodes_characteristics[nodes_characteristics[characteristic] > value, ]) },
-                   "LE" = { return(nodes_characteristics[nodes_characteristics[characteristic] <= value, ]) },
-                   "GE" = { return(nodes_characteristics[nodes_characteristics[characteristic] >= value, ]) },
-                   stop("value must be one of c(\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\")."))
-          })
-
-
-#' Validation de paramètres de recherche par catégorie
-#' 
-#' Vérifie que les paramètres fournis correspondent à une catégorie existante.
-#' Affiche un message d'erreur si ce n'est pas le cas.
-#' 
-#' @param object Objet de classe SpectralAnalyzer.
-#' @param category Nom ou numéro de la catégorie à laquelle accéder (numérotée selon l'ordre des colonnes de \code{object["items_categories"]}).
-#' @param value Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{extract_patterns_from_category}}, \code{\link{extract_nodes_from_category}}.
-#' @aliases check_acces_for_category
-#' @keywords internal
-setMethod(f = "check_acces_for_category",
-          signature = "SpectralAnalyzer",
-          definition = function(object, category, value) {
-            
-            # Vérification que le type de catégorie recherché existe
-            if (is.character(category) & !(category %in% colnames(object@items_categories))) {
-              stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
-                                                      collapse = ", ") ,".")
-            } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
-              stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
-            }
-            
-            # Vérification que la valeur de la catégorie recherchée existe
-            if (!(value %in% levels(object@items_categories[, category]))) {
-              stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
-                                                   collapse = ", ") ,".")
-            }
-          })
-
-
 #' Recherche de motifs par catégorie
 #' 
 #' Extrait les motifs correspondant à une valeur de catégorie recherchée
@@ -2495,54 +2543,6 @@ setMethod(f = "extract_patterns_from_category",
               links = links[sapply(categories_links, function(x) value %in% x), ]
               # Récupération des motifs associés
               return(patterns_characteristics[unique(unlist(links[, 1:2])), ])
-            }
-          })
-
-
-#' Recherche de nœuds par catégorie
-#' 
-#' Extrait les nœuds correspondant à une valeur de catégorie recherchée
-#' 
-#' @param object Objet de classe SpectralAnalyzer.
-#' @param nodes_characteristics Data frame des nœuds et de leurs caractéristiques.
-#' @param category Nom ou numéro de la catégorie sur laquelle effectuer la recherche
-#'  (numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).
-#' @param value Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.
-#' @param target Condition pour qu'un nœud soit extrait. Choix parmi \code{"vertices"}, \code{"edges"}.
-#'  \describe{
-#'    \item{\code{"vertices"}}{Recherche des nœuds contenant un item associé à la valeur de catégorie recherchée.}
-#'    \item{\code{"edges"}}{Recherche de nœuds générant un lien corresopndant à la valeur de catégorie recherchée.}
-#'  }
-#' @return Data frame des nœuds correspondant aux critères de recherche.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_characteristic}}.
-#' @aliases extract_nodes_from_category
-#' @export
-setMethod(f = "extract_nodes_from_category",
-          signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics, category, value, target) {
-            
-            # Validation des paramètres
-            if (!(target %in% c("vertices", "edges"))) stop("target must be \"vertices\" or \"edges\".")
-            check_acces_for_category(object, category, value)
-            
-            if (target == "vertices") {
-              # Recherche des items correspondant à la catégorie recherchée
-              items = rownames(subset(object@items_categories, object@items_categories[category] == value))
-              # Extraction des noeuds contenant ces items
-              return(extract_nodes_from_items(object, nodes_characteristics, items, target = "any"))
-              
-            } else if (target == "edges") {
-              # Recherche de l'ensemble de liens correspondant aux motifs
-              links = extract_links(object, "nodes", nodes_characteristics)
-              # Valeurs associées à chaque lien pour le type de catégorie recherché
-              categories_links = lapply(strsplit(links$items, "/"),
-                                        function(x) sort(unique(as.character(object@items_categories[x, category]))))
-              # Extraction des liens qui correspondent à la valeur de catégorie recherchée
-              links = links[sapply(categories_links, function(x) value %in% x), ]
-              # Récupération des noeuds associés
-              return(nodes_characteristics[unique(unlist(links[, 1:2])), ])
             }
           })
 
