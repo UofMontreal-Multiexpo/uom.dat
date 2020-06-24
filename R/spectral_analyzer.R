@@ -399,11 +399,11 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs relatifs
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities)){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -1441,8 +1441,23 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'  Le nom de la catégorie est ajouté à la fin du nom du fichier.
 #' 
 #' Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
-#'  liens simples, elles apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
-#'  
+#'  liens simples, ces valeurs apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
+#' 
+#' Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
+#'  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
+#' Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
+#'  \code{gmode}, \code{coord}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
+#' Les paramètres suivants, pouvant être redéfinis, ont pour valeurs :
+#'  \itemize{
+#'    \item{\code{mode = "fruchtermanreingold"}}
+#'    \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
+#'      où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.}
+#'    \item{\code{displaylabels = TRUE}}
+#'    \item{\code{label.pos = 0}}
+#'    \item{\code{boxed.labels = TRUE}}
+#'    \item{\code{displayisolates = TRUE}}
+#'  }
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément pour lequel construire le spectrosome (nœuds ou motifs).
 #'  Choix parmi \code{"nodes"}, \code{"patterns"}.
@@ -1461,6 +1476,8 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param name Nom (avec extension) du fichier dans lequel enregistrer le graphique.
 #'  Si \code{nb_graph} est supérieur à \code{1}, un numéro est ajouté automatiquement à la fin du nom du fichier.
 #' @param title Titre du graphique.
+#' @param ... Arguments supplémentaires fournis à la fonction \code{\link[sna:gplot]{sna::gplot}}
+#'  pour le traçage du graphe. Cf. section Details.
 #' @return Liste contenant :
 #'  \describe{
 #'    \item{\code{vertices}}{Data frame des nœuds ou motifs et caractéristiques utilisées,
@@ -1472,12 +1489,12 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{degree}}.
+#' @seealso \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' @aliases spectrosome_chart
 #' @export
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities)) {
+          definition = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
             
             if (entities != "nodes" && entities != "patterns")
               stop("entities must be \"nodes\" or \"patterns\".")
@@ -1654,6 +1671,20 @@ setMethod(f = "spectrosome_chart",
             # Correction du chemin du dossier où créer les fichiers
             if (substring(path, nchar(path)) != "/") path = paste0(path, "/")
             
+            # Récupération des arguments additionnels et détermination de valeurs par défaut pour sna::gplot
+            args = list(...)
+            if(!("mode" %in% names(args))) args$mode = "fruchtermanreingold"
+            if(!("layout.par" %in% names(args)) && args$mode == "fruchtermanreingold")
+              args$layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))
+            if(!("displaylabels" %in% names(args))) args$displaylabels = TRUE
+            if(!("label.pos" %in% names(args))) args$label.pos = 0
+            if(!("boxed.labels" %in% names(args))) args$boxed.labels = TRUE
+            if(!("displayisolates" %in% names(args))) args$displayisolates = TRUE
+            
+            # Duplication de la fonction utilisée par l'argument "mode" de la fonction sna::gplot
+            # pour fonctionner sans avoir à charger le package
+            eval(parse(text = paste0("gplot.layout.", args$mode, " <- sna::gplot.layout.", args$mode)))
+            
             # Nombre de variantes du graphique
             nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
             
@@ -1673,22 +1704,15 @@ setMethod(f = "spectrosome_chart",
                 png(paste0(path, file_name), 950, 700)
                 par(mar = c(2,0.5,4,0.5))
                 
-                # Duplication de la fonction utilisée par l'argument "mode" de la fonction sna::gplot
-                # pour fonctionner sans avoir à charger le package
-                gplot.layout.fruchtermanreingold = sna::gplot.layout.fruchtermanreingold
-                # Dessin du graphe
-                spectrosome = sna::gplot(network_data, gmode = "graph",
-                                         mode = "fruchtermanreingold",
-                                         coord = spectrosome,
-                                         layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10))),
-                                         displaylabels = TRUE,
-                                         label.pos = 0,
-                                         boxed.labels = TRUE,
-                                         displayisolates = TRUE,
-                                         vertex.sides = vertices_shapes,
-                                         vertex.cex = vertices_sizes,
-                                         vertex.col = vertices_colors,
-                                         edge.col = links_colors[[j]])
+                # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
+                spectrosome = do.call(sna::gplot, c(list(
+                                        dat = network_data, gmode = "graph",
+                                        coord = spectrosome,
+                                        vertex.sides = vertices_shapes,
+                                        vertex.cex = vertices_sizes,
+                                        vertex.col = vertices_colors,
+                                        edge.col = links_colors[[j]]
+                                     ), args))
                 
                 # Titre du graphique
                 title(main = title, cex.main = 1.5)
@@ -1795,6 +1819,22 @@ setMethod(f = "cluster_text",
 #' 
 #' Identifie le cluster associé à l'item fourni en argument et en dessine un spectrosome.
 #' 
+#' @details
+#' Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
+#'  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
+#' Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
+#'  \code{gmode}, \code{coord}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
+#' Les paramètres suivants, pouvant être redéfinis, ont pour valeurs :
+#'  \itemize{
+#'    \item{\code{mode = "fruchtermanreingold"}}
+#'    \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
+#'      où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.}
+#'    \item{\code{displaylabels = TRUE}}
+#'    \item{\code{label.pos = 0}}
+#'    \item{\code{boxed.labels = TRUE}}
+#'    \item{\code{displayisolates = TRUE}}
+#'  }
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément pour rechercher un cluster (nœuds ou motifs).
 #'  Choix parmi \code{"nodes"}, \code{"patterns"}.
@@ -1815,6 +1855,8 @@ setMethod(f = "cluster_text",
 #' @param title Titre du graphique.
 #'  Par défaut, le titre dépend des arguments \code{entities} et \code{item}.
 #'  Exemple de titre par défaut : \code{"Node cluster of 25"}.
+#' @param ... Arguments supplémentaires fournis à la fonction \code{\link[sna:gplot]{sna::gplot}}
+#'  pour le traçage du graphe. Cf. section Details.
 #' @return \code{NULL} si aucun ou un seul nœud ou motif contient l'item recherché. \cr
 #'  Sinon, liste contenant :
 #'  \describe{
@@ -1824,13 +1866,13 @@ setMethod(f = "cluster_text",
 #'  }
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{spectrosome_chart}}, \code{\link{degree}}.
+#' @seealso \code{\link{spectrosome_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' @aliases cluster_chart
 #' @export
 setMethod(f = "cluster_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
-                                                                                                  title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)) {
+                                                                                                  title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...) {
             
             # Extraction des noeuds ou motifs contenant l'item recherché (nop = nodes or patterns)
             if (entities == "nodes") nop = extract_nodes_from_items(object, object@nodes, item)
@@ -1840,7 +1882,7 @@ setMethod(f = "cluster_chart",
             # Pas de cluster à construire si un seul noeud/motif contient l'item
             if (nrow(nop) > 1) {
               # Construction du spectrosome associé  
-              return(spectrosome_chart(object, entities, nop, vertex_size = vertex_size, path = path, name = name, title = title))
+              return(spectrosome_chart(object, entities, nop, vertex_size = vertex_size, path = path, name = name, title = title, ...))
               
             } else {
               warning(paste0("There is no cluster for item ", item,
