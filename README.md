@@ -16,7 +16,7 @@ In addition to the documentation of the functions included in the **man** folder
 
 * An example of analysis, presented in the file `spectral_analysis_example.nb.html`.
 
-* A presentation of the data structures used by the `SpectralAnalyzer` class (attributes, function parameters and function returns) in the  file `Attribute_and_method_types.pdf`.
+* A presentation of the data structures used by the `SpectralAnalyzer` class (attributes, function parameters and function returns) in the file `Types_of_attributes_and_methods.pdf`.
 
 
 ## Authors
