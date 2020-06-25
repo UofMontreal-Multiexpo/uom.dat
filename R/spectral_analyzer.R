@@ -399,7 +399,7 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs relatifs
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graph = 1, min_link_weight = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links){ standardGeneric("cluster_text") })
 
@@ -1442,6 +1442,10 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' 
 #' Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
 #'  liens simples, ces valeurs apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
+#'  
+#' Si \code{min_link_weight} est supérieur à 1, certains nœuds ou motifs peuvent devenir isolés
+#'  du fait que leurs liens avec les autres éléments peuvent ne plus être considérés. Ces nouveaux
+#'  sommets isolés sont déplacés à la fin de la data frame de retour \code{edges}.
 #' 
 #' Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
 #'  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
@@ -1462,7 +1466,8 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param entities Type d'élément pour lequel construire le spectrosome (nœuds ou motifs).
 #'  Choix parmi \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Ensemble des caractéristiques des nœuds ou motifs dont le spectrosome est à tracer.
-#' @param nb_graph Nombre de graphes à générer et enregistrer.
+#' @param nb_graph Nombre de graphes à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.
+#' @param min_link_weight Nombre minimum d'items en commun entre deux entités pour afficher le lien sur le graphe.
 #' @param vertex_size Façon dont les tailles des sommets du graphe doivent être définies.
 #'  Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
 #'  \describe{
@@ -1494,7 +1499,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @export
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, nb_graph = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
+          definition = function(object, entities, characteristics, nb_graph = 1, min_link_weight = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
             
             if (entities != "nodes" && entities != "patterns")
               stop("entities must be \"nodes\" or \"patterns\".")
@@ -1534,10 +1539,27 @@ setMethod(f = "spectrosome_chart",
               nop_links$Target = vertices_id[as.character(nop_links$Target)]
             }
             
-            # Réseau généré avec statnet
-            links = as.matrix(nop_links[, 1:2], ncol = 2)
-            network_data = network::network(links, directed = FALSE, matrix.type = "edgelist")
-            vertices_names = network::network.vertex.names(network_data)
+            # Retrait des liens entre les sommets qui ont moins de min_link_weight items en commun
+            if (min_link_weight > 1) {
+              all_vertices = unique(c(t(nop_links[, 1:2]))) # unlist horizontalement
+              nop_links = nop_links[nop_links$weight >= min_link_weight | nop_links$weight == 0, ]
+              
+              # Redéfinition des sommets maintenant sans lien
+              missing_vertices = as.data.frame(t(
+                sapply(setdiff(all_vertices, unique(unlist(nop_links[, 1:2]))),
+                       function(x){
+                         if (entities == "nodes") return(c(x, x, nrow(nop_links), "I", 0))
+                         return(c(x, x, nrow(nop_links), "I", 0, object@patterns[x, "year"]))
+                       })), stringsAsFactors = FALSE)
+              
+              # Réattribution des noms et classes des colonnes avant concaténation à la data frame des liens
+              colnames(missing_vertices) = colnames(nop_links)
+              for (c_name in colnames(missing_vertices)) class(missing_vertices[c_name]) = class(nop_links[c_name])
+              class(missing_vertices$Source) = class(missing_vertices$Target) = class(missing_vertices$ID) = class(missing_vertices$weight) = "integer"
+              if(entities == "patterns") class(missing_vertices$year) = "integer"
+              nop_links = rbind(nop_links, missing_vertices)
+              nop_links$ID = seq_len(nrow(nop_links))
+            }
             
             
             # Couleurs et légendes pour chaque catégorie existante
@@ -1613,6 +1635,7 @@ setMethod(f = "spectrosome_chart",
               }
             }
             
+            
             # Définition des couleurs des sommets en fonction du statut et nombre pour chaque statut
             if (entities == "nodes") {
               vertices_colors = rep("grey", nrow(characteristics))
@@ -1670,6 +1693,11 @@ setMethod(f = "spectrosome_chart",
             
             # Correction du chemin du dossier où créer les fichiers
             if (substring(path, nchar(path)) != "/") path = paste0(path, "/")
+            
+            # Réseau généré avec le package network
+            links = as.matrix(nop_links[, 1:2], ncol = 2)
+            network_data = network::network(links, directed = FALSE, matrix.type = "edgelist")
+            vertices_names = network::network.vertex.names(network_data)
             
             # Récupération des arguments additionnels et détermination de valeurs par défaut pour sna::gplot
             args = list(...)

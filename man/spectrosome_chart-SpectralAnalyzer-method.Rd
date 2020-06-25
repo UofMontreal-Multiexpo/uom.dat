@@ -10,6 +10,7 @@
   entities,
   characteristics,
   nb_graph = 1,
+  min_link_weight = 1,
   vertex_size = "relative",
   path = getwd(),
   name = paste0("spectrosome_of_", entities, ".png"),
@@ -25,7 +26,9 @@ Choix parmi \code{"nodes"}, \code{"patterns"}.}
 
 \item{characteristics}{Ensemble des caractéristiques des nœuds ou motifs dont le spectrosome est à tracer.}
 
-\item{nb_graph}{Nombre de graphes à générer et enregistrer.}
+\item{nb_graph}{Nombre de graphes à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.}
+
+\item{min_link_weight}{Nombre minimum d'items en commun entre deux entités pour afficher le lien sur le graphe.}
 
 \item{vertex_size}{Façon dont les tailles des sommets du graphe doivent être définies.
 Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
@@ -64,6 +67,10 @@ Si des catégories sont associées aux items, chaque catégorie génère un spec
 
 Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
  liens simples, ces valeurs apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
+ 
+Si \code{min_link_weight} est supérieur à 1, certains nœuds ou motifs peuvent devenir isolés
+ du fait que leurs liens avec les autres éléments peuvent ne plus être considérés. Ces nouveaux
+ sommets isolés sont déplacés à la fin de la data frame de retour \code{edges}.
 
 Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
