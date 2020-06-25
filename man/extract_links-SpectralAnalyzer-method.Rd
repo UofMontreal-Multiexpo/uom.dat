@@ -25,6 +25,7 @@ Extrait de l'ensemble des liens ceux correspondant aux nœuds ou motifs recherch
 Si parmi les nœuds ou motifs, certains deviennent isolés du fait que les autres éléments
  auxquels ils sont normalement liés ne font pas partie de \code{characteristics}, ces nœuds ou
  motifs sont ajoutés à la fin de la data frame de retour.
+Ces éventuelles \code{n} lignes additionnelles sont numérotées \code{"A1"..."An"}.
 }
 \author{
 Gauthier Magnin

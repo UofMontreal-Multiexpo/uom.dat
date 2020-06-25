@@ -1446,6 +1446,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' Si \code{min_link_weight} est supérieur à 1, certains nœuds ou motifs peuvent devenir isolés
 #'  du fait que leurs liens avec les autres éléments peuvent ne plus être considérés. Ces nouveaux
 #'  sommets isolés sont déplacés à la fin de la data frame de retour \code{edges}.
+#' Les \code{n} lignes additionnelles sont numérotées \code{"A1"..."An"}.
 #' 
 #' Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
 #'  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
@@ -1559,6 +1560,10 @@ setMethod(f = "spectrosome_chart",
               if(entities == "patterns") class(missing_vertices$year) = "integer"
               nop_links = rbind(nop_links, missing_vertices)
               nop_links$ID = seq_len(nrow(nop_links))
+              
+              # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
+              rownames(nop_links) = c(rownames(nop_links)[1:(nrow(nop_links) - nrow(missing_vertices))],
+                                      paste0("A", seq_len(nrow(missing_vertices))))
             }
             
             
@@ -2596,6 +2601,7 @@ setMethod(f = "extract_patterns_from_category",
 #' Si parmi les nœuds ou motifs, certains deviennent isolés du fait que les autres éléments
 #'  auxquels ils sont normalement liés ne font pas partie de \code{characteristics}, ces nœuds ou
 #'  motifs sont ajoutés à la fin de la data frame de retour.
+#' Ces éventuelles \code{n} lignes additionnelles sont numérotées \code{"A1"..."An"}.
 #' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément pour lequel rechercher les liens.
@@ -2640,14 +2646,22 @@ setMethod(f = "extract_links",
                                 return(NULL)
                               })
             
-            # S'il y en a, ajout à l'ensemble des liens/sommets
+            # S'il y a de nouveaux isolés
             if (any(sapply(isolated, function(x) !is.null(x)))) {
+              
+              # Ajout à l'ensemble des liens/sommets
               no_links = do.call(rbind, isolated)
               colnames(no_links) = colnames(nop_links)
               nop_links = rbind(nop_links, no_links, stringsAsFactors = FALSE)
               class(nop_links$Source) = class(nop_links$Target) = class(nop_links$weight) = "integer"
               if(!search_nodes) class(nop_links$year) = "integer"
               nop_links$ID = seq_len(nrow(nop_links))
+              
+              # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
+              r_names = rownames(nop_links)
+              last_index = which(r_names[seq_len(length(r_names)-1)] > r_names[seq(2, length(r_names))])
+              rownames(nop_links) = c(r_names[1:last_index],
+                                      paste0("A", seq_len(nrow(nop_links) - last_index)))
             }
             
             return(nop_links)

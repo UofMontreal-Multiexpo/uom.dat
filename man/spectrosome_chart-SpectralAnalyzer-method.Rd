@@ -71,6 +71,7 @@ Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas r
 Si \code{min_link_weight} est supérieur à 1, certains nœuds ou motifs peuvent devenir isolés
  du fait que leurs liens avec les autres éléments peuvent ne plus être considérés. Ces nouveaux
  sommets isolés sont déplacés à la fin de la data frame de retour \code{edges}.
+Les \code{n} lignes additionnelles sont numérotées \code{"A1"..."An"}.
 
 Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
