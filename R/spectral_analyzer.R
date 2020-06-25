@@ -392,7 +392,7 @@ setGeneric(name = "define_dynamic_status", def = function(object, patterns, stat
 
 setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns"){ standardGeneric("spectrum_chart") })
 
-setGeneric(name = "create_spectrum_chart", def = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns"){ standardGeneric("create_spectrum_chart") })
+setGeneric(name = "plot_spectrum_chart", def = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
 
 setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object, patterns){ standardGeneric("compute_pattern_distribution_in_nodes") })
 
@@ -414,7 +414,7 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, display_text = NULL, cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
 
-setGeneric(name = "create_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, cutoff = NULL, display_text = NULL, title = "Multi-association tree"){ standardGeneric("create_tree_chart") })
+setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, cutoff = NULL, display_text = NULL, title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
 
 # Méthodes de recherche et d'enregistrement
@@ -1307,7 +1307,7 @@ setMethod(f = "spectrum_chart",
             
             # Traçage du graphique dans un fichier PDF
             pdf(paste0(path, name), 15, 8, pointsize = 10)
-            create_spectrum_chart(object, patterns_characteristics, weights, title)
+            plot_spectrum_chart(object, patterns_characteristics, weights, title)
             dev.off()
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
@@ -1331,9 +1331,9 @@ setMethod(f = "spectrum_chart",
 #'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{spectrum_chart}}, \code{\link{compute_pattern_distribution_in_nodes}}.
-#' @aliases create_spectrum_chart
+#' @aliases plot_spectrum_chart
 #' @keywords internal
-setMethod(f = "create_spectrum_chart",
+setMethod(f = "plot_spectrum_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns") {
             
@@ -2081,7 +2081,7 @@ setMethod(f = "tree_chart",
               
               # Traçage du graphique dans un fichier PDF
               pdf(paste0(path, file_name), 14, 10, paper = "a4r", pointsize = 11)
-              create_tree_chart(object, pat_charac, items_cat, category, cutoff, display_text, title)
+              plot_tree_chart(object, pat_charac, items_cat, category, cutoff, display_text, title)
               dev.off()
             }
             
@@ -2107,9 +2107,9 @@ setMethod(f = "tree_chart",
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @seealso \code{\link{tree_chart}}.
-#' @aliases create_tree_chart
+#' @aliases plot_tree_chart
 #' @keywords internal
-setMethod(f = "create_tree_chart",
+setMethod(f = "plot_tree_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, items_category, category = NULL, cutoff = NULL, display_text = NULL, title = "Multi-association tree") {
             
