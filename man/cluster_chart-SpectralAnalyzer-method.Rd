@@ -57,6 +57,7 @@ pour le traçage du graphe. Cf. section Details.}
    \item{\code{vertices}}{Data frame des nœuds ou motifs et caractéristiques utilisées,
                           associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
    \item{\code{edges}}{Data frame des informations relatives aux arêtes du graphe.}
+   \item{\code{coords}}{Matrice des coordonnées des sommets du graphe.}
  }
 }
 \description{

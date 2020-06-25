@@ -1467,7 +1467,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param entities Type d'élément pour lequel construire le spectrosome (nœuds ou motifs).
 #'  Choix parmi \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Ensemble des caractéristiques des nœuds ou motifs dont le spectrosome est à tracer.
-#' @param nb_graph Nombre de graphes à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.
+#' @param nb_graph Nombre de graphiques à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.
 #' @param min_link_weight Nombre minimum d'items en commun entre deux entités pour afficher le lien sur le graphe.
 #' @param vertex_size Façon dont les tailles des sommets du graphe doivent être définies.
 #'  Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
@@ -1489,6 +1489,9 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'    \item{\code{vertices}}{Data frame des nœuds ou motifs et caractéristiques utilisées,
 #'                           associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
 #'    \item{\code{edges}}{Data frame des informations relatives aux arêtes du graphe.}
+#'    \item{\code{coords}}{Liste contenant les matrices des coordonnées des sommets du graphe.
+#'                         Autant de matrices que de graphiques (\code{nb_graph}), pouvant être
+#'                         réutilisées via l'argument \code{coord} (cf. \code{...}).}
 #'  }
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
@@ -1721,9 +1724,19 @@ setMethod(f = "spectrosome_chart",
             # Nombre de variantes du graphique
             nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
             
+            # Réutilisation ou non de coordonnées
+            if ("coord" %in% names(args)) {
+              coord = args$coord
+              args$coord = NULL
+              is.missing = is.null(coord)
+              
+            } else { is.missing = TRUE }
+            coords_list = list()
+            
+            # Traçage des graphiques
             for (i in seq(nb_graph)) {
               # Coordonnées qui seront réutilisées
-              spectrosome = NULL
+              if (is.missing) coord = NULL
               
               for (j in seq(nb_categories)) {
                 
@@ -1738,14 +1751,14 @@ setMethod(f = "spectrosome_chart",
                 par(mar = c(2,0.5,4,0.5))
                 
                 # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
-                spectrosome = do.call(sna::gplot, c(list(
-                                        dat = network_data, gmode = "graph",
-                                        coord = spectrosome,
-                                        vertex.sides = vertices_shapes,
-                                        vertex.cex = vertices_sizes,
-                                        vertex.col = vertices_colors,
-                                        edge.col = links_colors[[j]]
-                                     ), args))
+                coord = do.call(sna::gplot, c(list(
+                                  dat = network_data, gmode = "graph",
+                                  coord = coord,
+                                  vertex.sides = vertices_shapes,
+                                  vertex.cex = vertices_sizes,
+                                  vertex.col = vertices_colors,
+                                  edge.col = links_colors[[j]]
+                               ), args))
                 
                 # Titre du graphique
                 title(main = title, cex.main = 1.5)
@@ -1775,12 +1788,15 @@ setMethod(f = "spectrosome_chart",
                 
                 # S'il y a bien des liens, identification et affichage des noms des clusters
                 if (length(which(nop_links[, "items"] != "I"))) {
-                  cluster_text(object, spectrosome, nop_links)
+                  cluster_text(object, coord, nop_links)
                 }
                 
                 # Fermeture du fichier PNG
                 dev.off()
               }
+              
+              # Récupération des coordonnées des sommets du graphe
+              coords_list[[i]] = coord
             }
             
             # Calcul du degré de chaque sommet dans le graphe
@@ -1788,7 +1804,8 @@ setMethod(f = "spectrosome_chart",
             
             # Noeuds ou motifs, caractéristiques, identifiants sur le graphique et degrés dans le graphe
             return(list(vertices = data.frame(ID = vertices_id, characteristics, degree = degrees),
-                        edges = nop_links))
+                        edges = nop_links,
+                        coords = coords_list))
           })
 
 
@@ -1904,6 +1921,7 @@ setMethod(f = "cluster_text",
 #'    \item{\code{vertices}}{Data frame des nœuds ou motifs et caractéristiques utilisées,
 #'                           associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
 #'    \item{\code{edges}}{Data frame des informations relatives aux arêtes du graphe.}
+#'    \item{\code{coords}}{Matrice des coordonnées des sommets du graphe.}
 #'  }
 #' 
 #' @author Gauthier Magnin
@@ -1928,8 +1946,9 @@ setMethod(f = "cluster_chart",
             
             # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
             if (nrow(nop) > 1) {
-              # Construction du spectrosome associé  
-              return(spectrosome_chart(object, entities, nop, vertex_size = vertex_size, path = path, name = name, title = title, ...))
+              # Construction du spectrosome associé
+              to_return = spectrosome_chart(object, entities, nop, vertex_size = vertex_size, path = path, name = name, title = title, ...)
+              return(list(vertices = to_return$vertices, edges = to_return$edges, coords = to_return$coords[[1]]))
               
             } else {
               warning(paste0("There is no cluster for item ", item,

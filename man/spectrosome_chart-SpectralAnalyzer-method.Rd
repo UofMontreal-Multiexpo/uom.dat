@@ -26,7 +26,7 @@ Choix parmi \code{"nodes"}, \code{"patterns"}.}
 
 \item{characteristics}{Ensemble des caractéristiques des nœuds ou motifs dont le spectrosome est à tracer.}
 
-\item{nb_graph}{Nombre de graphes à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.}
+\item{nb_graph}{Nombre de graphiques à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.}
 
 \item{min_link_weight}{Nombre minimum d'items en commun entre deux entités pour afficher le lien sur le graphe.}
 
@@ -56,6 +56,9 @@ Liste contenant :
    \item{\code{vertices}}{Data frame des nœuds ou motifs et caractéristiques utilisées,
                           associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
    \item{\code{edges}}{Data frame des informations relatives aux arêtes du graphe.}
+   \item{\code{coords}}{Liste contenant les matrices des coordonnées des sommets du graphe.
+                        Autant de matrices que de graphiques (\code{nb_graph}), pouvant être
+                        réutilisées via l'argument \code{coord} (cf. \code{...}).}
  }
 }
 \description{
