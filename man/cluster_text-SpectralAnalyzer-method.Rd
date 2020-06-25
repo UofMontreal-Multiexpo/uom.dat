@@ -13,7 +13,7 @@
 \item{graph}{Graphe généré par la fonction \code{\link[sna:gplot]{sna::gplot}} :
 "A two-column matrix containing the vertex positions as x,y coordinates.".}
 
-\item{links}{Liens des motifs utilisés pour générer \code{graph}.}
+\item{links}{Liens des nœuds ou motifs utilisés pour générer \code{graph}.}
 }
 \description{
 Identifie et affiche les noms des clusters sur le graphe fourni en argument.

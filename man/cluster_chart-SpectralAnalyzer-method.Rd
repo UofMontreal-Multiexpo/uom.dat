@@ -63,6 +63,12 @@ pour le traçage du graphe. Cf. section Details.}
 Identifie le cluster associé à l'item fourni en argument et en dessine un spectrosome.
 }
 \details{
+Si des catégories sont associées aux items, chaque catégorie génère un spectrosome.
+ Le nom de la catégorie est ajouté à la fin du nom du fichier.
+
+Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
+ liens simples, ces valeurs apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
+
 Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
 Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
