@@ -8,6 +8,7 @@
 \S4method{cluster_chart}{SpectralAnalyzer}(
   object,
   entities,
+  characteristics,
   item,
   vertex_size = "relative",
   path = getwd(),
@@ -21,6 +22,8 @@
 
 \item{entities}{Type d'élément pour rechercher un cluster (nœuds ou motifs).
 Choix parmi \code{"nodes"}, \code{"patterns"}.}
+
+\item{characteristics}{Ensemble des caractéristiques des nœuds ou motifs dont l'un des clusters est à tracer.}
 
 \item{item}{Code de l'item dont le cluster est à mettre en évidence.}
 

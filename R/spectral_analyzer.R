@@ -403,7 +403,7 @@ setGeneric(name = "spectrosome_chart", def = function(object, entities, characte
 
 setGeneric(name = "cluster_text", def = function(object, graph, links){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -1839,6 +1839,7 @@ setMethod(f = "cluster_text",
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param entities Type d'élément pour rechercher un cluster (nœuds ou motifs).
 #'  Choix parmi \code{"nodes"}, \code{"patterns"}.
+#' @param characteristics Ensemble des caractéristiques des nœuds ou motifs dont l'un des clusters est à tracer.
 #' @param item Code de l'item dont le cluster est à mettre en évidence.
 #' @param vertex_size Façon dont les tailles des sommets du graphe doivent être définies.
 #'  Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
@@ -1872,8 +1873,8 @@ setMethod(f = "cluster_text",
 #' @export
 setMethod(f = "cluster_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
-                                                                                                  title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...) {
+          definition = function(object, entities, characteristics, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
+                                                                                                                   title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...) {
             
             # Vérifie qu'un seul item est mentionné
             if (length(item) != 1 && entities == "nodes")
@@ -1882,8 +1883,8 @@ setMethod(f = "cluster_chart",
               stop("item must refer to only one item. For more, check out the functions extract_patterns_from_items and spectrosome_chart.")
             
             # Extraction des noeuds ou motifs contenant l'item recherché (nop = nodes or patterns)
-            if (entities == "nodes") nop = extract_nodes_from_items(object, object@nodes, item)
-            else if (entities == "patterns") nop = extract_patterns_from_items(object, object@patterns, item)
+            if (entities == "nodes") nop = extract_nodes_from_items(object, characteristics, item)
+            else if (entities == "patterns") nop = extract_patterns_from_items(object, characteristics, item)
             else stop("entities must be \"nodes\" or \"patterns\".")
             
             # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
