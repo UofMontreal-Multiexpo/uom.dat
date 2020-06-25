@@ -399,7 +399,7 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs relatifs
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graph = 1, min_link_weight = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links){ standardGeneric("cluster_text") })
 
@@ -1467,7 +1467,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param entities Type d'élément pour lequel construire le spectrosome (nœuds ou motifs).
 #'  Choix parmi \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Ensemble des caractéristiques des nœuds ou motifs dont le spectrosome est à tracer.
-#' @param nb_graph Nombre de graphiques à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.
+#' @param nb_graphs Nombre de graphiques à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.
 #' @param min_link_weight Nombre minimum d'items en commun entre deux entités pour afficher le lien sur le graphe.
 #' @param vertex_size Façon dont les tailles des sommets du graphe doivent être définies.
 #'  Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
@@ -1480,7 +1480,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
 #' @param name Nom (avec extension) du fichier dans lequel enregistrer le graphique.
-#'  Si \code{nb_graph} est supérieur à \code{1}, un numéro est ajouté automatiquement à la fin du nom du fichier.
+#'  Si \code{nb_graphs} est supérieur à \code{1}, un numéro est ajouté automatiquement à la fin du nom du fichier.
 #' @param title Titre du graphique.
 #' @param ... Arguments supplémentaires fournis à la fonction \code{\link[sna:gplot]{sna::gplot}}
 #'  pour le traçage du graphe. Cf. section Details.
@@ -1490,7 +1490,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'                           associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
 #'    \item{\code{edges}}{Data frame des informations relatives aux arêtes du graphe.}
 #'    \item{\code{coords}}{Liste contenant les matrices des coordonnées des sommets du graphe.
-#'                         Autant de matrices que de graphiques (\code{nb_graph}), pouvant être
+#'                         Autant de matrices que de graphiques (\code{nb_graphs}), pouvant être
 #'                         réutilisées via l'argument \code{coord} (cf. \code{...}).}
 #'  }
 #' 
@@ -1503,7 +1503,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @export
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, nb_graph = 1, min_link_weight = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
+          definition = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
             
             if (entities != "nodes" && entities != "patterns")
               stop("entities must be \"nodes\" or \"patterns\".")
@@ -1734,14 +1734,14 @@ setMethod(f = "spectrosome_chart",
             coords_list = list()
             
             # Traçage des graphiques
-            for (i in seq(nb_graph)) {
+            for (i in seq(nb_graphs)) {
               # Coordonnées qui seront réutilisées
               if (is.missing) coord = NULL
               
               for (j in seq(nb_categories)) {
                 
                 # Nom du graphique en fonction du nombre
-                file_name = ifelse(nb_graph == 1, name, sub(".png", paste0("-", i, ".png"), name))
+                file_name = ifelse(nb_graphs == 1, name, sub(".png", paste0("-", i, ".png"), name))
                 file_name = ifelse(nb_categories == 1,
                                    file_name,
                                    sub(".png", paste0("-", colnames(object@items_categories)[j], ".png"), file_name))

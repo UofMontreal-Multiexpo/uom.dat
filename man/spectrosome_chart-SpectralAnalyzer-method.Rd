@@ -9,7 +9,7 @@
   object,
   entities,
   characteristics,
-  nb_graph = 1,
+  nb_graphs = 1,
   min_link_weight = 1,
   vertex_size = "relative",
   path = getwd(),
@@ -26,7 +26,7 @@ Choix parmi \code{"nodes"}, \code{"patterns"}.}
 
 \item{characteristics}{Ensemble des caractéristiques des nœuds ou motifs dont le spectrosome est à tracer.}
 
-\item{nb_graph}{Nombre de graphiques à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.}
+\item{nb_graphs}{Nombre de graphiques à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.}
 
 \item{min_link_weight}{Nombre minimum d'items en commun entre deux entités pour afficher le lien sur le graphe.}
 
@@ -43,7 +43,7 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}
 
 \item{name}{Nom (avec extension) du fichier dans lequel enregistrer le graphique.
-Si \code{nb_graph} est supérieur à \code{1}, un numéro est ajouté automatiquement à la fin du nom du fichier.}
+Si \code{nb_graphs} est supérieur à \code{1}, un numéro est ajouté automatiquement à la fin du nom du fichier.}
 
 \item{title}{Titre du graphique.}
 
@@ -57,7 +57,7 @@ Liste contenant :
                           associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
    \item{\code{edges}}{Data frame des informations relatives aux arêtes du graphe.}
    \item{\code{coords}}{Liste contenant les matrices des coordonnées des sommets du graphe.
-                        Autant de matrices que de graphiques (\code{nb_graph}), pouvant être
+                        Autant de matrices que de graphiques (\code{nb_graphs}), pouvant être
                         réutilisées via l'argument \code{coord} (cf. \code{...}).}
  }
 }
