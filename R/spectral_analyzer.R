@@ -1345,7 +1345,7 @@ setMethod(f = "plot_spectrum_chart",
             par(mar = c(7.1, 4.5, 4.1, 3.1) + .1)
             
             # Diagramme en barres selon le poids des motifs
-            las = ifelse(length(patterns_characteristics$pattern) <= 15, 1, 2)
+            las = ifelse(length(patterns_characteristics$pattern) <= 20, 1, 2)
             
             bar_plot = barplot(t(weights_by_node_type), col = NA, space = 0, main = title,
                                ylim = c(0, max(patterns_characteristics$weight) * 1.25),
@@ -1361,8 +1361,8 @@ setMethod(f = "plot_spectrum_chart",
             }
             
             # Texte relatif à l'ordre des motifs
-            text(bar_plot, patterns_characteristics$weight + sd(patterns_characteristics$weight) / 3, 
-                 as.roman(patterns_characteristics$order), cex = 0.8, pos = 3)
+            text(bar_plot, patterns_characteristics$weight, 
+                 as.roman(patterns_characteristics$order), cex = 0.8, pos = 3, offset = 1)
             
             
             ## Line chart relatif à la spécificité
