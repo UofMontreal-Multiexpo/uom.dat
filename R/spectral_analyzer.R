@@ -681,13 +681,13 @@ setMethod(f = "search_links",
             
             # Affectation de noms de colonnes et rétablissement des types
             if (entities == "patterns") {
-              colnames(merged) = c("Source", "Target", "items", "weight", "year")
+              colnames(merged) = c("endpoint.1", "endpoint.2", "items", "weight", "year")
               class(merged$year) = "integer"
             } else {
-              colnames(merged) = c("Source", "Target", "items", "weight")
+              colnames(merged) = c("endpoint.1", "endpoint.2", "items", "weight")
             }
             rownames(merged) = NULL
-            class(merged$Source) = class(merged$Target) = class(merged$weight) = "integer"
+            class(merged$endpoint.1) = class(merged$endpoint.2) = class(merged$weight) = "integer"
             
             
             # Définition de l'attribut et retour
@@ -1546,8 +1546,8 @@ setMethod(f = "spectrosome_chart",
             if (not_identical) {
               # Nouvelle numérotation des éléments conservés
               names(vertices_id) = rownames(characteristics)
-              nop_links$Source = vertices_id[as.character(nop_links$Source)]
-              nop_links$Target = vertices_id[as.character(nop_links$Target)]
+              nop_links$endpoint.1 = vertices_id[as.character(nop_links$endpoint.1)]
+              nop_links$endpoint.2 = vertices_id[as.character(nop_links$endpoint.2)]
             }
             
             # Retrait des liens entre les sommets qui ont moins de min_link_weight items en commun
@@ -1566,7 +1566,7 @@ setMethod(f = "spectrosome_chart",
               # Réattribution des noms et classes des colonnes avant concaténation à la data frame des liens
               colnames(missing_vertices) = colnames(nop_links)
               for (c_name in colnames(missing_vertices)) class(missing_vertices[c_name]) = class(nop_links[c_name])
-              class(missing_vertices$Source) = class(missing_vertices$Target) = class(missing_vertices$weight) = "integer"
+              class(missing_vertices$endpoint.1) = class(missing_vertices$endpoint.2) = class(missing_vertices$weight) = "integer"
               if(entities == "patterns") class(missing_vertices$year) = "integer"
               nop_links = rbind(nop_links, missing_vertices)
               
@@ -1576,8 +1576,8 @@ setMethod(f = "spectrosome_chart",
             }
             # Attribution d'identifiants aux liens
             nop_links$ID = seq_len(nrow(nop_links))
-            if (entities == "nodes") nop_links = nop_links[, c("ID", "Source", "Target", "items", "weight")]
-            else nop_links = nop_links[, c("ID", "Source", "Target", "items", "weight", "year")]
+            if (entities == "nodes") nop_links = nop_links[, c("ID", "endpoint.1", "endpoint.2", "items", "weight")]
+            else nop_links = nop_links[, c("ID", "endpoint.1", "endpoint.2", "items", "weight", "year")]
             
             
             # Couleurs et légendes pour chaque catégorie existante
@@ -1715,7 +1715,7 @@ setMethod(f = "spectrosome_chart",
             if (substring(path, nchar(path)) != "/") path = paste0(path, "/")
             
             # Réseau généré avec le package network
-            links = as.matrix(nop_links[, c("Source", "Target")], ncol = 2)
+            links = as.matrix(nop_links[, c("endpoint.1", "endpoint.2")], ncol = 2)
             network_data = network::network(links, directed = FALSE, matrix.type = "edgelist")
             vertices_names = network::network.vertex.names(network_data)
             
@@ -1839,41 +1839,41 @@ setMethod(f = "cluster_text",
           definition = function(object, graph, links){
             
             # Calcul des coordonnées des milieux des liaisons
-            coordS = graph[links[, "Source"], 1:2] # Coordonnées des 'sources'
-            coordT = graph[links[, "Target"], 1:2] # Coordonnées des 'targets'
+            coord_e1 = graph[links[, "endpoint.1"], 1:2] # Coordonnées des premiers sommets des liens
+            coord_e2 = graph[links[, "endpoint.2"], 1:2] # Coordonnées des seconds sommets des liens
             # S'il y a plusieurs liens
-            if (!is.vector(coordS)) {
-              coordL = data.frame(X = rowMeans(cbind(coordS[, 1], coordT[, 1])), 
-                                  Y = rowMeans(cbind(coordS[, 2], coordT[, 2])),
-                                  LABEL = links[, "items"])
+            if (!is.vector(coord_e1)) {
+              coord_L = data.frame(X = rowMeans(cbind(coord_e1[, 1], coord_e2[, 1])), 
+                                   Y = rowMeans(cbind(coord_e1[, 2], coord_e2[, 2])),
+                                   LABEL = links[, "items"])
             } else {
               # S'il n'y a qu'un seul lien
-              coordL = data.frame(X = mean(c(coordS[1], coordT[1])), 
-                                  Y = mean(c(coordS[2], coordT[2])),
-                                  LABEL = links[, "items"])
+              coord_L = data.frame(X = mean(c(coord_e1[1], coord_e2[1])), 
+                                   Y = mean(c(coord_e1[2], coord_e2[2])),
+                                   LABEL = links[, "items"])
             }
             # Regroupement en fonction du type de liaison ("LABEL")
-            coordL = coordL[order(coordL[, "LABEL"]), ]
+            coord_L = coord_L[order(coord_L[, "LABEL"]), ]
             
             # Décomposition des liens multiples et calcul du nombre de liaisons réelles
-            clusters = sort(table(unlist(strsplit(as.character(coordL[coordL[, "LABEL"] != "I", "LABEL"]), "/"))), decreasing = TRUE)
+            clusters = sort(table(unlist(strsplit(as.character(coord_L[coord_L[, "LABEL"] != "I", "LABEL"]), "/"))), decreasing = TRUE)
             # Extraction des noms des éléments ayant générés le plus de liaisons
             clusters = names(clusters)[1 : ifelse(length(clusters) >= 15, 15, length(clusters))]
             
             # Moyenne des coordonnées des liens pour chaque type de lien ("LABEL")
-            coordX = aggregate(data.frame(MOY = coordL[, "X"]), by = list(coordL[, "LABEL"]), function(x) mean(x, trim = 0.1))
-            coordY = aggregate(data.frame(MOY = coordL[, "Y"]), by = list(coordL[, "LABEL"]), function(x) mean(x, trim = 0.1))
+            coord_X = aggregate(data.frame(MOY = coord_L[, "X"]), by = list(coord_L[, "LABEL"]), function(x) mean(x, trim = 0.1))
+            coord_Y = aggregate(data.frame(MOY = coord_L[, "Y"]), by = list(coord_L[, "LABEL"]), function(x) mean(x, trim = 0.1))
             
             # Associations des coordonnées moyennes des liens exactes (non pas décomposés) aux noms des éléments ayant générés le plus de liaisons
-            coordX = coordX[match(clusters, as.character(coordX[, 1])), ]
-            coordY = coordY[match(clusters, as.character(coordY[, 1])), ]
+            coord_X = coord_X[match(clusters, as.character(coord_X[, 1])), ]
+            coord_Y = coord_Y[match(clusters, as.character(coord_Y[, 1])), ]
             #! Les coordonnées ne sont donc pas la moyenne de tous les liens correspondant à l'élément
             #! mais uniquement de ceux qui correspondent exactement à cet élément (pas de combinaisons)
             #! bien que la variable "cluster" a recherché le nombre de liens correspondant à l'élément qu'il y ait une combinaison ou non.
             #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'élément.
             
             # Affichage des noms des "clusters" retenus
-            shadowtext(coordX[, 2], coordY[, 2], clusters,
+            shadowtext(coord_X[, 2], coord_Y[, 2], clusters,
                        col = "black", bg = "white", font = ifelse(clusters %in% clusters[1:5], 2, 1), cex = 0.9)
           })
 
@@ -1988,7 +1988,7 @@ setMethod(f = "network_density",
             
             # Nombre d'arêtes et de sommets
             nb_edges = nrow(links) - sum(links$weight == 0)
-            nb_vertices = length(unique(c(links$Source, links$Target)))
+            nb_vertices = length(unique(c(links$endpoint.1, links$endpoint.2)))
             
             # Nombre maximal d'arêtes (1 entre chaque paire de sommets, sans boucle)
             nb_edges_max = nb_vertices * (nb_vertices - 1) / 2
@@ -2014,7 +2014,7 @@ setMethod(f = "degree",
           signature = "SpectralAnalyzer",
           definition = function(object, ID, links) {
             
-            return(sum(xor(links$Source == ID, links$Target == ID)))
+            return(sum(xor(links$endpoint.1 == ID, links$endpoint.2 == ID)))
           })
 
 
@@ -2680,8 +2680,8 @@ setMethod(f = "extract_links",
             
             # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
             # (nop_links = nodes or patterns links)
-            nop_links = all_links[all_links$Source %in% rownames(characteristics)
-                                  & all_links$Target %in% rownames(characteristics), ]
+            nop_links = all_links[all_links$endpoint.1 %in% rownames(characteristics)
+                                  & all_links$endpoint.2 %in% rownames(characteristics), ]
             
             # Identification des nouveaux sommets isolés
             isolated = lapply(rownames(characteristics),
@@ -2700,7 +2700,7 @@ setMethod(f = "extract_links",
               no_links = do.call(rbind, isolated)
               colnames(no_links) = colnames(nop_links)
               nop_links = rbind(nop_links, no_links, stringsAsFactors = FALSE)
-              class(nop_links$Source) = class(nop_links$Target) = class(nop_links$weight) = "integer"
+              class(nop_links$endpoint.1) = class(nop_links$endpoint.2) = class(nop_links$weight) = "integer"
               if(!search_nodes) class(nop_links$year) = "integer"
               
               # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
