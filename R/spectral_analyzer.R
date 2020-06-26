@@ -1448,6 +1448,13 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'  sommets isolés sont déplacés à la fin de la data frame de retour \code{edges}.
 #' Les \code{n} lignes additionnelles sont numérotées \code{"A1"..."An"}.
 #' 
+#' Les couleurs associées aux valeurs de chaque catégorie représentée sont sélectionnées
+#'  de manière circulaire parmi les 20 couleurs de la palette \code{category20} de D3 (cf.
+#'  \code{ggsci::pal_d3("category20")}).
+#' Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
+#'  plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
+#'  \out{2<sup>e</sup>} valeur
+#' 
 #' Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
 #'  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
 #' Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
@@ -1605,7 +1612,9 @@ setMethod(f = "spectrosome_chart",
                   category_mixed = sort(setdiff(category_values, unique(unlist(categories_links))))
                   category_not_mixed = sort(setdiff(category_values, category_mixed))
                   
-                  categories_colors[[category]] = c(rainbow(length(category_not_mixed)), "black", "white")
+                  # Sélection circulaire parmi les 20 couleurs d'une palette de D3
+                  categories_colors[[category]] = c(ggsci::pal_d3("category20")(20)[seq_along(category_not_mixed) %% 21],
+                                                    "black", "white")
                   names(categories_colors[[category]]) = c(category_not_mixed, "Mixt", "Isolated")
                   
                   # Couleurs des liens tracés sur le graphique
@@ -2023,6 +2032,13 @@ setMethod(f = "degree",
 #' 
 #' Les motifs sont triés selon leurs poids.
 #' 
+#' Les couleurs associées aux valeurs de l'éventuelle catégorie représentée sont sélectionnées
+#'  de manière circulaire parmi les 20 couleurs de la palette \code{category20} de D3 (cf.
+#'  \code{ggsci::pal_d3("category20")}).
+#' Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
+#'  plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
+#'  \out{2<sup>e</sup>} valeur.
+#' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Ensemble des caractéristiques des motifs dont l'arbre est à tracer.
 #' @param display_text Texte à afficher sur le graphique à côté des motifs.
@@ -2093,6 +2109,14 @@ setMethod(f = "tree_chart",
 #' Arbre de la multi-association
 #' 
 #' Dessine un graphique de type arbre de la multi-association.
+#' 
+#' @details
+#' Les couleurs associées aux valeurs de l'éventuelle catégorie représentée sont sélectionnées
+#'  de manière circulaire parmi les 20 couleurs de la palette \code{category20} de D3 (cf.
+#'  \code{ggsci::pal_d3("category20")}).
+#' Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
+#'  plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
+#'  \out{2<sup>e</sup>} valeur
 #' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Ensemble des caractéristiques des motifs dont l'arbre est à tracer.
@@ -2218,7 +2242,8 @@ setMethod(f = "plot_tree_chart",
             
             # Couleurs de catégorie
             if (!is.null(category)) {
-              category_colors = rainbow(length(unique(items_category$category)))
+              # Sélection circulaire parmi les 20 couleurs d'une palette de D3
+              category_colors = ggsci::pal_d3("category20")(20)[seq_along(unique(items_category$category)) %% 21]
               names(category_colors) = unique(items_category$category)
               
               final_colors = category_colors[match(items_category$category, names(category_colors))]

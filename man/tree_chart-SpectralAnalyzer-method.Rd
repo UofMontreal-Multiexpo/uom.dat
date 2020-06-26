@@ -50,6 +50,13 @@ Les motifs d'ordre 1 ne sont pas dessinés. Seuls les items inclus dans les moti
  le sont.
 
 Les motifs sont triés selon leurs poids.
+
+Les couleurs associées aux valeurs de l'éventuelle catégorie représentée sont sélectionnées
+ de manière circulaire parmi les 20 couleurs de la palette \code{category20} de D3 (cf.
+ \code{ggsci::pal_d3("category20")}).
+Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
+ plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
+ \out{2<sup>e</sup>} valeur.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin

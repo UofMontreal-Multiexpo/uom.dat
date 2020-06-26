@@ -36,6 +36,14 @@ Par défaut (valeur \code{NULL}), aucun texte n'est affiché.}
 \description{
 Dessine un graphique de type arbre de la multi-association.
 }
+\details{
+Les couleurs associées aux valeurs de l'éventuelle catégorie représentée sont sélectionnées
+ de manière circulaire parmi les 20 couleurs de la palette \code{category20} de D3 (cf.
+ \code{ggsci::pal_d3("category20")}).
+Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
+ plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
+ \out{2<sup>e</sup>} valeur
+}
 \seealso{
 \code{\link{tree_chart}}.
 }

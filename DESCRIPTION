@@ -18,7 +18,8 @@ Depends: R (>= 3.5.0)
 Imports:
     arules,
     network,
-    sna
+    sna,
+    ggsci
 Suggests:
     utils
 RoxygenNote: 7.1.0
