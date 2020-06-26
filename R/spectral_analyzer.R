@@ -1463,7 +1463,8 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'  \itemize{
 #'    \item{\code{mode = "fruchtermanreingold"}}
 #'    \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
-#'      où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.}
+#'      où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.
+#'      Peut aussi être un objet de type \code{expression} ou \code{NULL}.}
 #'    \item{\code{displaylabels = TRUE}}
 #'    \item{\code{label.pos = 0}}
 #'    \item{\code{boxed.labels = TRUE}}
@@ -1724,6 +1725,9 @@ setMethod(f = "spectrosome_chart",
             if(!("mode" %in% names(args))) args$mode = "fruchtermanreingold"
             if(!("layout.par" %in% names(args)) && args$mode == "fruchtermanreingold")
               args$layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))
+            if("layout.par" %in% names(args) && is.expression(args$layout.par))
+              args$layout.par = eval(args$layout.par)
+            print(args$layout.par)
             if(!("displaylabels" %in% names(args))) args$displaylabels = TRUE
             if(!("label.pos" %in% names(args))) args$label.pos = 0
             if(!("boxed.labels" %in% names(args))) args$boxed.labels = TRUE
@@ -1897,7 +1901,8 @@ setMethod(f = "cluster_text",
 #'  \itemize{
 #'    \item{\code{mode = "fruchtermanreingold"}}
 #'    \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
-#'      où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.}
+#'      où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.
+#'      Peut aussi être un objet de type \code{expression} ou \code{NULL}.}
 #'    \item{\code{displaylabels = TRUE}}
 #'    \item{\code{label.pos = 0}}
 #'    \item{\code{boxed.labels = TRUE}}

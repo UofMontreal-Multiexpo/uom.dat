@@ -78,7 +78,8 @@ Les paramètres suivants, pouvant être redéfinis, ont pour valeurs :
  \itemize{
    \item{\code{mode = "fruchtermanreingold"}}
    \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
-     où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.}
+     où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.
+     Peut aussi être un objet de type \code{expression} ou \code{NULL}.}
    \item{\code{displaylabels = TRUE}}
    \item{\code{label.pos = 0}}
    \item{\code{boxed.labels = TRUE}}
