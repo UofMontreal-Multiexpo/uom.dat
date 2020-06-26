@@ -628,7 +628,7 @@ setMethod(f = "search_links",
             
             # Utilisation de la propriété de symétrie de la matrice pour compter le nombre de liens
             nb_links = (sum(entities_links != 0) - nrow(entities_links)) / 2
-            links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == "patterns", 6, 5))
+            links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == "patterns", 5, 4))
             
             link_counter = 0
             loop_index = 0
@@ -645,11 +645,11 @@ setMethod(f = "search_links",
                   
                   # Élément i, élément j, numéro de lien, items en communs, nb items en communs (, année d'apparition du lien)
                   if (entities == "patterns") {
-                    links[link_counter, ] = c(i, j, link_counter,
+                    links[link_counter, ] = c(i, j,
                                               paste(intersection, collapse = "/"), entities_links[i, j],
                                               max(object@patterns[i, "year"], object@patterns[j, "year"]))
                   } else {
-                    links[link_counter, ] = c(i, j, link_counter, paste(intersection, collapse = "/"), entities_links[i, j])
+                    links[link_counter, ] = c(i, j, paste(intersection, collapse = "/"), entities_links[i, j])
                   }
                 }
               }
@@ -663,16 +663,16 @@ setMethod(f = "search_links",
             
             # Matrice des éléments isolés qui complète celle des paires de éléments liés
             if (length(isolated_indexes) != 0) {
-              no_links = t(sapply(isolated_indexes, entity = entities, id0 = nb_links,
-                                  function(x, entity, id0) {
+              no_links = t(sapply(isolated_indexes, entity = entities,
+                                  function(x, entity) {
                                     if (entity == "patterns") {
-                                      return(c(x, x, id0 + parent.frame()$i[], "I", 0, object@patterns[parent.frame()$i[], "year"]))
+                                      return(c(x, x, "I", 0, object@patterns[parent.frame()$i[], "year"]))
                                     }
-                                    return(c(x, x, id0 + parent.frame()$i[], "I", 0))
+                                    return(c(x, x, "I", 0))
                                   }))
             } else {
               # Matrice vide pour la fusion qui suit (sans avoir à tester aucune des deux)
-              no_links = matrix(NA, nrow = 0, ncol = ifelse(entities == "patterns", 6, 5))
+              no_links = matrix(NA, nrow = 0, ncol = ifelse(entities == "patterns", 5, 4))
             }
             
             
@@ -681,13 +681,13 @@ setMethod(f = "search_links",
             
             # Affectation de noms de colonnes et rétablissement des types
             if (entities == "patterns") {
-              colnames(merged) = c("Source", "Target", "ID", "items", "weight", "year")
+              colnames(merged) = c("Source", "Target", "items", "weight", "year")
               class(merged$year) = "integer"
             } else {
-              colnames(merged) = c("Source", "Target", "ID", "items", "weight")
+              colnames(merged) = c("Source", "Target", "items", "weight")
             }
             rownames(merged) = NULL
-            class(merged$Source) = class(merged$Target) = class(merged$ID) = class(merged$weight) = "integer"
+            class(merged$Source) = class(merged$Target) = class(merged$weight) = "integer"
             
             
             # Définition de l'attribut et retour
@@ -1559,22 +1559,25 @@ setMethod(f = "spectrosome_chart",
               missing_vertices = as.data.frame(t(
                 sapply(setdiff(all_vertices, unique(unlist(nop_links[, 1:2]))),
                        function(x){
-                         if (entities == "nodes") return(c(x, x, nrow(nop_links), "I", 0))
-                         return(c(x, x, nrow(nop_links), "I", 0, object@patterns[x, "year"]))
+                         if (entities == "nodes") return(c(x, x, "I", 0))
+                         return(c(x, x, "I", 0, object@patterns[x, "year"]))
                        })), stringsAsFactors = FALSE)
               
               # Réattribution des noms et classes des colonnes avant concaténation à la data frame des liens
               colnames(missing_vertices) = colnames(nop_links)
               for (c_name in colnames(missing_vertices)) class(missing_vertices[c_name]) = class(nop_links[c_name])
-              class(missing_vertices$Source) = class(missing_vertices$Target) = class(missing_vertices$ID) = class(missing_vertices$weight) = "integer"
+              class(missing_vertices$Source) = class(missing_vertices$Target) = class(missing_vertices$weight) = "integer"
               if(entities == "patterns") class(missing_vertices$year) = "integer"
               nop_links = rbind(nop_links, missing_vertices)
-              nop_links$ID = seq_len(nrow(nop_links))
               
               # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
               rownames(nop_links) = c(rownames(nop_links)[1:(nrow(nop_links) - nrow(missing_vertices))],
                                       paste0("A", seq_len(nrow(missing_vertices))))
             }
+            # Attribution d'identifiants aux liens
+            nop_links$ID = seq_len(nrow(nop_links))
+            if (entities == "nodes") nop_links = nop_links[, c("ID", "Source", "Target", "items", "weight")]
+            else nop_links = nop_links[, c("ID", "Source", "Target", "items", "weight", "year")]
             
             
             # Couleurs et légendes pour chaque catégorie existante
@@ -1712,7 +1715,7 @@ setMethod(f = "spectrosome_chart",
             if (substring(path, nchar(path)) != "/") path = paste0(path, "/")
             
             # Réseau généré avec le package network
-            links = as.matrix(nop_links[, 1:2], ncol = 2)
+            links = as.matrix(nop_links[, c("Source", "Target")], ncol = 2)
             network_data = network::network(links, directed = FALSE, matrix.type = "edgelist")
             vertices_names = network::network.vertex.names(network_data)
             
@@ -1836,8 +1839,8 @@ setMethod(f = "cluster_text",
           definition = function(object, graph, links){
             
             # Calcul des coordonnées des milieux des liaisons
-            coordS = graph[links[, 1], 1:2] # Coordonnées des 'sources'
-            coordT = graph[links[, 2], 1:2] # Coordonnées des 'targets'
+            coordS = graph[links[, "Source"], 1:2] # Coordonnées des 'sources'
+            coordT = graph[links[, "Target"], 1:2] # Coordonnées des 'targets'
             # S'il y a plusieurs liens
             if (!is.vector(coordS)) {
               coordL = data.frame(X = rowMeans(cbind(coordS[, 1], coordT[, 1])), 
@@ -2684,8 +2687,8 @@ setMethod(f = "extract_links",
             isolated = lapply(rownames(characteristics),
                               function(x) {
                                 if (!(x %in% unlist(nop_links[, 1:2]))) {
-                                  if (search_nodes) return(c(x, x, nrow(nop_links), "I", 0))
-                                  return(c(x, x, nrow(nop_links), "I", 0, object@patterns[x, "year"]))
+                                  if (search_nodes) return(c(x, x, "I", 0))
+                                  return(c(x, x, "I", 0, object@patterns[x, "year"]))
                                 }
                                 return(NULL)
                               })
@@ -2699,7 +2702,6 @@ setMethod(f = "extract_links",
               nop_links = rbind(nop_links, no_links, stringsAsFactors = FALSE)
               class(nop_links$Source) = class(nop_links$Target) = class(nop_links$weight) = "integer"
               if(!search_nodes) class(nop_links$year) = "integer"
-              nop_links$ID = seq_len(nrow(nop_links))
               
               # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
               r_names = rownames(nop_links)
