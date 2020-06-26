@@ -1277,8 +1277,7 @@ setMethod(f = "spectrum_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns") {
             
-            # Arrondi de la spécificité et définition d'un identifiant
-            patterns_characteristics["specificity"] = round(patterns_characteristics["specificity"], 2)
+            # Attribution d'identifiants aux motifs
             patterns_characteristics$ID = seq(nrow(patterns_characteristics))
             
             # Ensembles des poids et longueurs des noeuds contenant les motifs
