@@ -1731,7 +1731,6 @@ setMethod(f = "spectrosome_chart",
               args$layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))
             if("layout.par" %in% names(args) && is.expression(args$layout.par))
               args$layout.par = eval(args$layout.par)
-            print(args$layout.par)
             if(!("displaylabels" %in% names(args))) args$displaylabels = TRUE
             if(!("label.pos" %in% names(args))) args$label.pos = 0
             if(!("boxed.labels" %in% names(args))) args$boxed.labels = TRUE
