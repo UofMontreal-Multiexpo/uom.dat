@@ -1,13 +1,23 @@
 # Occupational Exposure Databases analysis tools - Multiexposure
 
 
-## Project purpose
+## Purpose
 
 This project is about developing **R processing, analysis and visualization tools** for occupational exposure databases, especially for multiexposure.
 
 The development of these tools is part of a research study led by **Jérôme Lavoué** (Professor at [**University of Montreal**](https://recherche.umontreal.ca/english/home/), department of environmental health and occupational health) whose title is "Portrait of multiexposure situations in the workplace in Quebec from occupational exposure databases".
 
 Main analytical approaches are *Frequent Itemset Mining*, *Association Rules*, *Clustering* and *Spectrosome*.
+
+
+## Installation
+
+To install the package `oedb.analysis.tools`:
+
+1. Clone the repository or download a ZIP copy.
+2. In RStudio, open the project file `oedb-analysis-tools.Rproj`.
+3. Go to the Build tab (which is by default in the upper right quadrant).
+4. Click on the "Install and Restart" button.
 
 
 ## Documentation
