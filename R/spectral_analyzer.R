@@ -1788,9 +1788,9 @@ setMethod(f = "spectrosome_chart",
                 # Titre du graphique
                 title(main = title, cex.main = 1.5)
                 title(main = paste0(nop_subtitle_1, nrow(characteristics),
-                                   "; Links: ", length(which(nop_links[, "items"] != "I")),
-                                   nop_subtitle_3, length(sna::isolates(network_data))),
-                      font.main = 4, line = -0.5)
+                                    "; Links: ", sum(nop_links$weight != 0),
+                                    nop_subtitle_3, length(sna::isolates(network_data))),
+                      font.main = 3, line = 0)
                 
                 # Légende du graphique
                 if (entities == "nodes") {
