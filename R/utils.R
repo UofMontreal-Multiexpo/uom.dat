@@ -63,6 +63,9 @@ cap = function(s) {
 }
 
 
+
+#### Fonctions utiles au traçage de graphiques ####
+
 #' Ombrage de texte
 #' 
 #' Affiche du texte en y ajoutant un contour d'une autre couleur.
@@ -80,7 +83,7 @@ cap = function(s) {
 #'  \href{https://stackoverflow.com/questions/25631216/r-plots-is-there-any-way-to-draw-border-shadow-or-buffer-around-text-labels}{Any way to draw border, shadow or buffer around text labels}.
 #' @keywords internal
 shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
-                       theta = seq(0, 2 * pi, length.out = 32), r = 0.1, ...) {
+                      theta = seq(0, 2 * pi, length.out = 32), r = 0.1, ...) {
   
   xy = xy.coords(x,y)
   xo = r * strwidth('A')
@@ -92,5 +95,41 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
   }
   # Draw actual text in exact xy position in foreground colour
   text(xy$x, xy$y, labels, col = col, ...)
+}
+
+
+
+#### Fonctions utiles à la gestion de fichiers ####
+
+#' Chemin de dossier
+#' 
+#' Vérifie si une chaîne de caractères peut être utilisée comme chemin d'un dossier.
+#' Ajoute un caractère \code{"/"} si ce n'est pas le cas.
+#' 
+#' @param path Chaîne de caractères devant être utilisée comme chemin d'un dossier.
+#' @return Chaîne de caractères, terminant par le caractère \code{"/"}.
+#' 
+#' @keywords internal
+turn_into_path = function(path) {
+  if (substring(path, nchar(path)) != "/") return(paste0(path, "/"))
+  return(path)
+}
+
+
+#' Extension de fichier
+#' 
+#' Vérifie si un nom de fichier possède l'extension désirée.
+#' Ajoute cette extension si ce n'est pas le cas.
+#' 
+#' @param filename Chaîne de caractères devant être considérée comme un nom de fichier.
+#' @param ext Extension souhaitée.
+#' @return Chaîne de caractères, terminant par l'extension \code{ext}.
+#' 
+#' @keywords internal
+check_extension = function(filename, ext) {
+  if (substr(ext, 1, 1) != ".") ext = paste0(".", ext)
+  file_end = substring(filename, nchar(filename) - nchar(ext) + 1)
+  if (file_end != ext && file_end != toupper(ext)) return(paste0(filename, ext))
+  return(filename)
 }
 

@@ -1263,7 +1263,7 @@ setMethod(f = "define_dynamic_status",
 #' @param patterns_characteristics Ensemble des caractéristiques des motifs dont le spectre est à tracer.
 #' @param path Chemin du dossier dans lequel enregistrer le graphique.
 #'  Par défaut, le graphique est enregistré dans le répertoire de travail.
-#' @param name Nom (avec extension) du fichier dans lequel enregistrer le graphique.
+#' @param name Nom du fichier dans lequel enregistrer le graphique.
 #' @param title Titre du graphique.
 #' @return Data frame des motifs et caractéristiques utilisées, associés aux identifiants visibles sur le graphique.
 #' 
@@ -1302,10 +1302,8 @@ setMethod(f = "spectrum_chart",
             weights$simple_node = patterns_characteristics$weight - weights$complex_nodes
             
             
-            if (substring(path, nchar(path)) != "/") path = paste0(path, "/")
-            
             # Traçage du graphique dans un fichier PDF
-            pdf(paste0(path, name), 15, 8, pointsize = 10)
+            pdf(paste0(turn_into_path(path), check_extension(name, "pdf")), 15, 8, pointsize = 10)
             plot_spectrum_chart(object, patterns_characteristics, weights, title)
             dev.off()
             
@@ -1496,7 +1494,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'  }
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
-#' @param name Nom (avec extension) du fichier dans lequel enregistrer le graphique.
+#' @param name Nom du fichier dans lequel enregistrer le graphique.
 #'  Si \code{nb_graphs} est supérieur à \code{1}, un numéro est ajouté automatiquement à la fin du nom du fichier.
 #' @param title Titre du graphique.
 #' @param ... Arguments supplémentaires fournis à la fonction \code{\link[sna:gplot]{sna::gplot}}
@@ -1721,9 +1719,6 @@ setMethod(f = "spectrosome_chart",
                    stop("Unknown value for vertex_size. Must be one of c(\"relative\", \"grouped\", \"absolute\", \"equal\")."))
             
             
-            # Correction du chemin du dossier où créer les fichiers
-            if (substring(path, nchar(path)) != "/") path = paste0(path, "/")
-            
             # Réseau généré avec le package network
             links = as.matrix(nop_links[, c("endpoint.1", "endpoint.2")], ncol = 2)
             network_data = network::network(links, directed = FALSE, matrix.type = "edgelist")
@@ -1748,6 +1743,7 @@ setMethod(f = "spectrosome_chart",
             
             # Nombre de variantes du graphique
             nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
+            file_name = check_extension(name, "png")
             
             # Réutilisation ou non de coordonnées
             if ("coord" %in% names(args)) {
@@ -1766,13 +1762,13 @@ setMethod(f = "spectrosome_chart",
               for (j in seq(nb_categories)) {
                 
                 # Nom du graphique en fonction du nombre
-                file_name = ifelse(nb_graphs == 1, name, sub(".png", paste0("-", i, ".png"), name))
+                file_name = ifelse(nb_graphs == 1, file_name, sub(".png", paste0("-", i, ".png"), file_name))
                 file_name = ifelse(nb_categories == 1,
                                    file_name,
                                    sub(".png", paste0("-", colnames(object@items_categories)[j], ".png"), file_name))
                 
                 # Traçage des graphiques dans des fichiers PNG
-                png(paste0(path, file_name), 950, 700)
+                png(paste0(turn_into_path(path), file_name), 950, 700)
                 par(mar = c(2,0.5,4,0.5))
                 
                 # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
@@ -1933,7 +1929,7 @@ setMethod(f = "cluster_text",
 #'  }
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
-#' @param name Nom (avec extension) du fichier dans lequel enregistrer le graphique.
+#' @param name Nom du fichier dans lequel enregistrer le graphique.
 #'  Par défaut, le nom dépend des arguments \code{entities} et \code{item}.
 #'  Exemple de nom par défaut : \code{"node_cluster_of_25"}.
 #' @param title Titre du graphique.
@@ -2065,7 +2061,7 @@ setMethod(f = "degree",
 #' @param cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
 #' @param path Chemin du dossier dans lequel enregistrer le graphique.
 #'  Par défaut, le graphique est enregistré dans le répertoire de travail.
-#' @param name Nom (avec extension) du fichier dans lequel enregistrer le graphique.
+#' @param name Nom du fichier dans lequel enregistrer le graphique.
 #' @param title Titre du graphique.
 #' @return Data frame des motifs représentées sur le graphique, associés à leurs caractéristiques et
 #'  identifiants (visibles sur le graphique si \code{display_text = "ID"}).
@@ -2076,8 +2072,6 @@ setMethod(f = "degree",
 setMethod(f = "tree_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, display_text = NULL, cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
-            
-            if (substring(path, nchar(path)) != "/") path = paste0(path, "/")
             
             # Motifs d'ordre > 1, triés par taille croissant, puis par poids décroissant
             pat_charac = patterns_characteristics[patterns_characteristics$order != 1, ]
@@ -2090,6 +2084,7 @@ setMethod(f = "tree_chart",
             
             # Une variante du graphique par catégorie
             nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
+            file_name = check_extension(name, "pdf")
             
             for (c in seq(nb_categories)) {
               
@@ -2109,11 +2104,11 @@ setMethod(f = "tree_chart",
               
               # Nom du graphique en fonction de la catégorie
               file_name = ifelse(nb_categories == 1,
-                                 name,
-                                 sub(".pdf", paste0("-", category, ".pdf"), name))
+                                 file_name,
+                                 sub(".pdf", paste0("-", category, ".pdf"), file_name))
               
               # Traçage du graphique dans un fichier PDF
-              pdf(paste0(path, file_name), 14, 10, paper = "a4r", pointsize = 11)
+              pdf(paste0(turn_into_path(path), file_name), 14, 10, paper = "a4r", pointsize = 11)
               plot_tree_chart(object, pat_charac, items_cat, category, cutoff, display_text, title)
               dev.off()
             }
