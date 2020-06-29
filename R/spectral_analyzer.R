@@ -1374,7 +1374,8 @@ setMethod(f = "plot_spectrum_chart",
                  lwd = 3, bty = "n", type = "b", col = "black", pch = 20,
                  xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "",
                  xlim = c(0, nrow(patterns_characteristics)))
-            abline(h = 0.5, lwd = 0.5, lty = "dotted")
+            segments(x0 = 0, x1 = nrow(patterns_characteristics) + 1, y0 = 0.5,
+                     lwd = 0.5, lty = "dotted")
             
             # Axe et titre à droite
             axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = 1.5, line = -1, font.axis = 2)
