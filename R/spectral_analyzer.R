@@ -1337,7 +1337,7 @@ setMethod(f = "plot_spectrum_chart",
           definition = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns") {
             
             # Définition des couleurs des barres du barplot
-            bars_colors = object@Class$STATUS_COLORS[patterns_characteristics[, "status"]]
+            bars_colors = object@Class$STATUS_COLORS[patterns_characteristics$status]
             
             
             ## Bar chart relatif au poids
@@ -1346,10 +1346,10 @@ setMethod(f = "plot_spectrum_chart",
             
             # Diagramme en barres selon le poids des motifs
             las = ifelse(length(patterns_characteristics$pattern) <= 20, 1, 2)
-            
+            y_lim_bar = max(patterns_characteristics$weight) * 1.25
             bar_plot = barplot(t(weights_by_node_type), col = NA, space = 0, main = title,
                                xlim = c(-0.5, nrow(patterns_characteristics) + 0.5), xaxs = "i",
-                               ylim = c(0, max(patterns_characteristics$weight) * 1.25),
+                               ylim = c(0, y_lim_bar),
                                lwd = 2, xlab = "Patterns IDs", ylab = "Weight", names.arg = patterns_characteristics$ID,
                                cex.main = 1.3, cex.lab = 1.5, cex.axis = 1.5, cex.names = 0.9, las = las, font.axis = 2)
             bar_width_2 = diff(bar_plot[1:2]) / 2
@@ -1361,27 +1361,31 @@ setMethod(f = "plot_spectrum_chart",
                    col = bars_colors[i], density = c(300, 15), border = "black")
             }
             
-            # Texte relatif à l'ordre des motifs
-            text(bar_plot, patterns_characteristics$weight, 
-                 as.roman(patterns_characteristics$order), cex = 0.8, pos = 3, offset = 1)
-            
             
             ## Line chart relatif à la spécificité
             par(new = TRUE)
             
             # Ligne de la spécificité et seuil
+            y_lim_line = 1.039
             plot(x = seq(0.5, nrow(patterns_characteristics) - 0.5),
                  y = patterns_characteristics$specificity,
                  lwd = 3, bty = "n", type = "b", col = "black", pch = 20,
                  xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "",
                  xlim = c(-0.5, nrow(patterns_characteristics) + 0.5), xaxs = "i",
-                 ylim = c(0, 1.039), yaxs = "i")
+                 ylim = c(0, y_lim_line), yaxs = "i")
             segments(x0 = 0, x1 = nrow(patterns_characteristics) + 0.5, y0 = 0.5,
                      lwd = 0.5, lty = "dotted")
             
             # Axe et titre à droite
             axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = 1.5, font.axis = 2)
             mtext("Specificity", side = 4, line = 3.1, cex = 1.5)
+            
+            
+            ## Texte relatif à l'ordre des motifs
+            # Changement du système de coordonnées du au changement de graphique (bar -> line)
+            new_y = patterns_characteristics$weight * y_lim_line / y_lim_bar
+            shadowtext(bar_plot, new_y, as.roman(patterns_characteristics$order),
+                       col = "black", bg = "white", cex = 0.8, pos = 3, offset = 1)
             
             
             ## Légendes du graphique complet
