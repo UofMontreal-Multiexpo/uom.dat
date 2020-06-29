@@ -1882,7 +1882,7 @@ setMethod(f = "cluster_text",
             #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'élément.
             
             # Affichage des noms des "clusters" retenus
-            shadowtext(coord_X[, 2], coord_Y[, 2], clusters,
+            shadowtext(coord_X[, 2], coord_Y[, 2], clusters, r = 0.3,
                        col = "black", bg = "white", font = ifelse(clusters %in% clusters[1:5], 2, 1), cex = 0.9)
           })
 

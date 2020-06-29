@@ -80,7 +80,7 @@ cap = function(s) {
 #'  \href{https://stackoverflow.com/questions/25631216/r-plots-is-there-any-way-to-draw-border-shadow-or-buffer-around-text-labels}{Any way to draw border, shadow or buffer around text labels}.
 #' @keywords internal
 shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
-                       theta = seq(pi/4, 2*pi, length.out = 16), r = 0.3, ...) {
+                       theta = seq(0, 2 * pi, length.out = 32), r = 0.1, ...) {
   
   xy = xy.coords(x,y)
   xo = r * strwidth('A')
