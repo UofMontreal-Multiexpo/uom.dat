@@ -1392,8 +1392,8 @@ setMethod(f = "plot_spectrum_chart",
                    legend = "- Order", cex = 1.1)
             legend("topright", bty = "n", xpd = NA, adj = 0, inset = c(0.18, -0.04), pch = 20, lty = 1,
                    legend = "Specificity", cex = 1.1)
-            legend("topright", bty = "n", xpd = NA, inset = c(0.05, -0.07), fill = "red", density = c(600, 15),
-                   legend = c("In complex nodes", "In single node"), cex = 1.1)
+            legend("topright", bty = "n", xpd = NA, inset = c(0.02, -0.07), fill = "red", density = c(600, 15),
+                   legend = c("Weight in complex nodes", "Weight in simple nodes"), cex = 1.1)
           })
 
 
