@@ -42,7 +42,7 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}
 
-\item{name}{Nom (avec extension) du fichier dans lequel enregistrer le graphique.
+\item{name}{Nom du fichier dans lequel enregistrer le graphique.
 Si \code{nb_graphs} est supérieur à \code{1}, un numéro est ajouté automatiquement à la fin du nom du fichier.}
 
 \item{title}{Titre du graphique.}

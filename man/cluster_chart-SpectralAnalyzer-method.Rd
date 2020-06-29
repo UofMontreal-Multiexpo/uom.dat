@@ -39,7 +39,7 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}
 
-\item{name}{Nom (avec extension) du fichier dans lequel enregistrer le graphique.
+\item{name}{Nom du fichier dans lequel enregistrer le graphique.
 Par défaut, le nom dépend des arguments \code{entities} et \code{item}.
 Exemple de nom par défaut : \code{"node_cluster_of_25"}.}
 

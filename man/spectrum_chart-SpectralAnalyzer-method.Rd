@@ -21,7 +21,7 @@
 \item{path}{Chemin du dossier dans lequel enregistrer le graphique.
 Par défaut, le graphique est enregistré dans le répertoire de travail.}
 
-\item{name}{Nom (avec extension) du fichier dans lequel enregistrer le graphique.}
+\item{name}{Nom du fichier dans lequel enregistrer le graphique.}
 
 \item{title}{Titre du graphique.}
 }
