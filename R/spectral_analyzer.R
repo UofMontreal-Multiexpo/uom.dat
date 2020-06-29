@@ -1342,12 +1342,13 @@ setMethod(f = "plot_spectrum_chart",
             
             ## Bar chart relatif au poids
             par(mfrow = c(1, 1))
-            par(mar = c(7.1, 4.5, 4.1, 3.1) + .1)
+            par(mar = c(7.1, 5, 4.1, 5) + .1)
             
             # Diagramme en barres selon le poids des motifs
             las = ifelse(length(patterns_characteristics$pattern) <= 20, 1, 2)
             
             bar_plot = barplot(t(weights_by_node_type), col = NA, space = 0, main = title,
+                               xlim = c(-0.5, nrow(patterns_characteristics) + 0.5), xaxs = "i",
                                ylim = c(0, max(patterns_characteristics$weight) * 1.25),
                                lwd = 2, xlab = "Patterns IDs", ylab = "Weight", names.arg = patterns_characteristics$ID,
                                cex.main = 1.3, cex.lab = 1.5, cex.axis = 1.5, cex.names = 0.9, las = las, font.axis = 2)
@@ -1373,13 +1374,13 @@ setMethod(f = "plot_spectrum_chart",
                  y = patterns_characteristics$specificity,
                  lwd = 3, bty = "n", type = "b", col = "black", pch = 20,
                  xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "",
-                 xlim = c(0, nrow(patterns_characteristics)))
-            segments(x0 = 0, x1 = nrow(patterns_characteristics) + 1, y0 = 0.5,
+                 xlim = c(-0.5, nrow(patterns_characteristics) + 0.5), xaxs = "i")
+            segments(x0 = 0, x1 = nrow(patterns_characteristics) + 0.5, y0 = 0.5,
                      lwd = 0.5, lty = "dotted")
             
             # Axe et titre à droite
-            axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = 1.5, line = -1, font.axis = 2)
-            mtext("Specificity", side = 4, line = 1.5, cex = 1.5, font.axis = 2)
+            axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = 1.5, font.axis = 2)
+            mtext("Specificity", side = 4, line = 3.1, cex = 1.5)
             
             
             ## Légendes du graphique complet
