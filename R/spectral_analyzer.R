@@ -1369,8 +1369,11 @@ setMethod(f = "plot_spectrum_chart",
             par(new = TRUE)
             
             # Ligne de la spécificité et seuil
-            plot(patterns_characteristics[, "specificity"], lwd = 3, bty = "n", xaxt = "n", yaxt = "n", 
-                 xlab = "", ylab = "", main = "", type = "b", col = "black", pch = 20)
+            plot(x = seq(0.5, nrow(patterns_characteristics) - 0.5),
+                 y = patterns_characteristics$specificity,
+                 lwd = 3, bty = "n", type = "b", col = "black", pch = 20,
+                 xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "",
+                 xlim = c(0, nrow(patterns_characteristics)))
             abline(h = 0.5, lwd = 0.5, lty = "dotted")
             
             # Axe et titre à droite
