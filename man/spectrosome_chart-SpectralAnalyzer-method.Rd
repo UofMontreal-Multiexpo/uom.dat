@@ -12,6 +12,7 @@
   nb_graphs = 1,
   min_link_weight = 1,
   vertex_size = "relative",
+  cutoff = NULL,
   path = getwd(),
   name = paste0("spectrosome_of_", entities, ".png"),
   title = paste0("Network of ", entities),
@@ -38,6 +39,8 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
   \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
   \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 }}
+
+\item{cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
 
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}

@@ -399,11 +399,11 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs relatifs
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, vertex_size = "relative", cutoff = NULL, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -1492,6 +1492,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'    \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
 #'    \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 #'  }
+#' @param cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
 #' @param name Nom du fichier dans lequel enregistrer le graphique.
@@ -1518,7 +1519,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @export
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
+          definition = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
             
             if (entities != "nodes" && entities != "patterns")
               stop("entities must be \"nodes\" or \"patterns\".")
@@ -1799,7 +1800,11 @@ setMethod(f = "spectrosome_chart",
                 
                 # Légende des liens uniquement si des catégories existent
                 if(length(object@items_categories) != 0) {
-                  legend = c(legend_1, "", names(categories_colors[[j]]))
+                  if (is.null(cutoff)) {
+                    legend = c(legend_1, "", names(categories_colors[[j]]))
+                  } else {
+                    legend = c(legend_1, "", substr(names(categories_colors[[j]]), 1, cutoff))
+                  }
                   col = c(col_1, "white", categories_colors[[j]])
                 }
                 
@@ -1926,6 +1931,7 @@ setMethod(f = "cluster_text",
 #'    \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
 #'    \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 #'  }
+#' @param cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
 #' @param name Nom du fichier dans lequel enregistrer le graphique.
@@ -1951,7 +1957,7 @@ setMethod(f = "cluster_text",
 #' @export
 setMethod(f = "cluster_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, item, vertex_size = "relative", path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
+          definition = function(object, entities, characteristics, item, vertex_size = "relative", cutoff = NULL, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
                                                                                                                    title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...) {
             
             # Vérifie qu'un seul item est mentionné
@@ -1968,7 +1974,7 @@ setMethod(f = "cluster_chart",
             # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
             if (nrow(nop) > 1) {
               # Construction du spectrosome associé
-              to_return = spectrosome_chart(object, entities, nop, vertex_size = vertex_size, path = path, name = name, title = title, ...)
+              to_return = spectrosome_chart(object, entities, nop, vertex_size = vertex_size, cutoff = cutoff, path = path, name = name, title = title, ...)
               return(list(vertices = to_return$vertices, edges = to_return$edges, coords = to_return$coords[[1]]))
               
             } else {

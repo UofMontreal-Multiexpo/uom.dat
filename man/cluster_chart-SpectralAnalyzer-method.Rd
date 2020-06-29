@@ -11,6 +11,7 @@
   characteristics,
   item,
   vertex_size = "relative",
+  cutoff = NULL,
   path = getwd(),
   name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
   title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
@@ -35,6 +36,8 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
   \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
   \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 }}
+
+\item{cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
 
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}
