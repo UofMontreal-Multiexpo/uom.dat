@@ -10,8 +10,8 @@ shadowtext(
   labels,
   col = "black",
   bg = "white",
-  theta = seq(pi/4, 2 * pi, length.out = 16),
-  r = 0.3,
+  theta = seq(0, 2 * pi, length.out = 32),
+  r = 0.1,
   ...
 )
 }
