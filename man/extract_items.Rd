@@ -23,6 +23,9 @@ Extrait les items associés aux observations correspondant à un ou plusieurs cr
 extract_items(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
 
 }
+\seealso{
+\code{\link{extract_information}}.
+}
 \author{
 Gauthier Magnin
 }

@@ -42,6 +42,9 @@ Les situations connues sont décrites par l'argument \code{work_situations}.
 Les situations non connues sont décrites par les combinaisons existantes des variables dont les noms sont
  définis par l'argument \code{variable_names}.
 }
+\seealso{
+\code{\link{turn_interventions_into_observations}}.
+}
 \author{
 Gauthier Magnin
 }

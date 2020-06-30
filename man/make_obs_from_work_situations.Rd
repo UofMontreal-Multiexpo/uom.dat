@@ -24,6 +24,9 @@ Liste contenant :
 Regroupe des prélèvements sous forme d'observations.
 Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail.
 }
+\seealso{
+\code{\link{make_observations}}, \code{\link{make_obs_from_unspecified_situations}}.
+}
 \author{
 Gauthier Magnin
 }

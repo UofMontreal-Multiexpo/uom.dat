@@ -23,6 +23,9 @@ Sous-ensemble de la liste d'observations correspondant aux critères de recherch
 \description{
 Extrait les observations correspondant à un ou plusieurs items recherchés.
 }
+\seealso{
+\code{\link{extract_observations_from_information}}.
+}
 \author{
 Gauthier Magnin
 }

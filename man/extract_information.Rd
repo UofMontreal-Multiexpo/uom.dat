@@ -24,6 +24,9 @@ Extrait les informations associées aux observations qui contiennent un ensemble
 extract_information(observations, 27, c("METIER", "TACHE"))
 
 }
+\seealso{
+\code{\link{extract_items}}.
+}
 \author{
 Gauthier Magnin
 }

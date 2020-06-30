@@ -25,6 +25,9 @@ Regroupe des prélèvements sous forme d'observations.
 Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail.
 Ces situations sont décrites par les combinaisons de variables dont les noms sont définis en paramètres.
 }
+\seealso{
+\code{\link{make_observations}}, \code{\link{make_obs_from_work_situations}}.
+}
 \author{
 Gauthier Magnin
 }

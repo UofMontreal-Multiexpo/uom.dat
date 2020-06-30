@@ -26,6 +26,7 @@
 #' @return Liste des observations identifiées.
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{turn_interventions_into_observations}}.
 #' @export
 make_observations = function(measures, mode, work_situations = NULL, variable_names = NULL, additional = NULL) {
   
@@ -80,6 +81,7 @@ make_observations = function(measures, mode, work_situations = NULL, variable_na
 #'  }
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{make_observations}}, \code{\link{make_obs_from_unspecified_situations}}.
 #' @keywords internal
 make_obs_from_work_situations = function(measures, work_situations, additional = NULL) {
   
@@ -157,6 +159,7 @@ make_obs_from_work_situations = function(measures, work_situations, additional =
 #' @return Liste des observations identifiées.
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{make_observations}}, \code{\link{make_obs_from_work_situations}}.
 #' @keywords internal
 make_obs_from_unspecified_situations = function(measures, variable_names, additional = NULL) {
   
@@ -222,6 +225,7 @@ make_obs_from_unspecified_situations = function(measures, variable_names, additi
 #' @return Liste des observations identifiées.
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{make_observations}}.
 #' @export
 turn_interventions_into_observations = function(measures, additional = NULL) {
   # Identifiants des interventions associés aux prélèvements
@@ -266,6 +270,7 @@ turn_interventions_into_observations = function(measures, additional = NULL) {
 #' @return Sous-ensemble de la liste d'observations correspondant aux critères de recherche.
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{extract_observations_from_information}}.
 #' @export
 extract_observations_from_items = function(observations, items, target = "all") {
   
@@ -295,6 +300,7 @@ extract_observations_from_items = function(observations, items, target = "all") 
 #' extract_observations_from_information(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{extract_observations_from_items}}.
 #' @export
 extract_observations_from_information = function(observations, info_names, info_values) {
   
@@ -322,6 +328,7 @@ extract_observations_from_information = function(observations, info_names, info_
 #' extract_items(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{extract_information}}.
 #' @export
 extract_items = function(observations, info_names, info_values) {
   
@@ -353,6 +360,7 @@ extract_items = function(observations, info_names, info_values) {
 #' extract_information(observations, 27, c("METIER", "TACHE"))
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{extract_items}}.
 #' @export
 extract_information = function(observations, items, info_names) {
   

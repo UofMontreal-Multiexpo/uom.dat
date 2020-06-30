@@ -23,6 +23,9 @@ Extrait les observations correspondant à un ou plusieurs critères de recherche
 extract_observations_from_information(observations, c("METIER", "TACHE"), c(44143009, "A3410"))
 
 }
+\seealso{
+\code{\link{extract_observations_from_items}}.
+}
 \author{
 Gauthier Magnin
 }

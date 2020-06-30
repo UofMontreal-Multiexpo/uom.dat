@@ -18,6 +18,9 @@ Liste des observations identifiées.
 Regroupe des prélèvements sous forme d'observations.
 Les substances retrouvées dans une même intervention sont regroupées en une même observation.
 }
+\seealso{
+\code{\link{make_observations}}.
+}
 \author{
 Gauthier Magnin
 }
