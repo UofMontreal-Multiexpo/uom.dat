@@ -666,9 +666,9 @@ setMethod(f = "search_links",
               no_links = t(sapply(isolated_indexes, entity = entities,
                                   function(x, entity) {
                                     if (entity == "patterns") {
-                                      return(c(x, x, "I", 0, object@patterns[parent.frame()$i[], "year"]))
+                                      return(c(x, x, "", 0, object@patterns[parent.frame()$i[], "year"]))
                                     }
-                                    return(c(x, x, "I", 0))
+                                    return(c(x, x, "", 0))
                                   }))
             } else {
               # Matrice vide pour la fusion qui suit (sans avoir à tester aucune des deux)
@@ -1568,8 +1568,8 @@ setMethod(f = "spectrosome_chart",
               missing_vertices = as.data.frame(t(
                 sapply(setdiff(all_vertices, unique(unlist(nop_links[, 1:2]))),
                        function(x){
-                         if (entities == "nodes") return(c(x, x, "I", 0))
-                         return(c(x, x, "I", 0, object@patterns[x, "year"]))
+                         if (entities == "nodes") return(c(x, x, "", 0))
+                         return(c(x, x, "", 0, object@patterns[x, "year"]))
                        })), stringsAsFactors = FALSE)
               
               # Réattribution des noms et classes des colonnes avant concaténation à la data frame des liens
@@ -1650,7 +1650,7 @@ setMethod(f = "spectrosome_chart",
                   categories_colors[[category]] = c("black", "white")
                   names(categories_colors[[category]]) = c(levels(object@items_categories[, category]), "Isolated")
                   
-                  categories_links = ifelse(nop_links[, "items"] == "I", "Isolated", levels(object@items_categories[, category]))
+                  categories_links = ifelse(nop_links$weight == 0, "Isolated", levels(object@items_categories[, category]))
                   
                   # Couleurs des liens tracés sur le graphique
                   links_colors[[category]] = categories_colors[[category]][categories_links]
@@ -1812,7 +1812,7 @@ setMethod(f = "spectrosome_chart",
                        legend = legend, col = col)
                 
                 # S'il y a bien des liens, identification et affichage des noms des clusters
-                if (length(which(nop_links[, "items"] != "I"))) {
+                if (sum(nop_links$weight != 0)) {
                   cluster_text(object, coord, nop_links)
                 }
                 
@@ -1869,7 +1869,7 @@ setMethod(f = "cluster_text",
             coord_L = coord_L[order(coord_L[, "LABEL"]), ]
             
             # Décomposition des liens multiples et calcul du nombre de liaisons réelles
-            clusters = sort(table(unlist(strsplit(as.character(coord_L[coord_L[, "LABEL"] != "I", "LABEL"]), "/"))), decreasing = TRUE)
+            clusters = sort(table(unlist(strsplit(as.character(coord_L[coord_L[, "LABEL"] != "", "LABEL"]), "/"))), decreasing = TRUE)
             # Extraction des noms des éléments ayant générés le plus de liaisons
             clusters = names(clusters)[1 : ifelse(length(clusters) >= 15, 15, length(clusters))]
             
@@ -2701,8 +2701,8 @@ setMethod(f = "extract_links",
             isolated = lapply(rownames(characteristics),
                               function(x) {
                                 if (!(x %in% unlist(nop_links[, 1:2]))) {
-                                  if (search_nodes) return(c(x, x, "I", 0))
-                                  return(c(x, x, "I", 0, object@patterns[x, "year"]))
+                                  if (search_nodes) return(c(x, x, "", 0))
+                                  return(c(x, x, "", 0, object@patterns[x, "year"]))
                                 }
                                 return(NULL)
                               })
