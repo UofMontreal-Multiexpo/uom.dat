@@ -12,6 +12,7 @@
   nb_graphs = 1,
   min_link_weight = 1,
   vertex_size = "relative",
+  use_names = TRUE,
   cutoff = NULL,
   path = getwd(),
   name = paste0("spectrosome_of_", entities, ".png"),
@@ -39,6 +40,8 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
   \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
   \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 }}
+
+\item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
 
 \item{cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
 

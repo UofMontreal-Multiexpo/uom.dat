@@ -20,8 +20,9 @@ Chaque observation est elle-même une liste sous la forme \code{list( CODE = cha
 Les valeurs de \code{CODE} ne doivent pas contenir le caractère "/".
 Une observation peut contenir des informations supplémentaires quelconques.}
 
-\item{items}{Data frame associant une ou plusieurs catégories à un élément (colonne \code{item}).
-La valeur \code{NULL} par défaut précise qu'aucune catégorie n'est définie.}
+\item{items}{Data frame associant un nom (colonne \code{name}) et une ou plusieurs catégories (colonnes
+supplémentaires) à chaque élément (colonne \code{item}).
+La valeur \code{NULL} par défaut précise qu'aucun nom et aucune catégorie ne sont définis.}
 
 \item{target}{Type de motifs à énumérer.
 Choix parmi \code{"frequent itemsets"}, \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
@@ -43,6 +44,11 @@ Nouvel objet de classe \code{\link{SpectralAnalyzer}}.
 }
 \description{
 Construit un objet de classe SpectralAnalyzer.
+}
+\details{
+Si les items ne sont pas spécifiés via l'argument \code{items}, ils sont automatiquement listés
+ à partir des valeurs de \code{CODE} dans l'argument \code{observations}, sans aucune catégorisation
+ ni aucune dénomination.
 }
 \seealso{
 \code{\link[arules:ASparameter-class]{arules::APparameter}}.

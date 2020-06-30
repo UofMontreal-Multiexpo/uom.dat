@@ -11,6 +11,7 @@
   items_category,
   category = NULL,
   cutoff = NULL,
+  use_names = TRUE,
   display_text = NULL,
   title = "Multi-association tree"
 )
@@ -25,6 +26,8 @@
 \item{category}{Nom de la catégorie à représenter sur l'arbre, utilisé comme titre de légende.}
 
 \item{cutoff}{Nombre limite de caractères à afficher dans la légende concernant la catégorie représentée.}
+
+\item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
 
 \item{display_text}{Texte à afficher sur le graphique à côté des motifs.
 Choix entre les identifiants \code{"ID"} des motifs ou l'une des caractéristiques (\code{"weight"},

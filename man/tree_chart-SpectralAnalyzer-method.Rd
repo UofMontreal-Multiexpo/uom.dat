@@ -8,6 +8,7 @@
 \S4method{tree_chart}{SpectralAnalyzer}(
   object,
   patterns_characteristics,
+  use_names = TRUE,
   display_text = NULL,
   cutoff = NULL,
   path = getwd(),
@@ -19,6 +20,8 @@
 \item{object}{Objet de classe SpectralAnalyzer.}
 
 \item{patterns_characteristics}{Ensemble des caractéristiques des motifs dont l'arbre est à tracer.}
+
+\item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
 
 \item{display_text}{Texte à afficher sur le graphique à côté des motifs.
 Choix entre les identifiants \code{"ID"} des motifs ou l'une des caractéristiques (\code{"weight"},

@@ -5,7 +5,7 @@
 \alias{cluster_text}
 \title{Affichage des noms des clusters}
 \usage{
-\S4method{cluster_text}{SpectralAnalyzer}(object, graph, links)
+\S4method{cluster_text}{SpectralAnalyzer}(object, graph, links, use_names = TRUE)
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
@@ -14,6 +14,8 @@
 "A two-column matrix containing the vertex positions as x,y coordinates.".}
 
 \item{links}{Liens des nœuds ou motifs utilisés pour générer \code{graph}.}
+
+\item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
 }
 \description{
 Identifie et affiche les noms des clusters sur le graphe fourni en argument.

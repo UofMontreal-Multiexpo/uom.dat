@@ -10,6 +10,7 @@
   entities,
   characteristics,
   item,
+  use_name = TRUE,
   vertex_size = "relative",
   cutoff = NULL,
   path = getwd(),
@@ -27,6 +28,8 @@ Choix parmi \code{"nodes"}, \code{"patterns"}.}
 \item{characteristics}{Ensemble des caractéristiques des nœuds ou motifs dont l'un des clusters est à tracer.}
 
 \item{item}{Code de l'item dont le cluster est à mettre en évidence.}
+
+\item{use_name}{Si \code{TRUE}, affiche le nom de l'item s'il est défini. Affiche son code sinon.}
 
 \item{vertex_size}{Façon dont les tailles des sommets du graphe doivent être définies.
 Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
