@@ -520,7 +520,7 @@ setMethod(f = "list_separate_obs",
             nodes_df = data.frame("weight" = unname(rowSums(nodes_per_year)))
             nodes_df$node = lapply(strsplit(rownames(nodes_per_year), 'c\\("|", "|")'),
                                    function(node) {
-                                     if(length(node) > 1) { return(node[-1]) }
+                                     if (length(node) > 1) { return(node[-1]) }
                                      return(node)
                                    })
             
@@ -895,7 +895,7 @@ setMethod(f = "compute_patterns_characteristics",
             # Calcul de la spécificité et du statut dynamique de chaque motif
             specificity = compute_specificity(object, object@patterns$pattern, object@patterns$frequency, object@patterns$weight)
             object@patterns$specificity = specificity
-            object@patterns$status = define_dynamic_status(object, object@patterns$pattern, object@status_limit)[, "status"]
+            object@patterns$status = define_dynamic_status(object, object@patterns$pattern, object@status_limit)$status
             
             # Changement de l'ordre des colonnes
             object@patterns = object@patterns[, c("pattern", "year", "frequency", "weight", "order", "specificity", "status")]
@@ -936,7 +936,7 @@ setMethod(f = "compute_specificity",
             # Pour chaque motif
             for (i in seq_along(patterns)) {
               # Recherche des poids des noeuds qui contiennent le motif
-              a = object@nodes[object@obs_patterns[, i], ]$weight
+              a = object@nodes$weight[object@obs_patterns[, i]]
               
               # Calcul de h
               h_m = -1 * sum((a / w[i] * log(a / w[i])))
@@ -1233,8 +1233,8 @@ setMethod(f = "define_dynamic_status",
                                function(column) { compute_ri_threshold(object, column) })
             
             # Mise en évidence des RI ayant une valeur supérieur aux seuils
-            substantially_recorded_2 = ri_limits[, "ri_2"] >= ri_thresholds["ri_2"]
-            substantially_recorded_period = ri_limits[, "ri_period"] >= ri_thresholds["ri_period"]
+            substantially_recorded_2 = ri_limits$ri_2 >= ri_thresholds["ri_2"]
+            substantially_recorded_period = ri_limits$ri_period >= ri_thresholds["ri_period"]
             
             # Interprétation
             status = rep(NA, length(patterns))
@@ -1286,10 +1286,10 @@ setMethod(f = "spectrum_chart",
             length_distribution = patterns_distributions[["length_distribution"]]
             
             # Tri des motifs selon spécificité, statut, poids, longueur
-            sorting_vector = order(1 - patterns_characteristics[, "specificity"],
-                                   patterns_characteristics[, "status"],
-                                   abs(patterns_characteristics[, "weight"] - max(patterns_characteristics[, "weight"])),
-                                   patterns_characteristics[, "order"])
+            sorting_vector = order(1 - patterns_characteristics$specificity,
+                                   patterns_characteristics$status,
+                                   abs(patterns_characteristics$weight - max(patterns_characteristics$weight)),
+                                   patterns_characteristics$order)
             
             patterns_characteristics = patterns_characteristics[sorting_vector, ]
             weight_distribution = weight_distribution[sorting_vector]
@@ -1611,7 +1611,7 @@ setMethod(f = "spectrosome_chart",
                 } else if (length(levels(object@items_categories[, category])) > 1) {
                     
                   # Catégories associées aux liens
-                  categories_links = lapply(strsplit(nop_links[, "items"], "/"),
+                  categories_links = lapply(strsplit(nop_links$items, "/"),
                                             function(x) sort(unique(as.character(object@items_categories[x, category]))))
                   category_values = unique(unlist(categories_links))
                   categories_links = unlist(lapply(categories_links, function(x) {
@@ -1675,7 +1675,7 @@ setMethod(f = "spectrosome_chart",
               col_1 = c("black", "black")
               
             } else if (entities == "patterns") {
-              vertices_colors = object@Class$STATUS_COLORS[characteristics[, "status"]]
+              vertices_colors = object@Class$STATUS_COLORS[characteristics$status]
               count_status = tapply(names(object@Class$STATUS_COLORS), seq_along(object@Class$STATUS_COLORS),
                                     function(status) sum(characteristics$status == status))
               
@@ -1693,24 +1693,24 @@ setMethod(f = "spectrosome_chart",
             switch(EXPR = vertex_size,
                    "relative" = {
                      # Interpolation linéaire des poids aux valeurs [0.5, 2.5]
-                     if (min(characteristics[, "weight"]) != max(characteristics[, "weight"])) {
-                       func = approxfun(x = c(min(characteristics[, "weight"]), max(characteristics[, "weight"])),
+                     if (min(characteristics$weight) != max(characteristics$weight)) {
+                       func = approxfun(x = c(min(characteristics$weight), max(characteristics$weight)),
                                         y = c(0.5, 2.5))
-                       vertices_sizes = func(characteristics[, "weight"])
+                       vertices_sizes = func(characteristics$weight)
                      } else {
-                       vertices_sizes = rep(1, length(characteristics[, "weight"]))
+                       vertices_sizes = rep(1, length(characteristics$weight))
                      }
                    },
                    "grouped" = {
                      # Groupement des valeurs des poids
-                     breaks = round(quantile(unique(characteristics[, "weight"]), prob = seq(0, 1, 0.2)))
-                     intervals = cut(characteristics[, "weight"], breaks = breaks, include.lowest = TRUE, dig.lab = 5)
+                     breaks = round(quantile(unique(characteristics$weight), prob = seq(0, 1, 0.2)))
+                     intervals = cut(characteristics$weight, breaks = breaks, include.lowest = TRUE, dig.lab = 5)
                      sizes = seq(0.5, 2.5, length.out = length(levels(intervals)))
                      vertices_sizes = sizes[intervals]
                    },
                    "absolute" = {
                      # Utilisation d'un log
-                     vertices_sizes = log10(characteristics[, "weight"])
+                     vertices_sizes = log10(characteristics$weight)
                      vertices_sizes[vertices_sizes < 0.5] = 0.5
                    },
                    "equal" = {
@@ -1852,30 +1852,30 @@ setMethod(f = "cluster_text",
           definition = function(object, graph, links){
             
             # Calcul des coordonnées des milieux des liaisons
-            coord_e1 = graph[links[, "endpoint.1"], 1:2] # Coordonnées des premiers sommets des liens
-            coord_e2 = graph[links[, "endpoint.2"], 1:2] # Coordonnées des seconds sommets des liens
+            coord_e1 = graph[links$endpoint.1, ] # Coordonnées des premiers sommets des liens
+            coord_e2 = graph[links$endpoint.2, ] # Coordonnées des seconds sommets des liens
             # S'il y a plusieurs liens
             if (!is.vector(coord_e1)) {
-              coord_L = data.frame(X = rowMeans(cbind(coord_e1[, 1], coord_e2[, 1])), 
-                                   Y = rowMeans(cbind(coord_e1[, 2], coord_e2[, 2])),
-                                   LABEL = links[, "items"])
+              coord_L = data.frame(X = rowMeans(cbind(coord_e1[, "x"], coord_e2[, "x"])), 
+                                   Y = rowMeans(cbind(coord_e1[, "y"], coord_e2[, "y"])),
+                                   LABEL = links$items)
             } else {
-              # S'il n'y a qu'un seul lien
-              coord_L = data.frame(X = mean(c(coord_e1[1], coord_e2[1])), 
-                                   Y = mean(c(coord_e1[2], coord_e2[2])),
-                                   LABEL = links[, "items"])
+              # S'il n'y a qu'un seul lien et que deux sommets
+              coord_L = data.frame(X = mean(c(coord_e1["x"], coord_e2["x"])), 
+                                   Y = mean(c(coord_e1["y"], coord_e2["y"])),
+                                   LABEL = links$items)
             }
             # Regroupement en fonction du type de liaison ("LABEL")
-            coord_L = coord_L[order(coord_L[, "LABEL"]), ]
+            coord_L = coord_L[order(coord_L$LABEL), ]
             
             # Décomposition des liens multiples et calcul du nombre de liaisons réelles
-            clusters = sort(table(unlist(strsplit(as.character(coord_L[coord_L[, "LABEL"] != "", "LABEL"]), "/"))), decreasing = TRUE)
+            clusters = sort(table(unlist(strsplit(as.character(coord_L$LABEL[coord_L$LABEL != ""]), "/"))), decreasing = TRUE)
             # Extraction des noms des éléments ayant générés le plus de liaisons
             clusters = names(clusters)[1 : ifelse(length(clusters) >= 15, 15, length(clusters))]
             
             # Moyenne des coordonnées des liens pour chaque type de lien ("LABEL")
-            coord_X = aggregate(data.frame(MOY = coord_L[, "X"]), by = list(coord_L[, "LABEL"]), function(x) mean(x, trim = 0.1))
-            coord_Y = aggregate(data.frame(MOY = coord_L[, "Y"]), by = list(coord_L[, "LABEL"]), function(x) mean(x, trim = 0.1))
+            coord_X = aggregate(data.frame(MOY = coord_L$X), by = list(coord_L$LABEL), function(x) mean(x, trim = 0.1))
+            coord_Y = aggregate(data.frame(MOY = coord_L$Y), by = list(coord_L$LABEL), function(x) mean(x, trim = 0.1))
             
             # Associations des coordonnées moyennes des liens exactes (non pas décomposés) aux noms des éléments ayant générés le plus de liaisons
             coord_X = coord_X[match(clusters, as.character(coord_X[, 1])), ]
@@ -1886,7 +1886,7 @@ setMethod(f = "cluster_text",
             #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'élément.
             
             # Affichage des noms des "clusters" retenus
-            shadowtext(coord_X[, 2], coord_Y[, 2], clusters, r = 0.3,
+            shadowtext(coord_X$MOY, coord_Y$MOY, clusters, r = 0.3,
                        col = "black", bg = "white", font = ifelse(clusters %in% clusters[1:5], 2, 1), cex = 0.9)
           })
 
