@@ -2718,10 +2718,13 @@ setMethod(f = "extract_links",
               if(!search_nodes) class(nop_links$year) = "integer"
               
               # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
-              r_names = rownames(nop_links)
-              last_index = which(r_names[seq_len(length(r_names)-1)] > r_names[seq(2, length(r_names))])
-              rownames(nop_links) = c(r_names[1:last_index],
-                                      paste0("A", seq_len(nrow(nop_links) - last_index)))
+              if (nrow(no_links) == nrow(nop_links)) {
+                # Si toutes les lignes ne sont que des nouveaux isolés
+                rownames(nop_links) = paste0("A", seq_len(nrow(nop_links)))
+              } else {
+                rownames(nop_links) = c(rownames(nop_links)[1:(nrow(nop_links) - nrow(no_links))],
+                                        paste0("A", seq_len(nrow(no_links))))
+              }
             }
             
             return(nop_links)
