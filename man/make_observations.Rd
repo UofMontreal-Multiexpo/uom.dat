@@ -2,48 +2,46 @@
 % Please edit documentation in R/observations_maker.R
 \name{make_observations}
 \alias{make_observations}
-\title{Regroupement de prélèvements}
+\title{Regroupement de données}
 \usage{
-make_observations(
-  measures,
-  mode,
-  work_situations = NULL,
-  variable_names = NULL,
-  additional = NULL
-)
+make_observations(data, by, additional = NULL, unique_values = TRUE)
 }
 \arguments{
-\item{measures}{Ensemble de mesures de prélèvements.}
+\item{data}{Data frame contenant un ensemble de données à regrouper.}
 
-\item{mode}{Mode de création des observations. Choix parmi \code{1}, \code{2}, \code{3}.
-\describe{
- \item{\code{1}}{Construction d'observations à partir des situations décrites par \code{work_situations}
-  et des situations existantes à partir de combinaisons de \code{variable_names} qui ne seraient pas
-  décrites dans \code{work_situations}.}
-\item{\code{2}}{Construction d'observations uniquement à partir des situations décrites par \code{work_situations}.
-  Les prélèvements restants sont ignorés.}
-\item{\code{3}}{Construction d'observations uniquement à partir des combinaisons de \code{variable_names}.}
+\item{by}{Noms de variables inclus dans \code{colnames(data)} servant à regrouper les données
+de \code{data}.
+Chaque combinaison de valeurs de ces différentes variables engendre une observation.}
+
+\item{additional}{Noms d'informations à conserver lors de la constitution des observations
+(vecteur inclus dans \code{colnames(data)}).}
+
+\item{unique_values}{logical ou character.
+\itemize{
+  \item{Si \code{TRUE}, simplification des valeurs associées aux variables définies dans
+        \code{additional} de manière à supprimer les doublons.}
+  \item{Si \code{FALSE}, conserve les doublons et la correspondance entre les valeurs de ces
+        variables pour une même ligne de \code{data} (autant de valeurs que de lignes
+        regroupées).}
+  \item{Sinon, vecteur des variables inclus dans \code{colnames(data)} pour lesquelles la
+        suppression des doublons doit être réalisée.}
 }}
-
-\item{work_situations}{Description de situations de travail.}
-
-\item{variable_names}{Noms des variables à prendre en compte pour considérer une situation de travail.}
-
-\item{additional}{Noms des informations à conserver lors de la constitution des observations.}
 }
 \value{
-Liste des observations identifiées.
+Liste des observations identifiées. Chaque observation est nommée par la combinaison de
+ valeurs des variables nommées dans \code{by} qui l'a générée. Chaque observation est une liste
+ dont les éléments correspondent aux valeurs des variables nommées dans \code{by} et
+ \code{additional} qui ont été regroupées
 }
 \description{
-Regroupe des prélèvements sous forme d'observations.
-Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail
- lors d'une même intervention.
-Les situations connues sont décrites par l'argument \code{work_situations}.
-Les situations non connues sont décrites par les combinaisons existantes des variables dont les noms sont
- définis par l'argument \code{variable_names}.
+Regroupe des données sous forme d'observations.
+}
+\details{
+Les variables de type \code{factor} sont converties en type \code{character}.
 }
 \seealso{
-\code{\link{turn_interventions_into_observations}}.
+\code{\link{make_INRS_observations}} pour la construction d'observations bien ciblées
+ par rapport à des interventions et à des situations de travail similaires.
 }
 \author{
 Gauthier Magnin

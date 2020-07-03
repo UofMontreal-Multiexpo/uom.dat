@@ -97,7 +97,7 @@ setMethod(f = "initialize",
             
             # Ensemble des éléments observés et catégories associées
             if (missing(items)) {
-              .Object@items = sort(unique(unlist(sapply(observations, "[", "CODE"))))
+              .Object@items = get_all_items(observations)
               names(.Object@items) = .Object@items
             } else {
               .Object@items = items$item
