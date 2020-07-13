@@ -420,9 +420,9 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Méthodes de création de graphiques de type arbre de la multi-association
 
-setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_text = NULL, c.cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
+setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_text = "ID", c.cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
 
-setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_text = NULL, title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
+setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
 
 # Méthodes de recherche et d'enregistrement
@@ -2084,7 +2084,7 @@ setMethod(f = "degree",
 #' @param display_text Texte à afficher sur le graphique à côté des motifs.
 #'  Choix entre les identifiants \code{"ID"} des motifs ou l'une des caractéristiques (\code{"weight"},
 #'  \code{"frequency"}, \code{"specificity"}, \code{"year"}, \code{"status"}).
-#'  Par défaut (valeur \code{NULL}), aucun texte n'est affiché.
+#'  La valeur \code{NULL} précise qu'aucune de ces informations ne doit être affichée.
 #' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
 #' @param path Chemin du dossier dans lequel enregistrer le graphique.
 #'  Par défaut, le graphique est enregistré dans le répertoire de travail.
@@ -2102,7 +2102,7 @@ setMethod(f = "degree",
 #' @export
 setMethod(f = "tree_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_text = NULL, c.cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
+          definition = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_text = "ID", c.cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
             
             # Motifs d'ordre > 1, triés par taille croissant, puis par poids décroissant
             pat_charac = patterns_characteristics[patterns_characteristics$order != 1, ]
@@ -2171,7 +2171,7 @@ setMethod(f = "tree_chart",
 #' @param display_text Texte à afficher sur le graphique à côté des motifs.
 #'  Choix entre les identifiants \code{"ID"} des motifs ou l'une des caractéristiques (\code{"weight"},
 #'  \code{"frequency"}, \code{"specificity"}, \code{"year"}, \code{"status"}).
-#'  Par défaut (valeur \code{NULL}), aucun texte n'est affiché.
+#'  La valeur \code{NULL} précise qu'aucune de ces informations ne doit être affichée.
 #' @param title Titre du graphique.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
@@ -2184,7 +2184,7 @@ setMethod(f = "tree_chart",
 #' @keywords internal
 setMethod(f = "plot_tree_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_text = NULL, title = "Multi-association tree") {
+          definition = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_text = "ID", title = "Multi-association tree") {
             
             # Définition des marges
             par(mar = c(3, 1.1, 1.1, 1.1))
