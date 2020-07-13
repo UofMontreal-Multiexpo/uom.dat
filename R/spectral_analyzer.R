@@ -1904,30 +1904,28 @@ setMethod(f = "cluster_text",
             clusters = names(clusters)
             
             # Moyenne des coordonnées des liens pour chaque type de lien ("LABEL")
-            coord_X = aggregate(data.frame(MOY = coord_L$X), by = list(coord_L$LABEL), function(x) mean(x, trim = 0.1))
-            coord_Y = aggregate(data.frame(MOY = coord_L$Y), by = list(coord_L$LABEL), function(x) mean(x, trim = 0.1))
+            coords = aggregate(data.frame(MOY.X = coord_L$X), by = list(LABEL = coord_L$LABEL), mean)
+            coords$MOY.Y = tapply(coord_L$Y, coord_L$LABEL, mean)
             
-            # Association des coordonnées moyennes des liens exactes (non multiples et non décomposés) aux noms des éléments ayant générés le plus de liaisons
-            coord_X = coord_X[match(clusters, as.character(coord_X[, 1])), ]
-            coord_Y = coord_Y[match(clusters, as.character(coord_Y[, 1])), ]
-            #! Les coordonnées ne sont donc pas la moyenne de tous les liens correspondant à l'élément
-            #! mais uniquement de ceux qui correspondent exactement à cet élément (pas de combinaisons)
-            #! bien que la variable "cluster" a recherché le nombre de liens correspondant à l'élément, qu'il y ait une combinaison ou non.
-            #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'élément.
+            # Association des coordonnées moyennes des liens exactes (non multiples et non décomposés) aux noms des items ayant générés le plus de liaisons
+            coords = coords[match(clusters, as.character(coords$LABEL)), ]
+            #! Les coordonnées ne sont donc pas la moyenne de tous les liens correspondant à l'item
+            #! mais uniquement de ceux qui correspondent exactement à cet item (pas de combinaisons)
+            #! bien que la variable "cluster" a recherché le nombre de liens correspondant à l'item, qu'il y ait une combinaison ou non.
+            #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'item.
             
-            # Extraction des noms des éléments ayant générés le plus de liaisons
-            coord_X = coord_X[complete.cases(coord_X), ]
-            coord_Y = coord_Y[complete.cases(coord_Y), ]
-            if (nrow(coord_X) >= display) coord_X = coord_X[seq_len(display), ]
-            if (nrow(coord_Y) >= display) coord_Y = coord_Y[seq_len(display), ]
+            # Extraction des noms des items ayant générés le plus de liaisons
+            coords = coords[complete.cases(coords), ]
+            if (nrow(coords) >= display) coords = coords[seq_len(display), ]
             
             # Affichage des noms des "clusters" retenus
             if (use_names) {
-              clusters = names(object@items)[match(coord_X[, 1], object@items)]
+              clusters = names(object@items)[match(coords$LABEL, object@items)]
               if (!is.null(cutoff)) clusters = substr(clusters, 1, cutoff)
             }
-            shadowtext(coord_X$MOY, coord_Y$MOY, clusters, r = 0.3,
-                       col = "black", bg = "white", font = ifelse(clusters %in% clusters[seq_len(highlight)], 2, 1), cex = 0.9)
+            shadowtext(coords$MOY.X, coords$MOY.Y, clusters, r = 0.3,
+                       col = "black", bg = "white", cex = 0.9,
+                       font = ifelse(clusters %in% clusters[seq_len(highlight)], 2, 1))
           })
 
 
