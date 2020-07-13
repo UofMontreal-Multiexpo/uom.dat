@@ -407,9 +407,9 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs relatifs
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
-setGeneric(name = "cluster_text", def = function(object, graph, links, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
+setGeneric(name = "cluster_text", def = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
 setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", c.cutoff = NULL, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
 
@@ -1468,7 +1468,10 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'  \code{ggsci::pal_d3("category20")}).
 #' Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
 #'  plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
-#'  \out{2<sup>e</sup>} valeur
+#'  \out{2<sup>e</sup>} valeur.
+#' 
+#' Les noms des clusters confondus, du fait que l'intégralité de leurs liens sont des liens mixtes,
+#'  ne sont pas affichés.
 #' 
 #' Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
 #'  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
@@ -1500,6 +1503,10 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'    \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
 #'    \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 #'  }
+#' @param clusters Nombre maximum de clusters à nommer sur le graphe.
+#'  Si le nombre de clusters est supérieur, les noms des plus petits clusters ne sont pas affichés.
+#' @param highlight Nombre de clusters à mettre en évidence parmi ceux nommés sur le graphe.
+#'  Les noms des plus grands clusters sont affichés en gras.
 #' @param use_names Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.
 #' @param n.cutoff Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.
 #' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
@@ -1529,7 +1536,12 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @export
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
+          definition = function(object, entities, characteristics,
+                                nb_graphs = 1, min_link_weight = 1, vertex_size = "relative",
+                                clusters = Inf, highlight = 3,
+                                use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL,
+                                path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities),
+                                ...) {
             
             if (entities != "nodes" && entities != "patterns")
               stop("entities must be \"nodes\" or \"patterns\".")
@@ -1823,7 +1835,7 @@ setMethod(f = "spectrosome_chart",
                 
                 # S'il y a bien des liens, identification et affichage des noms des clusters
                 if (sum(nop_links$weight != 0)) {
-                  cluster_text(object, coord, nop_links, use_names, n.cutoff)
+                  cluster_text(object, coord, nop_links, clusters, highlight, use_names, n.cutoff)
                 }
                 
                 # Fermeture du fichier PNG
@@ -1847,11 +1859,18 @@ setMethod(f = "spectrosome_chart",
 #' Affichage des noms des clusters
 #' 
 #' Identifie et affiche les noms des clusters sur le graphe fourni en argument.
+#' Les noms des clusters confondus, du fait que l'intégralité de leurs liens sont des liens mixtes,
+#'  ne sont pas affichés.
+#' Les textes sont écrits sur le périphérique graphique actif.
 #' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param graph Graphe généré par la fonction \code{\link[sna:gplot]{sna::gplot}} :
 #'  "A two-column matrix containing the vertex positions as x,y coordinates.".
 #' @param links Liens des nœuds ou motifs utilisés pour générer \code{graph}.
+#' @param display Nombre maximum de clusters à nommer sur le graphe.
+#'  Si le nombre de clusters est supérieur, les noms des plus petits clusters ne sont pas affichés.
+#' @param highlight Nombre de clusters à mettre en évidence parmi ceux nommés sur le graphe.
+#'  Les noms des plus grands clusters sont affichés en gras.
 #' @param use_names Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.
 #' @param cutoff Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.
 #' 
@@ -1861,7 +1880,7 @@ setMethod(f = "spectrosome_chart",
 #' @keywords internal
 setMethod(f = "cluster_text",
           signature = "SpectralAnalyzer",
-          definition = function(object, graph, links, use_names = TRUE, cutoff = NULL){
+          definition = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){
             
             # Calcul des coordonnées des milieux des liaisons
             coord_e1 = graph[links$endpoint.1, ] # Coordonnées des premiers sommets des liens
@@ -1899,8 +1918,8 @@ setMethod(f = "cluster_text",
             # Extraction des noms des éléments ayant générés le plus de liaisons
             coord_X = coord_X[complete.cases(coord_X), ]
             coord_Y = coord_Y[complete.cases(coord_Y), ]
-            if (nrow(coord_X) >= 15) coord_X = coord_X[seq_len(15), ]
-            if (nrow(coord_Y) >= 15) coord_Y = coord_Y[seq_len(15), ]
+            if (nrow(coord_X) >= display) coord_X = coord_X[seq_len(display), ]
+            if (nrow(coord_Y) >= display) coord_Y = coord_Y[seq_len(display), ]
             
             # Affichage des noms des "clusters" retenus
             if (use_names) {
@@ -1908,7 +1927,7 @@ setMethod(f = "cluster_text",
               if (!is.null(cutoff)) clusters = substr(clusters, 1, cutoff)
             }
             shadowtext(coord_X$MOY, coord_Y$MOY, clusters, r = 0.3,
-                       col = "black", bg = "white", font = ifelse(clusters %in% clusters[1:5], 2, 1), cex = 0.9)
+                       col = "black", bg = "white", font = ifelse(clusters %in% clusters[seq_len(highlight)], 2, 1), cex = 0.9)
           })
 
 
@@ -2100,8 +2119,8 @@ setMethod(f = "degree",
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
-#'             \emph{Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration}.
-#'             Annals of Work Exposures and Health, Volume 64, Issue 4, May 2020, Pages 402–415.
+#'             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
+#'             \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
 #' @aliases tree_chart
 #' @export
@@ -2181,8 +2200,8 @@ setMethod(f = "tree_chart",
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
-#'             \emph{Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration}.
-#'             Annals of Work Exposures and Health, Volume 64, Issue 4, May 2020, Pages 402–415.
+#'             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
+#'             \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
 #' @seealso \code{\link{tree_chart}}.
 #' @aliases plot_tree_chart
