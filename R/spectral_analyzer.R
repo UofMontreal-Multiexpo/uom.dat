@@ -2187,7 +2187,7 @@ setMethod(f = "plot_tree_chart",
           definition = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_text = NULL, title = "Multi-association tree") {
             
             # Définition des marges
-            par(mar = c(3, 2.1, 1.1, 2.1))
+            par(mar = c(3, 1.1, 1.1, 1.1))
             
             # Préparation de la position des items sur le graphique (x = 0 ; y = ordre décroissant)
             items_category$x = 0
@@ -2208,10 +2208,12 @@ setMethod(f = "plot_tree_chart",
             if (use_names) {
               text_labels = names(object@items)[match(items_category$item, object@items)]
               if (!is.null(n.cutoff)) text_labels = substr(text_labels, 1, n.cutoff)
+              text_area = max(strwidth(text_labels, cex = 0.75) + strwidth("12", cex = 0.75), strwidth("Order", cex = 1.05))
+              # Ajout de la place pour 2 caractères en plus (stridwidth("12")) car le texte est parfois tronqué
             } else {
               text_labels = as.character(items_category$item)
+              text_area = max(strwidth(text_labels, cex = 0.75), strwidth("Order", cex = 1.05))
             }
-            text_area = max(strwidth(text_labels), strwidth("Order")) + 1
             data_area = nrow(patterns_characteristics) + length(unique(patterns_characteristics$order)) + strwidth(1)
             
             # Option "new" pour ne pas générer une page blanche à cause du premier plot
