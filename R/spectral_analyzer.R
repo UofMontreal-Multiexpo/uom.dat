@@ -407,11 +407,11 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs relatifs
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", use_names = TRUE, cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
-setGeneric(name = "cluster_text", def = function(object, graph, links, use_names = TRUE){ standardGeneric("cluster_text") })
+setGeneric(name = "cluster_text", def = function(object, graph, links, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, use_name = TRUE, vertex_size = "relative", cutoff = NULL, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", c.cutoff = NULL, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -420,9 +420,9 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Méthodes de création de graphiques de type arbre de la multi-association
 
-setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, use_names = TRUE, display_text = NULL, cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
+setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_text = NULL, c.cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
 
-setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, cutoff = NULL, use_names = TRUE, display_text = NULL, title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
+setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_text = NULL, title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
 
 # Méthodes de recherche et d'enregistrement
@@ -1501,7 +1501,8 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'    \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 #'  }
 #' @param use_names Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.
-#' @param cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
+#' @param n.cutoff Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.
+#' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
 #' @param name Nom du fichier dans lequel enregistrer le graphique.
@@ -1528,7 +1529,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @export
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", use_names = TRUE, cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
+          definition = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...) {
             
             if (entities != "nodes" && entities != "patterns")
               stop("entities must be \"nodes\" or \"patterns\".")
@@ -1809,10 +1810,10 @@ setMethod(f = "spectrosome_chart",
                 
                 # Légende des liens uniquement si des catégories existent
                 if(length(object@items_categories) != 0) {
-                  if (is.null(cutoff)) {
+                  if (is.null(c.cutoff)) {
                     legend = c(legend_1, "", names(categories_colors[[j]]))
                   } else {
-                    legend = c(legend_1, "", substr(names(categories_colors[[j]]), 1, cutoff))
+                    legend = c(legend_1, "", substr(names(categories_colors[[j]]), 1, c.cutoff))
                   }
                   col = c(col_1, "white", categories_colors[[j]])
                 }
@@ -1822,7 +1823,7 @@ setMethod(f = "spectrosome_chart",
                 
                 # S'il y a bien des liens, identification et affichage des noms des clusters
                 if (sum(nop_links$weight != 0)) {
-                  cluster_text(object, coord, nop_links, use_names)
+                  cluster_text(object, coord, nop_links, use_names, n.cutoff)
                 }
                 
                 # Fermeture du fichier PNG
@@ -1852,6 +1853,7 @@ setMethod(f = "spectrosome_chart",
 #'  "A two-column matrix containing the vertex positions as x,y coordinates.".
 #' @param links Liens des nœuds ou motifs utilisés pour générer \code{graph}.
 #' @param use_names Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.
+#' @param cutoff Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @seealso \code{\link{spectrosome_chart}}, \code{\link[sna:gplot]{sna::gplot}}.
@@ -1859,7 +1861,7 @@ setMethod(f = "spectrosome_chart",
 #' @keywords internal
 setMethod(f = "cluster_text",
           signature = "SpectralAnalyzer",
-          definition = function(object, graph, links, use_names = TRUE){
+          definition = function(object, graph, links, use_names = TRUE, cutoff = NULL){
             
             # Calcul des coordonnées des milieux des liaisons
             coord_e1 = graph[links$endpoint.1, ] # Coordonnées des premiers sommets des liens
@@ -1896,7 +1898,10 @@ setMethod(f = "cluster_text",
             #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'élément.
             
             # Affichage des noms des "clusters" retenus
-            if (use_names) clusters = names(object@items)[match(clusters, object@items)]
+            if (use_names) {
+              clusters = names(object@items)[match(clusters, object@items)]
+              if (!is.null(cutoff)) clusters = substr(clusters, 1, cutoff)
+            }
             shadowtext(coord_X$MOY, coord_Y$MOY, clusters, r = 0.3,
                        col = "black", bg = "white", font = ifelse(clusters %in% clusters[1:5], 2, 1), cex = 0.9)
           })
@@ -1935,6 +1940,7 @@ setMethod(f = "cluster_text",
 #' @param characteristics Ensemble des caractéristiques des nœuds ou motifs dont l'un des clusters est à tracer.
 #' @param item Code de l'item dont le cluster est à mettre en évidence.
 #' @param use_name Si \code{TRUE}, affiche le nom de l'item s'il est défini. Affiche son code sinon.
+#' @param n.cutoff Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant le nom de l'item.
 #' @param vertex_size Façon dont les tailles des sommets du graphe doivent être définies.
 #'  Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
 #'  \describe{
@@ -1943,7 +1949,7 @@ setMethod(f = "cluster_text",
 #'    \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
 #'    \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 #'  }
-#' @param cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
+#' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
 #' @param name Nom du fichier dans lequel enregistrer le graphique.
@@ -1969,7 +1975,7 @@ setMethod(f = "cluster_text",
 #' @export
 setMethod(f = "cluster_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, item, use_name = TRUE, vertex_size = "relative", cutoff = NULL, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
+          definition = function(object, entities, characteristics, item, use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", c.cutoff = NULL, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
                                                                                                                                                    title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...) {
             
             # Vérifie qu'un seul item est mentionné
@@ -1987,7 +1993,7 @@ setMethod(f = "cluster_chart",
             if (nrow(nop) > 1) {
               # Construction du spectrosome associé
               to_return = spectrosome_chart(object, entities, nop, vertex_size = vertex_size,
-                                            use_names = use_name, cutoff = cutoff,
+                                            use_names = use_name, n.cutoff = n.cutoff, c.cutoff = c.cutoff,
                                             path = path, name = name, title = title, ...)
               return(list(vertices = to_return$vertices, edges = to_return$edges, coords = to_return$coords[[1]]))
               
@@ -2074,11 +2080,12 @@ setMethod(f = "degree",
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Ensemble des caractéristiques des motifs dont l'arbre est à tracer.
 #' @param use_names Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.
+#' @param n.cutoff Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.
 #' @param display_text Texte à afficher sur le graphique à côté des motifs.
 #'  Choix entre les identifiants \code{"ID"} des motifs ou l'une des caractéristiques (\code{"weight"},
 #'  \code{"frequency"}, \code{"specificity"}, \code{"year"}, \code{"status"}).
 #'  Par défaut (valeur \code{NULL}), aucun texte n'est affiché.
-#' @param cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
+#' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
 #' @param path Chemin du dossier dans lequel enregistrer le graphique.
 #'  Par défaut, le graphique est enregistré dans le répertoire de travail.
 #' @param name Nom du fichier dans lequel enregistrer le graphique.
@@ -2095,7 +2102,7 @@ setMethod(f = "degree",
 #' @export
 setMethod(f = "tree_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, use_names = TRUE, display_text = NULL, cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
+          definition = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_text = NULL, c.cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
             
             # Motifs d'ordre > 1, triés par taille croissant, puis par poids décroissant
             pat_charac = patterns_characteristics[patterns_characteristics$order != 1, ]
@@ -2133,7 +2140,7 @@ setMethod(f = "tree_chart",
               
               # Traçage du graphique dans un fichier PDF
               pdf(paste0(turn_into_path(path), file_name), 14, 10, paper = "a4r", pointsize = 11)
-              plot_tree_chart(object, pat_charac, items_cat, category, cutoff, use_names, display_text, title)
+              plot_tree_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, display_text, title)
               dev.off()
             }
             
@@ -2158,8 +2165,9 @@ setMethod(f = "tree_chart",
 #' @param patterns_characteristics Ensemble des caractéristiques des motifs dont l'arbre est à tracer.
 #' @param items_category Data frame des items et d'une catégorie associée.
 #' @param category Nom de la catégorie à représenter sur l'arbre, utilisé comme titre de légende.
-#' @param cutoff Nombre limite de caractères à afficher dans la légende concernant la catégorie représentée.
+#' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant la catégorie représentée.
 #' @param use_names Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.
+#' @param n.cutoff Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.
 #' @param display_text Texte à afficher sur le graphique à côté des motifs.
 #'  Choix entre les identifiants \code{"ID"} des motifs ou l'une des caractéristiques (\code{"weight"},
 #'  \code{"frequency"}, \code{"specificity"}, \code{"year"}, \code{"status"}).
@@ -2176,7 +2184,7 @@ setMethod(f = "tree_chart",
 #' @keywords internal
 setMethod(f = "plot_tree_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, items_category, category = NULL, cutoff = NULL, use_names = TRUE, display_text = NULL, title = "Multi-association tree") {
+          definition = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_text = NULL, title = "Multi-association tree") {
             
             # Définition des marges
             par(mar = c(3, 2.1, 1.1, 2.1))
@@ -2197,10 +2205,12 @@ setMethod(f = "plot_tree_chart",
             
             # Espace à gauche pour affichage des items et du titre "Order"
             # et à droite pour afficher la dernière taille de motif s'il n'y a qu'un seul motif de cette taille
-            if (use_names)
+            if (use_names) {
               text_labels = names(object@items)[match(items_category$item, object@items)]
-            else
+              if (!is.null(n.cutoff)) text_labels = substr(text_labels, 1, n.cutoff)
+            } else {
               text_labels = as.character(items_category$item)
+            }
             text_area = max(strwidth(text_labels), strwidth("Order")) + 1
             data_area = nrow(patterns_characteristics) + length(unique(patterns_characteristics$order)) + strwidth(1)
             
@@ -2294,10 +2304,10 @@ setMethod(f = "plot_tree_chart",
               final_colors = category_colors[match(items_category$category, names(category_colors))]
               
               # Légende de catégorie
-              if (is.null(cutoff)) {
+              if (is.null(c.cutoff)) {
                 category_legend = unique(items_category$category)
               } else {
-                category_legend = substr(unique(items_category$category), 1, cutoff)
+                category_legend = substr(unique(items_category$category), 1, c.cutoff)
               }
               legend("bottom", xpd = NA, bty = "n", inset = c(0, -0.09),
                      title = cap(category), cex = 0.85,
