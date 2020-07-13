@@ -2087,6 +2087,10 @@ setMethod(f = "degree",
 #'  identifiants (visibles sur le graphique si \code{display_text = "ID"}).
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
+#' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
+#'             \emph{Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration}.
+#'             Annals of Work Exposures and Health, Volume 64, Issue 4, May 2020, Pages 402–415.
+#'             \url{https://doi.org/10.1093/annweh/wxaa008}.
 #' @aliases tree_chart
 #' @export
 setMethod(f = "tree_chart",
@@ -2163,6 +2167,10 @@ setMethod(f = "tree_chart",
 #' @param title Titre du graphique.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
+#' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
+#'             \emph{Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration}.
+#'             Annals of Work Exposures and Health, Volume 64, Issue 4, May 2020, Pages 402–415.
+#'             \url{https://doi.org/10.1093/annweh/wxaa008}.
 #' @seealso \code{\link{tree_chart}}.
 #' @aliases plot_tree_chart
 #' @keywords internal
