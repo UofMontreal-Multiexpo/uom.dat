@@ -1473,7 +1473,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
 #'  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
 #' Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
-#'  \code{gmode}, \code{coord}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
+#'  \code{gmode}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
 #' Les paramètres suivants, pouvant être redéfinis, ont pour valeurs :
 #'  \itemize{
 #'    \item{\code{mode = "fruchtermanreingold"}}
@@ -1921,7 +1921,7 @@ setMethod(f = "cluster_text",
 #' Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
 #'  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
 #' Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
-#'  \code{gmode}, \code{coord}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
+#'  \code{gmode}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
 #' Les paramètres suivants, pouvant être redéfinis, ont pour valeurs :
 #'  \itemize{
 #'    \item{\code{mode = "fruchtermanreingold"}}
