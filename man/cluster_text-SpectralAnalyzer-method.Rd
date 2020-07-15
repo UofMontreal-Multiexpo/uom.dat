@@ -5,7 +5,15 @@
 \alias{cluster_text}
 \title{Affichage des noms des clusters}
 \usage{
-\S4method{cluster_text}{SpectralAnalyzer}(object, graph, links, use_names = TRUE)
+\S4method{cluster_text}{SpectralAnalyzer}(
+  object,
+  graph,
+  links,
+  display = Inf,
+  highlight = 3,
+  use_names = TRUE,
+  cutoff = NULL
+)
 }
 \arguments{
 \item{object}{Objet de classe SpectralAnalyzer.}
@@ -15,10 +23,21 @@
 
 \item{links}{Liens des nœuds ou motifs utilisés pour générer \code{graph}.}
 
+\item{display}{Nombre maximum de clusters à nommer sur le graphe.
+Si le nombre de clusters est supérieur, les noms des plus petits clusters ne sont pas affichés.}
+
+\item{highlight}{Nombre de clusters à mettre en évidence parmi ceux nommés sur le graphe.
+Les noms des plus grands clusters sont affichés en gras.}
+
 \item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
+
+\item{cutoff}{Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.}
 }
 \description{
 Identifie et affiche les noms des clusters sur le graphe fourni en argument.
+Les noms des clusters confondus, du fait que l'intégralité de leurs liens sont des liens mixtes,
+ ne sont pas affichés.
+Les textes sont écrits sur le périphérique graphique actif.
 }
 \seealso{
 \code{\link{spectrosome_chart}}, \code{\link[sna:gplot]{sna::gplot}}.

@@ -10,9 +10,11 @@
   patterns_characteristics,
   items_category,
   category = NULL,
-  cutoff = NULL,
+  c.cutoff = NULL,
   use_names = TRUE,
-  display_text = NULL,
+  n.cutoff = NULL,
+  display_status = TRUE,
+  display_text = "ID",
   title = "Multi-association tree"
 )
 }
@@ -25,14 +27,18 @@
 
 \item{category}{Nom de la catégorie à représenter sur l'arbre, utilisé comme titre de légende.}
 
-\item{cutoff}{Nombre limite de caractères à afficher dans la légende concernant la catégorie représentée.}
+\item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant la catégorie représentée.}
 
 \item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
 
+\item{n.cutoff}{Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.}
+
+\item{display_status}{Si \code{TRUE}, affiche les statuts des motifs.}
+
 \item{display_text}{Texte à afficher sur le graphique à côté des motifs.
-Choix entre les identifiants \code{"ID"} des motifs ou l'une des caractéristiques (\code{"weight"},
-\code{"frequency"}, \code{"specificity"}, \code{"year"}, \code{"status"}).
-Par défaut (valeur \code{NULL}), aucun texte n'est affiché.}
+Choix entre les identifiants \code{"ID"} des motifs ou l'une des autres caractéristiques
+(\code{"weight"}, \code{"frequency"}, \code{"specificity"}, \code{"year"}).
+La valeur \code{NULL} précise qu'aucune de ces informations ne doit être affichée.}
 
 \item{title}{Titre du graphique.}
 }
@@ -46,6 +52,12 @@ Les couleurs associées aux valeurs de l'éventuelle catégorie représentée so
 Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
  plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
  \out{2<sup>e</sup>} valeur
+}
+\references{
+Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
+            Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
+            \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
+            \url{https://doi.org/10.1093/annweh/wxaa008}.
 }
 \seealso{
 \code{\link{tree_chart}}.

@@ -11,8 +11,10 @@
   characteristics,
   item,
   use_name = TRUE,
+  n.cutoff = NULL,
   vertex_size = "relative",
-  cutoff = NULL,
+  vertex_col = "status",
+  c.cutoff = NULL,
   path = getwd(),
   name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
   title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
@@ -31,6 +33,8 @@ Choix parmi \code{"nodes"}, \code{"patterns"}.}
 
 \item{use_name}{Si \code{TRUE}, affiche le nom de l'item s'il est défini. Affiche son code sinon.}
 
+\item{n.cutoff}{Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant le nom de l'item.}
+
 \item{vertex_size}{Façon dont les tailles des sommets du graphe doivent être définies.
 Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
 \describe{
@@ -40,7 +44,11 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
   \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 }}
 
-\item{cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
+\item{vertex_col}{Façon dont les couleurs des sommets du graphe doivent être définies.
+Choix parmi \code{"status"}, \code{NULL}.
+Si \code{"status"}, coloration selon les statuts des motifs. Sinon, couleur grise.}
+
+\item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
 
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}
@@ -79,7 +87,7 @@ Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas r
 Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
 Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
- \code{gmode}, \code{coord}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
+ \code{gmode}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
 Les paramètres suivants, pouvant être redéfinis, ont pour valeurs :
  \itemize{
    \item{\code{mode = "fruchtermanreingold"}}

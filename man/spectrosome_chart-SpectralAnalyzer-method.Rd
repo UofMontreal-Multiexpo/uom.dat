@@ -12,8 +12,12 @@
   nb_graphs = 1,
   min_link_weight = 1,
   vertex_size = "relative",
+  vertex_col = "status",
+  clusters = Inf,
+  highlight = 3,
   use_names = TRUE,
-  cutoff = NULL,
+  n.cutoff = NULL,
+  c.cutoff = NULL,
   path = getwd(),
   name = paste0("spectrosome_of_", entities, ".png"),
   title = paste0("Network of ", entities),
@@ -41,9 +45,22 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
   \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 }}
 
+\item{vertex_col}{Façon dont les couleurs des sommets du graphe doivent être définies.
+Choix parmi \code{"status"}, \code{NULL}.
+Si \code{"status"} et \code{entities = "patterns"}, coloration selon les statuts des motifs.
+Dans tous les autres cas, le sommets sont de couleur grise.}
+
+\item{clusters}{Nombre maximum de clusters à nommer sur le graphe.
+Si le nombre de clusters est supérieur, les noms des plus petits clusters ne sont pas affichés.}
+
+\item{highlight}{Nombre de clusters à mettre en évidence parmi ceux nommés sur le graphe.
+Les noms des plus grands clusters sont affichés en gras.}
+
 \item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
 
-\item{cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
+\item{n.cutoff}{Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.}
+
+\item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
 
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}
@@ -87,12 +104,15 @@ Les couleurs associées aux valeurs de chaque catégorie représentée sont sél
  \code{ggsci::pal_d3("category20")}).
 Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
  plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
- \out{2<sup>e</sup>} valeur
+ \out{2<sup>e</sup>} valeur.
+
+Les noms des clusters confondus, du fait que l'intégralité de leurs liens sont des liens mixtes,
+ ne sont pas affichés.
 
 Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
 Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
- \code{gmode}, \code{coord}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
+ \code{gmode}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
 Les paramètres suivants, pouvant être redéfinis, ont pour valeurs :
  \itemize{
    \item{\code{mode = "fruchtermanreingold"}}

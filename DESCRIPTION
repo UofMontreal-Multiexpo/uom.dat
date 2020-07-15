@@ -24,6 +24,6 @@ Suggests:
     utils
 RoxygenNote: 7.1.0
 Collate: 
-    'observations_maker.R'
+    'observation_maker.R'
     'utils.R'
     'spectral_analyzer.R'
