@@ -1820,18 +1820,17 @@ setMethod(f = "spectrosome_chart",
                   legend_pch = c(rep(15, length(object@Class$STATUS_COLORS)), 0, 2, 1, 0, rep(20, length(categories_colors[[j]])))
                 }
                 
-                # Légende des liens uniquement si des catégories existent
-                if(length(object@items_categories) != 0) {
-                  if (is.null(c.cutoff)) {
-                    legend = c(legend_1, "", names(categories_colors[[j]]))
-                  } else {
-                    legend = c(legend_1, "", substr(names(categories_colors[[j]]), 1, c.cutoff))
-                  }
-                  col = c(col_1, "white", categories_colors[[j]])
+                # Préparation de la légende des liens, à la suite des statuts et sommets
+                if (is.null(c.cutoff)) {
+                  legend_legend = c(legend_1, "", names(categories_colors[[j]]))
+                } else {
+                  legend_legend = c(legend_1, "", substr(names(categories_colors[[j]]), 1, c.cutoff))
                 }
+                legend_col = c(col_1, "white", categories_colors[[j]])
                 
+                # Affichage de la légende
                 legend("topleft", bty = "n", xpd = NA, pt.cex = legend_pt.cex, pch = legend_pch,
-                       legend = legend, col = col)
+                       legend = legend_legend, col = legend_col)
                 
                 # S'il y a bien des liens, identification et affichage des noms des clusters
                 if (sum(nop_links$weight != 0)) {
