@@ -18,9 +18,19 @@ setClassUnion("listORarray", c("list", "array"))
 #' 
 #' Classe d'objet S4 permettant une analyse spectrale.
 #' 
+#' @details
+#' Des couleurs par défaut sont assignées aux valeurs de chaque catégorie associée aux items.
+#'  Ces couleurs sont sélectionnées de manière circulaire parmi les 20 couleurs de la palette
+#'  \code{category20} de D3 (cf. \code{ggsci::pal_d3("category20")}).
+#' Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
+#'  plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
+#'  \out{2<sup>e</sup>} valeur.
+#' Voir l'attribut \code{categories_colors} pour réassigner des couleurs aux valeurs des catégories.
+#' 
 #' @slot observations Liste des éléments retrouvés pour chaque observation.
 #' @slot items Ensemble des codes des différents éléments retrouvés dans les observations.
 #' @slot items_categories Catégories associées aux différents éléments observés.
+#' @slot categories_colors Couleurs associées aux différentes valeurs des différentes catégories associées aux items.
 #' @slot target Type de motifs à énumérer lors de l'analyse.
 #' @slot count Nombre minimal d'apparition d'un motif pour être conservé lors de l'énumération des motifs.
 #' @slot min_length Taille minimale qu'un motif doit avoir pour être conservé lors de l'énumération des motifs.
@@ -46,6 +56,7 @@ setClass(Class = "SpectralAnalyzer",
            observations = "listORarray",
            items = "vector",
            items_categories = "data.frame",
+           categories_colors = "list",
            
            target = "character",
            count = "numeric",
@@ -104,6 +115,15 @@ setMethod(f = "initialize",
               names(.Object@items) = if ("name" %in% colnames(items)) items$name else items$item
               .Object@items_categories = items[-which(colnames(items) %in% c("item", "name"))]
               rownames(.Object@items_categories) = items$item
+              
+              # Attribution de couleurs aux valeurs de chaque catégorie
+              if (length(.Object@items_categories) != 0) {
+                .Object@categories_colors = lapply(.Object@items_categories, function(category) {
+                  # Sélection circulaire parmi les 20 couleurs d'une palette de D3
+                  colors = ggsci::pal_d3("category20")(20)[seq_along(levels(category)) %% 21]
+                  return(setNames(colors, levels(category)))
+                })
+              }
             }
             
             # Descripteurs de la recherche de motifs
@@ -147,7 +167,8 @@ setMethod(f = "initialize",
 #'  Les valeurs de \code{CODE} ne doivent pas contenir le caractère "/".
 #'  Une observation peut contenir des informations supplémentaires quelconques.
 #' @param items Data frame associant un nom (colonne \code{name}) et une ou plusieurs catégories (colonnes
-#'  supplémentaires) à chaque élément (colonne \code{item}).
+#'  supplémentaires) à chaque élément (colonne \code{item}). Chaque catégorie doit être de type
+#'  \code{factor}. Les colonnes \code{item} et \code{name} doivent être de type \code{character}.
 #'  La valeur \code{NULL} par défaut précise qu'aucun nom et aucune catégorie ne sont définis.
 #' @param target Type de motifs à énumérer.
 #'  Choix parmi \code{"frequent itemsets"}, \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
@@ -306,6 +327,7 @@ setMethod(f = "[",
                    "observations" = { return(x@observations) },
                    "items" = { return(x@items) },
                    "items_categories" = { return(x@items_categories) },
+                   "categories_colors" = { return(x@categories_colors) },
                    "target" = { return(x@target) },
                    "count" = { return(x@count) },
                    "min_length" = { return(x@min_length) },
@@ -332,6 +354,7 @@ setReplaceMethod(f = "[",
                           "observations" = { x@observations = value },
                           "items" = { x@items = value },
                           "items_categories" = { x@items_categories = value },
+                          "categories_colors" = { x@categories_colors = value },
                           "target" = { x@target = value },
                           "count" = { x@count = value },
                           "min_length" = { x@min_length = value },
@@ -1638,26 +1661,26 @@ setMethod(f = "spectrosome_chart",
                 } else if (length(levels(object@items_categories[, category])) > 1) {
                     
                   # Catégories associées aux liens
-                  categories_links = lapply(strsplit(nop_links$items, "/"),
+                  links_categories = lapply(strsplit(nop_links$items, "/"),
                                             function(x) sort(unique(as.character(object@items_categories[x, category]))))
-                  category_values = unique(unlist(categories_links))
-                  categories_links = unlist(lapply(categories_links, function(x) {
+                  category_values = unique(unlist(links_categories))
+                  links_categories = unlist(lapply(links_categories, function(x) {
                     if (length(x) == 1) return(x)
                     if (length(x) > 1) return("Mixt")
                     return("Isolated")
                   }))
                   
                   # Séparation des valeurs de la catégorie qui sont uniquement inclus dans des liens mixtes
-                  category_mixed = sort(setdiff(category_values, unique(unlist(categories_links))))
+                  category_mixed = sort(setdiff(category_values, unique(links_categories)))
                   category_not_mixed = sort(setdiff(category_values, category_mixed))
                   
-                  # Sélection circulaire parmi les 20 couleurs d'une palette de D3
-                  categories_colors[[category]] = c(ggsci::pal_d3("category20")(20)[seq_along(category_not_mixed) %% 21],
+                  # Sélection des couleurs associées
+                  categories_colors[[category]] = c(object@categories_colors[[category]][category_not_mixed],
                                                     "black", "white")
                   names(categories_colors[[category]]) = c(category_not_mixed, "Mixt", "Isolated")
                   
                   # Couleurs des liens tracés sur le graphique
-                  links_colors[[category]] = categories_colors[[category]][categories_links]
+                  links_colors[[category]] = categories_colors[[category]][links_categories]
                   
                   # Retrait du noir associé aux liens mixtes s'il n'y en a pas et retrait du blanc
                   # associé aux isolés, pour ne pas les afficher ultérieurement dans la légende
@@ -1677,10 +1700,10 @@ setMethod(f = "spectrosome_chart",
                   categories_colors[[category]] = c("black", "white")
                   names(categories_colors[[category]]) = c(levels(object@items_categories[, category]), "Isolated")
                   
-                  categories_links = ifelse(nop_links$weight == 0, "Isolated", levels(object@items_categories[, category]))
+                  links_categories = ifelse(nop_links$weight == 0, "Isolated", levels(object@items_categories[, category]))
                   
                   # Couleurs des liens tracés sur le graphique
-                  links_colors[[category]] = categories_colors[[category]][categories_links]
+                  links_colors[[category]] = categories_colors[[category]][links_categories]
                   
                   # Retrait du blanc associé aux isolés pour ne pas l'afficher ultérieurement dans la légende
                   categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
@@ -2193,7 +2216,7 @@ setMethod(f = "tree_chart",
 #'  \code{ggsci::pal_d3("category20")}).
 #' Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
 #'  plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
-#'  \out{2<sup>e</sup>} valeur
+#'  \out{2<sup>e</sup>} valeur.
 #' 
 #' @param object Objet de classe SpectralAnalyzer.
 #' @param patterns_characteristics Ensemble des caractéristiques des motifs dont l'arbre est à tracer.
@@ -2336,11 +2359,8 @@ setMethod(f = "plot_tree_chart",
             
             # Couleurs de catégorie
             if (!is.null(category)) {
-              # Sélection circulaire parmi les 20 couleurs d'une palette de D3
-              category_colors = ggsci::pal_d3("category20")(20)[seq_along(unique(items_category$category)) %% 21]
-              names(category_colors) = unique(items_category$category)
-              
-              final_colors = category_colors[match(items_category$category, names(category_colors))]
+              item_colors = object@categories_colors[[category]][items_category$category]
+              category_colors = unique(item_colors)
               
               # Légende de catégorie
               if (is.null(c.cutoff)) {
@@ -2354,15 +2374,15 @@ setMethod(f = "plot_tree_chart",
                      col = category_colors,
                      pch = 20, ncol = ceiling(length(category_legend) / 2))
             } else {
-              final_colors = "black"
+              item_colors = "black"
             }
             
             # Pointage et affichage des items
             points(items_category[, c("x", "y")],
-                   col = final_colors, pch = 20)
+                   col = item_colors, pch = 20)
             text(items_category$x, items_category$y, text_labels,
                  cex = 0.75, pos = 2,
-                 col = final_colors)
+                 col = item_colors)
             
             # Légende des statuts
             if (display_status) {

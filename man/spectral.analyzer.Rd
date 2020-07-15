@@ -21,7 +21,8 @@ Les valeurs de \code{CODE} ne doivent pas contenir le caractère "/".
 Une observation peut contenir des informations supplémentaires quelconques.}
 
 \item{items}{Data frame associant un nom (colonne \code{name}) et une ou plusieurs catégories (colonnes
-supplémentaires) à chaque élément (colonne \code{item}).
+supplémentaires) à chaque élément (colonne \code{item}). Chaque catégorie doit être de type
+\code{factor}. Les colonnes \code{item} et \code{name} doivent être de type \code{character}.
 La valeur \code{NULL} par défaut précise qu'aucun nom et aucune catégorie ne sont définis.}
 
 \item{target}{Type de motifs à énumérer.

@@ -8,6 +8,15 @@
 \description{
 Classe d'objet S4 permettant une analyse spectrale.
 }
+\details{
+Des couleurs par défaut sont assignées aux valeurs de chaque catégorie associée aux items.
+ Ces couleurs sont sélectionnées de manière circulaire parmi les 20 couleurs de la palette
+ \code{category20} de D3 (cf. \code{ggsci::pal_d3("category20")}).
+Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
+ plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
+ \out{2<sup>e</sup>} valeur.
+Voir l'attribut \code{categories_colors} pour réassigner des couleurs aux valeurs des catégories.
+}
 \section{Slots}{
 
 \describe{
@@ -16,6 +25,8 @@ Classe d'objet S4 permettant une analyse spectrale.
 \item{\code{items}}{Ensemble des codes des différents éléments retrouvés dans les observations.}
 
 \item{\code{items_categories}}{Catégories associées aux différents éléments observés.}
+
+\item{\code{categories_colors}}{Couleurs associées aux différentes valeurs des différentes catégories associées aux items.}
 
 \item{\code{target}}{Type de motifs à énumérer lors de l'analyse.}
 

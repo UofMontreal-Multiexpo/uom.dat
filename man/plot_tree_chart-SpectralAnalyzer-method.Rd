@@ -51,7 +51,7 @@ Les couleurs associées aux valeurs de l'éventuelle catégorie représentée so
  \code{ggsci::pal_d3("category20")}).
 Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
  plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
- \out{2<sup>e</sup>} valeur
+ \out{2<sup>e</sup>} valeur.
 }
 \references{
 Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
