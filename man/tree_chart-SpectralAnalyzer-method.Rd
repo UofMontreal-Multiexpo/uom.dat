@@ -13,6 +13,7 @@
   display_status = TRUE,
   display_text = "ID",
   c.cutoff = NULL,
+  sort_by = "category",
   path = getwd(),
   name = "multi-association_tree.pdf",
   title = "Multi-association tree"
@@ -35,6 +36,8 @@ Choix entre les identifiants \code{"ID"} des motifs ou l'une des autres caracté
 La valeur \code{NULL} précise qu'aucune de ces informations ne doit être affichée.}
 
 \item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
+
+\item{sort_by}{Méthode de tri des items affichés. Choix parmi \code{"category"}, \code{"item"}.}
 
 \item{path}{Chemin du dossier dans lequel enregistrer le graphique.
 Par défaut, le graphique est enregistré dans le répertoire de travail.}

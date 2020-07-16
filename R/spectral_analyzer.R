@@ -443,7 +443,7 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Méthodes de création de graphiques de type arbre de la multi-association
 
-setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
+setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
 
 setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
@@ -2227,6 +2227,7 @@ setMethod(f = "degree",
 #'  (\code{"weight"}, \code{"frequency"}, \code{"specificity"}, \code{"year"}).
 #'  La valeur \code{NULL} précise qu'aucune de ces informations ne doit être affichée.
 #' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
+#' @param sort_by Méthode de tri des items affichés. Choix parmi \code{"category"}, \code{"item"}.
 #' @param path Chemin du dossier dans lequel enregistrer le graphique.
 #'  Par défaut, le graphique est enregistré dans le répertoire de travail.
 #' @param name Nom du fichier dans lequel enregistrer le graphique.
@@ -2243,7 +2244,7 @@ setMethod(f = "degree",
 #' @export
 setMethod(f = "tree_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
+          definition = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
             
             # Motifs d'ordre > 1, triés par taille croissant, puis par poids décroissant
             pat_charac = patterns_characteristics[patterns_characteristics$order != 1, ]
@@ -2260,17 +2261,26 @@ setMethod(f = "tree_chart",
             
             for (c in seq(nb_categories)) {
               
-              # S'il n'y a pas de catégorie
+              # Association des items à leur valeur de catégorie s'il y a des catégories
               if (length(object@items_categories) == 0) {
-                # Tri des items alphanumériquement
+                sort_by = "item"
                 items_cat$category = NA
-                items_cat = items_cat[order(items_cat$item), ]
                 category = NULL
               } else {
-                # Tri des items selon une catégorie
                 items_cat$category = object@items_categories[as.character(items_cat$item), c]
-                items_cat = items_cat[order(items_cat$category), ]
                 category = colnames(object@items_categories)[c]
+              }
+              
+              # Tri des items
+              if (use_names && sort_by == "item") {
+                # Par nom
+                items_cat = items_cat[order(names(object@items)[match(items_cat$item, object@items)]), ]
+              } else if (sort_by == "item") {
+                # Par code
+                items_cat = items_cat[order(match(items_cat$item, object@items)), ]
+              } else {
+                # Selon une catégorie
+                items_cat = items_cat[order(items_cat[[sort_by]]), ]
               }
               rownames(items_cat) = NULL
               
@@ -2444,13 +2454,13 @@ setMethod(f = "plot_tree_chart",
             # Couleurs de catégorie
             if (!is.null(category)) {
               item_colors = object@categories_colors[[category]][items_category$category]
-              category_colors = unique(item_colors)
+              category_colors = unique(item_colors)[order(unique(items_category$category))]
               
               # Légende de catégorie
               if (is.null(c.cutoff)) {
-                category_legend = unique(items_category$category)
+                category_legend = sort(unique(items_category$category))
               } else {
-                category_legend = substr(unique(items_category$category), 1, c.cutoff)
+                category_legend = substr(sort(unique(items_category$category)), 1, c.cutoff)
               }
               legend("bottom", xpd = NA, bty = "n", inset = c(0, -0.09),
                      title = cap(category), cex = 0.85,
