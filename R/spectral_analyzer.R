@@ -1792,7 +1792,7 @@ setMethod(f = "spectrosome_chart",
             
             # Nombre de variantes du graphique
             nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
-            file_name = check_extension(name, "png")
+            name = check_extension(name, "png")
             
             # Réutilisation ou non de coordonnées
             if ("coord" %in% names(args)) {
@@ -1811,7 +1811,7 @@ setMethod(f = "spectrosome_chart",
               for (j in seq(nb_categories)) {
                 
                 # Nom du graphique en fonction du nombre
-                file_name = ifelse(nb_graphs == 1, file_name, sub(".png", paste0("-", i, ".png"), file_name))
+                file_name = ifelse(nb_graphs == 1, name, sub(".png", paste0("-", i, ".png"), name))
                 file_name = ifelse(nb_categories == 1,
                                    file_name,
                                    sub(".png", paste0("-", colnames(object@items_categories)[j], ".png"), file_name))
@@ -2172,7 +2172,7 @@ setMethod(f = "tree_chart",
             
             # Une variante du graphique par catégorie
             nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
-            file_name = check_extension(name, "pdf")
+            name = check_extension(name, "pdf")
             
             for (c in seq(nb_categories)) {
               
@@ -2192,8 +2192,8 @@ setMethod(f = "tree_chart",
               
               # Nom du graphique en fonction de la catégorie
               file_name = ifelse(nb_categories == 1,
-                                 file_name,
-                                 sub(".pdf", paste0("-", category, ".pdf"), file_name))
+                                 name,
+                                 sub(".pdf", paste0("-", category, ".pdf"), name))
               
               # Traçage du graphique dans un fichier PDF
               pdf(paste0(turn_into_path(path), file_name), 14, 10, paper = "a4r", pointsize = 11)
