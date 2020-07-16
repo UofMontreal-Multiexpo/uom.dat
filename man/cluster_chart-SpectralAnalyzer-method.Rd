@@ -45,8 +45,10 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
 }}
 
 \item{vertex_col}{Façon dont les couleurs des sommets du graphe doivent être définies.
-Choix parmi \code{"status"}, \code{NULL}.
-Si \code{"status"}, coloration selon les statuts des motifs. Sinon, couleur grise.}
+Choix parmi \code{"status"}, \code{"categories"}, \code{"none"}.
+Si \code{"status"} et \code{entities = "patterns"}, coloration selon les statuts des motifs.
+Si \code{"categories"}, coloration selon les catégories associées aux items des entités représentées.
+Dans tous les autres cas, le sommets sont de couleur grise.}
 
 \item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
 
@@ -83,6 +85,8 @@ Si des catégories sont associées aux items, chaque catégorie génère un spec
 
 Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
  liens simples, ces valeurs apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
+Il en est de même concernant les sommets mixtes si l'argument \code{vertex_col} vaut
+ \code{"categories"}.
 
 Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.

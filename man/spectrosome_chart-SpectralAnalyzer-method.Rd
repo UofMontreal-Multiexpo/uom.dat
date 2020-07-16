@@ -46,8 +46,9 @@ Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal
 }}
 
 \item{vertex_col}{Façon dont les couleurs des sommets du graphe doivent être définies.
-Choix parmi \code{"status"}, \code{NULL}.
+Choix parmi \code{"status"}, \code{"categories"}, \code{"none"}.
 Si \code{"status"} et \code{entities = "patterns"}, coloration selon les statuts des motifs.
+Si \code{"categories"}, coloration selon les catégories associées aux items des entités représentées.
 Dans tous les autres cas, le sommets sont de couleur grise.}
 
 \item{clusters}{Nombre maximum de clusters à nommer sur le graphe.
@@ -93,6 +94,8 @@ Si des catégories sont associées aux items, chaque catégorie génère un spec
 
 Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
  liens simples, ces valeurs apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
+Il en est de même concernant les sommets mixtes si l'argument \code{vertex_col} vaut
+ \code{"categories"}.
  
 Si \code{min_link_weight} est supérieur à 1, certains nœuds ou motifs peuvent devenir isolés
  du fait que leurs liens avec les autres éléments peuvent ne plus être considérés. Ces nouveaux

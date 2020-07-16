@@ -1480,6 +1480,8 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' 
 #' Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
 #'  liens simples, ces valeurs apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
+#' Il en est de même concernant les sommets mixtes si l'argument \code{vertex_col} vaut
+#'  \code{"categories"}.
 #'  
 #' Si \code{min_link_weight} est supérieur à 1, certains nœuds ou motifs peuvent devenir isolés
 #'  du fait que leurs liens avec les autres éléments peuvent ne plus être considérés. Ces nouveaux
@@ -1527,8 +1529,9 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'    \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 #'  }
 #' @param vertex_col Façon dont les couleurs des sommets du graphe doivent être définies.
-#'  Choix parmi \code{"status"}, \code{NULL}.
+#'  Choix parmi \code{"status"}, \code{"categories"}, \code{"none"}.
 #'  Si \code{"status"} et \code{entities = "patterns"}, coloration selon les statuts des motifs.
+#'  Si \code{"categories"}, coloration selon les catégories associées aux items des entités représentées.
 #'  Dans tous les autres cas, le sommets sont de couleur grise.
 #' @param clusters Nombre maximum de clusters à nommer sur le graphe.
 #'  Si le nombre de clusters est supérieur, les noms des plus petits clusters ne sont pas affichés.
@@ -1577,12 +1580,16 @@ setMethod(f = "spectrosome_chart",
             if (nrow(characteristics) < 2)
               stop("\"characteristics\" must have at least 2 rows to draw a spectrosome.")
             
+            if (vertex_col != "status" && vertex_col != "categories" && vertex_col != "none")
+              stop("vertex_col must be \"status\", \"categories\" or \"none\".")
+            
             
             # Extraction des liens pour les éléments à visualiser (nop_links = nodes or patterns links)
             nop_links = extract_links(object, entities, characteristics)
             
             if (entities == "nodes") {
-              # Renommage d'une colonne pour plus tard (cf. vertices_shapes)
+              # Renommage de colonnes pour simplification ultérieure (cf. vertices_colors et vertices_shapes)
+              colnames(characteristics)[colnames(characteristics) == "node"] = "pattern"
               colnames(characteristics)[colnames(characteristics) == "length"] = "order"
               
               # Texte affiché sur le graphique
@@ -1716,7 +1723,7 @@ setMethod(f = "spectrosome_chart",
             
             
             # Définition des couleurs des sommets en fonction du statut et nombre pour chaque statut
-            if (entities == "patterns" && !is.null(vertex_col) && vertex_col == "status") {
+            if (entities == "patterns" && vertex_col == "status") {
               vertices_colors = object@Class$STATUS_COLORS[characteristics$status]
               count_status = sapply(names(object@Class$STATUS_COLORS),
                                     function(status) sum(characteristics$status == status))
@@ -1725,17 +1732,73 @@ setMethod(f = "spectrosome_chart",
               legend_1 = c(paste(names(object@Class$STATUS_COLORS), paste0("(", count_status, ")")),
                            "", "Single items", "Multiple items")
               col_1 = c(object@Class$STATUS_COLORS, "white", "black", "black")
-            } else {
+              
+            } else if (vertex_col != "categories") {
+              # Noeuds ou motifs sans affichage du statut : couleur grise
               vertices_colors = rep("grey", nrow(characteristics))
-              count_status = c(0,0,0,0)
               
               # Légende associée
               legend_1 = c("Single items", "Multiple items")
               col_1 = c("black", "black")
+              
+            } else {
+              # Couleurs en fonction de la catégorie
+              v.categories_colors = list()
+              vertices_colors = list()
+              legend_1 = list()
+              col_1 = list()
+              
+              if (length(object@items_categories) == 0) {
+                v.categories_colors[[1]] = character(0)
+                vertices_colors[[1]] = rep("grey", nrow(characteristics))
+                legend_1[[1]] = c("Single items", "Multiple items")
+                col_1[[1]] = c("black", "black")
+                
+              } else {
+                # Pour chaque catégorie
+                for (category in seq_len(ncol(object@items_categories))) {
+                  
+                  # Valeurs de la catégorie associées aux sommets
+                  vertices_categories = lapply(characteristics$pattern,
+                                               function(x) sort(unique(as.character(object@items_categories[x, category]))))
+                  category_values = unique(unlist(vertices_categories))
+                  vertices_categories = unlist(lapply(vertices_categories, function(x) {
+                    if (length(x) == 1) return(x)
+                    if (length(x) > 1) return("Mixt")
+                  }))
+                  
+                  # Séparation des valeurs de la catégorie qui sont uniquement inclus dans des sommets mixtes
+                  category_mixed = sort(setdiff(category_values, unique(vertices_categories)))
+                  category_not_mixed = sort(setdiff(category_values, category_mixed))
+                  
+                  # Sélection des couleurs associées
+                  v.categories_colors[[category]] = c(object@categories_colors[[category]][category_not_mixed],
+                                                      "black")
+                  names(v.categories_colors[[category]]) = c(category_not_mixed, "Mixt")
+                  
+                  # Couleurs des sommets tracés sur le graphique
+                  vertices_colors[[category]] = v.categories_colors[[category]][vertices_categories]
+                  
+                  # Retrait du noir associé aux sommets mixtes s'il n'y en a pas, pour ne pas l'afficher ultérieurement dans la légende
+                  if (length(category_mixed) == 0) {
+                    v.categories_colors[[category]] = v.categories_colors[[category]][seq(length(v.categories_colors[[category]])-1)]
+                  } else {
+                    # Ajout des valeurs de catégorie inclus uniquement dans des sommets mixtes
+                    new_names = c(names(v.categories_colors[[category]]), category_mixed)
+                    v.categories_colors[[category]] = append(v.categories_colors[[category]], rep("white", length(category_mixed)))
+                    names(v.categories_colors[[category]]) = new_names
+                  }
+                  
+                  # Légende associée
+                  legend_1[[category]] = c(names(v.categories_colors[[category]]),
+                                           "", "Single items", "Multiple items")
+                  col_1[[category]] = c(v.categories_colors[[category]], "white", "black", "black")
+                }
+              }
             }
             
             # Sommets à plusieurs items en cercle ; triangle sinon
-            vertices_shapes = rep(100 , length(vertices_colors))
+            vertices_shapes = rep(100 , nrow(characteristics))
             vertices_shapes[characteristics$order == 1] = 3
             
             # Définition des tailles des sommets
@@ -1826,7 +1889,7 @@ setMethod(f = "spectrosome_chart",
                                   coord = coord,
                                   vertex.sides = vertices_shapes,
                                   vertex.cex = vertices_sizes,
-                                  vertex.col = vertices_colors,
+                                  vertex.col = if (vertex_col == "categories") vertices_colors[[j]] else vertices_colors,
                                   edge.col = links_colors[[j]]
                                ), args))
                 
@@ -1838,21 +1901,38 @@ setMethod(f = "spectrosome_chart",
                       font.main = 3, line = 0)
                 
                 # Préparation des formes de la légende du graphique
-                if (entities == "patterns" && !is.null(vertex_col) && vertex_col == "status") {
+                if (entities == "patterns" && vertex_col == "status") {
                   legend_pt.cex = c(rep(2, length(object@Class$STATUS_COLORS)), 1.7, 1.9, rep(2, length(categories_colors[[j]])))
                   legend_pch = c(rep(15, length(object@Class$STATUS_COLORS)), 0, 2, 1, 0, rep(20, length(categories_colors[[j]])))
-                } else {
+                } else if (vertex_col != "categories" || length(object@items_categories) == 0) {
                   legend_pt.cex = c(1.9, rep(2, length(categories_colors[[j]])))
                   legend_pch = c(2, 1, 0, rep(20, length(categories_colors[[j]])))
+                } else {
+                  legend_pt.cex = c(rep(2, length(v.categories_colors[[j]])), 1.7, 1.9, rep(2, length(categories_colors[[j]])))
+                  legend_pch = c(rep(15, length(v.categories_colors[[j]])), 0, 2, 1, 0, rep(20, length(categories_colors[[j]])))
                 }
                 
                 # Préparation de la légende des liens, à la suite des statuts et sommets
                 if (is.null(c.cutoff)) {
-                  legend_legend = c(legend_1, "", names(categories_colors[[j]]))
+                  legend_legend = c(if (vertex_col == "categories") legend_1[[j]] else legend_1,
+                                    "", names(categories_colors[[j]]))
                 } else {
-                  legend_legend = c(legend_1, "", substr(names(categories_colors[[j]]), 1, c.cutoff))
+                  if (vertex_col == "categories") {
+                    if (length(object@items_categories) != 0) {
+                      # Application du cutoff sur la légende des couleurs des sommets également
+                      nb_vertices_leg = length(legend_1[[j]])
+                      legend_legend = c(substr(legend_1[[j]][1:(nb_vertices_leg-3)], 1, c.cutoff),
+                                        legend_1[[j]][(nb_vertices_leg-2):nb_vertices_leg],
+                                        "", substr(names(categories_colors[[j]]), 1, c.cutoff))
+                    } else {
+                      legend_legend = legend_1[[1]]
+                    }
+                  } else {
+                    legend_legend = c(legend_1, "", substr(names(categories_colors[[j]]), 1, c.cutoff))
+                  }
                 }
-                legend_col = c(col_1, "white", categories_colors[[j]])
+                legend_col = c(if (vertex_col == "categories") col_1[[j]] else col_1,
+                               "white", categories_colors[[j]])
                 
                 # Affichage de la légende
                 legend("topleft", bty = "n", xpd = NA, pt.cex = legend_pt.cex, pch = legend_pch,
@@ -1964,6 +2044,8 @@ setMethod(f = "cluster_text",
 #' 
 #' Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
 #'  liens simples, ces valeurs apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
+#' Il en est de même concernant les sommets mixtes si l'argument \code{vertex_col} vaut
+#'  \code{"categories"}.
 #' 
 #' Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
 #'  Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
@@ -1997,8 +2079,10 @@ setMethod(f = "cluster_text",
 #'    \item{\code{"equal"}}{Les sommets ont tous la même taille.}
 #'  }
 #' @param vertex_col Façon dont les couleurs des sommets du graphe doivent être définies.
-#'  Choix parmi \code{"status"}, \code{NULL}.
-#'  Si \code{"status"}, coloration selon les statuts des motifs. Sinon, couleur grise.
+#'  Choix parmi \code{"status"}, \code{"categories"}, \code{"none"}.
+#'  Si \code{"status"} et \code{entities = "patterns"}, coloration selon les statuts des motifs.
+#'  Si \code{"categories"}, coloration selon les catégories associées aux items des entités représentées.
+#'  Dans tous les autres cas, le sommets sont de couleur grise.
 #' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
