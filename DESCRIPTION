@@ -4,7 +4,8 @@ Title: Occupational Exposure Databases Analysis Tools for Multiexposure
 Version: 0.1.0
 Author@R: c(
     person("Gauthier", "Magnin", email = "gauthier.magnin@gmail.com", role = c("aut", "cre")),
-    person("Delphine", "Bosson-Rieutort", email = "delphine.bosson-rieutort@umontreal.ca", role = "aut"))
+    person("Delphine", "Bosson-Rieutort", email = "delphine.bosson-rieutort@umontreal.ca", role = "aut")
+    )
 Author: Gauthier Magnin [aut, cre],
     Delphine Bosson-Rieutort [aut]
 Maintainer: Gauthier Magnin <gauthier.magnin@gmail.com>
@@ -25,5 +26,6 @@ Suggests:
 RoxygenNote: 7.1.0
 Collate: 
     'observation_maker.R'
+    'oedb.analysis.tools-package.R'
     'utils.R'
     'spectral_analyzer.R'

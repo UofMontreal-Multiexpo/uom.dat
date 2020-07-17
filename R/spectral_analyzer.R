@@ -184,7 +184,6 @@ setMethod(f = "initialize",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link[arules:ASparameter-class]{arules::APparameter}}.
-#' @aliases spectral.analyzer
 #' @export
 spectral.analyzer = function(observations, items = NULL, target = "closed frequent itemsets", count = 1, min_length = 1, max_length = Inf, status_limit = 2) {
   
