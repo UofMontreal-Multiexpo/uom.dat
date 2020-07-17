@@ -284,7 +284,7 @@ setMethod(f = "print",
             cat("SpectralAnalyzer\n")
             print(getSlots("SpectralAnalyzer"))
           })
-  
+
 # show : affichage sommaire en console
 setMethod(f = "show",
           signature = "SpectralAnalyzer",
@@ -1666,7 +1666,7 @@ setMethod(f = "spectrosome_chart",
                   links_colors[[category]] = rep("white", nrow(nop_links))
                   
                 } else if (length(levels(object@items_categories[, category])) > 1) {
-                    
+                  
                   # Catégories associées aux liens
                   links_categories = lapply(strsplit(nop_links$items, "/"),
                                             function(x) sort(unique(as.character(object@items_categories[x, category]))))
@@ -2514,7 +2514,7 @@ setMethod(f = "save_characteristics",
             
             # Nom de la colonne dans laquelle chercher les vecteurs à convertir
             column = substr(entities, 1, nchar(entities) - 1)
-  
+            
             # Conversion des noeuds ou motifs en chaînes de caractères
             itemsets = tapply(characteristics[, column],
                               seq_along(characteristics[, column]),
@@ -2922,4 +2922,4 @@ setMethod(f = "extract_links",
             
             return(nop_links)
           })
-          
+
