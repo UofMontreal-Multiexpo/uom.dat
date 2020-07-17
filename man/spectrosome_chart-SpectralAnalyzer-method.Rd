@@ -18,6 +18,7 @@
   use_names = TRUE,
   n.cutoff = NULL,
   c.cutoff = NULL,
+  display_mixt = TRUE,
   path = getwd(),
   name = paste0("spectrosome_of_", entities, ".png"),
   title = paste0("Network of ", entities),
@@ -62,6 +63,9 @@ Les noms des plus grands clusters sont affichés en gras.}
 \item{n.cutoff}{Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.}
 
 \item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
+
+\item{display_mixt}{Si \code{TRUE}, affiche dans la légende les valeurs de catégorie incluses
+uniquement dans des liens mixtes (ou dans des sommets mixtes, si \code{vertex_col = "categories"}).}
 
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}

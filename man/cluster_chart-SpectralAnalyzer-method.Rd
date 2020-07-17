@@ -15,6 +15,7 @@
   vertex_size = "relative",
   vertex_col = "status",
   c.cutoff = NULL,
+  display_mixt = TRUE,
   path = getwd(),
   name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
   title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
@@ -51,6 +52,9 @@ Si \code{"categories"}, coloration selon les catégories associées aux items de
 Dans tous les autres cas, le sommets sont de couleur grise.}
 
 \item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
+
+\item{display_mixt}{Si \code{TRUE}, affiche dans la légende les valeurs de catégorie incluses
+uniquement dans des liens mixtes (ou dans des sommets mixtes, si \code{vertex_col = "categories"}).}
 
 \item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
 Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}

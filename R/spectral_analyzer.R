@@ -430,11 +430,11 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs relatifs
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", vertex_col = "status", c.cutoff = NULL, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -674,7 +674,7 @@ setMethod(f = "search_links",
                   link_counter = link_counter + 1
                   intersection = to_link[[j]][to_link[[j]] %in% to_link[[i]]]
                   
-                  # Élément i, élément j, numéro de lien, items en communs, nb items en communs (, année d'apparition du lien)
+                  # Élément i, élément j, items en communs, nb items en communs (, année d'apparition du lien)
                   if (entities == "patterns") {
                     links[link_counter, ] = c(i, j,
                                               paste(intersection, collapse = "/"), entities_links[i, j],
@@ -1540,6 +1540,8 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param use_names Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.
 #' @param n.cutoff Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.
 #' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
+#' @param display_mixt Si \code{TRUE}, affiche dans la légende les valeurs de catégorie incluses
+#'  uniquement dans des liens mixtes (ou dans des sommets mixtes, si \code{vertex_col = "categories"}).
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
 #' @param name Nom du fichier dans lequel enregistrer le graphique.
@@ -1570,7 +1572,7 @@ setMethod(f = "spectrosome_chart",
                                 nb_graphs = 1, min_link_weight = 1, 
                                 vertex_size = "relative", vertex_col = "status",
                                 clusters = Inf, highlight = 3,
-                                use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL,
+                                use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE,
                                 path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities),
                                 ...) {
             
@@ -1697,9 +1699,11 @@ setMethod(f = "spectrosome_chart",
                     categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
                     
                     # Ajout des valeurs de catégorie inclus uniquement dans des liens mixtes
-                    new_names = c(names(categories_colors[[category]]), category_mixed)
-                    categories_colors[[category]] = append(categories_colors[[category]], rep("white", length(category_mixed)))
-                    names(categories_colors[[category]]) = new_names
+                    if (display_mixt) {
+                      new_names = c(names(categories_colors[[category]]), category_mixed)
+                      categories_colors[[category]] = append(categories_colors[[category]], rep("white", length(category_mixed)))
+                      names(categories_colors[[category]]) = new_names
+                    }
                   }
                   
                 } else if(length(levels(object@items_categories[, category])) == 1) {
@@ -1784,9 +1788,11 @@ setMethod(f = "spectrosome_chart",
                     v.categories_colors[[category]] = v.categories_colors[[category]][seq(length(v.categories_colors[[category]])-1)]
                   } else {
                     # Ajout des valeurs de catégorie inclus uniquement dans des sommets mixtes
-                    new_names = c(names(v.categories_colors[[category]]), category_mixed)
-                    v.categories_colors[[category]] = append(v.categories_colors[[category]], rep("white", length(category_mixed)))
-                    names(v.categories_colors[[category]]) = new_names
+                    if (display_mixt) {
+                      new_names = c(names(v.categories_colors[[category]]), category_mixed)
+                      v.categories_colors[[category]] = append(v.categories_colors[[category]], rep("white", length(category_mixed)))
+                      names(v.categories_colors[[category]]) = new_names
+                    }
                   }
                   
                   # Légende associée
@@ -2084,6 +2090,8 @@ setMethod(f = "cluster_text",
 #'  Si \code{"categories"}, coloration selon les catégories associées aux items des entités représentées.
 #'  Dans tous les autres cas, le sommets sont de couleur grise.
 #' @param c.cutoff Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.
+#' @param display_mixt Si \code{TRUE}, affiche dans la légende les valeurs de catégorie incluses
+#'  uniquement dans des liens mixtes (ou dans des sommets mixtes, si \code{vertex_col = "categories"}).
 #' @param path Chemin du dossier dans lequel enregistrer les graphiques.
 #'  Par défaut, les graphiques sont enregistrés dans le répertoire de travail.
 #' @param name Nom du fichier dans lequel enregistrer le graphique.
@@ -2111,7 +2119,8 @@ setMethod(f = "cluster_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, characteristics, item,
                                 use_name = TRUE, n.cutoff = NULL,
-                                vertex_size = "relative", vertex_col = "status", c.cutoff = NULL,
+                                vertex_size = "relative", vertex_col = "status",
+                                c.cutoff = NULL, display_mixt = TRUE,
                                 path = getwd(),
                                 name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
                                 title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
@@ -2134,6 +2143,7 @@ setMethod(f = "cluster_chart",
               to_return = spectrosome_chart(object, entities, nop,
                                             vertex_size = vertex_size, vertex_col = vertex_col,
                                             use_names = use_name, n.cutoff = n.cutoff, c.cutoff = c.cutoff,
+                                            display_mixt = display_mixt,
                                             path = path, name = name, title = title, ...)
               return(list(vertices = to_return$vertices, edges = to_return$edges, coords = to_return$coords[[1]]))
               
