@@ -14,7 +14,7 @@ Description: R processing, analysis and visualization tools for occupational exp
     Frequent Itemset Mining, Association Rules, Clustering and Spectrosome.
 License: Undefined
 Encoding: UTF-8
-LazyData: false
+LazyData: true
 Depends: R (>= 3.5.0)
 Imports:
     arules,
@@ -25,6 +25,7 @@ Suggests:
     utils
 RoxygenNote: 7.1.0
 Collate: 
+    'data.R'
     'observation_maker.R'
     'oedb.analysis.tools-package.R'
     'utils.R'
