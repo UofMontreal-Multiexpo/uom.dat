@@ -12,21 +12,23 @@ Main analytical approaches are *Frequent Itemset Mining*, *Association Rules*, *
 
 ## Installation
 
-To install the package `oedb.analysis.tools`:
+To install the package **oedb.analysis.tools**:
 
 1. Clone the repository or download a ZIP copy.
 2. In RStudio, open the project file `oedb-analysis-tools.Rproj`.
-3. Go to the Build tab (which is by default in the upper right quadrant).
+3. Go to the "Build" tab (which is by default in the upper right quadrant).
 4. Click on the "Install and Restart" button.
 
 
 ## Documentation
 
-In addition to the documentation of the functions included in the **man** folder, the **vignettes** folder contains:
+In addition to the documentation of the package, data and functions (accessible by the `help` function), the **doc** directory contains:
 
 * An example of analysis, presented in the file `spectral_analysis_example.nb.html`.
 
-* A presentation of the data structures used by the `SpectralAnalyzer` class (attributes, function parameters and function returns) in the file `Types_of_attributes_and_methods.pdf`.
+* A presentation of the data structures used by the **SpectralAnalyzer** class (attributes, function parameters and function returns) in the file `Types_of_attributes_and_methods.pdf`.
+
+These files can be accessed using `help(package = "oedb.analysis.tools")` then clicking on "User guides, package vignettes and other documentation".
 
 
 ## Authors
