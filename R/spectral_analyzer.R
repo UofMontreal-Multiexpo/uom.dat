@@ -1568,7 +1568,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, characteristics,
-                                nb_graphs = 1, min_link_weight = 1, 
+                                nb_graphs = 1, min_link_weight = 1,
                                 vertex_size = "relative", vertex_col = "status",
                                 clusters = Inf, highlight = 3,
                                 use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE,
@@ -1958,6 +1958,11 @@ setMethod(f = "spectrosome_chart",
             
             # Calcul du degré de chaque sommet dans le graphe
             degrees = sapply(vertices_id, function(ID) degree(object, ID, nop_links))
+            # Renommage initial des colonnes avant retour
+            if (entities == "nodes") {
+              colnames(characteristics)[colnames(characteristics) == "pattern"] = "node"
+              colnames(characteristics)[colnames(characteristics) == "order"] = "length"
+            }
             
             # Noeuds ou motifs, caractéristiques, identifiants sur le graphique et degrés dans le graphe
             return(list(vertices = data.frame(ID = vertices_id, characteristics, degree = degrees),
