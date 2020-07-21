@@ -2033,14 +2033,17 @@ setMethod(f = "cluster_text",
             coords = coords[complete.cases(coords), ]
             if (nrow(coords) >= display) coords = coords[seq_len(display), ]
             
-            # Affichage des noms des "clusters" retenus
-            if (use_names) {
-              clusters = names(object@items)[match(coords$LABEL, object@items)]
-              if (!is.null(cutoff)) clusters = substr(clusters, 1, cutoff)
+            # S'il y a effectivement des clusters à nommer (ce n'est pas le cas s'il n'y a que des liens mixtes)
+            if (nrow(coords) > 0) {
+              # Affichage des noms des "clusters" retenus
+              if (use_names) {
+                clusters = names(object@items)[match(coords$LABEL, object@items)]
+                if (!is.null(cutoff)) clusters = substr(clusters, 1, cutoff)
+              }
+              shadowtext(coords$MOY.X, coords$MOY.Y, clusters, r = 0.3,
+                         col = "black", bg = "white", cex = 0.9,
+                         font = ifelse(clusters %in% clusters[seq_len(highlight)], 2, 1))
             }
-            shadowtext(coords$MOY.X, coords$MOY.Y, clusters, r = 0.3,
-                       col = "black", bg = "white", cex = 0.9,
-                       font = ifelse(clusters %in% clusters[seq_len(highlight)], 2, 1))
           })
 
 
