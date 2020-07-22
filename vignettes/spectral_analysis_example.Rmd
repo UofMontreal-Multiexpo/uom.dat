@@ -1,39 +1,27 @@
 ---
 title: "Spectral analysis and observation processing example"
 author: "Gauthier Magnin"
-date: "2020-05-14 (last update: `r Sys.Date()`)"
+date: "Last update: `r Sys.Date()`"
 output: html_notebook
 ---
 
-
-
 # 1. Preparation of data and spectral analysis
 
-## 1.1. Loading functions, classes and data
+## 1.1. Loading package and look at the example data
 
-Loading the class allowing spectral analysis and other functions necessary for its operation...
 ```{r}
-source("../R/utils.R", encoding = "UTF-8")
-source("../R/spectral_analyzer.R", encoding = "UTF-8")
+# Loading package
+library(oedb.analysis.tools)
 ```
 
-Loading functions for aggregating data from samples into sets of observed substances...
+Here are illustrative data from an occupational exposure database:
 ```{r}
-source("../R/observations_maker.R", encoding = "UTF-8")
+oedb_sample
 ```
-These functions are constraining with regard to the names of the variables of the data frame. Four variables are necessary:
+In this database, samples for which substances sought were not found have been removed; a filter was carried out on a particular work sector and a specific subset of data was extracted. Each line corresponds to a sample.
 
-* **ID**: identifier of a sample.
-* **ANNEE**: year of the sampling.
-* **AC_NOM**: name of the chemical agent.
-* **AC_CODE**: code of the chemical agent.
-
-Loading example of data from an occupational exposure database...
-```{r}
-db = readRDS("../data/example_data.RDS")
-db
-```
-In this databse, samples for which sought substances were not found have been removed; a filter was carried out on a particular work sector and a specific subset of data was extracted.
+For a description of these data, you can use `help(oedb_sample)` to access the following help page:
+![](./img/help.oedb_sample.png)
 
 
 
@@ -41,25 +29,28 @@ In this databse, samples for which sought substances were not found have been re
 
 ### 1.2.1. Definition of the structure
 
-Loading a set of workplace situations described beforehand...
+Defining a set of work situations...
 ```{r}
-workplace_situations = read.csv2("../data/workplace_situations.csv",
-                                 header = TRUE, stringsAsFactors = FALSE)
-workplace_situations
+work_situations = data.frame(WS_ID = c(1, 2, 2, 3, 3),
+                             JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
+                             JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
+                             stringsAsFactors = FALSE)
+work_situations
 ```
-The CSV file must have an **ID** column to identify the different workplace situations described. The other columns correspond to the variables that we want to use to describe a workplace situation and have the same names as the variables in the database used.
+These are work situations the user could identify beforehand. **The data frame must have a *WS_ID* column to identify the different work situations described.** The other columns correspond to the variables to use to describe a work situation and have the same names as the variables in the database used.
 
-For this fictitious example, the variables named *METIER* and *TACHE* are used. Several couples with the same *ID* are considered to correspond to the same workplace situation.
+For this fictitious example, the variables named *JOB.TITLE* and *JOB.TASK* are used and random combinations were picked. Several couples with the same *WS_ID* are considered to correspond to the same work situation. Three work situations are described. The first one has one combination of the two variables. The second has two combinations which are considered as works with similar conditions. The last one is formed in the same way as the second one.
 
 
-Defining the set of variables used to search for situations that have not been described...
+Defining the set of variables used to search for situations that have not been described in the previous data frame...
 ```{r}
-variable_names = c("METIER", "TACHE")
+variable_names = c("JOB.TITLE", "JOB.TASK")
 ```
+Each combination of these variables will be considered as a new work situation.
 
 Defining the set of information to be kept in the observation structure...
 ```{r}
-additional = c("NAF", "METIER", "TACHE")
+additional = c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
 ```
 This is additional information which is not useful for spectral analysis but which allows to find a posteriori the context associated with the observations.
 
@@ -70,19 +61,26 @@ There are 4 possibilities here:
 
 1. A single observation per inspection in an establisment...
 ```{r}
-observations1 = turn_interventions_into_observations(db, additional)
+observations1 = make_observations(oedb_sample,
+                                  by = "ID",
+                                  additional = c("CODE", additional),
+                                  unique_values = TRUE)
 
 # Print the number of observations
 cat(length(observations1), "observations.\n")
 ```
 ```{r}
 # Print one observation to see what it looks like
-observations1[2]
+observations1[14]
 ```
 
-2. For one inspection, research of the workplace situations described in a CSV file...
+2. For one inspection, research of the work situations described previously...
 ```{r}
-observations2 = make_observations(db, 2, workplace_situations, additional = additional)
+observations2 = make_INRS_observations(oedb_sample,
+                                       mode = 2,
+                                       work_situations = work_situations,
+                                       additional = additional,
+                                       unique_values = TRUE)
 
 # Print the number of observations
 cat(length(observations2), "observations.\n")
@@ -92,9 +90,13 @@ cat(length(observations2), "observations.\n")
 observations2[2]
 ```
 
-3. For one inspection, as many workplace sitautions as different *METIER*-*TACHE* pairs...
+3. For one inspection, as many work situations as different *JOB.TITLE*-*JOB.TASK* pairs...
 ```{r}
-observations3 = make_observations(db, 3, variable_names = variable_names, additional = additional)
+observations3 = make_INRS_observations(oedb_sample,
+                                       mode = 3,
+                                       variable_names = variable_names,
+                                       additional = additional,
+                                       unique_values = TRUE)
 
 # Print the number of observations
 cat(length(observations3), "observations.\n")
@@ -104,9 +106,14 @@ cat(length(observations3), "observations.\n")
 observations3[2]
 ```
 
-4. Combination of points 2 and 3: search for the workplace situations described in the CSV file and one observation per situation not described (*METIER*-*TACHE* pair) concerning the remaining samples...
+4. Combination of points 2 and 3: search for the work situations described previously and one observation per situation not described (*JOB.TITLE*-*JOB.TASK* pair) concerning the remaining samples...
 ```{r}
-observations4 = make_observations(db, 1, workplace_situations, variable_names, additional)
+observations4 = make_INRS_observations(oedb_sample,
+                                       mode = 1,
+                                       work_situations = work_situations,
+                                       variable_names = variable_names,
+                                       additional = additional,
+                                       unique_values = TRUE)
 
 # Print the number of observations
 cat(length(observations4), "observations.\n")
@@ -115,6 +122,8 @@ cat(length(observations4), "observations.\n")
 # Print one observation
 observations4[2]
 ```
+
+**Note that the function used to create the last three lists of observations need the dataset to contain 3 variables named *ID*, *YEAR* and *CODE* to be able to function.**
 
 For the rest of the example, use of the last one...
 ```{r}
@@ -127,63 +136,64 @@ observations = observations4
 
 ### 1.3.1. Association of each substance to categories
 
-Loading the list of families of substances...
+Here is a data frame associating substances to one family of substances and one subfamily:
 ```{r}
-family_agent = read.csv2("../data/family_agent.csv", stringsAsFactors = FALSE)
-family_agent
+substances_classification
 ```
 
-Classification of chemical agents according to their family...
+Classification of the substances from the observations according to their subfamily...
 ```{r}
 # Search for separate substances
-agents = sort(unique(unlist(sapply(observations, "[", "CODE"))))
-# Search for family associated to each substance
-families = family_agent$Famille[match(agents, family_agent$Code)]
-# Assignment of a specific value to agents for which no family has been found in the CSV file
+substances = get_all_items(observations)
+# Search for the subfamily associated to each substance
+families = substances_classification$SUBFAMILY[match(substances, substances_classification$CODE)]
+# By prevention, assignment of a specific value to substances for which no family has been found
 families[is.na(families)] = "Unknown"
+# Search for the name associated to each substance
+names = substances_classification$NAME[match(substances, substances_classification$CODE)]
 
 # Print the number of separate substances
-cat(length(agents), "substances.\n")
+cat(length(substances), "substances.")
 ```
 ```{r}
-# Print ID of all substances found in the observations
-agents
+# Print the codes of all substances found in the observations
+substances
 ```
 ```{r}
 # Print the number of separate families
-cat(length(unique(families)), "families.\n")
+cat(length(unique(families)), "families.")
 ```
 ```{r}
-# Print name of all families of substances found in the observations
+# Print names of all families of substances found in the observations
 unique(families)
 ```
 
-Creation of a table associating each substance with some categories...
+Creation of a table associating each substance with its name and some categories...
 ```{r}
-categories = data.frame(item = agents,
-                        family = families)
+items = data.frame(item = substances,
+                   name = names,
+                   family = families)
+items
 ```
 
 
-The column corresponding to the substance must be named **item**. The other names are free.
+The column corresponding to the substance codes must be named **item**. The one corresponding to the substance names (which is optional) must be named **name**. The other names (for categories, which are also optional) are free.
 
-Creation here of a *family* category corresponding to the family associated with each substance.
+Creation here of a *family* category corresponding to the subfamily associated with each substance.
 
 Add other variables to the data frame to associate additional categories.
 
 
 ### 1.3.2. Instanciation of the object in charge of the analysis
 
-Use of the default values (see the documentation for function *spectral.analyzer()* or the function itself in file *spectral_analyser.R*)...
+Use of the default values to create a spectral analyzer (see the documentation for function *spectral.analyzer()*)...
 ```{r}
-sa_object = spectral.analyzer(observations, items = categories)
+sa_object = spectral.analyzer(observations, items)
 ```
 
-The **arules** and **statnet** packages are automatically installed and loaded on initialization.
+The execution time for each step is displayed in the form [01h 22m 05s].
 
-The execution time for each of the steps are displayed in the form [01h 22m 05s].
-
-The *warning* message appearing is generated by the *arules* package which informs that the choice of a minimum frequency of 1 for the enumeration of the patterns risks requiring more memory than available in case where a lot of data is used and many patterns exist. That is not the case here.
+The *warning* message appearing is generated by one package used (*arules*) which informs that the choice of a minimum frequency of 1 for the enumeration of the patterns risks requiring more memory than available in case where a lot of data is used and many patterns exist. That is not the case here.
 
 
 ### 1.3.3. The resulting object
@@ -197,11 +207,12 @@ Let's take a look at the structure of the object...
 # Try this on your console to see more than the following picture
 View(sa_object)
 ```
-![Fig. 1: View of the spectral analyzer object.](./img/View_sa_object.png)
+![Fig. 1: View of the spectral analyzer object example.](./img/View_sa_object.png)
 
-Some of these attributes are saved in the output files (see the following sections).
+Some of these attributes will be saved in output files (see the following sections).
 
-To see more about the types of attributes and methods variables, see *Attribute_and_method_types.pdf* in the *man* folder.
+To have a description of the attributes, use `help("SpectralAnalyzer")`.
+To know more about the types of attributes and methods variables, see *Types_of_attributes_and_methods.pdf* in the *doc* directory.
 
 
 
@@ -229,7 +240,7 @@ sa_object["patterns"]
 ```
 ![](./img/sa_object_patterns.png)
 
-Saving the nodes and patterns in a CSV file...
+Saving the nodes and the patterns in CSV files...
 ```{r}
 # Saving the nodes
 save_characteristics(sa_object, "nodes", sa_object["nodes"],
@@ -256,7 +267,8 @@ Creation of the spectrosome of the nodes...
 spectrosome = spectrosome_chart(sa_object, "nodes", sa_object["nodes"],
                                 path = directory,
                                 name = "spectrosome_of_nodes.png",
-                                title = "Network of nodes")
+                                title = "Network of nodes",
+                                layout.par = NULL)
 ```
 ![Fig. 2: Spectrosome of the nodes.](./output/spec_nodes/spectrosome_of_nodes.png)
 
@@ -290,7 +302,7 @@ spectrosome[["edges"]]
 Extraction of the node cluster relating to the item *3146*...
 ```{r}
 item = 3146
-cluster = cluster_chart(sa_object, "nodes", item,
+cluster = cluster_chart(sa_object, "nodes", sa_object["nodes"], item,
                         path = directory,
                         name = paste0("node_cluster_of_", item, ".png"),
                         title = paste("Network cluster of", item))
@@ -341,8 +353,6 @@ spectrum = spectrum_chart(sa_object, sa_object["patterns"],
 ```
 ![Fig. 4: Spectrum of patterns.](./img/spectrum_of_patterns.png)
 
-Patterns presented in this spectrum are the ones already saved before as "sao.patterns.csv" in section 1.4.
-
 Saving pattern characteristics in a CSV file...
 ```{r}
 save_characteristics(sa_object, "patterns",
@@ -350,6 +360,7 @@ save_characteristics(sa_object, "patterns",
                      file = paste0(directory, "spectrum_of_patterns.csv"),
                      row.names = FALSE)
 ```
+Patterns presented in this spectrum are the ones already saved before as "sao.patterns.csv" in section 1.4.
 
 
 ### 3.1.2. Spectrosome
@@ -359,7 +370,8 @@ Creation of the spectrosome of the patterns...
 spectrosome = spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
                                 path = directory,
                                 name = "spectrosome_of_patterns.png",
-                                title = "Network of patterns")
+                                title = "Network of patterns",
+                                layout.par = NULL)
 ```
 ![Fig. 5: Spectrosome of the patterns.](./output/spec_patterns/spectrosome_of_patterns.png)
 
@@ -391,15 +403,16 @@ cat("Network density:", network_density(sa_object, spectrosome[["edges"]]))
 
 Creation of the multi-association tree...
 ```{r}
-tree = tree_chart(sa_object, sa_object["patterns"], "ID",
-                  cutoff = 17,
+tree = tree_chart(sa_object, sa_object["patterns"],
+                  n.cutoff = 20,
+                  c.cutoff = 17,
                   path = directory,
                   name = "multi-association_tree.pdf",
                   title = "Multi-association tree")
 ```
 ![Fig. 6 : Multi-association tree.](./img/multi-association_tree.png)
 
-**Note that too many values for the displayed category or too long names prevent the legend from being displayed correcly, hence the use of the cutoff parameter to reduce the size of these values.**
+**Note that too many values for the displayed category or too long names prevent the legend from being displayed entirely, hence the use of the *c.cutoff* parameter to reduce the size of these values. Likewise, the *n.cutoff* allow to shorten the names of long substances.**
 
 Saving pattern characteristics in a CSV file...
 ```{r}
@@ -421,7 +434,7 @@ See that only patterns with an order value greater than 1 are plotted on this ki
 Extraction of the pattern cluster relating to the item *3146*...
 ```{r}
 item = 3146
-cluster = cluster_chart(sa_object, "patterns", item,
+cluster = cluster_chart(sa_object, "patterns", sa_object["patterns"], item,
                         path = directory,
                         name = paste0("pattern_cluster_of_", item, ".png"),
                         title = paste("Network cluster of", item))
@@ -499,9 +512,10 @@ spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
 Selection of patterns with filter according to status...
 ```{r}
 # For example: patterns with a status "Persistent"
-value = sa_object["Class"]$STATUS_PERSISTENT
+status = sa_object["Class"]$STATUS_PERSISTENT
 patterns = extract_patterns_from_status(sa_object, sa_object["patterns"],
-                                        value, "EQ")
+                                        value = status,
+                                        condition = "EQ")
 
 patterns
 ```
@@ -544,12 +558,12 @@ dir.create(directory)
 
 Substances in the family *Chrome*...
 ```{r}
-categories[categories$family == "Chrome", ]
+items[items$family == "Chrome", ]
 ```
 
-Selection of patterns with contain any substance in the family *Chrome*...
+Selection of patterns which contain any substance in the family *Chrome*...
 ```{r}
-patterns = extract_patterns_from_category(sa_object,
+patterns = extract_patterns_from_category(sa_object, sa_object["patterns"],
                                           category = "family",
                                           value = "Chrome",
                                           target = "vertices")
@@ -593,12 +607,12 @@ spectrosome[["edges"]]
 
 Substances in the family *Chrome* (the same as in the previous section)...
 ```{r}
-categories[categories$family == "Chrome", ]
+items[items$family == "Chrome", ]
 ```
 
-Selection of patterns with generate links in which any substance belongs to the family *Chrome*...
+Selection of patterns which generate links in which any substance belongs to the family *Chrome*...
 ```{r}
-patterns = extract_patterns_from_category(sa_object,
+patterns = extract_patterns_from_category(sa_object, sa_object["patterns"],
                                           category = "family",
                                           value = "Chrome",
                                           target = "edges")
@@ -645,65 +659,122 @@ spectrosome[["edges"]]
 
 ## 5.1. Processing on observations
 
+Enumerate all items in a list of observations...
+```{r}
+get_all_items(sa_object["observations"])
+```
+
+
 Selection of observations containing a desired substance or set of substances...
 ```{r}
 # For example, observations in which there is the item which has the code 25
-View(extract_observations_from_items(observations, items = 25, "all"))
+View(get_obs_from_items(sa_object["observations"],
+                        items = 25,
+                        target = "all"))
 ```
 ![](./img/View_observations_25.png)
 
-Selection of observations corresponding to a desired workplace situation...
+Selection of observations corresponding to a desired work situation...
 ```{r}
-# Search for observations for which the additional information "METIER" and "TACHE" corresponding respectively to 44132001 and "A8310"
-View(extract_observations_from_information(observations,
-                                           info_names = c("METIER", "TACHE"),
-                                           info_values = c(44132001, "A8310")))
+# Search for observations for which the additional information "JOB.TITLE" and "JOB.TASK" correspond respectively to 44132001 and "A8310"
+View(get_obs_from_info(sa_object["observations"],
+                       JOB.TITLE = 44132001,
+                       JOB.TASK = "A8310"))
 ```
 ![](./img/View_observations_MT.png)
 
-Search for substances found in observations associated with a workplace situation...
+Search for substances found in observations associated with a work situation...
 ```{r}
-extract_items(observations,
-              info_names = c("METIER", "TACHE"),
-              info_values = c(44121004, "A5440"))
+get_items_from_info(sa_object["observations"],
+                    JOB.TITLE = 44121004,
+                    JOB.TASK = "A5440")
 ```
 
 Search for situations associated with a desired substance...
 ```{r}
-# Search for the information "METIER" and "TACHE" associated to observations in which there is the items 3146
-extract_information(observations,
+# Search for the information "JOB.TITLE" and "JOB.TASK" associated to observations in which there is the item 3146
+get_info_from_items(sa_object["observations"],
                     items = 3146,
-                    info_names = c("METIER", "TACHE"))
+                    info_names = c("JOB.TITLE", "JOB.TASK"))
 ```
 
 
-## 5.2 Substance code correspondance with names and families
+## 5.2. Substance code correspondance with names and categories
 
-Table of correspondences between substance codes and substance names analyzed...
+Names and categories of specific substances...
 ```{r}
-AC = unique(db[db$AC_CODE %in% sa_object["items"], c("AC_CODE", "AC_NOM")])
-AC
-```
+# For example substances which have the codes 328, 929 and 3146
+substances_sought = c(328, 929, 3146)
+substances_names = names(sa_object["items"])[sa_object["items"] %in% substances_sought]
+substances_categories = sa_object["items_categories"][as.character(substances_sought), ]
 
-Name of specific substances...
-```{r}
-# For example substances which have the codes 497 and 3146
-agents_ch = c(497, 3146)
-AC[AC$AC_CODE %in% agents_ch, ]
+result = data.frame(substances_sought,
+                    substances_names,
+                    substances_categories)
+setNames(result, c("item", "name", colnames(sa_object["items_categories"])))
 ```
 
 Families associated with specific set of substances
 ```{r}
-# Categories of two substances: for example 497 and 3146
-categories[categories$item %in% c(497, 3146), ]
-```
-```{r}
 # Categories of the substances of one specific pattern from the whole set of patterns
-categories[categories$item %in% sa_object["patterns"]$pattern[[2]], ]
+sa_object["items_categories"][sa_object["patterns"]$pattern[[2]], ]
 ```
 ```{r}
 # Or from one specific pattern from a spectrosome resulting from a previous filter
-categories[categories$item %in% spectrosome[["vertices"]]$pattern[[1]], ]
+sa_object["items_categories"][spectrosome[["vertices"]]$pattern[[1]], ]
 ```
+
+
+## 5.3. Some chart alternatives
+
+```{r}
+directory = "./output/alternatives/"
+dir.create(directory)
+```
+
+Some possible alternatives:
+
+* If the status are not relevant for the desired analysis, some parameters allow to ignore them on charts.
+* Because vertices of the spectrosome are positioned partially randomly, it may be necessary to redo a graph to get better readability. A parameter allows to plot as many spectrosome as you want.
+* Another parameter allows to reduce the number of links displayed on a spectrosome according to their weight.
+
+```{r}
+# Plot 3 spectrosomes coloring the vertices with the categories
+spectrosome_1 = spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
+                                  vertex_col = "categories",
+                                  nb_graphs = 3,
+                                  path = directory,
+                                  name = "spectrosome_of_patterns-no_status.png",
+                                  layout.par = NULL)
+```
+
+![Fig. 14.a: Spectrosome in which vertices are colored according to the category associated with the items, example 1.](./output/alternatives/spectrosome_of_patterns-no_status-1.png)
+
+![Fig. 14.b: Spectrosome in which vertices are colored according to the category associated with the items, example 2.](./output/alternatives/spectrosome_of_patterns-no_status-2.png)
+
+![Fig. 14.c: Spectrosome in which vertices are colored according to the category associated with the items, example 3.](./output/alternatives/spectrosome_of_patterns-no_status-3.png)
+
+One can choose one of the three spectrosomes plotted and reuse it with the parameter *coord*. For instance, one can plot again the third spectrosome with another constraint on links:
+```{r}
+# Spectrosomes with several values for the parameter defining the minimum weight of a link to be plotted.
+for (min_weight in seq(2, 5)) {
+  spectrosome_w = spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
+                                    min_link_weight = min_weight,
+                                    vertex_col = "categories",
+                                    path = directory,
+                                    name = paste0("spectrosome_of_patterns-weight", min_weight, ".png"),
+                                    layout.par = NULL,
+                                    coord = spectrosome_1$coords[[3]])
+}
+```
+
+![Fig. 15.a: Spectrosome with the constraint of a minimum link weight of 2.](./output/alternatives/spectrosome_of_patterns-weight2.png)
+
+![Fig. 15.b: Spectrosome with the constraint of a minimum link weight of 3.](./output/alternatives/spectrosome_of_patterns-weight3.png)
+
+![Fig. 15.c: Spectrosome with the constraint of a minimum link weight of 4.](./output/alternatives/spectrosome_of_patterns-weight4.png)
+
+![Fig. 15.d: Spectrosome with the constraint of a minimum link weight of 5.](./output/alternatives/spectrosome_of_patterns-weight5.png)
+
 
 ---
