@@ -462,6 +462,14 @@ setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteris
 
 setGeneric(name = "save_characteristics", def = function(object, entities, characteristics, ...){ standardGeneric("save_characteristics") })
 
+setGeneric(name = "extract_nodes_from_items", def = function(object, nodes_characteristics, items, target = "all"){ standardGeneric("extract_nodes_from_items") })
+
+setGeneric(name = "extract_nodes_from_characteristic", def = function(object, nodes_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_nodes_from_characteristic") })
+
+setGeneric(name = "extract_nodes_from_category", def = function(object, nodes_characteristics, category, value, target){ standardGeneric("extract_nodes_from_category") })
+
+setGeneric(name = "check_access_for_category", def = function(object, category, value){ standardGeneric("check_access_for_category") })
+
 setGeneric(name = "extract_patterns_from_items", def = function(object, patterns_characteristics, items, target = "all"){ standardGeneric("extract_patterns_from_items") })
 
 setGeneric(name = "extract_patterns_from_characteristic", def = function(object, patterns_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_patterns_from_characteristic") })
@@ -470,15 +478,11 @@ setGeneric(name = "extract_patterns_from_status", def = function(object, pattern
 
 setGeneric(name = "extract_patterns_from_category", def = function(object, patterns_characteristics, category, value, target){ standardGeneric("extract_patterns_from_category") })
 
-setGeneric(name = "check_access_for_category", def = function(object, category, value){ standardGeneric("check_access_for_category") })
-
-setGeneric(name = "extract_nodes_from_items", def = function(object, nodes_characteristics, items, target = "all"){ standardGeneric("extract_nodes_from_items") })
-
-setGeneric(name = "extract_nodes_from_characteristic", def = function(object, nodes_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_nodes_from_characteristic") })
-
-setGeneric(name = "extract_nodes_from_category", def = function(object, nodes_characteristics, category, value, target){ standardGeneric("extract_nodes_from_category") })
-
 setGeneric(name = "get_links", def = function(object, entities, characteristics){ standardGeneric("get_links") })
+
+setGeneric(name = "get_isolates", def = function(object, entities, characteristics){ standardGeneric("get_isolates") })
+
+setGeneric(name = "get_non_isolates", def = function(object, entities, characteristics){ standardGeneric("get_non_isolates") })
 
 
 
@@ -3003,4 +3007,56 @@ setMethod(f = "get_links",
             
             return(nop_links)
           })
+
+
+#' Search for isolated nodes or patterns
+#' 
+#' Extract from the given nodes or patterns those which are isolated.
+#' 
+#' @param object SpectralAnalyzer class object.
+#' @param entities Type of entities to search for isolated.
+#'  One of \code{"nodes"}, \code{"patterns"}.
+#' @param characteristics Data frame of the characteristics of the nodes or patterns whose isolated
+#'  are to be sought.
+#' @return Subset of the data frame that corresponds to isolated entities.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{get_non_isolates}}, \code{\link{get_links}}.
+#' @aliases get_isolates
+#' @export
+setMethod(f = "get_isolates",
+          signature = "SpectralAnalyzer",
+          definition = function(object, entities, characteristics) {
+            
+            links = get_links(object, entities, characteristics)
+            row_id = as.character(links$endpoint.1[links$weight == 0])
+            return(characteristics[row_id, ])
+          })
+
+
+#' Search for non-isolated nodes or patterns
+#' 
+#' Extract from the given nodes or patterns those which are not isolated.
+#' 
+#' @param object SpectralAnalyzer class object.
+#' @param entities Type of entities to search for non-isolated.
+#'  One of \code{"nodes"}, \code{"patterns"}.
+#' @param characteristics Data frame of the characteristics of the nodes or patterns whose non-isolated
+#'  are to be sought.
+#' @return Subset of the data frame that corresponds to non-isolated entities.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{get_isolates}}, \code{\link{get_links}}.
+#' @aliases get_non_isolates
+#' @export
+setMethod(f = "get_non_isolates",
+          signature = "SpectralAnalyzer",
+          definition = function(object, entities, characteristics) {
+            
+            links = get_links(object, entities, characteristics)
+            row_id = as.character(sort(unique(unlist(links[links$weight != 0,
+                                                           c("endpoint.1", "endpoint.2")]))))
+            return(characteristics[row_id, ])
+          })
+
 
