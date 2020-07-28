@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{shadowtext}
 \alias{shadowtext}
-\title{Ombrage de texte}
+\title{Text shading}
 \usage{
 shadowtext(
   x,
@@ -16,22 +16,22 @@ shadowtext(
 )
 }
 \arguments{
-\item{x, y}{Coordonnées du texte à afficher.}
+\item{x, y}{Coordinates where the text \code{labels} should be written.}
 
-\item{labels}{Texte à afficher.}
+\item{labels}{Text to be written.}
 
-\item{col}{Couleur du texte.}
+\item{col}{Text color.}
 
-\item{bg}{Couleur du contour.}
+\item{bg}{Outline color.}
 
-\item{theta}{Angles à utiliser pour créer le contour.}
+\item{theta}{Angles to be used to create the outline.}
 
-\item{r}{Taille du contour.}
+\item{r}{Outline size.}
 }
 \description{
-Affiche du texte en y ajoutant un contour d'une autre couleur.
-Le contour est créé en affichant d'abord le texte avec la seconde couleur, plusieurs fois
- et avec de légers décalages.
+Draw text with an outline on a plot.
+The outline is created by first drawing the text with the second color serveral times
+ and with slight offsets.
 }
 \references{
 Greg Snow. Stack Overflow topic :

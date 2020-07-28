@@ -3,21 +3,21 @@
 \name{network_density,SpectralAnalyzer-method}
 \alias{network_density,SpectralAnalyzer-method}
 \alias{network_density}
-\title{Densité d'un réseau}
+\title{Network density}
 \usage{
 \S4method{network_density}{SpectralAnalyzer}(object, links)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{links}{Data frame des liens (ou arêtes) d'un graphe de type spectrosome.}
+\item{links}{Data frame of the links (or edges) of a spectrosome graph.}
 }
 \value{
-Densité du réseau.
+Density of the network.
 }
 \description{
-Calcule la densité du graphe comme étant le ratio entre le nombre de liens identifiés
- et le nombre maximal de liens possibles.
+Compute the density of the graph as the ratio between the number of links identified and
+ the maximum number of possible links.
 }
 \author{
 Gauthier Magnin

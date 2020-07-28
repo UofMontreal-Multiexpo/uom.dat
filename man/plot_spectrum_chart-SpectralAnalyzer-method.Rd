@@ -3,7 +3,7 @@
 \name{plot_spectrum_chart,SpectralAnalyzer-method}
 \alias{plot_spectrum_chart,SpectralAnalyzer-method}
 \alias{plot_spectrum_chart}
-\title{Spectre des motifs}
+\title{Pattern spectrum plotting}
 \usage{
 \S4method{plot_spectrum_chart}{SpectralAnalyzer}(
   object,
@@ -13,17 +13,17 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns_characteristics}{Ensemble des caractéristiques des motifs dont le spectre est à tracer.}
+\item{patterns_characteristics}{Patterns (and their characteristics) whose spectrum is to be plotted.}
 
-\item{weights_by_node_type}{Data frame contenant, pour chaque motif, son poids dans des nœuds complexes
-et son poids dans des nœuds simples.}
+\item{weights_by_node_type}{Data frame containing for each pattern, its wieght in complexe nodes
+and its weight in simple nodes.}
 
-\item{title}{Titre du graphique.}
+\item{title}{Chart title.}
 }
 \description{
-Dessine un graphique de type spectre.
+Plot a spectrum chart.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).

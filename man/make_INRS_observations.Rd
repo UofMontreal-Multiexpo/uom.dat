@@ -2,7 +2,7 @@
 % Please edit documentation in R/observation_maker.R
 \name{make_INRS_observations}
 \alias{make_INRS_observations}
-\title{Regroupement de prélèvements}
+\title{Grouping samples}
 \usage{
 make_INRS_observations(
   measures,
@@ -14,64 +14,64 @@ make_INRS_observations(
 )
 }
 \arguments{
-\item{measures}{Ensemble de mesures de prélèvements. Data frame devant contenir au moins les
-trois variables suivantes :
+\item{measures}{Set of sampling measures. Data frame that must contain at least the following three
+variables:
 \describe{
-  \item{\code{ID}}{Identifiant de l'intervention. Les mesures issues d'une même intervention
-        doivent avoir le même identifiant d'intervention.}
-  \item{\code{YEAR}}{Année de réalisation de l'intervention.}
-  \item{\code{CODE}}{Code identifiant la substance faisant l'objet du prélèvement.}
+  \item{\code{ID}}{Inspection identifier. The measures resulting from the same inspection must
+        have the same inspection identifier.}
+  \item{\code{YEAR}}{Year of inspection.}
+  \item{\code{CODE}}{Code identifying the substance being sampled.}
 }}
 
-\item{mode}{Mode de création des observations. Choix parmi \code{1}, \code{2}, \code{3}.
+\item{mode}{Mode of creation of observations. One of \code{1}, \code{2}, \code{3}.
 \describe{
- \item{\code{1}}{Construction d'observations à partir des situations décrites par \code{work_situations}
-  et des situations existantes à partir de combinaisons de \code{variable_names} qui ne seraient pas
-  décrites dans \code{work_situations}.}
-\item{\code{2}}{Construction d'observations uniquement à partir des situations décrites par \code{work_situations}.
-  Les prélèvements restants sont ignorés.}
-\item{\code{3}}{Construction d'observations uniquement à partir des combinaisons de \code{variable_names}.}
+  \item{\code{1}}{Construction of observations from the situations described by \code{work_situations}
+   and existing situations from combinations of values of variables defined by \code{variable_names}
+   that would not be described in \code{work_situations}.}
+  \item{\code{2}}{Construction of observations only from the situations described by
+   \code{work_situations}. Remaining samples are ignored.}
+  \item{\code{3}}{Construction of observations only from combinations of values of variables
+   defined by \code{variable_names}.}
 }}
 
-\item{work_situations}{Description de situations de travail. Data frame devant contenir les
-valeurs associées à certaines variables de \code{measures} formant une situation de travail.
-Une colonne \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) doit permettre
-d'identifier les différentes associations de valeurs considérées comme une même situation de travail.}
+\item{work_situations}{Description of work situations. Data frame that must contain the values
+associated with certain variables from \code{measures} forming one work situation.
+A \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) column must make possible
+to identify the different associations of values considered to be the same work situation.}
 
-\item{variable_names}{Noms des variables à prendre en compte pour considérer une situation de travail,
-c'est-à-dire, vecteur de noms de variables contenues dans \code{measures} dont les différentes
-combinaisons forment les différentes situations de travail non décrites dans \code{work_situations}.}
+\item{variable_names}{Names of variables to be taken into account to consider a work situation,
+ie. vector of names of variables contained in \code{measures} whose different combinations of
+values form the different work situations not described in \code{work_situations}.}
 
-\item{additional}{Noms d'informations à conserver lors de la constitution des observations,
-c'est-à-dire, vecteur de noms de variables contenues dans \code{measures}.}
+\item{additional}{Names of information to keep when creating observations: vector included in
+\code{colnames(measures)}.}
 
-\item{unique_values}{logical ou character.
+\item{unique_values}{logical or character.
 \itemize{
-  \item{Si \code{TRUE}, simplification des valeurs associées aux variables définies dans
-        \code{additional} de manière à supprimer les doublons.}
-  \item{Si \code{FALSE}, conserve les doublons et la correspondance entre les valeurs de ces
-        variables pour un même prélèvement (autant de valeurs que de prélèvements).}
-  \item{Sinon, vecteur des variables inclus dans \code{colnames(measures)} pour lesquelles la
-        suppression des doublons doit être réalisée.}
+  \item{If \code{TRUE}, simplification of the values associated with the variables defined in
+        \code{additional} in order to remove duplicates.}
+  \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
+        these variables for the same sample (as many values as there are samples).}
+  \item{Otherwise, vector of variable names included in \code{colnames(measures)} for which the
+        removal of duplicates must be performed.}
 }}
 }
 \value{
-Liste des observations identifiées. Chaque observation est une liste contenant :
-   \describe{
-     \item{CODE}{Les codes identifiant les substances regroupées.}
-     \item{YEAR}{L'année de réalisation de l'intervention de laquelle les prélèvements sont regroupées.}
-     \item{ID}{L'identifiant dede l'intervention de laquelle les prélèvements sont regroupées.}
-     \item{...}{Les données associées aux prélèvements, concernant les variables définies
-                dans l'argument \code{additional}.}
-   }
+List of observations identified. Each observation is a list containing:
+ \describe{
+   \item{\code{CODE}}{The codes identifying the substances grouped together.}
+   \item{\code{YEAR}}{The year of the inspection from which the samples are grouped.}
+   \item{\code{...}}{Data related to the samples grouped, concerning the variables defined in
+                     the argument \code{additional}.}
+ }
 }
 \description{
-Regroupe des prélèvements sous forme d'observations.
-Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail
- lors d'une même intervention.
-Les situations spécifiques sont définies par l'argument \code{work_situations}.
-Les situations non spécifiques sont décrites par les combinaisons existantes des variables dont les
- noms sont définis par l'argument \code{variable_names}.
+Grouping samples in the form of observations.
+An observation corresponds to a set of substances found in the same work situation during the same
+ inspection.
+Specific situations are defined by the argument \code{work_situations}.
+Non-specific situations are described by existing combinations of variables whose names are defnied
+ by the argument \code{variable_names}.
 }
 \seealso{
 \code{\link{make_observations}}.

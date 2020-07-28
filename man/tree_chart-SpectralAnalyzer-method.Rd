@@ -3,7 +3,7 @@
 \name{tree_chart,SpectralAnalyzer-method}
 \alias{tree_chart,SpectralAnalyzer-method}
 \alias{tree_chart}
-\title{Arbre de la multi-association}
+\title{Multi-association tree}
 \usage{
 \S4method{tree_chart}{SpectralAnalyzer}(
   object,
@@ -20,55 +20,55 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns_characteristics}{Ensemble des caractéristiques des motifs dont l'arbre est à tracer.}
+\item{patterns_characteristics}{Patterns (and their characteristics) whose tree is to be plotted.}
 
-\item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
+\item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
+codes otherwise.}
 
-\item{n.cutoff}{Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.}
+\item{n.cutoff}{If \code{use_names = TRUE}, limit number of characters to display concerning the names
+of the represented items.}
 
-\item{display_status}{Si \code{TRUE}, affiche les statuts des motifs.}
+\item{display_status}{If \code{TRUE}, display pattern status.}
 
-\item{display_text}{Texte à afficher sur le graphique à côté des motifs.
-Choix entre les identifiants \code{"ID"} des motifs ou l'une des autres caractéristiques
-(\code{"weight"}, \code{"frequency"}, \code{"specificity"}, \code{"year"}).
-La valeur \code{NULL} précise qu'aucune de ces informations ne doit être affichée.}
+\item{display_text}{Text to display on the chart next to the patterns.
+Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"},
+\code{"frequency"}, \code{"specificity"}, \code{"year"}).
+The \code{NULL} value specifies that none of this information should be displayed.}
 
-\item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
+\item{c.cutoff}{Limit number of characters to display in the legend for the categories represented.}
 
-\item{sort_by}{Méthode de tri des items affichés. Choix parmi \code{"category"}, \code{"item"}.}
+\item{sort_by}{Sorting method of displayed items. One of \code{"category"}, \code{"item"}.}
 
-\item{path}{Chemin du dossier dans lequel enregistrer le graphique.
-Par défaut, le graphique est enregistré dans le répertoire de travail.}
+\item{path}{Path of the directory in which to save the chart.
+By default, the chart is saved in the working directory.}
 
-\item{name}{Nom du fichier dans lequel enregistrer le graphique.}
+\item{name}{Name of the file in which to save the chart.}
 
-\item{title}{Titre du graphique.}
+\item{title}{Chart title.}
 }
 \value{
-Data frame des motifs représentées sur le graphique, associés à leurs caractéristiques et
- identifiants (visibles sur le graphique si \code{display_text = "ID"}).
+Data frame of the patterns represented on the chart, associated with their characteristics
+ and identifiers (visible on the chart if \code{display_text = "ID"}).
 }
 \description{
-Construit un graphique de type arbre de la multi-association et l'enregistre dans un fichier au
-format PDF.
+Plot a multi-association tree chart and save it as a PDF file.
 }
 \details{
-Si des catégories sont associées aux items, chaque catégorie génère un arbre.
- Le nom de la catégorie est ajouté à la fin du nom du fichier.
+If categories are associated with items, each category generates a tree.
+ The category name is appended to the end of the file name.
 
-Les motifs d'ordre 1 ne sont pas dessinés. Seuls les items inclus dans les motifs d'ordre supérieur
- le sont.
+Patterns of order 1 are not drawn. Only items included in higher-order patterns are.
 
-Les motifs sont triés selon leurs poids.
+The patterns are sorted according to their weights.
 
-Les couleurs associées aux valeurs de l'éventuelle catégorie représentée sont sélectionnées
- de manière circulaire parmi les 20 couleurs de la palette \code{category20} de D3 (cf.
- \code{ggsci::pal_d3("category20")}).
-Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
- plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
- \out{2<sup>e</sup>} valeur.
+The colors associated with the values of the possible category represented are selected circularly
+ among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
+Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
+ For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
+ value.
+See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 }
 \references{
 Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).

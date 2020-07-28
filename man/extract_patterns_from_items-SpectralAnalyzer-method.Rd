@@ -3,7 +3,7 @@
 \name{extract_patterns_from_items,SpectralAnalyzer-method}
 \alias{extract_patterns_from_items,SpectralAnalyzer-method}
 \alias{extract_patterns_from_items}
-\title{Recherche de motifs par item}
+\title{Search for patterns by item}
 \usage{
 \S4method{extract_patterns_from_items}{SpectralAnalyzer}(
   object,
@@ -13,23 +13,25 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns_characteristics}{Data frame des motifs et de leurs caractéristiques.}
+\item{patterns_characteristics}{Data frame of patterns and their characteristics.}
 
-\item{items}{Éléments recherchés (un ou plusieurs).}
+\item{items}{Sought items (one or more).}
 
-\item{target}{Condition pour qu'un motif soit extrait. Choix parmi \code{"all"}, \code{"any"}.
+\item{target}{Condition for a pattern to be extracted. One of \code{"all"}, \code{"any"}.
 \describe{
-  \item{\code{"all"}}{L'intégralité des éléments recherchés doivent faire partie d'un motif pour que ce motif soit extrait.}
-  \item{\code{"any"}}{Au moins un des éléments recherchés doit faire partie d'un motif pour que ce motif soit extrait.}
+  \item{\code{"all"}}{All the sought items must be part of a pattern for this pattern to be
+                      extracted.}
+  \item{\code{"any"}}{At least one of the sought items must be part of a pattern for this pattern
+                      to be extracted.}
 }}
 }
 \value{
-Sous-ensemble de la data frame fournie en argument contenant les motifs correspondant au critère de recherche.
+Subset of the data frame of patterns that match the search criteria.
 }
 \description{
-Extrait les motifs contenant un ou plusieurs items recherchés.
+Extract the patterns containing one or more sought items.
 }
 \seealso{
 \code{\link{extract_patterns_from_characteristic}}, \code{\link{extract_patterns_from_status}},

@@ -1,13 +1,13 @@
 
 #### Fonctions utiles à l'affichage ####
 
-#' Décomposition d'un temps
+#' Decomposition of a time
 #' 
-#' Convertit en une chaîne de caractères une période définie en secondes.
-#' Exemples du format de la chaîne retournée : 1d 02h 25m 47s ; 01m 05s ; 19s.
+#' Convert a period defined in seconds to a character string.
+#' Examples of the format of the returned string: 1d 02h 25m 47s; 01m 05s; 19s.
 #' 
-#' @param t Numeric. Temps à convertir, en secondes.
-#' @return Chaîne de caractère correspondant au temps converti.
+#' @param t numeric. Time to convert, in seconds.
+#' @return Character string corresponding to the converted time.
 #' 
 #' @references Stack Overflow topic :
 #'  \href{https://stackoverflow.com/questions/27312292/convert-seconds-to-days-hoursminutesseconds}{Convert seconds to days:hours:minutes:seconds}
@@ -32,17 +32,18 @@ dhms = function(t){
 }
 
 
-#' Affiche un temps d'exécution
+#' Print an execution time
 #' 
-#' Évalue une expression et affiche le temps écoulé selon le format défini par la fonction \code{dhms}.
-#' Exemples du format de la chaîne retournée : [1d 02h 25m 47s] ; [01m 05s] ; [19s].
+#' Evaluate an expression and print the elapsed time according to the format defined by the
+#'  \code{dhms} function.
+#' Examples of the display format: [1d 02h 25m 47s]; [01m 05s]; [19s].
 #' 
 #' @details
-#' Un appel au garbage collector est effectué avant le chronométrage.
+#' A call to the garbage collector is made beforme timing.
 #' 
-#' @param expr Expression R valide à chronométrer.
+#' @param expr Valid \code{R} expression to be timed.
 #' 
-#' @seealso \code{\link{dhms}}.
+#' @seealso \code{\link{dhms}}, \code{\link{system.time}}.
 #' @keywords internal
 display_time = function(expr) {
   t = system.time(expr)
@@ -50,12 +51,12 @@ display_time = function(expr) {
 }
 
 
-#' Capitalise une chaîne de caractères
+#' Capitalize a character string
 #' 
-#' Change la première lettre d'une chaîne de caractères en une majuscule.
+#' Change the first letter of a string to an uppercase.
 #' 
-#' @param s Chaîne de caractères à modifier.
-#' @return La chaîne de caractères fournie par l'argument \code{s}, commençant par une majuscule.
+#' @param s Character string to be capitalized.
+#' @return The character string corresponding to the argument \code{s}, starting with a capital letter.
 #' 
 #' @keywords internal
 cap = function(s) {
@@ -66,18 +67,18 @@ cap = function(s) {
 
 #### Fonctions utiles au traçage de graphiques ####
 
-#' Ombrage de texte
+#' Text shading
 #' 
-#' Affiche du texte en y ajoutant un contour d'une autre couleur.
-#' Le contour est créé en affichant d'abord le texte avec la seconde couleur, plusieurs fois
-#'  et avec de légers décalages.
+#' Draw text with an outline on a plot.
+#' The outline is created by first drawing the text with the second color serveral times
+#'  and with slight offsets.
 #' 
-#' @param x,y Coordonnées du texte à afficher.
-#' @param labels Texte à afficher.
-#' @param col Couleur du texte.
-#' @param bg Couleur du contour.
-#' @param theta Angles à utiliser pour créer le contour.
-#' @param r Taille du contour.
+#' @param x,y Coordinates where the text \code{labels} should be written.
+#' @param labels Text to be written.
+#' @param col Text color.
+#' @param bg Outline color.
+#' @param theta Angles to be used to create the outline.
+#' @param r Outline size.
 #' 
 #' @references Greg Snow. Stack Overflow topic :
 #'  \href{https://stackoverflow.com/questions/25631216/r-plots-is-there-any-way-to-draw-border-shadow-or-buffer-around-text-labels}{Any way to draw border, shadow or buffer around text labels}.
@@ -101,13 +102,13 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 
 #### Fonctions utiles à la gestion de fichiers ####
 
-#' Chemin de dossier
+#' Directory path
 #' 
-#' Vérifie si une chaîne de caractères peut être utilisée comme chemin d'un dossier.
-#' Ajoute un caractère \code{"/"} si ce n'est pas le cas.
+#' Check if a string can be used as a directory path.
+#' Add a \code{"/"} character if it cannot.
 #' 
-#' @param path Chaîne de caractères devant être utilisée comme chemin d'un dossier.
-#' @return Chaîne de caractères, terminant par le caractère \code{"/"}.
+#' @param path Character string to be used as a directory path.
+#' @return Character string \code{path}, ending with \code{"/"}.
 #' 
 #' @keywords internal
 turn_into_path = function(path) {
@@ -116,14 +117,14 @@ turn_into_path = function(path) {
 }
 
 
-#' Extension de fichier
+#' File extension
 #' 
-#' Vérifie si un nom de fichier possède l'extension désirée.
-#' Ajoute cette extension si ce n'est pas le cas.
+#' Check if a filename has the desired extension.
+#' Add this extension if it has not.
 #' 
-#' @param filename Chaîne de caractères devant être considérée comme un nom de fichier.
-#' @param ext Extension souhaitée.
-#' @return Chaîne de caractères, terminant par l'extension \code{ext}.
+#' @param filename Character string to be considered as a filename.
+#' @param ext Desired extension.
+#' @return Character string \code{filename}, ending with the extension \code{ext}.
 #' 
 #' @keywords internal
 check_extension = function(filename, ext) {

@@ -3,7 +3,7 @@
 \name{compute_reporting_indexes_limits,SpectralAnalyzer-method}
 \alias{compute_reporting_indexes_limits,SpectralAnalyzer-method}
 \alias{compute_reporting_indexes_limits}
-\title{Calcul de RI à des limites temporelles}
+\title{Computation of RI at temporal limits}
 \usage{
 \S4method{compute_reporting_indexes_limits}{SpectralAnalyzer}(
   object,
@@ -14,28 +14,30 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns}{Liste des motifs dont les limites sont à calculer.}
+\item{patterns}{Patterns whose limits are to be computed.}
 
-\item{first_limit}{Intervalle de temps sur lequel calculer la première limite (nombre d'années).}
+\item{first_limit}{Time interval over which to compute the first limit (number of years).}
 
-\item{t}{Année de fin de la période, c'est-à-dire, date à laquelle caractériser le motif.
-\code{NULL} indique que le calcul doit se faire par rapport à la dernière année
-couverte par les observations.}
+\item{t}{Year of the end of the period, i.e. the date on which to characterize the pattern.
+\code{NULL} specifies that the characterization must be done in relation to the last year covered
+by the observations.}
 
-\item{period}{Intervalle de temps sur lequel faire le calcul (nombre d'années).
-Si \code{t = 2015} et \code{period = 2}, alors le calcul est fait sur la période [2014 - 2015].
-\code{Inf} indique que la période considérée couvre un intervalle commençant à la date de la 
-plus ancienne observation et terminant à l'année \code{t}.}
+\item{period}{Time interval over which to do the computation (number of years).
+For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
+period [2014 - 2015].
+\code{Inf} specifies that the period considered covers an interval starting on the date of the
+oldest observation and ending in the year \code{t}.}
 }
 \value{
-Data frame associant à chaque motif ses deux limites.
+Data frame associating each pattern to its two  limits.
 }
 \description{
-Calcule les indices de recrutement aux limites temporelles utilisées pour caractériser les motifs.
-La première correspond à l'indice de recrutement calculé sur \code{first_limit} années.
-La seconde correspond à l'indice de recrutement calculé sur la période définie par les paramètres \code{t} et \code{period}.
+Compute the reporting indexes at the temporal limits used to characterize the patterns.
+The first one corresponds to the reporting index computed over the \code{first_limit} years.
+The second one corresponds to the reporting index computed over the period defined by the arguments
+ \code{t} and \code{period}.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).

@@ -2,7 +2,7 @@
 % Please edit documentation in R/observation_maker.R
 \name{get_info_from_items}
 \alias{get_info_from_items}
-\title{Recherche d'informations par item}
+\title{Search for information by item}
 \usage{
 get_info_from_items(
   observations,
@@ -13,29 +13,29 @@ get_info_from_items(
 )
 }
 \arguments{
-\item{observations}{Liste des observations sur lesquels effectuer la recherche.}
+\item{observations}{List of observations on which to do the search.}
 
-\item{items}{Élément·s recherché·s.}
+\item{items}{Sought items.}
 
-\item{info_names}{Noms des informations à extraire des observations.}
+\item{info_names}{Names of information to extract from observations.}
 
-\item{target}{Condition pour qu'une information soit extraite d'une observation.
-Choix parmi \code{"all"}, \code{"any"}.
+\item{target}{Condition for information to be extracted from an observation.
+One of \code{"all"}, \code{"any"}.
  \describe{
-  \item{\code{"all"}}{L'intégralité des items recherchés doivent faire partie d'une observation
-                      pour que ses informations soient extraites.}
-  \item{\code{"any"}}{Au moins un des items recherchés doit faire partie d'une observation pour
-                      que ses informations soient extraites.}
+  \item{\code{"all"}}{All the sought items must be part of an observation for its information
+                      to be extracted.}
+  \item{\code{"any"}}{At least one of the sought items must be part of an observation for its
+                      information to be extracted.}
  }}
 
-\item{key}{Clé d'accès aux items de chaque observation.}
+\item{key}{Access key to the items in an observation.}
 }
 \value{
-Vecteur ou liste des informations correspondant à la recherche.
- Vecteur si un seul type d'information est à extraire. Liste sinon.
+Vector or list of information corresponding to the search.
+ Vector if only one type of information is to be extracted. List otherwise.
 }
 \description{
-Extrait les informations associées aux observations qui contiennent un ensemble d'items recherchés.
+Retrieve information associated with observations that contain a set of sought items.
 }
 \seealso{
 \code{\link{get_items_from_info}}.

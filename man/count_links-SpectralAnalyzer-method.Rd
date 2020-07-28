@@ -3,22 +3,24 @@
 \name{count_links,SpectralAnalyzer-method}
 \alias{count_links,SpectralAnalyzer-method}
 \alias{count_links}
-\title{Comptage des liens}
+\title{Counting of links}
 \usage{
 \S4method{count_links}{SpectralAnalyzer}(object, entities)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{entities}{Type d'élément pour lequel compter les liens (nœuds ou motifs).
-Choix parmi \code{"nodes"}, \code{"patterns"}.}
+\item{entities}{Type of entities for which to count links (nodes or patterns).
+One of \code{"nodes"}, \code{"patterns"}.}
 }
 \value{
-Invisible. Matrice d'adjacence : matrice du nombre de liens entre chaque nœud ou motif.
+Invisible. Adjacency matrix: matrix of the number of links between each pair of nodes
+ or patterns.
 }
 \description{
-Compte le nombre d'éléments en commun entre chaque nœud ou motif.
-La matrice résultante est assignée à l'attribut \code{n_links} ou \code{p_links} respectivement.
+Count the number of items in common between each pair of nodes or patterns.
+The resulting matrix is assigned respectively to the attribute \code{n_links} or \code{p_links}
+ of \code{object}.
 }
 \author{
 Gauthier Magnin

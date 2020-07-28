@@ -2,7 +2,7 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{spectral.analyzer}
 \alias{spectral.analyzer}
-\title{Constructeur d'Analyseur Spectral}
+\title{Spectral Analyzer constructor}
 \usage{
 spectral.analyzer(
   observations,
@@ -15,41 +15,42 @@ spectral.analyzer(
 )
 }
 \arguments{
-\item{observations}{Liste des éléments retrouvés pour chaque observation.
-Chaque observation est elle-même une liste sous la forme \code{list( CODE = character(), YEAR = numeric )}.
-Les valeurs de \code{CODE} ne doivent pas contenir le caractère "/".
-Une observation peut contenir des informations supplémentaires quelconques.}
+\item{observations}{List of observations containing the items corresponding to each observation.
+Each observation is itself a list in the form \code{list( CODE = character(), YEAR = numeric )}.
+Values of \code{CODE} must not contain the character \code{"/"}.
+An observation can contain any additional information in its list.}
 
-\item{items}{Data frame associant un nom (colonne \code{name}) et une ou plusieurs catégories (colonnes
-supplémentaires) à chaque élément (colonne \code{item}). Chaque catégorie doit être de type
-\code{factor}. Les colonnes \code{item} et \code{name} doivent être de type \code{character}.
-La valeur \code{NULL} par défaut précise qu'aucun nom et aucune catégorie ne sont définis.}
+\item{items}{Data frame associating a name (column \code{name}) and one or more categories
+(additional columns) to each item (column \code{item}). Each category must be of type \code{factor}.
+The columns \code{item} and \code{name} must be of type \code{character}. The default value,
+\code{NULL}, specifies that no name or category is defined.}
 
-\item{target}{Type de motifs à énumérer.
-Choix parmi \code{"frequent itemsets"}, \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
-Par défaut, \code{"closed frequent itemsets"}, fournissant une synthèse des motifs fréquents
-de sorte à économiser l'espace mémoire nécessaire.
-Pour énumérer l'intégralité des motifs possibles, utiliser \code{"frequent itemsets"}.}
+\item{target}{Type of patterns to enumerate. One of \code{"frequent itemsets"},
+\code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
+By default, \code{"closed frequent itemsets"} provide a summary of frequent patterns in order to
+save the necessary memory space. To use even less memory, use \code{"maximally frequent itemsets"}.
+To enumerate all possible patterns, use \code{"frequent itemsets"}.}
 
-\item{count}{Nombre minimal d'apparition d'un motif pour être considéré comme "fréquent", et par conséquent, conservé.}
+\item{count}{Minimum number of occurrences of a pattern to be considered as "frequent".}
 
-\item{min_length}{Taille minimale qu'un motif doit avoir pour être conservé lors de l'énumération.}
+\item{min_length}{Minimum number of items that a pattern must have to be kept when enumerating.}
 
-\item{max_length}{Taille maximale qu'un motif doit avoir pour être conservé lors de l'énumération.
-La valeur \code{Inf} par défaut correspond à une recherche de motifs sans limite maximale de taille.}
+\item{max_length}{Maximum number of items that a pattern must have to be kept when enumerating.
+The default \code{Inf} corresponds to a pattern search without maximum size limit.}
 
-\item{status_limit}{Intervalle de temps pour lequel caractériser le statut des motifs par rapport à la période totale d'observations (nombre d'années).}
+\item{status_limit}{Time interval for which to characterize the status of the patterns in relation
+to the total period of observations (number of years).}
 }
 \value{
-Nouvel objet de classe \code{\link{SpectralAnalyzer}}.
+New object of class \code{\link{SpectralAnalyzer}}.
 }
 \description{
-Construit un objet de classe SpectralAnalyzer.
+Create and initialize an object of the class SpectralAnalyzer.
 }
 \details{
-Si les items ne sont pas spécifiés via l'argument \code{items}, ils sont automatiquement listés
- à partir des valeurs de \code{CODE} dans l'argument \code{observations}, sans aucune catégorisation
- ni aucune dénomination.
+If items are not specified using the argument \code{items}, they are automatically listed from
+ the values of \code{CODE} in the argument \code{observations} without any categorization or
+ specific denomination.
 }
 \seealso{
 \code{\link[arules:ASparameter-class]{arules::APparameter}}.

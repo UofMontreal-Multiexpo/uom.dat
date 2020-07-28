@@ -1,37 +1,37 @@
 
 #### Fonctions de structuration d'observations génériques ####
 
-#' Regroupement de données
+#' Grouping data
 #' 
-#' Regroupe des données sous forme d'observations.
+#' Grouping data in the form of observations.
 #' 
 #' @details
-#' Les variables de type \code{factor} sont converties en type \code{character}.
+#' Variables of type \code{factor} are cast to \code{character}.
 #' 
-#' @param data Data frame contenant un ensemble de données à regrouper.
-#' @param by Noms de variables inclus dans \code{colnames(data)} servant à regrouper les données
-#'  de \code{data}.
-#'  Chaque combinaison de valeurs de ces différentes variables engendre une observation.
-#' @param additional Noms d'informations à conserver lors de la constitution des observations
-#'  (vecteur inclus dans \code{colnames(data)}).
-#' @param unique_values logical ou character.
+#' @param data Data frame containing a set of data to group together.
+#' @param by Variable names included in \code{colnames(data)} used to group the data.
+#'  Each combination of values of these different variables generates one observation.
+#' @param additional Names of information to keep when creating observations: vector included in
+#'  \code{colnames(data)}.
+#' @param unique_values logical or character.
 #'  \itemize{
-#'    \item{Si \code{TRUE}, simplification des valeurs associées aux variables définies dans
-#'          \code{additional} de manière à supprimer les doublons.}
-#'    \item{Si \code{FALSE}, conserve les doublons et la correspondance entre les valeurs de ces
-#'          variables pour une même ligne de \code{data} (autant de valeurs que de lignes
-#'          regroupées).}
-#'    \item{Sinon, vecteur des variables inclus dans \code{colnames(data)} pour lesquelles la
-#'          suppression des doublons doit être réalisée.}
+#'    \item{If \code{TRUE}, simplification of the values associated with the variables defined in
+#'          \code{additional} in order to remove duplicates.}
+#'    \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
+#'          these variables for the same line in \code{data} (as many values as there are rows
+#'          grouped).}
+#'    \item{Otherwise, vector of variable names included in \code{colnames(data)} for which the
+#'          removal of duplicates must be performed.}
 #'  }
-#' @return Liste des observations identifiées. Chaque observation est nommée par la combinaison de
-#'  valeurs des variables nommées dans \code{by} qui l'a générée. Chaque observation est une liste
-#'  dont les éléments correspondent aux valeurs des variables nommées dans \code{by} et
-#'  \code{additional} qui ont été regroupées
+#' @return List of observations identified. Each observation is named by the combination of values
+#'  of the variables named in \code{by} that generated it. Each observation is a list whose elements
+#'  correspond to the values of the variables named in \code{by} and \code{additional} which have
+#'  been grouped together.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{make_INRS_observations}} pour la construction d'observations bien ciblées
-#'  par rapport à des interventions et à des situations de travail similaires.
+#' @seealso \code{\link{make_INRS_observations}} for the construction of well-targeted observations
+#'  specific to the field of occupational exposure in relation to inspections and similar work
+#'  situations.
 #' @export
 make_observations = function(data, by, additional = NULL, unique_values = TRUE) {
   
@@ -79,58 +79,58 @@ make_observations = function(data, by, additional = NULL, unique_values = TRUE) 
 
 #### Fonctions de structuration d'observations spécifiques au domaine Occupational Exposure ####
 
-#' Regroupement de prélèvements
+#' Grouping samples
 #' 
-#' Regroupe des prélèvements sous forme d'observations.
-#' Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail
-#'  lors d'une même intervention.
-#' Les situations spécifiques sont définies par l'argument \code{work_situations}.
-#' Les situations non spécifiques sont décrites par les combinaisons existantes des variables dont les
-#'  noms sont définis par l'argument \code{variable_names}.
+#' Grouping samples in the form of observations.
+#' An observation corresponds to a set of substances found in the same work situation during the same
+#'  inspection.
+#' Specific situations are defined by the argument \code{work_situations}.
+#' Non-specific situations are described by existing combinations of variables whose names are defnied
+#'  by the argument \code{variable_names}.
 #' 
-#' @param measures Ensemble de mesures de prélèvements. Data frame devant contenir au moins les
-#'  trois variables suivantes :
+#' @param measures Set of sampling measures. Data frame that must contain at least the following three
+#'  variables:
 #'  \describe{
-#'    \item{\code{ID}}{Identifiant de l'intervention. Les mesures issues d'une même intervention
-#'          doivent avoir le même identifiant d'intervention.}
-#'    \item{\code{YEAR}}{Année de réalisation de l'intervention.}
-#'    \item{\code{CODE}}{Code identifiant la substance faisant l'objet du prélèvement.}
+#'    \item{\code{ID}}{Inspection identifier. The measures resulting from the same inspection must
+#'          have the same inspection identifier.}
+#'    \item{\code{YEAR}}{Year of inspection.}
+#'    \item{\code{CODE}}{Code identifying the substance being sampled.}
 #'  }
-#' @param mode Mode de création des observations. Choix parmi \code{1}, \code{2}, \code{3}.
+#' @param mode Mode of creation of observations. One of \code{1}, \code{2}, \code{3}.
 #'  \describe{
-#'   \item{\code{1}}{Construction d'observations à partir des situations décrites par \code{work_situations}
-#'    et des situations existantes à partir de combinaisons de \code{variable_names} qui ne seraient pas
-#'    décrites dans \code{work_situations}.}
-#'  \item{\code{2}}{Construction d'observations uniquement à partir des situations décrites par \code{work_situations}.
-#'    Les prélèvements restants sont ignorés.}
-#'  \item{\code{3}}{Construction d'observations uniquement à partir des combinaisons de \code{variable_names}.}
+#'    \item{\code{1}}{Construction of observations from the situations described by \code{work_situations}
+#'     and existing situations from combinations of values of variables defined by \code{variable_names}
+#'     that would not be described in \code{work_situations}.}
+#'    \item{\code{2}}{Construction of observations only from the situations described by
+#'     \code{work_situations}. Remaining samples are ignored.}
+#'    \item{\code{3}}{Construction of observations only from combinations of values of variables
+#'     defined by \code{variable_names}.}
 #'  }
-#' @param work_situations Description de situations de travail. Data frame devant contenir les
-#'  valeurs associées à certaines variables de \code{measures} formant une situation de travail.
-#'  Une colonne \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) doit permettre
-#'  d'identifier les différentes associations de valeurs considérées comme une même situation de travail.
-#' @param variable_names Noms des variables à prendre en compte pour considérer une situation de travail,
-#'  c'est-à-dire, vecteur de noms de variables contenues dans \code{measures} dont les différentes
-#'  combinaisons forment les différentes situations de travail non décrites dans \code{work_situations}.
-#' @param additional Noms d'informations à conserver lors de la constitution des observations,
-#'  c'est-à-dire, vecteur de noms de variables contenues dans \code{measures}.
-#' @param unique_values logical ou character.
+#' @param work_situations Description of work situations. Data frame that must contain the values
+#'  associated with certain variables from \code{measures} forming one work situation.
+#'  A \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) column must make possible
+#'  to identify the different associations of values considered to be the same work situation.
+#' @param variable_names Names of variables to be taken into account to consider a work situation,
+#'  ie. vector of names of variables contained in \code{measures} whose different combinations of
+#'  values form the different work situations not described in \code{work_situations}.
+#' @param additional Names of information to keep when creating observations: vector included in
+#'  \code{colnames(measures)}.
+#' @param unique_values logical or character.
 #'  \itemize{
-#'    \item{Si \code{TRUE}, simplification des valeurs associées aux variables définies dans
-#'          \code{additional} de manière à supprimer les doublons.}
-#'    \item{Si \code{FALSE}, conserve les doublons et la correspondance entre les valeurs de ces
-#'          variables pour un même prélèvement (autant de valeurs que de prélèvements).}
-#'    \item{Sinon, vecteur des variables inclus dans \code{colnames(measures)} pour lesquelles la
-#'          suppression des doublons doit être réalisée.}
+#'    \item{If \code{TRUE}, simplification of the values associated with the variables defined in
+#'          \code{additional} in order to remove duplicates.}
+#'    \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
+#'          these variables for the same sample (as many values as there are samples).}
+#'    \item{Otherwise, vector of variable names included in \code{colnames(measures)} for which the
+#'          removal of duplicates must be performed.}
 #'  }
-#' @return Liste des observations identifiées. Chaque observation est une liste contenant :
-#'    \describe{
-#'      \item{CODE}{Les codes identifiant les substances regroupées.}
-#'      \item{YEAR}{L'année de réalisation de l'intervention de laquelle les prélèvements sont regroupées.}
-#'      \item{ID}{L'identifiant dede l'intervention de laquelle les prélèvements sont regroupées.}
-#'      \item{...}{Les données associées aux prélèvements, concernant les variables définies
-#'                 dans l'argument \code{additional}.}
-#'    }
+#' @return List of observations identified. Each observation is a list containing:
+#'  \describe{
+#'    \item{\code{CODE}}{The codes identifying the substances grouped together.}
+#'    \item{\code{YEAR}}{The year of the inspection from which the samples are grouped.}
+#'    \item{\code{...}}{Data related to the samples grouped, concerning the variables defined in
+#'                      the argument \code{additional}.}
+#'  }
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{make_observations}}.
@@ -178,45 +178,45 @@ make_INRS_observations = function(measures, mode, work_situations = NULL, variab
 }
 
 
-#' Regroupement de prélèvements selon des situations de travail spécifiques
+#' Grouping samples according to specific work situations
 #' 
-#' Regroupe des prélèvements sous forme d'observations (make observations from Work Situation).
-#' Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail.
+#' Grouping samples in the form of observations: make observations from work situations.
+#' An observation corresponds to a set of substances found in the same work situation.
 #' 
-#' @param measures Ensemble de mesures de prélèvements. Data frame devant contenir au moins les
-#'  deux variables suivantes :
+#' @param measures Set of sampling measures. Data frame that must contain at least the following two
+#'  variables:
 #'  \describe{
-#'    \item{\code{YEAR}}{Année de réalisation de l'intervention.}
-#'    \item{\code{CODE}}{Code identifiant la substance faisant l'objet du prélèvement.}
+#'    \item{\code{YEAR}}{Year of inspection.}
+#'    \item{\code{CODE}}{Code identifying the substance being sampled.}
 #'  }
-#' @param work_situations Description de situations de travail. Data frame devant contenir les
-#'  valeurs associées à certaines variables de \code{measures} formant une situation de travail.
-#'  Une colonne \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) doit permettre
-#'  d'identifier les différentes associations de valeurs considérées comme une même situation de travail.
-#' @param additional Noms d'informations à conserver lors de la constitution des observations,
-#'  c'est-à-dire, vecteur de noms de variables contenues dans \code{measures}.
-#' @param unique_values logical ou character.
+#' @param work_situations Description of work situations. Data frame that must contain the values
+#'  associated with certain variables from \code{measures} forming one work situation.
+#'  A \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) column must make possible
+#'  to identify the different associations of values considered to be the same work situation.
+#' @param additional Names of information to keep when creating observations: vector included in
+#'  \code{colnames(measures)}.
+#' @param unique_values logical or character.
 #'  \itemize{
-#'    \item{Si \code{TRUE}, simplification des valeurs associées aux variables définies dans
-#'          \code{additional} de manière à supprimer les doublons.}
-#'    \item{Si \code{FALSE}, conserve les doublons et la correspondance entre les valeurs de ces
-#'          variables pour un même prélèvement (autant de valeurs que de prélèvements).}
-#'    \item{Sinon, vecteur des variables inclus dans \code{colnames(measures)} pour lesquelles la
-#'          suppression des doublons doit être réalisée.}
+#'    \item{If \code{TRUE}, simplification of the values associated with the variables defined in
+#'          \code{additional} in order to remove duplicates.}
+#'    \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
+#'          these variables for the same sample (as many values as there are samples).}
+#'    \item{Otherwise, vector of variable names included in \code{colnames(measures)} for which the
+#'          removal of duplicates must be performed.}
 #'  }
 #' @return
 #'  \describe{
-#'    \item{\code{observations}}{La liste des observations identifiées.
-#'      Chaque observation est une liste contenant :
+#'    \item{\code{observations}}{List of observations identified.
+#'      Each observation is a list containing:
 #'      \describe{
-#'        \item{CODE}{Les codes identifiant les substances regroupées.}
-#'        \item{YEAR}{L'année de réalisation de l'intervention de laquelle les prélèvements sont regroupées.}
-#'        \item{...}{Les données associées aux prélèvements, concernant les variables définies
-#'                   dans l'argument \code{additional}.}
+#'        \item{\code{CODE}}{The codes identifying the substances grouped together.}
+#'        \item{\code{YEAR}}{The year of the inspection from which the samples are grouped.}
+#'        \item{\code{...}}{Data related to the samples grouped, concerning the variables defined in
+#'                          the argument \code{additional}.}
 #'      }
 #'    }
-#'    \item{processed}{Un vecteur spécifiant, pour chaque ligne de \code{measures},
-#'                     si elle a été intégrée dans une observation.}
+#'    \item{\code{processed}}{Vector specifying for each line of \code{measures} whether it has been
+#'                            included in an observation.}
 #'  }
 #' 
 #' @author Gauthier Magnin
@@ -289,39 +289,39 @@ make_obs_from_ws = function(measures, work_situations, additional = NULL, unique
 }
 
 
-#' Regroupement de prélèvements selon des situations de travail non spécifiques
+#' Grouping samples according to non-specific work situations
 #' 
-#' Regroupe des prélèvements sous forme d'observations (make observations from unspecified Work Situation).
-#' Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail.
-#' Ces situations sont décrites par les combinaisons de valeurs possibles des variables dont les noms
-#'  sont définis en paramètre.
+#' Group samples in the form of observations: make observations from unspecified work situations.
+#' An observation corresponds to a set of substances found in the same work situation.
+#' These situations are described by the possible combinations of values of the variables whose names
+#'  are defined in arguments.
 #' 
-#' @param measures Ensemble de mesures de prélèvements. Data frame devant contenir au moins les
-#'  deux variables suivantes :
+#' @param measures Set of sampling measures. Data frame that must contain at least the following
+#'  two variables:
 #'  \describe{
-#'    \item{\code{YEAR}}{Année de réalisation de l'intervention.}
-#'    \item{\code{CODE}}{Code identifiant la substance faisant l'objet du prélèvement.}
+#'    \item{\code{YEAR}}{Year of inspection.}
+#'    \item{\code{CODE}}{Code identifying the substance being sampled.}
 #'  }
-#' @param variable_names Noms des variables à prendre en compte pour considérer une situation de travail,
-#'  c'est-à-dire, vecteur de noms de variables contenues dans \code{measures} dont les différentes
-#'  combinaisons forment les différentes situations de travail.
-#' @param additional Noms d'informations à conserver lors de la constitution des observations,
-#'  c'est-à-dire, vecteur de noms de variables contenues dans \code{measures}.
-#' @param unique_values logical ou character.
+#' @param variable_names Names of variables to be taken into account to consider a work situation,
+#'  ie. vector of names of variables contained in \code{measures} whose different combinations of
+#'  values form the different work situations.
+#' @param additional Names of information to keep when creating observations: vector included in
+#'  \code{colnames(measures)}.
+#' @param unique_values logical or character.
 #'  \itemize{
-#'    \item{Si \code{TRUE}, simplification des valeurs associées aux variables définies dans
-#'          \code{additional} de manière à supprimer les doublons.}
-#'    \item{Si \code{FALSE}, conserve les doublons et la correspondance entre les valeurs de ces
-#'          variables pour un même prélèvement (autant de valeurs que de prélèvements).}
-#'    \item{Sinon, vecteur des variables inclus dans \code{colnames(measures)} pour lesquelles la
-#'          suppression des doublons doit être réalisée.}
+#'    \item{If \code{TRUE}, simplification of the values associated with the variables defined in
+#'          \code{additional} in order to remove duplicates.}
+#'    \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
+#'          these variables for the same sample (as many values as there are samples).}
+#'    \item{Otherwise, vector of variable names included in \code{colnames(measures)} for which the
+#'          removal of duplicates must be performed.}
 #'  }
-#' @return Liste des observations identifiées. Chaque observation est une liste contenant :
+#' @return List of observations identified. Each observation is a list containing:
 #'    \describe{
-#'      \item{CODE}{Les codes identifiant les substances regroupées.}
-#'      \item{YEAR}{L'année de réalisation de l'intervention de laquelle les prélèvements sont regroupées.}
-#'      \item{...}{Les données associées aux prélèvements, concernant les variables définies
-#'                 dans l'argument \code{additional}.}
+#'      \item{\code{CODE}}{The codes identifying the substances grouped together.}
+#'      \item{\code{YEAR}}{The year of the inspection from which the samples are grouped.}
+#'      \item{\code{...}}{Data related to the samples grouped, concerning the variables defined in
+#'                        the argument \code{additional}.}
 #'    }
 #' 
 #' @author Gauthier Magnin
@@ -347,13 +347,13 @@ make_obs_from_unspecified_ws = function(measures, variable_names, additional = N
 
 #### Fonctions de recherche dans une structure d'observations ####
 
-#' Recherche l'ensemble des items
+#' Search all items
 #' 
-#' Extrait l'intégralité des items contenus dans les observations.
+#' Extract all the items contained in the observations.
 #' 
-#' @param observations Liste des observations sur lesquels effectuer la recherche.
-#' @param key Clé d'accès aux items de chaque observation.
-#' @return Vecteur des identifiants de l'ensemble des items.
+#' @param observations List of observations on which to do the search.
+#' @param key Access key to the items in an observation.
+#' @return Vector of all unique items.
 #' 
 #' @author Gauthier Magnin
 #' @export
@@ -365,21 +365,21 @@ get_all_items = function(observations, key = "CODE") {
 }
 
 
-#' Recherche d'observations par item
+#' Search for observations by item
 #' 
-#' Extrait les observations contenant un ou plusieurs items recherchés.
+#' Extract the observations containing one or more sought items.
 #' 
-#' @param observations Liste des observations sur lesquels effectuer la recherche.
-#' @param items Élément·s recherché·s.
-#' @param target Condition pour qu'une observation soit extraite. Choix parmi \code{"all"}, \code{"any"}.
+#' @param observations List of observations on which to do the search.
+#' @param items Sought items.
+#' @param target Condition for an observation to be extracted. One of \code{"all"}, \code{"any"}.
 #'  \describe{
-#'   \item{\code{"all"}}{L'intégralité des items recherchés doivent faire partie d'une observation
-#'                       pour que cette observation soit extraite.}
-#'   \item{\code{"any"}}{Au moins un des items recherchés doit faire partie d'une observation pour
-#'                       que cette observation soit extraite.}
+#'    \item{\code{"all"}}{All the sought items must be part of an observation for this
+#'                        observation to be extracted.}
+#'    \item{\code{"any"}}{At least one of the sought items must be part of an observation for
+#'                        this observation to be extracted.}
 #'  }
-#' @param key Clé d'accès aux items de chaque observation.
-#' @return Sous-ensemble de la liste d'observations correspondant aux critères de recherche.
+#' @param key Access key to the items in an observation.
+#' @return Subset of the list of observations that match the search criteria.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_obs_from_info}}.
@@ -398,21 +398,22 @@ get_obs_from_items = function(observations, items, target = "all", key = "CODE")
 }
 
 
-#' Recherche d'observations par information spécifique
+#' Search for observations by specific information
 #' 
-#' Extrait les observations correspondant à un ou plusieurs critères de recherche.
+#' Extract the observations that match to one or more search criteria.
 #' 
-#' @param observations Liste des observations sur lesquels effectuer la recherche.
-#' @param ... Arguments de type \code{clé = valeur} où \code{clé} fait référence au nom d'une variable
-#'  contenue dans les observations et \code{valeur} correspond à la valeur recherchée pour cette variable.
-#' @param target Condition pour qu'une observation soit extraite. Choix parmi \code{"all"}, \code{"any"}.
+#' @param observations List of observations on which to do the search.
+#' @param ... arguments of type \code{key = value} where \code{key} refers to the name of one
+#'  variable contained in the observations and \code{value} corresponds to the sought value for
+#'  this variable.
+#' @param target Condition for an observation to be extracted. One of \code{"all"}, \code{"any"}.
 #'  \describe{
-#'   \item{\code{"all"}}{L'intégralité des informations recherchées doivent faire partie d'une observation
-#'                       pour que cette observation soit extraite.}
-#'   \item{\code{"any"}}{Au moins une des informations recherchées doit faire partie d'une observation pour
-#'                       que cette observation soit extraite.}
+#'   \item{\code{"all"}}{All the sought information must be part of an observation for this
+#'                       observation to be extracted.}
+#'   \item{\code{"any"}}{At least one of the sought information must be part of an observation
+#'                       for this observation to be extracted.}
 #'  }
-#' @return Sous-ensemble de la liste d'observations correspondant aux critères de recherche.
+#' @return Subset of the list of observations that match the search criteria.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_obs_from_items}}.
@@ -445,24 +446,26 @@ get_obs_from_info = function(observations, ..., target = "all") {
 }
 
 
-#' Recherche d'items par information spécifique
+#' Search for items by specific information
 #' 
-#' Extrait les items associés aux observations correspondant à un ou plusieurs critères de recherche.
+#' Retrieve the items associated with observations corresponding to one or more search criteria.
 #' 
-#' @param observations Liste des observations sur lesquels effectuer la recherche.
-#' @param ... Arguments de type \code{clé = valeur} où \code{clé} fait référence au nom d'une variable
-#'  contenue dans les observations et \code{valeur} correspond à la valeur recherchée pour cette variable.
-#' @param target Condition pour qu'une observation soit extraite. Choix parmi \code{"all"}, \code{"any"}.
+#' @param observations List of observations on which to do the search.
+#' @param ... arguments of type \code{key = value} where \code{key} refers to the name of one
+#'  variable contained in the observations and \code{value} corresponds to the sought value for
+#'  this variable.
+#' @param target Condition for an item to be extracted from an observation.
+#'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
-#'   \item{\code{"all"}}{L'intégralité des informations recherchées doivent faire partie d'une observation
-#'                       pour que cette observation soit extraite.}
-#'   \item{\code{"any"}}{Au moins une des informations recherchées doit faire partie d'une observation pour
-#'                       que cette observation soit extraite.}
+#'   \item{\code{"all"}}{All the sought information must be part of an observation for its items to
+#'                       be extracted.}
+#'   \item{\code{"any"}}{At least one of the sought information must be part of an observation for
+#'                       its items to be extracted.}
 #'  }
-#' @param additional Noms d'informations supplémentaires à extraire lors de la recherche.
-#' @param key Clé d'accès aux items de chaque observation.
-#' @return Vecteur des codes des items correspondant à la recherche si \code{additional} vaut \code{NULL}.
-#'  Liste des codes et des informations demandées sinon.
+#' @param additional Names of additional information to extract during the search.
+#' @param key Access key to the items in an observation.
+#' @return Vector of the item codes corresponding to the search if \code{additional} is
+#'  equal to \code{NULL}. List of codes and information requested otherwise.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_info_from_items}}.
@@ -487,24 +490,24 @@ get_items_from_info = function(observations, ..., target = "all", additional = N
 }
 
 
-#' Recherche d'informations par item
+#' Search for information by item
 #' 
-#' Extrait les informations associées aux observations qui contiennent un ensemble d'items recherchés.
+#' Retrieve information associated with observations that contain a set of sought items.
 #' 
-#' @param observations Liste des observations sur lesquels effectuer la recherche.
-#' @param items Élément·s recherché·s.
-#' @param info_names Noms des informations à extraire des observations.
-#' @param target Condition pour qu'une information soit extraite d'une observation.
-#' Choix parmi \code{"all"}, \code{"any"}.
+#' @param observations List of observations on which to do the search.
+#' @param items Sought items.
+#' @param info_names Names of information to extract from observations.
+#' @param target Condition for information to be extracted from an observation.
+#' One of \code{"all"}, \code{"any"}.
 #'  \describe{
-#'   \item{\code{"all"}}{L'intégralité des items recherchés doivent faire partie d'une observation
-#'                       pour que ses informations soient extraites.}
-#'   \item{\code{"any"}}{Au moins un des items recherchés doit faire partie d'une observation pour
-#'                       que ses informations soient extraites.}
+#'   \item{\code{"all"}}{All the sought items must be part of an observation for its information
+#'                       to be extracted.}
+#'   \item{\code{"any"}}{At least one of the sought items must be part of an observation for its
+#'                       information to be extracted.}
 #'  }
-#' @param key Clé d'accès aux items de chaque observation.
-#' @return Vecteur ou liste des informations correspondant à la recherche.
-#'  Vecteur si un seul type d'information est à extraire. Liste sinon.
+#' @param key Access key to the items in an observation.
+#' @return Vector or list of information corresponding to the search.
+#'  Vector if only one type of information is to be extracted. List otherwise.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_items_from_info}}.

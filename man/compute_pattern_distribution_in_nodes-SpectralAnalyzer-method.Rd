@@ -3,24 +3,25 @@
 \name{compute_pattern_distribution_in_nodes,SpectralAnalyzer-method}
 \alias{compute_pattern_distribution_in_nodes,SpectralAnalyzer-method}
 \alias{compute_pattern_distribution_in_nodes}
-\title{Distribution des motifs parmi les nœuds}
+\title{Distribution of patterns among nodes}
 \usage{
 \S4method{compute_pattern_distribution_in_nodes}{SpectralAnalyzer}(object, patterns)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns}{Liste des motifs dont les distributions sont à calculer.}
+\item{patterns}{Patterns whose distributions are to be calculated.}
 }
 \value{
-Liste contenant :
- \describe{
-   \item{\code{weight_distribution}}{La distribution, pour chaque motif, des poids des nœuds dans lequel ils sont inclus.}
-   \item{\code{length_distribution}}{La distribution, pour chaque motif, des longueurs des nœuds dans lequel ils sont inclus.}
+\describe{
+   \item{\code{weight_distribution}}{The distribution, for each pattern, of the weights of nodes in
+                                     which they are included.}
+   \item{\code{length_distribution}}{The distribution, for each pattern, of the lengths of nodes in
+                                     which they are included.}
  }
 }
 \description{
-Calcule les distributions des poids et longueurs des nœuds dans lesquels sont inclus chaque motif.
+Compute the distributions of the weights and lenghts of the nodes in which each pattern is included.
 }
 \author{
 Gauthier Magnin

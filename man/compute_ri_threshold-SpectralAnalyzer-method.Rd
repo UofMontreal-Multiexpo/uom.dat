@@ -3,25 +3,25 @@
 \name{compute_ri_threshold,SpectralAnalyzer-method}
 \alias{compute_ri_threshold,SpectralAnalyzer-method}
 \alias{compute_ri_threshold}
-\title{Calcul de seuil de RI}
+\title{RI threshold computation}
 \usage{
 \S4method{compute_ri_threshold}{SpectralAnalyzer}(object, reporting_indexes, ksi = NULL)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{reporting_indexes}{Indices de recrutement associées aux motifs.}
+\item{reporting_indexes}{Reporting indexes associated with the patterns.}
 
-\item{ksi}{Nombre de motifs à considérer avant de fixer le seuil.
-Est calculé si valeur \code{NULL}.}
+\item{ksi}{Number of patterns to consider before setting the RI threshold.
+Is computed if \code{NULL}.}
 }
 \value{
-Seuil calculé.
+Computed threshold.
 }
 \description{
-Calcule la valeur limite séparant deux statuts dynamiques par rapport aux indices de recrutement.
-Les motifs sont ordonnés par ordre décroissant de leur valeur d'indice de recrutement et séparé 
-par le seuil \code{ksi}.
+Compute the limit value separating two dynamic profiles with respect to the reporting indexes.
+The patterns are ordered in descending order of their reporting index value and separated by
+ the threshold \code{ksi}.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).

@@ -2,7 +2,7 @@
 % Please edit documentation in R/observation_maker.R
 \name{get_items_from_info}
 \alias{get_items_from_info}
-\title{Recherche d'items par information spécifique}
+\title{Search for items by specific information}
 \usage{
 get_items_from_info(
   observations,
@@ -13,29 +13,31 @@ get_items_from_info(
 )
 }
 \arguments{
-\item{observations}{Liste des observations sur lesquels effectuer la recherche.}
+\item{observations}{List of observations on which to do the search.}
 
-\item{...}{Arguments de type \code{clé = valeur} où \code{clé} fait référence au nom d'une variable
-contenue dans les observations et \code{valeur} correspond à la valeur recherchée pour cette variable.}
+\item{...}{arguments of type \code{key = value} where \code{key} refers to the name of one
+variable contained in the observations and \code{value} corresponds to the sought value for
+this variable.}
 
-\item{target}{Condition pour qu'une observation soit extraite. Choix parmi \code{"all"}, \code{"any"}.
+\item{target}{Condition for an item to be extracted from an observation.
+One of \code{"all"}, \code{"any"}.
 \describe{
- \item{\code{"all"}}{L'intégralité des informations recherchées doivent faire partie d'une observation
-                     pour que cette observation soit extraite.}
- \item{\code{"any"}}{Au moins une des informations recherchées doit faire partie d'une observation pour
-                     que cette observation soit extraite.}
+ \item{\code{"all"}}{All the sought information must be part of an observation for its items to
+                     be extracted.}
+ \item{\code{"any"}}{At least one of the sought information must be part of an observation for
+                     its items to be extracted.}
 }}
 
-\item{additional}{Noms d'informations supplémentaires à extraire lors de la recherche.}
+\item{additional}{Names of additional information to extract during the search.}
 
-\item{key}{Clé d'accès aux items de chaque observation.}
+\item{key}{Access key to the items in an observation.}
 }
 \value{
-Vecteur des codes des items correspondant à la recherche si \code{additional} vaut \code{NULL}.
- Liste des codes et des informations demandées sinon.
+Vector of the item codes corresponding to the search if \code{additional} is
+ equal to \code{NULL}. List of codes and information requested otherwise.
 }
 \description{
-Extrait les items associés aux observations correspondant à un ou plusieurs critères de recherche.
+Retrieve the items associated with observations corresponding to one or more search criteria.
 }
 \seealso{
 \code{\link{get_info_from_items}}.

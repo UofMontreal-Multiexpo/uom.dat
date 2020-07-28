@@ -2,19 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{dhms}
 \alias{dhms}
-\title{Décomposition d'un temps}
+\title{Decomposition of a time}
 \usage{
 dhms(t)
 }
 \arguments{
-\item{t}{Numeric. Temps à convertir, en secondes.}
+\item{t}{numeric. Time to convert, in seconds.}
 }
 \value{
-Chaîne de caractère correspondant au temps converti.
+Character string corresponding to the converted time.
 }
 \description{
-Convertit en une chaîne de caractères une période définie en secondes.
-Exemples du format de la chaîne retournée : 1d 02h 25m 47s ; 01m 05s ; 19s.
+Convert a period defined in seconds to a character string.
+Examples of the format of the returned string: 1d 02h 25m 47s; 01m 05s; 19s.
 }
 \references{
 Stack Overflow topic :

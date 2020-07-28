@@ -3,23 +3,22 @@
 \name{degree,SpectralAnalyzer-method}
 \alias{degree,SpectralAnalyzer-method}
 \alias{degree}
-\title{Degré d'un sommet}
+\title{Degree of a vertex}
 \usage{
 \S4method{degree}{SpectralAnalyzer}(object, ID, links)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{ID}{Identifiant du sommet (nœud ou motif) dont le degré est à calculer.}
+\item{ID}{Identifier of the vertex (node or pattern) whose degree is to be calculated.}
 
-\item{links}{Data frame des liens (ou arêtes) d'un graphe de type spectrosome.}
+\item{links}{Data frame of the links (or edges) of a spectrosome graph.}
 }
 \value{
-Degré du sommet.
+Degree of the vertex.
 }
 \description{
-Calcule le degré d'un sommet dans un graphe, c'est-à-dire, le nombre de sommets
- auxquels il est adjacent.
+Compute the degree of a vertex in a graph, i.e. the number of vertices to which it is adjacent.
 }
 \author{
 Gauthier Magnin

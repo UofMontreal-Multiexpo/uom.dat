@@ -3,7 +3,7 @@
 \name{plot_tree_chart,SpectralAnalyzer-method}
 \alias{plot_tree_chart,SpectralAnalyzer-method}
 \alias{plot_tree_chart}
-\title{Arbre de la multi-association}
+\title{Multi-association tree plotting}
 \usage{
 \S4method{plot_tree_chart}{SpectralAnalyzer}(
   object,
@@ -19,39 +19,41 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns_characteristics}{Ensemble des caractéristiques des motifs dont l'arbre est à tracer.}
+\item{patterns_characteristics}{Patterns (and their characteristics) whose tree is to be plotted.}
 
-\item{items_category}{Data frame des items et d'une catégorie associée.}
+\item{items_category}{Data frame of items and one associated category.}
 
-\item{category}{Nom de la catégorie à représenter sur l'arbre, utilisé comme titre de légende.}
+\item{category}{Name of the category to represent on the tree, used as the legend title.}
 
-\item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant la catégorie représentée.}
+\item{c.cutoff}{Limit number of characters to display in the legend for the category represented.}
 
-\item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
+\item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
+codes otherwise.}
 
-\item{n.cutoff}{Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.}
+\item{n.cutoff}{If \code{use_names = TRUE}, limit number of characters to display concerning the names
+of the represented items.}
 
-\item{display_status}{Si \code{TRUE}, affiche les statuts des motifs.}
+\item{display_status}{If \code{TRUE}, display pattern status.}
 
-\item{display_text}{Texte à afficher sur le graphique à côté des motifs.
-Choix entre les identifiants \code{"ID"} des motifs ou l'une des autres caractéristiques
-(\code{"weight"}, \code{"frequency"}, \code{"specificity"}, \code{"year"}).
-La valeur \code{NULL} précise qu'aucune de ces informations ne doit être affichée.}
+\item{display_text}{Text to display on the chart next to the patterns.
+Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"},
+\code{"frequency"}, \code{"specificity"}, \code{"year"}).
+The \code{NULL} value specifies that none of this information should be displayed.}
 
-\item{title}{Titre du graphique.}
+\item{title}{Chart title.}
 }
 \description{
-Dessine un graphique de type arbre de la multi-association.
+Plot a multi-association tree chart
 }
 \details{
-Les couleurs associées aux valeurs de l'éventuelle catégorie représentée sont sélectionnées
- de manière circulaire parmi les 20 couleurs de la palette \code{category20} de D3 (cf.
- \code{ggsci::pal_d3("category20")}).
-Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
- plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
- \out{2<sup>e</sup>} valeur.
+The colors associated with the values of the possible category represented are selected circularly
+ among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
+Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
+ For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
+ value.
+See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 }
 \references{
 Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).

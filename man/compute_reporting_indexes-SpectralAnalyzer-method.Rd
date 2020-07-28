@@ -3,31 +3,32 @@
 \name{compute_reporting_indexes,SpectralAnalyzer-method}
 \alias{compute_reporting_indexes,SpectralAnalyzer-method}
 \alias{compute_reporting_indexes}
-\title{Calcul d'indice de recrutement}
+\title{Compute the reporting index (RI)}
 \usage{
 \S4method{compute_reporting_indexes}{SpectralAnalyzer}(object, patterns, t = NULL, period = Inf)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns}{Liste des motifs dont l'indice de recrutement est à calculer.}
+\item{patterns}{Patterns whose reporting indexes are to be computed.}
 
-\item{t}{Année de fin de la période, c'est-à-dire, date à laquelle caractériser le motif.
-\code{NULL} indique que la caractérisation doit se faire par rapport à la dernière année
-couverte par les observations.}
+\item{t}{Year of the end of the period, i.e. the date on which to characterize the patterns.
+\code{NULL} specifies that the characterization must be done in relation to the last year covered
+by the observations.}
 
-\item{period}{Intervalle de temps sur lequel calculer l'indice de recrutement (nombre d'années).
-Si \code{t = 2015} et \code{period = 2}, alors le calcul est fait sur la période [2014 - 2015].
-\code{Inf} indique que la période considérée couvre un intervalle commençant à la date de la 
-plus ancienne observation et terminant à l'année \code{t}.}
+\item{period}{Time interval over which to compute the reporting indexes (number of years).
+For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
+period [2014 - 2015].
+\code{Inf} specifies that the period considered covers an interval starting on the date of the
+oldest observation and ending in the year \code{t}.}
 }
 \value{
-Data frame associant un indice de recrutement à chaque motif.
+Data frame associating one reporting index with each pattern.
 }
 \description{
-Calcule l'indice de recrutement de chaque motif pour une période donnée.
-Cet indice informe sur la proportion et l'importance du recrutement d'un motif en tenant compte
- du recrutement des autres motifs.
+Compute the reporting index of each pattern for a given period.
+This index provides information on the proportion and importance of the occurrences of a pattern,
+ taking into account the occurrences of the other patterns.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).

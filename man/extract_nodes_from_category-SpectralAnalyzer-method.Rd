@@ -3,7 +3,7 @@
 \name{extract_nodes_from_category,SpectralAnalyzer-method}
 \alias{extract_nodes_from_category,SpectralAnalyzer-method}
 \alias{extract_nodes_from_category}
-\title{Recherche de nœuds par catégorie}
+\title{Search for nodes by category}
 \usage{
 \S4method{extract_nodes_from_category}{SpectralAnalyzer}(
   object,
@@ -14,26 +14,28 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{nodes_characteristics}{Data frame des nœuds et de leurs caractéristiques.}
+\item{nodes_characteristics}{Data frame of nodes and their characteristics.}
 
-\item{category}{Nom ou numéro de la catégorie sur laquelle effectuer la recherche
-(numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).}
+\item{category}{Name or number of the category on which to search (numbering according to the order
+of the columns of \code{object["items_categories"]}).}
 
-\item{value}{Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.}
+\item{value}{Sought value for the category specified by the parameter \code{category}.}
 
-\item{target}{Condition pour qu'un nœud soit extrait. Choix parmi \code{"vertices"}, \code{"edges"}.
+\item{target}{Condition for a node to be extracted. One of \code{"vertices"}, \code{"edges"}.
 \describe{
-  \item{\code{"vertices"}}{Recherche des nœuds contenant un item associé à la valeur de catégorie recherchée.}
-  \item{\code{"edges"}}{Recherche de nœuds générant un lien corresopndant à la valeur de catégorie recherchée.}
+  \item{\code{"vertices"}}{Search for nodes containing an item associated with the sought category
+                           value.}
+  \item{\code{"edges"}}{Search for nodes generating links corresponding to the sought category
+                        value.}
 }}
 }
 \value{
-Data frame des nœuds correspondant aux critères de recherche.
+Subset of the data frame of nodes that match the search criteria.
 }
 \description{
-Extrait les nœuds correspondant à une valeur de catégorie recherchée
+Extract the nodes corresponding to a sought category value.
 }
 \seealso{
 \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_characteristic}}.

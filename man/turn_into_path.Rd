@@ -2,18 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{turn_into_path}
 \alias{turn_into_path}
-\title{Chemin de dossier}
+\title{Directory path}
 \usage{
 turn_into_path(path)
 }
 \arguments{
-\item{path}{Chaîne de caractères devant être utilisée comme chemin d'un dossier.}
+\item{path}{Character string to be used as a directory path.}
 }
 \value{
-Chaîne de caractères, terminant par le caractère \code{"/"}.
+Character string \code{path}, ending with \code{"/"}.
 }
 \description{
-Vérifie si une chaîne de caractères peut être utilisée comme chemin d'un dossier.
-Ajoute un caractère \code{"/"} si ce n'est pas le cas.
+Check if a string can be used as a directory path.
+Add a \code{"/"} character if it cannot.
 }
 \keyword{internal}

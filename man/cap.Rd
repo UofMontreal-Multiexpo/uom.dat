@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{cap}
 \alias{cap}
-\title{Capitalise une chaîne de caractères}
+\title{Capitalize a character string}
 \usage{
 cap(s)
 }
 \arguments{
-\item{s}{Chaîne de caractères à modifier.}
+\item{s}{Character string to be capitalized.}
 }
 \value{
-La chaîne de caractères fournie par l'argument \code{s}, commençant par une majuscule.
+The character string corresponding to the argument \code{s}, starting with a capital letter.
 }
 \description{
-Change la première lettre d'une chaîne de caractères en une majuscule.
+Change the first letter of a string to an uppercase.
 }
 \keyword{internal}

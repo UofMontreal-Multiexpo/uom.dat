@@ -2,30 +2,30 @@
 % Please edit documentation in R/observation_maker.R
 \name{get_obs_from_items}
 \alias{get_obs_from_items}
-\title{Recherche d'observations par item}
+\title{Search for observations by item}
 \usage{
 get_obs_from_items(observations, items, target = "all", key = "CODE")
 }
 \arguments{
-\item{observations}{Liste des observations sur lesquels effectuer la recherche.}
+\item{observations}{List of observations on which to do the search.}
 
-\item{items}{Élément·s recherché·s.}
+\item{items}{Sought items.}
 
-\item{target}{Condition pour qu'une observation soit extraite. Choix parmi \code{"all"}, \code{"any"}.
+\item{target}{Condition for an observation to be extracted. One of \code{"all"}, \code{"any"}.
 \describe{
- \item{\code{"all"}}{L'intégralité des items recherchés doivent faire partie d'une observation
-                     pour que cette observation soit extraite.}
- \item{\code{"any"}}{Au moins un des items recherchés doit faire partie d'une observation pour
-                     que cette observation soit extraite.}
+  \item{\code{"all"}}{All the sought items must be part of an observation for this
+                      observation to be extracted.}
+  \item{\code{"any"}}{At least one of the sought items must be part of an observation for
+                      this observation to be extracted.}
 }}
 
-\item{key}{Clé d'accès aux items de chaque observation.}
+\item{key}{Access key to the items in an observation.}
 }
 \value{
-Sous-ensemble de la liste d'observations correspondant aux critères de recherche.
+Subset of the list of observations that match the search criteria.
 }
 \description{
-Extrait les observations contenant un ou plusieurs items recherchés.
+Extract the observations containing one or more sought items.
 }
 \seealso{
 \code{\link{get_obs_from_info}}.

@@ -3,24 +3,25 @@
 \name{search_links,SpectralAnalyzer-method}
 \alias{search_links,SpectralAnalyzer-method}
 \alias{search_links}
-\title{Élaboration des liens}
+\title{Elaboration of links}
 \usage{
 \S4method{search_links}{SpectralAnalyzer}(object, entities)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{entities}{Type d'élément pour lequel compter les liens (nœuds ou motifs).
-Choix parmi \code{"nodes"}, \code{"patterns"}.}
+\item{entities}{Type of entities for which to elaborate links (nodes or patterns).
+One of \code{"nodes"}, \code{"patterns"}.}
 }
 \value{
-Invisible. Data frame détaillant les liens entre les paires de nœuds ou de motifs.
- Les nœuds ou motifs isolés (c'est-à-dire sans lien avec aucune autre entité) apparaîssent au bas
- de la data frame.
+Invisible. Data frame detailing the links between pairs of nodes or patterns.
+ Isolated nodes or patterns (i.e. unrelated to any other entity) appear at the bottom of the data
+ frame.
 }
 \description{
-Identifie les liens selon les éléments en commun, entre les nœuds ou les motifs.
-La data frame résultante est assignée à l'attribut \code{nodes_links} ou \code{patterns_links} respectivement.
+Identify the links according to items in common between nodes or patterns.
+The resulting data frame is assigned respectively to the attribute \code{nodes_links} or
+ \code{patterns_links} of \code{object}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin

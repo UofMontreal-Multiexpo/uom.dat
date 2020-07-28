@@ -3,7 +3,7 @@
 \name{list_separate_patterns,SpectralAnalyzer-method}
 \alias{list_separate_patterns,SpectralAnalyzer-method}
 \alias{list_separate_patterns}
-\title{Énumération des motifs}
+\title{Enumeration of patterns}
 \usage{
 \S4method{list_separate_patterns}{SpectralAnalyzer}(
   object,
@@ -14,28 +14,28 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{target}{Type de motifs à énumérer.
-Choix parmi \code{"frequent itemsets"}, \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets")}.}
+\item{target}{Type of patterns to enumerate. One of \code{"frequent itemsets"},
+\code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.}
 
-\item{count}{Nombre minimal d'apparition d'un motif pour être considéré comme "fréquent", et par conséquent, conservé.}
+\item{count}{Minimum number of occurrences of a pattern to be considered as "frequent".}
 
-\item{min_length}{Taille minimale qu'un motif doit avoir pour être conservé lors de l'énumération.}
+\item{min_length}{Minimum number of items that a pattern must have to be kept when enumerating.}
 
-\item{max_length}{Taille maximale qu'un motif doit avoir pour être conservé lors de l'énumération.
-La valeur \code{Inf} par défaut correspond à une recherche de motifs sans limite maximale de taille.}
+\item{max_length}{Maximum number of items that a pattern must have to be kept when enumerating.
+The default \code{Inf} corresponds to a pattern search without maximum size limit.}
 }
 \value{
-Invisible. Data frame dans laquelle une ligne est une association entre un motif et sa
- fréquence dans l'ensemble des observations.
+Invisible. Data frame in which a line is an association between a pattern and its
+ frequency in the set of observations.
 }
 \description{
-Identifie l'ensemble des motifs distincts générés à partir des observations.
-La data frame résultante est assignée à l'attribut \code{patterns}.
+Identify the patterns generated from the observations.
+The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 }
 \seealso{
-[arules:ASparameter-class]{arules::APparameter}
+\code{\link[arules:ASparameter-class]{arules::APparameter}}.
 }
 \author{
 Gauthier Magnin

@@ -2,7 +2,7 @@
 % Please edit documentation in R/observation_maker.R
 \name{make_obs_from_ws}
 \alias{make_obs_from_ws}
-\title{Regroupement de prélèvements selon des situations de travail spécifiques}
+\title{Grouping samples according to specific work situations}
 \usage{
 make_obs_from_ws(
   measures,
@@ -12,49 +12,49 @@ make_obs_from_ws(
 )
 }
 \arguments{
-\item{measures}{Ensemble de mesures de prélèvements. Data frame devant contenir au moins les
-deux variables suivantes :
+\item{measures}{Set of sampling measures. Data frame that must contain at least the following two
+variables:
 \describe{
-  \item{\code{YEAR}}{Année de réalisation de l'intervention.}
-  \item{\code{CODE}}{Code identifiant la substance faisant l'objet du prélèvement.}
+  \item{\code{YEAR}}{Year of inspection.}
+  \item{\code{CODE}}{Code identifying the substance being sampled.}
 }}
 
-\item{work_situations}{Description de situations de travail. Data frame devant contenir les
-valeurs associées à certaines variables de \code{measures} formant une situation de travail.
-Une colonne \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) doit permettre
-d'identifier les différentes associations de valeurs considérées comme une même situation de travail.}
+\item{work_situations}{Description of work situations. Data frame that must contain the values
+associated with certain variables from \code{measures} forming one work situation.
+A \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) column must make possible
+to identify the different associations of values considered to be the same work situation.}
 
-\item{additional}{Noms d'informations à conserver lors de la constitution des observations,
-c'est-à-dire, vecteur de noms de variables contenues dans \code{measures}.}
+\item{additional}{Names of information to keep when creating observations: vector included in
+\code{colnames(measures)}.}
 
-\item{unique_values}{logical ou character.
+\item{unique_values}{logical or character.
 \itemize{
-  \item{Si \code{TRUE}, simplification des valeurs associées aux variables définies dans
-        \code{additional} de manière à supprimer les doublons.}
-  \item{Si \code{FALSE}, conserve les doublons et la correspondance entre les valeurs de ces
-        variables pour un même prélèvement (autant de valeurs que de prélèvements).}
-  \item{Sinon, vecteur des variables inclus dans \code{colnames(measures)} pour lesquelles la
-        suppression des doublons doit être réalisée.}
+  \item{If \code{TRUE}, simplification of the values associated with the variables defined in
+        \code{additional} in order to remove duplicates.}
+  \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
+        these variables for the same sample (as many values as there are samples).}
+  \item{Otherwise, vector of variable names included in \code{colnames(measures)} for which the
+        removal of duplicates must be performed.}
 }}
 }
 \value{
 \describe{
-   \item{\code{observations}}{La liste des observations identifiées.
-     Chaque observation est une liste contenant :
+   \item{\code{observations}}{List of observations identified.
+     Each observation is a list containing:
      \describe{
-       \item{CODE}{Les codes identifiant les substances regroupées.}
-       \item{YEAR}{L'année de réalisation de l'intervention de laquelle les prélèvements sont regroupées.}
-       \item{...}{Les données associées aux prélèvements, concernant les variables définies
-                  dans l'argument \code{additional}.}
+       \item{\code{CODE}}{The codes identifying the substances grouped together.}
+       \item{\code{YEAR}}{The year of the inspection from which the samples are grouped.}
+       \item{\code{...}}{Data related to the samples grouped, concerning the variables defined in
+                         the argument \code{additional}.}
      }
    }
-   \item{processed}{Un vecteur spécifiant, pour chaque ligne de \code{measures},
-                    si elle a été intégrée dans une observation.}
+   \item{\code{processed}}{Vector specifying for each line of \code{measures} whether it has been
+                           included in an observation.}
  }
 }
 \description{
-Regroupe des prélèvements sous forme d'observations (make observations from Work Situation).
-Une observation correspond à un ensemble de substances retrouvées dans une même situation de travail.
+Grouping samples in the form of observations: make observations from work situations.
+An observation corresponds to a set of substances found in the same work situation.
 }
 \seealso{
 \code{\link{make_observations}}, \code{\link{make_obs_from_unspecified_ws}}.

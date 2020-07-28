@@ -3,7 +3,7 @@
 \name{extract_patterns_from_characteristic,SpectralAnalyzer-method}
 \alias{extract_patterns_from_characteristic,SpectralAnalyzer-method}
 \alias{extract_patterns_from_characteristic}
-\title{Recherche de motifs par caractéristique}
+\title{Search for patterns by characteristic}
 \usage{
 \S4method{extract_patterns_from_characteristic}{SpectralAnalyzer}(
   object,
@@ -14,31 +14,37 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns_characteristics}{Data frame des motifs et de leurs caractéristiques.}
+\item{patterns_characteristics}{Data frame of patterns and their characteristics.}
 
-\item{characteristic}{Nom de la caractéristique sur laquelle faire la recherche.
-Choix parmi \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}.}
+\item{characteristic}{Name of the characteristic on which to do the search.
+One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}
+See \code{\link{extract_patterns_from_status}} to search by \code{"status"}.}
 
-\item{value}{Valeur recherchée pour la caractéristique spécifiée par l'argument \code{characteristic}.}
+\item{value}{Sought value for the characteristic specified by the parameter \code{characteristic}.}
 
-\item{condition}{Condition de la recherche.
-Choix parmi \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
+\item{condition}{Search condition.
+One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
 \describe{
-  \item{\code{"EQ"}}{\strong{EQ}ual : la valeur de la caractéristique doit être égale à celle recherchée.}
-  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual : la valeur de la caractéristique doit être différente de celle recherchée.}
-  \item{\code{"LT"}}{\strong{L}ess \strong{T}han : la valeur de la caractéristique doit être inférieure à celle recherchée.}
-  \item{\code{"GT"}}{\strong{G}reater \strong{T}han : la valeur de la caractéristique doit être supérieure à celle recherchée.}
-  \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual : la valeur de la caractéristique doit être inférieure ou égale à celle recherchée.}
-  \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual : la valeur de la caractéristique doit être supérieure ou égale à celle recherchée.}
+  \item{\code{"EQ"}}{\strong{EQ}ual: the value of the characteristic must be equal to that sought.}
+  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual: the value of the characteristic must be different
+                     from that sought.}
+  \item{\code{"LT"}}{\strong{L}ess \strong{T}han: the value of the characteristic must be less
+                     than that sought.}
+  \item{\code{"GT"}}{\strong{G}reater \strong{T}han: the value of the characteristic must be greater
+                     than that sought.}
+  \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual: the value of the caracteristic must be
+                     less than or equal to that sought.}
+  \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual: the value of the characteristic must
+                     be greater than or equal to that sought.}
 }}
 }
 \value{
-Sous-ensemble de la data frame fournie en argument contant les motifs satisfaisant le critère de recherche.
+Subset of the data frame of patterns that match the search criteria.
 }
 \description{
-Extrait les motifs satisfaisant un critère de recherche relatif à une caractéristique.
+Extract the patterns satisfying a search criterion according to one characteristic.
 }
 \seealso{
 \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_status}},

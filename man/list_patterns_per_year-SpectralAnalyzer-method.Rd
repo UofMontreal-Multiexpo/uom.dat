@@ -3,20 +3,20 @@
 \name{list_patterns_per_year,SpectralAnalyzer-method}
 \alias{list_patterns_per_year,SpectralAnalyzer-method}
 \alias{list_patterns_per_year}
-\title{Dénombrement des motifs par année}
+\title{Enumeration of patterns per year}
 \usage{
 \S4method{list_patterns_per_year}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 }
 \value{
-Invisible. Matrice des poids de chaque motif, par année.
- Les lignes correspondent aux motifs. Les colonnes correspondent aux années.
+Invisible. Matrix of the weights of each pattern, pear year.
+ The lines correspond to the patterns. The column correspond to the years.
 }
 \description{
-Compte le nombre d'apparitions de chaque motif selon l'année.
-La matrice résultante est assignée à l'attribut \code{patterns_per_year}.
+Count the number of occurrences of each pattern pear year.
+The resulting matrix is assigned to the attribute \code{patterns_per_year} of \code{object}.
 }
 \author{
 Gauthier Magnin

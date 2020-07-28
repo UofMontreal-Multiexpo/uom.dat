@@ -3,7 +3,7 @@
 \name{extract_patterns_from_status,SpectralAnalyzer-method}
 \alias{extract_patterns_from_status,SpectralAnalyzer-method}
 \alias{extract_patterns_from_status}
-\title{Recherche de motifs par statut}
+\title{Search for patterns by status}
 \usage{
 \S4method{extract_patterns_from_status}{SpectralAnalyzer}(
   object,
@@ -13,24 +13,24 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns_characteristics}{Data frame des motifs et de leurs caractéristiques.}
+\item{patterns_characteristics}{Data frame of patterns and their characteristics.}
 
-\item{value}{Valeur de statut recherché (une ou plusieurs).}
+\item{value}{Status value sought (one or more)}
 
-\item{condition}{Condition de la recherche.
-Choix parmi \code{"EQ"}, \code{"NE"}.
+\item{condition}{Search condition. One of \code{"EQ"}, \code{"NE"}.
 \describe{
-  \item{\code{"EQ"}}{\strong{EQ}ual : le statut du motif doit être l'une des valeurs recherchées.}
-  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual : le statut du motif doit être différente des valeurs recherchées.}
+  \item{\code{"EQ"}}{\strong{EQ}ual: the status of the pattern must be one of the sought values.}
+  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual: the status of the pattern must be different from
+                     the sought values.}
 }}
 }
 \value{
-Sous-ensemble de la data frame fournie en argument contenant les motifs satisfaisant le critère de recherche.
+Subset of the data frame of patterns that match the search criteria.
 }
 \description{
-Extrait les motifs dont le statut correspond à une valeur recherchée.
+Extract the patterns whose status match one or more sought values.
 }
 \seealso{
 \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_characteristic}},

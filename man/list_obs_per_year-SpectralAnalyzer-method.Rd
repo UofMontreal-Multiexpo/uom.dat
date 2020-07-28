@@ -3,21 +3,20 @@
 \name{list_obs_per_year,SpectralAnalyzer-method}
 \alias{list_obs_per_year,SpectralAnalyzer-method}
 \alias{list_obs_per_year}
-\title{Dénombrement des observations par année}
+\title{Enumeration of separate observations per year}
 \usage{
 \S4method{list_obs_per_year}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 }
 \value{
-Invisible. Matrice du nombre d'occurrences de chaque observation distincte, par année.
- Les lignes correspondent aux observations. Les colonnes correspondent aux années.
+Invisible. Matrix of the number of occurrences of each separate observation, per year.
+ The lines correspond to the observations. The columns correspond to the years.
 }
 \description{
-Identifie les observations distinctes par année et calcule le nombre de recrutements
-de chacune de ces observations.
-La matrice résultante est assignée à l'attribut \code{nodes_per_year}.
+Identify the separate observations per year and count their number of occurrences for each one.
+The resulting matrix is assigned to the attribute \code{nodes_per_year} of \code{object}.
 }
 \author{
 Gauthier Magnin

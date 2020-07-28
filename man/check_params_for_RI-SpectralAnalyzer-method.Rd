@@ -3,28 +3,29 @@
 \name{check_params_for_RI,SpectralAnalyzer-method}
 \alias{check_params_for_RI,SpectralAnalyzer-method}
 \alias{check_params_for_RI}
-\title{Validation de paramètres de calcul de RI}
+\title{Validation of RI computation parameters}
 \usage{
 \S4method{check_params_for_RI}{SpectralAnalyzer}(object, t, period)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{t}{Année de fin de la période, c'est-à-dire, date à laquelle caractériser le motif.
-\code{NULL} indique que la caractérisation doit se faire par rapport à la dernière année
-couverte par les observations.}
+\item{t}{Year of the end of the period, i.e. the date on which to characterize the patterns.
+\code{NULL} specifies that the characterization must be done in relation to the last year covered
+by the observations.}
 
-\item{period}{Intervalle de temps sur lequel calculer l'indice de recrutement (nombre d'années).
-Si \code{t = 2015} et \code{period = 2}, alors le calcul est fait sur la période [2014 - 2015].
-\code{Inf} indique que la période considérée couvre un intervalle commençant à la date de la 
-plus ancienne observation et terminant à l'année \code{t}.}
+\item{period}{Time interval over which to compute the reporting indexes (number of years).
+For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
+period [2014 - 2015].
+\code{Inf} specifies that the period considered covers an interval starting on the date of the
+oldest observation and ending in the year \code{t}.}
 }
 \value{
-Liste contenant la valeur finale de \code{t} et celle de \code{period}.
+List containing the final values of \code{t} and \code{period}.
 }
 \description{
-Vérifie la validité des valeurs des paramètres donnés en arguments pour le calcul d'indices de recrutement.
-Adapte leurs valeurs si elles n'entrent pas dans l'intervalle adéquate et affiche un message d'information.
+Check the validity of the values of the parameters given for the computation of reporting indexes.
+Adapt their values if they do not fall within the correct range and print a warning message.
 }
 \seealso{
 \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}}.

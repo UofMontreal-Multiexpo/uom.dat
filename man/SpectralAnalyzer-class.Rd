@@ -4,61 +4,75 @@
 \name{SpectralAnalyzer-class}
 \alias{SpectralAnalyzer-class}
 \alias{SpectralAnalyzer}
-\title{Analyseur Spectral}
+\title{Spectral Analyzer}
 \description{
-Classe d'objet S4 permettant une analyse spectrale.
+S4 object class allowing spectral analyzes.
 }
 \details{
-Des couleurs par défaut sont assignées aux valeurs de chaque catégorie associée aux items.
- Ces couleurs sont sélectionnées de manière circulaire parmi les 20 couleurs de la palette
- \code{category20} de D3 (cf. \code{ggsci::pal_d3("category20")}).
-Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
- plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
- \out{2<sup>e</sup>} valeur.
-Voir l'attribut \code{categories_colors} pour réassigner des couleurs aux valeurs des catégories.
+Default colors are assigned to the values of each category associated with the items.
+ These colors are selected circularly among the 20 colors of the palette \code{category20}
+ from D3 (see \code{ggsci::pal_d3("category20")}).
+Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
+ For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
+ value.
+See the attribute \code{categories_colors} to reassign colors to the category values.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{observations}}{Liste des éléments retrouvés pour chaque observation.}
+\item{\code{observations}}{List of observations containing the items corresponding to each observation.}
 
-\item{\code{items}}{Ensemble des codes des différents éléments retrouvés dans les observations.}
+\item{\code{items}}{Set of codes identifying the items found in the observations.}
 
-\item{\code{items_categories}}{Catégories associées aux différents éléments observés.}
+\item{\code{items_categories}}{Categories associated with the items.}
 
-\item{\code{categories_colors}}{Couleurs associées aux différentes valeurs des différentes catégories associées aux items.}
+\item{\code{categories_colors}}{Colors associated with the values of the categories associated with the items.}
 
-\item{\code{target}}{Type de motifs à énumérer lors de l'analyse.}
+\item{\code{target}}{Type of patterns to enumerate during the analysis.}
 
-\item{\code{count}}{Nombre minimal d'apparition d'un motif pour être conservé lors de l'énumération des motifs.}
+\item{\code{count}}{Minimum number of occurrences of a pattern to be kept when enumerating patterns.}
 
-\item{\code{min_length}}{Taille minimale qu'un motif doit avoir pour être conservé lors de l'énumération des motifs.}
+\item{\code{min_length}}{Minimum number of items that a pattern must have to be kept when enumerating patterns.}
 
-\item{\code{max_length}}{Taille maximale qu'un motif doit avoir pour être conservé lors de l'énumération des motifs.}
+\item{\code{max_length}}{Maximum number of items that a pattern must have to be kept when enumerating patterns.}
 
-\item{\code{status_limit}}{Intervalle de temps pour lequel caractériser le statut des motifs par rapport à la période totale d'observations.}
+\item{\code{status_limit}}{Time interval for which to characterize the status of the patterns in relation to the total period of observations.}
 
-\item{\code{nodes_per_year}}{Nombre de recrutements de chaque observation par année.}
+\item{\code{nodes}}{Set of nodes: set of separate observations, and characteristics of these nodes.}
 
-\item{\code{nodes}}{Ensemble des nœuds, c'est-à-dire ensemble des observations distinctes.}
+\item{\code{nodes_per_year}}{Number of occurrences of each node per year.}
 
-\item{\code{n_links}}{Ensemble des poids des liens entre les nœuds.}
+\item{\code{n_links}}{Set of weights of the links between the nodes.}
 
-\item{\code{nodes_links}}{Ensemble des liens entre les nœuds et caractéristiques de ces liens.}
+\item{\code{nodes_links}}{Set of links between the nodes and characteristics of these links.}
 
-\item{\code{obs_patterns}}{Ensemble des motifs associés à chaque observation disctincte.}
+\item{\code{obs_patterns}}{Set of associations between patterns and observation.}
 
-\item{\code{patterns_per_year}}{Ensemble des motifs, par année.}
+\item{\code{patterns}}{Set of separate patterns and their characteristics.}
 
-\item{\code{patterns}}{Ensemble des motifs distincts et de leurs caractéristiques.}
+\item{\code{patterns_per_year}}{Number of occurrences of each pattern per year.}
 
-\item{\code{p_links}}{Ensemble des poids des liens entre les motifs.}
+\item{\code{p_links}}{Set of weights of the links between the patterns.}
 
-\item{\code{patterns_links}}{Ensemble des liens entre les motifs et caractéristiques de ces liens.}
+\item{\code{patterns_links}}{Set of links between the patterns and characteristics of these links.}
 
-\item{\code{Class}}{Liste des attributs de classe (indépendants de l'instance).}
+\item{\code{Class}}{List of class attributes (independent of the instance).}
 }}
 
+\references{
+Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
+            \emph{The spectrosome of occupational health problems}.
+            PLoS ONE 13(1): e0190196.
+            \url{https://doi.org/10.1371/journal.pone.0190196}.
+            
+            Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
+            Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
+            \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
+            \url{https://doi.org/10.1093/annweh/wxaa008}.
+}
+\seealso{
+The SpectralAnalyzer constructor \code{\link{spectral.analyzer}}.
+}
 \author{
 Gauthier Magnin
 }

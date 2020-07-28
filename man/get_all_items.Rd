@@ -2,20 +2,20 @@
 % Please edit documentation in R/observation_maker.R
 \name{get_all_items}
 \alias{get_all_items}
-\title{Recherche l'ensemble des items}
+\title{Search all items}
 \usage{
 get_all_items(observations, key = "CODE")
 }
 \arguments{
-\item{observations}{Liste des observations sur lesquels effectuer la recherche.}
+\item{observations}{List of observations on which to do the search.}
 
-\item{key}{Clé d'accès aux items de chaque observation.}
+\item{key}{Access key to the items in an observation.}
 }
 \value{
-Vecteur des identifiants de l'ensemble des items.
+Vector of all unique items.
 }
 \description{
-Extrait l'intégralité des items contenus dans les observations.
+Extract all the items contained in the observations.
 }
 \author{
 Gauthier Magnin

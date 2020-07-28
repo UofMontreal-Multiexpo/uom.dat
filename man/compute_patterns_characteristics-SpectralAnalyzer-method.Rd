@@ -3,20 +3,20 @@
 \name{compute_patterns_characteristics,SpectralAnalyzer-method}
 \alias{compute_patterns_characteristics,SpectralAnalyzer-method}
 \alias{compute_patterns_characteristics}
-\title{Calcul des caractéristiques des motifs}
+\title{Computation of pattern characteristics}
 \usage{
 \S4method{compute_patterns_characteristics}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 }
 \value{
-Invisible. Data frame dans laquelle une ligne est une association entre un motif
- et ses caractéristiques.
+Invisible. Data frame in which a line is an association between a pattern and its
+ characteristics.
 }
 \description{
-Calcule les caractéristiques des différents motifs (fréquence, poids, ordre, spécificté, caractère dynamique).
-La data frame résultante est assignée à l'attribut \code{patterns}.
+Compute the characteristics of the patterns (frequency, weight, order, specificity, dynamic status).
+The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).

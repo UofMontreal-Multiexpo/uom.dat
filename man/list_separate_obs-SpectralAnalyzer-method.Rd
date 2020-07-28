@@ -3,21 +3,20 @@
 \name{list_separate_obs,SpectralAnalyzer-method}
 \alias{list_separate_obs,SpectralAnalyzer-method}
 \alias{list_separate_obs}
-\title{Énumération des nœuds}
+\title{Enumeration of nodes}
 \usage{
 \S4method{list_separate_obs}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 }
 \value{
-Invisible. Data frame des observations distinctes et de leurs caractéristiques
- (longueur et poids).
+Invisible. Data frame of the separate observations and their characteristics (length and
+ weight).
 }
 \description{
-Identifie les observations distinctes et calcule la taille et le nombre de recrutements
-de chacune de ces observations.
-La data frame résultante est assignée à l'attribut \code{nodes}.
+Identify the separate observations and compute their size and number of occurrences.
+The resulting data frame is assigned to the attribute \code{nodes} of \code{object}.
 }
 \author{
 Gauthier Magnin

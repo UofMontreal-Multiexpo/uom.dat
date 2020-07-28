@@ -3,28 +3,29 @@
 \name{extract_nodes_from_items,SpectralAnalyzer-method}
 \alias{extract_nodes_from_items,SpectralAnalyzer-method}
 \alias{extract_nodes_from_items}
-\title{Recherche de nœuds par item}
+\title{Search for nodes by item}
 \usage{
 \S4method{extract_nodes_from_items}{SpectralAnalyzer}(object, nodes_characteristics, items, target = "all")
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{nodes_characteristics}{Data frame des nœuds et de leurs caractéristiques.}
+\item{nodes_characteristics}{Data frame of nodes and their characteristics.}
 
-\item{items}{Éléments recherchés (un ou plusieurs).}
+\item{items}{Sought items (one or more).}
 
-\item{target}{Condition pour qu'un nœud soit extrait. Choix parmi \code{"all"}, \code{"any"}.
+\item{target}{Condition for a node to be extracted. One of \code{"all"}, \code{"any"}.
 \describe{
-  \item{\code{"all"}}{L'intégralité des éléments recherchés doivent faire partie d'un nœud pour que ce nœud soit extrait.}
-  \item{\code{"any"}}{Au moins un des éléments recherchés doit faire partie d'un nœud pour que ce nœud soit extrait.}
+  \item{\code{"all"}}{All the sought items must be part of a node for this node to be extracted.}
+  \item{\code{"any"}}{At least one of the sought items must be part of a node for this node to be
+                      extracted.}
 }}
 }
 \value{
-Sous-ensemble de la data frame fournie en argument contenant les nœuds correspondant au critère de recherche.
+Subset of the data frame of nodes that match the search criteria.
 }
 \description{
-Extrait les nœuds contenant un ou plusieurs items recherchés.
+Extract the nodes containing one or more sought items.
 }
 \seealso{
 \code{\link{extract_nodes_from_characteristic}}, \code{\link{extract_nodes_from_category}}.

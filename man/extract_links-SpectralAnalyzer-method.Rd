@@ -3,29 +3,30 @@
 \name{extract_links,SpectralAnalyzer-method}
 \alias{extract_links,SpectralAnalyzer-method}
 \alias{extract_links}
-\title{Extraction de liens}
+\title{Extraction of links}
 \usage{
 \S4method{extract_links}{SpectralAnalyzer}(object, entities, characteristics)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{entities}{Type d'élément pour lequel rechercher les liens.
-Choix parmi \code{"nodes"}, \code{"patterns"}.}
+\item{entities}{Type of entities to search for links.
+One of \code{"nodes"}, \code{"patterns"}.}
 
-\item{characteristics}{Data frame des caractéristiques des nœuds ou motifs dont les liens sont à rechercher.}
+\item{characteristics}{Data frame of the characteristics of the nodes or patterns whose links are
+to be sought.}
 }
 \value{
-Data frame associant les nœuds ou motifs liés.
+Data frame associating the linked nodes or linked patterns.
 }
 \description{
-Extrait de l'ensemble des liens ceux correspondant aux nœuds ou motifs recherchés.
+Extract from the links those corresponding to the desired nodes or patterns.
 }
 \details{
-Si parmi les nœuds ou motifs, certains deviennent isolés du fait que les autres éléments
- auxquels ils sont normalement liés ne font pas partie de \code{characteristics}, ces nœuds ou
- motifs sont ajoutés à la fin de la data frame de retour.
-Ces éventuelles \code{n} lignes additionnelles sont numérotées \code{"A1"..."An"}.
+If among the nodes or patterns some become isolated because the other entities to which they
+ are normally linked are not part of \code{characteristics}, these nodes or patterns are placed
+ at the end of the return data frame.
+These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
 }
 \author{
 Gauthier Magnin

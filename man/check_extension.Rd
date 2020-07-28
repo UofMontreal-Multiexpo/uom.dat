@@ -2,20 +2,20 @@
 % Please edit documentation in R/utils.R
 \name{check_extension}
 \alias{check_extension}
-\title{Extension de fichier}
+\title{File extension}
 \usage{
 check_extension(filename, ext)
 }
 \arguments{
-\item{filename}{Chaîne de caractères devant être considérée comme un nom de fichier.}
+\item{filename}{Character string to be considered as a filename.}
 
-\item{ext}{Extension souhaitée.}
+\item{ext}{Desired extension.}
 }
 \value{
-Chaîne de caractères, terminant par l'extension \code{ext}.
+Character string \code{filename}, ending with the extension \code{ext}.
 }
 \description{
-Vérifie si un nom de fichier possède l'extension désirée.
-Ajoute cette extension si ce n'est pas le cas.
+Check if a filename has the desired extension.
+Add this extension if it has not.
 }
 \keyword{internal}

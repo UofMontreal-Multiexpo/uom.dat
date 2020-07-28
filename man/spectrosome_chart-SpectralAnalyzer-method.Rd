@@ -26,106 +26,114 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{entities}{Type d'élément pour lequel construire le spectrosome (nœuds ou motifs).
-Choix parmi \code{"nodes"}, \code{"patterns"}.}
+\item{entities}{Type of entities for which to plot the spectrosome (nodes or patterns).
+One of \code{"nodes"}, \code{"patterns"}.}
 
-\item{characteristics}{Ensemble des caractéristiques des nœuds ou motifs dont le spectrosome est à tracer.}
+\item{characteristics}{Characteristics of nodes or patterns whose spectrosome is to be plotted.}
 
-\item{nb_graphs}{Nombre de graphiques à générer et enregistrer. Le placement des sommets diffère entre chaque exemplaire.}
+\item{nb_graphs}{Number of graphics to generate and save. The place of the vertices differs between
+each copy.}
 
-\item{min_link_weight}{Nombre minimum d'items en commun entre deux entités pour afficher le lien sur le graphe.}
+\item{min_link_weight}{Minimum number of items in common between two entities to plot their link on
+the chart.}
 
-\item{vertex_size}{Façon dont les tailles des sommets du graphe doivent être définies.
-Choix parmi \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
+\item{vertex_size}{Way how the sizes of the vertices of the graph should be defined.
+One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
 \describe{
-  \item{\code{"relative"}}{La taille d'un sommet dépend de l'intervalle de valeurs des différents poids.}
-  \item{\code{"grouped"}}{Les poids des motifs sont regroupés selon des intervalles. À chaque intervalle correspond une taille.}
-  \item{\code{"absolute"}}{La taille d'un sommet est définie directement en fonction du poids du motif.}
-  \item{\code{"equal"}}{Les sommets ont tous la même taille.}
+  \item{\code{"relative"}}{The size of a vertex depends on the range of values of the weights.}
+  \item{\code{"grouped"}}{The weights of the entities are grouped according to intervals.
+                          One size is defined for each interval.}
+  \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
+                           the entity.}
+  \item{\code{"equal"}}{The vertices are all the same size.}
 }}
 
-\item{vertex_col}{Façon dont les couleurs des sommets du graphe doivent être définies.
-Choix parmi \code{"status"}, \code{"categories"}, \code{"none"}.
-Si \code{"status"} et \code{entities = "patterns"}, coloration selon les statuts des motifs.
-Si \code{"categories"}, coloration selon les catégories associées aux items des entités représentées.
-Dans tous les autres cas, le sommets sont de couleur grise.}
+\item{vertex_col}{Way how the colors of the vertices of the graph should be defined.
+One of \code{"status"}, \code{"categories"}, \code{"none"}.
+If \code{"status"} and \code{entities = "patterns"}, coloring according to the status of the patterns.
+If \code{"categories"}, coloring according to the categories associated with the items of the
+entities represented.
+In all other cases, the vertices are colored gray.}
 
-\item{clusters}{Nombre maximum de clusters à nommer sur le graphe.
-Si le nombre de clusters est supérieur, les noms des plus petits clusters ne sont pas affichés.}
+\item{clusters}{Maximum number of clusters to name on the graph.
+If the actual number of clusters is greater, the names of the smaller clusters are not displayed.}
 
-\item{highlight}{Nombre de clusters à mettre en évidence parmi ceux nommés sur le graphe.
-Les noms des plus grands clusters sont affichés en gras.}
+\item{highlight}{Number of clusters to highlight among those named on the graph.
+The names of the largest clusters are displayed in bold.}
 
-\item{use_names}{Si \code{TRUE}, affiche les noms des items s'ils sont définis. Affiche leurs codes sinon.}
+\item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
+codes otherwise.}
 
-\item{n.cutoff}{Si \code{use_names = TRUE}, nombre limite de caractères à afficher concernant les noms des items affichés.}
+\item{n.cutoff}{If \code{use_names = TRUE}, limit number of characters to display concerning the names
+of the represented items.}
 
-\item{c.cutoff}{Nombre limite de caractères à afficher dans la légende concernant les catégories représentées.}
+\item{c.cutoff}{Limit number of characters to display in the legend for the categories represented.}
 
-\item{display_mixt}{Si \code{TRUE}, affiche dans la légende les valeurs de catégorie incluses
-uniquement dans des liens mixtes (ou dans des sommets mixtes, si \code{vertex_col = "categories"}).}
+\item{display_mixt}{If \code{TRUE}, display in the legend the category values included only in mixed
+links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 
-\item{path}{Chemin du dossier dans lequel enregistrer les graphiques.
-Par défaut, les graphiques sont enregistrés dans le répertoire de travail.}
+\item{path}{Path of the directory in which to save the charts.
+By default, the charts are saved in the working directory.}
 
-\item{name}{Nom du fichier dans lequel enregistrer le graphique.
-Si \code{nb_graphs} est supérieur à \code{1}, un numéro est ajouté automatiquement à la fin du nom du fichier.}
+\item{name}{Name of the file in which to save the chart.
+If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
+file name.}
 
-\item{title}{Titre du graphique.}
+\item{title}{Chart title.}
 
-\item{...}{Arguments supplémentaires fournis à la fonction \code{\link[sna:gplot]{sna::gplot}}
-pour le traçage du graphe. Cf. section Details.}
+\item{...}{Additional arguments to the function \code{\link[sna:gplot]{sna::gplot}} for plotting
+the graph. See Details section.}
 }
 \value{
-Liste contenant :
- \describe{
-   \item{\code{vertices}}{Data frame des nœuds ou motifs et caractéristiques utilisées,
-                          associés aux identifiants des sommets du graphe et à leurs degrés dans le graphe.}
-   \item{\code{edges}}{Data frame des informations relatives aux arêtes du graphe.}
-   \item{\code{coords}}{Liste contenant les matrices des coordonnées des sommets du graphe.
-                        Autant de matrices que de graphiques (\code{nb_graphs}), pouvant être
-                        réutilisées via l'argument \code{coord} (cf. \code{...}).}
+\describe{
+   \item{\code{vertices}}{Data frame of the nodes or patterns and characteristics used,
+                          associated with the identifiers of the vertices of the graph and their
+                          degrees in the graph.}
+   \item{\code{edges}}{Data frame of information relating to the edges of the graph.}
+   \item{\code{coords}}{List containing the coordinate matrices of the vertices of the graph.
+                        As many matrices as there are charts (\code{nb_graphs}), which can be
+                        reused via the argument \code{coord} (see \code{...}).}
  }
 }
 \description{
-Construit un ou plusieurs graphiques de type spectrosome et les enregistre au format PNG.
+Plot one or more spectrosome charts and save them in PNG format.
 }
 \details{
-Si des catégories sont associées aux items, chaque catégorie génère un spectrosome.
- Le nom de la catégorie est ajouté à la fin du nom du fichier.
+If categories are associated with the items, each category generates a spectrosome.
+ The category name is appended to the end of the file name.
 
-Si des liens mixtes sont relatifs à des valeurs de catégorie qui ne sont pas représentées par des
- liens simples, ces valeurs apparaîssent dans la légende en dessous de "Mixt", sans couleur associée.
-Il en est de même concernant les sommets mixtes si l'argument \code{vertex_col} vaut
- \code{"categories"}.
- 
-Si \code{min_link_weight} est supérieur à 1, certains nœuds ou motifs peuvent devenir isolés
- du fait que leurs liens avec les autres éléments peuvent ne plus être considérés. Ces nouveaux
- sommets isolés sont déplacés à la fin de la data frame de retour \code{edges}.
-Les \code{n} lignes additionnelles sont numérotées \code{"A1"..."An"}.
+If mixed links are relative to category values that are not represented by single links, these
+ values are present in the legend below "Mixt", with no associated color.
+The same is true for mixed vertices if the argument \code{vertex_col} is \code{"categories"}.
 
-Les couleurs associées aux valeurs de chaque catégorie représentée sont sélectionnées
- de manière circulaire parmi les 20 couleurs de la palette \code{category20} de D3 (cf.
- \code{ggsci::pal_d3("category20")}).
-Par conséquent, si le nombre de valeurs dépasse \code{20}, certaines couleurs seront utilisées
- plusieurs fois. Par exemple, la \out{22<sup>e</sup>} valeur partagera la couleur de la
- \out{2<sup>e</sup>} valeur.
+If \code{min_link_weight} is greater than 1 or the chart is to be plotted from a subset of
+ all nodes or patterns, some of them may become isolated because their links to the other
+ entities may no longer be considered.
+These new isolated vertices are moved to the end of the return data frame \code{edges}.
+The \code{n} related lines are numbered \code{"A1"..."An"}.
 
-Les noms des clusters confondus, du fait que l'intégralité de leurs liens sont des liens mixtes,
- ne sont pas affichés.
+The colors associated with the values of each category represented are selected circularly
+ among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
+Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
+ For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
+ value.
+See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 
-Des arguments supplémentaires peuvent être fournis à la fonction en charge du traçage du graphe.
- Voir la liste des paramètres : \code{\link[sna:gplot]{sna::gplot}}.
-Parmi eux, les paramètres suivants sont déjà définis et ne peuvent pas être modifiés : \code{dat},
+The names of clusters confused because all of their links are mixed links, are not displayed.
+
+Additional arguments can be supplied to the function in charge of plotting the graph.
+ See the list of parameters: \code{\link[sna:gplot]{sna::gplot}}.
+Among them, the following parameters are already defined and cannot be modified: \code{dat},
  \code{gmode}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
-Les paramètres suivants, pouvant être redéfinis, ont pour valeurs :
+The following parameters, which can be redefined, have the following values:
  \itemize{
    \item{\code{mode = "fruchtermanreingold"}}
    \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
-     où \code{nrow(nop_links)} correspond à la somme du nombre de liens et du nombre d'éléments isolés.
-     Peut aussi être un objet de type \code{expression} ou \code{NULL}.}
+     where \code{nrow(nop_links)} is the sum of the number of links and the number of isolated
+     entities.
+     Can also be an object of type \code{expression} or \code{NULL}.}
    \item{\code{displaylabels = TRUE}}
    \item{\code{label.pos = 0}}
    \item{\code{boxed.labels = TRUE}}

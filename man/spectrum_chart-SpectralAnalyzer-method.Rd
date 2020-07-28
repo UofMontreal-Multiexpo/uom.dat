@@ -3,7 +3,7 @@
 \name{spectrum_chart,SpectralAnalyzer-method}
 \alias{spectrum_chart,SpectralAnalyzer-method}
 \alias{spectrum_chart}
-\title{Spectre des motifs}
+\title{Pattern spectrum}
 \usage{
 \S4method{spectrum_chart}{SpectralAnalyzer}(
   object,
@@ -14,22 +14,23 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns_characteristics}{Ensemble des caractéristiques des motifs dont le spectre est à tracer.}
+\item{patterns_characteristics}{Patterns (and their characteristics) whose spectrum is to be plotted.}
 
-\item{path}{Chemin du dossier dans lequel enregistrer le graphique.
-Par défaut, le graphique est enregistré dans le répertoire de travail.}
+\item{path}{Path of the directory in which to save the chart.
+By default, the chart is saved in the working directory.}
 
-\item{name}{Nom du fichier dans lequel enregistrer le graphique.}
+\item{name}{Name of the file in which to save the chart.}
 
-\item{title}{Titre du graphique.}
+\item{title}{Chart title.}
 }
 \value{
-Data frame des motifs et caractéristiques utilisées, associés aux identifiants visibles sur le graphique.
+Data frame of the patterns and characteristics used, associated with the identifiers visible
+ on the chart.
 }
 \description{
-Construit un graphique de type spectre et l'enregistre dans un fichier au format PDF.
+Plot a spectrum chart and save it as a PDF file.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).

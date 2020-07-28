@@ -2,29 +2,30 @@
 % Please edit documentation in R/observation_maker.R
 \name{get_obs_from_info}
 \alias{get_obs_from_info}
-\title{Recherche d'observations par information spécifique}
+\title{Search for observations by specific information}
 \usage{
 get_obs_from_info(observations, ..., target = "all")
 }
 \arguments{
-\item{observations}{Liste des observations sur lesquels effectuer la recherche.}
+\item{observations}{List of observations on which to do the search.}
 
-\item{...}{Arguments de type \code{clé = valeur} où \code{clé} fait référence au nom d'une variable
-contenue dans les observations et \code{valeur} correspond à la valeur recherchée pour cette variable.}
+\item{...}{arguments of type \code{key = value} where \code{key} refers to the name of one
+variable contained in the observations and \code{value} corresponds to the sought value for
+this variable.}
 
-\item{target}{Condition pour qu'une observation soit extraite. Choix parmi \code{"all"}, \code{"any"}.
+\item{target}{Condition for an observation to be extracted. One of \code{"all"}, \code{"any"}.
 \describe{
- \item{\code{"all"}}{L'intégralité des informations recherchées doivent faire partie d'une observation
-                     pour que cette observation soit extraite.}
- \item{\code{"any"}}{Au moins une des informations recherchées doit faire partie d'une observation pour
-                     que cette observation soit extraite.}
+ \item{\code{"all"}}{All the sought information must be part of an observation for this
+                     observation to be extracted.}
+ \item{\code{"any"}}{At least one of the sought information must be part of an observation
+                     for this observation to be extracted.}
 }}
 }
 \value{
-Sous-ensemble de la liste d'observations correspondant aux critères de recherche.
+Subset of the list of observations that match the search criteria.
 }
 \description{
-Extrait les observations correspondant à un ou plusieurs critères de recherche.
+Extract the observations that match to one or more search criteria.
 }
 \seealso{
 \code{\link{get_obs_from_items}}.

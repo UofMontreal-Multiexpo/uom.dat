@@ -3,17 +3,17 @@
 \name{reset,SpectralAnalyzer-method}
 \alias{reset,SpectralAnalyzer-method}
 \alias{reset}
-\title{Reconstruit en partie un analyseur spectral}
+\title{Partial reset of a spectral analyzer}
 \usage{
 \S4method{reset}{SpectralAnalyzer}(object, from = 1)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{from}{Étape à partir de laquelle recalculer les attributs.}
+\item{from}{Step from which to recompute the attributes.}
 }
 \description{
-Redéfinit les attributs d'un analyseur à partir d'une étape spécifique.
+Redefine the attributes of a spectral analyzer from a specific step.
 }
 \author{
 Gauthier Magnin

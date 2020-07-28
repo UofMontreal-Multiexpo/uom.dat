@@ -3,20 +3,20 @@
 \name{compute_ksi_threshold,SpectralAnalyzer-method}
 \alias{compute_ksi_threshold,SpectralAnalyzer-method}
 \alias{compute_ksi_threshold}
-\title{Calcul de seuil ksi}
+\title{Computation of threshold ksi}
 \usage{
 \S4method{compute_ksi_threshold}{SpectralAnalyzer}(object, reporting_indexes)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{reporting_indexes}{Indices de recrutement associées aux motifs.}
+\item{reporting_indexes}{Reporting indexes associated with the patterns.}
 }
 \value{
-Seuil calculé.
+Computed threshold.
 }
 \description{
-Calcule le nombre de motifs permettant d'expliquer l'essentiel des indices de recrutement.
+Compute the number of patterns allowing to explain the main part of the reporting indexes.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).

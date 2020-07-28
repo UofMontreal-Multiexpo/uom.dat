@@ -3,26 +3,26 @@
 \name{compute_specificity,SpectralAnalyzer-method}
 \alias{compute_specificity,SpectralAnalyzer-method}
 \alias{compute_specificity}
-\title{Calcul de spécificité}
+\title{Specificity computation}
 \usage{
 \S4method{compute_specificity}{SpectralAnalyzer}(object, patterns, frequencies, weights)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns}{Liste des motifs dont la spécificité est à calculer.}
+\item{patterns}{Patterns whose specificity is to be computed.}
 
-\item{frequencies}{Vecteur des fréquences associées aux motifs contenus dans \code{patterns}.}
+\item{frequencies}{Vector of frequencies associated with the patterns contained in \code{patterns}.}
 
-\item{weights}{Vecteur des poids associées aux motifs contenus dans \code{patterns}.}
+\item{weights}{Vector of weights associated with the patterns contained in \code{patterns}.}
 }
 \value{
-Vecteur contenant la spécificité de chaque motif contenu dans \code{patterns}.
+Vector containing the specificity of each pattern contained in \code{patterns}.
 }
 \description{
-Calcule la spécificité de l'information portée par chaque motif.
-La spécificité correspond au caractère d'un motif spécifique d'une combinaison particulière
- ou ubiquitaire et permettant la formation de nombreux agrégats.
+Compute the specificity of the information conveyed by each pattern.
+The specitificity corresponds to the character of a pattern of being specific of a particular
+ combination or ubiquitous and allowing the formation of numerous aggregates.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).

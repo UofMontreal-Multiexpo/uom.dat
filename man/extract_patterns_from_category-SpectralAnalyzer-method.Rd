@@ -3,7 +3,7 @@
 \name{extract_patterns_from_category,SpectralAnalyzer-method}
 \alias{extract_patterns_from_category,SpectralAnalyzer-method}
 \alias{extract_patterns_from_category}
-\title{Recherche de motifs par catégorie}
+\title{Search for patterns by category}
 \usage{
 \S4method{extract_patterns_from_category}{SpectralAnalyzer}(
   object,
@@ -14,26 +14,28 @@
 )
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns_characteristics}{Data frame des motifs et de leurs caractéristiques.}
+\item{patterns_characteristics}{Data frame of patterns and their characteristics.}
 
-\item{category}{Nom ou numéro de la catégorie sur laquelle effectuer la recherche
-(numérotation selon l'ordre des colonnes de \code{object["items_categories"]}).}
+\item{category}{Name or number of the category on which to search (numbering according to the order
+of the columns of \code{object["items_categories"]}).}
 
-\item{value}{Valeur recherchée pour la catégorie spécifiée par l'argument \code{category}.}
+\item{value}{Sought value for the category specified by the argument \code{category}.}
 
-\item{target}{Condition pour qu'un motif soit extrait. Choix parmi \code{"vertices"}, \code{"edges"}.
+\item{target}{Condition for a pattern to be extracted. One of \code{"vertices"}, \code{"edges"}.
 \describe{
-  \item{\code{"vertices"}}{Recherche des motifs contenant un item associé à la valeur de catégorie recherchée.}
-  \item{\code{"edges"}}{Recherche des motifs générant un lien correspondant à la valeur de catégorie recherchée.}
+  \item{\code{"vertices"}}{Search for patterns containing an item associated with the sought
+                           category value.}
+  \item{\code{"edges"}}{Search for patterns generating links corresponding to the sought category
+                        value.}
 }}
 }
 \value{
-Data frame des motifs correspondant aux critères de recherche.
+Subset of the data frame of patterns that match the search criteria.
 }
 \description{
-Extrait les motifs correspondant à une valeur de catégorie recherchée
+Extract the patterns corresponding to a sought category value.
 }
 \seealso{
 \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_characteristic}},

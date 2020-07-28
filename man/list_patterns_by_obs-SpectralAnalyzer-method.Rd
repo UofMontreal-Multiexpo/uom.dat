@@ -3,21 +3,20 @@
 \name{list_patterns_by_obs,SpectralAnalyzer-method}
 \alias{list_patterns_by_obs,SpectralAnalyzer-method}
 \alias{list_patterns_by_obs}
-\title{Liaison des nœuds aux motifs}
+\title{Linking nodes to patterns}
 \usage{
 \S4method{list_patterns_by_obs}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 }
 \value{
-Invisible. Matrice de booléens dans laquelle les lignes correspondent aux observations
- et les colones aux motifs.
- Une case ayant la valeur \code{TRUE} signifie que le motif est inclus dans l'observation (ou le nœud).
+Invisible. Logical matrix in which rows correspond to observations and columns correspond
+ to patterns. A value of \code{TRUE} means the pattern is included in the observation (or the node).
 }
 \description{
-Associe à chaque observation distincte (c'est-à-dire, chaque nœud) les motifs qui y sont inclus.
-La matrice résultante est assignée à l'attribut \code{obs_patterns}.
+Associate each separate observation (i.e. each node) with the patterns included in it.
+The resulting matrix is assigned to the attribute \code{obs_patterns} of \code{object}.
 }
 \author{
 Gauthier Magnin

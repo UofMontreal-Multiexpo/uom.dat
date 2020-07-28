@@ -2,46 +2,46 @@
 % Please edit documentation in R/observation_maker.R
 \name{make_observations}
 \alias{make_observations}
-\title{Regroupement de données}
+\title{Grouping data}
 \usage{
 make_observations(data, by, additional = NULL, unique_values = TRUE)
 }
 \arguments{
-\item{data}{Data frame contenant un ensemble de données à regrouper.}
+\item{data}{Data frame containing a set of data to group together.}
 
-\item{by}{Noms de variables inclus dans \code{colnames(data)} servant à regrouper les données
-de \code{data}.
-Chaque combinaison de valeurs de ces différentes variables engendre une observation.}
+\item{by}{Variable names included in \code{colnames(data)} used to group the data.
+Each combination of values of these different variables generates one observation.}
 
-\item{additional}{Noms d'informations à conserver lors de la constitution des observations
-(vecteur inclus dans \code{colnames(data)}).}
+\item{additional}{Names of information to keep when creating observations: vector included in
+\code{colnames(data)}.}
 
-\item{unique_values}{logical ou character.
+\item{unique_values}{logical or character.
 \itemize{
-  \item{Si \code{TRUE}, simplification des valeurs associées aux variables définies dans
-        \code{additional} de manière à supprimer les doublons.}
-  \item{Si \code{FALSE}, conserve les doublons et la correspondance entre les valeurs de ces
-        variables pour une même ligne de \code{data} (autant de valeurs que de lignes
-        regroupées).}
-  \item{Sinon, vecteur des variables inclus dans \code{colnames(data)} pour lesquelles la
-        suppression des doublons doit être réalisée.}
+  \item{If \code{TRUE}, simplification of the values associated with the variables defined in
+        \code{additional} in order to remove duplicates.}
+  \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
+        these variables for the same line in \code{data} (as many values as there are rows
+        grouped).}
+  \item{Otherwise, vector of variable names included in \code{colnames(data)} for which the
+        removal of duplicates must be performed.}
 }}
 }
 \value{
-Liste des observations identifiées. Chaque observation est nommée par la combinaison de
- valeurs des variables nommées dans \code{by} qui l'a générée. Chaque observation est une liste
- dont les éléments correspondent aux valeurs des variables nommées dans \code{by} et
- \code{additional} qui ont été regroupées
+List of observations identified. Each observation is named by the combination of values
+ of the variables named in \code{by} that generated it. Each observation is a list whose elements
+ correspond to the values of the variables named in \code{by} and \code{additional} which have
+ been grouped together.
 }
 \description{
-Regroupe des données sous forme d'observations.
+Grouping data in the form of observations.
 }
 \details{
-Les variables de type \code{factor} sont converties en type \code{character}.
+Variables of type \code{factor} are cast to \code{character}.
 }
 \seealso{
-\code{\link{make_INRS_observations}} pour la construction d'observations bien ciblées
- par rapport à des interventions et à des situations de travail similaires.
+\code{\link{make_INRS_observations}} for the construction of well-targeted observations
+ specific to the field of occupational exposure in relation to inspections and similar work
+ situations.
 }
 \author{
 Gauthier Magnin

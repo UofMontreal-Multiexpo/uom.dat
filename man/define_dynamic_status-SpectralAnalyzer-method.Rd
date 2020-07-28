@@ -3,32 +3,33 @@
 \name{define_dynamic_status,SpectralAnalyzer-method}
 \alias{define_dynamic_status,SpectralAnalyzer-method}
 \alias{define_dynamic_status}
-\title{Attribution de statut dynamique}
+\title{Dynamic status assignment}
 \usage{
 \S4method{define_dynamic_status}{SpectralAnalyzer}(object, patterns, status_limit, t = NULL, period = Inf)
 }
 \arguments{
-\item{object}{Objet de classe SpectralAnalyzer.}
+\item{object}{SpectralAnalyzer class object.}
 
-\item{patterns}{Liste des motifs dont le statut dynamique est à définir.}
+\item{patterns}{Patterns whose dynamic status are to be defined.}
 
-\item{status_limit}{Intervalle de temps sur lequel caractériser le statut des motifs
-par rapport à la période définie par les paramètres \code{t} et \code{period}.}
+\item{status_limit}{Time interval over which to characterize the status of the patterns in relation
+to the period defined by the arguments \code{t} and \code{period}.}
 
-\item{t}{Année de fin de la période, c'est-à-dire, date à laquelle caractériser le motif.
-\code{NULL} indique que la caractérisation doit se faire par rapport à la dernière année
-couverte par les observations.}
+\item{t}{Year of the end of the period, i.e. the date on which to characterize the pattern.
+\code{NULL} specifies that the characterization must be done in relation to the last year covered
+by the observations.}
 
-\item{period}{Intervalle de temps à considérer pour caractériser le motif (nombre d'années).
-Si \code{t = 2015} et \code{period = 2}, alors le calcul est fait sur la période [2014 - 2015].
-\code{Inf} indique que la période considérée couvre un intervalle commençant à la date de la 
-plus ancienne observation et terminant à l'année \code{t}.}
+\item{period}{Time interval over which to characterize the patterns (number of years).
+For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
+period [2014 - 2015].
+\code{Inf} specifies that the period considered covers an interval starting on the date of the
+oldest observation and ending in the year \code{t}.}
 }
 \value{
-Data frame associant à chaque motif son statut dynamique.
+Data frame associating each pattern with its dynamic status.
 }
 \description{
-Définit le statut dynamique de chaque motif.
+Define the dynamic status of each pattern.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
