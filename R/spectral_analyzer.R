@@ -64,15 +64,15 @@ setClass(Class = "SpectralAnalyzer",
            max_length = "numeric",
            status_limit = "numeric",
            
-           nodes_per_year = "matrix",
            nodes = "data.frame",
+           nodes_per_year = "matrix",
            n_links = "matrix",
            nodes_links = "data.frame",
            
            obs_patterns = "matrix",
            
-           patterns_per_year = "matrix",
            patterns = "data.frame",
+           patterns_per_year = "matrix",
            p_links = "matrix",
            patterns_links = "data.frame",
            
