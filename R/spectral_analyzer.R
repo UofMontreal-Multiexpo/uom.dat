@@ -245,7 +245,7 @@ setMethod(f = "reset",
                 expression(  list_patterns_by_obs(object)  ),
                 "\n*** Step 7/10:  Characterization of patterns per year... ",
                 expression(  list_patterns_per_year(object)  ),
-                "\n*** Step 8/10:  Calculation of pattern characteristics... ",
+                "\n*** Step 8/10:  Computation of pattern characteristics... ",
                 expression(  compute_patterns_characteristics(object)  ),
                 
               # Initialisation des attributs utiles à la construction d'un spectrosome des motifs
@@ -459,7 +459,7 @@ setGeneric(name = "extract_patterns_from_status", def = function(object, pattern
 
 setGeneric(name = "extract_patterns_from_category", def = function(object, patterns_characteristics, category, value, target){ standardGeneric("extract_patterns_from_category") })
 
-setGeneric(name = "check_acces_for_category", def = function(object, category, value){ standardGeneric("check_acces_for_category") })
+setGeneric(name = "check_access_for_category", def = function(object, category, value){ standardGeneric("check_access_for_category") })
 
 setGeneric(name = "extract_nodes_from_items", def = function(object, nodes_characteristics, items, target = "all"){ standardGeneric("extract_nodes_from_items") })
 
@@ -2652,7 +2652,7 @@ setMethod(f = "extract_nodes_from_category",
             
             # Validation des paramètres
             if (!(target %in% c("vertices", "edges"))) stop("target must be \"vertices\" or \"edges\".")
-            check_acces_for_category(object, category, value)
+            check_access_for_category(object, category, value)
             
             if (target == "vertices") {
               # Recherche des items correspondant à la catégorie recherchée
@@ -2685,9 +2685,9 @@ setMethod(f = "extract_nodes_from_category",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_patterns_from_category}}, \code{\link{extract_nodes_from_category}}.
-#' @aliases check_acces_for_category
+#' @aliases check_access_for_category
 #' @keywords internal
-setMethod(f = "check_acces_for_category",
+setMethod(f = "check_access_for_category",
           signature = "SpectralAnalyzer",
           definition = function(object, category, value) {
             
@@ -2842,7 +2842,7 @@ setMethod(f = "extract_patterns_from_category",
             
             # Validation des paramètres
             if (!(target %in% c("vertices", "edges"))) stop("target must be \"vertices\" or \"edges\".")
-            check_acces_for_category(object, category, value)
+            check_access_for_category(object, category, value)
             
             if (target == "vertices") {
               # Recherche des items correspondant à la catégorie recherchée
