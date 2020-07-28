@@ -1626,15 +1626,15 @@ setMethod(f = "spectrosome_chart",
               colnames(characteristics)[colnames(characteristics) == "length"] = "order"
               
               # Texte affiché sur le graphique
-              nop_subtitle_1 = "\nNodes: "
-              nop_subtitle_3 = "; Isolated nodes: "
+              nop_subtitle_1 = "Nodes: %d (%d isolate"
+              nop_subtitle_2 = "); Links: %d"
               
               not_identical = !identical(object@nodes, characteristics)
               
             } else if (entities == "patterns") {
               # Texte affiché sur le graphique
-              nop_subtitle_1 = "\nPatterns: "
-              nop_subtitle_3 = "; Isolated patterns: "
+              nop_subtitle_1 = "Patterns: %d (%d isolate"
+              nop_subtitle_2 = "); Links: %d"
               
               not_identical = !identical(object@patterns, characteristics)
             }
@@ -1764,8 +1764,7 @@ setMethod(f = "spectrosome_chart",
                                     function(status) sum(characteristics$status == status))
               
               # Légende associée
-              legend_1 = c(paste(names(object@Class$STATUS_COLORS), paste0("(", count_status, ")")),
-                           "", "Single items", "Multiple items")
+              legend_1 = c(names(object@Class$STATUS_COLORS), "", "Single items", "Multiple items")
               col_1 = c(object@Class$STATUS_COLORS, "white", "black", "black")
               
             } else if (vertex_col != "categories") {
@@ -1930,11 +1929,12 @@ setMethod(f = "spectrosome_chart",
                                   edge.col = links_colors[[j]]
                                ), args))
                 
-                # Titre du graphique
+                # Titres du graphique
                 title(main = title, cex.main = 1.5)
-                title(main = paste0(nop_subtitle_1, nrow(characteristics),
-                                    "; Links: ", sum(nop_links$weight != 0),
-                                    nop_subtitle_3, length(sna::isolates(network_data))),
+                nb_isolates = length(sna::isolates(network_data))
+                title(main = paste0(sprintf(nop_subtitle_1, nrow(characteristics), nb_isolates),
+                                    if (nb_isolates < 2) "" else "s",
+                                    sprintf(nop_subtitle_2, sum(nop_links$weight != 0))),
                       font.main = 3, line = 0)
                 
                 # Préparation des formes de la légende du graphique
@@ -1974,6 +1974,12 @@ setMethod(f = "spectrosome_chart",
                 # Affichage de la légende
                 legend("topleft", bty = "n", xpd = NA, pt.cex = legend_pt.cex, pch = legend_pch,
                        legend = legend_legend, col = legend_col)
+                
+                # Légende supplémentaire concernant la distribution des statuts
+                if (entities == "patterns" && vertex_col == "status") {
+                  legend("topleft", bty = "n", xpd = NA, inset = c(0.065, 0),
+                         legend = paste0("(", count_status, ")"))
+                }
                 
                 # S'il y a bien des liens, identification et affichage des noms des clusters
                 if (sum(nop_links$weight != 0)) {
