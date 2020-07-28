@@ -478,7 +478,7 @@ setGeneric(name = "extract_nodes_from_characteristic", def = function(object, no
 
 setGeneric(name = "extract_nodes_from_category", def = function(object, nodes_characteristics, category, value, target){ standardGeneric("extract_nodes_from_category") })
 
-setGeneric(name = "extract_links", def = function(object, entities, characteristics){ standardGeneric("extract_links") })
+setGeneric(name = "get_links", def = function(object, entities, characteristics){ standardGeneric("get_links") })
 
 
 
@@ -1614,7 +1614,7 @@ setMethod(f = "spectrosome_chart",
             
             
             # Extraction des liens pour les éléments à visualiser (nop_links = nodes or patterns links)
-            nop_links = extract_links(object, entities, characteristics)
+            nop_links = get_links(object, entities, characteristics)
             
             if (entities == "nodes") {
               # Renommage de colonnes pour simplification ultérieure (cf. vertices_colors et vertices_shapes)
@@ -2714,7 +2714,7 @@ setMethod(f = "extract_nodes_from_category",
               
             } else if (target == "edges") {
               # Recherche de l'ensemble de liens correspondant aux motifs
-              links = extract_links(object, "nodes", nodes_characteristics)
+              links = get_links(object, "nodes", nodes_characteristics)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
               categories_links = lapply(strsplit(links$items, "/"),
                                         function(x) sort(unique(as.character(object@items_categories[x, category]))))
@@ -2915,7 +2915,7 @@ setMethod(f = "extract_patterns_from_category",
               
             } else if (target == "edges") {
               # Recherche de l'ensemble de liens correspondant aux motifs
-              links = extract_links(object, "patterns", patterns_characteristics)
+              links = get_links(object, "patterns", patterns_characteristics)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
               categories_links = lapply(strsplit(links$items, "/"),
                                         function(x) sort(unique(as.character(object@items_categories[x, category]))))
@@ -2927,7 +2927,7 @@ setMethod(f = "extract_patterns_from_category",
           })
 
 
-#' Extraction of links
+#' Get links between nodes or patterns
 #' 
 #' Extract from the links those corresponding to the desired nodes or patterns.
 #' 
@@ -2945,9 +2945,9 @@ setMethod(f = "extract_patterns_from_category",
 #' @return Data frame associating the linked nodes or linked patterns.
 #' 
 #' @author Gauthier Magnin
-#' @aliases extract_links
+#' @aliases get_links
 #' @export
-setMethod(f = "extract_links",
+setMethod(f = "get_links",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, characteristics) {
             
