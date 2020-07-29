@@ -71,7 +71,7 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1093/annweh/wxaa008}.
 }
 \seealso{
-The SpectralAnalyzer constructor \code{\link{spectral.analyzer}}.
+The SpectralAnalyzer constructor: \code{\link{spectral.analyzer}}.
 }
 \author{
 Gauthier Magnin

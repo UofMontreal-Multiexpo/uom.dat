@@ -2298,7 +2298,7 @@ setMethod(f = "degree",
 #' 
 #' Patterns of order 1 are not drawn. Only items included in higher-order patterns are.
 #' 
-#' The patterns are sorted according to their weights.
+#' The patterns are sorted according to their order values, then to their weights.
 #' 
 #' The colors associated with the values of the possible category represented are selected circularly
 #'  among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
