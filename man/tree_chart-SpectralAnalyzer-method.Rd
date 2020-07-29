@@ -8,6 +8,7 @@
 \S4method{tree_chart}{SpectralAnalyzer}(
   object,
   patterns_characteristics,
+  identifiers = "original",
   use_names = TRUE,
   n.cutoff = NULL,
   display_status = TRUE,
@@ -23,6 +24,12 @@
 \item{object}{SpectralAnalyzer class object.}
 
 \item{patterns_characteristics}{Patterns (and their characteristics) whose tree is to be plotted.}
+
+\item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame?
+One of \code{"original"}, \code{"new"}. \cr
+\code{"original"} to use the original identifiers.
+\code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
+about the sort that is performed).}
 
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}

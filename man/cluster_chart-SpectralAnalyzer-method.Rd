@@ -10,6 +10,7 @@
   entities,
   characteristics,
   item,
+  identifiers = "original",
   use_name = TRUE,
   n.cutoff = NULL,
   vertex_size = "relative",
@@ -32,6 +33,11 @@ One of \code{"nodes"}, \code{"patterns"}.}
 plotted.}
 
 \item{item}{Identification code of the item whose cluster is to be plotted.}
+
+\item{identifiers}{Which IDs to use to identify the nodes or patterns on the chart and in the
+return data frames? One of \code{"original"}, \code{"new"}. \cr
+\code{"original"} to use the original identifiers.
+\code{"new"} to use new identifiers ordered according to \code{characteristics}.}
 
 \item{use_name}{If \code{TRUE}, display the item name if it is defined. Display its identification
 code otherwise.}

@@ -8,6 +8,7 @@
 \S4method{spectrum_chart}{SpectralAnalyzer}(
   object,
   patterns_characteristics,
+  identifiers = "original",
   path = getwd(),
   name = "spectrum_of_patterns.pdf",
   title = "Spectrum of patterns"
@@ -17,6 +18,12 @@
 \item{object}{SpectralAnalyzer class object.}
 
 \item{patterns_characteristics}{Patterns (and their characteristics) whose spectrum is to be plotted.}
+
+\item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame?
+One of \code{"original"}, \code{"new"}. \cr
+\code{"original"} to use the original identifiers.
+\code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
+about the sort that is performed).}
 
 \item{path}{Path of the directory in which to save the chart.
 By default, the chart is saved in the working directory.}

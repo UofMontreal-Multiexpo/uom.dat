@@ -431,7 +431,7 @@ setGeneric(name = "define_dynamic_status", def = function(object, patterns, stat
 
 # Méthodes de création de graphiques de type spectre
 
-setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns"){ standardGeneric("spectrum_chart") })
+setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, identifiers = "original", path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns"){ standardGeneric("spectrum_chart") })
 
 setGeneric(name = "plot_spectrum_chart", def = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
 
@@ -440,11 +440,11 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs y étant relatifs
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -453,7 +453,7 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Méthodes de création de graphiques de type arbre de la multi-association
 
-setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
+setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
 
 setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
@@ -1315,6 +1315,11 @@ setMethod(f = "define_dynamic_status",
 #' 
 #' @param object SpectralAnalyzer class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose spectrum is to be plotted.
+#' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame?
+#'  One of \code{"original"}, \code{"new"}. \cr
+#'  \code{"original"} to use the original identifiers.
+#'  \code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
+#'  about the sort that is performed).
 #' @param path Path of the directory in which to save the chart.
 #'  By default, the chart is saved in the working directory.
 #' @param name Name of the file in which to save the chart.
@@ -1330,10 +1335,10 @@ setMethod(f = "define_dynamic_status",
 #' @export
 setMethod(f = "spectrum_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns") {
+          definition = function(object, patterns_characteristics, identifiers = "original", path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns") {
             
-            # Attribution d'identifiants aux motifs
-            patterns_characteristics$ID = seq(nrow(patterns_characteristics))
+            if (identifiers != "original" && identifiers != "new")
+              stop("identifiers must be \"original\" or \"new\".")
             
             # Ensembles des poids et longueurs des noeuds contenant les motifs
             patterns_distributions = compute_pattern_distribution_in_nodes(object, patterns_characteristics$pattern)
@@ -1349,6 +1354,10 @@ setMethod(f = "spectrum_chart",
             patterns_characteristics = patterns_characteristics[sorting_vector, ]
             weight_distribution = weight_distribution[sorting_vector]
             length_distribution = length_distribution[sorting_vector]
+            
+            # Attribution d'identifiants aux motifs
+            if (identifiers == "new") patterns_characteristics$ID = seq(nrow(patterns_characteristics))
+            else patterns_characteristics$ID = as.numeric(rownames(patterns_characteristics))
             
             # Décomposition des poids des motifs selon le type de noeuds (simple ou complexe)
             weights = data.frame(complex_nodes = sapply(seq(nrow(patterns_characteristics)), function(x) {
@@ -1566,6 +1575,10 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param entities Type of entities for which to plot the spectrosome (nodes or patterns).
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Characteristics of nodes or patterns whose spectrosome is to be plotted.
+#' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
+#'  return data frames? One of \code{"original"}, \code{"new"}. \cr
+#'  \code{"original"} to use the original identifiers.
+#'  \code{"new"} to use new identifiers ordered according to \code{characteristics}.
 #' @param nb_graphs Number of graphics to generate and save. The place of the vertices differs between
 #'  each copy.
 #' @param min_link_weight Minimum number of items in common between two entities to plot their link on
@@ -1620,12 +1633,13 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
+#' @seealso \code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' @aliases spectrosome_chart
 #' @export
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, characteristics,
+                                identifiers = "original",
                                 nb_graphs = 1, min_link_weight = 1,
                                 vertex_size = "relative", vertex_col = "status",
                                 clusters = Inf, highlight = 3,
@@ -1633,11 +1647,15 @@ setMethod(f = "spectrosome_chart",
                                 path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities),
                                 ...) {
             
+            # Validation des paramètres
             if (entities != "nodes" && entities != "patterns")
               stop("entities must be \"nodes\" or \"patterns\".")
             
             if (nrow(characteristics) < 2)
-              stop("\"characteristics\" must have at least 2 rows to draw a spectrosome.")
+              stop("characteristics must have at least 2 rows to draw a spectrosome.")
+            
+            if (identifiers != "original" && identifiers != "new")
+              stop("identifiers must be \"original\" or \"new\".")
             
             if (vertex_col != "status" && vertex_col != "categories" && vertex_col != "none")
               stop("vertex_col must be \"status\", \"categories\" or \"none\".")
@@ -1910,6 +1928,10 @@ setMethod(f = "spectrosome_chart",
             if(!("label.pos" %in% names(args))) args$label.pos = 0
             if(!("boxed.labels" %in% names(args))) args$boxed.labels = TRUE
             if(!("displayisolates" %in% names(args))) args$displayisolates = TRUE
+            if(!("label" %in% names(args))) {
+              if (identifiers == "new") args$label = vertices_id
+              else args$label = rownames(characteristics)
+            }
             
             # Duplication de la fonction utilisée par l'argument "mode" de la fonction sna::gplot
             # pour fonctionner sans avoir à charger le package
@@ -2028,6 +2050,14 @@ setMethod(f = "spectrosome_chart",
               colnames(characteristics)[colnames(characteristics) == "order"] = "length"
             }
             
+            # Réattribution des ID d'origine (non compatibles avec sna::gplot)
+            if (identifiers == "original" && not_identical) {
+              nop_links$endpoint.1 = names(vertices_id[nop_links$endpoint.1])
+              nop_links$endpoint.2 = names(vertices_id[nop_links$endpoint.2])
+              
+              vertices_id = as.numeric(rownames(characteristics))
+            }
+            
             # Noeuds ou motifs, caractéristiques, identifiants sur le graphique et degrés dans le graphe
             return(list(vertices = data.frame(ID = vertices_id, characteristics, degree = degrees),
                         edges = nop_links,
@@ -2055,7 +2085,7 @@ setMethod(f = "spectrosome_chart",
 #'  of the represented items.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
-#' @seealso \code{\link{spectrosome_chart}}, \code{\link[sna:gplot]{sna::gplot}}.
+#' @seealso \code{\link{spectrosome_chart}}, \code{\link{cluster_chart}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' @aliases cluster_text
 #' @keywords internal
 setMethod(f = "cluster_text",
@@ -2152,6 +2182,10 @@ setMethod(f = "cluster_text",
 #' @param characteristics Characteristics of nodes or patterns of which one of the clusters is to be
 #'  plotted.
 #' @param item Identification code of the item whose cluster is to be plotted.
+#' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
+#'  return data frames? One of \code{"original"}, \code{"new"}. \cr
+#'  \code{"original"} to use the original identifiers.
+#'  \code{"new"} to use new identifiers ordered according to \code{characteristics}.
 #' @param use_name If \code{TRUE}, display the item name if it is defined. Display its identification
 #'  code otherwise.
 #' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the name
@@ -2205,6 +2239,7 @@ setMethod(f = "cluster_text",
 setMethod(f = "cluster_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, characteristics, item,
+                                identifiers = "original",
                                 use_name = TRUE, n.cutoff = NULL,
                                 vertex_size = "relative", vertex_col = "status",
                                 c.cutoff = NULL, display_mixt = TRUE,
@@ -2228,6 +2263,7 @@ setMethod(f = "cluster_chart",
             if (nrow(nop) > 1) {
               # Construction du spectrosome associé
               to_return = spectrosome_chart(object, entities, nop,
+                                            identifiers = identifiers,
                                             vertex_size = vertex_size, vertex_col = vertex_col,
                                             use_names = use_name, n.cutoff = n.cutoff, c.cutoff = c.cutoff,
                                             display_mixt = display_mixt,
@@ -2313,6 +2349,11 @@ setMethod(f = "degree",
 #' 
 #' @param object SpectralAnalyzer class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose tree is to be plotted.
+#' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame?
+#'  One of \code{"original"}, \code{"new"}. \cr
+#'  \code{"original"} to use the original identifiers.
+#'  \code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
+#'  about the sort that is performed).
 #' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the names
@@ -2340,13 +2381,19 @@ setMethod(f = "degree",
 #' @export
 setMethod(f = "tree_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
+          definition = function(object, patterns_characteristics, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
+            
+            if (identifiers != "original" && identifiers != "new")
+              stop("identifiers must be \"original\" or \"new\".")
             
             # Motifs d'ordre > 1, triés par taille croissant, puis par poids décroissant
             pat_charac = patterns_characteristics[patterns_characteristics$order != 1, ]
             pat_charac = pat_charac[order(pat_charac$order,
                                           max(pat_charac$weight) - pat_charac$weight), ]
-            pat_charac$ID = seq(nrow(pat_charac))
+            
+            # Attribution d'identifiants aux motifs
+            if (identifiers == "new") pat_charac$ID = seq(nrow(pat_charac))
+            else pat_charac$ID = as.numeric(rownames(pat_charac))
             
             # Ensemble des items distincts parmi les motifs, associés d'une catégorie
             items_cat = data.frame(item = unique(unlist(pat_charac$pattern)))
@@ -2392,7 +2439,8 @@ setMethod(f = "tree_chart",
             }
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
-            return(pat_charac[, c(ncol(pat_charac), seq(ncol(pat_charac)-1))])
+            return(pat_charac[order(pat_charac$ID),
+                              c(ncol(pat_charac), seq(ncol(pat_charac)-1))])
           })
 
 

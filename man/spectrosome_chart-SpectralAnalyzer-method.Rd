@@ -9,6 +9,7 @@
   object,
   entities,
   characteristics,
+  identifiers = "original",
   nb_graphs = 1,
   min_link_weight = 1,
   vertex_size = "relative",
@@ -32,6 +33,11 @@
 One of \code{"nodes"}, \code{"patterns"}.}
 
 \item{characteristics}{Characteristics of nodes or patterns whose spectrosome is to be plotted.}
+
+\item{identifiers}{Which IDs to use to identify the nodes or patterns on the chart and in the
+return data frames? One of \code{"original"}, \code{"new"}. \cr
+\code{"original"} to use the original identifiers.
+\code{"new"} to use new identifiers ordered according to \code{characteristics}.}
 
 \item{nb_graphs}{Number of graphics to generate and save. The place of the vertices differs between
 each copy.}
@@ -146,7 +152,7 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
+\code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin

@@ -41,7 +41,7 @@ The names of clusters confused because all of their links are mixed links, are n
 Texts are written on the active graphics device.
 }
 \seealso{
-\code{\link{spectrosome_chart}}, \code{\link[sna:gplot]{sna::gplot}}.
+\code{\link{spectrosome_chart}}, \code{\link{cluster_chart}}, \code{\link[sna:gplot]{sna::gplot}}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin
