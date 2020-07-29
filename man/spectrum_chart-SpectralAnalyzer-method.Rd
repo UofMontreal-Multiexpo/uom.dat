@@ -32,6 +32,10 @@ Data frame of the patterns and characteristics used, associated with the identif
 \description{
 Plot a spectrum chart and save it as a PDF file.
 }
+\details{
+The patterns are sorted according to their specificities (desc.), status (\code{"Persistent"},
+ \code{"Declining"}, \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
+}
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.

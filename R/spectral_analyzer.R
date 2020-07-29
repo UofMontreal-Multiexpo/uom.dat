@@ -1309,6 +1309,10 @@ setMethod(f = "define_dynamic_status",
 #' 
 #' Plot a spectrum chart and save it as a PDF file.
 #' 
+#' @details
+#' The patterns are sorted according to their specificities (desc.), status (\code{"Persistent"},
+#'  \code{"Declining"}, \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
+#' 
 #' @param object SpectralAnalyzer class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose spectrum is to be plotted.
 #' @param path Path of the directory in which to save the chart.
@@ -1338,8 +1342,8 @@ setMethod(f = "spectrum_chart",
             
             # Tri des motifs selon spécificité, statut, poids, longueur
             sorting_vector = order(1 - patterns_characteristics$specificity,
-                                   patterns_characteristics$status,
-                                   abs(patterns_characteristics$weight - max(patterns_characteristics$weight)),
+                                   match(patterns_characteristics$status, names(object@Class$STATUS_COLORS)),
+                                   max(patterns_characteristics$weight) - patterns_characteristics$weight,
                                    patterns_characteristics$order)
             
             patterns_characteristics = patterns_characteristics[sorting_vector, ]
