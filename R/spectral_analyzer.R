@@ -1388,20 +1388,39 @@ setMethod(f = "plot_spectrum_chart",
             # Définition des couleurs des barres du barplot
             bars_colors = object@Class$STATUS_COLORS[patterns_characteristics$status]
             
+            # Limite maximale de l'ordonnée concernant la spécificité
+            # Écart à 1 ajouté pour que la ligne ne soit pas tronquée en haut du graphique
+            # et que les tailles des motifs ayant le poids max ne soient pas masquées par la marge
+            y_lim_line = 1.045
+            
+            # Marge entre les barres et les axes à gauche et à droite
+            x_margin = 0.03 * nrow(patterns_characteristics)
             
             ## Bar chart relatif au poids
             par(mfrow = c(1, 1))
-            par(mar = c(7.1, 5, 4.1, 5) + .1)
+            par(mar = c(7.1, 5.6, 4.1, 5.6) + 0.1)
             
             # Diagramme en barres selon le poids des motifs
-            las = ifelse(length(patterns_characteristics$pattern) <= 20, 1, 2)
-            y_lim_bar = max(patterns_characteristics$weight) * 1.25
-            bar_plot = barplot(t(weights_by_node_type), col = NA, space = 0, main = title,
-                               xlim = c(-0.5, nrow(patterns_characteristics) + 0.5), xaxs = "i",
-                               ylim = c(0, y_lim_bar),
-                               lwd = 2, xlab = "Patterns IDs", ylab = "Weight", names.arg = patterns_characteristics$ID,
-                               cex.main = 1.3, cex.lab = 1.5, cex.axis = 1.5, cex.names = 0.9, las = las, font.axis = 2)
+            las = if (length(patterns_characteristics$pattern) < 50) 1 else 3
+            y_lim_bar = max(patterns_characteristics$weight) * y_lim_line # Poids max aligné avec specificité de 1
+            bar_plot = barplot(t(weights_by_node_type), main = title,
+                               col = NA, space = 0, lwd = 2,
+                               xlim = c(-x_margin, nrow(patterns_characteristics) + x_margin), xaxs = "i",
+                               ylim = c(0, y_lim_bar), yaxt = "n",
+                               xlab = "Patterns IDs", ylab = "",
+                               names.arg = patterns_characteristics$ID, las = las,
+                               cex.main = 1.3, cex.lab = 1.5, cex.axis = 1.5, cex.names = 0.9, font.axis = 2)
             bar_width_2 = diff(bar_plot[1:2]) / 2
+            
+            # Axe à gauche : suppression des nombres à virgule, orientation en fonction du nombre
+            # et affichage éventuel d'un tick supplémentaire pour délimiter l'axe en haut du graphique
+            ticks = unique(trunc(axTicks(2)))
+            if (max(ticks) < max(patterns_characteristics$weight)) {
+               ticks = append(ticks, max(patterns_characteristics$weight))
+            }
+            axis(2, lwd = 2, cex.axis = 1.5, font.axis = 2,
+                 at = ticks, las = if (any(ticks >= 10)) 3 else 1)
+            mtext("Weight", side = 2, line = 3.1, cex = 1.5, at = max(patterns_characteristics$weight) / 2)
             
             # Coloration des barres
             for (i in seq(nrow(weights_by_node_type))) {
@@ -1415,37 +1434,40 @@ setMethod(f = "plot_spectrum_chart",
             par(new = TRUE)
             
             # Ligne de la spécificité et seuil
-            y_lim_line = 1.039
             plot(x = seq(0.5, nrow(patterns_characteristics) - 0.5),
                  y = patterns_characteristics$specificity,
-                 lwd = 3, bty = "n", type = "b", col = "black", pch = 20,
-                 xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "",
-                 xlim = c(-0.5, nrow(patterns_characteristics) + 0.5), xaxs = "i",
-                 ylim = c(0, y_lim_line), yaxs = "i")
-            segments(x0 = 0, x1 = nrow(patterns_characteristics) + 0.5, y0 = 0.5,
+                 lwd = 3, type = "b", col = "black", pch = 20,
+                 bty = "n", xlab = "", ylab = "", main = "",
+                 xlim = c(-x_margin, nrow(patterns_characteristics) + x_margin), xaxt = "n", xaxs = "i",
+                 ylim = c(0, y_lim_line), yaxt = "n", yaxs = "i")
+            segments(x0 = 0, y0 = 0.5,
+                     x1 = nrow(patterns_characteristics) * (1 + x_margin),
                      lwd = 0.5, lty = "dotted")
             
             # Axe et titre à droite
             axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = 1.5, font.axis = 2)
-            mtext("Specificity", side = 4, line = 3.1, cex = 1.5)
+            mtext("Specificity", side = 4, line = 3.1, cex = 1.5, at = 0.5)
             
             
-            ## Texte relatif à l'ordre des motifs
+            ## Texte relatif aux tailles des motifs
             # Changement du système de coordonnées du au changement de graphique (bar -> line)
             new_y = patterns_characteristics$weight * y_lim_line / y_lim_bar
             shadowtext(bar_plot, new_y, as.roman(patterns_characteristics$order),
                        col = "black", bg = "white", cex = 0.8, pos = 3, offset = 1)
             
             
-            ## Légendes du graphique complet
-            legend("bottom", bty = "n", horiz = TRUE, xpd = NA, inset = c(0.06, -0.18),
+            ## Légendes
+            legend("bottomleft", bty = "n", horiz = TRUE, xpd = NA, inset = c(0, -0.15),
                    pch = 15, col = object@Class$STATUS_COLORS,
                    legend = names(object@Class$STATUS_COLORS), cex = 1.1)
-            legend("topright", bty = "n", xpd = NA, adj = 0, inset = c(0.18, -0.07), pch = "I",
+            legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.135),
+                   pch = "I",
                    legend = "- Order", cex = 1.1)
-            legend("topright", bty = "n", xpd = NA, adj = 0, inset = c(0.18, -0.04), pch = 20, lty = 1,
+            legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.165),
+                   pch = 20, lty = 1,
                    legend = "Specificity", cex = 1.1)
-            legend("topright", bty = "n", xpd = NA, inset = c(0.02, -0.07), fill = "red", density = c(600, 15),
+            legend("bottomright", bty = "n", xpd = NA, inset = c(0.005, -0.165),
+                   fill = "red", density = c(600, 15),
                    legend = c("Weight in complex nodes", "Weight in simple nodes"), cex = 1.1)
           })
 
