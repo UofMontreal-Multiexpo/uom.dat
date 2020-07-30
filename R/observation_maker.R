@@ -391,7 +391,7 @@ get_obs_from_items = function(observations, items, target = "all", key = "CODE")
   
   func = if (target == "all") all else any
   
-  index = which(sapply(sapply(observations, "[[", key), function (x) func(items %in% x)))
+  index = which(sapply(lapply(observations, "[[", key), function (x) func(items %in% x)))
   extraction = observations[index]
   
   return(setNames(extraction, index))
