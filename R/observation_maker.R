@@ -569,3 +569,39 @@ get_info_from_items = function(observations, items, info_names, target = "all", 
   return(setNames(to_return, info_names))
 }
 
+
+
+#### Fonctions de calculs sur des observations ####
+
+#' Proportions of co-occurrences of each item with any other item
+#' 
+#' For each item, compute the ratio between the number of occurrences of the item in complex observations
+#'  and the number of occurrences of the item in all observations. In other words, compute the inverse of
+#'  the ratio between the number of times the items appears alone and the number of times the item appears.
+#' 
+#' @param observations List of observations.
+#' @param key Access key to the items in an observation.
+#' @return Vector of the proportions of occurrences of each item in complex observations among all
+#'  observations.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{get_all_items}}, \code{\link{get_obs_from_items}},
+#'          \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}.
+#' @export
+co_occurrence_proportions = function(observations, key = "CODE") {
+  
+  # Vecteurs des items et proportions qui leurs seront associées
+  items = get_all_items(observations, key)
+  proportions = numeric(length(items))
+  names(proportions) = items
+  
+  # Calcul des proportions pour chaque item
+  for (item in items) {
+    obs_item = get_obs_from_items(observations, item, key = key)
+    proportions[as.character(item)] = length(get_complex_obs(obs_item, key)) / length(obs_item)
+  }
+  
+  return(proportions)
+}
+
+
