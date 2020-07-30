@@ -365,6 +365,50 @@ get_all_items = function(observations, key = "CODE") {
 }
 
 
+#' Search for complexe observations
+#' 
+#' Extract the observations containing more than one item.
+#' 
+#' @param observations List of observations on which to do the search.
+#' @param key Access key to the items in an observation.
+#' @return Subset of the list of observations that contain more than one item.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{get_simple_obs}}, \code{\link{get_obs_from_items}}, \code{\link{get_obs_from_info}}.
+#' @export
+get_complex_obs = function(observations, key = "CODE") {
+  
+  if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
+  
+  index = which(sapply(lapply(observations, "[[", key), function (x) length(x) > 1))
+  extraction = observations[index]
+  
+  return(setNames(extraction, index))
+}
+
+
+#' Search for simple observations
+#' 
+#' Extract the observations containing exactly one item.
+#' 
+#' @param observations List of observations on which to do the search.
+#' @param key Access key to the items in an observation.
+#' @return Subset of the list of observations that contain exactly one item.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{get_complex_obs}}, \code{\link{get_obs_from_items}}, \code{\link{get_obs_from_info}}.
+#' @export
+get_simple_obs = function(observations, key = "CODE") {
+  
+  if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
+  
+  index = which(sapply(lapply(observations, "[[", key), function (x) length(x) == 1))
+  extraction = observations[index]
+  
+  return(setNames(extraction, index))
+}
+
+
 #' Search for observations by item
 #' 
 #' Extract the observations containing one or more sought items.
@@ -382,7 +426,7 @@ get_all_items = function(observations, key = "CODE") {
 #' @return Subset of the list of observations that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_obs_from_info}}.
+#' @seealso \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_info}}.
 #' @export
 get_obs_from_items = function(observations, items, target = "all", key = "CODE") {
   
@@ -416,7 +460,7 @@ get_obs_from_items = function(observations, items, target = "all", key = "CODE")
 #' @return Subset of the list of observations that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_obs_from_items}}.
+#' @seealso \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_items}}.
 #' @export
 get_obs_from_info = function(observations, ..., target = "all") {
   
@@ -468,7 +512,7 @@ get_obs_from_info = function(observations, ..., target = "all") {
 #'  equal to \code{NULL}. List of codes and information requested otherwise.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_info_from_items}}.
+#' @seealso \code{\link{get_all_items}}, \code{\link{get_info_from_items}}.
 #' @export
 get_items_from_info = function(observations, ..., target = "all", additional = NULL, key = "CODE") {
   
@@ -510,7 +554,7 @@ get_items_from_info = function(observations, ..., target = "all", additional = N
 #'  Vector if only one type of information is to be extracted. List otherwise.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_items_from_info}}.
+#' @seealso \code{\link{get_items_from_info}}, \code{\link{get_all_items}}.
 #' @export
 get_info_from_items = function(observations, items, info_names, target = "all", key = "CODE") {
   

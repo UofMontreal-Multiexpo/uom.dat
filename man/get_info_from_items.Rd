@@ -38,7 +38,7 @@ Vector or list of information corresponding to the search.
 Retrieve information associated with observations that contain a set of sought items.
 }
 \seealso{
-\code{\link{get_items_from_info}}.
+\code{\link{get_items_from_info}}, \code{\link{get_all_items}}.
 }
 \author{
 Gauthier Magnin

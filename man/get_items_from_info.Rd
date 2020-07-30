@@ -40,7 +40,7 @@ Vector of the item codes corresponding to the search if \code{additional} is
 Retrieve the items associated with observations corresponding to one or more search criteria.
 }
 \seealso{
-\code{\link{get_info_from_items}}.
+\code{\link{get_all_items}}, \code{\link{get_info_from_items}}.
 }
 \author{
 Gauthier Magnin

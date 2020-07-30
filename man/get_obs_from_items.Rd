@@ -28,7 +28,7 @@ Subset of the list of observations that match the search criteria.
 Extract the observations containing one or more sought items.
 }
 \seealso{
-\code{\link{get_obs_from_info}}.
+\code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_info}}.
 }
 \author{
 Gauthier Magnin
