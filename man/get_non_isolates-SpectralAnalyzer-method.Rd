@@ -23,7 +23,7 @@ Subset of the data frame that corresponds to non-isolated entities.
 Extract from the given nodes or patterns those which are not isolated.
 }
 \seealso{
-\code{\link{get_isolates}}, \code{\link{get_links}}.
+\code{\link{get_isolates}}, \code{\link{get_complexes}}, \code{\link{get_links}}.
 }
 \author{
 Gauthier Magnin

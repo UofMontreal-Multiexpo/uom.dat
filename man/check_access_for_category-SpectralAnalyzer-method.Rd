@@ -13,11 +13,14 @@
 \item{category}{Name or number of the category to access (numbering according to the order of the
 columns of \code{object["items_categories"]}).}
 
-\item{value}{Sought value for the category specified by the argument \code{category}.}
+\item{value}{Sought value for the category specified by the argument \code{category}, or NA.}
 }
 \description{
 Check that the parameters provided match an existing category.
 Print an error message if not.
+}
+\details{
+If \code{value = NA}, only the parameter \code{category} is checked.
 }
 \seealso{
 \code{\link{extract_patterns_from_category}}, \code{\link{extract_nodes_from_category}}.

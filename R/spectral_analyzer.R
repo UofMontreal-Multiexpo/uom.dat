@@ -484,6 +484,8 @@ setGeneric(name = "get_isolates", def = function(object, entities, characteristi
 
 setGeneric(name = "get_non_isolates", def = function(object, entities, characteristics){ standardGeneric("get_non_isolates") })
 
+setGeneric(name = "get_complexes", def = function(object, entities, characteristics, category, target, min_nb_values = 2){ standardGeneric("get_complexes") })
+
 
 
 #### Méthodes de calculs utiles à la construction des noeuds ####
@@ -2839,10 +2841,13 @@ setMethod(f = "extract_nodes_from_category",
 #' Check that the parameters provided match an existing category.
 #' Print an error message if not.
 #' 
+#' @details
+#' If \code{value = NA}, only the parameter \code{category} is checked.
+#' 
 #' @param object SpectralAnalyzer class object.
 #' @param category Name or number of the category to access (numbering according to the order of the
 #'  columns of \code{object["items_categories"]}).
-#' @param value Sought value for the category specified by the argument \code{category}.
+#' @param value Sought value for the category specified by the argument \code{category}, or NA.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_patterns_from_category}}, \code{\link{extract_nodes_from_category}}.
@@ -2861,7 +2866,7 @@ setMethod(f = "check_access_for_category",
             }
             
             # Vérification que la valeur de la catégorie recherchée existe
-            if (!(value %in% levels(object@items_categories[, category]))) {
+            if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
               stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
                                                    collapse = ", ") ,".")
             }
@@ -3125,7 +3130,7 @@ setMethod(f = "get_links",
 #' @return Subset of the data frame that corresponds to isolated entities.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_non_isolates}}, \code{\link{get_links}}.
+#' @seealso \code{\link{get_non_isolates}}, \code{\link{get_complexes}}, \code{\link{get_links}}.
 #' @aliases get_isolates
 #' @export
 setMethod(f = "get_isolates",
@@ -3150,7 +3155,7 @@ setMethod(f = "get_isolates",
 #' @return Subset of the data frame that corresponds to non-isolated entities.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_isolates}}, \code{\link{get_links}}.
+#' @seealso \code{\link{get_isolates}}, \code{\link{get_complexes}}, \code{\link{get_links}}.
 #' @aliases get_non_isolates
 #' @export
 setMethod(f = "get_non_isolates",
@@ -3161,6 +3166,68 @@ setMethod(f = "get_non_isolates",
             row_id = as.character(sort(unique(unlist(links[links$weight != 0,
                                                            c("endpoint.1", "endpoint.2")]))))
             return(characteristics[row_id, ])
+          })
+
+
+#' Search for complex nodes or patterns
+#' 
+#' Extract from the given nodes or patterns those which are complexes by the number of values with
+#'  which they are associated, with regard to one category.
+#' 
+#' @param object SpectralAnalyzer class object.
+#' @param entities Type of entities to search for complexes.
+#'  One of \code{"nodes"}, \code{"patterns"}.
+#' @param characteristics Data frame of the characteristics of the nodes or patterns whose complexes
+#'  are to be sought.
+#' @param category Name or number of the category on which to search (numbering according to the order
+#'  of the columns of \code{object["items_categories"]}).
+#' @param target Condition for a node or a pattern to be extracted.
+#'  One of \code{"vertices"}, \code{"edges"}.
+#'  \describe{
+#'    \item{\code{"vertices"}}{Search for nodes or patterns associated (via their items) with several
+#'                             values of the category \code{category}.}
+#'    \item{\code{"edges"}}{Search for nodes or patterns generating links corresponding with several
+#'                          values of the category \code{category}.}
+#'  }
+#' @param min_nb_values Minimum number of different values of the category \code{category} a node, a
+#'  pattern or a link must have to extract the related entity.
+#' @return Subset of the data frame that corresponds to the complex entities sought.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}}.
+#' @aliases get_complexes
+#' @export
+setMethod(f = "get_complexes",
+          signature = "SpectralAnalyzer",
+          definition = function(object, entities, characteristics, category, target, min_nb_values = 2) {
+            
+            # Validation du paramètre d'accès à une catégorie
+            check_access_for_category(object, category, NA)
+            
+            if (target == "vertices") {
+              # Catégories associées à chaque noeud ou motif
+              nop_category = lapply(characteristics[[substr(entities, 1, nchar(entities) - 1)]],
+                                    function(x) unique(as.character(object@items_categories[x, category])))
+              
+              # Entités associés à au moins min_nb_values valeurs différentes pour la catégorie
+              return(characteristics[lapply(nop_category, length) >= min_nb_values, ])
+              
+            } else if (target == "edges") {
+              # Liens associés aux noeuds ou motifs
+              nop_links = get_links(object, entities, characteristics)
+              
+              # Catégories associées à chaque lien
+              links_category = lapply(strsplit(nop_links$items, "/"),
+                                      function(x) sort(unique(as.character(object@items_categories[x, category]))))
+              
+              # Identifiants des entités dont au moins un lien est associé à au moins min_nb_values valeurs différentes pour la catégorie
+              id = unique(unlist(nop_links[which(lapply(links_category, length) >= min_nb_values),
+                                           c("endpoint.1", "endpoint.2")]))
+              
+              # Entités correspondantes
+              return(characteristics[as.character(id), ])
+            }
+            stop("target must be \"vertices\" or \"edges\".")
           })
 
 
