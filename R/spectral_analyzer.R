@@ -1474,8 +1474,10 @@ setMethod(f = "plot_spectrum_chart",
                    pch = 15, col = object@Class$STATUS_COLORS,
                    legend = names(object@Class$STATUS_COLORS), cex = 1.1)
             legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.135),
-                   pch = "I",
-                   legend = "- Order", cex = 1.1)
+                   pch = NA_integer_,
+                   legend = paste0(as.roman(min(patterns_characteristics$order)), " ... ",
+                                   as.roman(max(patterns_characteristics$order)), ":  Order"),
+                   cex = 1.1)
             legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.165),
                    pch = 20, lty = 1,
                    legend = "Specificity", cex = 1.1)
