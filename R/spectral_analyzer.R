@@ -2486,68 +2486,123 @@ setMethod(f = "plot_tree_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree") {
             
-            # Définition des marges
-            par(mar = c(3, 1.1, 1.1, 1.1))
+            # Définition des marges et initialisation de la zone graphique
+            if (!is.null(category)) par(mar = c(3.0, 0.5, 1.9, 0.5))
+            else par(mar = c(0.5, 0.5, 1.9, 0.5))
+            plot.new()
             
             # Préparation de la position des items sur le graphique (x = 0 ; y = ordre décroissant)
             items_category$x = 0
             items_category$y = rev(seq(nrow(items_category)))
             
-            # Initialisation de la zone graphique
-            plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
-                       data.frame(x = rep(0, 3), y = seq(3) + nrow(items_category))), # + 3 pour placer du texte
-                 xlim = c(-max(nchar(as.character(items_category$item))) - 1,
-                          nrow(patterns_characteristics) + length(unique(patterns_characteristics$order))),
-                 ylim = c(0, nrow(items_category) + 3),
-                 col = "white", pch = 20,
-                 xaxt = "n", yaxt = "n", bty = "n",
-                 xaxs = "i", yaxs = "i")
             
-            # Espace à gauche pour affichage des items et du titre "Order"
-            # et à droite pour afficher la dernière taille de motif s'il n'y a qu'un seul motif de cette taille
+            ## Affichage des légendes, centrées, avant le graphique (avant modification de la "plot region")
+            
+            title(main = title, line = 1.1, cex.main = 1.3)
+            
+            # Couleurs de catégorie
+            if (!is.null(category)) {
+              item_colors = object@categories_colors[[category]][items_category$category]
+              category_colors = unique(item_colors)[order(unique(items_category$category))]
+              
+              # Légende de catégorie
+              if (is.null(c.cutoff)) {
+                category_legend = sort(unique(items_category$category))
+              } else {
+                category_legend = substr(sort(unique(items_category$category)), 1, c.cutoff)
+              }
+              
+              legend("bottom", xpd = NA, bty = "n", inset = c(0, -0.09),
+                     title = cap(category), cex = 0.85,
+                     legend = category_legend,
+                     col = category_colors,
+                     pch = 20, ncol = ceiling(length(category_legend) / 2))
+            } else {
+              item_colors = "black"
+            }
+            
+            # Légende des statuts
+            if (display_status) {
+              # La différence de marges implique la nécessité une différence d'inset
+              status_inset = if (!is.null(category)) c(-0.02, -0.064) else c(-0.02, -0.060)
+              
+              legend("topright", bty = "n", horiz = TRUE, xpd = NA, inset = status_inset,
+                     pch = 15, cex = 0.85,
+                     col = object@Class$STATUS_COLORS,
+                     legend = names(object@Class$STATUS_COLORS))
+            }
+            
+            
+            ## Préparation de variables
+            
+            # Marge entre un motif et la ligne séparatrice qui le suit
+            line_margin = 0.5
+            
+            # Table des tailles des motifs et effectifs cumulés
+            order_tab = table(patterns_characteristics$order)
+            order_cumfreq = cumsum(order_tab)
+            
+            # Titre des taille des motifs et position en Y
+            order_text = "Order:"
+            order_y = nrow(items_category) + 1.25
+            
+            # Labels des items (codes ou noms)
             if (use_names) {
               text_labels = names(object@items)[match(items_category$item, object@items)]
               if (!is.null(n.cutoff)) text_labels = substr(text_labels, 1, n.cutoff)
-              text_area = max(strwidth(text_labels, cex = 0.75) + strwidth("12", cex = 0.75), strwidth("Order", cex = 1.05))
-              # Ajout de la place pour 2 caractères en plus (stridwidth("12")) car le texte est parfois tronqué
             } else {
               text_labels = as.character(items_category$item)
-              text_area = max(strwidth(text_labels, cex = 0.75), strwidth("Order", cex = 1.05))
             }
-            data_area = nrow(patterns_characteristics) + length(unique(patterns_characteristics$order)) + strwidth(1)
-            
-            # Option "new" pour ne pas générer une page blanche à cause du premier plot
-            par(new = TRUE)
-            
-            # Réinitialisation de la zone graphique en considérant la taille d'un caractère (strwidth, dépend du graphique)
-            plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
-                       data.frame(x = rep(0, 3), y = seq(3) + nrow(items_category))), # + 3 pour placer du texte
-                 xlim = c(-text_area, data_area),
-                 ylim = c(-strwidth(1, cex = 0.5), # Taille d'un caractère pour affichage d'une caractéristique
-                          nrow(items_category) + 3),
-                 col = "white", pch = 20,
-                 xaxt = "n", yaxt = "n", bty = "n",
-                 xaxs = "i", yaxs = "i")
-            title(main = title, line = 0.35, cex.main = 1.3)
-            
-            # Traçage des lignes horizontales
-            for (y_i in items_category$y) {
-              segments(x0 = 0, x1 = data_area - strwidth(1), y0 = y_i,
-                       lwd = 0.02, lty = 3, col = "gray85")
-            }
-            
-            # Titre taille des motifs
-            text(0, nrow(items_category) + 1.5,
-                 "Order", col = "black", cex = 1.05, adj = c(1, 0.5))
-            
-            
-            # Effectifs cumulés des tailles des motifs
-            order_cumfreq = cumsum(table(patterns_characteristics$order))
             
             # Préparation des couleurs des lignes séparatrices
             vcolor = c("white", rep("black", length(order_cumfreq)-1))
             names(vcolor) = names(order_cumfreq)
+            
+            # Largeur de la zone déjà tracée ; utilisé comme coordonnée X pour afficher le prochain élément
             width = -1
+            
+            
+            ## Préparation de la zone graphique
+            
+            # Espace à droite : nombre de motifs - espace inexistant avant le premier motif
+            #                   + nombre de lignes verticales
+            data_area = nrow(patterns_characteristics) - line_margin + 
+              length(unique(patterns_characteristics$order) - 1) * line_margin
+            # Espace ajouté pour afficher la dernière taille de motif s'il y a trop peu de motifs associés
+            last_space = strwidth(as.roman(names(order_tab[length(order_tab)]))) - (order_tab[length(order_tab)] + line_margin)
+            if (last_space > 0) data_area = data_area + last_space
+            
+            # Placement de la "plot region" pour avoir la place d'afficher les labels des items
+            # Espace à gauche : taille du plus grand label (ou du titre "Order") + taille de la marge
+            #                   + taille d'un caractère * 0.5 (offset de placement des labels) ; en fraction de la "figure region"
+            par(plt = c(max(strwidth(text_labels, cex = 0.75, units = "figure"), strwidth(order_text, cex = 1.05, units = "figure")) +
+                          par("mai")[2] * strwidth(1, units = "figure") / strwidth(1, units = "inches") + # Conversion marge en figure units
+                          0.5 * strwidth("A", units = "figure"),
+                        par("plt")[2:4]))
+            
+            # Option "new" pour que le graphique n'apparaîssent pas sur une seconde page
+            par(new = TRUE)
+            
+            # Réinitialisation de la zone graphique en considérant la taille d'un caractère (strwidth, dépend du graphique)
+            plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
+                       data.frame(x = rep(0, 2), y = seq(2) + nrow(items_category))), # + 2 pour placer du texte
+                 xlim = c(0, data_area),
+                 ylim = c(-strwidth(1, cex = 0.5), # - taille d'un caractère pour affichage d'une caractéristique
+                          nrow(items_category) + 2), # + 2 pour affichage tailles des motifs
+                 col = "white", pch = 20, bty = "n",
+                 xaxt = "n", xaxs = "i", xlab = "",
+                 yaxt = "n", yaxs = "i", ylab = "")
+            
+            
+            ## Traçage du graphique
+            
+            # Traçage des lignes horizontales
+            for (y_i in items_category$y) {
+              segments(x0 = 0, x1 = data_area, y0 = y_i, lwd = 0.02, lty = 3, col = "gray85")
+            }
+            
+            # Titre taille des motifs
+            text(0, order_y, order_text, col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
             
             # Pour chaque motif à dessiner
             for (m in 1:nrow(patterns_characteristics)) {
@@ -2555,18 +2610,23 @@ setMethod(f = "plot_tree_chart",
               # Nouvelle taille de motifs
               if (m %in% (1 + c(0, order_cumfreq))) {
                 order_nb = patterns_characteristics$order[m]
-                width = width + 1
+                width = width + line_margin
                 
-                # Séparation verticale et affichage de la taille des prochains motifs
-                abline(v = width,
-                       col = vcolor[as.character(order_nb)], lwd = 0.5, lty = "dotted")
-                # Positionnement en X : (nombres de motifs et de lignes déjà placés - la première placée à 0)
-                #                       + (nombre de motifs de la même taille
-                #                          + 1 espace entre dernier motif et prochaine ligne) / 2
-                text(x = (m - 1 + which(names(order_cumfreq) == as.character(order_nb)) - 1) +
-                           (order_cumfreq[as.character(order_nb)] - m + 1 + 1) / 2,
-                     y = nrow(items_category) + 1.5,
-                     as.roman(order_nb), col = "black", cex = 1.05)
+                # Séparation verticale
+                abline(v = width, col = vcolor[as.character(order_nb)], lwd = 0.5, lty = "dotted")
+                
+                # Affichage de la taille des prochains motifs
+                if (m == 1) {
+                  order_x = order_cumfreq[as.character(order_nb)] / 2 
+                } else if (m == nrow(patterns_characteristics)) {
+                  order_x = width + (data_area - width) / 2
+                } else {
+                  # Positionnement en X : position de la ligne qui vient d'être tracée
+                  #                       + (nombre de motifs de la nouvelle taille
+                  #                          + 1 espace entre dernier motif et prochaine ligne) / 2
+                  order_x = width + (order_cumfreq[as.character(order_nb)] - m + 1 + line_margin) / 2
+                }
+                text(x = order_x, y = order_y, as.roman(order_nb), col = "black", cex = 1.05)
               }
               
               # Ordonnées (y) des items du motif (m)
@@ -2598,41 +2658,10 @@ setMethod(f = "plot_tree_chart",
               width = width + 1
             }
             
-            
-            # Couleurs de catégorie
-            if (!is.null(category)) {
-              item_colors = object@categories_colors[[category]][items_category$category]
-              category_colors = unique(item_colors)[order(unique(items_category$category))]
-              
-              # Légende de catégorie
-              if (is.null(c.cutoff)) {
-                category_legend = sort(unique(items_category$category))
-              } else {
-                category_legend = substr(sort(unique(items_category$category)), 1, c.cutoff)
-              }
-              legend("bottom", xpd = NA, bty = "n", inset = c(0, -0.09),
-                     title = cap(category), cex = 0.85,
-                     legend = category_legend,
-                     col = category_colors,
-                     pch = 20, ncol = ceiling(length(category_legend) / 2))
-            } else {
-              item_colors = "black"
-            }
-            
             # Pointage et affichage des items
-            points(items_category[, c("x", "y")],
-                   col = item_colors, pch = 20)
+            points(items_category[, c("x", "y")], col = item_colors, pch = 20)
             text(items_category$x, items_category$y, text_labels,
-                 cex = 0.75, pos = 2,
-                 col = item_colors)
-            
-            # Légende des statuts
-            if (display_status) {
-              legend("topright", bty = "n", horiz = TRUE, xpd = NA, inset = c(-0.02, -0.04),
-                     pch = 15, cex = 0.85,
-                     col = object@Class$STATUS_COLORS,
-                     legend = names(object@Class$STATUS_COLORS))
-            }
+                 cex = 0.75, pos = 2, col = item_colors, xpd = TRUE)
           })
 
 
