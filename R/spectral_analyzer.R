@@ -1563,10 +1563,6 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' The following parameters, which can be redefined, have the following values:
 #'  \itemize{
 #'    \item{\code{mode = "fruchtermanreingold"}}
-#'    \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
-#'      where \code{nrow(nop_links)} is the sum of the number of links and the number of isolated
-#'      entities.
-#'      Can also be an object of type \code{expression} or \code{NULL}.}
 #'    \item{\code{displaylabels = TRUE}}
 #'    \item{\code{label.pos = 0}}
 #'    \item{\code{boxed.labels = TRUE}}
@@ -1922,10 +1918,6 @@ setMethod(f = "spectrosome_chart",
             # Récupération des arguments additionnels et détermination de valeurs par défaut pour sna::gplot
             args = list(...)
             if(!("mode" %in% names(args))) args$mode = "fruchtermanreingold"
-            if(!("layout.par" %in% names(args)) && args$mode == "fruchtermanreingold")
-              args$layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))
-            if("layout.par" %in% names(args) && is.expression(args$layout.par))
-              args$layout.par = eval(args$layout.par)
             if(!("displaylabels" %in% names(args))) args$displaylabels = TRUE
             if(!("label.pos" %in% names(args))) args$label.pos = 0
             if(!("boxed.labels" %in% names(args))) args$boxed.labels = TRUE
@@ -2168,10 +2160,6 @@ setMethod(f = "cluster_text",
 #' The following parameters, which can be redefined, have the following values:
 #'  \itemize{
 #'    \item{\code{mode = "fruchtermanreingold"}}
-#'    \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
-#'      where \code{nrow(nop_links)} is the sum of the number of links and the number of isolated
-#'      entities.
-#'      Can also be an object of type \code{expression} or \code{NULL}.}
 #'    \item{\code{displaylabels = TRUE}}
 #'    \item{\code{label.pos = 0}}
 #'    \item{\code{boxed.labels = TRUE}}

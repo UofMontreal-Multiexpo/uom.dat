@@ -119,10 +119,6 @@ Among them, the following parameters are already defined and cannot be modified:
 The following parameters, which can be redefined, have the following values:
  \itemize{
    \item{\code{mode = "fruchtermanreingold"}}
-   \item{\code{layout.par = list(repulse.rad = 4 ^ (log(nrow(nop_links), 10)))},
-     where \code{nrow(nop_links)} is the sum of the number of links and the number of isolated
-     entities.
-     Can also be an object of type \code{expression} or \code{NULL}.}
    \item{\code{displaylabels = TRUE}}
    \item{\code{label.pos = 0}}
    \item{\code{boxed.labels = TRUE}}
