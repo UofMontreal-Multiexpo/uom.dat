@@ -1770,7 +1770,7 @@ setMethod(f = "spectrosome_chart",
                   
                   # Retrait du noir associé aux liens mixtes s'il n'y en a pas et retrait du blanc
                   # associé aux isolés, pour ne pas les afficher ultérieurement dans la légende
-                  if (length(category_mixed) == 0) {
+                  if (length(category_mixed) == 0 && !("Mixt" %in% links_categories)) {
                     categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-2)]
                   } else {
                     categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
