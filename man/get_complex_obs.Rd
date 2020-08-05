@@ -2,7 +2,7 @@
 % Please edit documentation in R/observation_maker.R
 \name{get_complex_obs}
 \alias{get_complex_obs}
-\title{Search for complexe observations}
+\title{Search for complex observations}
 \usage{
 get_complex_obs(observations, key = "CODE")
 }

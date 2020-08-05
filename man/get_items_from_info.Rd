@@ -7,7 +7,7 @@
 get_items_from_info(
   observations,
   ...,
-  target = "all",
+  presence = "all",
   additional = NULL,
   key = "CODE"
 )
@@ -19,7 +19,7 @@ get_items_from_info(
 variable contained in the observations and \code{value} corresponds to the sought value for
 this variable.}
 
-\item{target}{Condition for an item to be extracted from an observation.
+\item{presence}{Information presence condition for an item to be extracted from an observation.
 One of \code{"all"}, \code{"any"}.
 \describe{
  \item{\code{"all"}}{All the sought information must be part of an observation for its items to

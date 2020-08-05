@@ -4,7 +4,7 @@
 \alias{get_obs_from_info}
 \title{Search for observations by specific information}
 \usage{
-get_obs_from_info(observations, ..., target = "all")
+get_obs_from_info(observations, ..., presence = "all")
 }
 \arguments{
 \item{observations}{List of observations on which to do the search.}
@@ -13,7 +13,8 @@ get_obs_from_info(observations, ..., target = "all")
 variable contained in the observations and \code{value} corresponds to the sought value for
 this variable.}
 
-\item{target}{Condition for an observation to be extracted. One of \code{"all"}, \code{"any"}.
+\item{presence}{Information presence condition for an observation to be extracted.
+One of \code{"all"}, \code{"any"}.
 \describe{
  \item{\code{"all"}}{All the sought information must be part of an observation for this
                      observation to be extracted.}

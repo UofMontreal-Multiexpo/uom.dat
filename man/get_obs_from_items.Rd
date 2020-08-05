@@ -4,14 +4,15 @@
 \alias{get_obs_from_items}
 \title{Search for observations by item}
 \usage{
-get_obs_from_items(observations, items, target = "all", key = "CODE")
+get_obs_from_items(observations, items, presence = "all", key = "CODE")
 }
 \arguments{
 \item{observations}{List of observations on which to do the search.}
 
 \item{items}{Sought items.}
 
-\item{target}{Condition for an observation to be extracted. One of \code{"all"}, \code{"any"}.
+\item{presence}{Item presence condition for an observation to be extracted.
+One of \code{"all"}, \code{"any"}.
 \describe{
   \item{\code{"all"}}{All the sought items must be part of an observation for this
                       observation to be extracted.}

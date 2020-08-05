@@ -9,7 +9,7 @@
   object,
   patterns_characteristics,
   items,
-  target = "all"
+  presence = "all"
 )
 }
 \arguments{
@@ -19,7 +19,8 @@
 
 \item{items}{Sought items (one or more).}
 
-\item{target}{Condition for a pattern to be extracted. One of \code{"all"}, \code{"any"}.
+\item{presence}{Item presence condition for a pattern to be extracted.
+One of \code{"all"}, \code{"any"}.
 \describe{
   \item{\code{"all"}}{All the sought items must be part of a pattern for this pattern to be
                       extracted.}

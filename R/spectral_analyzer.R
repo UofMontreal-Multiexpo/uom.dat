@@ -462,7 +462,7 @@ setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteris
 
 setGeneric(name = "save_characteristics", def = function(object, entities, characteristics, ...){ standardGeneric("save_characteristics") })
 
-setGeneric(name = "extract_nodes_from_items", def = function(object, nodes_characteristics, items, target = "all"){ standardGeneric("extract_nodes_from_items") })
+setGeneric(name = "extract_nodes_from_items", def = function(object, nodes_characteristics, items, presence = "all"){ standardGeneric("extract_nodes_from_items") })
 
 setGeneric(name = "extract_nodes_from_characteristic", def = function(object, nodes_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_nodes_from_characteristic") })
 
@@ -470,7 +470,7 @@ setGeneric(name = "extract_nodes_from_category", def = function(object, nodes_ch
 
 setGeneric(name = "check_access_for_category", def = function(object, category, value){ standardGeneric("check_access_for_category") })
 
-setGeneric(name = "extract_patterns_from_items", def = function(object, patterns_characteristics, items, target = "all"){ standardGeneric("extract_patterns_from_items") })
+setGeneric(name = "extract_patterns_from_items", def = function(object, patterns_characteristics, items, presence = "all"){ standardGeneric("extract_patterns_from_items") })
 
 setGeneric(name = "extract_patterns_from_characteristic", def = function(object, patterns_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_patterns_from_characteristic") })
 
@@ -2712,7 +2712,8 @@ setMethod(f = "save_characteristics",
 #' @param object SpectralAnalyzer class object.
 #' @param nodes_characteristics Data frame of nodes and their characteristics.
 #' @param items Sought items (one or more).
-#' @param target Condition for a node to be extracted. One of \code{"all"}, \code{"any"}.
+#' @param presence Item presence condition for a node to be extracted.
+#'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
 #'    \item{\code{"all"}}{All the sought items must be part of a node for this node to be extracted.}
 #'    \item{\code{"any"}}{At least one of the sought items must be part of a node for this node to be
@@ -2726,12 +2727,12 @@ setMethod(f = "save_characteristics",
 #' @export
 setMethod(f = "extract_nodes_from_items",
           signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics, items, target = "all") {
+          definition = function(object, nodes_characteristics, items, presence = "all") {
             
-            if (!(target %in% c("all", "any"))) stop("target must be \"all\" or \"any\".")
+            if (!(presence %in% c("all", "any"))) stop("presence must be \"all\" or \"any\".")
             
-            if (target == "all") func = all
-            else if (target == "any") func = any
+            if (presence == "all") func = all
+            else if (presence == "any") func = any
             
             return(subset(nodes_characteristics, sapply(nodes_characteristics$node,
                                                         function(x) func(items %in% x))))
@@ -2880,7 +2881,8 @@ setMethod(f = "check_access_for_category",
 #' @param object SpectralAnalyzer class object.
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
 #' @param items Sought items (one or more).
-#' @param target Condition for a pattern to be extracted. One of \code{"all"}, \code{"any"}.
+#' @param presence Item presence condition for a pattern to be extracted.
+#'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
 #'    \item{\code{"all"}}{All the sought items must be part of a pattern for this pattern to be
 #'                        extracted.}
@@ -2896,12 +2898,12 @@ setMethod(f = "check_access_for_category",
 #' @export
 setMethod(f = "extract_patterns_from_items",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, items, target = "all") {
+          definition = function(object, patterns_characteristics, items, presence = "all") {
             
-            if (!(target %in% c("all", "any"))) stop("target must be \"all\" or \"any\".")
+            if (!(presence %in% c("all", "any"))) stop("presence must be \"all\" or \"any\".")
             
-            if (target == "all") func = all
-            else if (target == "any") func = any
+            if (presence == "all") func = all
+            else if (presence == "any") func = any
             
             return(subset(patterns_characteristics, sapply(patterns_characteristics$pattern,
                                                            function(x) func(items %in% x))))

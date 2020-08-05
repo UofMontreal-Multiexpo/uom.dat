@@ -365,7 +365,7 @@ get_all_items = function(observations, key = "CODE") {
 }
 
 
-#' Search for complexe observations
+#' Search for complex observations
 #' 
 #' Extract the observations containing more than one item.
 #' 
@@ -415,7 +415,8 @@ get_simple_obs = function(observations, key = "CODE") {
 #' 
 #' @param observations List of observations on which to do the search.
 #' @param items Sought items.
-#' @param target Condition for an observation to be extracted. One of \code{"all"}, \code{"any"}.
+#' @param presence Item presence condition for an observation to be extracted.
+#'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
 #'    \item{\code{"all"}}{All the sought items must be part of an observation for this
 #'                        observation to be extracted.}
@@ -428,12 +429,12 @@ get_simple_obs = function(observations, key = "CODE") {
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_info}}.
 #' @export
-get_obs_from_items = function(observations, items, target = "all", key = "CODE") {
+get_obs_from_items = function(observations, items, presence = "all", key = "CODE") {
   
-  if (!(target %in% c("all", "any"))) stop("target must be \"all\" or \"any\".")
+  if (!(presence %in% c("all", "any"))) stop("presence must be \"all\" or \"any\".")
   if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
   
-  func = if (target == "all") all else any
+  func = if (presence == "all") all else any
   
   index = which(sapply(lapply(observations, "[[", key), function (x) func(items %in% x)))
   extraction = observations[index]
@@ -450,7 +451,8 @@ get_obs_from_items = function(observations, items, target = "all", key = "CODE")
 #' @param ... arguments of type \code{key = value} where \code{key} refers to the name of one
 #'  variable contained in the observations and \code{value} corresponds to the sought value for
 #'  this variable.
-#' @param target Condition for an observation to be extracted. One of \code{"all"}, \code{"any"}.
+#' @param presence Information presence condition for an observation to be extracted.
+#'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
 #'   \item{\code{"all"}}{All the sought information must be part of an observation for this
 #'                       observation to be extracted.}
@@ -462,10 +464,10 @@ get_obs_from_items = function(observations, items, target = "all", key = "CODE")
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_items}}.
 #' @export
-get_obs_from_info = function(observations, ..., target = "all") {
+get_obs_from_info = function(observations, ..., presence = "all") {
   
-  if (!(target %in% c("all", "any"))) stop("target must be \"all\" or \"any\".")
-  func = if (target == "all") all else any
+  if (!(presence %in% c("all", "any"))) stop("presence must be \"all\" or \"any\".")
+  func = if (presence == "all") all else any
   
   args = list(...)
   if (length(args) == 0) return(observations)
@@ -498,7 +500,7 @@ get_obs_from_info = function(observations, ..., target = "all") {
 #' @param ... arguments of type \code{key = value} where \code{key} refers to the name of one
 #'  variable contained in the observations and \code{value} corresponds to the sought value for
 #'  this variable.
-#' @param target Condition for an item to be extracted from an observation.
+#' @param presence Information presence condition for an item to be extracted from an observation.
 #'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
 #'   \item{\code{"all"}}{All the sought information must be part of an observation for its items to
@@ -514,12 +516,12 @@ get_obs_from_info = function(observations, ..., target = "all") {
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_all_items}}, \code{\link{get_info_from_items}}.
 #' @export
-get_items_from_info = function(observations, ..., target = "all", additional = NULL, key = "CODE") {
+get_items_from_info = function(observations, ..., presence = "all", additional = NULL, key = "CODE") {
   
   if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
   
   # Observations correspondant aux critères
-  obs = get_obs_from_info(observations, ..., target = target)
+  obs = get_obs_from_info(observations, ..., presence = presence)
   
   # Vecteur des items
   if (is.null(additional)) {
@@ -541,7 +543,7 @@ get_items_from_info = function(observations, ..., target = "all", additional = N
 #' @param observations List of observations on which to do the search.
 #' @param items Sought items.
 #' @param info_names Names of information to extract from observations.
-#' @param target Condition for information to be extracted from an observation.
+#' @param presence Item presence condition for information to be extracted from an observation.
 #' One of \code{"all"}, \code{"any"}.
 #'  \describe{
 #'   \item{\code{"all"}}{All the sought items must be part of an observation for its information
@@ -556,10 +558,10 @@ get_items_from_info = function(observations, ..., target = "all", additional = N
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_items_from_info}}, \code{\link{get_all_items}}.
 #' @export
-get_info_from_items = function(observations, items, info_names, target = "all", key = "CODE") {
+get_info_from_items = function(observations, items, info_names, presence = "all", key = "CODE") {
   
   # Observations contenant le ou les items recherchés
-  obs = get_obs_from_items(observations, items, target, key)
+  obs = get_obs_from_items(observations, items, presence, key)
   
   # Vecteur de la variable demandée
   if (length(info_names) == 1) return(sort(unique(unlist(sapply(obs, "[", info_names)))))

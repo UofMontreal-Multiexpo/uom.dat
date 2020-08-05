@@ -5,7 +5,12 @@
 \alias{extract_nodes_from_items}
 \title{Search for nodes by item}
 \usage{
-\S4method{extract_nodes_from_items}{SpectralAnalyzer}(object, nodes_characteristics, items, target = "all")
+\S4method{extract_nodes_from_items}{SpectralAnalyzer}(
+  object,
+  nodes_characteristics,
+  items,
+  presence = "all"
+)
 }
 \arguments{
 \item{object}{SpectralAnalyzer class object.}
@@ -14,7 +19,8 @@
 
 \item{items}{Sought items (one or more).}
 
-\item{target}{Condition for a node to be extracted. One of \code{"all"}, \code{"any"}.
+\item{presence}{Item presence condition for a node to be extracted.
+One of \code{"all"}, \code{"any"}.
 \describe{
   \item{\code{"all"}}{All the sought items must be part of a node for this node to be extracted.}
   \item{\code{"any"}}{At least one of the sought items must be part of a node for this node to be
