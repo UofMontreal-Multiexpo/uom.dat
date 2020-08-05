@@ -27,12 +27,12 @@ are to be sought.}
 of the columns of \code{object["items_categories"]}).}
 
 \item{target}{Condition for a node or a pattern to be extracted.
-One of \code{"vertices"}, \code{"edges"}.
+One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 \describe{
-  \item{\code{"vertices"}}{Search for nodes or patterns associated (via their items) with several
-                           values of the category \code{category}.}
-  \item{\code{"edges"}}{Search for nodes or patterns generating links corresponding with several
-                        values of the category \code{category}.}
+  \item{\code{"items"}, \code{"vertices"}}{Search for nodes or patterns associated (via their items)
+        with several values of the category \code{category}.}
+  \item{\code{"links"}, \code{"edges"}}{Search for nodes or patterns generating links corresponding
+        with several values of the category \code{category}.}
 }}
 
 \item{min_nb_values}{Minimum number of different values of the category \code{category} a node, a

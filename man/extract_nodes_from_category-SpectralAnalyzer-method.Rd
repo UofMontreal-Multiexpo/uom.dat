@@ -23,12 +23,13 @@ of the columns of \code{object["items_categories"]}).}
 
 \item{value}{Sought value for the category specified by the parameter \code{category}.}
 
-\item{target}{Condition for a node to be extracted. One of \code{"vertices"}, \code{"edges"}.
+\item{target}{Condition for a node to be extracted.
+One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 \describe{
-  \item{\code{"vertices"}}{Search for nodes containing an item associated with the sought category
-                           value.}
-  \item{\code{"edges"}}{Search for nodes generating links corresponding to the sought category
-                        value.}
+  \item{\code{"items"}, \code{"vertices"}}{Search for nodes containing an item associated with the
+        sought category value.}
+  \item{\code{"links"}, \code{"edges"}}{Search for nodes generating links corresponding to the
+        sought category value.}
 }}
 }
 \value{

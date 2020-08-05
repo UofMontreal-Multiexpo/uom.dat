@@ -2796,12 +2796,13 @@ setMethod(f = "extract_nodes_from_characteristic",
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the parameter \code{category}.
-#' @param target Condition for a node to be extracted. One of \code{"vertices"}, \code{"edges"}.
+#' @param target Condition for a node to be extracted.
+#'  One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 #'  \describe{
-#'    \item{\code{"vertices"}}{Search for nodes containing an item associated with the sought category
-#'                             value.}
-#'    \item{\code{"edges"}}{Search for nodes generating links corresponding to the sought category
-#'                          value.}
+#'    \item{\code{"items"}, \code{"vertices"}}{Search for nodes containing an item associated with the
+#'          sought category value.}
+#'    \item{\code{"links"}, \code{"edges"}}{Search for nodes generating links corresponding to the
+#'          sought category value.}
 #'  }
 #' @return Subset of the data frame of nodes that match the search criteria.
 #' 
@@ -2813,17 +2814,16 @@ setMethod(f = "extract_nodes_from_category",
           signature = "SpectralAnalyzer",
           definition = function(object, nodes_characteristics, category, value, target) {
             
-            # Validation des paramètres
-            if (!(target %in% c("vertices", "edges"))) stop("target must be \"vertices\" or \"edges\".")
+            # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
             
-            if (target == "vertices") {
+            if (target == "items" || target == "vertices") {
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
               # Extraction des noeuds contenant ces items
-              return(extract_nodes_from_items(object, nodes_characteristics, items, target = "any"))
+              return(extract_nodes_from_items(object, nodes_characteristics, items, presence = "any"))
               
-            } else if (target == "edges") {
+            } else if (target == "links" || target == "edges") {
               # Recherche de l'ensemble de liens correspondant aux motifs
               links = get_links(object, "nodes", nodes_characteristics)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
@@ -2834,6 +2834,7 @@ setMethod(f = "extract_nodes_from_category",
               # Récupération des noeuds associés
               return(nodes_characteristics[unique(unlist(links[, 1:2])), ])
             }
+            stop("target must be one of \"items\", \"links\", \"vertices\", \"edges\".")
           })
 
 
@@ -3000,12 +3001,13 @@ setMethod(f = "extract_patterns_from_status",
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the argument \code{category}.
-#' @param target Condition for a pattern to be extracted. One of \code{"vertices"}, \code{"edges"}.
+#' @param target Condition for a pattern to be extracted.
+#'  One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 #'  \describe{
-#'    \item{\code{"vertices"}}{Search for patterns containing an item associated with the sought
-#'                             category value.}
-#'    \item{\code{"edges"}}{Search for patterns generating links corresponding to the sought category
-#'                          value.}
+#'    \item{\code{"items"}, \code{"vertices"}}{Search for patterns containing an item associated with
+#'          the sought category value.}
+#'    \item{\code{"links"}, \code{"edges"}}{Search for patterns generating links corresponding to the
+#'          sought category value.}
 #'  }
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
@@ -3018,17 +3020,16 @@ setMethod(f = "extract_patterns_from_category",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, category, value, target) {
             
-            # Validation des paramètres
-            if (!(target %in% c("vertices", "edges"))) stop("target must be \"vertices\" or \"edges\".")
+            # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
             
-            if (target == "vertices") {
+            if (target == "items" || target == "vertices") {
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
               # Extraction des motifs contenant ces items
-              return(extract_patterns_from_items(object, patterns_characteristics, items, target = "any"))
+              return(extract_patterns_from_items(object, patterns_characteristics, items, presence = "any"))
               
-            } else if (target == "edges") {
+            } else if (target == "links" || target == "edges") {
               # Recherche de l'ensemble de liens correspondant aux motifs
               links = get_links(object, "patterns", patterns_characteristics)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
@@ -3039,6 +3040,7 @@ setMethod(f = "extract_patterns_from_category",
               # Récupération des motifs associés
               return(patterns_characteristics[unique(unlist(links[, 1:2])), ])
             }
+            stop("target must be one of \"items\", \"links\", \"vertices\", \"edges\".")
           })
 
 
@@ -3184,12 +3186,12 @@ setMethod(f = "get_non_isolates",
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param target Condition for a node or a pattern to be extracted.
-#'  One of \code{"vertices"}, \code{"edges"}.
+#'  One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 #'  \describe{
-#'    \item{\code{"vertices"}}{Search for nodes or patterns associated (via their items) with several
-#'                             values of the category \code{category}.}
-#'    \item{\code{"edges"}}{Search for nodes or patterns generating links corresponding with several
-#'                          values of the category \code{category}.}
+#'    \item{\code{"items"}, \code{"vertices"}}{Search for nodes or patterns associated (via their items)
+#'          with several values of the category \code{category}.}
+#'    \item{\code{"links"}, \code{"edges"}}{Search for nodes or patterns generating links corresponding
+#'          with several values of the category \code{category}.}
 #'  }
 #' @param min_nb_values Minimum number of different values of the category \code{category} a node, a
 #'  pattern or a link must have to extract the related entity.
@@ -3206,7 +3208,7 @@ setMethod(f = "get_complexes",
             # Validation du paramètre d'accès à une catégorie
             check_access_for_category(object, category, NA)
             
-            if (target == "vertices") {
+            if (target == "items" || target == "vertices") {
               # Catégories associées à chaque noeud ou motif
               nop_category = lapply(characteristics[[substr(entities, 1, nchar(entities) - 1)]],
                                     function(x) unique(as.character(object@items_categories[x, category])))
@@ -3214,7 +3216,7 @@ setMethod(f = "get_complexes",
               # Entités associés à au moins min_nb_values valeurs différentes pour la catégorie
               return(characteristics[lapply(nop_category, length) >= min_nb_values, ])
               
-            } else if (target == "edges") {
+            } else if (target == "links" || target == "edges") {
               # Liens associés aux noeuds ou motifs
               nop_links = get_links(object, entities, characteristics)
               
@@ -3229,7 +3231,7 @@ setMethod(f = "get_complexes",
               # Entités correspondantes
               return(characteristics[as.character(id), ])
             }
-            stop("target must be \"vertices\" or \"edges\".")
+            stop("target must be one of \"items\", \"links\", \"vertices\", \"edges\".")
           })
 
 
