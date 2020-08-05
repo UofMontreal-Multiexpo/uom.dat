@@ -1664,7 +1664,7 @@ setMethod(f = "spectrosome_chart",
             # Extraction des liens pour les éléments à visualiser (nop_links = nodes or patterns links)
             nop_links = get_links(object, entities, characteristics)
             
-            if (all(nop_links$weight == 0) && !(list(...)$displayisolates)) {
+            if (all(nop_links$weight == 0) && "displayisolates" %in% names(list(...)) && !(list(...)$displayisolates)) {
               warning("There is no graph to plot: displayisolates = FALSE and all entities are isolated.")
               return(NULL)
             }
