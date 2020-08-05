@@ -2,7 +2,9 @@
 title: "Spectral analysis and observation processing example"
 author: "Gauthier Magnin"
 date: "Last update: `r Sys.Date()`"
-output: html_notebook
+output: 
+  html_notebook: 
+    toc: yes
 ---
 
 # 1. Preparation of data and spectral analysis
@@ -267,8 +269,7 @@ Creation of the spectrosome of the nodes...
 spectrosome = spectrosome_chart(sa_object, "nodes", sa_object["nodes"],
                                 path = directory,
                                 name = "spectrosome_of_nodes.png",
-                                title = "Network of nodes",
-                                layout.par = NULL)
+                                title = "Network of nodes")
 ```
 ![Fig. 2: Spectrosome of the nodes.](./output/spec_nodes/spectrosome_of_nodes.png)
 
@@ -370,8 +371,7 @@ Creation of the spectrosome of the patterns...
 spectrosome = spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
                                 path = directory,
                                 name = "spectrosome_of_patterns.png",
-                                title = "Network of patterns",
-                                layout.par = NULL)
+                                title = "Network of patterns")
 ```
 ![Fig. 5: Spectrosome of the patterns.](./output/spec_patterns/spectrosome_of_patterns.png)
 
@@ -527,7 +527,7 @@ Associated spectrum...
 ```{r}
 spectrum = spectrum_chart(sa_object, patterns,
                          path = directory,
-                         name = paste0("spectrum_of_patterns-", value, ".pdf"),
+                         name = paste0("spectrum_of_patterns-", status, ".pdf"),
                          title = paste("Spectrum with status filter"))
 ```
 ![Fig. 10: Spectrum of patterns with stauts filter.](./img/spectrum_of_patterns_persistent.png)
@@ -536,7 +536,7 @@ Associated spectrosome...
 ```{r}
 spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
                                 path = directory,
-                                name = paste0("spectrosome_of_patterns-", value, ".png"),
+                                name = paste0("spectrosome_of_patterns-", status, ".png"),
                                 title = "Spectrosome with status filter")
 ```
 ![Fig. 11: Spectrosome of the patterns with status filter.](./output/spec_filter/spectrosome_of_patterns-Persistent.png)
@@ -566,7 +566,7 @@ Selection of patterns which contain any substance in the family *Chrome*...
 patterns = extract_patterns_from_category(sa_object, sa_object["patterns"],
                                           category = "family",
                                           value = "Chrome",
-                                          target = "vertices")
+                                          target = "items")
 patterns
 ```
 ![](./img/patterns_chrome_vertices.png)
@@ -576,7 +576,7 @@ Spectrosome related to this selection...
 name = "spectrosome_of_patterns-Chrome-vertices"
 spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
                                 path = directory,
-                                name = paste0(name, ".png"),
+                                name = name,
                                 title = "Spectrosome of category Chrome")
 ```
 ![Fig. 12: Spectrosome of the patterns containing at least one substance related to the family named "Chrome".](./output/spec_family/spectrosome_of_patterns-Chrome-vertices.png)
@@ -615,8 +615,7 @@ Selection of patterns which generate links in which any substance belongs to the
 patterns = extract_patterns_from_category(sa_object, sa_object["patterns"],
                                           category = "family",
                                           value = "Chrome",
-                                          target = "edges")
-
+                                          target = "links")
 patterns
 ```
 ![](./img/patterns_chrome_edges.png)
@@ -670,7 +669,7 @@ Selection of observations containing a desired substance or set of substances...
 # For example, observations in which there is the item which has the code 25
 View(get_obs_from_items(sa_object["observations"],
                         items = 25,
-                        target = "all"))
+                        presence = "all"))
 ```
 ![](./img/View_observations_25.png)
 
@@ -697,6 +696,17 @@ get_info_from_items(sa_object["observations"],
                     items = 3146,
                     info_names = c("JOB.TITLE", "JOB.TASK"))
 ```
+
+Compute some proportions...
+```{r}
+# Proportion of situations involving more than one substance
+length(get_complex_obs(sa_object["observations"])) / length(sa_object["observations"])
+```
+```{r}
+# Proportion of involvement of each substance in multiple exposures
+co_occurrence_proportions(sa_object["observations"])
+```
+
 
 
 ## 5.2. Substance code correspondance with names and categories
@@ -744,8 +754,7 @@ spectrosome_1 = spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
                                   vertex_col = "categories",
                                   nb_graphs = 3,
                                   path = directory,
-                                  name = "spectrosome_of_patterns-no_status.png",
-                                  layout.par = NULL)
+                                  name = "spectrosome_of_patterns-no_status.png")
 ```
 
 ![Fig. 14.a: Spectrosome in which vertices are colored according to the category associated with the items, example 1.](./output/alternatives/spectrosome_of_patterns-no_status-1.png)
@@ -762,8 +771,7 @@ for (min_weight in seq(2, 5)) {
                                     min_link_weight = min_weight,
                                     vertex_col = "categories",
                                     path = directory,
-                                    name = paste0("spectrosome_of_patterns-weight", min_weight, ".png"),
-                                    layout.par = NULL,
+                                    name = paste0("spectrosome_of_patterns-weight", min_weight),
                                     coord = spectrosome_1$coords[[3]])
 }
 ```
@@ -775,6 +783,84 @@ for (min_weight in seq(2, 5)) {
 ![Fig. 15.c: Spectrosome with the constraint of a minimum link weight of 4.](./output/alternatives/spectrosome_of_patterns-weight4.png)
 
 ![Fig. 15.d: Spectrosome with the constraint of a minimum link weight of 5.](./output/alternatives/spectrosome_of_patterns-weight5.png)
+
+
+
+# List of functions and datasets
+
+Datasets:
+
+* [oedb_sample](../html/oedb_sample.html)
+* [substances_classification](../html/substances_classification.html)
+
+
+## About observations
+
+Making observations:
+
+* [make_observations](../html/make_observations.html)
+* [make_INRS_observations](../html/make_INRS_observations.html)
+
+Search for observations:
+
+* [get_complex_obs](../html/get_complex_obs.html)
+* [get_simple_obs](../html/get_simple_obs.html)
+* [get_obs_from_items](../html/get_obs_from_items.html)
+* [get_obs_from_info](../html/get_obs_from_info.html)
+
+Search in observations:
+
+* [get_all_items](../html/get_all_items.html)
+* [get_items_from_info](../html/get_items_from_info.html)
+* [get_info_from_items](../html/get_info_from_items.html)
+
+Computations on observations:
+
+* [co_occurrence_proportions](../html/co_occurrence_proportions.html)
+
+
+## About spectral analysis
+
+The class: [SpectralAnalyzer](../html/SpectralAnalyzer-class.html)
+
+Making *SpectralAnalyzer* objects:
+
+* [spectral.analyzer](../html/spectral.analyzer.html)
+* [reset](../html/reset-SpectralAnalyzer-method.html)
+
+Making charts:
+
+* [spectrosome_chart](../html/spectrosome_chart-SpectralAnalyzer-method.html)
+* [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
+* [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
+* [tree_chart](../html/tree_chart-SpectralAnalyzer-method.html)
+
+Search for nodes or patterns:
+
+* [get_complexes](../html/get_complexes-SpectralAnalyzer-method.html)
+* [get_isolates](../html/get_isolates-SpectralAnalyzer-method.html)
+* [get_non_isolates](../html/get_non_isolates-SpectralAnalyzer-method.html)
+* [extract_nodes_from_items](../html/extract_nodes_from_items-SpectralAnalyzer-method.html)
+* [extract_nodes_from_characteristic](../html/extract_nodes_from_characteristic-SpectralAnalyzer-method.html)
+* [extract_nodes_from_category](../html/extract_nodes_from_category-SpectralAnalyzer-method.html)
+* [extract_patterns_from_items](../html/extract_patterns_from_items-SpectralAnalyzer-method.html)
+* [extract_patterns_from_characteristic](../html/extract_patterns_from_characteristic-SpectralAnalyzer-method.html)
+* [extract_patterns_from_status](../html/extract_patterns_from_status-SpectralAnalyzer-method.html)
+* [extract_patterns_from_category](../html/extract_patterns_from_category-SpectralAnalyzer-method.html)
+
+Search for links between nodes or between patterns:
+
+* [get_links](../html/get_links-SpectralAnalyzer-method.html)
+
+Computations on spectrosomes:
+
+* [degree](../html/degree-SpectralAnalyzer-method.html)
+* [network_density](../html/network_density-SpectralAnalyzer-method.html)
+
+Saving nodes or patterns:
+
+* [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
+
 
 
 ---

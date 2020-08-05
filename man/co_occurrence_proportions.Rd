@@ -2,7 +2,7 @@
 % Please edit documentation in R/observation_maker.R
 \name{co_occurrence_proportions}
 \alias{co_occurrence_proportions}
-\title{Proportions of co-occurrences of each item with any other item}
+\title{Proportions of co-occurrence of each item with any other item}
 \usage{
 co_occurrence_proportions(observations, key = "CODE")
 }

@@ -575,7 +575,7 @@ get_info_from_items = function(observations, items, info_names, presence = "all"
 
 #### Fonctions de calculs sur des observations ####
 
-#' Proportions of co-occurrences of each item with any other item
+#' Proportions of co-occurrence of each item with any other item
 #' 
 #' For each item, compute the ratio between the number of occurrences of the item in complex observations
 #'  and the number of occurrences of the item in all observations. In other words, compute the inverse of
