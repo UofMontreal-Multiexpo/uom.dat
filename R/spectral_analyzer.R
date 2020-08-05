@@ -1914,7 +1914,7 @@ setMethod(f = "spectrosome_chart",
                      # Taille par défaut (valeur par défaut de l'argument vertex.cex de la fonction gplot())
                      vertices_sizes = 1
                    },
-                   stop("Unknown value for vertex_size. Must be one of c(\"relative\", \"grouped\", \"absolute\", \"equal\")."))
+                   stop("Unknown value for vertex_size. Must be one of \"relative\", \"grouped\", \"absolute\", \"equal\"."))
             
             
             # Réseau généré avec le package network
@@ -2782,7 +2782,7 @@ setMethod(f = "extract_nodes_from_characteristic",
                    "GT" = { return(nodes_characteristics[nodes_characteristics[characteristic] > value, ]) },
                    "LE" = { return(nodes_characteristics[nodes_characteristics[characteristic] <= value, ]) },
                    "GE" = { return(nodes_characteristics[nodes_characteristics[characteristic] >= value, ]) },
-                   stop("value must be one of c(\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\")."))
+                   stop("value must be one of \"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\"."))
           })
 
 
@@ -2954,7 +2954,7 @@ setMethod(f = "extract_patterns_from_characteristic",
                    "GT" = { return(patterns_characteristics[patterns_characteristics[characteristic] > value, ]) },
                    "LE" = { return(patterns_characteristics[patterns_characteristics[characteristic] <= value, ]) },
                    "GE" = { return(patterns_characteristics[patterns_characteristics[characteristic] >= value, ]) },
-                   stop("value must be one of c(\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\")."))
+                   stop("value must be one of \"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\"."))
           })
 
 
