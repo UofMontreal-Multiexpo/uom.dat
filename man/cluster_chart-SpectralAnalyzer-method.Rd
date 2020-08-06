@@ -14,6 +14,7 @@
   use_name = TRUE,
   n.cutoff = NULL,
   vertex_size = "relative",
+  size_range = c(0.5, 2.5),
   vertex_col = "status",
   c.cutoff = NULL,
   display_mixt = TRUE,
@@ -48,13 +49,17 @@ of the item.}
 \item{vertex_size}{Way how the sizes of the vertices of the graph should be defined.
 One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
 \describe{
-  \item{\code{"relative"}}{The size of a vertex depends on the range of values of the weights.}
-  \item{\code{"grouped"}}{The weights of the entities are grouped according to intervals.
-                          One size is defined for each interval.}
+  \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
+                           entities in \code{size_range}.}
+  \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals.
+                          Equidistributed values from \code{size_range} are assigned to the
+                          intervals.}
   \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
                            the entity.}
-  \item{\code{"equal"}}{The vertices are all the same size.}
+  \item{\code{"equal"}}{The vertices are all the same size of 1.}
 }}
+
+\item{size_range}{Range of vertex size values (given as expansion factors).}
 
 \item{vertex_col}{Way how the colors of the vertices of the graph should be defined.
 One of \code{"status"}, \code{"categories"}, \code{"none"}.

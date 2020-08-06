@@ -440,11 +440,11 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs y étant relatifs
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -1586,13 +1586,16 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param vertex_size Way how the sizes of the vertices of the graph should be defined.
 #'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
 #'  \describe{
-#'    \item{\code{"relative"}}{The size of a vertex depends on the range of values of the weights.}
-#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to intervals.
-#'                            One size is defined for each interval.}
+#'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
+#'                             entities in \code{size_range}.}
+#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals.
+#'                            Equidistributed values from \code{size_range} are assigned to the
+#'                            intervals.}
 #'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
 #'                             the entity.}
-#'    \item{\code{"equal"}}{The vertices are all the same size.}
+#'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
 #'  }
+#' @param size_range Range of vertex size values (given as expansion factors).
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
 #'  One of \code{"status"}, \code{"categories"}, \code{"none"}.
 #'  If \code{"status"} and \code{entities = "patterns"}, coloring according to the status of the patterns.
@@ -1641,7 +1644,7 @@ setMethod(f = "spectrosome_chart",
           definition = function(object, entities, characteristics,
                                 identifiers = "original",
                                 nb_graphs = 1, min_link_weight = 1,
-                                vertex_size = "relative", vertex_col = "status",
+                                vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 clusters = Inf, highlight = 3,
                                 use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE,
                                 path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities),
@@ -1889,29 +1892,27 @@ setMethod(f = "spectrosome_chart",
             # Définition des tailles des sommets
             switch(EXPR = vertex_size,
                    "relative" = {
-                     # Interpolation linéaire des poids aux valeurs [0.5, 2.5]
+                     # Interpolation linéaire des poids aux valeurs [size_range[1], size_range[2]]
                      if (min(characteristics$weight) != max(characteristics$weight)) {
                        func = approxfun(x = c(min(characteristics$weight), max(characteristics$weight)),
-                                        y = c(0.5, 2.5))
+                                        y = size_range)
                        vertices_sizes = func(characteristics$weight)
                      } else {
-                       vertices_sizes = rep(1, length(characteristics$weight))
+                       vertices_sizes = rep(mean(size_range), length(characteristics$weight))
                      }
                    },
                    "grouped" = {
                      # Groupement des valeurs des poids
                      breaks = round(quantile(unique(characteristics$weight), prob = seq(0, 1, 0.2)))
                      intervals = cut(characteristics$weight, breaks = breaks, include.lowest = TRUE, dig.lab = 5)
-                     sizes = seq(0.5, 2.5, length.out = length(levels(intervals)))
+                     sizes = seq(size_range[1], size_range[2], length.out = length(levels(intervals)))
                      vertices_sizes = sizes[intervals]
                    },
                    "absolute" = {
-                     # Utilisation d'un log
-                     vertices_sizes = log10(characteristics$weight)
-                     vertices_sizes[vertices_sizes < 0.5] = 0.5
+                     vertices_sizes = characteristics$weight
                    },
                    "equal" = {
-                     # Taille par défaut (valeur par défaut de l'argument vertex.cex de la fonction gplot())
+                     # Valeur par défaut de l'argument vertex.cex de la fonction sna::gplot()
                      vertices_sizes = 1
                    },
                    stop("Unknown value for vertex_size. Must be one of \"relative\", \"grouped\", \"absolute\", \"equal\"."))
@@ -2201,13 +2202,16 @@ setMethod(f = "cluster_text",
 #' @param vertex_size Way how the sizes of the vertices of the graph should be defined.
 #'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
 #'  \describe{
-#'    \item{\code{"relative"}}{The size of a vertex depends on the range of values of the weights.}
-#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to intervals.
-#'                            One size is defined for each interval.}
+#'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
+#'                             entities in \code{size_range}.}
+#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals.
+#'                            Equidistributed values from \code{size_range} are assigned to the
+#'                            intervals.}
 #'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
 #'                             the entity.}
-#'    \item{\code{"equal"}}{The vertices are all the same size.}
+#'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
 #'  }
+#' @param size_range Range of vertex size values (given as expansion factors).
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
 #'  One of \code{"status"}, \code{"categories"}, \code{"none"}.
 #'  If \code{"status"} and \code{entities = "patterns"}, coloring according to the status of the patterns.
@@ -2249,7 +2253,7 @@ setMethod(f = "cluster_chart",
           definition = function(object, entities, characteristics, item,
                                 identifiers = "original",
                                 use_name = TRUE, n.cutoff = NULL,
-                                vertex_size = "relative", vertex_col = "status",
+                                vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 c.cutoff = NULL, display_mixt = TRUE,
                                 path = getwd(),
                                 name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
