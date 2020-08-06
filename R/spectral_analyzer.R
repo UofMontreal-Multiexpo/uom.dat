@@ -1588,14 +1588,15 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'  \describe{
 #'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
 #'                             entities in \code{size_range}.}
-#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals.
-#'                            Equidistributed values from \code{size_range} are assigned to the
-#'                            intervals.}
+#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals
+#'                            defined by quantiles. The 5 corresponding size values are taken in a
+#'                            regular sequence bounded by \code{size_range}.}
 #'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
 #'                             the entity.}
 #'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
 #'  }
-#' @param size_range Range of vertex size values (given as expansion factors).
+#' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
+#'  Range of vertex size values (given as expansion factors).
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
 #'  One of \code{"status"}, \code{"categories"}, \code{"none"}.
 #'  If \code{"status"} and \code{entities = "patterns"}, coloring according to the status of the patterns.
@@ -1902,9 +1903,9 @@ setMethod(f = "spectrosome_chart",
                      }
                    },
                    "grouped" = {
-                     # Groupement des valeurs des poids
-                     breaks = round(quantile(unique(characteristics$weight), prob = seq(0, 1, 0.2)))
-                     intervals = cut(characteristics$weight, breaks = breaks, include.lowest = TRUE, dig.lab = 5)
+                     # Groupement des valeurs des poids selon 5 quantiles
+                     breaks = round(quantile(characteristics$weight, prob = seq(0, 1, 0.2)))
+                     intervals = cut(characteristics$weight, breaks = unique(breaks), include.lowest = TRUE)
                      sizes = seq(size_range[1], size_range[2], length.out = length(levels(intervals)))
                      vertices_sizes = sizes[intervals]
                    },
@@ -2204,14 +2205,15 @@ setMethod(f = "cluster_text",
 #'  \describe{
 #'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
 #'                             entities in \code{size_range}.}
-#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals.
-#'                            Equidistributed values from \code{size_range} are assigned to the
-#'                            intervals.}
+#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals
+#'                            defined by quantiles. The 5 corresponding size values are taken in a
+#'                            regular sequence bounded by \code{size_range}.}
 #'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
 #'                             the entity.}
 #'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
 #'  }
-#' @param size_range Range of vertex size values (given as expansion factors).
+#' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
+#'  Range of vertex size values (given as expansion factors).
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
 #'  One of \code{"status"}, \code{"categories"}, \code{"none"}.
 #'  If \code{"status"} and \code{entities = "patterns"}, coloring according to the status of the patterns.
