@@ -1966,25 +1966,16 @@ setMethod(f = "spectrosome_chart",
                 
                 # Traçage des graphiques dans des fichiers PNG
                 png(paste0(turn_into_path(path), file_name), 950, 700)
-                par(mar = c(2,0.5,4,0.5))
-                
-                # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
-                coord = do.call(sna::gplot, c(list(
-                                  dat = network_data, gmode = "graph",
-                                  coord = coord,
-                                  vertex.sides = vertices_shapes,
-                                  vertex.cex = vertices_sizes,
-                                  vertex.col = if (vertex_col == "categories") vertices_colors[[j]] else vertices_colors,
-                                  edge.col = links_colors[[j]]
-                               ), args))
+                par(mar = c(0.5, 0.5, 4.5, 0.5))
+                plot.new()
                 
                 # Titres du graphique
-                title(main = title, cex.main = 1.5)
+                title(main = title, cex.main = 1.5, line = 2.5)
                 nb_isolates = length(sna::isolates(network_data))
                 title(main = paste0(sprintf(nop_subtitle_1, nrow(characteristics), nb_isolates),
                                     if (nb_isolates < 2) "" else "s",
                                     sprintf(nop_subtitle_2, sum(nop_links$weight != 0))),
-                      font.main = 3, line = 0)
+                      font.main = 3, line = 1)
                 
                 # Préparation des formes de la légende du graphique
                 if (entities == "patterns" && vertex_col == "status") {
@@ -2023,12 +2014,32 @@ setMethod(f = "spectrosome_chart",
                 # Affichage de la légende
                 legend("topleft", bty = "n", xpd = NA, pt.cex = legend_pt.cex, pch = legend_pch,
                        legend = legend_legend, col = legend_col)
+                # Taille de la légende (labels + pch + espace à droite)
+                legend_size = strwidth(legend_legend, units = "inches") + 
+                              strwidth("1", units = "inches") * 4.5
                 
                 # Légende supplémentaire concernant la distribution des statuts
                 if (entities == "patterns" && vertex_col == "status") {
-                  legend("topleft", bty = "n", xpd = NA, inset = c(0.065, 0),
-                         legend = paste0("(", count_status, ")"))
+                  status_legend = paste0("(", count_status, ")")
+                  legend_size[1:4] = legend_size[1:4] + strwidth(status_legend, units = "inches") +
+                                                        strwidth("1", units = "inches") * 2.5
+                  
+                  legend("topleft", bty = "n", xpd = NA, inset = c(0.065, 0), legend = status_legend)
                 }
+                
+                
+                # Réinitialisation des marges de la zone graphique pour séparer légende et plot
+                par(new = TRUE, mai = par()$mai + c(0, max(legend_size), 0, 0))
+                
+                # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
+                coord = do.call(sna::gplot, c(list(
+                  dat = network_data, gmode = "graph",
+                  coord = coord,
+                  vertex.sides = vertices_shapes,
+                  vertex.cex = vertices_sizes,
+                  vertex.col = if (vertex_col == "categories") vertices_colors[[j]] else vertices_colors,
+                  edge.col = links_colors[[j]]
+                ), args))
                 
                 # S'il y a bien des liens, identification et affichage des noms des clusters
                 if (sum(nop_links$weight != 0)) {
