@@ -49,8 +49,8 @@ setClassUnion("listORarray", c("list", "array"))
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}.
-#'             PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems.
+#'             \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #'             
 #'             Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
@@ -914,7 +914,7 @@ setMethod(f = "list_patterns_per_year",
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @aliases compute_patterns_characteristics
 #' @keywords internal
@@ -967,7 +967,7 @@ setMethod(f = "compute_patterns_characteristics",
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @aliases compute_specificity
 #' @keywords internal
@@ -1026,7 +1026,7 @@ setMethod(f = "compute_specificity",
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{compute_reporting_indexes_limits}}.
 #' @aliases compute_reporting_indexes
@@ -1169,7 +1169,7 @@ setMethod(f = "check_params_for_RI",
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{compute_reporting_indexes}}.
 #' @aliases compute_reporting_indexes_limits
@@ -1200,7 +1200,7 @@ setMethod(f = "compute_reporting_indexes_limits",
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
 #'          \code{\link{compute_ri_threshold}}.
@@ -1228,7 +1228,7 @@ setMethod(f = "compute_ksi_threshold",
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
 #'          \code{\link{compute_ksi_threshold}}.
@@ -1269,7 +1269,7 @@ setMethod(f = "compute_ri_threshold",
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
 #'          \code{\link{compute_ksi_threshold}}, \code{\link{compute_ri_threshold}}.
@@ -1331,7 +1331,7 @@ setMethod(f = "define_dynamic_status",
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @aliases spectrum_chart
 #' @export
@@ -1391,7 +1391,7 @@ setMethod(f = "spectrum_chart",
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{spectrum_chart}}, \code{\link{compute_pattern_distribution_in_nodes}}.
 #' @aliases plot_spectrum_chart
@@ -1635,7 +1635,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' @aliases spectrosome_chart

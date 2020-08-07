@@ -17,8 +17,7 @@ To install the package **oedb.analysis.tools**:
 1. Clone the repository or download a ZIP copy.
 2. In RStudio, open the project file `oedb-analysis-tools.Rproj`.
 3. Install the required packages by running `install.packages(c("arules", "network", "sna", "ggsci"))`.
-4. Go to the "Build" tab (which is by default in the upper right quadrant).
-5. Click on the "Install and Restart" button.
+4. In the "Build" menu, click on the "Install and Restart" item.
 
 
 ## Documentation

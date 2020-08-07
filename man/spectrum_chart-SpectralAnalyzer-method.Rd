@@ -45,7 +45,7 @@ The patterns are sorted according to their specificities (desc.), status (\code{
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-            \emph{The spectrosome of occupational health problems}. PLoS ONE 13(1): e0190196.
+            The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \author{
