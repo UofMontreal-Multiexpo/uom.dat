@@ -794,14 +794,10 @@ setMethod(f = "list_separate_patterns",
               res <- arules::inspect(result, linebreak = FALSE) # Permet aussi d'obtenir le support
             }))
             
-            # Exraction des motifs issus du résultat puis transformation
-            patterns = res$items
-            patterns = tapply(patterns, seq_along(patterns), as.character)
-            patterns = tapply(patterns, seq_along(patterns), function(x) {
-                                substr(x, start = 2, stop = nchar(x) - 1)
-                              })
+            # Exraction des motifs issus du résultat et transformation en liste de vecteurs
+            patterns = unname(sapply(as.character(res$items),
+                                     function(x) substr(x, start = 2, stop = nchar(x) - 1)))
             patterns = strsplit(patterns, ",")
-            patterns = lapply(patterns, as.character)
             
             # Rassemblement des motifs dans une data.frame
             patterns_df = data.frame(pattern = numeric(length(patterns)))
