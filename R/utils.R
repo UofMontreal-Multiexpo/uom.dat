@@ -64,6 +64,46 @@ cap = function(s) {
 }
 
 
+#' Turn a set notation into a vector notation
+#' 
+#' Convert itemsets written in mathematical notation into a list of character vectors.
+#' Example of conversion: \code{{item i, item j}} becomes \code{c("item i", "item j")}.
+#' 
+#' @param sets Itemsets written in mathematical notation. Must be of vector type or of factor type.
+#' @return List of character vectors corresponding to the itemsets \code{sets}.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{set_notation}}.
+#' @export
+vector_notation = function(sets) {
+  return(strsplit(unname(sapply(as.character(sets),
+                                function(x) substr(x, start = 2, stop = nchar(x) - 1))),
+                  ","))
+}
+
+
+#' Turn a vector notation into a set notation
+#' 
+#' Convert a list of character vectors or a character vector into itemsets written in mathematical
+#'  notation.
+#' Example of conversion: \code{c("item i", "item j")} becomes \code{{item i, item j}}.
+#' 
+#' @param sets Itemsets to write in mathematical notation.
+#' @param type Type of the return variable. One of \code{"character"}, \code{"factor"}.
+#' @return Character vector or factor of the itemsets \code{sets} written in mathematical notation.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{vector_notation}}.
+#' @export
+set_notation = function(sets, type = "character") {
+  new_sets = paste0("{", lapply(sets, paste, collapse = ","), "}")
+  
+  if (type == "character") return(new_sets)
+  if (type == "factor") return(as.factor(new_sets))
+  stop("type must be \"character\" or \"factor\"")
+}
+
+
 
 #### Fonctions utiles au traçage de graphiques ####
 
