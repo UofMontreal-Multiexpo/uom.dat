@@ -87,8 +87,8 @@ By default, the title depends on the arguments \code{entities} and \code{item}.
 Example of default title: \code{"Node cluster of 25"} if \code{entities = "nodes"} and
 \code{item = 25}.}
 
-\item{...}{Additional arguments to the function \code{\link[sna:gplot]{sna::gplot}} for plotting
-the graph. See Details section.}
+\item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
+\code{sna} for plotting the graph. See Details section.}
 }
 \value{
 \code{NULL} if none or only one node or pattern contains the sought item. \cr

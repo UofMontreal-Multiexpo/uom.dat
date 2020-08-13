@@ -52,9 +52,6 @@ If items are not specified using the argument \code{items}, they are automatical
  the values of \code{CODE} in the argument \code{observations} without any categorization or
  specific denomination.
 }
-\seealso{
-\code{\link[arules:ASparameter-class]{arules::APparameter}}.
-}
 \author{
 Gauthier Magnin
 }

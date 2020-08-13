@@ -95,8 +95,8 @@ file name.}
 
 \item{title}{Chart title.}
 
-\item{...}{Additional arguments to the function \code{\link[sna:gplot]{sna::gplot}} for plotting
-the graph. See Details section.}
+\item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
+\code{sna} for plotting the graph. See Details section.}
 }
 \value{
 \describe{

@@ -34,9 +34,6 @@ Invisible. Data frame in which a line is an association between a pattern and it
 Identify the patterns generated from the observations.
 The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 }
-\seealso{
-\code{\link[arules:ASparameter-class]{arules::APparameter}}.
-}
 \author{
 Gauthier Magnin
 }
