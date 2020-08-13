@@ -486,6 +486,11 @@ setGeneric(name = "get_non_isolates", def = function(object, entities, character
 setGeneric(name = "get_complexes", def = function(object, entities, characteristics, category, target, min_nb_values = 2){ standardGeneric("get_complexes") })
 
 
+# Méthodes d'extraction de règles d'association
+
+setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
+
+
 
 #### Méthodes de calculs utiles à la construction des noeuds ####
 
@@ -3243,6 +3248,111 @@ setMethod(f = "get_complexes",
               return(characteristics[as.character(id), ])
             }
             stop("target must be one of \"items\", \"links\", \"vertices\", \"edges\".")
+          })
+
+
+
+#### Méthodes d'extraction de règles d'association ####
+
+#' Rules extraction
+#' 
+#' Extract association rules from the observations. Can be used to find all rules, rules relating to
+#'  patterns (or other specific item sets) or relating to specific items.
+#' 
+#' @details
+#' Only creates rules with one item in the consequent. The reason is detailed on
+#'  \href{https://borgelt.net/doc/apriori/apriori.html#conseq}{this web page} by the author of the
+#'  algorithms used. Here are some extracts: \cr
+#'  \emph{"There are usually already (many) more association rules than item sets if only a single
+#'  item is allowed in the consequents."} \cr
+#'  \emph{"Multiple items in the consequents of association rules therefore come at a considerable
+#'  cost."} \cr
+#'  \emph{"There is no true benefit."}
+#' 
+#' A rule is redundant if a more general rule with the same or higher confidence exists. A rule is more
+#'  general if it has the same consequent but one or more items removed from the antecedent.
+#' 
+#' If \code{from = "observations"}, additional arguments are \code{parameter}, \code{appearance} and
+#'  \code{control} of function \code{\link[arules:apriori]{apriori}} from the package \code{arules}.
+#'  These arguments allow to specify minimum support (default \code{0.1}), minimum confidence (default
+#'  \code{0.8}), minimum length (default \code{1}), maximum length (default \code{10}), specific items
+#'  in antecedent or consequent, and some operating parameters of the rule extraction algorithm.
+#' 
+#' If \code{from} is \code{"patterns"} or a list, additional arguments are \code{confidence} and
+#'  \code{control} of function \code{\link[arules:ruleInduction]{ruleInduction}} from the package
+#'  \code{arules}. These arguments allow to specify minmum confidence (default \code{0.8}) and some
+#'  operating parameters of the rule extraction algorithm.
+#' 
+#' @param object SpectralAnalyzer class object.
+#' @param from Character or list of item sets for which to extract the association rules.
+#'  \itemize{
+#'    \item{If \code{"observations"}, look for all rules within the observations saved in \code{object}
+#'          or for rules with specific items.}
+#'    \item{If \code{"patterns"}, look for rules whose union of the antecedent and the consequent form
+#'          an entire pattern among those of \code{object["patterns"]$pattern}.}
+#'    \item{Otherwise, a list of item sets defined the same way as \code{object["patterns"]$pattern}.
+#'          The search is then done the same way as for \code{"patterns"}.}
+#'  }
+#' @param pruning If \code{TRUE}, remove redundant rules.
+#' @param as_sets If \code{FALSE}, antecedents and consequents of the rules will be character vectors.
+#'  If \code{TRUE}, they will be factors written in mathematical notation (i.e. set notation).
+#' @param ... Additional arguments to configure the extraction. See Details.
+#' @return Data frame containing the extracted rules and their characteristics.
+#'  If \code{from} is not \code{"observations"}, the column \code{"itemset"} refers to the index of the
+#'  item set from which the rule was generated, in the list of patterns (if \code{from = "patterns"})
+#'  or the given list (otherwise).
+#' 
+#' @author Gauthier Magnin
+#' @aliases extract_rules
+#' @export
+setMethod(f = "extract_rules",
+          signature = "SpectralAnalyzer",
+          definition = function(object, from, pruning = FALSE, as_sets = FALSE, ...) {
+            
+            # Validation du paramètre de choix des itemsets desquels extraire les règles
+            if (is.character(from) && from != "observations" && from != "patterns")
+              stop("from must be \"observations\", \"patterns\" or a list of item sets.")
+            
+            # Conversion des observations en transactions
+            transact = turn_obs_into_transactions(object@observations, "CODE")
+            
+            if (is.character(from) && from == "observations") {
+              
+              # Vérification du bon choix du paramètre demandant l'extraction de règles
+              args = list(...)
+              if ("parameter" %in% names(args) && "target" %in% names(args$parameter)
+                  && args$parameter$target != "rules") stop("target parameter must be \"rules\"")
+              
+              # Extraction des règles d'association
+              invisible(capture.output(
+                rules <- arules::apriori(transact, ...)
+              ))
+              
+            } else {
+              if (is.character(from)) from = object@patterns$pattern
+              
+              # Conversion de la liste d'item sets en objet arules::itemMatrix puis arules::itemsets
+              itemsets = new("itemsets", items = arules::encode(from, object@items))
+              
+              # Extraction des règles d'association
+              rules = arules::ruleInduction(itemsets, transact, ...)
+            }
+            
+            # Recherche et retrait des règles redondantes
+            if (pruning) rules = rules[!arules::is.redundant(rules)]
+            
+            # Conversion du type arules::rules en data frame et changement de notation
+            invisible(capture.output(
+              rules_df <- arules::inspect(rules)
+            ))
+            if (!as_sets) {
+              rules_df[, c("lhs", "rhs")] = apply(rules_df[, c("lhs", "rhs")], 2, vector_notation)
+            }
+            
+            # Renommage des colonnes "lhs" et "rhs" et retour
+            colnames(rules_df)[c(1,3)] = c("antecedent", "consequent")
+            rownames(rules_df) = NULL
+            return(rules_df)
           })
 
 
