@@ -779,13 +779,8 @@ setMethod(f = "list_separate_patterns",
             object_name = deparse(substitute(object))
             
             
-            # Liste des items retrouvés pour chaque observation et vecteurs des identifiants des items
-            data = sapply(sapply(object@observations, "[", "CODE"), as.character)
-            labels = as.character(object@items)
-            
-            # Transformation en objet itemMatrix puis en objet transaction : une ligne par observation, une colonne par item
-            item_matrix = arules::encode(data, labels)
-            transact = as(item_matrix, "transactions")
+            # Conversion des observations en transactions : une ligne par observation, une colonne par item
+            transact = turn_obs_into_transactions(object@observations, "CODE")
             
             # Énumération des motifs recherchés
             params = list(supp = count/dim(transact)[1], 
@@ -798,9 +793,7 @@ setMethod(f = "list_separate_patterns",
             }))
             
             # Exraction des motifs issus du résultat et transformation en liste de vecteurs
-            patterns = unname(sapply(as.character(res$items),
-                                     function(x) substr(x, start = 2, stop = nchar(x) - 1)))
-            patterns = strsplit(patterns, ",")
+            patterns = vector_notation(res$items)
             
             # Rassemblement des motifs dans une data.frame
             patterns_df = data.frame(pattern = numeric(length(patterns)))
