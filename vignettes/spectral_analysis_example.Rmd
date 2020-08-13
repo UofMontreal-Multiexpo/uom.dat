@@ -871,5 +871,18 @@ Saving nodes or patterns:
 * [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
 
 
+## About association rules and sets
+
+Extracting rules:
+
+* [extract_rules](../html/extract_rules-SpectralAnalyzer-method.html)
+
+Switching between mathematical notation and vector notation for sets:
+
+* [vector_notation](../html/vector_notation.html)
+* [set_notation](../html/set_notation.html)
+
+
+
 
 ---
