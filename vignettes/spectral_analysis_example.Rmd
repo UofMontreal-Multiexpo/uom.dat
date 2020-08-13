@@ -158,7 +158,7 @@ Classification of the substances from the observations according to their subfam
 substances = get_all_items(observations)
 # Search for the subfamily associated to each substance
 families = substances_classification$SUBFAMILY[match(substances, substances_classification$CODE)]
-# By prevention, assignment of a specific value to substances for which no family has been found
+# As a precaution, assignment of a specific value to substances for which no family has been found
 families[is.na(families)] = "Unknown"
 # Search for the name associated to each substance
 names = substances_classification$NAME[match(substances, substances_classification$CODE)]

@@ -9,7 +9,7 @@
 #' @param t numeric. Time to convert, in seconds.
 #' @return Character string corresponding to the converted time.
 #' 
-#' @references Stack Overflow topic :
+#' @references Stack Overflow topic:
 #'  \href{https://stackoverflow.com/questions/27312292/convert-seconds-to-days-hoursminutesseconds}{Convert seconds to days:hours:minutes:seconds}
 #' @keywords internal
 dhms = function(t){
