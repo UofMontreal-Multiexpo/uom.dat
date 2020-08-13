@@ -622,7 +622,7 @@ co_occurrence_proportions = function(observations, key = "CODE") {
 #'  the package \code{arules}.
 #' 
 #' @author Gauthier Magnin
-#' @export
+#' @keywords internal
 turn_obs_into_transactions = function(observations, key = "CODE") {
   
   # Liste des items retrouvés pour chaque observation et vecteurs des identifiants des items

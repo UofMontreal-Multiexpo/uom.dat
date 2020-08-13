@@ -23,3 +23,4 @@ Only the items of the observations are considered. Other data are ignored.
 \author{
 Gauthier Magnin
 }
+\keyword{internal}
