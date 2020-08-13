@@ -607,3 +607,31 @@ co_occurrence_proportions = function(observations, key = "CODE") {
 }
 
 
+
+#### Fonctions de transtypage d'observations ####
+
+#' Turn observations into arules transactions
+#' 
+#' Turn a set of observations into a set of \code{\link[arules:transactions-class]{transactions}} from
+#'  the package \code{arules}.
+#' Only the items of the observations are considered. Other data are ignored.
+#' 
+#' @param observations List of observations to turn into \code{arules} transactions.
+#' @param key Access key to the items in an observation.
+#' @return Set of transactions: \code{\link[arules:transactions-class]{transactions}} class object from
+#'  the package \code{arules}.
+#' 
+#' @author Gauthier Magnin
+#' @export
+turn_obs_into_transactions = function(observations, key = "CODE") {
+  
+  # Liste des items retrouvés pour chaque observation et vecteurs des identifiants des items
+  data = sapply(sapply(observations, "[", key), as.character)
+  labels = as.character(get_all_items(observations, key))
+  
+  # Transformation en objet arules::itemMatrix puis en objet arules::transaction :
+  # une ligne par observation, une colonne par item
+  return(as(arules::encode(data, labels), "transactions"))
+}
+
+
