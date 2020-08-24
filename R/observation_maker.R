@@ -154,7 +154,7 @@ make_INRS_observations = function(measures, mode, work_situations = NULL, variab
   # Pour chaque intervention
   for (id_i in id_interv) {
     # Extraction des prélèvements associés à l'intervention en cours de traitement
-    intervention = subset(measures, ID == id_i)
+    intervention = subset(measures, measures$ID == id_i)
     
     if (mode == 1 || mode == 2) {
       # Regroupement des prélèvements correspondant à des situations de travail décrites
@@ -245,7 +245,7 @@ make_obs_from_ws = function(measures, work_situations, additional = NULL, unique
   
   # Pour chaque situation de travail
   for (id_s in unique(work_situations$WS_ID)) {
-    situation = subset(work_situations, WS_ID == id_s)
+    situation = subset(work_situations, work_situations$WS_ID == id_s)
     
     CODE = c()
     YEAR = c()
