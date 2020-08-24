@@ -2759,17 +2759,23 @@ setMethod(f = "extract_rules",
             # Recherche et retrait des règles redondantes
             if (pruning) rules = rules[!arules::is.redundant(rules)]
             
-            # Conversion du type arules::rules en data frame et changement de notation
+            # Conversion du type arules::rules en data frame
             invisible(capture.output(
               rules_df <- arules::inspect(rules)
             ))
-            if (!as_sets) {
-              rules_df[, c("lhs", "rhs")] = apply(rules_df[, c("lhs", "rhs")], 2, vector_notation)
+            
+            # Si au moins une règle correspond aux critères de recherche
+            if (!is.null(rules_df)) {
+              # Changement de notation
+              if (!as_sets) {
+                rules_df[, c("lhs", "rhs")] = apply(rules_df[, c("lhs", "rhs")], 2, vector_notation)
+              }
+              
+              # Renommage des colonnes "lhs" et "rhs"
+              colnames(rules_df)[c(1,3)] = c("antecedent", "consequent")
+              rownames(rules_df) = NULL
             }
             
-            # Renommage des colonnes "lhs" et "rhs" et retour
-            colnames(rules_df)[c(1,3)] = c("antecedent", "consequent")
-            rownames(rules_df) = NULL
             return(rules_df)
           })
 
