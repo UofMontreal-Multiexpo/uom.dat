@@ -2672,13 +2672,13 @@ setMethod(f = "plot_tree_chart",
 
 #### Méthodes de recherche et d'enregistrement ####
 
-#' Saving nodes or patterns
+#' Saving nodes, patterns or association rules
 #' 
-#' Save in CSV format a set of nodes or patterns as well as their characteristics.
+#' Save in CSV format a set of nodes, patterns or association rules as well as their characteristics.
 #' 
 #' @param object SpectralAnalyzer class object.
-#' @param entities Type of entities to save. One of \code{"nodes"}, \code{"patterns"}.
-#' @param characteristics Data frame of the characteristics of nodes or patterns.
+#' @param entities Type of entities to save. One of \code{"nodes"}, \code{"patterns"}, \code{"rules"}.
+#' @param characteristics Data frame of the characteristics of nodes, patterns or rules.
 #' @param ... Further arguments to the function \code{\link[utils:write.table]{utils::write.csv2}}.
 #' 
 #' @author Gauthier Magnin
@@ -2689,25 +2689,28 @@ setMethod(f = "save_characteristics",
           signature = "SpectralAnalyzer",
           definition = function(object, entities, characteristics, ...) {
             
-            if (entities != "nodes" & entities != "patterns")
-              stop("entities must be \"nodes\" or \"patterns\".")
-            
-            # Nom de la colonne dans laquelle chercher les vecteurs à convertir
-            column = substr(entities, 1, nchar(entities) - 1)
+            # Nom des colonnes dans lesquelles chercher les vecteurs à convertir
+            if (entities == "nodes" || entities == "patterns") {
+              columns = substr(entities, 1, nchar(entities) - 1)
+            } else if (entities == "rules") {
+              columns = c("antecedent", "consequent")
+            } else stop("entities must be one of \"nodes\", \"patterns\", \"rules\".")
             
             # Conversion des noeuds ou motifs en chaînes de caractères
-            itemsets = tapply(characteristics[, column],
-                              seq_along(characteristics[, column]),
-                              function(x) {
-                                x = as.character(x)
-                                
-                                # Suppression des caractères liés aux vecteurs
-                                ifelse (substring(x, 1, 1) == "c",
-                                        substr(x, start = 3, stop = nchar(x) - 1),
-                                        x)
-                              })
+            itemsets = apply(characteristics[columns], 2,
+                             function(x) {
+                               x = as.character(x)
+                               
+                               # Suppression des caractères "c()" liés aux vecteurs
+                               y = ifelse(substring(x, 1, 1) == "c",
+                                          substr(x, start = 3, stop = nchar(x) - 1),
+                                          x)
+                               
+                               # Suppression des guillemets liés aux vecteurs
+                               return(gsub("\"", "", y))
+                             })
             
-            characteristics[, column] = unlist(itemsets)
+            characteristics[, columns] = unlist(itemsets)
             
             # Enregistrement des données
             utils::write.csv2(x = characteristics, ...)

@@ -3,21 +3,21 @@
 \name{save_characteristics,SpectralAnalyzer-method}
 \alias{save_characteristics,SpectralAnalyzer-method}
 \alias{save_characteristics}
-\title{Saving nodes or patterns}
+\title{Saving nodes, patterns or association rules}
 \usage{
 \S4method{save_characteristics}{SpectralAnalyzer}(object, entities, characteristics, ...)
 }
 \arguments{
 \item{object}{SpectralAnalyzer class object.}
 
-\item{entities}{Type of entities to save. One of \code{"nodes"}, \code{"patterns"}.}
+\item{entities}{Type of entities to save. One of \code{"nodes"}, \code{"patterns"}, \code{"rules"}.}
 
-\item{characteristics}{Data frame of the characteristics of nodes or patterns.}
+\item{characteristics}{Data frame of the characteristics of nodes, patterns or rules.}
 
 \item{...}{Further arguments to the function \code{\link[utils:write.table]{utils::write.csv2}}.}
 }
 \description{
-Save in CSV format a set of nodes or patterns as well as their characteristics.
+Save in CSV format a set of nodes, patterns or association rules as well as their characteristics.
 }
 \seealso{
 \code{\link[utils:write.table]{utils::write.csv2}}.
