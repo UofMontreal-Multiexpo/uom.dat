@@ -18,11 +18,15 @@ LazyData: true
 Depends: R (>= 3.5.0)
 Imports:
     arules,
+    ggsci,
+    graphics,
+    grDevices,
+    methods,
     network,
     sna,
-    ggsci
-Suggests:
+    stats,
     utils
+Suggests:
 RoxygenNote: 7.1.0
 Collate: 
     'data.R'

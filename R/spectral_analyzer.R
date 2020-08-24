@@ -131,7 +131,7 @@ setMethod(f = "initialize",
                 .Object@categories_colors = lapply(.Object@items_categories, function(category) {
                   # Sélection circulaire parmi les 20 couleurs d'une palette de D3
                   colors = ggsci::pal_d3("category20")(20)[seq_along(levels(category)) %% 21]
-                  return(setNames(colors, levels(category)))
+                  return(stats::setNames(colors, levels(category)))
                 })
               }
             }
@@ -144,7 +144,7 @@ setMethod(f = "initialize",
             .Object@status_limit = status_limit
             
             # Vérification des premiers attributs
-            validObject(.Object)
+            methods::validObject(.Object)
             
             # Attrtibuts de classe
             .Object@Class = list("STATUS_PERSISTENT" = "Persistent",
@@ -158,7 +158,7 @@ setMethod(f = "initialize",
             # Initialisation des attributs restants
             reset(.Object, from = 1)
             
-            validObject(.Object)
+            methods::validObject(.Object)
             return(.Object)
           })
 
@@ -199,18 +199,18 @@ spectral.analyzer = function(observations, items = NULL, target = "closed freque
   
   # Installation des packages nécessaires au fonctionnement
   # Utile uniquement si les fonctions sont chargées sans charger le package (mode dev)
-  packages = c("arules", "network", "sna", "ggsci")
-  new_packages = packages[!(packages %in% installed.packages()[, "Package"])]
+  packages = c("arules", "ggsci", "graphics", "grDevices", "methods", "network", "sna", "stats", "utils")
+  new_packages = packages[!(packages %in% utils::installed.packages()[, "Package"])]
   
   if(length(new_packages) != 0) { 
     cat("Installing required packages:", paste(new_packages, collapse = ", "), "\n")
-    install.packages(new_packages)
+    utils::install.packages(new_packages)
   }
   
   # Instanciation avec ou sans la liste des items et des catégories associées
   ifelse(is.null(items),
-    return(new(Class = "SpectralAnalyzer", observations = observations, target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)),
-    return(new(Class = "SpectralAnalyzer", observations = observations, items = items, target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)))
+    return(methods::new(Class = "SpectralAnalyzer", observations = observations, target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)),
+    return(methods::new(Class = "SpectralAnalyzer", observations = observations, items = items, target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)))
 }
 
 
@@ -291,7 +291,7 @@ setMethod(f = "print",
           signature = "SpectralAnalyzer",
           definition = function(x, ...) {
             cat("SpectralAnalyzer\n")
-            print(getSlots("SpectralAnalyzer"))
+            print(methods::getSlots("SpectralAnalyzer"))
           })
 
 # show : affichage sommaire en console
@@ -299,7 +299,7 @@ setMethod(f = "show",
           signature = "SpectralAnalyzer",
           definition = function(object) {
             cat("SpectralAnalyzer\n")
-            print(slotNames(object))
+            print(methods::slotNames(object))
           })
 
 # summary : résumé de l'objet
@@ -381,7 +381,7 @@ setReplaceMethod(f = "[",
                           "Class" = { stop("Final attribute.") },
                           stop("Unknown attribute."))
                    
-                   validObject(x)
+                   methods::validObject(x)
                    return(x)
                  })
 
@@ -623,7 +623,7 @@ setMethod(f = "count_links",
             
             # Compte le nombre d'items en commun pour chaque paire d'éléments à lier
             names(to_link) = sapply(to_link, paste0, collapse = "/")
-            n_intersections = crossprod(table(stack(to_link)))
+            n_intersections = crossprod(table(utils::stack(to_link)))
             
             # Nommage des colonnes et lignes par les itemsets correspondants
             dimnames(n_intersections) = NULL
@@ -787,7 +787,7 @@ setMethod(f = "list_separate_patterns",
                           minlen = min_length,
                           maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length), 
                           target = target)
-            invisible(capture.output({
+            invisible(utils::capture.output({
               result <- arules::eclat(transact, parameter = params)
               res <- arules::inspect(result, linebreak = FALSE) # Permet aussi d'obtenir le support
             }))
@@ -1361,9 +1361,10 @@ setMethod(f = "spectrum_chart",
             
             
             # Traçage du graphique dans un fichier PDF
-            pdf(paste0(turn_into_path(path), check_extension(name, "pdf")), 15, 8, pointsize = 10)
+            grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
+                           15, 8, pointsize = 10)
             plot_spectrum_chart(object, patterns_characteristics, weights, title)
-            dev.off()
+            grDevices::dev.off()
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
             return(patterns_characteristics[order(patterns_characteristics$ID),
@@ -1404,80 +1405,82 @@ setMethod(f = "plot_spectrum_chart",
             x_margin = 0.03 * nrow(patterns_characteristics)
             
             ## Bar chart relatif au poids
-            par(mfrow = c(1, 1))
-            par(mar = c(7.1, 5.6, 4.1, 5.6) + 0.1)
+            graphics::par(mfrow = c(1, 1))
+            graphics::par(mar = c(7.1, 5.6, 4.1, 5.6) + 0.1)
             
             # Diagramme en barres selon le poids des motifs
             las = if (length(patterns_characteristics$pattern) < 50) 1 else 3
             y_lim_bar = max(patterns_characteristics$weight) * y_lim_line # Poids max aligné avec specificité de 1
-            bar_plot = barplot(t(weights_by_node_type), main = title,
-                               col = NA, space = 0, lwd = 2,
-                               xlim = c(-x_margin, nrow(patterns_characteristics) + x_margin), xaxs = "i",
-                               ylim = c(0, y_lim_bar), yaxt = "n",
-                               xlab = "Patterns IDs", ylab = "",
-                               names.arg = patterns_characteristics$ID, las = las,
-                               cex.main = 1.3, cex.lab = 1.5, cex.axis = 1.5, cex.names = 0.9, font.axis = 2)
+            bar_plot = graphics::barplot(t(weights_by_node_type), main = title,
+                                         col = NA, space = 0, lwd = 2,
+                                         xlim = c(-x_margin, nrow(patterns_characteristics) + x_margin), xaxs = "i",
+                                         ylim = c(0, y_lim_bar), yaxt = "n",
+                                         xlab = "Patterns IDs", ylab = "",
+                                         names.arg = patterns_characteristics$ID, las = las, font.axis = 2,
+                                         cex.main = 1.3, cex.lab = 1.5, cex.axis = 1.5, cex.names = 0.9)
             bar_width_2 = diff(bar_plot[1:2]) / 2
             
             # Axe à gauche : suppression des nombres à virgule, orientation en fonction du nombre
             # et affichage éventuel d'un tick supplémentaire pour délimiter l'axe en haut du graphique
-            ticks = unique(trunc(axTicks(2)))
+            ticks = unique(trunc(graphics::axTicks(2)))
             if (max(ticks) < max(patterns_characteristics$weight)) {
                ticks = append(ticks, max(patterns_characteristics$weight))
             }
-            axis(2, lwd = 2, cex.axis = 1.5, font.axis = 2,
-                 at = ticks, las = if (any(ticks >= 10)) 3 else 1)
-            mtext("Weight", side = 2, line = 3.1, cex = 1.5, at = max(patterns_characteristics$weight) / 2)
+            graphics::axis(2, lwd = 2, cex.axis = 1.5, font.axis = 2,
+                           at = ticks, las = if (any(ticks >= 10)) 3 else 1)
+            graphics::mtext("Weight", side = 2, line = 3.1, cex = 1.5,
+                            at = max(patterns_characteristics$weight) / 2)
             
             # Coloration des barres
             for (i in seq(nrow(weights_by_node_type))) {
               y = c(0, cumsum(c(weights_by_node_type[i, ])))
-              rect(bar_plot[i] - bar_width_2,  y[ - length(y)],  bar_plot[i] + bar_width_2,  y[ - 1], 
-                   col = bars_colors[i], density = c(300, 15), border = "black")
+              graphics::rect(bar_plot[i] - bar_width_2, y[ - length(y)],
+                             bar_plot[i] + bar_width_2, y[ - 1],
+                             col = bars_colors[i], density = c(300, 15), border = "black")
             }
             
             
             ## Line chart relatif à la spécificité
-            par(new = TRUE)
+            graphics::par(new = TRUE)
             
             # Ligne de la spécificité et seuil
-            plot(x = seq(0.5, nrow(patterns_characteristics) - 0.5),
-                 y = patterns_characteristics$specificity,
-                 lwd = 3, type = "b", col = "black", pch = 20,
-                 bty = "n", xlab = "", ylab = "", main = "",
-                 xlim = c(-x_margin, nrow(patterns_characteristics) + x_margin), xaxt = "n", xaxs = "i",
-                 ylim = c(0, y_lim_line), yaxt = "n", yaxs = "i")
-            segments(x0 = 0, y0 = 0.5,
-                     x1 = nrow(patterns_characteristics) * (1 + x_margin),
-                     lwd = 0.5, lty = "dotted")
+            graphics::plot(x = seq(0.5, nrow(patterns_characteristics) - 0.5),
+                           y = patterns_characteristics$specificity,
+                           lwd = 3, type = "b", col = "black", pch = 20,
+                           bty = "n", xlab = "", ylab = "", main = "",
+                           xlim = c(-x_margin, nrow(patterns_characteristics) + x_margin), xaxt = "n", xaxs = "i",
+                           ylim = c(0, y_lim_line), yaxt = "n", yaxs = "i")
+            graphics::segments(x0 = 0, y0 = 0.5,
+                               x1 = nrow(patterns_characteristics) * (1 + x_margin),
+                               lwd = 0.5, lty = "dotted")
             
             # Axe et titre à droite
-            axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = 1.5, font.axis = 2)
-            mtext("Specificity", side = 4, line = 3.1, cex = 1.5, at = 0.5)
+            graphics::axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = 1.5, font.axis = 2)
+            graphics::mtext("Specificity", side = 4, line = 3.1, cex = 1.5, at = 0.5)
             
             
             ## Texte relatif aux tailles des motifs
             # Changement du système de coordonnées du au changement de graphique (bar -> line)
             new_y = patterns_characteristics$weight * y_lim_line / y_lim_bar
-            shadowtext(bar_plot, new_y, as.roman(patterns_characteristics$order),
+            shadowtext(bar_plot, new_y, utils::as.roman(patterns_characteristics$order),
                        col = "black", bg = "white", cex = 0.8, pos = 3, offset = 1)
             
             
             ## Légendes
-            legend("bottomleft", bty = "n", horiz = TRUE, xpd = NA, inset = c(0, -0.15),
-                   pch = 15, col = object@Class$STATUS_COLORS,
-                   legend = names(object@Class$STATUS_COLORS), cex = 1.1)
-            legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.135),
-                   pch = NA_integer_,
-                   legend = paste0(as.roman(min(patterns_characteristics$order)), " ... ",
-                                   as.roman(max(patterns_characteristics$order)), ":  Order"),
-                   cex = 1.1)
-            legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.165),
-                   pch = 20, lty = 1,
-                   legend = "Specificity", cex = 1.1)
-            legend("bottomright", bty = "n", xpd = NA, inset = c(0.005, -0.165),
-                   fill = "red", density = c(600, 15),
-                   legend = c("Weight in complex nodes", "Weight in simple nodes"), cex = 1.1)
+            graphics::legend("bottomleft", bty = "n", horiz = TRUE, xpd = NA, inset = c(0, -0.15),
+                             pch = 15, col = object@Class$STATUS_COLORS,
+                             legend = names(object@Class$STATUS_COLORS), cex = 1.1)
+            graphics::legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.135),
+                             pch = NA_integer_,
+                             legend = paste0(utils::as.roman(min(patterns_characteristics$order)), " ... ",
+                                             utils::as.roman(max(patterns_characteristics$order)), ":  Order"),
+                             cex = 1.1)
+            graphics::legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.165),
+                             pch = 20, lty = 1,
+                             legend = "Specificity", cex = 1.1)
+            graphics::legend("bottomright", bty = "n", xpd = NA, inset = c(0.005, -0.165),
+                             fill = "red", density = c(600, 15),
+                             legend = c("Weight in complex nodes", "Weight in simple nodes"), cex = 1.1)
           })
 
 
@@ -1887,8 +1890,9 @@ setMethod(f = "spectrosome_chart",
                    "relative" = {
                      # Interpolation linéaire des poids aux valeurs [size_range[1], size_range[2]]
                      if (min(characteristics$weight) != max(characteristics$weight)) {
-                       func = approxfun(x = c(min(characteristics$weight), max(characteristics$weight)),
-                                        y = size_range)
+                       func = stats::approxfun(x = c(min(characteristics$weight),
+                                                     max(characteristics$weight)),
+                                               y = size_range)
                        vertices_sizes = func(characteristics$weight)
                      } else {
                        vertices_sizes = rep(mean(size_range), length(characteristics$weight))
@@ -1896,7 +1900,7 @@ setMethod(f = "spectrosome_chart",
                    },
                    "grouped" = {
                      # Groupement des valeurs des poids selon 5 quantiles
-                     breaks = round(quantile(characteristics$weight, prob = seq(0, 1, 0.2)))
+                     breaks = round(stats::quantile(characteristics$weight, prob = seq(0, 1, 0.2)))
                      intervals = cut(characteristics$weight, breaks = unique(breaks), include.lowest = TRUE)
                      sizes = seq(size_range[1], size_range[2], length.out = length(levels(intervals)))
                      vertices_sizes = sizes[intervals]
@@ -1959,9 +1963,9 @@ setMethod(f = "spectrosome_chart",
                                    sub(".png", paste0("-", colnames(object@items_categories)[j], ".png"), file_name))
                 
                 # Traçage des graphiques dans des fichiers PNG
-                png(paste0(turn_into_path(path), file_name), 950, 700)
-                par(mar = c(0.5, 0.5, 4.5, 0.5))
-                plot.new()
+                grDevices::png(paste0(turn_into_path(path), file_name), 950, 700)
+                graphics::par(mar = c(0.5, 0.5, 4.5, 0.5))
+                graphics::plot.new()
                 
                 # Titres du graphique
                 title(main = title, cex.main = 1.5, line = 2.5)
@@ -2006,24 +2010,24 @@ setMethod(f = "spectrosome_chart",
                                "white", categories_colors[[j]])
                 
                 # Affichage de la légende
-                legend("topleft", bty = "n", xpd = NA, pt.cex = legend_pt.cex, pch = legend_pch,
-                       legend = legend_legend, col = legend_col)
+                graphics::legend("topleft", bty = "n", xpd = NA, pt.cex = legend_pt.cex, pch = legend_pch,
+                                 legend = legend_legend, col = legend_col)
                 # Taille de la légende (labels + pch + espace à droite)
-                legend_size = strwidth(legend_legend, units = "inches") + 
-                              strwidth("1", units = "inches") * 4.5
+                legend_size = graphics::strwidth(legend_legend, units = "inches") + 
+                              graphics::strwidth("1", units = "inches") * 4.5
                 
                 # Légende supplémentaire concernant la distribution des statuts
                 if (entities == "patterns" && vertex_col == "status") {
                   status_legend = paste0("(", count_status, ")")
-                  legend_size[1:4] = legend_size[1:4] + strwidth(status_legend, units = "inches") +
-                                                        strwidth("1", units = "inches") * 2.5
+                  legend_size[1:4] = legend_size[1:4] + graphics::strwidth(status_legend, units = "inches") + 
+                                                        graphics::strwidth("1", units = "inches") * 2.5
                   
-                  legend("topleft", bty = "n", xpd = NA, inset = c(0.065, 0), legend = status_legend)
+                  graphics::legend("topleft", bty = "n", xpd = NA, inset = c(0.065, 0), legend = status_legend)
                 }
                 
                 
                 # Réinitialisation des marges de la zone graphique pour séparer légende et plot
-                par(new = TRUE, mai = par()$mai + c(0, max(legend_size), 0, 0))
+                graphics::par(new = TRUE, mai = graphics::par()$mai + c(0, max(legend_size), 0, 0))
                 
                 # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
                 coord = do.call(sna::gplot, c(list(
@@ -2041,7 +2045,7 @@ setMethod(f = "spectrosome_chart",
                 }
                 
                 # Fermeture du fichier PNG
-                dev.off()
+                grDevices::dev.off()
               }
               
               # Récupération des coordonnées des sommets du graphe
@@ -2120,7 +2124,8 @@ setMethod(f = "cluster_text",
             clusters = names(clusters)
             
             # Moyenne des coordonnées des liens pour chaque type de lien ("LABEL")
-            coords = aggregate(data.frame(MOY.X = coord_L$X), by = list(LABEL = coord_L$LABEL), mean)
+            coords = stats::aggregate(data.frame(MOY.X = coord_L$X),
+                                      by = list(LABEL = coord_L$LABEL), mean)
             coords$MOY.Y = tapply(coord_L$Y, coord_L$LABEL, mean)
             
             # Association des coordonnées moyennes des liens exactes (non multiples et non décomposés) aux noms des items ayant générés le plus de liaisons
@@ -2131,7 +2136,7 @@ setMethod(f = "cluster_text",
             #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'item.
             
             # Extraction des noms des items ayant générés le plus de liaisons
-            coords = coords[complete.cases(coords), ]
+            coords = coords[stats::complete.cases(coords), ]
             if (nrow(coords) >= display) coords = coords[seq_len(display), ]
             
             # S'il y a effectivement des clusters à nommer (ce n'est pas le cas s'il n'y a que des liens mixtes)
@@ -2439,9 +2444,10 @@ setMethod(f = "tree_chart",
                                  sub(".pdf", paste0("-", category, ".pdf"), name))
               
               # Traçage du graphique dans un fichier PDF
-              pdf(paste0(turn_into_path(path), file_name), 14, 10, paper = "a4r", pointsize = 11)
+              grDevices::pdf(paste0(turn_into_path(path), file_name),
+                             14, 10, paper = "a4r", pointsize = 11)
               plot_tree_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, display_status, display_text, title)
-              dev.off()
+              grDevices::dev.off()
             }
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
@@ -2491,9 +2497,9 @@ setMethod(f = "plot_tree_chart",
           definition = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree") {
             
             # Définition des marges et initialisation de la zone graphique
-            if (!is.null(category)) par(mar = c(3.0, 0.5, 1.9, 0.5))
-            else par(mar = c(0.5, 0.5, 1.9, 0.5))
-            plot.new()
+            if (!is.null(category)) graphics::par(mar = c(3.0, 0.5, 1.9, 0.5))
+            else graphics::par(mar = c(0.5, 0.5, 1.9, 0.5))
+            graphics::plot.new()
             
             # Préparation de la position des items sur le graphique (x = 0 ; y = ordre décroissant)
             items_category$x = 0
@@ -2516,11 +2522,11 @@ setMethod(f = "plot_tree_chart",
                 category_legend = substr(sort(unique(items_category$category)), 1, c.cutoff)
               }
               
-              legend("bottom", xpd = NA, bty = "n", inset = c(0, -0.09),
-                     title = cap(category), cex = 0.85,
-                     legend = category_legend,
-                     col = category_colors,
-                     pch = 20, ncol = ceiling(length(category_legend) / 2))
+              graphics::legend("bottom", xpd = NA, bty = "n", inset = c(0, -0.09),
+                               title = cap(category), cex = 0.85,
+                               legend = category_legend,
+                               col = category_colors,
+                               pch = 20, ncol = ceiling(length(category_legend) / 2))
             } else {
               item_colors = "black"
             }
@@ -2530,10 +2536,10 @@ setMethod(f = "plot_tree_chart",
               # La différence de marges implique la nécessité une différence d'inset
               status_inset = if (!is.null(category)) c(-0.02, -0.064) else c(-0.02, -0.060)
               
-              legend("topright", bty = "n", horiz = TRUE, xpd = NA, inset = status_inset,
-                     pch = 15, cex = 0.85,
-                     col = object@Class$STATUS_COLORS,
-                     legend = names(object@Class$STATUS_COLORS))
+              graphics::legend("topright", bty = "n", horiz = TRUE, xpd = NA, inset = status_inset,
+                               pch = 15, cex = 0.85,
+                               col = object@Class$STATUS_COLORS,
+                               legend = names(object@Class$STATUS_COLORS))
             }
             
             
@@ -2573,40 +2579,40 @@ setMethod(f = "plot_tree_chart",
             data_area = nrow(patterns_characteristics) - line_margin + 
               length(unique(patterns_characteristics$order) - 1) * line_margin
             # Espace ajouté pour afficher la dernière taille de motif s'il y a trop peu de motifs associés
-            last_space = strwidth(as.roman(names(order_tab[length(order_tab)]))) - (order_tab[length(order_tab)] + line_margin)
+            last_space = graphics::strwidth(utils::as.roman(names(order_tab[length(order_tab)]))) - (order_tab[length(order_tab)] + line_margin)
             if (last_space > 0) data_area = data_area + last_space
             
             # Placement de la "plot region" pour avoir la place d'afficher les labels des items
             # Espace à gauche : taille du plus grand label (ou du titre "Order") + taille de la marge
             #                   + taille d'un caractère * 0.5 (offset de placement des labels) ; en fraction de la "figure region"
-            par(plt = c(max(strwidth(text_labels, cex = 0.75, units = "figure"), strwidth(order_text, cex = 1.05, units = "figure")) +
-                          par("mai")[2] * strwidth(1, units = "figure") / strwidth(1, units = "inches") + # Conversion marge en figure units
-                          0.5 * strwidth("A", units = "figure"),
-                        par("plt")[2:4]))
+            graphics::par(plt = c(max(graphics::strwidth(text_labels, cex = 0.75, units = "figure"), graphics::strwidth(order_text, cex = 1.05, units = "figure")) +
+                                    graphics::par("mai")[2] * graphics::strwidth(1, units = "figure") / graphics::strwidth(1, units = "inches") + # Conversion marge en figure units
+                                    0.5 * graphics::strwidth("A", units = "figure"),
+                          graphics::par("plt")[2:4]))
             
             # Option "new" pour que le graphique n'apparaîssent pas sur une seconde page
-            par(new = TRUE)
+            graphics::par(new = TRUE)
             
             # Réinitialisation de la zone graphique en considérant la taille d'un caractère (strwidth, dépend du graphique)
-            plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
-                       data.frame(x = rep(0, 2), y = seq(2) + nrow(items_category))), # + 2 pour placer du texte
-                 xlim = c(0, data_area),
-                 ylim = c(-strwidth(1, cex = 0.5), # - taille d'un caractère pour affichage d'une caractéristique
-                          nrow(items_category) + 2), # + 2 pour affichage tailles des motifs
-                 col = "white", pch = 20, bty = "n",
-                 xaxt = "n", xaxs = "i", xlab = "",
-                 yaxt = "n", yaxs = "i", ylab = "")
+            graphics::plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
+                                 data.frame(x = rep(0, 2), y = seq(2) + nrow(items_category))), # + 2 pour placer du texte
+                           xlim = c(0, data_area),
+                           ylim = c(-graphics::strwidth(1, cex = 0.5), # - taille d'un caractère pour affichage d'une caractéristique
+                                    nrow(items_category) + 2), # + 2 pour affichage tailles des motifs
+                           col = "white", pch = 20, bty = "n",
+                           xaxt = "n", xaxs = "i", xlab = "",
+                           yaxt = "n", yaxs = "i", ylab = "")
             
             
             ## Traçage du graphique
             
             # Traçage des lignes horizontales
             for (y_i in items_category$y) {
-              segments(x0 = 0, x1 = data_area, y0 = y_i, lwd = 0.02, lty = 3, col = "gray85")
+              graphics::segments(x0 = 0, x1 = data_area, y0 = y_i, lwd = 0.02, lty = 3, col = "gray85")
             }
             
             # Titre taille des motifs
-            text(0, order_y, order_text, col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
+            graphics::text(0, order_y, order_text, col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
             
             # Pour chaque motif à dessiner
             for (m in 1:nrow(patterns_characteristics)) {
@@ -2617,7 +2623,7 @@ setMethod(f = "plot_tree_chart",
                 width = width + line_margin
                 
                 # Séparation verticale
-                abline(v = width, col = vcolor[as.character(order_nb)], lwd = 0.5, lty = "dotted")
+                graphics::abline(v = width, col = vcolor[as.character(order_nb)], lwd = 0.5, lty = "dotted")
                 
                 # Affichage de la taille des prochains motifs
                 if (m == 1) {
@@ -2630,42 +2636,42 @@ setMethod(f = "plot_tree_chart",
                   #                          + 1 espace entre dernier motif et prochaine ligne) / 2
                   order_x = width + (order_cumfreq[as.character(order_nb)] - m + 1 + line_margin) / 2
                 }
-                text(x = order_x, y = order_y, as.roman(order_nb), col = "black", cex = 1.05)
+                graphics::text(x = order_x, y = order_y, utils::as.roman(order_nb), col = "black", cex = 1.05)
               }
               
               # Ordonnées (y) des items du motif (m)
               y_m = sort(items_category[match(patterns_characteristics[m, "pattern"][[1]], items_category$item), "y"])
               
               # Segment vertical entre les premier et dernier items du motif
-              lines(c(width + 1, width + 1),
-                    c(y_m[1], y_m[length(y_m)]),
-                    lwd = 1.2, lty = 1, col = "black")
+              graphics::lines(c(width + 1, width + 1),
+                              c(y_m[1], y_m[length(y_m)]),
+                              lwd = 1.2, lty = 1, col = "black")
               # Segments horizontaux pour les items du motif
               for (y in y_m) {
-                lines(c(width + 0.5, width + 1), c(y, y),
-                      lwd = 1.2, lty = 1, col = "black", pch = 20, cex = 0.8)
+                graphics::lines(c(width + 0.5, width + 1), c(y, y),
+                                lwd = 1.2, lty = 1, col = "black", pch = 20, cex = 0.8)
               }
               
               # Affichage de l'identifiant ou de l'une des caractéristiques du motif
               if (!is.null(display_text)) {
-                text(0.75 + width, y_m[1] - 0.25,
-                     patterns_characteristics[m, display_text],
-                     col = "black", cex = 0.5, srt = 90, adj = 1)
+                graphics::text(0.75 + width, y_m[1] - 0.25,
+                               patterns_characteristics[m, display_text],
+                               col = "black", cex = 0.5, srt = 90, adj = 1)
               }
               # Affichage du statut du motif
               if (display_status) {
-                points(0.75 + width, y_m[length(y_m)] + 0.25,
-                       cex = 0.5, pch = 15,
-                       col = object@Class$STATUS_COLORS[patterns_characteristics$status[m]])
+                graphics::points(0.75 + width, y_m[length(y_m)] + 0.25,
+                                 cex = 0.5, pch = 15,
+                                 col = object@Class$STATUS_COLORS[patterns_characteristics$status[m]])
               }
               
               width = width + 1
             }
             
             # Pointage et affichage des items
-            points(items_category[, c("x", "y")], col = item_colors, pch = 20)
-            text(items_category$x, items_category$y, text_labels,
-                 cex = 0.75, pos = 2, col = item_colors, xpd = TRUE)
+            graphics::points(items_category[, c("x", "y")], col = item_colors, pch = 20)
+            graphics::text(items_category$x, items_category$y, text_labels,
+                           cex = 0.75, pos = 2, col = item_colors, xpd = TRUE)
           })
 
 
@@ -2742,7 +2748,7 @@ setMethod(f = "extract_rules",
                   && args$parameter$target != "rules") stop("target parameter must be \"rules\"")
               
               # Extraction des règles d'association
-              invisible(capture.output(
+              invisible(utils::capture.output(
                 rules <- arules::apriori(transact, ...)
               ))
               
@@ -2750,7 +2756,7 @@ setMethod(f = "extract_rules",
               if (is.character(from)) from = object@patterns$pattern
               
               # Conversion de la liste d'item sets en objet arules::itemMatrix puis arules::itemsets
-              itemsets = new("itemsets", items = arules::encode(from, object@items))
+              itemsets = methods::new("itemsets", items = arules::encode(from, object@items))
               
               # Extraction des règles d'association
               rules = arules::ruleInduction(itemsets, transact, ...)
@@ -2760,7 +2766,7 @@ setMethod(f = "extract_rules",
             if (pruning) rules = rules[!arules::is.redundant(rules)]
             
             # Conversion du type arules::rules en data frame
-            invisible(capture.output(
+            invisible(utils::capture.output(
               rules_df <- arules::inspect(rules)
             ))
             

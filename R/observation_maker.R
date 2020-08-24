@@ -37,9 +37,9 @@ make_observations = function(data, by, additional = NULL, unique_values = TRUE) 
   
   # Regroupement des valeurs des variables "additional" selon les combinaisons possibles de celles de "by"
   # Si unique_values vaut TRUE, aggrégation par la fonction unique() ; c() sinon
-  obs = aggregate(data[, additional],
-                  by = lapply(by, function(x) data[, x]),
-                  FUN = ifelse(is.logical(unique_values) && unique_values, unique, c))
+  obs = stats::aggregate(data[, additional],
+                         by = lapply(by, function(x) data[, x]),
+                         FUN = ifelse(is.logical(unique_values) && unique_values, unique, c))
   colnames(obs) = c(by, additional)
   
   # Nommage des lignes selon les combinaisons (valeurs des variables "by" concaténées par ".")
@@ -383,7 +383,7 @@ get_complex_obs = function(observations, key = "CODE") {
   index = which(sapply(lapply(observations, "[[", key), function (x) length(x) > 1))
   extraction = observations[index]
   
-  return(setNames(extraction, index))
+  return(stats::setNames(extraction, index))
 }
 
 
@@ -405,7 +405,7 @@ get_simple_obs = function(observations, key = "CODE") {
   index = which(sapply(lapply(observations, "[[", key), function (x) length(x) == 1))
   extraction = observations[index]
   
-  return(setNames(extraction, index))
+  return(stats::setNames(extraction, index))
 }
 
 
@@ -439,7 +439,7 @@ get_obs_from_items = function(observations, items, presence = "all", key = "CODE
   index = which(sapply(lapply(observations, "[[", key), function (x) func(items %in% x)))
   extraction = observations[index]
   
-  return(setNames(extraction, index))
+  return(stats::setNames(extraction, index))
 }
 
 
@@ -488,7 +488,7 @@ get_obs_from_info = function(observations, ..., presence = "all") {
     index = apply(t(apply(correspondence, 1, unlist)), 1, func)
   }
   
-  return(setNames(observations[index], which(index)))
+  return(stats::setNames(observations[index], which(index)))
 }
 
 
@@ -532,7 +532,7 @@ get_items_from_info = function(observations, ..., presence = "all", additional =
   # Liste des items et données demandées
   items = c(list(CODE = sort(unique(unlist(lapply(obs, "[[", key))))),
             lapply(additional, function(a) sort(unique(unlist(lapply(obs, "[[", a))))))
-  return(setNames(items, c(key, additional)))
+  return(stats::setNames(items, c(key, additional)))
 }
 
 
@@ -568,7 +568,7 @@ get_info_from_items = function(observations, items, info_names, presence = "all"
   
   # Liste des variables demandées
   to_return = lapply(info_names, function(var) sort(unique(unlist(lapply(obs, "[[", var)))))
-  return(setNames(to_return, info_names))
+  return(stats::setNames(to_return, info_names))
 }
 
 
@@ -631,7 +631,7 @@ turn_obs_into_transactions = function(observations, key = "CODE") {
   
   # Transformation en objet arules::itemMatrix puis en objet arules::transaction :
   # une ligne par observation, une colonne par item
-  return(as(arules::encode(data, labels), "transactions"))
+  return(methods::as(arules::encode(data, labels), "transactions"))
 }
 
 

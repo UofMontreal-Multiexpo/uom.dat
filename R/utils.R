@@ -126,16 +126,16 @@ set_notation = function(sets, type = "character") {
 shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
                       theta = seq(0, 2 * pi, length.out = 32), r = 0.1, ...) {
   
-  xy = xy.coords(x,y)
-  xo = r * strwidth('A')
-  yo = r * strheight('A')
+  xy = grDevices::xy.coords(x,y)
+  xo = r * graphics::strwidth('A')
+  yo = r * graphics::strheight('A')
   
   # Draw background text with small shift in x and y in background colour
   for (i in theta) {
-    text(xy$x + cos(i)*xo, xy$y + sin(i)*yo, labels, col = bg, ...)
+    graphics::text(xy$x + cos(i)*xo, xy$y + sin(i)*yo, labels, col = bg, ...)
   }
   # Draw actual text in exact xy position in foreground colour
-  text(xy$x, xy$y, labels, col = col, ...)
+  graphics::text(xy$x, xy$y, labels, col = col, ...)
 }
 
 
