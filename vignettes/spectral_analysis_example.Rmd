@@ -794,6 +794,86 @@ for (min_weight in seq(2, 5)) {
 ![Fig. 15.d: Spectrosome with the constraint of a minimum link weight of 5.](./output/alternatives/spectrosome_of_patterns-weight5.png)
 
 
+## 5.4. Extracting association rules
+
+There are 4 ways to look for association rules (i.e. implication between two itemsets):
+
+1. Looking for all rules within the observations.
+2. Looking for rules whose union of the antecedent and the consequent form an entier pattern.
+3. Looking for rules whose union of the antecedent and the consequent form an entier itemset among those defined in argument.
+4. Looking for rules related to items specify in arguments as antecedent or consequent.
+
+**Note that only rules with one item in the consequent are created.**
+
+```{r}
+# All rules (with a support threshold of 0.1)
+rules_1 = extract_rules(sa_object, from = "observations")
+rules_1
+```
+![](./img/rules_1.png)
+
+```{r}
+# Rules forming the patterns (without support threshold)
+rules_2 = extract_rules(sa_object, from = "patterns")
+rules_2
+```
+![](./img/rules_2.png)
+
+```{r}
+# Rules forming 2 specific itemsets
+rules_3 = extract_rules(sa_object, from = list(c("931", "3180"),
+                                               c("25", "192", "328")))
+rules_3
+```
+![](./img/rules_3.png)
+
+```{r}
+# Rules having the substance "328" as consequent and only one substance as antecedent
+rules_4a = extract_rules(sa_object, from = "observations",
+                         parameter = list(supp = 0.001, conf = 0.5, maxlen = 2),
+                         appearance = list(rhs = "328"))
+rules_4a
+```
+![](./img/rules_4a.png)
+
+The confidence of 1 means that the substance *328* is found each time the substance *192* is found. In other words, the presence of the substance *192* implies that of the substance *328*.
+
+```{r}
+# Rules having the substance "497" as antecedent
+rules_4b = extract_rules(sa_object, from = "observations",
+                         parameter = list(supp = 0.001, conf = 0.5, maxlen = 2),
+                         appearance = list(lhs = "497"))
+rules_4b
+```
+![](./img/rules_4b.png)
+
+```{r eval=FALSE}
+# Rules in which the substance "328" is the antecedent and the substance "3180" is the consequent (with confidence threshold of 0)
+rules_4c = extract_rules(sa_object, from = "observations",
+                         parameter = list(supp = 0.001, conf = 0, minlen = 2, maxlen = 2),
+                         appearance = list(lhs = "328", rhs = "3180"))
+rules_4c
+```
+```{r eval=TRUE, echo=FALSE}
+# Duplication of the previous chunk with the option echo=FALSE so that the source is not divided into two blocks
+rules_4c = extract_rules(sa_object, from = "observations",
+                         parameter = list(supp = 0.001, conf = 0, minlen = 2, maxlen = 2),
+                         appearance = list(lhs = "328", rhs = "3180"))
+rules_4c
+```
+
+The *NULL* result means that no association rule exists between the substances *328* as antecedent and *3180* as consequent. In other words, the presence of the substance *328* implies the absence of the substance *3180*.
+
+Rules are saved in the same way as for nodes or patterns.
+```{r}
+directory = "./output/rules/"
+dir.create(directory)
+
+save_characteristics(sa_object, "rules", rules_1,
+                     file = paste0(directory, "rules.csv"), row.names = FALSE)
+```
+
+
 
 # List of functions and datasets
 
@@ -873,9 +953,10 @@ Saving nodes or patterns:
 
 ## About association rules and sets
 
-Extracting rules:
+Extracting and saving rules:
 
 * [extract_rules](../html/extract_rules-SpectralAnalyzer-method.html)
+* [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
 
 Switching between mathematical notation and vector notation for sets:
 
