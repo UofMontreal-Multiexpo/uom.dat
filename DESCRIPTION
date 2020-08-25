@@ -27,6 +27,9 @@ Imports:
     stats,
     utils
 Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
 RoxygenNote: 7.1.0
 Collate: 
     'data.R'

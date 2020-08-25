@@ -328,7 +328,17 @@ setMethod(f = "summary",
 
 #### Sélecteurs et mutateurs ####
 
-# Sélecteurs généraux
+#' Extract or replace parts of a SpectralAnalyzer object
+#' 
+#' General selector and mutator to access the attributes of an object of class SpectralAnalyzer.
+#' Extraction and replacement can be done by using an attribute name or its numeric value in the order
+#'  of the attributes.
+#' 
+#' @inheritParams base::Extract
+#' 
+#' @author Gauthier Magnin
+#' @aliases [,SpectralAnalyzer-method
+#' @export
 setMethod(f = "[",
           signature = "SpectralAnalyzer",
           definition = function(x, i, j, drop) {
@@ -355,7 +365,9 @@ setMethod(f = "[",
                    stop("Unknown attribute."))
           })
 
-# Mutateurs généraux
+#' @rdname sub-SpectralAnalyzer-ANY-ANY-ANY-method
+#' @aliases [<-,SpectralAnalyzer-method
+#' @export
 setReplaceMethod(f = "[",
                  signature = "SpectralAnalyzer",
                  definition = function(x, i, j, value) {
