@@ -17,6 +17,11 @@ Subset of the list of observations that contain exactly one item.
 \description{
 Extract the observations containing exactly one item.
 }
+\examples{
+obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+get_simple_obs(obs)
+
+}
 \seealso{
 \code{\link{get_complex_obs}}, \code{\link{get_obs_from_items}}, \code{\link{get_obs_from_info}}.
 }

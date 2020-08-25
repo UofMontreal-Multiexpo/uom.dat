@@ -17,6 +17,11 @@ Subset of the list of observations that contain more than one item.
 \description{
 Extract the observations containing more than one item.
 }
+\examples{
+obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+get_complex_obs(obs)
+
+}
 \seealso{
 \code{\link{get_simple_obs}}, \code{\link{get_obs_from_items}}, \code{\link{get_obs_from_info}}.
 }

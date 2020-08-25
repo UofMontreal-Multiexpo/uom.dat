@@ -37,6 +37,12 @@ Vector or list of information corresponding to the search.
 \description{
 Retrieve information associated with observations that contain a set of sought items.
 }
+\examples{
+obs <- make_observations(oedb_sample, by = "ID",
+                         additional = c("CODE", "NAME", "JOB.TITLE", "JOB.TASK"))
+get_info_from_items(obs, items = 3146, info_names = c("JOB.TITLE", "JOB.TASK"))
+
+}
 \seealso{
 \code{\link{get_items_from_info}}, \code{\link{get_all_items}}.
 }

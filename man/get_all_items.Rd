@@ -17,6 +17,11 @@ Vector of all unique items.
 \description{
 Extract all the items contained in the observations.
 }
+\examples{
+obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+get_all_items(obs)
+
+}
 \author{
 Gauthier Magnin
 }

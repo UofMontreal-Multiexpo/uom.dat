@@ -28,6 +28,12 @@ Subset of the list of observations that match the search criteria.
 \description{
 Extract the observations containing one or more sought items.
 }
+\examples{
+obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+get_obs_from_items(obs, items = c(25, 192), presence = "all")
+get_obs_from_items(obs, items = c(25, 192), presence = "any")
+
+}
 \seealso{
 \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_info}}.
 }

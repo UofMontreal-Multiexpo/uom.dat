@@ -17,7 +17,13 @@ Character vector or factor of the itemsets \code{sets} written in mathematical n
 \description{
 Convert a list of character vectors or a character vector into itemsets written in mathematical
  notation.
-Example of conversion: \code{c("item i", "item j")} becomes \code{{item i, item j}}.
+Example of conversion: \code{c("item i", "item j")} becomes \code{{item i,item j}}.
+}
+\examples{
+sets = list("A", c("B", "C"), c("A", "B"), "A")
+set_notation(sets, type = "character")
+set_notation(sets, type = "factor")
+
 }
 \seealso{
 \code{\link{vector_notation}}.

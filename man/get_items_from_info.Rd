@@ -39,6 +39,14 @@ Vector of the item codes corresponding to the search if \code{additional} is
 \description{
 Retrieve the items associated with observations corresponding to one or more search criteria.
 }
+\examples{
+obs <- make_observations(oedb_sample, by = "ID",
+                         additional = c("CODE", "NAME",
+                                        "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
+get_items_from_info(obs, JOB.TITLE = 44132017)
+get_items_from_info(obs, JOB.TITLE = 44132017, additional = "SAMPLE.ID")
+
+}
 \seealso{
 \code{\link{get_all_items}}, \code{\link{get_info_from_items}}.
 }

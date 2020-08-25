@@ -20,6 +20,11 @@ For each item, compute the ratio between the number of occurrences of the item i
  and the number of occurrences of the item in all observations. In other words, compute the inverse of
  the ratio between the number of times the items appears alone and the number of times the item appears.
 }
+\examples{
+obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+co_occurrence_proportions(obs)
+
+}
 \seealso{
 \code{\link{get_all_items}}, \code{\link{get_obs_from_items}},
          \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}.

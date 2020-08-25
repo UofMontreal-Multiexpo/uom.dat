@@ -38,6 +38,19 @@ Grouping data in the form of observations.
 \details{
 Variables of type \code{factor} are cast to \code{character}.
 }
+\examples{
+to_keep <- c("CODE", "NAME", "ACTIVITY", "JOB.TITLE", "SAMPLE.ID")
+
+## Make observations without duplicate elements in the additional variables
+obs_1 <- make_observations(oedb_sample, by = "ID", additional = to_keep)
+
+## Make observations with duplicate elements correspondence
+obs_2 <- make_observations(oedb_sample, by = "ID", additional = to_keep,
+                           unique_values = FALSE)
+obs_3 <- make_observations(oedb_sample, by = "ID", additional = to_keep,
+                           unique_values = to_keep[1:2])
+
+}
 \seealso{
 \code{\link{make_INRS_observations}} for the construction of well-targeted observations
  specific to the field of occupational exposure in relation to inspections and similar work

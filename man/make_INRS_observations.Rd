@@ -73,6 +73,32 @@ Specific situations are defined by the argument \code{work_situations}.
 Non-specific situations are described by existing combinations of variables whose names are defnied
  by the argument \code{variable_names}.
 }
+\examples{
+to_keep <- c("CODE", "NAME", "ACTIVITY", "JOB.TITLE", "SAMPLE.ID")
+ws <- data.frame(WS_ID = c(1, 2, 2, 3, 3),
+                 JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
+                 JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
+                 stringsAsFactors = FALSE)
+ws_vars <- c("JOB.TITLE", "JOB.TASK")
+
+## Make observations from 3 specific work situations and as many other
+## situations as JOB.TITLE, JOB.TASK pairs
+obs_1 <- make_INRS_observations(oedb_sample, mode = 1,
+                                work_situations = ws,
+                                variable_names = ws_vars,
+                                additional = to_keep)
+
+## Make observations from specific work situations only
+obs_2 <- make_INRS_observations(oedb_sample, mode = 2,
+                                work_situations = ws,
+                                additional = to_keep)
+
+## Make observations where each pair of JOB.TITLE, JOB.TASK is one situation
+obs_3 <- make_INRS_observations(oedb_sample, mode = 3,
+                                variable_names = ws_vars,
+                                additional = to_keep)
+
+}
 \seealso{
 \code{\link{make_observations}}.
 }

@@ -14,7 +14,11 @@ List of character vectors corresponding to the itemsets \code{sets}.
 }
 \description{
 Convert itemsets written in mathematical notation into a list of character vectors.
-Example of conversion: \code{{item i, item j}} becomes \code{c("item i", "item j")}.
+Example of conversion: \code{{item i,item j}} becomes \code{c("item i", "item j")}.
+}
+\examples{
+vector_notation(as.factor(c("{A}", "{B,C}", "{A,B}", "{A}")))
+
 }
 \seealso{
 \code{\link{set_notation}}.

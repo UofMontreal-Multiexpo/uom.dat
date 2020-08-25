@@ -32,6 +32,19 @@
 #' @seealso \code{\link{make_INRS_observations}} for the construction of well-targeted observations
 #'  specific to the field of occupational exposure in relation to inspections and similar work
 #'  situations.
+#' 
+#' @examples
+#' to_keep <- c("CODE", "NAME", "ACTIVITY", "JOB.TITLE", "SAMPLE.ID")
+#' 
+#' ## Make observations without duplicate elements in the additional variables
+#' obs_1 <- make_observations(oedb_sample, by = "ID", additional = to_keep)
+#' 
+#' ## Make observations with duplicate elements correspondence
+#' obs_2 <- make_observations(oedb_sample, by = "ID", additional = to_keep,
+#'                            unique_values = FALSE)
+#' obs_3 <- make_observations(oedb_sample, by = "ID", additional = to_keep,
+#'                            unique_values = to_keep[1:2])
+#' 
 #' @export
 make_observations = function(data, by, additional = NULL, unique_values = TRUE) {
   
@@ -134,6 +147,32 @@ make_observations = function(data, by, additional = NULL, unique_values = TRUE) 
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{make_observations}}.
+#' 
+#' @examples
+#' to_keep <- c("CODE", "NAME", "ACTIVITY", "JOB.TITLE", "SAMPLE.ID")
+#' ws <- data.frame(WS_ID = c(1, 2, 2, 3, 3),
+#'                  JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
+#'                  JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
+#'                  stringsAsFactors = FALSE)
+#' ws_vars <- c("JOB.TITLE", "JOB.TASK")
+#' 
+#' ## Make observations from 3 specific work situations and as many other
+#' ## situations as JOB.TITLE, JOB.TASK pairs
+#' obs_1 <- make_INRS_observations(oedb_sample, mode = 1,
+#'                                 work_situations = ws,
+#'                                 variable_names = ws_vars,
+#'                                 additional = to_keep)
+#' 
+#' ## Make observations from specific work situations only
+#' obs_2 <- make_INRS_observations(oedb_sample, mode = 2,
+#'                                 work_situations = ws,
+#'                                 additional = to_keep)
+#' 
+#' ## Make observations where each pair of JOB.TITLE, JOB.TASK is one situation
+#' obs_3 <- make_INRS_observations(oedb_sample, mode = 3,
+#'                                 variable_names = ws_vars,
+#'                                 additional = to_keep)
+#' 
 #' @export
 make_INRS_observations = function(measures, mode, work_situations = NULL, variable_names = NULL, additional = NULL, unique_values = TRUE) {
   
@@ -356,6 +395,11 @@ make_obs_from_unspecified_ws = function(measures, variable_names, additional = N
 #' @return Vector of all unique items.
 #' 
 #' @author Gauthier Magnin
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+#' get_all_items(obs)
+#' 
 #' @export
 get_all_items = function(observations, key = "CODE") {
   
@@ -375,6 +419,11 @@ get_all_items = function(observations, key = "CODE") {
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_simple_obs}}, \code{\link{get_obs_from_items}}, \code{\link{get_obs_from_info}}.
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+#' get_complex_obs(obs)
+#' 
 #' @export
 get_complex_obs = function(observations, key = "CODE") {
   
@@ -397,6 +446,11 @@ get_complex_obs = function(observations, key = "CODE") {
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_complex_obs}}, \code{\link{get_obs_from_items}}, \code{\link{get_obs_from_info}}.
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+#' get_simple_obs(obs)
+#' 
 #' @export
 get_simple_obs = function(observations, key = "CODE") {
   
@@ -428,6 +482,12 @@ get_simple_obs = function(observations, key = "CODE") {
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_info}}.
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+#' get_obs_from_items(obs, items = c(25, 192), presence = "all")
+#' get_obs_from_items(obs, items = c(25, 192), presence = "any")
+#' 
 #' @export
 get_obs_from_items = function(observations, items, presence = "all", key = "CODE") {
   
@@ -463,6 +523,12 @@ get_obs_from_items = function(observations, items, presence = "all", key = "CODE
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_items}}.
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID",
+#'                          additional = c("CODE", "NAME", "JOB.TITLE", "JOB.TASK"))
+#' get_obs_from_info(obs, JOB.TITLE = 44132001, JOB.TASK = "A8310")
+#' 
 #' @export
 get_obs_from_info = function(observations, ..., presence = "all") {
   
@@ -515,6 +581,14 @@ get_obs_from_info = function(observations, ..., presence = "all") {
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_all_items}}, \code{\link{get_info_from_items}}.
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID",
+#'                          additional = c("CODE", "NAME",
+#'                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
+#' get_items_from_info(obs, JOB.TITLE = 44132017)
+#' get_items_from_info(obs, JOB.TITLE = 44132017, additional = "SAMPLE.ID")
+#' 
 #' @export
 get_items_from_info = function(observations, ..., presence = "all", additional = NULL, key = "CODE") {
   
@@ -557,6 +631,12 @@ get_items_from_info = function(observations, ..., presence = "all", additional =
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_items_from_info}}, \code{\link{get_all_items}}.
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID",
+#'                          additional = c("CODE", "NAME", "JOB.TITLE", "JOB.TASK"))
+#' get_info_from_items(obs, items = 3146, info_names = c("JOB.TITLE", "JOB.TASK"))
+#' 
 #' @export
 get_info_from_items = function(observations, items, info_names, presence = "all", key = "CODE") {
   
@@ -589,6 +669,11 @@ get_info_from_items = function(observations, items, info_names, presence = "all"
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_all_items}}, \code{\link{get_obs_from_items}},
 #'          \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}.
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+#' co_occurrence_proportions(obs)
+#' 
 #' @export
 co_occurrence_proportions = function(observations, key = "CODE") {
   
