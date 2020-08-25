@@ -57,7 +57,9 @@ setClassUnion("listORarray", c("list", "array"))
 #'             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
 #'             \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
-#' @seealso The SpectralAnalyzer constructor: \code{\link{spectral.analyzer}}.
+#' @seealso The \code{SpectralAnalyzer} constructor: \code{\link{spectral.analyzer}}.
+#' 
+#' An example object of class \code{SpectralAnalyzer}: \code{\link{SA_instance}}.
 #' @aliases SpectralAnalyzer
 #' @export
 setClass(Class = "SpectralAnalyzer",

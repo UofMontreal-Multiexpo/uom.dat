@@ -71,7 +71,9 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1093/annweh/wxaa008}.
 }
 \seealso{
-The SpectralAnalyzer constructor: \code{\link{spectral.analyzer}}.
+The \code{SpectralAnalyzer} constructor: \code{\link{spectral.analyzer}}.
+
+An example object of class \code{SpectralAnalyzer}: \code{\link{SA_instance}}.
 }
 \author{
 Gauthier Magnin

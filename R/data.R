@@ -27,3 +27,46 @@
 #'    \item{SUBFAMILY}{Subfamily of the substance.}
 #'  }
 "substances_classification"
+
+#' Example of a SpectralAnalyzer object
+#' 
+#' An example of an object of class \code{SpectralAnalyzer}.
+#' 
+#' Here is the way it was created:
+#' \preformatted{
+#' ## Making a list of observations
+#' to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
+#' ws <- data.frame(WS_ID = c(1, 2, 2, 3, 3),
+#'                  JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
+#'                  JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
+#'                  stringsAsFactors = FALSE)
+#' ws_vars <- c("JOB.TITLE", "JOB.TASK")
+#' 
+#' obs <- make_INRS_observations(oedb_sample, mode = 1,
+#'                               work_situations = ws,
+#'                               variable_names = ws_vars,
+#'                               additional = to_keep,
+#'                               unique_values = TRUE)
+#' 
+#' ## Associating item identifiers with names and categories
+#' substances <- get_all_items(obs)
+#' families <- substances_classification[match(substances,
+#'                                             substances_classification$CODE),
+#'                                       "SUBFAMILY"]
+#' families[is.na(families)] <- "Unknown"
+#' names <- substances_classification[match(substances,
+#'                                          substances_classification$CODE),
+#'                                    "NAME"]
+#' 
+#' items <- data.frame(item = substances, name = names, family = families)
+#' 
+#' ## Creation of the SpectralAnalyzer
+#' SA_instance <- spectral.analyzer(obs, items)
+#' }
+#' 
+#' @format An object of class \code{SpectralAnalyzer} created from 14 observations, 25 items, 1 category
+#'  associated to the items, and generating 12 nodes and 20 patterns by enumeration of the closed
+#'  frequent itemsets.
+#' 
+#' For more about the attributes, see \code{\link{SpectralAnalyzer}}.
+"SA_instance"
