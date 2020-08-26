@@ -8,7 +8,7 @@
 \S4method{reset}{SpectralAnalyzer}(object, from = 1)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{from}{Step from which to recompute the attributes.}
 }

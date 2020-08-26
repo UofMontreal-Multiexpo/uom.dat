@@ -8,7 +8,7 @@
 \S4method{list_separate_obs}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 }
 \value{
 Invisible. Data frame of the separate observations and their characteristics (length and

@@ -8,7 +8,7 @@
 \S4method{get_links}{SpectralAnalyzer}(object, entities, characteristics)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{entities}{Type of entities to search for links.
 One of \code{"nodes"}, \code{"patterns"}.}

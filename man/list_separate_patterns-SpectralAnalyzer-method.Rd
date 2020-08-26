@@ -14,7 +14,7 @@
 )
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{target}{Type of patterns to enumerate. One of \code{"frequent itemsets"},
 \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.}

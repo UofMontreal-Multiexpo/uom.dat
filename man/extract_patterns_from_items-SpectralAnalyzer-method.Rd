@@ -13,7 +13,7 @@
 )
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{patterns_characteristics}{Data frame of patterns and their characteristics.}
 

@@ -8,7 +8,7 @@
 \S4method{extract_rules}{SpectralAnalyzer}(object, from, pruning = FALSE, as_sets = FALSE, ...)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{from}{Character or list of item sets for which to extract the association rules.
 \itemize{

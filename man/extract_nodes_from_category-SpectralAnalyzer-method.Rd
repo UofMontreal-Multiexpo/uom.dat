@@ -14,7 +14,7 @@
 )
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{nodes_characteristics}{Data frame of nodes and their characteristics.}
 

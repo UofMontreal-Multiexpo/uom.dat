@@ -5,7 +5,7 @@
 \alias{[,SpectralAnalyzer-method}
 \alias{[<-,SpectralAnalyzer,ANY,ANY,ANY-method}
 \alias{[<-,SpectralAnalyzer-method}
-\title{Extract or replace parts of a SpectralAnalyzer object}
+\title{Extract or replace parts of a \code{SpectralAnalyzer} object}
 \usage{
 \S4method{[}{SpectralAnalyzer,ANY,ANY,ANY}(x, i, j, drop)
 
@@ -72,7 +72,7 @@
     \code{x}.}
 }
 \description{
-General selector and mutator to access the attributes of an object of class SpectralAnalyzer.
+General selector and mutator to access the attributes of an object of class \code{SpectralAnalyzer}.
 Extraction and replacement can be done by using an attribute name or its numeric value in the order
  of the attributes.
 }

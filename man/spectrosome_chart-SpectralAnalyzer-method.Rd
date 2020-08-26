@@ -28,7 +28,7 @@
 )
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{entities}{Type of entities for which to plot the spectrosome (nodes or patterns).
 One of \code{"nodes"}, \code{"patterns"}.}

@@ -21,7 +21,7 @@
 )
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{patterns_characteristics}{Patterns (and their characteristics) whose tree is to be plotted.}
 

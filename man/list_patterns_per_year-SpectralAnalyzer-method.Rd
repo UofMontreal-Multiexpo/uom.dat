@@ -8,7 +8,7 @@
 \S4method{list_patterns_per_year}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 }
 \value{
 Invisible. Matrix of the weights of each pattern, pear year.

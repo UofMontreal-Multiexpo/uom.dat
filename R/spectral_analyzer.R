@@ -167,7 +167,7 @@ setMethod(f = "initialize",
 
 #' Spectral Analyzer constructor
 #' 
-#' Create and initialize an object of the class SpectralAnalyzer.
+#' Create and initialize an object of class \code{SpectralAnalyzer}.
 #' 
 #' @details
 #' If items are not specified using the argument \code{items}, they are automatically listed from
@@ -223,7 +223,7 @@ setGeneric(name = "reset", def = function(object, from = 1){ standardGeneric("re
 #' 
 #' Redefine the attributes of a spectral analyzer from a specific step.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param from Step from which to recompute the attributes.
 #' 
 #' @author Gauthier Magnin
@@ -330,9 +330,9 @@ setMethod(f = "summary",
 
 #### Selectors and mutators ####
 
-#' Extract or replace parts of a SpectralAnalyzer object
+#' Extract or replace parts of a \code{SpectralAnalyzer} object
 #' 
-#' General selector and mutator to access the attributes of an object of class SpectralAnalyzer.
+#' General selector and mutator to access the attributes of an object of class \code{SpectralAnalyzer}.
 #' Extraction and replacement can be done by using an attribute name or its numeric value in the order
 #'  of the attributes.
 #' 
@@ -513,7 +513,7 @@ setGeneric(name = "get_complexes", def = function(object, entities, characterist
 #' Identify the separate observations per year and count their number of occurrences for each one.
 #' The resulting matrix is assigned to the attribute \code{nodes_per_year} of \code{object}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @return Invisible. Matrix of the number of occurrences of each separate observation, per year.
 #'  The lines correspond to the observations. The columns correspond to the years.
 #' 
@@ -562,7 +562,7 @@ setMethod(f = "list_obs_per_year",
 #' Identify the separate observations and compute their size and number of occurrences.
 #' The resulting data frame is assigned to the attribute \code{nodes} of \code{object}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @return Invisible. Data frame of the separate observations and their characteristics (length and
 #'  weight).
 #' 
@@ -614,7 +614,7 @@ setMethod(f = "list_separate_obs",
 #' The resulting matrix is assigned respectively to the attribute \code{n_links} or \code{p_links}
 #'  of \code{object}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities for which to count links (nodes or patterns).
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @return Invisible. Adjacency matrix: matrix of the number of links between each pair of nodes
@@ -660,7 +660,7 @@ setMethod(f = "count_links",
 #' The resulting data frame is assigned respectively to the attribute \code{nodes_links} or
 #'  \code{patterns_links} of \code{object}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities for which to elaborate links (nodes or patterns).
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @return Invisible. Data frame detailing the links between pairs of nodes or patterns.
@@ -772,7 +772,7 @@ setMethod(f = "search_links",
 #' Identify the patterns generated from the observations.
 #' The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param target Type of patterns to enumerate. One of \code{"frequent itemsets"},
 #'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
 #' @param count Minimum number of occurrences of a pattern to be considered as "frequent".
@@ -830,7 +830,7 @@ setMethod(f = "list_separate_patterns",
 #' Associate each separate observation (i.e. each node) with the patterns included in it.
 #' The resulting matrix is assigned to the attribute \code{obs_patterns} of \code{object}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @return Invisible. Logical matrix in which rows correspond to observations and columns correspond
 #'  to patterns. A value of \code{TRUE} means the pattern is included in the observation (or the node).
 #' 
@@ -870,7 +870,7 @@ setMethod(f = "list_patterns_by_obs",
 #' Count the number of occurrences of each pattern pear year.
 #' The resulting matrix is assigned to the attribute \code{patterns_per_year} of \code{object}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @return Invisible. Matrix of the weights of each pattern, pear year.
 #'  The lines correspond to the patterns. The column correspond to the years.
 #' 
@@ -914,7 +914,7 @@ setMethod(f = "list_patterns_per_year",
 #' Compute the characteristics of the patterns (frequency, weight, order, specificity, dynamic status).
 #' The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @return Invisible. Data frame in which a line is an association between a pattern and its
 #'  characteristics.
 #' 
@@ -965,7 +965,7 @@ setMethod(f = "compute_patterns_characteristics",
 #' The specitificity corresponds to the character of a pattern of being specific of a particular
 #'  combination or ubiquitous and allowing the formation of numerous aggregates.
 #'  
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns Patterns whose specificity is to be computed.
 #' @param frequencies Vector of frequencies associated with the patterns contained in \code{patterns}.
 #' @param weights Vector of weights associated with the patterns contained in \code{patterns}.
@@ -1018,7 +1018,7 @@ setMethod(f = "compute_specificity",
 #' This index provides information on the proportion and importance of the occurrences of a pattern,
 #'  taking into account the occurrences of the other patterns.
 #'  
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns Patterns whose reporting indexes are to be computed.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
@@ -1096,7 +1096,7 @@ setMethod(f = "compute_reporting_indexes",
 #' Check the validity of the values of the parameters given for the computation of reporting indexes.
 #' Adapt their values if they do not fall within the correct range and print a warning message.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
 #'  by the observations.
@@ -1160,7 +1160,7 @@ setMethod(f = "check_params_for_RI",
 #' The second one corresponds to the reporting index computed over the period defined by the arguments
 #'  \code{t} and \code{period}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns Patterns whose limits are to be computed.
 #' @param first_limit Time interval over which to compute the first limit (number of years).
 #' @param t Year of the end of the period, i.e. the date on which to characterize the pattern.
@@ -1200,7 +1200,7 @@ setMethod(f = "compute_reporting_indexes_limits",
 #' 
 #' Compute the number of patterns allowing to explain the main part of the reporting indexes.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
 #' @return Computed threshold.
 #' 
@@ -1226,7 +1226,7 @@ setMethod(f = "compute_ksi_threshold",
 #' The patterns are ordered in descending order of their reporting index value and separated by
 #'  the threshold \code{ksi}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
 #' @param ksi Number of patterns to consider before setting the RI threshold.
 #'  Is computed if \code{NULL}.
@@ -1259,7 +1259,7 @@ setMethod(f = "compute_ri_threshold",
 #' 
 #' Define the dynamic status of each pattern.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns Patterns whose dynamic status are to be defined.
 #' @param status_limit Time interval over which to characterize the status of the patterns in relation
 #' to the period defined by the arguments \code{t} and \code{period}.
@@ -1321,7 +1321,7 @@ setMethod(f = "define_dynamic_status",
 #' The patterns are sorted according to their specificities (desc.), status (\code{"Persistent"},
 #'  \code{"Declining"}, \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose spectrum is to be plotted.
 #' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame?
 #'  One of \code{"original"}, \code{"new"}. \cr
@@ -1390,7 +1390,7 @@ setMethod(f = "spectrum_chart",
 #' 
 #' Plot a spectrum chart.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose spectrum is to be plotted.
 #' @param weights_by_node_type Data frame containing for each pattern, its wieght in complexe nodes
 #'  and its weight in simple nodes.
@@ -1502,7 +1502,7 @@ setMethod(f = "plot_spectrum_chart",
 #' 
 #' Compute the distributions of the weights and lenghts of the nodes in which each pattern is included.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns Patterns whose distributions are to be calculated.
 #' @return
 #'  \describe{
@@ -1580,7 +1580,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'    \item{\code{displayisolates = TRUE}}
 #'  }
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities for which to plot the spectrosome (nodes or patterns).
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Characteristics of nodes or patterns whose spectrosome is to be plotted.
@@ -2095,7 +2095,7 @@ setMethod(f = "spectrosome_chart",
 #' The names of clusters confused because all of their links are mixed links, are not displayed.
 #' Texts are written on the active graphics device.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param graph Graph generated by the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna}: "A two-column matrix containing the vertex positions as x,y coordinates".
 #' @param links Links of nodes or patterns used to generate \code{graph}.
@@ -2197,7 +2197,7 @@ setMethod(f = "cluster_text",
 #'    \item{\code{displayisolates = TRUE}}
 #'  }
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities for which to plot one of the clusters (nodes or patterns).
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Characteristics of nodes or patterns of which one of the clusters is to be
@@ -2308,7 +2308,7 @@ setMethod(f = "cluster_chart",
 #' Compute the density of the graph as the ratio between the number of links identified and
 #'  the maximum number of possible links.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param links Data frame of the links (or edges) of a spectrosome graph.
 #' @return Density of the network.
 #' 
@@ -2334,7 +2334,7 @@ setMethod(f = "network_density",
 #' 
 #' Compute the degree of a vertex in a graph, i.e. the number of vertices to which it is adjacent.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param ID Identifier of the vertex (node or pattern) whose degree is to be calculated.
 #' @param links Data frame of the links (or edges) of a spectrosome graph.
 #' @return Degree of the vertex.
@@ -2372,7 +2372,7 @@ setMethod(f = "degree",
 #'  value.
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose tree is to be plotted.
 #' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame?
 #'  One of \code{"original"}, \code{"new"}. \cr
@@ -2482,7 +2482,7 @@ setMethod(f = "tree_chart",
 #'  value.
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose tree is to be plotted.
 #' @param items_category Data frame of items and one associated category.
 #' @param category Name of the category to represent on the tree, used as the legend title.
@@ -2721,7 +2721,7 @@ setMethod(f = "plot_tree_chart",
 #'  \code{arules}. These arguments allow to specify minmum confidence (default \code{0.8}) and some
 #'  operating parameters of the rule extraction algorithm.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param from Character or list of item sets for which to extract the association rules.
 #'  \itemize{
 #'    \item{If \code{"observations"}, look for all rules within the observations saved in \code{object}
@@ -2807,7 +2807,7 @@ setMethod(f = "extract_rules",
 #' 
 #' Save in CSV format a set of nodes, patterns or association rules as well as their characteristics.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities to save. One of \code{"nodes"}, \code{"patterns"}, \code{"rules"}.
 #' @param characteristics Data frame of the characteristics of nodes, patterns or rules.
 #' @param ... Further arguments to the function \code{\link[utils:write.table]{utils::write.csv2}}.
@@ -2852,7 +2852,7 @@ setMethod(f = "save_characteristics",
 #' 
 #' Extract the nodes containing one or more sought items.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param nodes_characteristics Data frame of nodes and their characteristics.
 #' @param items Sought items (one or more).
 #' @param presence Item presence condition for a node to be extracted.
@@ -2886,7 +2886,7 @@ setMethod(f = "extract_nodes_from_items",
 #' 
 #' Extract the nodes satisfying a search criterion according to one characteristic.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param nodes_characteristics Data frame of nodes and their characteristics.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"length"}, \code{"weight"}.
@@ -2934,7 +2934,7 @@ setMethod(f = "extract_nodes_from_characteristic",
 #' 
 #' Extract the nodes corresponding to a sought category value.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param nodes_characteristics Data frame of nodes and their characteristics.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
@@ -2989,7 +2989,7 @@ setMethod(f = "extract_nodes_from_category",
 #' @details
 #' If \code{value = NA}, only the parameter \code{category} is checked.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param category Name or number of the category to access (numbering according to the order of the
 #'  columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the argument \code{category}, or NA.
@@ -3022,7 +3022,7 @@ setMethod(f = "check_access_for_category",
 #' 
 #' Extract the patterns containing one or more sought items.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
 #' @param items Sought items (one or more).
 #' @param presence Item presence condition for a pattern to be extracted.
@@ -3058,7 +3058,7 @@ setMethod(f = "extract_patterns_from_items",
 #' 
 #' Extract the patterns satisfying a search criterion according to one characteristic.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}
@@ -3108,7 +3108,7 @@ setMethod(f = "extract_patterns_from_characteristic",
 #' 
 #' Extract the patterns whose status match one or more sought values.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
 #' @param value Status value sought (one or more)
 #' @param condition Search condition. One of \code{"EQ"}, \code{"NE"}.
@@ -3139,7 +3139,7 @@ setMethod(f = "extract_patterns_from_status",
 #' 
 #' Extract the patterns corresponding to a sought category value.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
@@ -3197,7 +3197,7 @@ setMethod(f = "extract_patterns_from_category",
 #'  at the end of the return data frame.
 #' These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities to search for links.
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Data frame of the characteristics of the nodes or patterns whose links are
@@ -3269,7 +3269,7 @@ setMethod(f = "get_links",
 #' 
 #' Extract from the given nodes or patterns those which are isolated.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities to search for isolated.
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Data frame of the characteristics of the nodes or patterns whose isolated
@@ -3294,7 +3294,7 @@ setMethod(f = "get_isolates",
 #' 
 #' Extract from the given nodes or patterns those which are not isolated.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities to search for non-isolated.
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Data frame of the characteristics of the nodes or patterns whose non-isolated
@@ -3321,7 +3321,7 @@ setMethod(f = "get_non_isolates",
 #' Extract from the given nodes or patterns those which are complexes by the number of values with
 #'  which they are associated, with regard to one category.
 #' 
-#' @param object SpectralAnalyzer class object.
+#' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities to search for complexes.
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Data frame of the characteristics of the nodes or patterns whose complexes

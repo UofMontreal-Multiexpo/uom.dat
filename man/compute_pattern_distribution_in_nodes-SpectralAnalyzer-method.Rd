@@ -8,7 +8,7 @@
 \S4method{compute_pattern_distribution_in_nodes}{SpectralAnalyzer}(object, patterns)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{patterns}{Patterns whose distributions are to be calculated.}
 }

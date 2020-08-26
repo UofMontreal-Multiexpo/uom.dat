@@ -8,7 +8,7 @@
 \S4method{list_patterns_by_obs}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 }
 \value{
 Invisible. Logical matrix in which rows correspond to observations and columns correspond

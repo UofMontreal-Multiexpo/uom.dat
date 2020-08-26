@@ -8,7 +8,7 @@
 \S4method{list_obs_per_year}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 }
 \value{
 Invisible. Matrix of the number of occurrences of each separate observation, per year.

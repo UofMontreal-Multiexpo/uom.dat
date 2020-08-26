@@ -8,7 +8,7 @@
 \S4method{compute_reporting_indexes}{SpectralAnalyzer}(object, patterns, t = NULL, period = Inf)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{patterns}{Patterns whose reporting indexes are to be computed.}
 

@@ -13,7 +13,7 @@
 )
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{patterns_characteristics}{Patterns (and their characteristics) whose spectrum is to be plotted.}
 

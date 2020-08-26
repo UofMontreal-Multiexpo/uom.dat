@@ -45,7 +45,7 @@ to the total period of observations (number of years).}
 New object of class \code{\link{SpectralAnalyzer}}.
 }
 \description{
-Create and initialize an object of the class SpectralAnalyzer.
+Create and initialize an object of class \code{SpectralAnalyzer}.
 }
 \details{
 If items are not specified using the argument \code{items}, they are automatically listed from

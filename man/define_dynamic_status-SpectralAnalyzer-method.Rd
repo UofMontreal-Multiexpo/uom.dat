@@ -8,7 +8,7 @@
 \S4method{define_dynamic_status}{SpectralAnalyzer}(object, patterns, status_limit, t = NULL, period = Inf)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{patterns}{Patterns whose dynamic status are to be defined.}
 

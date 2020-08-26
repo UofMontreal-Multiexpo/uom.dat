@@ -15,7 +15,7 @@
 )
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{entities}{Type of entities to search for complexes.
 One of \code{"nodes"}, \code{"patterns"}.}

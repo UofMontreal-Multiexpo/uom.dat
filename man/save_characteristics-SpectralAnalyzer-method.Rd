@@ -8,7 +8,7 @@
 \S4method{save_characteristics}{SpectralAnalyzer}(object, entities, characteristics, ...)
 }
 \arguments{
-\item{object}{SpectralAnalyzer class object.}
+\item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{entities}{Type of entities to save. One of \code{"nodes"}, \code{"patterns"}, \code{"rules"}.}
 
