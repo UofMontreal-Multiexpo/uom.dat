@@ -1,5 +1,5 @@
 
-#### Fonctions de structuration d'observations génériques ####
+#### Generic functions for structuring observations ####
 
 #' Grouping data
 #' 
@@ -90,7 +90,7 @@ make_observations = function(data, by, additional = NULL, unique_values = TRUE) 
 
 
 
-#### Fonctions de structuration d'observations spécifiques au domaine Occupational Exposure ####
+#### Functions for structuring observations, specific to the Occupational Exposure domain ####
 
 #' Grouping samples
 #' 
@@ -384,7 +384,7 @@ make_obs_from_unspecified_ws = function(measures, variable_names, additional = N
 
 
 
-#### Fonctions de recherche dans une structure d'observations ####
+#### Functions for search in an observation structure ####
 
 #' Search all items
 #' 
@@ -653,7 +653,7 @@ get_info_from_items = function(observations, items, info_names, presence = "all"
 
 
 
-#### Fonctions de calculs sur des observations ####
+#### Functions for computations on observations ####
 
 #' Proportions of co-occurrence of each item with any other item
 #' 
@@ -693,7 +693,7 @@ co_occurrence_proportions = function(observations, key = "CODE") {
 
 
 
-#### Fonctions de transtypage d'observations ####
+#### Observations coerce functions ####
 
 #' Turn observations into arules transactions
 #' 

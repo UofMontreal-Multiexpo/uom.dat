@@ -1,5 +1,5 @@
 
-#### Fonctions utiles à l'affichage ####
+#### Utility functions for display ####
 
 #' Decomposition of a time
 #' 
@@ -115,7 +115,7 @@ set_notation = function(sets, type = "character") {
 
 
 
-#### Fonctions utiles au traçage de graphiques ####
+#### Utility functions for plotting graphs ####
 
 #' Text shading
 #' 
@@ -150,7 +150,7 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 
 
 
-#### Fonctions utiles à la gestion de fichiers ####
+#### Utility functions for file management ####
 
 #' Directory path
 #' 

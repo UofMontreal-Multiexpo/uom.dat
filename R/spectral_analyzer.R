@@ -2,16 +2,16 @@
 NULL
 
 
-# État d'activation du mode débogage
+# Debug mode activation status
 DEBUG_MODE = FALSE
-# Définit l'étape jusqu'à laquelle effectuer l'analyse avant d'arrêter le processus
+# Defines the step up to which to perform the analysis before stopping the process
 UP_TO_STEP = Inf
 
 
 
-#### Attributs et constructeur ####
+#### Attributes and constructor ####
 
-# Création d'une classe correspondant à 2 types
+# Creation of a class corresponding to 2 types
 setClassUnion("listORarray", c("list", "array"))
 
 #' Spectral Analyzer
@@ -111,7 +111,7 @@ setClass(Class = "SpectralAnalyzer",
            return(TRUE)
          })
 
-# Initiateur
+# Initiator
 setMethod(f = "initialize",
           signature = "SpectralAnalyzer",
           definition = function(.Object, observations, items, target, count, min_length, max_length, status_limit) {
@@ -216,7 +216,7 @@ spectral.analyzer = function(observations, items = NULL, target = "closed freque
 }
 
 
-# Déclaration de la méthode de (ré)initialisation de l'analyseur spectral
+# Declaration of the SpectralAnalyzer (re)set method
 setGeneric(name = "reset", def = function(object, from = 1){ standardGeneric("reset") })
 
 #' Partial reset of a spectral analyzer
@@ -286,9 +286,9 @@ setMethod(f = "reset",
 
 
 
-#### Méthodes print, show, plot, summary, length ####
+#### Methods print, show, plot, summary, length ####
 
-# print : affichage en console
+# print: display in console
 setMethod(f = "print",
           signature = "SpectralAnalyzer",
           definition = function(x, ...) {
@@ -296,7 +296,7 @@ setMethod(f = "print",
             print(methods::getSlots("SpectralAnalyzer"))
           })
 
-# show : affichage sommaire en console
+# show: short display in console
 setMethod(f = "show",
           signature = "SpectralAnalyzer",
           definition = function(object) {
@@ -304,7 +304,7 @@ setMethod(f = "show",
             print(methods::slotNames(object))
           })
 
-# summary : résumé de l'objet
+# summary: object summary
 setMethod(f = "summary",
           signature = "SpectralAnalyzer",
           definition = function(object, ...) {
@@ -328,7 +328,7 @@ setMethod(f = "summary",
 
 
 
-#### Sélecteurs et mutateurs ####
+#### Selectors and mutators ####
 
 #' Extract or replace parts of a SpectralAnalyzer object
 #' 
@@ -401,23 +401,23 @@ setReplaceMethod(f = "[",
 
 
 
-#### Déclaration des méthodes ####
+#### Declaration of the methods ####
 
-# Méthodes de calculs utiles à la construction des noeuds
+# Computation methods used for the construction of the nodes
 
 setGeneric(name = "list_obs_per_year", def = function(object){ standardGeneric("list_obs_per_year") })
 
 setGeneric(name = "list_separate_obs", def = function(object){ standardGeneric("list_separate_obs") })
 
 
-# Méthodes de calculs utiles à la construction d'un spectrosome
+# Computation methods used for the construction of spectrosomes
 
 setGeneric(name = "count_links", def = function(object, entities){ standardGeneric("count_links") })
 
 setGeneric(name = "search_links", def = function(object, entities){ standardGeneric("search_links") })
 
 
-# Méthodes de calculs utiles à la construction des motifs
+# Computation methods used for the construction of the patterns
 
 setGeneric(name = "list_separate_patterns", def = function(object, target, count = 1, min_length = 1, max_length = Inf){ standardGeneric("list_separate_patterns") })
 
@@ -442,7 +442,7 @@ setGeneric(name = "compute_ri_threshold", def = function(object, reporting_index
 setGeneric(name = "define_dynamic_status", def = function(object, patterns, status_limit, t = NULL, period = Inf){ standardGeneric("define_dynamic_status") })
 
 
-# Méthodes de création de graphiques de type spectre
+# Methods for creating spectrum graphs
 
 setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, identifiers = "original", path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns"){ standardGeneric("spectrum_chart") })
 
@@ -451,7 +451,7 @@ setGeneric(name = "plot_spectrum_chart", def = function(object, patterns_charact
 setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object, patterns){ standardGeneric("compute_pattern_distribution_in_nodes") })
 
 
-# Méthodes de création de graphiques de type spectrosome et de calcul d'indicateurs y étant relatifs
+# Methods for creating spectrosome graphs and computing related indicators
 
 setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
 
@@ -464,19 +464,19 @@ setGeneric(name = "network_density", def = function(object, links){ standardGene
 setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("degree") })
 
 
-# Méthodes de création de graphiques de type arbre de la multi-association
+# Methods for creating multi-association tree graphs
 
 setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
 
 setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
 
-# Méthodes d'extraction de règles d'association
+# Association rule extraction methods
 
 setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
 
 
-# Méthodes de recherche et d'enregistrement
+# Methods for search and save
 
 setGeneric(name = "save_characteristics", def = function(object, entities, characteristics, ...){ standardGeneric("save_characteristics") })
 
@@ -506,7 +506,7 @@ setGeneric(name = "get_complexes", def = function(object, entities, characterist
 
 
 
-#### Méthodes de calculs utiles à la construction des noeuds ####
+#### Computation methods used for the construction of the nodes ####
 
 #' Enumeration of separate observations per year
 #' 
@@ -606,7 +606,7 @@ setMethod(f = "list_separate_obs",
 
 
 
-#### Méthodes de calculs utiles à la construction d'un spectrosome ####
+#### Computation methods used for the construction of spectrosomes ####
 
 #' Counting of links
 #' 
@@ -765,7 +765,7 @@ setMethod(f = "search_links",
 
 
 
-#### Méthodes de calculs utiles à la construction des motifs ####
+#### Computation methods used for the construction of the patterns ####
 
 #' Enumeration of patterns
 #' 
@@ -1311,7 +1311,7 @@ setMethod(f = "define_dynamic_status",
 
 
 
-#### Méthodes de création de graphiques de type spectre ####
+#### Methods for creating spectrum graphs ####
 
 #' Pattern spectrum
 #' 
@@ -1538,7 +1538,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 
 
 
-#### Méthodes de création de graphiques de type spectrosome ####
+#### Methods for creating spectrosome graphs and computing related indicators ####
 
 #' Spectrosome
 #' 
@@ -2351,7 +2351,7 @@ setMethod(f = "degree",
 
 
 
-#### Méthodes de création de graphiques de type arbre de la multi-association ####
+#### Methods for creating multi-association tree graphs ####
 
 #' Multi-association tree
 #' 
@@ -2690,7 +2690,7 @@ setMethod(f = "plot_tree_chart",
 
 
 
-#### Méthodes d'extraction de règles d'association ####
+#### Association rule extraction methods ####
 
 #' Rules extraction
 #' 
@@ -2801,7 +2801,7 @@ setMethod(f = "extract_rules",
 
 
 
-#### Méthodes de recherche et d'enregistrement ####
+#### Methods for search and save ####
 
 #' Saving nodes, patterns or association rules
 #' 
