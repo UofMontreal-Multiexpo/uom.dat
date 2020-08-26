@@ -543,7 +543,7 @@ setGeneric(name = "get_isolates", def = function(object, entities, characteristi
 
 setGeneric(name = "get_non_isolates", def = function(object, entities, characteristics){ standardGeneric("get_non_isolates") })
 
-setGeneric(name = "get_complexes", def = function(object, entities, characteristics, category, target, min_nb_values = 2){ standardGeneric("get_complexes") })
+setGeneric(name = "get_complexes", def = function(object, entities, characteristics, category = NULL, target = NULL, min_nb_values = 2){ standardGeneric("get_complexes") })
 
 
 
@@ -3508,10 +3508,14 @@ setMethod(f = "get_non_isolates",
           })
 
 
-#' Search for complex nodes or patterns with regard to one category
+#' Search for complex nodes or patterns
 #' 
-#' Extract from the given nodes or patterns those which are complexes by the number of values with
-#'  which they are associated, with regard to one category.
+#' Extract from the given nodes or patterns those which are complex by the number of items they
+#'  contain or by the number of values with which they are associated, with regard to one category.
+#' 
+#' @details
+#' If \code{category} and \code{target} are \code{NULL}, entities with more than \code{min_nb_values}
+#'  items are sought. Otherwise, the search is related to the \code{category} (see \code{target}).
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities to search for complexes.
@@ -3536,10 +3540,9 @@ setMethod(f = "get_non_isolates",
 #' @seealso \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}}.
 #' 
 #' @examples
-#' get_complexes(SA_instance, "patterns", SA_instance["patterns"],
-#'               category = "family", target = "items")
+#' get_complexes(SA_instance, "patterns", SA_instance["patterns"])
 #' get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
-#'               category = 1, target = "items")
+#'               category = "family", target = "items")
 #' get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
 #'               category = 1, target = "links")
 #' 
@@ -3547,35 +3550,45 @@ setMethod(f = "get_non_isolates",
 #' @export
 setMethod(f = "get_complexes",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, category, target, min_nb_values = 2) {
+          definition = function(object, entities, characteristics, category = NULL, target = NULL, min_nb_values = 2) {
             
-            # Validation du paramètre d'accès à une catégorie
-            check_access_for_category(object, category, NA)
+            if (entities != "nodes" && entities != "patterns")
+              stop("entities must be \"nodes\" or \"patterns\".")
             
-            if (target == "items" || target == "vertices") {
-              # Catégories associées à chaque noeud ou motif
-              nop_category = lapply(characteristics[[substr(entities, 1, nchar(entities) - 1)]],
-                                    function(x) unique(as.character(object@items_categories[x, category])))
+            if (is.null(category)) {
+              # Entités possédant au moins min_nb_values items
+              column = if (entities == "nodes") "length" else "order"
+              return(characteristics[characteristics[, column] >= min_nb_values, ])
               
-              # Entités associés à au moins min_nb_values valeurs différentes pour la catégorie
-              return(characteristics[lapply(nop_category, length) >= min_nb_values, ])
+            } else {
+              # Validation du paramètre d'accès à la catégorie
+              check_access_for_category(object, category, NA)
               
-            } else if (target == "links" || target == "edges") {
-              # Liens associés aux noeuds ou motifs
-              nop_links = get_links(object, entities, characteristics)
-              
-              # Catégories associées à chaque lien
-              links_category = lapply(strsplit(nop_links$items, "/"),
-                                      function(x) sort(unique(as.character(object@items_categories[x, category]))))
-              
-              # Identifiants des entités dont au moins un lien est associé à au moins min_nb_values valeurs différentes pour la catégorie
-              id = unique(unlist(nop_links[which(lapply(links_category, length) >= min_nb_values),
-                                           c("endpoint.1", "endpoint.2")]))
-              
-              # Entités correspondantes
-              return(characteristics[as.character(id), ])
+              if (target == "items" || target == "vertices") {
+                # Catégories associées à chaque noeud ou motif
+                nop_category = lapply(characteristics[[substr(entities, 1, nchar(entities) - 1)]],
+                                      function(x) unique(as.character(object@items_categories[x, category])))
+                
+                # Entités associées à au moins min_nb_values valeurs différentes pour la catégorie
+                return(characteristics[lapply(nop_category, length) >= min_nb_values, ])
+                
+              } else if (target == "links" || target == "edges") {
+                # Liens associés aux noeuds ou motifs
+                nop_links = get_links(object, entities, characteristics)
+                
+                # Catégories associées à chaque lien
+                links_category = lapply(strsplit(nop_links$items, "/"),
+                                        function(x) sort(unique(as.character(object@items_categories[x, category]))))
+                
+                # Identifiants des entités dont au moins un lien est associé à au moins min_nb_values valeurs différentes pour la catégorie
+                id = unique(unlist(nop_links[which(lapply(links_category, length) >= min_nb_values),
+                                             c("endpoint.1", "endpoint.2")]))
+                
+                # Entités correspondantes
+                return(characteristics[as.character(id), ])
+              }
+              stop("target must be one of \"items\", \"links\", \"vertices\", \"edges\".") 
             }
-            stop("target must be one of \"items\", \"links\", \"vertices\", \"edges\".")
           })
 
 

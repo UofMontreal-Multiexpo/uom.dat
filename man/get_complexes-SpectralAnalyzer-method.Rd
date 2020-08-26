@@ -3,14 +3,14 @@
 \name{get_complexes,SpectralAnalyzer-method}
 \alias{get_complexes,SpectralAnalyzer-method}
 \alias{get_complexes}
-\title{Search for complex nodes or patterns with regard to one category}
+\title{Search for complex nodes or patterns}
 \usage{
 \S4method{get_complexes}{SpectralAnalyzer}(
   object,
   entities,
   characteristics,
-  category,
-  target,
+  category = NULL,
+  target = NULL,
   min_nb_values = 2
 )
 }
@@ -42,14 +42,17 @@ pattern or a link must have to extract the related entity.}
 Subset of the data frame that corresponds to the complex entities sought.
 }
 \description{
-Extract from the given nodes or patterns those which are complexes by the number of values with
- which they are associated, with regard to one category.
+Extract from the given nodes or patterns those which are complex by the number of items they
+ contain or by the number of values with which they are associated, with regard to one category.
+}
+\details{
+If \code{category} and \code{target} are \code{NULL}, entities with more than \code{min_nb_values}
+ items are sought. Otherwise, the search is related to the \code{category} (see \code{target}).
 }
 \examples{
-get_complexes(SA_instance, "patterns", SA_instance["patterns"],
-              category = "family", target = "items")
+get_complexes(SA_instance, "patterns", SA_instance["patterns"])
 get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
-              category = 1, target = "items")
+              category = "family", target = "items")
 get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
               category = 1, target = "links")
 
