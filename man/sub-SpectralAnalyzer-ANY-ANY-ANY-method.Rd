@@ -76,6 +76,16 @@ General selector and mutator to access the attributes of an object of class \cod
 Extraction and replacement can be done by using an attribute name or its numeric value in the order
  of the attributes.
 }
+\examples{
+SA_instance["items"]
+SA_instance["patterns"]
+SA_instance[1]
+
+SA_instance["target"] <- "maximally frequent itemsets"
+SA_instance["count"] <- 2
+SA_instance["max_length"] <- 3
+
+}
 \author{
 Gauthier Magnin
 }

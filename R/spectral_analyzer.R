@@ -196,6 +196,28 @@ setMethod(f = "initialize",
 #' @return New object of class \code{\link{SpectralAnalyzer}}.
 #' 
 #' @author Gauthier Magnin
+#' 
+#' @examples
+#' ## Creating a SpectralAnalyzer from a list of observations
+#' obs <- make_observations(oedb_sample, by = "ID",
+#'                          additional = c("CODE", "NAME", "YEAR"))
+#' 
+#' sa_object_1 <- spectral.analyzer(obs)
+#' 
+#' ## Creating a SpectralAnalyzer after associating item identifiers with
+#' ## names and one category
+#' items_ids <- get_all_items(obs)
+#' category_1 <- substances_classification[match(items_ids,
+#'                                               substances_classification$CODE),
+#'                                         "SUBFAMILY"]
+#' category_1[is.na(category_1)] <- "Unknown"
+#' names <- substances_classification[match(items_ids,
+#'                                          substances_classification$CODE),
+#'                                    "NAME"]
+#' 
+#' items <- data.frame(item = items_ids, name = names, family = category_1)
+#' sa_object_2 <- spectral.analyzer(obs, items)
+#' 
 #' @export
 spectral.analyzer = function(observations, items = NULL, target = "closed frequent itemsets", count = 1, min_length = 1, max_length = Inf, status_limit = 2) {
   
@@ -227,6 +249,13 @@ setGeneric(name = "reset", def = function(object, from = 1){ standardGeneric("re
 #' @param from Step from which to recompute the attributes.
 #' 
 #' @author Gauthier Magnin
+#' 
+#' @examples
+#' ## Change one attribute (for instance, the pattern enumeration target) and
+#' ## enumerate the patterns again for a new analysis
+#' SA_instance["target"] <- "frequent itemsets"
+#' reset(SA_instance, from = 5)
+#' 
 #' @aliases reset
 #' @export
 setMethod(f = "reset",
@@ -339,6 +368,12 @@ setMethod(f = "summary",
 #' @inheritParams base::Extract
 #' 
 #' @author Gauthier Magnin
+#' 
+#' @examples
+#' SA_instance["items"]
+#' SA_instance["patterns"]
+#' SA_instance[1]
+#' 
 #' @aliases [,SpectralAnalyzer-method
 #' @export
 setMethod(f = "[",
@@ -368,6 +403,12 @@ setMethod(f = "[",
           })
 
 #' @rdname sub-SpectralAnalyzer-ANY-ANY-ANY-method
+#' 
+#' @examples
+#' SA_instance["target"] <- "maximally frequent itemsets"
+#' SA_instance["count"] <- 2
+#' SA_instance["max_length"] <- 3
+#' 
 #' @aliases [<-,SpectralAnalyzer-method
 #' @export
 setReplaceMethod(f = "[",
@@ -1339,6 +1380,12 @@ setMethod(f = "define_dynamic_status",
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
+#' 
+#' @examples
+#' spectrum_1 <- spectrum_chart(SA_instance, SA_instance["patterns"])
+#' spectrum_2 <- spectrum_chart(SA_instance, SA_instance["patterns"][1:15, ],
+#'                              name = "spectrum_of_patterns_1-15")
+#' 
 #' @aliases spectrum_chart
 #' @export
 setMethod(f = "spectrum_chart",
@@ -1647,6 +1694,15 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
+#' 
+#' @examples
+#' spectrosome_1 <- spectrosome_chart(SA_instance, "nodes", SA_instance["nodes"])
+#' spectrosome_2 <- spectrosome_chart(SA_instance, "patterns",
+#'                                    SA_instance["patterns"])
+#' spectrosome_3 <- spectrosome_chart(SA_instance, "patterns",
+#'                                    SA_instance["patterns"][1:15, ],
+#'                                    name = "spectrosome_of_patterns_1-15")
+#' 
 #' @aliases spectrosome_chart
 #' @export
 setMethod(f = "spectrosome_chart",
@@ -2259,6 +2315,13 @@ setMethod(f = "cluster_text",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{spectrosome_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
+#' 
+#' @examples
+#' cluster_1 <- cluster_chart(SA_instance, "nodes", SA_instance["nodes"],
+#'                            item = 3146)
+#' cluster_2 <- cluster_chart(SA_instance, "patterns", SA_instance["patterns"],
+#'                            item = 3146)
+#' 
 #' @aliases cluster_chart
 #' @export
 setMethod(f = "cluster_chart",
@@ -2313,6 +2376,12 @@ setMethod(f = "cluster_chart",
 #' @return Density of the network.
 #' 
 #' @author Gauthier Magnin
+#' 
+#' @examples
+#' spectrosome <- spectrosome_chart(SA_instance, "patterns",
+#'                                  SA_instance["patterns"][1:15, ])
+#' network_density(SA_instance, spectrosome[["edges"]])
+#' 
 #' @aliases network_density
 #' @export
 setMethod(f = "network_density",
@@ -2340,6 +2409,12 @@ setMethod(f = "network_density",
 #' @return Degree of the vertex.
 #' 
 #' @author Gauthier Magnin
+#' 
+#' @examples
+#' spectrosome <- spectrosome_chart(SA_instance, "patterns",
+#'                                  SA_instance["patterns"][1:15, ])
+#' degree(SA_instance, 7, spectrosome[["edges"]])
+#' 
 #' @aliases degree
 #' @export
 setMethod(f = "degree",
@@ -2402,6 +2477,13 @@ setMethod(f = "degree",
 #'             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
 #'             \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
+#' 
+#' @examples
+#' tree_1 <- tree_chart(SA_instance, SA_instance["patterns"],
+#'                      n.cutoff = 20, c.cutoff = 17)
+#' tree_2 <- tree_chart(SA_instance, SA_instance["patterns"][1:15, ],
+#'                      c.cutoff = 17, name = "multi-association_tree_1-15")
+#' 
 #' @aliases tree_chart
 #' @export
 setMethod(f = "tree_chart",
@@ -2741,6 +2823,27 @@ setMethod(f = "plot_tree_chart",
 #'  or the given list (otherwise).
 #' 
 #' @author Gauthier Magnin
+#' 
+#' @examples
+#' ## Basic rule extraction
+#' rules_1 <- extract_rules(SA_instance, from = "observations")
+#' rules_2 <- extract_rules(SA_instance, from = "patterns")
+#' rules_3 <- extract_rules(SA_instance, from = list(c("931", "3180"),
+#'                                                   c("25", "192", "328")))
+#' 
+#' ## Rule extraction with conditions on the antecedent and the consequent
+#' params <- list(supp = 0.001, conf = 0.5, maxlen = 2)
+#' rules_4 <- extract_rules(SA_instance, from = "observations",
+#'                          parameter = params,
+#'                          appearance = list(rhs = "328"))
+#' rules_5 <- extract_rules(SA_instance, from = "observations",
+#'                          parameter = params,
+#'                          appearance = list(lhs = "497"))
+#' rules_6 <- extract_rules(SA_instance, from = "observations",
+#'                          parameter = list(supp = 0.001, conf = 0,
+#'                                           minlen = 2, maxlen = 2),
+#'                          appearance = list(lhs = "328", rhs = "3180"))
+#' 
 #' @aliases extract_rules
 #' @export
 setMethod(f = "extract_rules",
@@ -2814,6 +2917,22 @@ setMethod(f = "extract_rules",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link[utils:write.table]{utils::write.csv2}}.
+#' 
+#' @examples
+#' save_characteristics(SA_instance, "nodes", SA_instance["nodes"],
+#'                      file = "nodes.csv")
+#' save_characteristics(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+#'                      file = "patterns.csv")
+#' 
+#' spectrosome <- spectrosome_chart(SA_instance, "patterns",
+#'                                  SA_instance["patterns"])
+#' save_characteristics(SA_instance, "patterns", spectrosome[["vertices"]],
+#'                      file = "spectrosome_vertices.csv", row.names = FALSE)
+#' 
+#' rules <- extract_rules(SA_instance, from = "observations")
+#' save_characteristics(SA_instance, "rules", rules,
+#'                      file = "rules.csv", row.names = FALSE)
+#' 
 #' @aliases save_characteristics
 #' @export
 setMethod(f = "save_characteristics",
@@ -2866,6 +2985,14 @@ setMethod(f = "save_characteristics",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_nodes_from_characteristic}}, \code{\link{extract_nodes_from_category}}.
+#' 
+#' @examples
+#' extract_nodes_from_items(SA_instance, SA_instance["nodes"], items = 3146)
+#' extract_nodes_from_items(SA_instance, SA_instance["nodes"],
+#'                          items = c(3146, 3180), presence = "all")
+#' extract_nodes_from_items(SA_instance, SA_instance["nodes"],
+#'                          items = c(3146, 3180), presence = "any")
+#' 
 #' @aliases extract_nodes_from_items
 #' @export
 setMethod(f = "extract_nodes_from_items",
@@ -2910,6 +3037,12 @@ setMethod(f = "extract_nodes_from_items",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_category}}.
+#' 
+#' @examples
+#' extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
+#'                                   characteristic = "weight",
+#'                                   value = 2, condition = "GE")
+#' 
 #' @aliases extract_nodes_from_characteristic
 #' @export
 setMethod(f = "extract_nodes_from_characteristic",
@@ -2951,6 +3084,16 @@ setMethod(f = "extract_nodes_from_characteristic",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_characteristic}}.
+#' 
+#' @examples
+#' extract_nodes_from_category(SA_instance, SA_instance["nodes"],
+#'                             category = "family", value = "Chrome",
+#'                             target = "items")
+#' 
+#' extract_nodes_from_category(SA_instance, SA_instance["nodes"],
+#'                             category = 1, value = "Chrome",
+#'                             target = "links")
+#' 
 #' @aliases extract_nodes_from_category
 #' @export
 setMethod(f = "extract_nodes_from_category",
@@ -3038,6 +3181,14 @@ setMethod(f = "check_access_for_category",
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_patterns_from_characteristic}}, \code{\link{extract_patterns_from_status}},
 #'          \code{\link{extract_patterns_from_category}}.
+#' 
+#' @examples
+#' extract_patterns_from_items(SA_instance, SA_instance["patterns"], items = 3146)
+#' extract_patterns_from_items(SA_instance, SA_instance["patterns"],
+#'                             items = c(3146, 3180), presence = "all")
+#' extract_patterns_from_items(SA_instance, SA_instance["patterns"],
+#'                             items = c(3146, 3180), presence = "any")
+#' 
 #' @aliases extract_patterns_from_items
 #' @export
 setMethod(f = "extract_patterns_from_items",
@@ -3084,6 +3235,12 @@ setMethod(f = "extract_patterns_from_items",
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_status}},
 #'          \code{\link{extract_patterns_from_category}}.
+#' 
+#' @examples
+#' extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
+#'                                      characteristic = "weight",
+#'                                      value = 3, condition = "GE")
+#' 
 #' @aliases extract_patterns_from_characteristic
 #' @export
 setMethod(f = "extract_patterns_from_characteristic",
@@ -3122,6 +3279,16 @@ setMethod(f = "extract_patterns_from_characteristic",
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_characteristic}},
 #'          \code{\link{extract_patterns_from_category}}.
+#' 
+#' @examples
+#' extract_patterns_from_status(SA_instance, SA_instance["patterns"],
+#'                              value = SA_instance["Class"]$STATUS_PERSISTENT,
+#'                              condition = "EQ")
+#' 
+#' extract_patterns_from_status(SA_instance, SA_instance["patterns"],
+#'                              value = c("Persistent", "Declining"),
+#'                              condition = "NE")
+#' 
 #' @aliases extract_patterns_from_status
 #' @export
 setMethod(f = "extract_patterns_from_status",
@@ -3157,6 +3324,16 @@ setMethod(f = "extract_patterns_from_status",
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_characteristic}},
 #'          \code{\link{extract_patterns_from_status}}.
+#' 
+#' @examples
+#' extract_patterns_from_category(SA_instance, SA_instance["patterns"],
+#'                                category = "family", value = "Chrome",
+#'                                target = "items")
+#' 
+#' extract_patterns_from_category(SA_instance, SA_instance["patterns"],
+#'                                category = 1, value = "Chrome",
+#'                                target = "links")
+#' 
 #' @aliases extract_patterns_from_category
 #' @export
 setMethod(f = "extract_patterns_from_category",
@@ -3205,6 +3382,11 @@ setMethod(f = "extract_patterns_from_category",
 #' @return Data frame associating the linked nodes or linked patterns.
 #' 
 #' @author Gauthier Magnin
+#' 
+#' @examples
+#' get_links(SA_instance, "patterns", SA_instance["patterns"])
+#' get_links(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+#' 
 #' @aliases get_links
 #' @export
 setMethod(f = "get_links",
@@ -3278,6 +3460,11 @@ setMethod(f = "get_links",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_non_isolates}}, \code{\link{get_complexes}}, \code{\link{get_links}}.
+#' 
+#' @examples
+#' get_isolates(SA_instance, "patterns", SA_instance["patterns"])
+#' get_isolates(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+#' 
 #' @aliases get_isolates
 #' @export
 setMethod(f = "get_isolates",
@@ -3303,6 +3490,11 @@ setMethod(f = "get_isolates",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_isolates}}, \code{\link{get_complexes}}, \code{\link{get_links}}.
+#' 
+#' @examples
+#' get_non_isolates(SA_instance, "patterns", SA_instance["patterns"])
+#' get_non_isolates(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+#' 
 #' @aliases get_non_isolates
 #' @export
 setMethod(f = "get_non_isolates",
@@ -3342,6 +3534,15 @@ setMethod(f = "get_non_isolates",
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}}.
+#' 
+#' @examples
+#' get_complexes(SA_instance, "patterns", SA_instance["patterns"],
+#'               category = "family", target = "items")
+#' get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+#'               category = 1, target = "items")
+#' get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+#'               category = 1, target = "links")
+#' 
 #' @aliases get_complexes
 #' @export
 setMethod(f = "get_complexes",

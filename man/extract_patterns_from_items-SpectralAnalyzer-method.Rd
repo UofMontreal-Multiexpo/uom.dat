@@ -34,6 +34,14 @@ Subset of the data frame of patterns that match the search criteria.
 \description{
 Extract the patterns containing one or more sought items.
 }
+\examples{
+extract_patterns_from_items(SA_instance, SA_instance["patterns"], items = 3146)
+extract_patterns_from_items(SA_instance, SA_instance["patterns"],
+                            items = c(3146, 3180), presence = "all")
+extract_patterns_from_items(SA_instance, SA_instance["patterns"],
+                            items = c(3146, 3180), presence = "any")
+
+}
 \seealso{
 \code{\link{extract_patterns_from_characteristic}}, \code{\link{extract_patterns_from_status}},
          \code{\link{extract_patterns_from_category}}.

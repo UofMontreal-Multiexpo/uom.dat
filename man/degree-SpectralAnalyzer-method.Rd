@@ -20,6 +20,12 @@ Degree of the vertex.
 \description{
 Compute the degree of a vertex in a graph, i.e. the number of vertices to which it is adjacent.
 }
+\examples{
+spectrosome <- spectrosome_chart(SA_instance, "patterns",
+                                 SA_instance["patterns"][1:15, ])
+degree(SA_instance, 7, spectrosome[["edges"]])
+
+}
 \author{
 Gauthier Magnin
 }

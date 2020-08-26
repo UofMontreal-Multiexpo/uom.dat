@@ -33,6 +33,14 @@ Subset of the data frame of nodes that match the search criteria.
 \description{
 Extract the nodes containing one or more sought items.
 }
+\examples{
+extract_nodes_from_items(SA_instance, SA_instance["nodes"], items = 3146)
+extract_nodes_from_items(SA_instance, SA_instance["nodes"],
+                         items = c(3146, 3180), presence = "all")
+extract_nodes_from_items(SA_instance, SA_instance["nodes"],
+                         items = c(3146, 3180), presence = "any")
+
+}
 \seealso{
 \code{\link{extract_nodes_from_characteristic}}, \code{\link{extract_nodes_from_category}}.
 }

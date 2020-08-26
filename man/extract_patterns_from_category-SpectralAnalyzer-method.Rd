@@ -38,6 +38,16 @@ Subset of the data frame of patterns that match the search criteria.
 \description{
 Extract the patterns corresponding to a sought category value.
 }
+\examples{
+extract_patterns_from_category(SA_instance, SA_instance["patterns"],
+                               category = "family", value = "Chrome",
+                               target = "items")
+
+extract_patterns_from_category(SA_instance, SA_instance["patterns"],
+                               category = 1, value = "Chrome",
+                               target = "links")
+
+}
 \seealso{
 \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_characteristic}},
          \code{\link{extract_patterns_from_status}}.

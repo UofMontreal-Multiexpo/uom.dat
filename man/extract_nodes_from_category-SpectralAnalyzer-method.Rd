@@ -38,6 +38,16 @@ Subset of the data frame of nodes that match the search criteria.
 \description{
 Extract the nodes corresponding to a sought category value.
 }
+\examples{
+extract_nodes_from_category(SA_instance, SA_instance["nodes"],
+                            category = "family", value = "Chrome",
+                            target = "items")
+
+extract_nodes_from_category(SA_instance, SA_instance["nodes"],
+                            category = 1, value = "Chrome",
+                            target = "links")
+
+}
 \seealso{
 \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_characteristic}}.
 }

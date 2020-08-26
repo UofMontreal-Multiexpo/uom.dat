@@ -45,6 +45,15 @@ Subset of the data frame that corresponds to the complex entities sought.
 Extract from the given nodes or patterns those which are complexes by the number of values with
  which they are associated, with regard to one category.
 }
+\examples{
+get_complexes(SA_instance, "patterns", SA_instance["patterns"],
+              category = "family", target = "items")
+get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+              category = 1, target = "items")
+get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+              category = 1, target = "links")
+
+}
 \seealso{
 \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}}.
 }

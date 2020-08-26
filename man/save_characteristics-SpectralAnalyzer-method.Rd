@@ -19,6 +19,22 @@
 \description{
 Save in CSV format a set of nodes, patterns or association rules as well as their characteristics.
 }
+\examples{
+save_characteristics(SA_instance, "nodes", SA_instance["nodes"],
+                     file = "nodes.csv")
+save_characteristics(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+                     file = "patterns.csv")
+
+spectrosome <- spectrosome_chart(SA_instance, "patterns",
+                                 SA_instance["patterns"])
+save_characteristics(SA_instance, "patterns", spectrosome[["vertices"]],
+                     file = "spectrosome_vertices.csv", row.names = FALSE)
+
+rules <- extract_rules(SA_instance, from = "observations")
+save_characteristics(SA_instance, "rules", rules,
+                     file = "rules.csv", row.names = FALSE)
+
+}
 \seealso{
 \code{\link[utils:write.table]{utils::write.csv2}}.
 }

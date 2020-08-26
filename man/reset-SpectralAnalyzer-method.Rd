@@ -15,6 +15,13 @@
 \description{
 Redefine the attributes of a spectral analyzer from a specific step.
 }
+\examples{
+## Change one attribute (for instance, the pattern enumeration target) and
+## enumerate the patterns again for a new analysis
+SA_instance["target"] <- "frequent itemsets"
+reset(SA_instance, from = 5)
+
+}
 \author{
 Gauthier Magnin
 }

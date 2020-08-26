@@ -43,6 +43,12 @@ Plot a spectrum chart and save it as a PDF file.
 The patterns are sorted according to their specificities (desc.), status (\code{"Persistent"},
  \code{"Declining"}, \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
 }
+\examples{
+spectrum_1 <- spectrum_chart(SA_instance, SA_instance["patterns"])
+spectrum_2 <- spectrum_chart(SA_instance, SA_instance["patterns"][1:15, ],
+                             name = "spectrum_of_patterns_1-15")
+
+}
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.

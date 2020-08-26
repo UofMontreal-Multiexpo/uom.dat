@@ -77,6 +77,13 @@ Therefore, if the number of values exceeds \code{20}, some colors will be used m
  value.
 See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 }
+\examples{
+tree_1 <- tree_chart(SA_instance, SA_instance["patterns"],
+                     n.cutoff = 20, c.cutoff = 17)
+tree_2 <- tree_chart(SA_instance, SA_instance["patterns"][1:15, ],
+                     c.cutoff = 17, name = "multi-association_tree_1-15")
+
+}
 \references{
 Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.

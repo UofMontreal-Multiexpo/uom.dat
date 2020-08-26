@@ -148,6 +148,15 @@ The following parameters, which can be redefined, have the following values:
    \item{\code{displayisolates = TRUE}}
  }
 }
+\examples{
+spectrosome_1 <- spectrosome_chart(SA_instance, "nodes", SA_instance["nodes"])
+spectrosome_2 <- spectrosome_chart(SA_instance, "patterns",
+                                   SA_instance["patterns"])
+spectrosome_3 <- spectrosome_chart(SA_instance, "patterns",
+                                   SA_instance["patterns"][1:15, ],
+                                   name = "spectrosome_of_patterns_1-15")
+
+}
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.

@@ -32,6 +32,16 @@ Subset of the data frame of patterns that match the search criteria.
 \description{
 Extract the patterns whose status match one or more sought values.
 }
+\examples{
+extract_patterns_from_status(SA_instance, SA_instance["patterns"],
+                             value = SA_instance["Class"]$STATUS_PERSISTENT,
+                             condition = "EQ")
+
+extract_patterns_from_status(SA_instance, SA_instance["patterns"],
+                             value = c("Persistent", "Declining"),
+                             condition = "NE")
+
+}
 \seealso{
 \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_characteristic}},
          \code{\link{extract_patterns_from_category}}.

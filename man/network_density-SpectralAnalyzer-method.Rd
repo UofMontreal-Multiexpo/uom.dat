@@ -19,6 +19,12 @@ Density of the network.
 Compute the density of the graph as the ratio between the number of links identified and
  the maximum number of possible links.
 }
+\examples{
+spectrosome <- spectrosome_chart(SA_instance, "patterns",
+                                 SA_instance["patterns"][1:15, ])
+network_density(SA_instance, spectrosome[["edges"]])
+
+}
 \author{
 Gauthier Magnin
 }

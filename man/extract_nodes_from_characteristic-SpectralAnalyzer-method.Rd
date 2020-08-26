@@ -45,6 +45,12 @@ Subset of the data frame of nodes that match the search criteria.
 \description{
 Extract the nodes satisfying a search criterion according to one characteristic.
 }
+\examples{
+extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
+                                  characteristic = "weight",
+                                  value = 2, condition = "GE")
+
+}
 \seealso{
 \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_category}}.
 }

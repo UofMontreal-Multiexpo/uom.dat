@@ -22,6 +22,11 @@ Subset of the data frame that corresponds to isolated entities.
 \description{
 Extract from the given nodes or patterns those which are isolated.
 }
+\examples{
+get_isolates(SA_instance, "patterns", SA_instance["patterns"])
+get_isolates(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+
+}
 \seealso{
 \code{\link{get_non_isolates}}, \code{\link{get_complexes}}, \code{\link{get_links}}.
 }

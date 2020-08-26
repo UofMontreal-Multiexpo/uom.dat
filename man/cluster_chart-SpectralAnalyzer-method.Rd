@@ -131,6 +131,13 @@ The following parameters, which can be redefined, have the following values:
    \item{\code{displayisolates = TRUE}}
  }
 }
+\examples{
+cluster_1 <- cluster_chart(SA_instance, "nodes", SA_instance["nodes"],
+                           item = 3146)
+cluster_2 <- cluster_chart(SA_instance, "patterns", SA_instance["patterns"],
+                           item = 3146)
+
+}
 \seealso{
 \code{\link{spectrosome_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 }

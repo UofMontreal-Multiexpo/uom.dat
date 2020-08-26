@@ -52,6 +52,28 @@ If items are not specified using the argument \code{items}, they are automatical
  the values of \code{CODE} in the argument \code{observations} without any categorization or
  specific denomination.
 }
+\examples{
+## Creating a SpectralAnalyzer from a list of observations
+obs <- make_observations(oedb_sample, by = "ID",
+                         additional = c("CODE", "NAME", "YEAR"))
+
+sa_object_1 <- spectral.analyzer(obs)
+
+## Creating a SpectralAnalyzer after associating item identifiers with
+## names and one category
+items_ids <- get_all_items(obs)
+category_1 <- substances_classification[match(items_ids,
+                                              substances_classification$CODE),
+                                        "SUBFAMILY"]
+category_1[is.na(category_1)] <- "Unknown"
+names <- substances_classification[match(items_ids,
+                                         substances_classification$CODE),
+                                   "NAME"]
+
+items <- data.frame(item = items_ids, name = names, family = category_1)
+sa_object_2 <- spectral.analyzer(obs, items)
+
+}
 \author{
 Gauthier Magnin
 }

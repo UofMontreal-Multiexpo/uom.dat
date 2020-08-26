@@ -61,6 +61,27 @@ If \code{from} is \code{"patterns"} or a list, additional arguments are \code{co
  \code{arules}. These arguments allow to specify minmum confidence (default \code{0.8}) and some
  operating parameters of the rule extraction algorithm.
 }
+\examples{
+## Basic rule extraction
+rules_1 <- extract_rules(SA_instance, from = "observations")
+rules_2 <- extract_rules(SA_instance, from = "patterns")
+rules_3 <- extract_rules(SA_instance, from = list(c("931", "3180"),
+                                                  c("25", "192", "328")))
+
+## Rule extraction with conditions on the antecedent and the consequent
+params <- list(supp = 0.001, conf = 0.5, maxlen = 2)
+rules_4 <- extract_rules(SA_instance, from = "observations",
+                         parameter = params,
+                         appearance = list(rhs = "328"))
+rules_5 <- extract_rules(SA_instance, from = "observations",
+                         parameter = params,
+                         appearance = list(lhs = "497"))
+rules_6 <- extract_rules(SA_instance, from = "observations",
+                         parameter = list(supp = 0.001, conf = 0,
+                                          minlen = 2, maxlen = 2),
+                         appearance = list(lhs = "328", rhs = "3180"))
+
+}
 \author{
 Gauthier Magnin
 }

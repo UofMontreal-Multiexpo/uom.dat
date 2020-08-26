@@ -46,6 +46,12 @@ Subset of the data frame of patterns that match the search criteria.
 \description{
 Extract the patterns satisfying a search criterion according to one characteristic.
 }
+\examples{
+extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
+                                     characteristic = "weight",
+                                     value = 3, condition = "GE")
+
+}
 \seealso{
 \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_status}},
          \code{\link{extract_patterns_from_category}}.

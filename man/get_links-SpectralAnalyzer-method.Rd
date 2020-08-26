@@ -28,6 +28,11 @@ If among the nodes or patterns some become isolated because the other entities t
  at the end of the return data frame.
 These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
 }
+\examples{
+get_links(SA_instance, "patterns", SA_instance["patterns"])
+get_links(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+
+}
 \author{
 Gauthier Magnin
 }
