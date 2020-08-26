@@ -42,7 +42,7 @@ The default \code{Inf} corresponds to a pattern search without maximum size limi
 to the total period of observations (number of years).}
 }
 \value{
-New object of class \code{\link{SpectralAnalyzer}}.
+New object of class \code{SpectralAnalyzer}.
 }
 \description{
 Create and initialize an object of class \code{SpectralAnalyzer}.
@@ -73,6 +73,9 @@ names <- substances_classification[match(items_ids,
 items <- data.frame(item = items_ids, name = names, family = category_1)
 sa_object_2 <- spectral.analyzer(obs, items)
 
+}
+\seealso{
+\code{\link{SpectralAnalyzer}}, \code{\link{reset}}.
 }
 \author{
 Gauthier Magnin

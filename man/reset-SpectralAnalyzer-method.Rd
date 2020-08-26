@@ -15,12 +15,30 @@
 \description{
 Redefine the attributes of a spectral analyzer from a specific step.
 }
+\details{
+The steps of construction of a spectral analyzer are:
+\enumerate{
+  \item{Enumeration of separate observations per year.}
+  \item{Enumeration of the nodes and calculation of the number of occurrence.}
+  \item{Counting the links between nodes.}
+  \item{Elaboration of links between nodes.}
+  \item{Enumeration of separate patterns.}
+  \item{Linking nodes to patterns.}
+  \item{Characterization of patterns per year.}
+  \item{Computation of pattern characteristics.}
+  \item{Counting the links between patterns.}
+  \item{Elaboration of links between patterns.}
+}
+}
 \examples{
 ## Change one attribute (for instance, the pattern enumeration target) and
 ## enumerate the patterns again for a new analysis
 SA_instance["target"] <- "frequent itemsets"
 reset(SA_instance, from = 5)
 
+}
+\seealso{
+The \code{\link{SpectralAnalyzer}} constructor: \code{\link{spectral.analyzer}}.
 }
 \author{
 Gauthier Magnin

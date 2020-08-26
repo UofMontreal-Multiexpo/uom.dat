@@ -193,9 +193,10 @@ setMethod(f = "initialize",
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
 #' @param status_limit Time interval for which to characterize the status of the patterns in relation
 #'  to the total period of observations (number of years).
-#' @return New object of class \code{\link{SpectralAnalyzer}}.
+#' @return New object of class \code{SpectralAnalyzer}.
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{SpectralAnalyzer}}, \code{\link{reset}}.
 #' 
 #' @examples
 #' ## Creating a SpectralAnalyzer from a list of observations
@@ -245,10 +246,26 @@ setGeneric(name = "reset", def = function(object, from = 1){ standardGeneric("re
 #' 
 #' Redefine the attributes of a spectral analyzer from a specific step.
 #' 
+#' @details
+#' The steps of construction of a spectral analyzer are:
+#' \enumerate{
+#'   \item{Enumeration of separate observations per year.}
+#'   \item{Enumeration of the nodes and calculation of the number of occurrence.}
+#'   \item{Counting the links between nodes.}
+#'   \item{Elaboration of links between nodes.}
+#'   \item{Enumeration of separate patterns.}
+#'   \item{Linking nodes to patterns.}
+#'   \item{Characterization of patterns per year.}
+#'   \item{Computation of pattern characteristics.}
+#'   \item{Counting the links between patterns.}
+#'   \item{Elaboration of links between patterns.}
+#' }
+#' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param from Step from which to recompute the attributes.
 #' 
 #' @author Gauthier Magnin
+#' @seealso The \code{\link{SpectralAnalyzer}} constructor: \code{\link{spectral.analyzer}}.
 #' 
 #' @examples
 #' ## Change one attribute (for instance, the pattern enumeration target) and
