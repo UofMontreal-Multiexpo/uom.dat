@@ -3316,7 +3316,7 @@ setMethod(f = "get_non_isolates",
           })
 
 
-#' Search for complex nodes or patterns
+#' Search for complex nodes or patterns with regard to one category
 #' 
 #' Extract from the given nodes or patterns those which are complexes by the number of values with
 #'  which they are associated, with regard to one category.

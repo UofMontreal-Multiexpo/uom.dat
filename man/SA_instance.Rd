@@ -34,7 +34,7 @@ obs <- make_INRS_observations(oedb_sample, mode = 1,
                               additional = to_keep,
                               unique_values = TRUE)
 
-## Associating item identifiers with names and categories
+## Associating item identifiers with names and one category
 substances <- get_all_items(obs)
 families <- substances_classification[match(substances,
                                             substances_classification$CODE),

@@ -3,7 +3,7 @@
 \name{get_complexes,SpectralAnalyzer-method}
 \alias{get_complexes,SpectralAnalyzer-method}
 \alias{get_complexes}
-\title{Search for complex nodes or patterns}
+\title{Search for complex nodes or patterns with regard to one category}
 \usage{
 \S4method{get_complexes}{SpectralAnalyzer}(
   object,
