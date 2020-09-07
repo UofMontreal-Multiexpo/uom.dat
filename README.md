@@ -7,7 +7,7 @@ This project is about developing **R processing, analysis and visualization tool
 
 The development of these tools is part of a research study led by **Jérôme Lavoué** (Professor at [**University of Montreal**](https://recherche.umontreal.ca/english/home/), department of environmental health and occupational health) whose title is "Portrait of multiexposure situations in the workplace in Quebec from occupational exposure databases".
 
-Main analytical approaches are *Frequent Itemset Mining*, *Association Rules*, *Clustering* and *Spectrosome*.
+Main analytical approaches are *Frequent Itemset Mining*, *Association Rules*, *Clustering*, *Maximum Cumulative Ratio* and *Spectrosome*.
 
 
 ## Installation
@@ -16,7 +16,7 @@ To install the package **oedb.analysis.tools**:
 
 1. Clone the repository or download a ZIP copy.
 2. In RStudio, open the project file `oedb-analysis-tools.Rproj`.
-3. Install the required packages by running `install.packages(c("arules", "network", "sna", "ggsci"))`.
+3. Install the required packages by running `install.packages(c("arules", "ggsci", "mathjaxr", network", "sna"))`.
 4. In the "Build" menu, click on the "Install and Restart" item.
 
 

@@ -28,11 +28,14 @@ Imports:
     utils
 Suggests:
     knitr,
+    mathjaxr,
     rmarkdown
+RdMacros: mathjaxr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0
 Collate: 
     'data.R'
+    'mixer.R'
     'observation_maker.R'
     'oedb.analysis.tools-package.R'
     'utils.R'
