@@ -9,7 +9,7 @@ hazard_quotient(values, references)
 \arguments{
 \item{values}{Numeric vector or matrix. Values for which the hazard quotients are to be computed.}
 
-\item{references}{Numeric vector. Reference values associated with the values.}
+\item{references}{Numeric vector. Reference values associated with the \code{values}.}
 }
 \value{
 Vector or matrix (according to \code{values}) of computed hazard quotients.
@@ -18,7 +18,7 @@ Vector or matrix (according to \code{values}) of computed hazard quotients.
 Compute the hazard quotient as the ratio between a value and a reference value.
 }
 \details{
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. there is one
+If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
 reference value for each row of the matrix).
 
 \loadmathjax

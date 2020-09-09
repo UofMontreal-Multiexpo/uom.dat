@@ -10,7 +10,7 @@ hazard_index(hq)
 \arguments{
 \item{values}{Numeric vector or matrix. Values for which the hazard index is to be computed.}
 
-\item{references}{Numeric vector. Reference values associated with the values.}
+\item{references}{Numeric vector. Reference values associated with the \code{values}.}
 
 \item{hq}{Numeric vector or matrix. \strong{H}azard \strong{q}uotients on which to compute the hazard index(es).}
 }
@@ -22,23 +22,25 @@ Compute the hazard index as the sum of hazard quotients (i.e. the sum of ratios 
 reference values).
 }
 \details{
-If \code{values} is a matrix, the reference values are applied once on each column to compute the hazard
-quotients (i.e. it must have one reference value for each row of the matrix) before computing the
+Arguments \code{values} and \code{references} are used to compute the hazard quotients before computing the
 hazard index. Thus, call the function with the argument \code{hq} is faster.
+
+If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
+reference value for each row of the matrix).
 
 If \code{values} or \code{hq} is a matrix, one hazard index is computed on each column.
 
 \loadmathjax
 The hazard index of the vector \eqn{i} is given by:
 \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
-where \eqn{HQ} denotes the hazard quotients \code{hq} and \eqn{N} denotes the number of hazard quotients.
+where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
 
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
 }
 \note{
-The multiple usages proposed implies the argument \code{hq} to be explicitly named in the function call.
+Due to the multiple possible usages, the argument \code{hq} must be explicitly named in the function call.
 }
 \examples{
 hazard_index(c(1,2,3,4,5), c(1,2,3,4,5))

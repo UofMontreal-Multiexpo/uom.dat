@@ -10,7 +10,7 @@ missed_toxicity(mcr)
 \arguments{
 \item{values}{Numeric vector or matrix. Values for which the missed toxicity is to be computed.}
 
-\item{references}{Numeric vector. Reference values associated with the values.}
+\item{references}{Numeric vector. Reference values associated with the \code{values}.}
 
 \item{mcr}{Numeric value or vector. \strong{M}aximum \strong{c}umulative \strong{r}atio(s) for which to compute the
 missed toxicity.}
@@ -23,10 +23,12 @@ Compute the hazard missed if a cumulative risk assessment is not performed, give
 references generating the maximum cumulative ratio.
 }
 \details{
-If \code{values} is a matrix, the reference values are applied once on each column to compute the hazard
-indexes (i.e. it must have one reference value for each row of the matrix) before searching for the
-maximum hazard quotient, computing the maximum cumulative ratio then computing the missed toxicity.
-Thus, call the function with the argument \code{mcr} is faster.
+Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard index
+before searching for the maximum hazard quotient, computing the maximum cumulative ratio then
+computing the missed toxicity. Thus, call the function with the argument \code{mcr} is faster.
+
+If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
+reference value for each row of the matrix).
 
 If \code{values} is a matrix (or \code{mcr} is a vector larger than 1), one missed toxicity value is computed
 for each column (or value, respectively).
@@ -34,7 +36,7 @@ for each column (or value, respectively).
 \loadmathjax
 The missed toxicity of the vector \eqn{i} is given by:
 \mjdeqn{Missed toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
-where \eqn{MCR} denotes the maximum cumulative ratio \code{mcr}.
+where \eqn{MCR} denotes the maximum cumulative ratio.
 
 The maximum cumulative ratio of the vector \eqn{i} is given by:
 \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
@@ -53,7 +55,7 @@ The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
 }
 \note{
-The multiple usages proposed implies the argument \code{mcr} to be explicitly named in the function call.
+Due to the multiple possible usages, the argument \code{mcr} msut be explicitly named in the function call.
 }
 \examples{
 missed_toxicity(c(1,2,3,4,5), c(1,2,3,4,5))

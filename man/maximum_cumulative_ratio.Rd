@@ -10,13 +10,13 @@ maximum_cumulative_ratio(hi, mhq)
 \arguments{
 \item{values}{Numeric vector or matrix. Values for which the maximum cumulative ratio is to be computed.}
 
-\item{references}{Numeric vector. Reference values associated with the values.}
+\item{references}{Numeric vector. Reference values associated with the \code{values}.}
 
 \item{hi}{Numeric value or vector. \strong{H}azard \strong{i}ndex(es) on which to compute the maximum cumulative
 ratio(s).}
 
 \item{mhq}{Numeric value or vector. \strong{M}aximum \strong{h}azard \strong{q}uotient(s) associated with the hazard
-index(es).}
+index(es) \code{hi}.}
 }
 \value{
 Numeric value or vector (according to \code{values} or \code{hi} and \code{mhq}) of the maximum cumulative
@@ -28,10 +28,12 @@ It represents the magnitude of the hazard that is underestimated by not performi
 assessment, given the values and references generating the hazard index and maximum hazard quotient.
 }
 \details{
-If \code{values} is a matrix, the reference values are applied once on each column to compute the hazard
-indexes (i.e. it must have one reference value for each row of the matrix) before searching for the
-maximum hazard quotient then computing the maximum cumulative ratio. Thus, call the function with
-the arguments \code{hi} and \code{mhq} is faster.
+Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard index
+before searching for the maximum hazard quotient then computing the maximum cumulative ratio.
+Thus, call the function with the arguments \code{hi} and \code{mhq} is faster.
+
+If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
+reference value for each row of the matrix).
 
 If \code{values} is a matrix (or \code{hi} and \code{mhq} are vectors larger than 1), one maximum cumulative ratio
 is computed for each column (or value, respectively).
@@ -39,7 +41,7 @@ is computed for each column (or value, respectively).
 \loadmathjax
 The maximum cumulative ratio of the vector \eqn{i} is given by:
 \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-where \eqn{HI} denotes the hazard index \code{hi} and \eqn{MHQ} denotes the maximum hazard quotient \code{mhq}.
+where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
 
 The hazard index of the vector \eqn{i} is given by:
 \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
@@ -54,7 +56,7 @@ The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
 }
 \note{
-The multiple usages proposed implies the arguments \code{hi} and \code{mhq} to be explicitly named in the
+Due to the multiple possible usages, the arguments \code{hi} and \code{mhq} must be explicitly named in the
 function call.
 }
 \examples{

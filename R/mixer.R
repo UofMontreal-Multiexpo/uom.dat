@@ -1,12 +1,12 @@
 
-#### Maximum Cumulative Ratio approach ####
+#### Maximum Cumulative Ratio approach - main indicators ####
 
 #' Hazard Quotient (HQ)
 #' 
 #' Compute the hazard quotient as the ratio between a value and a reference value.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. there is one
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
 #' 
 #' \loadmathjax
@@ -15,7 +15,7 @@
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
 #' @param values Numeric vector or matrix. Values for which the hazard quotients are to be computed.
-#' @param references Numeric vector. Reference values associated with the values.
+#' @param references Numeric vector. Reference values associated with the `values`.
 #' @return Vector or matrix (according to `values`) of computed hazard quotients.
 #' 
 #' @author Gauthier Magnin
@@ -61,29 +61,31 @@ hazard_quotient = function(values, references) {
 #'  reference values).
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column to compute the hazard
-#'  quotients (i.e. it must have one reference value for each row of the matrix) before computing the
+#' Arguments `values` and `references` are used to compute the hazard quotients before computing the
 #'  hazard index. Thus, call the function with the argument `hq` is faster.
+#' 
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
 #' 
 #' If `values` or `hq` is a matrix, one hazard index is computed on each column.
 #' 
 #' \loadmathjax
 #' The hazard index of the vector \eqn{i} is given by:
 #'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
-#'  where \eqn{HQ} denotes the hazard quotients `hq` and \eqn{N} denotes the number of hazard quotients.
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
 #' 
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
 #' @note
-#' The multiple usages proposed implies the argument `hq` to be explicitly named in the function call.
+#' Due to the multiple possible usages, the argument `hq` must be explicitly named in the function call.
 #' 
 #' @usage
 #' hazard_index(values, references)
 #' hazard_index(hq)
 #' @param values Numeric vector or matrix. Values for which the hazard index is to be computed.
-#' @param references Numeric vector. Reference values associated with the values.
+#' @param references Numeric vector. Reference values associated with the `values`.
 #' @param hq Numeric vector or matrix. **H**azard **q**uotients on which to compute the hazard index(es).
 #' @return Numeric value or vector (according to `values` or `hq`) of the computed hazard index(es).
 #' 
@@ -115,32 +117,34 @@ hazard_index = function(values = NULL, references = NULL,
 
 #' Maximum Hazard Quotient (MHQ)
 #' 
-#' Search for the maximum of hazard quotients.
+#' Search for the maximum of hazard quotients, also called the primary hazard quotient.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column to compute the hazard
-#'  quotients (i.e. it must have one reference value for each row of the matrix) before searching for
+#' Arguments `values` and `references` are used to compute the hazard quotients before searching for
 #'  the maximum hazard quotient. Thus, call the function with the argument `hq` is faster.
+#' 
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
 #' 
 #' If `values` or `hq` is a matrix, one maximum hazard quotient is searched for each column.
 #' 
 #' \loadmathjax
 #' The maximum hazard quotient of the vector \eqn{i} is given by:
 #'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients `hq` and \eqn{N} denotes the number of hazard quotients.
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
 #' 
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
 #' @note
-#' The multiple usages proposed implies the argument `hq` to be explicitly named in the function call.
+#' Due to the multiple possible usages, the argument `hq` must be explicitly named in the function call.
 #' 
 #' @usage
 #' maximum_hazard_quotient(values, references)
 #' maximum_hazard_quotient(hq)
 #' @param values Numeric vector or matrix. Values for which to search for the maximum hazard quotient.
-#' @param references Numeric vector. Reference values associated with the values.
+#' @param references Numeric vector. Reference values associated with the `values`.
 #' @param hq Numeric vector or matrix. **H**azard **q**uotients on which to search for the maximum.
 #' @return Numeric value or vector (according to `values` or `hq`) of the maximum hazard quotient(s).
 #' 
@@ -178,10 +182,12 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
 #'  assessment, given the values and references generating the hazard index and maximum hazard quotient.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column to compute the hazard
-#'  indexes (i.e. it must have one reference value for each row of the matrix) before searching for the
-#'  maximum hazard quotient then computing the maximum cumulative ratio. Thus, call the function with
-#'  the arguments `hi` and `mhq` is faster.
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard index
+#'  before searching for the maximum hazard quotient then computing the maximum cumulative ratio.
+#'  Thus, call the function with the arguments `hi` and `mhq` is faster.
+#' 
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
 #' 
 #' If `values` is a matrix (or `hi` and `mhq` are vectors larger than 1), one maximum cumulative ratio
 #'  is computed for each column (or value, respectively).
@@ -189,7 +195,7 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
 #' \loadmathjax
 #' The maximum cumulative ratio of the vector \eqn{i} is given by:
 #'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index `hi` and \eqn{MHQ} denotes the maximum hazard quotient `mhq`.
+#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
 #' 
 #' The hazard index of the vector \eqn{i} is given by:
 #'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
@@ -204,18 +210,18 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
 #' @note
-#' The multiple usages proposed implies the arguments `hi` and `mhq` to be explicitly named in the
+#' Due to the multiple possible usages, the arguments `hi` and `mhq` must be explicitly named in the
 #'  function call.
 #' 
 #' @usage
 #' maximum_cumulative_ratio(values, references)
 #' maximum_cumulative_ratio(hi, mhq)
 #' @param values Numeric vector or matrix. Values for which the maximum cumulative ratio is to be computed.
-#' @param references Numeric vector. Reference values associated with the values.
+#' @param references Numeric vector. Reference values associated with the `values`.
 #' @param hi Numeric value or vector. **H**azard **i**ndex(es) on which to compute the maximum cumulative
 #'  ratio(s).
 #' @param mhq Numeric value or vector. **M**aximum **h**azard **q**uotient(s) associated with the hazard
-#'  index(es).
+#'  index(es) `hi`.
 #' @return Numeric value or vector (according to `values` or `hi` and `mhq`) of the maximum cumulative
 #'  ratio(s).
 #' 
@@ -252,10 +258,12 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
 #'  references generating the maximum cumulative ratio.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column to compute the hazard
-#'  indexes (i.e. it must have one reference value for each row of the matrix) before searching for the
-#'  maximum hazard quotient, computing the maximum cumulative ratio then computing the missed toxicity.
-#'  Thus, call the function with the argument `mcr` is faster.
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard index
+#'  before searching for the maximum hazard quotient, computing the maximum cumulative ratio then
+#'  computing the missed toxicity. Thus, call the function with the argument `mcr` is faster.
+#' 
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
 #' 
 #' If `values` is a matrix (or `mcr` is a vector larger than 1), one missed toxicity value is computed
 #'  for each column (or value, respectively).
@@ -263,7 +271,7 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
 #' \loadmathjax
 #' The missed toxicity of the vector \eqn{i} is given by:
 #'  \mjdeqn{Missed toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
-#'  where \eqn{MCR} denotes the maximum cumulative ratio `mcr`.
+#'  where \eqn{MCR} denotes the maximum cumulative ratio.
 #' 
 #' The maximum cumulative ratio of the vector \eqn{i} is given by:
 #'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
@@ -282,13 +290,13 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
 #' @note
-#' The multiple usages proposed implies the argument `mcr` to be explicitly named in the function call.
+#' Due to the multiple possible usages, the argument `mcr` msut be explicitly named in the function call.
 #' 
 #' @usage
 #' missed_toxicity(values, references)
 #' missed_toxicity(mcr)
 #' @param values Numeric vector or matrix. Values for which the missed toxicity is to be computed.
-#' @param references Numeric vector. Reference values associated with the values.
+#' @param references Numeric vector. Reference values associated with the `values`.
 #' @param mcr Numeric value or vector. **M**aximum **c**umulative **r**atio(s) for which to compute the
 #'  missed toxicity.
 #' @return Numeric value or vector (according to `values` or `mcr`) of the missed toxicity.
