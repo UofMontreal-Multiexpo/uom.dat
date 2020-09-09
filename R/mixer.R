@@ -771,7 +771,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
 #'             *Environment International*, 112, 77-84.
 #'             <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' @seealso [`thq_pairs_freq`], [`classify_mixtures`], [`top_hazard_quotient`], [`hazard_quotient`].
+#' @seealso [`thq_pairs_freq`], [`classify_mixture`], [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
 #' @examples
 #' thq_freq_by_group(c(a = 1, b = 2, c = 3, d = 4, e = 5), c(5,4,3,2,1))
@@ -802,7 +802,7 @@ thq_freq_by_group = function(values = NULL, references = NULL,
   
   if (is.null(thq)) {
     if (is.null(hq)) hq = hazard_quotient(values, references)
-    thq = top_hazard_quotient(hq = hq,  t = 1)
+    thq = top_hazard_quotient(hq = hq,  k = 1)
   }
   if (is.null(groups)) groups = classify_mixtures(values, references)
   

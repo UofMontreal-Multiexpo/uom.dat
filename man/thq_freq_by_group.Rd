@@ -94,7 +94,7 @@ An analysis of cumulative risks based on biomonitoring data for six phthalates u
 \url{https://doi.org/10.1016/j.envint.2017.12.008}.
 }
 \seealso{
-\code{\link{thq_pairs_freq}}, \code{\link{classify_mixtures}}, \code{\link{top_hazard_quotient}}, \code{\link{hazard_quotient}}.
+\code{\link{thq_pairs_freq}}, \code{\link{classify_mixture}}, \code{\link{top_hazard_quotient}}, \code{\link{hazard_quotient}}.
 }
 \author{
 Gauthier Magnin
