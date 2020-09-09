@@ -1,0 +1,131 @@
+---
+title: "List of datasets, functions, classes and methods"
+author: "Gauthier Magnin"
+date: "Last update: `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{List of datasets, functions, classes and methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The package help page: [oedb.analysis.tools](../html/oedb.analysis.tools-package.html)
+
+
+
+# Datasets
+
+Datasets used as examples:
+
+* [oedb_sample](../html/oedb_sample.html)
+* [substances_classification](../html/substances_classification.html)
+* [SA_instance](../html/SA_instance.html)
+
+
+
+# About observations
+
+Making observations:
+
+* [make_observations](../html/make_observations.html)
+* [make_INRS_observations](../html/make_INRS_observations.html)
+
+Search for observations:
+
+* [get_complex_obs](../html/get_complex_obs.html)
+* [get_simple_obs](../html/get_simple_obs.html)
+* [get_obs_from_items](../html/get_obs_from_items.html)
+* [get_obs_from_info](../html/get_obs_from_info.html)
+
+Search in observations:
+
+* [get_all_items](../html/get_all_items.html)
+* [get_items_from_info](../html/get_items_from_info.html)
+* [get_info_from_items](../html/get_info_from_items.html)
+
+Computations on observations:
+
+* [co_occurrence_proportions](../html/co_occurrence_proportions.html)
+
+
+
+# About spectral analysis
+
+The class: [SpectralAnalyzer](../html/SpectralAnalyzer-class.html)
+
+Making *SpectralAnalyzer* objects:
+
+* [spectral.analyzer](../html/spectral.analyzer.html)
+* [reset](../html/reset-SpectralAnalyzer-method.html)
+* [\[<-](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html)
+
+Making charts:
+
+* [spectrosome_chart](../html/spectrosome_chart-SpectralAnalyzer-method.html)
+* [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
+* [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
+* [tree_chart](../html/tree_chart-SpectralAnalyzer-method.html)
+
+Search for nodes or patterns:
+
+* [get_complexes](../html/get_complexes-SpectralAnalyzer-method.html)
+* [get_isolates](../html/get_isolates-SpectralAnalyzer-method.html)
+* [get_non_isolates](../html/get_non_isolates-SpectralAnalyzer-method.html)
+* [extract_nodes_from_items](../html/extract_nodes_from_items-SpectralAnalyzer-method.html)
+* [extract_nodes_from_characteristic](../html/extract_nodes_from_characteristic-SpectralAnalyzer-method.html)
+* [extract_nodes_from_category](../html/extract_nodes_from_category-SpectralAnalyzer-method.html)
+* [extract_patterns_from_items](../html/extract_patterns_from_items-SpectralAnalyzer-method.html)
+* [extract_patterns_from_characteristic](../html/extract_patterns_from_characteristic-SpectralAnalyzer-method.html)
+* [extract_patterns_from_status](../html/extract_patterns_from_status-SpectralAnalyzer-method.html)
+* [extract_patterns_from_category](../html/extract_patterns_from_category-SpectralAnalyzer-method.html)
+
+Search for links between nodes or between patterns:
+
+* [get_links](../html/get_links-SpectralAnalyzer-method.html)
+
+Computations on spectrosomes:
+
+* [degree](../html/degree-SpectralAnalyzer-method.html)
+* [network_density](../html/network_density-SpectralAnalyzer-method.html)
+
+Saving nodes or patterns:
+
+* [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
+
+
+
+# About association rules and sets
+
+Extracting and saving rules:
+
+* [extract_rules](../html/extract_rules-SpectralAnalyzer-method.html)
+* [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
+
+Switching between mathematical notation and vector notation for sets:
+
+* [vector_notation](../html/vector_notation.html)
+* [set_notation](../html/set_notation.html)
+
+
+
+# About the maximum cumulative ratio approach
+
+Computation of main indicators:
+
+* [hazard_quotient](../html/hazard_quotient.html)
+* [hazard_index](../html/hazard_index.html)
+* [maximum_hazard_quotient](../html/maximum_hazard_quotient.html)
+* [maximum_cumulative_ratio](../html/maximum_cumulative_ratio.html)
+* [missed_toxicity](../html/missed_toxicity.html)
+
+Computation of additional indicators:
+
+* [reciprocal_of_mcr](../html/reciprocal_of_mcr.html)
+* [top_hazard_quotient](../html/top_hazard_quotient.html)
+* [thq_pairs_freq](../html/thq_pairs_freq.html)
+* [classify_mixture](../html/classify_mixture.html)
+* [thq_freq_by_group](../html/thq_freq_by_group.html)
+
+
+
+---

@@ -24,6 +24,8 @@ To install the package **oedb.analysis.tools**:
 
 In addition to the documentation of the package, data and functions (accessible by the `help` function), the **doc** directory contains:
 
+* An organized list of the datasets, functions, classes and methods, in the file `list_of_help_pages.html`.
+
 * An example of analysis, presented in the file `spectral_analysis_example.nb.html`.
 
 * A presentation of the data structures used by the **SpectralAnalyzer** class (attributes, function parameters and function returns) in the file `Types_of_attributes_and_methods.pdf`.

@@ -1746,7 +1746,7 @@ summary {
 
 <h1 class="title toc-ignore">Spectral analysis and observation processing example</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2020-08-25</h4>
+<h4 class="date">Last update: 2020-09-09</h4>
 
 </div>
 
@@ -1791,10 +1791,12 @@ summary {
 <li><a href="#some-chart-alternatives">5.3. Some chart alternatives</a></li>
 <li><a href="#extracting-association-rules">5.4. Extracting association rules</a></li>
 </ul></li>
-<li><a href="#list-of-functions-and-datasets">List of functions and datasets</a><ul>
+<li><a href="#list-of-datasets-functions-classes-and-methods">List of datasets, functions, classes and methods</a><ul>
+<li><a href="#datasets">Datasets</a></li>
 <li><a href="#about-observations">About observations</a></li>
 <li><a href="#about-spectral-analysis">About spectral analysis</a></li>
 <li><a href="#about-association-rules-and-sets">About association rules and sets</a></li>
+<li><a href="#about-the-maximum-cumulative-ratio-approach">About the maximum cumulative ratio approach</a></li>
 </ul></li>
 </ul>
 </div>
@@ -1805,7 +1807,7 @@ summary {
 <li>Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018). The spectrosome of occupational health problems. <em>PLoS ONE</em> 13(1): e0190196. <a href="https://doi.org/10.1371/journal.pone.0190196" class="uri">https://doi.org/10.1371/journal.pone.0190196</a></li>
 <li>Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020). Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration. <em>Annals of Work Exposures and Health</em>, Volume 64, Issue 4, May 2020, Pages 402–415. <a href="https://doi.org/10.1093/annweh/wxaa008" class="uri">https://doi.org/10.1093/annweh/wxaa008</a>.</li>
 </ul>
-<p>For more details about the functions used throughout this example (use of the parameters, other parameters and default values), it is recommended to consult the help pages of the functions along with it. Help pages can be access using the <code>help</code> function in your console or by referring to the <a href="#list-of-functions-and-datasets">List of functions and datasets</a> section of this document.</p>
+<p>For more details about the functions used throughout this example (use of the parameters, other parameters and default values), it is recommended to consult the help pages of the functions along with it. Help pages can be access using the <code>help</code> function in your console or by referring to the <a href="#list-of-datasets-functions-classes-and-methods">List of datasets, functions, classes and methods</a> section of this document.</p>
 <div id="preparation-of-data-and-spectral-analysis" class="section level1">
 <h1>1. Preparation of data and spectral analysis</h1>
 <div id="loading-package-and-look-at-the-example-data" class="section level2">
@@ -3270,14 +3272,18 @@ save_characteristics(sa_object, &quot;rules&quot;, rules_1,
 <!-- rnb-text-begin -->
 </div>
 </div>
-<div id="list-of-functions-and-datasets" class="section level1">
-<h1>List of functions and datasets</h1>
-<p>Datasets:</p>
+<div id="list-of-datasets-functions-classes-and-methods" class="section level1">
+<h1>List of datasets, functions, classes and methods</h1>
+<p>The package help page: <a href="../html/oedb.analysis.tools-package.html">oedb.analysis.tools</a></p>
+<div id="datasets" class="section level2">
+<h2>Datasets</h2>
+<p>Datasets used as examples:</p>
 <ul>
 <li><a href="../html/oedb_sample.html">oedb_sample</a></li>
 <li><a href="../html/substances_classification.html">substances_classification</a></li>
 <li><a href="../html/SA_instance.html">SA_instance</a></li>
 </ul>
+</div>
 <div id="about-observations" class="section level2">
 <h2>About observations</h2>
 <p>Making observations:</p>
@@ -3310,6 +3316,7 @@ save_characteristics(sa_object, &quot;rules&quot;, rules_1,
 <ul>
 <li><a href="../html/spectral.analyzer.html">spectral.analyzer</a></li>
 <li><a href="../html/reset-SpectralAnalyzer-method.html">reset</a></li>
+<li><a href="../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html">[&lt;-</a></li>
 </ul>
 <p>Making charts:</p>
 <ul>
@@ -3356,6 +3363,25 @@ save_characteristics(sa_object, &quot;rules&quot;, rules_1,
 <ul>
 <li><a href="../html/vector_notation.html">vector_notation</a></li>
 <li><a href="../html/set_notation.html">set_notation</a></li>
+</ul>
+</div>
+<div id="about-the-maximum-cumulative-ratio-approach" class="section level2">
+<h2>About the maximum cumulative ratio approach</h2>
+<p>Computation of main indicators:</p>
+<ul>
+<li><a href="../html/hazard_quotient.html">hazard_quotient</a></li>
+<li><a href="../html/hazard_index.html">hazard_index</a></li>
+<li><a href="../html/maximum_hazard_quotient.html">maximum_hazard_quotient</a></li>
+<li><a href="../html/maximum_cumulative_ratio.html">maximum_cumulative_ratio</a></li>
+<li><a href="../html/missed_toxicity.html">missed_toxicity</a></li>
+</ul>
+<p>Computation of additional indicators:</p>
+<ul>
+<li><a href="../html/reciprocal_of_mcr.html">reciprocal_of_mcr</a></li>
+<li><a href="../html/top_hazard_quotient.html">top_hazard_quotient</a></li>
+<li><a href="../html/thq_pairs_freq.html">thq_pairs_freq</a></li>
+<li><a href="../html/classify_mixture.html">classify_mixture</a></li>
+<li><a href="../html/thq_freq_by_group.html">thq_freq_by_group</a></li>
 </ul>
 <hr />
 <!-- rnb-text-end -->

@@ -12,7 +12,7 @@ The example of analysis proposed in this document assumes the reader is familiar
 * Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018). The spectrosome of occupational health problems. *PLoS ONE* 13(1): e0190196. <https://doi.org/10.1371/journal.pone.0190196>
 * Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020). Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration. *Annals of Work Exposures and Health*, Volume 64, Issue 4, May 2020, Pages 402–415. <https://doi.org/10.1093/annweh/wxaa008>.
 
-For more details about the functions used throughout this example (use of the parameters, other parameters and default values), it is recommended to consult the help pages of the functions along with it. Help pages can be access using the `help` function in your console or by referring to the [List of functions and datasets](#list-of-functions-and-datasets) section of this document.
+For more details about the functions used throughout this example (use of the parameters, other parameters and default values), it is recommended to consult the help pages of the functions along with it. Help pages can be access using the `help` function in your console or by referring to the [List of datasets, functions, classes and methods](#list-of-datasets-functions-classes-and-methods) section of this document.
 
 
 
@@ -875,9 +875,13 @@ save_characteristics(sa_object, "rules", rules_1,
 
 
 
-# List of functions and datasets
+# List of datasets, functions, classes and methods
 
-Datasets:
+The package help page: [oedb.analysis.tools](../html/oedb.analysis.tools-package.html)
+
+## Datasets
+
+Datasets used as examples:
 
 * [oedb_sample](../html/oedb_sample.html)
 * [substances_classification](../html/substances_classification.html)
@@ -917,6 +921,7 @@ Making *SpectralAnalyzer* objects:
 
 * [spectral.analyzer](../html/spectral.analyzer.html)
 * [reset](../html/reset-SpectralAnalyzer-method.html)
+* [\[<-](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html)
 
 Making charts:
 
@@ -963,6 +968,25 @@ Switching between mathematical notation and vector notation for sets:
 
 * [vector_notation](../html/vector_notation.html)
 * [set_notation](../html/set_notation.html)
+
+
+## About the maximum cumulative ratio approach
+
+Computation of main indicators:
+
+* [hazard_quotient](../html/hazard_quotient.html)
+* [hazard_index](../html/hazard_index.html)
+* [maximum_hazard_quotient](../html/maximum_hazard_quotient.html)
+* [maximum_cumulative_ratio](../html/maximum_cumulative_ratio.html)
+* [missed_toxicity](../html/missed_toxicity.html)
+
+Computation of additional indicators:
+
+* [reciprocal_of_mcr](../html/reciprocal_of_mcr.html)
+* [top_hazard_quotient](../html/top_hazard_quotient.html)
+* [thq_pairs_freq](../html/thq_pairs_freq.html)
+* [classify_mixture](../html/classify_mixture.html)
+* [thq_freq_by_group](../html/thq_freq_by_group.html)
 
 
 
