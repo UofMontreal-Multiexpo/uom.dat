@@ -28,7 +28,7 @@ In addition to the documentation of the package, data and functions (accessible 
 
 * An example of analysis, presented in the file `spectral_analysis_example.nb.html`.
 
-* A presentation of the data structures used by the **SpectralAnalyzer** class (attributes, function parameters and function returns) in the file `Types_of_attributes_and_methods.pdf`.
+* A presentation of the data structures used by the **SpectralAnalyzer** class (attributes, function parameters and function returns) in the file `types_of_attributes_and_methods.pdf`.
 
 These files can be accessed using `help(package = "oedb.analysis.tools")` then clicking on "User guides, package vignettes and other documentation".
 
