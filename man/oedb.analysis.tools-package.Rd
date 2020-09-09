@@ -6,9 +6,9 @@
 \alias{oedb.analysis.tools-package}
 \title{oedb.analysis.tools: Occupational Exposure Databases Analysis Tools for Multiexposure}
 \description{
-R processing, analysis and visualization tools for occupational exposure
-    databases, especially for multiexposure. Main analytical approaches are
-    Frequent Itemset Mining, Association Rules, Clustering and Spectrosome.
+R processing, analysis and visualization tools for occupational exposure databases,
+    especially for multiexposure. Main analytical approaches are Frequent Itemset Mining, Association
+    Rules, Clustering, Maximum Cumulative Ratio and Spectrosome.
 }
 \details{
 For a complete list of functions, classes and methods, use \code{library(help = "oedb.analysis.tools")}.
@@ -18,4 +18,3 @@ Gauthier Magnin, Delphine Bosson-Rieutort
  
  Maintainer: Gauthier Magnin \email{gauthier.magnin@gmail.com}
 }
-\keyword{internal}
