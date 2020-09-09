@@ -3,3 +3,6 @@
 .Rhistory
 .RData
 .Ruserdata
+# Folders relating to package development
+/doc
+Meta
