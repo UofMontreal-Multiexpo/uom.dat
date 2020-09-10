@@ -14,7 +14,7 @@
 One of \code{"nodes"}, \code{"patterns"}.}
 
 \item{characteristics}{Data frame of the characteristics of the nodes or patterns whose isolated
-are to be sought.}
+are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
 }
 \value{
 Subset of the data frame that corresponds to isolated entities.

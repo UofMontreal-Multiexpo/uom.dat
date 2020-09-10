@@ -16,7 +16,8 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{nodes_characteristics}{Data frame of nodes and their characteristics.}
+\item{nodes_characteristics}{Data frame of nodes and their characteristics.
+Any subset of \code{object["nodes"]}.}
 
 \item{characteristic}{Name of the characteristic on which to do the search.
 One of \code{"length"}, \code{"weight"}.}

@@ -16,7 +16,8 @@ spectral.analyzer(
 }
 \arguments{
 \item{observations}{List of observations containing the items corresponding to each observation.
-Each observation is itself a list in the form \code{list( CODE = character(), YEAR = numeric )}.
+Each observation is itself a list containing at least two elements named \code{"CODE"} and
+\code{"YEAR"}. \code{"YEAR"} must be numeric and \code{"CODE"} must be character or numeric values.
 Values of \code{CODE} must not contain the character \code{"/"}.
 An observation can contain any additional information in its list.}
 

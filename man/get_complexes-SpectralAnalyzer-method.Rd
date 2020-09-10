@@ -21,7 +21,7 @@
 One of \code{"nodes"}, \code{"patterns"}.}
 
 \item{characteristics}{Data frame of the characteristics of the nodes or patterns whose complexes
-are to be sought.}
+are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
 
 \item{category}{Name or number of the category on which to search (numbering according to the order
 of the columns of \code{object["items_categories"]}).}

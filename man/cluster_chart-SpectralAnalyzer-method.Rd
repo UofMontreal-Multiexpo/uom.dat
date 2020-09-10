@@ -31,7 +31,7 @@
 One of \code{"nodes"}, \code{"patterns"}.}
 
 \item{characteristics}{Characteristics of nodes or patterns of which one of the clusters is to be
-plotted.}
+plotted. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
 
 \item{item}{Identification code of the item whose cluster is to be plotted.}
 

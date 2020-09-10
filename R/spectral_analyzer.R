@@ -175,7 +175,8 @@ setMethod(f = "initialize",
 #'  specific denomination.
 #' 
 #' @param observations List of observations containing the items corresponding to each observation.
-#'  Each observation is itself a list in the form \code{list( CODE = character(), YEAR = numeric )}.
+#'  Each observation is itself a list containing at least two elements named \code{"CODE"} and
+#'  \code{"YEAR"}. \code{"YEAR"} must be numeric and \code{"CODE"} must be character or numeric values.
 #'  Values of \code{CODE} must not contain the character \code{"/"}.
 #'  An observation can contain any additional information in its list.
 #' @param items Data frame associating a name (column \code{name}) and one or more categories
@@ -1381,6 +1382,7 @@ setMethod(f = "define_dynamic_status",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose spectrum is to be plotted.
+#'  Any subset of \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame?
 #'  One of \code{"original"}, \code{"new"}. \cr
 #'  \code{"original"} to use the original identifiers.
@@ -1456,6 +1458,7 @@ setMethod(f = "spectrum_chart",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose spectrum is to be plotted.
+#'  Any subset of \code{object["patterns"]}.
 #' @param weights_by_node_type Data frame containing for each pattern, its wieght in complexe nodes
 #'  and its weight in simple nodes.
 #' @param title Chart title.
@@ -1648,6 +1651,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param entities Type of entities for which to plot the spectrosome (nodes or patterns).
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Characteristics of nodes or patterns whose spectrosome is to be plotted.
+#'  Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
 #'  return data frames? One of \code{"original"}, \code{"new"}. \cr
 #'  \code{"original"} to use the original identifiers.
@@ -2274,7 +2278,7 @@ setMethod(f = "cluster_text",
 #' @param entities Type of entities for which to plot one of the clusters (nodes or patterns).
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Characteristics of nodes or patterns of which one of the clusters is to be
-#'  plotted.
+#'  plotted. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
 #' @param item Identification code of the item whose cluster is to be plotted.
 #' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
 #'  return data frames? One of \code{"original"}, \code{"new"}. \cr
@@ -2466,6 +2470,7 @@ setMethod(f = "degree",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose tree is to be plotted.
+#'  Any subset of \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame?
 #'  One of \code{"original"}, \code{"new"}. \cr
 #'  \code{"original"} to use the original identifiers.
@@ -2583,6 +2588,7 @@ setMethod(f = "tree_chart",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose tree is to be plotted.
+#'  Any subset of \code{object["patterns"]}.
 #' @param items_category Data frame of items and one associated category.
 #' @param category Name of the category to represent on the tree, used as the legend title.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
@@ -2990,6 +2996,7 @@ setMethod(f = "save_characteristics",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param nodes_characteristics Data frame of nodes and their characteristics.
+#'  Any subset of \code{object["nodes"]}.
 #' @param items Sought items (one or more).
 #' @param presence Item presence condition for a node to be extracted.
 #'  One of \code{"all"}, \code{"any"}.
@@ -3032,6 +3039,7 @@ setMethod(f = "extract_nodes_from_items",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param nodes_characteristics Data frame of nodes and their characteristics.
+#'  Any subset of \code{object["nodes"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"length"}, \code{"weight"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
@@ -3086,6 +3094,7 @@ setMethod(f = "extract_nodes_from_characteristic",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param nodes_characteristics Data frame of nodes and their characteristics.
+#'  Any subset of \code{object["nodes"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the parameter \code{category}.
@@ -3184,6 +3193,7 @@ setMethod(f = "check_access_for_category",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
+#'  Any subset of \code{object["patterns"]}.
 #' @param items Sought items (one or more).
 #' @param presence Item presence condition for a pattern to be extracted.
 #'  One of \code{"all"}, \code{"any"}.
@@ -3228,6 +3238,7 @@ setMethod(f = "extract_patterns_from_items",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
+#'  Any subset of \code{object["patterns"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}
 #'  See \code{\link{extract_patterns_from_status}} to search by \code{"status"}.
@@ -3284,6 +3295,7 @@ setMethod(f = "extract_patterns_from_characteristic",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
+#'  Any subset of \code{object["patterns"]}.
 #' @param value Status value sought (one or more)
 #' @param condition Search condition. One of \code{"EQ"}, \code{"NE"}.
 #'  \describe{
@@ -3325,6 +3337,7 @@ setMethod(f = "extract_patterns_from_status",
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
+#'  Any subset of \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the argument \code{category}.
@@ -3395,7 +3408,7 @@ setMethod(f = "extract_patterns_from_category",
 #' @param entities Type of entities to search for links.
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Data frame of the characteristics of the nodes or patterns whose links are
-#'  to be sought.
+#'  to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
 #' @return Data frame associating the linked nodes or linked patterns.
 #' 
 #' @author Gauthier Magnin
@@ -3472,7 +3485,7 @@ setMethod(f = "get_links",
 #' @param entities Type of entities to search for isolated.
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Data frame of the characteristics of the nodes or patterns whose isolated
-#'  are to be sought.
+#'  are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
 #' @return Subset of the data frame that corresponds to isolated entities.
 #' 
 #' @author Gauthier Magnin
@@ -3502,7 +3515,7 @@ setMethod(f = "get_isolates",
 #' @param entities Type of entities to search for non-isolated.
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Data frame of the characteristics of the nodes or patterns whose non-isolated
-#'  are to be sought.
+#'  are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
 #' @return Subset of the data frame that corresponds to non-isolated entities.
 #' 
 #' @author Gauthier Magnin
@@ -3538,7 +3551,7 @@ setMethod(f = "get_non_isolates",
 #' @param entities Type of entities to search for complexes.
 #'  One of \code{"nodes"}, \code{"patterns"}.
 #' @param characteristics Data frame of the characteristics of the nodes or patterns whose complexes
-#'  are to be sought.
+#'  are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param target Condition for a node or a pattern to be extracted.

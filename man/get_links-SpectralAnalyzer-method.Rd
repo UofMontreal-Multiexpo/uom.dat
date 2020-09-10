@@ -14,7 +14,7 @@
 One of \code{"nodes"}, \code{"patterns"}.}
 
 \item{characteristics}{Data frame of the characteristics of the nodes or patterns whose links are
-to be sought.}
+to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
 }
 \value{
 Data frame associating the linked nodes or linked patterns.

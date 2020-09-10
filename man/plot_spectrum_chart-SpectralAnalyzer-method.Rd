@@ -15,7 +15,8 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Patterns (and their characteristics) whose spectrum is to be plotted.}
+\item{patterns_characteristics}{Patterns (and their characteristics) whose spectrum is to be plotted.
+Any subset of \code{object["patterns"]}.}
 
 \item{weights_by_node_type}{Data frame containing for each pattern, its wieght in complexe nodes
 and its weight in simple nodes.}

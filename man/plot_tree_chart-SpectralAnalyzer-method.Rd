@@ -21,7 +21,8 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Patterns (and their characteristics) whose tree is to be plotted.}
+\item{patterns_characteristics}{Patterns (and their characteristics) whose tree is to be plotted.
+Any subset of \code{object["patterns"]}.}
 
 \item{items_category}{Data frame of items and one associated category.}
 

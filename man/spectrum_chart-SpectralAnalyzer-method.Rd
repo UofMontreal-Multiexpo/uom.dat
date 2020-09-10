@@ -17,7 +17,8 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Patterns (and their characteristics) whose spectrum is to be plotted.}
+\item{patterns_characteristics}{Patterns (and their characteristics) whose spectrum is to be plotted.
+Any subset of \code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame?
 One of \code{"original"}, \code{"new"}. \cr

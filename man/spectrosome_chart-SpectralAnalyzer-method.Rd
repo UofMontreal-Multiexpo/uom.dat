@@ -33,7 +33,8 @@
 \item{entities}{Type of entities for which to plot the spectrosome (nodes or patterns).
 One of \code{"nodes"}, \code{"patterns"}.}
 
-\item{characteristics}{Characteristics of nodes or patterns whose spectrosome is to be plotted.}
+\item{characteristics}{Characteristics of nodes or patterns whose spectrosome is to be plotted.
+Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the nodes or patterns on the chart and in the
 return data frames? One of \code{"original"}, \code{"new"}. \cr

@@ -16,7 +16,8 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Data frame of patterns and their characteristics.}
+\item{patterns_characteristics}{Data frame of patterns and their characteristics.
+Any subset of \code{object["patterns"]}.}
 
 \item{characteristic}{Name of the characteristic on which to do the search.
 One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}
