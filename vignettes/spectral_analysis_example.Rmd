@@ -42,10 +42,10 @@ Here is the help page describing these data (accessible using `help(oedb_sample)
 
 Defining a set of work situations...
 ```{r}
-work_situations = data.frame(WS_ID = c(1, 2, 2, 3, 3),
-                             JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
-                             JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
-                             stringsAsFactors = FALSE)
+work_situations <- data.frame(WS_ID = c(1, 2, 2, 3, 3),
+                              JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
+                              JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
+                              stringsAsFactors = FALSE)
 work_situations
 ```
 These are work situations the user could identify beforehand. **The data frame must have a *WS_ID* column to identify the different work situations described.** The other columns correspond to the variables to use to describe a work situation and have the same names as the variables in the database used.
@@ -55,13 +55,13 @@ For this fictitious example, the variables named *JOB.TITLE* and *JOB.TASK* are 
 
 Defining the set of variables used to search for situations that have not been described in the previous data frame...
 ```{r}
-variable_names = c("JOB.TITLE", "JOB.TASK")
+variable_names <- c("JOB.TITLE", "JOB.TASK")
 ```
 Each combination of these variables will be considered as a new work situation.
 
 Defining the set of information to be kept in the observation structure...
 ```{r}
-additional = c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
+additional <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
 ```
 This is additional information which is not useful for spectral analysis but which allows to find a posteriori the context associated with the observations.
 
@@ -72,10 +72,10 @@ There are 4 possibilities here:
 
 1. A single observation per inspection in an establisment...
 ```{r}
-observations1 = make_observations(oedb_sample,
-                                  by = "ID",
-                                  additional = c("CODE", additional),
-                                  unique_values = TRUE)
+observations1 <- make_observations(oedb_sample,
+                                   by = "ID",
+                                   additional = c("CODE", additional),
+                                   unique_values = TRUE)
 
 # Print the number of observations
 cat(length(observations1), "observations.\n")
@@ -87,11 +87,11 @@ observations1[14]
 
 2. For one inspection, search of the work situations described previously...
 ```{r}
-observations2 = make_INRS_observations(oedb_sample,
-                                       mode = 2,
-                                       work_situations = work_situations,
-                                       additional = additional,
-                                       unique_values = TRUE)
+observations2 <- make_INRS_observations(oedb_sample,
+                                        mode = 2,
+                                        work_situations = work_situations,
+                                        additional = additional,
+                                        unique_values = TRUE)
 
 # Print the number of observations
 cat(length(observations2), "observations.\n")
@@ -103,11 +103,11 @@ observations2[2]
 
 3. For one inspection, as many work situations as different *JOB.TITLE*-*JOB.TASK* pairs...
 ```{r}
-observations3 = make_INRS_observations(oedb_sample,
-                                       mode = 3,
-                                       variable_names = variable_names,
-                                       additional = additional,
-                                       unique_values = TRUE)
+observations3 <- make_INRS_observations(oedb_sample,
+                                        mode = 3,
+                                        variable_names = variable_names,
+                                        additional = additional,
+                                        unique_values = TRUE)
 
 # Print the number of observations
 cat(length(observations3), "observations.\n")
@@ -119,12 +119,12 @@ observations3[2]
 
 4. Combination of points 2 and 3: search of the work situations described previously and one observation per situation not described (*JOB.TITLE*-*JOB.TASK* pair) concerning the remaining samples...
 ```{r}
-observations4 = make_INRS_observations(oedb_sample,
-                                       mode = 1,
-                                       work_situations = work_situations,
-                                       variable_names = variable_names,
-                                       additional = additional,
-                                       unique_values = TRUE)
+observations4 <- make_INRS_observations(oedb_sample,
+                                        mode = 1,
+                                        work_situations = work_situations,
+                                        variable_names = variable_names,
+                                        additional = additional,
+                                        unique_values = TRUE)
 
 # Print the number of observations
 cat(length(observations4), "observations.\n")
@@ -138,7 +138,7 @@ observations4[2]
 
 For the rest of the example, use of the last one...
 ```{r}
-observations = observations4
+observations <- observations4
 ```
 
 
@@ -155,13 +155,13 @@ substances_classification
 Classification of the substances from the observations according to their subfamily...
 ```{r}
 # Search for separate substances
-substances = get_all_items(observations)
+substances <- get_all_items(observations)
 # Search for the subfamily associated to each substance
-families = substances_classification$SUBFAMILY[match(substances, substances_classification$CODE)]
+families <- substances_classification$SUBFAMILY[match(substances, substances_classification$CODE)]
 # As a precaution, assignment of a specific value to substances for which no family has been found
-families[is.na(families)] = "Unknown"
+families[is.na(families)] <- "Unknown"
 # Search for the name associated to each substance
-names = substances_classification$NAME[match(substances, substances_classification$CODE)]
+names <- substances_classification$NAME[match(substances, substances_classification$CODE)]
 
 # Print the number of separate substances
 cat(length(substances), "substances.")
@@ -181,9 +181,9 @@ unique(families)
 
 Creation of a table associating each substance with its name and some categories...
 ```{r}
-items = data.frame(item = substances,
-                   name = names,
-                   family = families)
+items <- data.frame(item = substances,
+                    name = names,
+                    family = families)
 items
 ```
 
@@ -199,7 +199,7 @@ Add other variables to the data frame to associate additional categories.
 
 Use of the default values to create a spectral analyzer (see the documentation for function *spectral.analyzer()*)...
 ```{r}
-sa_object = spectral.analyzer(observations, items)
+sa_object <- spectral.analyzer(observations, items)
 ```
 
 The execution time for each step is displayed in the form [01h 22m 05s].
@@ -231,7 +231,7 @@ To know more about the types of attributes and methods variables, see *Types_of_
 
 Let's create a directory for the outputs...
 ```{r}
-directory = "./output/"
+directory <- "./output/"
 dir.create(directory)
 ```
 
@@ -269,16 +269,16 @@ save_characteristics(sa_object, "patterns", sa_object["patterns"],
 
 ```{r}
 # Let's organize it a little bit more
-directory = "./output/spec_nodes/"
+directory <- "./output/spec_nodes/"
 dir.create(directory)
 ```
 
 Creation of the spectrosome of the nodes...
 ```{r}
-spectrosome = spectrosome_chart(sa_object, "nodes", sa_object["nodes"],
-                                path = directory,
-                                name = "spectrosome_of_nodes.png",
-                                title = "Network of nodes")
+spectrosome <- spectrosome_chart(sa_object, "nodes", sa_object["nodes"],
+                                 path = directory,
+                                 name = "spectrosome_of_nodes.png",
+                                 title = "Network of nodes")
 ```
 ![Fig. 2: Spectrosome of the nodes.](./output/spec_nodes/spectrosome_of_nodes.png)
 
@@ -311,11 +311,11 @@ spectrosome[["edges"]]
 
 Extraction of the node cluster relating to the item *3146*...
 ```{r}
-item = 3146
-cluster = cluster_chart(sa_object, "nodes", sa_object["nodes"], item,
-                        path = directory,
-                        name = paste0("node_cluster_of_", item, ".png"),
-                        title = paste("Network cluster of", item))
+item <- 3146
+cluster <- cluster_chart(sa_object, "nodes", sa_object["nodes"], item,
+                         path = directory,
+                         name = paste0("node_cluster_of_", item, ".png"),
+                         title = paste("Network cluster of", item))
 ```
 **Note that no graphic is created and *cluster* is *NULL* if none or only one node contains the desired substance (which is here the substance having the code *3146*).**
 
@@ -350,16 +350,16 @@ cluster[["edges"]]
 ### 3.1.1. Spectrum
 
 ```{r}
-directory = "./output/spec_patterns/"
+directory <- "./output/spec_patterns/"
 dir.create(directory)
 ```
 
 Creation of the pattern spectrum...
 ```{r}
-spectrum = spectrum_chart(sa_object, sa_object["patterns"],
-                         path = directory,
-                         name = "spectrum_of_patterns.pdf",
-                         title = "Spectrum of patterns")
+spectrum <- spectrum_chart(sa_object, sa_object["patterns"],
+                           path = directory,
+                           name = "spectrum_of_patterns.pdf",
+                           title = "Spectrum of patterns")
 ```
 ![Fig. 4: Spectrum of patterns.](./img/spectrum_of_patterns.png)
 
@@ -377,10 +377,10 @@ Patterns presented in this spectrum are the ones already saved before as "sao.pa
 
 Creation of the spectrosome of the patterns...
 ```{r}
-spectrosome = spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
-                                path = directory,
-                                name = "spectrosome_of_patterns.png",
-                                title = "Network of patterns")
+spectrosome <- spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
+                                 path = directory,
+                                 name = "spectrosome_of_patterns.png",
+                                 title = "Network of patterns")
 ```
 ![Fig. 5: Spectrosome of the patterns.](./output/spec_patterns/spectrosome_of_patterns.png)
 
@@ -412,12 +412,12 @@ cat("Network density:", network_density(sa_object, spectrosome[["edges"]]))
 
 Creation of the multi-association tree...
 ```{r}
-tree = tree_chart(sa_object, sa_object["patterns"],
-                  n.cutoff = 20,
-                  c.cutoff = 17,
-                  path = directory,
-                  name = "multi-association_tree.pdf",
-                  title = "Multi-association tree")
+tree <- tree_chart(sa_object, sa_object["patterns"],
+                   n.cutoff = 20,
+                   c.cutoff = 17,
+                   path = directory,
+                   name = "multi-association_tree.pdf",
+                   title = "Multi-association tree")
 ```
 ![Fig. 6 : Multi-association tree.](./img/multi-association_tree.png)
 
@@ -442,11 +442,11 @@ See that only patterns with an order value greater than 1 are plotted on this ki
 
 Extraction of the pattern cluster relating to the item *3146*...
 ```{r}
-item = 3146
-cluster = cluster_chart(sa_object, "patterns", sa_object["patterns"], item,
-                        path = directory,
-                        name = paste0("pattern_cluster_of_", item, ".png"),
-                        title = paste("Network cluster of", item))
+item <- 3146
+cluster <- cluster_chart(sa_object, "patterns", sa_object["patterns"], item,
+                         path = directory,
+                         name = paste0("pattern_cluster_of_", item, ".png"),
+                         title = paste("Network cluster of", item))
 ```
 **Note that no graphic is created and *cluster* is *NULL* if none or only one pattern contains the desired substance (which is here the substance having the code *3146*).**
 
@@ -477,7 +477,7 @@ cluster[["edges"]]
 # 4. Filters on nodes and patterns
 
 ```{r}
-directory = "./output/spec_filter/"
+directory <- "./output/spec_filter/"
 dir.create(directory)
 ```
 
@@ -487,11 +487,11 @@ dir.create(directory)
 Selection of patterns with filter according to weight...
 ```{r}
 # For example: patterns with at least a weight of 3
-min_weight = 3
-patterns = extract_patterns_from_characteristic(sa_object, sa_object["patterns"],
-                                                characteristic = "weight",
-                                                value = min_weight,
-                                                condition = "GE")
+min_weight <- 3
+patterns <- extract_patterns_from_characteristic(sa_object, sa_object["patterns"],
+                                                 characteristic = "weight",
+                                                 value = min_weight,
+                                                 condition = "GE")
 
 patterns
 ```
@@ -499,19 +499,19 @@ patterns
 
 Associated spectrum...
 ```{r}
-spectrum = spectrum_chart(sa_object, patterns,
-                         path = directory,
-                         name = paste0("spectrum_of_patterns-w", min_weight, ".pdf"),
-                         title = paste("Spectrum with weight filter"))
+spectrum <- spectrum_chart(sa_object, patterns,
+                           path = directory,
+                           name = paste0("spectrum_of_patterns-w", min_weight, ".pdf"),
+                           title = paste("Spectrum with weight filter"))
 ```
 ![Fig. 8: Spectrum of patterns with weigh filter.](./img/spectrum_of_patterns_w3.png)
 
 Associated spectrosome...
 ```{r}
-spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
-                                path = directory,
-                                name = paste0("spectrosome_of_patterns-w", min_weight, ".png"),
-                                title = "Spectrosome with weight filter")
+spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
+                                 path = directory,
+                                 name = paste0("spectrosome_of_patterns-w", min_weight, ".png"),
+                                 title = "Spectrosome with weight filter")
 ```
 ![Fig. 9: Spectrosome of the patterns with weight filter.](./output/spec_filter/spectrosome_of_patterns-w3.png)
 
@@ -521,10 +521,10 @@ spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
 Selection of patterns with filter according to status...
 ```{r}
 # For example: patterns with a status "Persistent"
-status = sa_object["Class"]$STATUS_PERSISTENT
-patterns = extract_patterns_from_status(sa_object, sa_object["patterns"],
-                                        value = status,
-                                        condition = "EQ")
+status <- sa_object["Class"]$STATUS_PERSISTENT
+patterns <- extract_patterns_from_status(sa_object, sa_object["patterns"],
+                                         value = status,
+                                         condition = "EQ")
 
 patterns
 ```
@@ -534,19 +534,19 @@ patterns
 
 Associated spectrum...
 ```{r}
-spectrum = spectrum_chart(sa_object, patterns,
-                         path = directory,
-                         name = paste0("spectrum_of_patterns-", status, ".pdf"),
-                         title = paste("Spectrum with status filter"))
+spectrum <- spectrum_chart(sa_object, patterns,
+                           path = directory,
+                           name = paste0("spectrum_of_patterns-", status, ".pdf"),
+                           title = paste("Spectrum with status filter"))
 ```
 ![Fig. 10: Spectrum of patterns with stauts filter.](./img/spectrum_of_patterns_persistent.png)
 
 Associated spectrosome...
 ```{r}
-spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
-                                path = directory,
-                                name = paste0("spectrosome_of_patterns-", status, ".png"),
-                                title = "Spectrosome with status filter")
+spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
+                                 path = directory,
+                                 name = paste0("spectrosome_of_patterns-", status, ".png"),
+                                 title = "Spectrosome with status filter")
 ```
 ![Fig. 11: Spectrosome of the patterns with status filter.](./output/spec_filter/spectrosome_of_patterns-Persistent.png)
 ```{r}
@@ -561,7 +561,7 @@ cat("Network density:", network_density(sa_object, spectrosome[["edges"]]))
 ### 4.3.1. Patterns related to one specific family
 
 ```{r}
-directory = "./output/spec_family/"
+directory <- "./output/spec_family/"
 dir.create(directory)
 ```
 
@@ -572,21 +572,21 @@ items[items$family == "Chrome", ]
 
 Selection of patterns which contain any substance in the family *Chrome*...
 ```{r}
-patterns = extract_patterns_from_category(sa_object, sa_object["patterns"],
-                                          category = "family",
-                                          value = "Chrome",
-                                          target = "items")
+patterns <- extract_patterns_from_category(sa_object, sa_object["patterns"],
+                                           category = "family",
+                                           value = "Chrome",
+                                           target = "items")
 patterns
 ```
 ![](./img/patterns_chrome_vertices.png)
 
 Spectrosome related to this selection...
 ```{r}
-name = "spectrosome_of_patterns-Chrome-vertices"
-spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
-                                path = directory,
-                                name = name,
-                                title = "Spectrosome of category Chrome")
+name <- "spectrosome_of_patterns-Chrome-vertices"
+spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
+                                 path = directory,
+                                 name = name,
+                                 title = "Spectrosome of category Chrome")
 ```
 ![Fig. 12: Spectrosome of the patterns containing at least one substance related to the family named "Chrome".](./output/spec_family/spectrosome_of_patterns-Chrome-vertices.png)
 
@@ -621,10 +621,10 @@ items[items$family == "Chrome", ]
 
 Selection of patterns which generate links in which any substance belongs to the family *Chrome*...
 ```{r}
-patterns = extract_patterns_from_category(sa_object, sa_object["patterns"],
-                                          category = "family",
-                                          value = "Chrome",
-                                          target = "links")
+patterns <- extract_patterns_from_category(sa_object, sa_object["patterns"],
+                                           category = "family",
+                                           value = "Chrome",
+                                           target = "links")
 patterns
 ```
 ![](./img/patterns_chrome_edges.png)
@@ -633,11 +633,11 @@ patterns
 
 Spectrosome related to this selection...
 ```{r}
-name = "spectrosome_of_patterns-Chrome-edges"
-spectrosome = spectrosome_chart(sa_object, "patterns", patterns,
-                                path = directory,
-                                name = paste0(name, ".png"),
-                                title = paste("Spectrosome of category Chrome"))
+name <- "spectrosome_of_patterns-Chrome-edges"
+spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
+                                 path = directory,
+                                 name = paste0(name, ".png"),
+                                 title = paste("Spectrosome of category Chrome"))
 ```
 ![Fig. 13: Spectrosome of the patterns generating at least one link related to the family named "Chrome".](./output/spec_family/spectrosome_of_patterns-Chrome-edges.png)
 
@@ -723,13 +723,13 @@ co_occurrence_proportions(sa_object["observations"])
 Names and categories of specific substances...
 ```{r}
 # For example substances which have the codes 328, 929 and 3146
-substances_sought = c(328, 929, 3146)
-substances_names = names(sa_object["items"])[sa_object["items"] %in% substances_sought]
-substances_categories = sa_object["items_categories"][as.character(substances_sought), ]
+substances_sought <- c(328, 929, 3146)
+substances_names <- names(sa_object["items"])[sa_object["items"] %in% substances_sought]
+substances_categories <- sa_object["items_categories"][as.character(substances_sought), ]
 
-result = data.frame(substances_sought,
-                    substances_names,
-                    substances_categories)
+result <- data.frame(substances_sought,
+                     substances_names,
+                     substances_categories)
 setNames(result, c("item", "name", colnames(sa_object["items_categories"])))
 ```
 
@@ -747,7 +747,7 @@ sa_object["items_categories"][spectrosome[["vertices"]]$pattern[[1]], ]
 ## 5.3. Some chart alternatives
 
 ```{r}
-directory = "./output/alternatives/"
+directory <- "./output/alternatives/"
 dir.create(directory)
 ```
 
@@ -759,11 +759,11 @@ Some possible alternatives:
 
 ```{r}
 # Plot 3 spectrosomes coloring the vertices with the categories
-spectrosome_1 = spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
-                                  vertex_col = "categories",
-                                  nb_graphs = 3,
-                                  path = directory,
-                                  name = "spectrosome_of_patterns-no_status.png")
+spectrosome_1 <- spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
+                                   vertex_col = "categories",
+                                   nb_graphs = 3,
+                                   path = directory,
+                                   name = "spectrosome_of_patterns-no_status.png")
 ```
 
 ![Fig. 14.a: Spectrosome in which vertices are colored according to the category associated with the items, example 1.](./output/alternatives/spectrosome_of_patterns-no_status-1.png)
@@ -776,12 +776,12 @@ One can choose one of the three spectrosomes plotted and reuse it with the param
 ```{r}
 # Spectrosomes with several values for the parameter defining the minimum weight of a link to be plotted.
 for (min_weight in seq(2, 5)) {
-  spectrosome_w = spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
-                                    min_link_weight = min_weight,
-                                    vertex_col = "categories",
-                                    path = directory,
-                                    name = paste0("spectrosome_of_patterns-weight", min_weight),
-                                    coord = spectrosome_1$coords[[3]])
+  spectrosome_w <- spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
+                                     min_link_weight = min_weight,
+                                     vertex_col = "categories",
+                                     path = directory,
+                                     name = paste0("spectrosome_of_patterns-weight", min_weight),
+                                     coord = spectrosome_1$coords[[3]])
 }
 ```
 
@@ -807,31 +807,31 @@ There are 4 ways to look for association rules (i.e. implication between two ite
 
 ```{r}
 # All rules (with a support threshold of 0.1)
-rules_1 = extract_rules(sa_object, from = "observations")
+rules_1 <- extract_rules(sa_object, from = "observations")
 rules_1
 ```
 ![](./img/rules_1.png)
 
 ```{r}
 # Rules forming the patterns (without support threshold)
-rules_2 = extract_rules(sa_object, from = "patterns")
+rules_2 <- extract_rules(sa_object, from = "patterns")
 rules_2
 ```
 ![](./img/rules_2.png)
 
 ```{r}
 # Rules forming 2 specific itemsets
-rules_3 = extract_rules(sa_object, from = list(c("931", "3180"),
-                                               c("25", "192", "328")))
+rules_3 <- extract_rules(sa_object, from = list(c("931", "3180"),
+                                                c("25", "192", "328")))
 rules_3
 ```
 ![](./img/rules_3.png)
 
 ```{r}
 # Rules having the substance "328" as consequent and only one substance as antecedent
-rules_4a = extract_rules(sa_object, from = "observations",
-                         parameter = list(supp = 0.001, conf = 0.5, maxlen = 2),
-                         appearance = list(rhs = "328"))
+rules_4a <- extract_rules(sa_object, from = "observations",
+                          parameter = list(supp = 0.001, conf = 0.5, maxlen = 2),
+                          appearance = list(rhs = "328"))
 rules_4a
 ```
 ![](./img/rules_4a.png)
@@ -840,25 +840,25 @@ The confidence of 1 means that the substance *328* is found each time the substa
 
 ```{r}
 # Rules having the substance "497" as antecedent
-rules_4b = extract_rules(sa_object, from = "observations",
-                         parameter = list(supp = 0.001, conf = 0.5, maxlen = 2),
-                         appearance = list(lhs = "497"))
+rules_4b <- extract_rules(sa_object, from = "observations",
+                          parameter = list(supp = 0.001, conf = 0.5, maxlen = 2),
+                          appearance = list(lhs = "497"))
 rules_4b
 ```
 ![](./img/rules_4b.png)
 
 ```{r eval=FALSE}
 # Rules in which the substance "328" is the antecedent and the substance "3180" is the consequent (with confidence threshold of 0)
-rules_4c = extract_rules(sa_object, from = "observations",
-                         parameter = list(supp = 0.001, conf = 0, minlen = 2, maxlen = 2),
-                         appearance = list(lhs = "328", rhs = "3180"))
+rules_4c <- extract_rules(sa_object, from = "observations",
+                          parameter = list(supp = 0.001, conf = 0, minlen = 2, maxlen = 2),
+                          appearance = list(lhs = "328", rhs = "3180"))
 rules_4c
 ```
 ```{r eval=TRUE, echo=FALSE}
 # Duplication of the previous chunk with the option echo=FALSE so that the source is not divided into two blocks
-rules_4c = extract_rules(sa_object, from = "observations",
-                         parameter = list(supp = 0.001, conf = 0, minlen = 2, maxlen = 2),
-                         appearance = list(lhs = "328", rhs = "3180"))
+rules_4c <- extract_rules(sa_object, from = "observations",
+                          parameter = list(supp = 0.001, conf = 0, minlen = 2, maxlen = 2),
+                          appearance = list(lhs = "328", rhs = "3180"))
 rules_4c
 ```
 
@@ -866,7 +866,7 @@ The *NULL* result means that no association rule exists between the substances *
 
 Rules are saved in the same way as for nodes or patterns.
 ```{r}
-directory = "./output/rules/"
+directory <- "./output/rules/"
 dir.create(directory)
 
 save_characteristics(sa_object, "rules", rules_1,
