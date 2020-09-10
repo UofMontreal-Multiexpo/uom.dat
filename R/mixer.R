@@ -473,7 +473,7 @@ top_hazard_quotient = function(values = NULL, references = NULL,
                                hq = NULL,
                                k = NULL) {
   
-  if (k < 1) stop("k must be greater than 0.")
+  if (!is.null(k) && k < 1) stop("k must be greater than 0.")
   if (is.null(hq)) hq = hazard_quotient(values, references)
   
   if (is.matrix(hq)) {
