@@ -225,7 +225,7 @@ spectral.analyzer = function(observations, items = NULL, target = "closed freque
   
   # Installation des packages nécessaires au fonctionnement
   # Utile uniquement si les fonctions sont chargées sans charger le package (mode dev)
-  packages = c("arules", "ggsci", "graphics", "grDevices", "mathjaxr", "methods", "network", "sna", "stats", "utils")
+  packages = c("arules", "ggplot2", "ggsci", "graphics", "grDevices", "mathjaxr", "methods", "network", "sna", "stats", "utils")
   new_packages = packages[!(packages %in% utils::installed.packages()[, "Package"])]
   
   if(length(new_packages) != 0) { 

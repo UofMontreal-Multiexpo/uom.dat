@@ -18,6 +18,7 @@ LazyData: true
 Depends: R (>= 3.5.0)
 Imports:
     arules,
+    ggplot2,
     ggsci,
     graphics,
     grDevices,
