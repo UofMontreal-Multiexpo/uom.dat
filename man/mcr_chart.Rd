@@ -126,7 +126,8 @@ An analysis of cumulative risks based on biomonitoring data for six phthalates u
 \url{https://doi.org/10.1016/j.envint.2017.12.008}.
 }
 \seealso{
-\code{\link{maximum_cumulative_ratio}}, \code{\link{hazard_index}}, \code{\link{reciprocal_of_mcr}}, \code{\link{top_hazard_quotient}}.
+\code{\link{mcr_summary}} \code{\link{maximum_cumulative_ratio}}, \code{\link{hazard_index}}, \code{\link{reciprocal_of_mcr}},
+\code{\link{top_hazard_quotient}}.
 }
 \author{
 Gauthier Magnin

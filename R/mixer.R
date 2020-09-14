@@ -909,7 +909,8 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
 #'             *Environment International*, 112, 77-84.
 #'             <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' @seealso [`maximum_cumulative_ratio`], [`hazard_index`], [`reciprocal_of_mcr`], [`top_hazard_quotient`].
+#' @seealso [`mcr_summary`] [`maximum_cumulative_ratio`], [`hazard_index`], [`reciprocal_of_mcr`],
+#'          [`top_hazard_quotient`].
 #' 
 #' @examples
 #' ## Creating a matrix of 5*50 values and one reference value for each of the 5
@@ -1037,6 +1038,104 @@ mcr_chart = function(values = NULL, references = NULL,
   chart = chart + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
   
   graphics::plot(chart)
+}
+
+
+#' Summary of indicators of the MCR approach
+#' 
+#' Compute a set of indicators of the MCR approach, given values and references.
+#' 
+#' @details
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
+#'  
+#' \loadmathjax
+#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
+#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
+#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' The maximum hazard quotient of the vector \eqn{i} is given by:
+#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
+#'  where \eqn{N} denotes the number of hazard quotients.
+#' 
+#' The hazard index of the vector \eqn{i} is given by:
+#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
+#' 
+#' The maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+#' 
+#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+#' 
+#' The missed toxicity of the vector \eqn{i} is given by:
+#'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
+#'  
+#' The mixtures are assigned to the groups according the following conditions:
+#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
+#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
+#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
+#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
+#' 
+#' @param values Numeric named vector or matrix. Values whose indicators of the MCR approach are to
+#'  be computed.
+#' @param references Numeric vector. Reference values associated with the `values`.
+#' @return Data frame of the main indicators computed on the given `values`:.
+#' * **HI**: Hazard Index.
+#' * **MCR**: Maximum Cumulative Ratio.
+#' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
+#' * **Group**: MIAT group.
+#' * **THQ**: Top Hazard Quotient.
+#' * **MHQ**: Maximum Hazard Quotient.
+#' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
+#' 
+#' @author Gauthier Magnin
+#' @references 
+#' Price PS, Han X (2011).
+#' Maximum cumulative ratio (MCR) as a tool for assessing the value of performing a cumulative risk assessment.
+#' *International Journal of Environmental Research and Public Health*. 8(6): 2212-2225.
+#' <https://doi.org/10.3390/ijerph8062212>.
+#'             
+#' Reyes JM, Price PS (2018).
+#' An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
+#' *Environment International*, 112, 77-84.
+#' <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' 
+#' De Brouwere K, et al. (2014).
+#' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
+#' *The Science of the Total Environment*, 479-480, 267-276.
+#' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
+#' @seealso [`mcr_chart`], [`hazard_index`], [`maximum_cumulative_ratio`], [`reciprocal_of_mcr`],
+#'          [`classify_mixture`], [`top_hazard_quotient`], [`maximum_hazard_quotient`], [`missed_toxicity`].
+#' 
+#' @examples
+#' mcr_summary(c(a = 1, b = 2, c = 3, d = 4, e = 5, c(1,2,3,4,5))
+#' mcr_summary(values = matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
+#'                             ncol = 10, dimnames = list(letters[1:5])),
+#'             references = sample(seq(1,5), 5, replace = TRUE))
+#' 
+#' @md
+#' @export
+mcr_summary = function(values, references) {
+  
+  hq = hazard_quotient(values, references)
+  hi = hazard_index(hq = hq)
+  mhq = maximum_hazard_quotient(hq = hq)
+  mcr = maximum_cumulative_ratio(hi = hi, mhq = mhq)
+  mt = missed_toxicity(mcr = mcr)
+  
+  rmcr = reciprocal_of_mcr(mcr = mcr)
+  groups = classify_mixture(hi = hi, mhq = mhq, mcr = mcr)
+  
+  # Différence vector/matrix
+  if (is.vector(values)) {
+    return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+                      THQ = top_hazard_quotient(hq = hq, k = 1),
+                      MHQ = mhq, Missed = mt,
+                      row.names = NULL))
+  }
+  return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+                    THQ = sapply(unname(top_hazard_quotient(hq = hq, k = 1)), function(v) names(v)[1]),
+                    MHQ = mhq, Missed = mt))
 }
 
 
