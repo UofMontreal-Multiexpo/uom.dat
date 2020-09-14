@@ -494,6 +494,111 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 }
 
 
+#' Classify mixture into the four MIAT groups
+#' 
+#' Classify mixtures into four groups according to the CEFIC-MIAT (Mixtures Industry Ad-hoc Team)
+#'  decision tree, each one requiring a different risk management strategy.
+#' 
+#' @details
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
+#'  before searching for the maximum hazard quotients, computing the maximum cumulative ratios then
+#'  classifying the mixtures. Thus, call the function with the arguments `hi` and `mhq` is faster and
+#'  call it with the argument `mcr` is even faster (if they are already computed).
+#' 
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
+#' 
+#' If `values` is a matrix (or `hi`, `mhq` and `mcr` are vectors larger than 1), one class is assigned
+#'  for each column (or value, respectively).
+#' 
+#' \loadmathjax
+#' The mixtures are assigned to the groups according the following conditions:
+#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
+#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
+#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
+#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
+#' 
+#' The maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
+#' 
+#' The hazard index of the vector \eqn{i} is given by:
+#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+#'  
+#' The maximum hazard quotient of the vector \eqn{i} is given by:
+#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+#' 
+#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
+#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
+#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' @note
+#' Due to the multiple possible usages, the arguments `hi`, `mhq` and `mcr` must be explicitly named in
+#'  the function call.
+#' 
+#' @usage
+#' classify_mixture(values, references)
+#' classify_mixture(hi, mhq)
+#' classify_mixture(hi, mhq, mcr)
+#' @param values Numeric vector or matrix. Values of the mixture(s) to classify.
+#' @param references Numeric vector. Reference values associated with the `values`.
+#' @param hi Numeric value or vector. **H**azard **i**ndex(es) of the mixture(s) to classify.
+#' @param mhq Numeric value or vector. **M**aximum **h**azard **q**uotient(s) associated with the hazard
+#'  index(es) `hi`.
+#' @param mcr Numeric value or vector. **M**aximum **c**umulative **r**atio(s) associated with `hi` and
+#'  `mhq`.
+#' @return Character value or vector (according to `values` or `hi` and `mhq`) of the groups assigned to
+#'  the mixture(s).
+#' 
+#' @author Gauthier Magnin
+#' @references
+#' Reyes JM, Price PS (2018).
+#' An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
+#' *Environment International*, 112, 77-84.
+#' <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' 
+#' De Brouwere K, et al. (2014).
+#' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
+#' *The Science of the Total Environment*, 479-480, 267-276.
+#' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
+#' @seealso [`hazard_index`], [`maximum_hazard_quotient`], [`maximum_cumulative_ratio`].
+#' 
+#' @examples
+#' classify_mixture(c(1,2,3,4,5), c(1,2,3,4,5))
+#' classify_mixture(hi = hazard_index(c(1,2,3,0.5), c(1,2,3,0.5)),
+#'                  mhq = maximum_hazard_quotient(c(1,2,3,0.5), c(1,2,3,0.5)))
+#' classify_mixture(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+#'                                  ncol = 3),
+#'                  references = c(1,2,3,0.5))
+#' 
+#' @md
+#' @export
+classify_mixture = function(values = NULL, references = NULL,
+                             hi = NULL, mhq = NULL, mcr = NULL) {
+  
+  if (is.null(hi)) hi = hazard_index(values, references)
+  if (is.null(mhq)) mhq = maximum_hazard_quotient(values, references)
+  if (is.null(mcr)) mcr = maximum_cumulative_ratio(hi = hi, mhq = mhq)
+  
+  if (length(hi) != length(mhq) || length(mhq) != length(mcr))
+    stop("hi, mhq and mcr must be the same length.")
+  
+  groups = character(length(hi))
+  groups[mhq >= 1] = "I"
+  groups[groups == "" & hi <= 1] = "II"
+  groups[groups == "" & mcr < 2] = "IIIA"
+  groups[groups == ""] = "IIIB"
+  
+  return(groups)
+}
+
+
+
+#### Maximum Cumulative Ratio - summary functions ####
+
+
 #' Top Hazard Quotient pairs frequency
 #' 
 #' Build a contingency table of the counts of each combination of the top two hazard quotients pairs for
@@ -614,107 +719,6 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 }
 
 
-#' Classify mixture into the four MIAT groups
-#' 
-#' Classify mixtures into four groups according to the CEFIC-MIAT (Mixtures Industry Ad-hoc Team)
-#'  decision tree, each one requiring a different risk management strategy.
-#' 
-#' @details
-#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
-#'  before searching for the maximum hazard quotients, computing the maximum cumulative ratios then
-#'  classifying the mixtures. Thus, call the function with the arguments `hi` and `mhq` is faster and
-#'  call it with the argument `mcr` is even faster (if they are already computed).
-#' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
-#' 
-#' If `values` is a matrix (or `hi`, `mhq` and `mcr` are vectors larger than 1), one class is assigned
-#'  for each column (or value, respectively).
-#' 
-#' \loadmathjax
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
-#' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
-#'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
-#' 
-#' @note
-#' Due to the multiple possible usages, the arguments `hi`, `mhq` and `mcr` must be explicitly named in
-#'  the function call.
-#' 
-#' @usage
-#' classify_mixture(values, references)
-#' classify_mixture(hi, mhq)
-#' classify_mixture(hi, mhq, mcr)
-#' @param values Numeric vector or matrix. Values of the mixture(s) to classify.
-#' @param references Numeric vector. Reference values associated with the `values`.
-#' @param hi Numeric value or vector. **H**azard **i**ndex(es) of the mixture(s) to classify.
-#' @param mhq Numeric value or vector. **M**aximum **h**azard **q**uotient(s) associated with the hazard
-#'  index(es) `hi`.
-#' @param mcr Numeric value or vector. **M**aximum **c**umulative **r**atio(s) associated with `hi` and
-#'  `mhq`.
-#' @return Character value or vector (according to `values` or `hi` and `mhq`) of the groups assigned to
-#'  the mixture(s).
-#' 
-#' @author Gauthier Magnin
-#' @references
-#' Reyes JM, Price PS (2018).
-#' An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
-#' *Environment International*, 112, 77-84.
-#' <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' 
-#' De Brouwere K, et al. (2014).
-#' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
-#' *The Science of the Total Environment*, 479-480, 267-276.
-#' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
-#' @seealso [`hazard_index`], [`maximum_hazard_quotient`], [`maximum_cumulative_ratio`].
-#' 
-#' @examples
-#' classify_mixture(c(1,2,3,4,5), c(1,2,3,4,5))
-#' classify_mixture(hi = hazard_index(c(1,2,3,0.5), c(1,2,3,0.5)),
-#'                  mhq = maximum_hazard_quotient(c(1,2,3,0.5), c(1,2,3,0.5)))
-#' classify_mixture(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                  ncol = 3),
-#'                  references = c(1,2,3,0.5))
-#' 
-#' @md
-#' @export
-classify_mixture = function(values = NULL, references = NULL,
-                             hi = NULL, mhq = NULL, mcr = NULL) {
-  
-  if (is.null(hi)) hi = hazard_index(values, references)
-  if (is.null(mhq)) mhq = maximum_hazard_quotient(values, references)
-  if (is.null(mcr)) mcr = maximum_cumulative_ratio(hi = hi, mhq = mhq)
-  
-  if (length(hi) != length(mhq) || length(mhq) != length(mcr))
-    stop("hi, mhq and mcr must be the same length.")
-  
-  groups = character(length(hi))
-  groups[mhq >= 1] = "I"
-  groups[groups == "" & hi <= 1] = "II"
-  groups[groups == "" & mcr < 2] = "IIIA"
-  groups[groups == ""] = "IIIB"
-  
-  return(groups)
-}
-
-
 #' Top Hazard Quotients frequency by group
 #' 
 #' Build a contingency table of the counts of each combination of name of the element producing the
@@ -819,9 +823,6 @@ thq_freq_by_group = function(values = NULL, references = NULL,
   return(freq_table)
 }
 
-
-
-#### Maximum Cumulative Ratio - summary functions ####
 
 #' MCR approach scatter plot
 #' 

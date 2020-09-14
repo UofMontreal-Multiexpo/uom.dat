@@ -110,7 +110,7 @@ Switching between mathematical notation and vector notation for sets:
 
 # About the maximum cumulative ratio approach
 
-Computation of main indicators:
+Computation of the main indicators:
 
 * [hazard_quotient](../html/hazard_quotient.html)
 * [hazard_index](../html/hazard_index.html)
@@ -122,9 +122,14 @@ Computation of additional indicators:
 
 * [reciprocal_of_mcr](../html/reciprocal_of_mcr.html)
 * [top_hazard_quotient](../html/top_hazard_quotient.html)
-* [thq_pairs_freq](../html/thq_pairs_freq.html)
 * [classify_mixture](../html/classify_mixture.html)
+
+Summarising indicators:
+
+* [thq_pairs_freq](../html/thq_pairs_freq.html)
 * [thq_freq_by_group](../html/thq_freq_by_group.html)
+* [mcr_chart](../html/mcr_chart.html)
+* [mcr_summary](../html/mcr_summary.html)
 
 
 
