@@ -272,7 +272,7 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
 #' 
 #' \loadmathjax
 #' The missed toxicity of the vector \eqn{i} is given by:
-#'  \mjdeqn{Missed toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
+#'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
 #'  where \eqn{MCR} denotes the maximum cumulative ratio.
 #' 
 #' The maximum cumulative ratio of the vector \eqn{i} is given by:
@@ -347,7 +347,7 @@ missed_toxicity = function(values = NULL, references = NULL,
 #' 
 #' \loadmathjax
 #' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{Reciprocal of MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
 #'  where \eqn{MCR}, \eqn{MHQ} and {HI} denotes the maximum cumulative ratio, the maximum hazard
 #'  quotient and the hazard index respectively.
 #' 
@@ -852,7 +852,7 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
 #'  
 #' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{Reciprocal of MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
 #'  where \eqn{MCR}, \eqn{MHQ} and {HI} denotes the maximum cumulative ratio, the maximum hazard
 #'  quotient and the hazard index respectively.
 #' 
