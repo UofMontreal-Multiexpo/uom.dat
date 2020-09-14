@@ -28,7 +28,7 @@ quotients.
 }
 \details{
 Arguments \code{values} and \code{references} are used to compute the hazard quotients before identifying the
-highest ones. Thus, call the function with the argument \code{hq} is faster.
+highest ones. Thus, call the function with the argument \code{hq} is faster (if it is already computed).
 
 If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
 reference value for each row of the matrix).

@@ -62,7 +62,7 @@ hazard_quotient = function(values, references) {
 #' 
 #' @details
 #' Arguments `values` and `references` are used to compute the hazard quotients before computing the
-#'  hazard index. Thus, call the function with the argument `hq` is faster.
+#'  hazard index. Thus, call the function with the argument `hq` is faster (if it is already computed).
 #' 
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
@@ -121,7 +121,8 @@ hazard_index = function(values = NULL, references = NULL,
 #' 
 #' @details
 #' Arguments `values` and `references` are used to compute the hazard quotients before searching for
-#'  the maximum hazard quotient. Thus, call the function with the argument `hq` is faster.
+#'  the maximum hazard quotient. Thus, call the function with the argument `hq` is faster (if it is
+#'  already computed).
 #' 
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
@@ -184,7 +185,7 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
 #' @details
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard index
 #'  before searching for the maximum hazard quotient then computing the maximum cumulative ratio.
-#'  Thus, call the function with the arguments `hi` and `mhq` is faster.
+#'  Thus, call the function with the arguments `hi` and `mhq` is faster (if they are already computed).
 #' 
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
@@ -260,7 +261,8 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
 #' @details
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard index
 #'  before searching for the maximum hazard quotient, computing the maximum cumulative ratio then
-#'  computing the missed toxicity. Thus, call the function with the argument `mcr` is faster.
+#'  computing the missed toxicity. Thus, call the function with the argument `mcr` is faster (if it is
+#'  already computed).
 #' 
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
@@ -335,7 +337,7 @@ missed_toxicity = function(values = NULL, references = NULL,
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard index
 #'  before searching for the maximum hazard quotient, computing the maximum cumulative ratio then
 #'  computing the reciprocal. Thus, call the function with the arguments `hi` and `mhq` is faster and
-#'  call it with the argument `mcr` is even faster.
+#'  call it with the argument `mcr` is even faster (if they are already computed).
 #' 
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
@@ -422,7 +424,7 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' 
 #' @details
 #' Arguments `values` and `references` are used to compute the hazard quotients before identifying the
-#'  highest ones. Thus, call the function with the argument `hq` is faster.
+#'  highest ones. Thus, call the function with the argument `hq` is faster (if it is already computed).
 #' 
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
@@ -500,7 +502,7 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 #' @details
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
-#'  function with the arguments `hq` and `hi` is faster.
+#'  function with the arguments `hq` and `hi` is faster (if they are already computed).
 #'  
 #' The reference values are applied once on each column of `values` to compute the hazard indexes
 #'  (i.e. it must have one reference value for each row of the matrix).
@@ -621,7 +623,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
 #'  before searching for the maximum hazard quotients, computing the maximum cumulative ratios then
 #'  classifying the mixtures. Thus, call the function with the arguments `hi` and `mhq` is faster and
-#'  call it with the argument `mcr` is even faster.
+#'  call it with the argument `mcr` is even faster (if they are already computed).
 #' 
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
@@ -722,7 +724,8 @@ classify_mixture = function(values = NULL, references = NULL,
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
 #'  before searching for the maximum hazard quotients, computing the maximum cumulative ratios, performing
 #'  the classification then build the table. Thus, call the function with the arguments `hq` and `groups`
-#'  is faster and call it with the arguments `thq` and `groups` is even faster.
+#'  is faster and call it with the arguments `thq` and `groups` is even faster (if they are already
+#'  computed).
 #' 
 #' \loadmathjax
 #' The mixtures are assigned to the groups according the following conditions:

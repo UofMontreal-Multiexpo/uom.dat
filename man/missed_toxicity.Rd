@@ -25,7 +25,8 @@ references generating the maximum cumulative ratio.
 \details{
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard index
 before searching for the maximum hazard quotient, computing the maximum cumulative ratio then
-computing the missed toxicity. Thus, call the function with the argument \code{mcr} is faster.
+computing the missed toxicity. Thus, call the function with the argument \code{mcr} is faster (if it is
+already computed).
 
 If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
 reference value for each row of the matrix).

@@ -30,7 +30,7 @@ assessment, given the values and references generating the hazard index and maxi
 \details{
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard index
 before searching for the maximum hazard quotient then computing the maximum cumulative ratio.
-Thus, call the function with the arguments \code{hi} and \code{mhq} is faster.
+Thus, call the function with the arguments \code{hi} and \code{mhq} is faster (if they are already computed).
 
 If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
 reference value for each row of the matrix).

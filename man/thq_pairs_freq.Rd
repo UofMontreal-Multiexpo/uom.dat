@@ -34,7 +34,7 @@ which the associated hazard index is greater than 1.
 \details{
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
 before identifying the highest hazard quotients then building the contingency table. Thus, call the
-function with the arguments \code{hq} and \code{hi} is faster.
+function with the arguments \code{hq} and \code{hi} is faster (if they are already computed).
 
 The reference values are applied once on each column of \code{values} to compute the hazard indexes
 (i.e. it must have one reference value for each row of the matrix).

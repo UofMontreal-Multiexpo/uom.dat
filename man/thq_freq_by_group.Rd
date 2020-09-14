@@ -35,7 +35,8 @@ top hazard quotient with the associated MIAT group.
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
 before searching for the maximum hazard quotients, computing the maximum cumulative ratios, performing
 the classification then build the table. Thus, call the function with the arguments \code{hq} and \code{groups}
-is faster and call it with the arguments \code{thq} and \code{groups} is even faster.
+is faster and call it with the arguments \code{thq} and \code{groups} is even faster (if they are already
+computed).
 
 \loadmathjax
 The mixtures are assigned to the groups according the following conditions:
