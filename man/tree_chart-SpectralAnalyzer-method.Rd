@@ -15,9 +15,9 @@
   display_text = "ID",
   c.cutoff = NULL,
   sort_by = "category",
+  title = "Multi-association tree",
   path = getwd(),
-  name = "multi-association_tree.pdf",
-  title = "Multi-association tree"
+  name = "multi-association_tree.pdf"
 )
 }
 \arguments{
@@ -49,12 +49,12 @@ The \code{NULL} value specifies that none of this information should be displaye
 
 \item{sort_by}{Sorting method of displayed items. One of \code{"category"}, \code{"item"}.}
 
+\item{title}{Chart title.}
+
 \item{path}{Path of the directory in which to save the chart.
 By default, the chart is saved in the working directory.}
 
 \item{name}{Name of the file in which to save the chart.}
-
-\item{title}{Chart title.}
 }
 \value{
 Data frame of the patterns represented on the chart, associated with their characteristics

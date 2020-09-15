@@ -18,9 +18,9 @@
   vertex_col = "status",
   c.cutoff = NULL,
   display_mixt = TRUE,
+  title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
   path = getwd(),
   name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
-  title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
   ...
 )
 }
@@ -74,17 +74,17 @@ In all other cases, the vertices are colored gray.}
 \item{display_mixt}{If \code{TRUE}, display in the legend the category values included only in mixed
 links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 
+\item{title}{Chart title.
+By default, the title depends on the arguments \code{entities} and \code{item}.
+Example of default title: \code{"Node cluster of 25"} if \code{entities = "nodes"} and
+\code{item = 25}.}
+
 \item{path}{Path of the directory in which to save the charts.
 By default, the charts are saved in the working directory.}
 
 \item{name}{Name of the file in which to save the chart.
 By default, the name depends on the arguments \code{entities} and \code{item}.
 Example of default name: \code{"node_cluster_of_25.png"} if \code{entities = "nodes"} and
-\code{item = 25}.}
-
-\item{title}{Chart title.
-By default, the title depends on the arguments \code{entities} and \code{item}.
-Example of default title: \code{"Node cluster of 25"} if \code{entities = "nodes"} and
 \code{item = 25}.}
 
 \item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package

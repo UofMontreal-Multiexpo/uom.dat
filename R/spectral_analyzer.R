@@ -503,7 +503,7 @@ setGeneric(name = "define_dynamic_status", def = function(object, patterns, stat
 
 # Methods for creating spectrum graphs
 
-setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, identifiers = "original", path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns"){ standardGeneric("spectrum_chart") })
+setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, identifiers = "original", title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf"){ standardGeneric("spectrum_chart") })
 
 setGeneric(name = "plot_spectrum_chart", def = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
 
@@ -512,11 +512,11 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Methods for creating spectrosome graphs and computing related indicators
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, title = paste0("Network of ", entities), path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -525,7 +525,7 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Methods for creating multi-association tree graphs
 
-setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree"){ standardGeneric("tree_chart") })
+setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", title = "Multi-association tree", path = getwd(), name = "multi-association_tree.pdf"){ standardGeneric("tree_chart") })
 
 setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
@@ -1388,10 +1388,10 @@ setMethod(f = "define_dynamic_status",
 #'  \code{"original"} to use the original identifiers.
 #'  \code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
 #'  about the sort that is performed).
+#' @param title Chart title.
 #' @param path Path of the directory in which to save the chart.
 #'  By default, the chart is saved in the working directory.
 #' @param name Name of the file in which to save the chart.
-#' @param title Chart title.
 #' @return Data frame of the patterns and characteristics used, associated with the identifiers visible
 #'  on the chart.
 #' 
@@ -1409,7 +1409,8 @@ setMethod(f = "define_dynamic_status",
 #' @export
 setMethod(f = "spectrum_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, identifiers = "original", path = getwd(), name = "spectrum_of_patterns.pdf", title = "Spectrum of patterns") {
+          definition = function(object, patterns_characteristics, identifiers = "original",
+                                title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf") {
             
             if (identifiers != "original" && identifiers != "new")
               stop("identifiers must be \"original\" or \"new\".")
@@ -1691,12 +1692,12 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
 #' @param display_mixt If \code{TRUE}, display in the legend the category values included only in mixed
 #'  links (or in mixed vertices, if \code{vertex_col = "categories"}).
+#' @param title Chart title.
 #' @param path Path of the directory in which to save the charts.
 #'  By default, the charts are saved in the working directory.
 #' @param name Name of the file in which to save the chart.
 #'  If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
 #'  file name.
-#' @param title Chart title.
 #' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna} for plotting the graph. See Details section.
 #' @return
@@ -1734,7 +1735,8 @@ setMethod(f = "spectrosome_chart",
                                 vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 clusters = Inf, highlight = 3,
                                 use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE,
-                                path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), title = paste0("Network of ", entities),
+                                title = paste0("Network of ", entities),
+                                path = getwd(), name = paste0("spectrosome_of_", entities, ".png"),
                                 ...) {
             
             # Validation des paramètres
@@ -2311,15 +2313,15 @@ setMethod(f = "cluster_text",
 #' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
 #' @param display_mixt If \code{TRUE}, display in the legend the category values included only in mixed
 #'  links (or in mixed vertices, if \code{vertex_col = "categories"}).
+#' @param title Chart title.
+#'  By default, the title depends on the arguments \code{entities} and \code{item}.
+#'  Example of default title: \code{"Node cluster of 25"} if \code{entities = "nodes"} and
+#'  \code{item = 25}.
 #' @param path Path of the directory in which to save the charts.
 #'  By default, the charts are saved in the working directory.
 #' @param name Name of the file in which to save the chart.
 #'  By default, the name depends on the arguments \code{entities} and \code{item}.
 #'  Example of default name: \code{"node_cluster_of_25.png"} if \code{entities = "nodes"} and
-#'  \code{item = 25}.
-#' @param title Chart title.
-#'  By default, the title depends on the arguments \code{entities} and \code{item}.
-#'  Example of default title: \code{"Node cluster of 25"} if \code{entities = "nodes"} and
 #'  \code{item = 25}.
 #' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna} for plotting the graph. See Details section.
@@ -2352,9 +2354,9 @@ setMethod(f = "cluster_chart",
                                 use_name = TRUE, n.cutoff = NULL,
                                 vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 c.cutoff = NULL, display_mixt = TRUE,
+                                title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
                                 path = getwd(),
                                 name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
-                                title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
                                 ...) {
             
             # Vérifie qu'un seul item est mentionné
@@ -2376,7 +2378,7 @@ setMethod(f = "cluster_chart",
                                             vertex_size = vertex_size, vertex_col = vertex_col,
                                             use_names = use_name, n.cutoff = n.cutoff, c.cutoff = c.cutoff,
                                             display_mixt = display_mixt,
-                                            path = path, name = name, title = title, ...)
+                                            title = title, path = path, name = name, ...)
               return(list(vertices = to_return$vertices, edges = to_return$edges, coords = to_return$coords[[1]]))
               
             } else {
@@ -2487,10 +2489,10 @@ setMethod(f = "degree",
 #'  The \code{NULL} value specifies that none of this information should be displayed.
 #' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
 #' @param sort_by Sorting method of displayed items. One of \code{"category"}, \code{"item"}.
+#' @param title Chart title.
 #' @param path Path of the directory in which to save the chart.
 #'  By default, the chart is saved in the working directory.
 #' @param name Name of the file in which to save the chart.
-#' @param title Chart title.
 #' @return Data frame of the patterns represented on the chart, associated with their characteristics
 #'  and identifiers (visible on the chart if \code{display_text = "ID"}).
 #' 
@@ -2510,7 +2512,11 @@ setMethod(f = "degree",
 #' @export
 setMethod(f = "tree_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", path = getwd(), name = "multi-association_tree.pdf", title = "Multi-association tree") {
+          definition = function(object, patterns_characteristics, identifiers = "original",
+                                use_names = TRUE, n.cutoff = NULL,
+                                display_status = TRUE, display_text = "ID",
+                                c.cutoff = NULL, sort_by = "category",
+                                title = "Multi-association tree", path = getwd(), name = "multi-association_tree.pdf") {
             
             if (identifiers != "original" && identifiers != "new")
               stop("identifiers must be \"original\" or \"new\".")

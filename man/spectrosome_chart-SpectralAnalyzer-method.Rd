@@ -21,9 +21,9 @@
   n.cutoff = NULL,
   c.cutoff = NULL,
   display_mixt = TRUE,
+  title = paste0("Network of ", entities),
   path = getwd(),
   name = paste0("spectrosome_of_", entities, ".png"),
-  title = paste0("Network of ", entities),
   ...
 )
 }
@@ -87,14 +87,14 @@ of the represented items.}
 \item{display_mixt}{If \code{TRUE}, display in the legend the category values included only in mixed
 links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 
+\item{title}{Chart title.}
+
 \item{path}{Path of the directory in which to save the charts.
 By default, the charts are saved in the working directory.}
 
 \item{name}{Name of the file in which to save the chart.
 If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
 file name.}
-
-\item{title}{Chart title.}
 
 \item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 \code{sna} for plotting the graph. See Details section.}

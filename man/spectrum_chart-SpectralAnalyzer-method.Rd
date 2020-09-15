@@ -9,9 +9,9 @@
   object,
   patterns_characteristics,
   identifiers = "original",
+  title = "Spectrum of patterns",
   path = getwd(),
-  name = "spectrum_of_patterns.pdf",
-  title = "Spectrum of patterns"
+  name = "spectrum_of_patterns.pdf"
 )
 }
 \arguments{
@@ -26,12 +26,12 @@ One of \code{"original"}, \code{"new"}. \cr
 \code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
 about the sort that is performed).}
 
+\item{title}{Chart title.}
+
 \item{path}{Path of the directory in which to save the chart.
 By default, the chart is saved in the working directory.}
 
 \item{name}{Name of the file in which to save the chart.}
-
-\item{title}{Chart title.}
 }
 \value{
 Data frame of the patterns and characteristics used, associated with the identifiers visible
