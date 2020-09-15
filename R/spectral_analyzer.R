@@ -2975,20 +2975,8 @@ setMethod(f = "save_characteristics",
               columns = c("antecedent", "consequent")
             } else stop("entities must be one of \"nodes\", \"patterns\", \"rules\".")
             
-            # Conversion des noeuds ou motifs en chaînes de caractères
-            itemsets = apply(characteristics[columns], 2,
-                             function(x) {
-                               x = as.character(x)
-                               
-                               # Suppression des caractères "c()" liés aux vecteurs
-                               y = ifelse(substring(x, 1, 1) == "c",
-                                          substr(x, start = 3, stop = nchar(x) - 1),
-                                          x)
-                               
-                               # Suppression des guillemets liés aux vecteurs
-                               return(gsub("\"", "", y))
-                             })
-            
+            # Conversion des itemsets en chaînes de caractères
+            itemsets = apply(characteristics[columns], 2, turn_list_into_char)
             characteristics[, columns] = unlist(itemsets)
             
             # Enregistrement des données

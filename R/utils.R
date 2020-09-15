@@ -64,6 +64,29 @@ cap = function(s) {
 }
 
 
+#' Turn a list into a character vector
+#' 
+#' Each element of the list is turned into a character value so the list is turned into a character vector.
+#' 
+#' @param x List to turn into a character vector.
+#' @return Character vector corresponding to the input list.
+#' 
+#' @keywords internal
+turn_list_into_char = function(x) {
+  
+  # Conversion des éléments de la liste en chaînes de caractères
+  x = as.character(x)
+  
+  # Suppression des caractères "c()" liés aux vecteurs
+  y = ifelse(substring(x, 1, 1) == "c",
+             substr(x, start = 3, stop = nchar(x) - 1),
+             x)
+  
+  # Suppression des guillemets liés aux vecteurs
+  return(gsub("\"", "", y))
+}
+
+
 #' Turn a set notation into a vector notation
 #' 
 #' Convert itemsets written in mathematical notation into a list of character vectors.
