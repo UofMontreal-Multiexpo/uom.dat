@@ -145,7 +145,7 @@ observations <- observations4
 
 ## 1.3. Set up the analysis
 
-### 1.3.1. Association of each substance to categories
+### 1.3.1. Association of each item to categories
 
 Here is a data frame associating substances to one family of substances and one subfamily:
 ```{r}
@@ -663,7 +663,60 @@ spectrosome[["edges"]]
 
 
 
+## 4.4. Complex nodes and patterns
+
+Let's take a look at another example which has a way more patterns (the creation of the concerning spectral analyzer object is not shown).
+
+```{r eval = FALSE, echo = FALSE}
+# No run, no show
+# Creation of the SA object specific to this section
+other_obs <- make_observations(IMIS,
+                               by = c("COMPANY_INDEX", "JOB.TITLE", "YEAR"),
+                               additional = "SUBST")
+
+family_subst <- read.delim("Thesaurus_agents_clean_family_freq_07112019.txt", stringsAsFactors = FALSE)
+family_subst$Code[nchar(family_subst$Code) == 2] <- paste0("00", family_subst$Code[nchar(family_subst$Code) == 2])
+family_subst$Code[nchar(family_subst$Code) == 3] <- paste0("0", family_subst$Code[nchar(family_subst$Code) == 3])
+
+other_substances <- sort(unique(unlist(sapply(other_obs, "[", "CODE"))))
+other_families <- family_subst$Family[match(other_substances, family_subst$Code)]
+other_families[is.na(other_families)] <- "Unknown"
+other_categories <- data.frame(item = other_substances, family = other_families)
+
+another_sa_object <- spectral.analyzer(other_obs, items = other_categories,
+                                       target = "maximally frequent itemsets", count = 100)
+```
+
+```{r}
+directory <- "./output/another_sa_object/"
+dir.create(directory)
+
+spectrosome <- spectrosome_chart(another_sa_object, "patterns", another_sa_object["patterns"],
+                                 vertex_size = "grouped", size_range = c(0.5, 1.5),
+                                 displayisolates = FALSE, displaylabels = FALSE,
+                                 path = directory, name = "without_isolates")
+```
+
+![Fig. 14: Spectrosome of patterns from another spectral analyzer, without displaying the isolates or the labels](./output/another_sa_object/without_isolates.png)
+
+To focus on the patterns that make the junction between two or more families of substances (i.e. two values of one category), use the following...
+```{r}
+patterns <- get_complexes(another_sa_object, "patterns", another_sa_object["patterns"],
+                          category = "family", target = "vertices")
+
+spectrosome <- spectrosome_chart(another_sa_object, "patterns", patterns,
+                                 vertex_col = "categories",
+                                 title = "Complexe patterns",
+                                 path = directory, name = "complexe_patterns")
+```
+
+![Fig. 15: Spectrosome of patterns which are associated with more than one family of substances.](./output/another_sa_object/complexe_patterns.png)
+
+
+
 # 5. Ad-hoc analysis
+
+Let's go back to our original example.
 
 ## 5.1. Processing on observations
 
@@ -766,11 +819,11 @@ spectrosome_1 <- spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
                                    name = "spectrosome_of_patterns-no_status.png")
 ```
 
-![Fig. 14.a: Spectrosome in which vertices are colored according to the category associated with the items, example 1.](./output/alternatives/spectrosome_of_patterns-no_status-1.png)
+![Fig. 16.a: Spectrosome in which vertices are colored according to the category associated with the items, example 1.](./output/alternatives/spectrosome_of_patterns-no_status-1.png)
 
-![Fig. 14.b: Spectrosome in which vertices are colored according to the category associated with the items, example 2.](./output/alternatives/spectrosome_of_patterns-no_status-2.png)
+![Fig. 16.b: Spectrosome in which vertices are colored according to the category associated with the items, example 2.](./output/alternatives/spectrosome_of_patterns-no_status-2.png)
 
-![Fig. 14.c: Spectrosome in which vertices are colored according to the category associated with the items, example 3.](./output/alternatives/spectrosome_of_patterns-no_status-3.png)
+![Fig. 16.c: Spectrosome in which vertices are colored according to the category associated with the items, example 3.](./output/alternatives/spectrosome_of_patterns-no_status-3.png)
 
 One can choose one of the three spectrosomes plotted and reuse it with the parameter *coord*. For instance, one can plot again the third spectrosome with another constraint on links:
 ```{r}
@@ -785,13 +838,13 @@ for (min_weight in seq(2, 5)) {
 }
 ```
 
-![Fig. 15.a: Spectrosome with the constraint of a minimum link weight of 2.](./output/alternatives/spectrosome_of_patterns-weight2.png)
+![Fig. 17.a: Spectrosome with the constraint of a minimum link weight of 2.](./output/alternatives/spectrosome_of_patterns-weight2.png)
 
-![Fig. 15.b: Spectrosome with the constraint of a minimum link weight of 3.](./output/alternatives/spectrosome_of_patterns-weight3.png)
+![Fig. 17.b: Spectrosome with the constraint of a minimum link weight of 3.](./output/alternatives/spectrosome_of_patterns-weight3.png)
 
-![Fig. 15.c: Spectrosome with the constraint of a minimum link weight of 4.](./output/alternatives/spectrosome_of_patterns-weight4.png)
+![Fig. 17.c: Spectrosome with the constraint of a minimum link weight of 4.](./output/alternatives/spectrosome_of_patterns-weight4.png)
 
-![Fig. 15.d: Spectrosome with the constraint of a minimum link weight of 5.](./output/alternatives/spectrosome_of_patterns-weight5.png)
+![Fig. 17.d: Spectrosome with the constraint of a minimum link weight of 5.](./output/alternatives/spectrosome_of_patterns-weight5.png)
 
 
 ## 5.4. Extracting association rules
