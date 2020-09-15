@@ -5,13 +5,21 @@
 \title{MCR approach scatter plot}
 \usage{
 mcr_chart(values, references,
-          thq_col = NULL, regions = FALSE,
-          regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
-          regions_lab = !regions, regression = FALSE)
-mcr_chart(hi, mcr, thq, groups,
-          thq_col = NULL, regions = FALSE,
-          regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
-          regions_lab = !regions, regression = FALSE)
+          thq_col = NULL,
+          regions = FALSE,
+          regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"),
+          regions_alpha = 0.2,
+          regions_lab = !regions,
+          regression = FALSE,
+          log_transform = TRUE)
+mcr_chart(hi, mcr, thq,
+          thq_col = NULL,
+          regions = FALSE,
+          regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"),
+          regions_alpha = 0.2,
+          regions_lab = !regions,
+          regression = FALSE,
+          log_transform = TRUE)
 }
 \arguments{
 \item{values}{Numeric named matrix. Vectors of values for which the chart is to be plotted.}
@@ -27,8 +35,6 @@ mcr_chart(hi, mcr, thq, groups,
 associated with the hazard indexes \code{hi}. If list, only the first named value of each element of the
 list is considered.}
 
-\item{groups}{Character vector. MIAT groups associated with the hazard indexes \code{hi}.}
-
 \item{thq_col}{Character named vector. Colors to assign to the \strong{t}op \strong{h}azard \strong{q}uotients
 elements.}
 
@@ -40,12 +46,16 @@ defining by \code{regions_col}.}
 
 \item{regions_alpha}{Value between 0 and 1. Transparency of the regions filled with \code{regions_col}.}
 
-\item{regression}{If \code{TRUE}, the linear regression between \mjeqn{log_{10}(HI)}{log10(HI)} and
-\mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)} with 95\% confidence interval is represented.}
-
-\item{regios_lab}{Logical value or vector of length 4. Define if labels for the MIAT groups should
+\item{regions_lab}{Logical value or vector of length 4. Define if labels for the MIAT groups should
 be displayed (in order: I, II, IIIA, IIIB). \code{TRUE} and \code{FALSE} are special values for all \code{TRUE} or
 all \code{FALSE}.}
+
+\item{regression}{If \code{TRUE}, the linear regression between the X and Y coordinates of the points
+is represented with 95\% confidence interval.}
+
+\item{log_transform}{If \code{TRUE}, the log version of the chart is plotted (i.e.
+\mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}). If \code{FALSE},
+the standard version of the chart is plotted (i.e. \eqn{HI} versus \eqn{MCR}).}
 }
 \value{
 Invisible. Chart created with the \code{ggplot2} package.
@@ -57,14 +67,18 @@ quotients and the associated MIAT groups.
 }
 \details{
 The chart being plotted with the \code{ggplot2} package, it can be modified or completed afterwards using
-\code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned chart.
+\code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 
 Color specification can be done using the R predefined color names or hexadecimal values.
 
+In the standard version of the chart, the grey area represents the region in which no point can be
+plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does
+not exist.
+
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
-before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios,
-performing the classification then plot the chart. Thus, call the function with the arguments \code{hi},
-\code{mcr}, \code{thq} and \code{groups} is faster (if they are already computed).
+before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios
+then plot the chart. Thus, call the function with the arguments \code{hi}, \code{mcr} and \code{thq} is faster
+(if they are already computed).
 
 \loadmathjax
 The mixtures are assigned to the groups according the following conditions:
@@ -115,8 +129,19 @@ mcr_chart(v, r,
           regression = TRUE)
 mcr_chart(hi = hazard_index(v, r),
           mcr = maximum_cumulative_ratio(v, r),
+          thq = top_hazard_quotient(v, r))
+
+mcr_chart(v, r, regions = TRUE, log_transform = FALSE)
+mcr_chart(v, r,
+          thq_col = c(a = "blue", b = "green", c = "red", d = "yellow3", e = "grey"),
+          regions = FALSE,
+          regions_lab = c(TRUE, TRUE, FALSE, TRUE),
+          regression = TRUE,
+          log_transform = FALSE)
+mcr_chart(hi = hazard_index(v, r),
+          mcr = maximum_cumulative_ratio(v, r),
           thq = top_hazard_quotient(v, r),
-          groups = classify_mixture(v, r))
+          log_transform = FALSE)
 
 }
 \references{
@@ -124,6 +149,11 @@ Reyes JM, Price PS (2018).
 An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
 \emph{Environment International}, 112, 77-84.
 \url{https://doi.org/10.1016/j.envint.2017.12.008}.
+
+De Brouwere K, et al. (2014).
+Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
+\emph{The Science of the Total Environment}, 479-480, 267-276.
+\url{https://doi.org/10.1016/j.scitotenv.2014.01.083}.
 }
 \seealso{
 \code{\link{mcr_summary}} \code{\link{maximum_cumulative_ratio}}, \code{\link{hazard_index}}, \code{\link{reciprocal_of_mcr}},

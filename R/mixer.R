@@ -832,14 +832,18 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #' 
 #' @details
 #' The chart being plotted with the `ggplot2` package, it can be modified or completed afterwards using
-#'  [`ggplot2::last_plot`] or the returned chart.
+#'  [`ggplot2::last_plot`] or the returned object.
 #' 
 #' Color specification can be done using the R predefined color names or hexadecimal values.
+#' 
+#' In the standard version of the chart, the grey area represents the region in which no point can be
+#'  plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does
+#'  not exist.
 #'  
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
-#'  before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios,
-#'  performing the classification then plot the chart. Thus, call the function with the arguments `hi`,
-#'  `mcr`, `thq` and `groups` is faster (if they are already computed).
+#'  before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios
+#'  then plot the chart. Thus, call the function with the arguments `hi`, `mcr` and `thq` is faster
+#'  (if they are already computed).
 #' 
 #' \loadmathjax
 #' The mixtures are assigned to the groups according the following conditions:
@@ -875,13 +879,21 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #' 
 #' @usage
 #' mcr_chart(values, references,
-#'           thq_col = NULL, regions = FALSE,
-#'           regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
-#'           regions_lab = !regions, regression = FALSE)
-#' mcr_chart(hi, mcr, thq, groups,
-#'           thq_col = NULL, regions = FALSE,
-#'           regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
-#'           regions_lab = !regions, regression = FALSE)
+#'           thq_col = NULL,
+#'           regions = FALSE,
+#'           regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"),
+#'           regions_alpha = 0.2,
+#'           regions_lab = !regions,
+#'           regression = FALSE,
+#'           log_transform = TRUE)
+#' mcr_chart(hi, mcr, thq,
+#'           thq_col = NULL,
+#'           regions = FALSE,
+#'           regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"),
+#'           regions_alpha = 0.2,
+#'           regions_lab = !regions,
+#'           regression = FALSE,
+#'           log_transform = TRUE)
 #' @param values Numeric named matrix. Vectors of values for which the chart is to be plotted.
 #' @param references Numeric vector. Reference values associated with the `values`.
 #' @param hi Numeric vector. **H**azard **i**ndexes for which the chart is to be plotted.
@@ -890,7 +902,6 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #' @param thq Numeric named vector or list of numeric named vectors. **T**op **h**azard **q**uotients
 #'  associated with the hazard indexes `hi`. If list, only the first named value of each element of the
 #'  list is considered.
-#' @param groups Character vector. MIAT groups associated with the hazard indexes `hi`.
 #' @param thq_col Character named vector. Colors to assign to the **t**op **h**azard **q**uotients
 #'  elements.
 #' @param regions If `TRUE`, the regions corresponding to the MIAT groups are filled with the colors
@@ -898,18 +909,27 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #' @param regions_col Character vector of length 4. Define the colors for the regions of the MIAT groups
 #'  (in order: I, II, IIIA and IIIB).
 #' @param regions_alpha Value between 0 and 1. Transparency of the regions filled with `regions_col`.
-#' @param regios_lab Logical value or vector of length 4. Define if labels for the MIAT groups should
+#' @param regions_lab Logical value or vector of length 4. Define if labels for the MIAT groups should
 #'  be displayed (in order: I, II, IIIA, IIIB). `TRUE` and `FALSE` are special values for all `TRUE` or
 #'  all `FALSE`.
-#' @param regression If `TRUE`, the linear regression between \mjeqn{log_{10}(HI)}{log10(HI)} and
-#'  \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)} with 95% confidence interval is represented.
+#' @param regression If `TRUE`, the linear regression between the X and Y coordinates of the points
+#'  is represented with 95% confidence interval.
+#' @param log_transform If `TRUE`, the log version of the chart is plotted (i.e.
+#'  \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}). If `FALSE`,
+#'  the standard version of the chart is plotted (i.e. \eqn{HI} versus \eqn{MCR}).
 #' @return Invisible. Chart created with the `ggplot2` package.
 #' 
 #' @author Gauthier Magnin
-#' @references Reyes JM, Price PS (2018).
-#'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
-#'             *Environment International*, 112, 77-84.
-#'             <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' @references
+#' Reyes JM, Price PS (2018).
+#' An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
+#' *Environment International*, 112, 77-84.
+#' <https://doi.org/10.1016/j.envint.2017.12.008>.
+#'             
+#' De Brouwere K, et al. (2014).
+#' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
+#' *The Science of the Total Environment*, 479-480, 267-276.
+#' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
 #' @seealso [`mcr_summary`] [`maximum_cumulative_ratio`], [`hazard_index`], [`reciprocal_of_mcr`],
 #'          [`top_hazard_quotient`].
 #' 
@@ -928,82 +948,155 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #'           regression = TRUE)
 #' mcr_chart(hi = hazard_index(v, r),
 #'           mcr = maximum_cumulative_ratio(v, r),
+#'           thq = top_hazard_quotient(v, r))
+#' 
+#' mcr_chart(v, r, regions = TRUE, log_transform = FALSE)
+#' mcr_chart(v, r,
+#'           thq_col = c(a = "blue", b = "green", c = "red", d = "yellow3", e = "grey"),
+#'           regions = FALSE,
+#'           regions_lab = c(TRUE, TRUE, FALSE, TRUE),
+#'           regression = TRUE,
+#'           log_transform = FALSE)
+#' mcr_chart(hi = hazard_index(v, r),
+#'           mcr = maximum_cumulative_ratio(v, r),
 #'           thq = top_hazard_quotient(v, r),
-#'           groups = classify_mixture(v, r))
+#'           log_transform = FALSE)
 #' 
 #' @md
 #' @export
 mcr_chart = function(values = NULL, references = NULL,
-                     hi = NULL, mcr = NULL, thq = NULL, groups = NULL,
+                     hi = NULL, mcr = NULL, thq = NULL,
                      thq_col = NULL, regions = FALSE,
                      regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
-                     regions_lab = !regions, regression = FALSE) {
+                     regions_lab = !regions, regression = FALSE, log_transform = TRUE) {
   
   if (is.null(hi)) hi = hazard_index(values, references)
   if (is.null(mcr)) mcr = maximum_cumulative_ratio(values, references, hi = hi)
   if (is.null(thq)) thq = top_hazard_quotient(values, references, k = 1)
-  if (is.null(groups)) groups = classify_mixture(hi = hi, mhq = sapply(thq, "[", 1), mcr = mcr)
   
-  # Récupération des noms des top et calcul des réciproques de mcr
+  # Récupération des noms des top
   thq = sapply(unname(thq), function(v) names(v)[1])
-  rmcr = reciprocal_of_mcr(mcr = mcr)
   
-  # Préparation des données, fonctions et limites pour le graphique
-  data = data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups, THQ = thq,
-                    x = log10(hi), y = log10(mcr - 1))
+  # Préparation des données et limites du graphique
+  if (log_transform) data = data.frame(x = log10(hi), y = log10(mcr - 1), thq = thq)
+  else data = data.frame(x = hi, y = mcr, thq = thq)
   xlim = c(floor(min(data$x)), ceiling(max(data$x)))
   ylim = c(floor(min(data$y)), ceiling(max(data$y)))
+  
+  # Initialisation du graphique (valeurs, thème et cadre)
+  chart = ggplot2::ggplot(data = data, ggplot2::aes(x = x, y = y)) +
+    ggplot2::theme_bw() +
+    ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+  
+  # Partie du graphique spécifique au type log ou normal
+  fun.chart = if (log_transform) plot_mcr_log_part else plot_mcr_standard_part
+  chart = fun.chart(chart, xlim, ylim, regions, regions_col, regions_alpha, regions_lab)
+  # Default region colors are colorblind safe and print friendly
+  
+  # Si des couleurs spécifiques doivent être associés aux THQ
+  if (!is.null(thq_col)) chart = chart + ggplot2::scale_color_manual(values = thq_col)
+  
+  # Régression linéaire
+  if (regression) chart = chart + ggplot2::geom_smooth(method = "lm", formula = y ~ x)
+  
+  graphics::plot(chart) 
+}
+
+
+#' MCR approach scatter plot (log part)
+#' 
+#' Plot \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)} with the
+#'  percentage of the reciprocal of the maximum cumulative ratio, the elements producing the top hazard
+#'  quotients and the associated MIAT groups. More precisely, plot the part of the chart that depends
+#'  on the logarithm transformation (regions: filling, boundaries, labels; points and axes).
+#' \loadmathjax
+#' 
+#' @details
+#' The limits of the graph (`xlim` and `ylim`) are considered without taking into account the expand
+#'  limits (see [`ggplot2::expand_limits`]).
+#' 
+#' The chart being plotted with the `ggplot2` package, it can be modified or completed afterwards using
+#'  [`ggplot2::last_plot`] or the returned object.
+#' 
+#' Color specification can be done using the R predefined color names or hexadecimal values.
+#' 
+#' @param chart `ggplot` object on which to add the log part.
+#' @param xlim Lower and uper limits of the abscissa of the graph.
+#' @param ylim Lower and uper limits of the ordinate of the graph.
+#' @inheritParams mcr_chart
+#' @return `ggplot` object of the chart after plotting the log part.
+#' 
+#' @author Gauthier Magnin
+#' @references Reyes JM, Price PS (2018).
+#'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
+#'             *Environment International*, 112, 77-84.
+#'             <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' @seealso [`mcr_chart`], [`plot_mcr_standard_part`].
+#' 
+#' @md
+#' @keywords internal
+plot_mcr_log_part = function(chart, xlim, ylim,
+                             regions, regions_col, regions_alpha, regions_lab) {
+  
+  # Fonction de délimitation du groupe I
   fun.mhq_1 = function(x) log10(10^x - 1)
   xmin_fun = 0.001
   xmax_fun = xlim[2] + 1
   root_fun = uniroot(fun.mhq_1, c(0, 1))$root   # fun.mhq_1(log10(2)) = 0
   
-  
-  # Initialisation du graphique
-  chart = ggplot2::ggplot(data = data, ggplot2::aes(x = x, y = y))
+  # Texte relatif aux groupes
+  if (any(regions_lab)) {
+    # Vérification des zones affichées (non-affichage du texte des zones qui ne sont pas affichées)
+    regions_lab = regions_lab & c(xlim[2] > 0, xlim[1] < 0, ylim[1] < 0, ylim[2] > 0)
+    
+    chart = chart + ggplot2::annotate(geom = "text",
+                                      x = c(xlim[2], xlim[1], root_fun / 2, xlim[2] / 2)[regions_lab],
+                                      y = c(ylim[1], ylim[1], -0.05, ylim[2])[regions_lab],
+                                      hjust = c(1, 0, 0.5, 0.5)[regions_lab],
+                                      vjust = c(0, 0, 0.5, 1)[regions_lab],
+                                      label = c("Group I", "Group II", "Group IIIA", "Group IIIB")[regions_lab])
+  }
   
   # Coloration des régions
   if (regions) {
-    # Default colors are colorblind safe and print friendly
-    
     chart = chart +
       # A gauche, groupe II
       ggplot2::geom_polygon(data = data.frame(x = c(-Inf, -Inf, 0, 0),
                                               y = c(-Inf, Inf, Inf, -Inf)),
                             ggplot2::aes(fill = "II"),
                             alpha = regions_alpha) +
-      # A droite, groupe I + délimitation
+      # A droite, groupe I
       ggplot2::geom_polygon(data = data.frame(x = c(seq(0, xmax_fun, by = 0.001), xmax_fun),
                                               y = c(-Inf, fun.mhq_1(seq(xmin_fun, xmax_fun, by = 0.001)), -Inf)),
-                            ggplot2::aes(fill = "I", x = x, y = y),
-                            color = "black", linetype = "longdash", alpha = regions_alpha) +
+                            ggplot2::aes(fill = "I"),
+                            alpha = regions_alpha) +
       # Au centre, groupe IIIA
       ggplot2::geom_polygon(data = data.frame(x = c(0, seq(0, root_fun, by = 0.001)),
                                               y = c(0, -Inf, fun.mhq_1(seq(xmin_fun, root_fun, by = 0.001)))),
-                            ggplot2::aes(fill = "IIIA", x = x, y = y),
+                            ggplot2::aes(fill = "IIIA"),
                             alpha = regions_alpha) +
       # En haut, groupe IIIB
       ggplot2::geom_polygon(data = data.frame(x = c(0, 0, seq(root_fun, xmax_fun, by = 0.001), xmax_fun, xmax_fun),
                                               y = c(Inf, 0, fun.mhq_1(seq(root_fun, xmax_fun, by = 0.001)), fun.mhq_1(xmax_fun), Inf)),
-                            ggplot2::aes(fill = "IIIB", x = x, y = y),
+                            ggplot2::aes(fill = "IIIB"),
                             alpha = regions_alpha) +
       # Légende associée
-      ggplot2:: scale_fill_manual(values = setNames(regions_col, c("I", "II", "IIIA", "IIIB")),
-                                  name = "MIAT groups")
-  } else {
-    # Courbe délimitant le groupe I
-    chart = chart + ggplot2::stat_function(fun = fun.mhq_1, xlim = c(xmin_fun, xmax_fun),
-                                           color = "black", linetype = "longdash")
+      ggplot2::scale_fill_manual(values = stats::setNames(regions_col, c("I", "II", "IIIA", "IIIB")),
+                                 name = "MIAT groups",
+                                 guide = ggplot2::guide_legend(override.aes = list(color = "black",
+                                                                                   linetype = "longdash")))
   }
   
-  # Suite du graphique
-  chart = chart + 
-    ggplot2::geom_point(ggplot2::aes(color = factor(thq))) +
+  # Suite du graphique (points, délimitations, légende, labels axe Y)
+  chart = chart +  ggplot2::geom_point(ggplot2::aes(color = factor(thq))) +
     # Segment horizontal séparant IIIA et IIIB
     ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, xend = root_fun, yend = 0),
                           color = "black", linetype = "longdash") +
     # Droite vertical séparant le groupe II du reste
     ggplot2::geom_vline(xintercept = 0, color = "black", linetype = "longdash") +
+    # Courbe séparant le groupe I du reste
+    ggplot2::stat_function(fun = fun.mhq_1, xlim = c(xmin_fun, xmax_fun),
+                           color = "black", linetype = "longdash") +
     # Titres des axes et légende
     ggplot2::labs(x = bquote(log[10]*"(HI)"),
                   y = bquote(log[10]*"(MCR - 1); MHQ / HI"),
@@ -1013,32 +1106,120 @@ mcr_chart = function(values = NULL, references = NULL,
       return(paste0(format(round(y, 1), nsmall = 1), "\n",
                     format(round(reciprocal_of_mcr(mcr = 10^y + 1) * 100, 1), nsmall = 1), "%"))
       # 10^y + 1 => valeur de mcr à partir de y = log10(mcr - 1)
-    }) +
-    ggplot2::theme_bw()
+    })
   
-  # Si des couleurs spécifiques doivent être associés aux THQ
-  if (!is.null(thq_col)) chart = chart + ggplot2::scale_color_manual(values = thq_col)
+  return(chart)
+}
+
+
+#' MCR approach scatter plot (standard part)
+#' 
+#' Plot \eqn{HI} versus \eqn{MCR} with the percentage of the reciprocal of the maximum cumulative ratio,
+#'  the elements producing the top hazard quotients and the associated MIAT groups. More precisely, plot
+#'  the part of the chart that depends on the non-transformation of the axes (regions: filling,
+#'  boundaries, labels; points and axes).
+#' 
+#' @details
+#' The limits of the graph (`xlim` and `ylim`) are considered without taking into account the expand
+#'  limits (see [`ggplot2::expand_limits`]).
+#' 
+#' The chart being plotted with the `ggplot2` package, it can be modified or completed afterwards using
+#'  [`ggplot2::last_plot`] or the returned object.
+#' 
+#' Color specification can be done using the R predefined color names or hexadecimal values.
+#' 
+#' The grey area represents the region in which no point can be plotted because \eqn{MCR} cannot be lower
+#'  than 1.
+#' 
+#' @param chart `ggplot` object on which to add the standard part.
+#' @param xlim Lower and uper limits of the abscissa of the graph.
+#' @param ylim Lower and uper limits of the ordinate of the graph.
+#' @inheritParams mcr_chart
+#' @return `ggplot` object of the chart after plotting the standard part.
+#' 
+#' @author Gauthier Magnin
+#' @references De Brouwere K, et al. (2014).
+#'             Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
+#'             *The Science of the Total Environment*, 479-480, 267-276.
+#'             <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
+#' @seealso [`mcr_chart`], [`plot_mcr_log_part`].
+#' 
+#' @md
+#' @keywords internal
+plot_mcr_standard_part = function(chart, xlim, ylim,
+                                  regions, regions_col, regions_alpha, regions_lab) {
   
   # Texte relatif aux groupes
   if (any(regions_lab)) {
     # Vérification des zones affichées (non-affichage du texte des zones qui ne sont pas affichées)
-    regions_lab = regions_lab & c(xlim[2] > 0, xlim[1] < 0, ylim[1] < 0, ylim[2] > 0)
+    regions_lab = regions_lab & c(xlim[2] > 1, xlim[1] < 1, ylim[2] > 1, ylim[2] > 2)
     
     chart = chart + ggplot2::annotate(geom = "text",
-                                      x = c(xlim[2], xlim[1], root_fun / 2, xlim[2] / 2)[regions_lab],
-                                      y = c(ylim[1], ylim[1], -0.25, ylim[2])[regions_lab],
-                                      hjust = c(1, 0, 0.5, 0.5)[regions_lab],
-                                      vjust = c(0, 0, 0.5, 1)[regions_lab],
+                                      x = c(xlim[2], xlim[1], 1.5, xlim[2])[regions_lab],
+                                      y = c(1.05, ylim[2], 1.95, ylim[2])[regions_lab],
+                                      hjust = c(1, 0, 0.5, 1)[regions_lab],
+                                      vjust = c(0, 1, 1, 1)[regions_lab],
                                       label = c("Group I", "Group II", "Group IIIA", "Group IIIB")[regions_lab])
   }
   
-  # Régression linéaire
-  if (regression) chart = chart + ggplot2::geom_smooth(method = "lm", formula = y ~ x)
+  # Nécessité d'utiliser cette limite au lieu de Inf pour tracer correctement les délimitations
+  xmax = xlim[2] + 1
   
-  # Recadrage du graphique
-  chart = chart + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+  # Coloration des régions
+  if (regions) {
+    chart = chart +
+      # A gauche, groupe II
+      ggplot2::geom_polygon(data = data.frame(x = c(-Inf, -Inf, 1, 1),
+                                              y = c(1, Inf, Inf, 1)),
+                            ggplot2::aes(fill = "II"),
+                            alpha = regions_alpha) +
+      # A droite, groupe I
+      ggplot2::geom_polygon(data = data.frame(x = c(Inf, 1, xmax),
+                                              y = c(1, 1, xmax)),
+                            ggplot2::aes(fill = "I"),
+                            alpha = regions_alpha) +
+      # Au centre, groupe IIIA
+      ggplot2::geom_polygon(data = data.frame(x = c(1, 1, 2),
+                                              y = c(1, 2, 2)),
+                            ggplot2::aes(fill = "IIIA"),
+                            alpha = regions_alpha) +
+      # En haut, groupe IIIB
+      ggplot2::geom_polygon(data = data.frame(x = c(1, 1, Inf, xmax, 2),
+                                              y = c(2, Inf, Inf, xmax, 2)),
+                            ggplot2::aes(fill = "IIIB"),
+                            alpha = regions_alpha) +
+      # Légende associée
+      ggplot2::scale_fill_manual(values = stats::setNames(regions_col, c("I", "II", "IIIA", "IIIB")),
+                                 name = "MIAT groups",
+                                 guide = ggplot2::guide_legend(override.aes = list(color = "black",
+                                                                                   linetype = "longdash")))
+  }
   
-  graphics::plot(chart)
+  # Suite du graphique (points, délimitations, légende, labels axe Y)
+  chart = chart + ggplot2::geom_point(ggplot2::aes(color = factor(thq))) +
+    # Mise en évidence de la zone impossible
+    ggplot2::geom_polygon(data = data.frame(x = c(-Inf, -Inf, Inf ,Inf),
+                                            y = c(-Inf, 1, 1, -Inf)),
+                          fill = "lightgrey", alpha = regions_alpha) +
+    # Délimitation du groupe IIIA
+    ggplot2::geom_polygon(data = data.frame(x = c(1, 1, 2),
+                                            y = c(1, 2, 2)),
+                          color = "black", linetype = "longdash", alpha = 0) +
+    # Droite vertical séparant le groupe II du reste
+    ggplot2::geom_segment(ggplot2::aes(x = 1, y = 2, xend = 1, yend = Inf),
+                          color = "black", linetype = "longdash") +
+    # Droite séparant le groupe I du reste
+    ggplot2::geom_segment(ggplot2::aes(x = 2, y = 2, xend = xmax, yend = xmax),
+                          color = "black", linetype = "longdash") +
+    # Titres des axes et légende
+    ggplot2::labs(x = "HI", y = "MCR; MHQ / HI",
+                  col = "Top Hazard Quotients") +
+    # Ajout de la réciproque de MCR aux labels de l'axe Y
+    ggplot2::scale_y_continuous(labels = function(y) {
+      return(paste0(y, "\n", format(round(reciprocal_of_mcr(mcr = y) * 100, 1), nsmall = 1), "%"))
+    })
+  
+  return(chart)
 }
 
 
