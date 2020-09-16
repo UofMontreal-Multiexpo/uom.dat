@@ -3078,7 +3078,7 @@ setMethod(f = "extract_nodes_from_characteristic",
           definition = function(object, nodes_characteristics, characteristic, value, condition = "EQ") {
             
             if (!(characteristic %in% c("length", "weight")))
-              stop("characteristic must be one of c(\"length\", \"weight\").")
+              stop("characteristic must be one of \"length\", \"weight\".")
             
             switch(EXPR = condition,
                    "EQ" = { return(nodes_characteristics[nodes_characteristics[characteristic] == value, ]) },
@@ -3087,7 +3087,7 @@ setMethod(f = "extract_nodes_from_characteristic",
                    "GT" = { return(nodes_characteristics[nodes_characteristics[characteristic] > value, ]) },
                    "LE" = { return(nodes_characteristics[nodes_characteristics[characteristic] <= value, ]) },
                    "GE" = { return(nodes_characteristics[nodes_characteristics[characteristic] >= value, ]) },
-                   stop("value must be one of \"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\"."))
+                   stop("condition must be one of \"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\"."))
           })
 
 
@@ -3279,7 +3279,7 @@ setMethod(f = "extract_patterns_from_characteristic",
           definition = function(object, patterns_characteristics, characteristic, value, condition = "EQ") {
             
             if (!(characteristic %in% c("year", "frequency", "weight", "order", "specificity")))
-              stop("characteristic must be one of c(\"year\", \"frequency\", \"weight\", \"order\", \"specificity\").")
+              stop("characteristic must be one of \"year\", \"frequency\", \"weight\", \"order\", \"specificity\".")
             
             switch(EXPR = condition,
                    "EQ" = { return(patterns_characteristics[patterns_characteristics[characteristic] == value, ]) },
@@ -3288,7 +3288,7 @@ setMethod(f = "extract_patterns_from_characteristic",
                    "GT" = { return(patterns_characteristics[patterns_characteristics[characteristic] > value, ]) },
                    "LE" = { return(patterns_characteristics[patterns_characteristics[characteristic] <= value, ]) },
                    "GE" = { return(patterns_characteristics[patterns_characteristics[characteristic] >= value, ]) },
-                   stop("value must be one of \"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\"."))
+                   stop("condition must be one of \"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\"."))
           })
 
 
