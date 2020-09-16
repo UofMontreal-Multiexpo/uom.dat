@@ -356,19 +356,29 @@ setMethod(f = "summary",
           signature = "SpectralAnalyzer",
           definition = function(object, ...) {
             
-            # Résumé des caractéristiques des motifs
             summaries = list()
-            summaries[["year"]] = summary(object@patterns$year)
-            summaries[["frequency"]] = summary(object@patterns$frequency)
-            summaries[["weight"]] = summary(object@patterns$weight)
             
-            summaries[["order"]] = as.data.frame(table(object@patterns$order))
-            colnames(summaries[["order"]]) = c("order", "count")
+            # Résumé des caractéristiques des motifs
+            main = cbind(
+              "year" = summary(object@patterns$year),
+              "frequency" = summary(object@patterns$frequency),
+              "weight" = summary(object@patterns$weight),
+              "specificity" = summary(object@patterns$specificity)
+            )
+            colnames(main) = c("year", "frequency", "weight", "specificity")
             
-            summaries[["specificity"]] = summary(object@patterns$specificity)
+            summaries[["patterns"]] = list(main = main)
+            summaries[["patterns"]][["order"]] = as.data.frame(table(object@patterns$order))
+            summaries[["patterns"]][["status"]] = as.data.frame(table(object@patterns$status))
+            colnames(summaries[["patterns"]][["order"]]) = c("order", "count")
+            colnames(summaries[["patterns"]][["status"]]) = c("status", "count")
             
-            summaries[["status"]] = as.data.frame(table(object@patterns$status))
-            colnames(summaries[["status"]]) = c("status", "count")
+            # Tailles des attributs principaux
+            summaries[["count"]] = c(observations = length(object@observations),
+                                     items = length(object@items),
+                                     categories = ncol(object@items_categories),
+                                     nodes = nrow(object@nodes),
+                                     patterns = nrow(object@patterns))
             
             return(summaries)
           })
