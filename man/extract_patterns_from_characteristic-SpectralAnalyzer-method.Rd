@@ -26,19 +26,21 @@ See \code{\link{extract_patterns_from_status}} to search by \code{"status"}.}
 \item{value}{Sought value for the characteristic specified by the parameter \code{characteristic}.}
 
 \item{condition}{Search condition.
-One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
+One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"},
+\code{"=="}, \code{"!="}, \code{"<"}, \code{">"}, \code{"<="}, \code{">="}.
 \describe{
-  \item{\code{"EQ"}}{\strong{EQ}ual: the value of the characteristic must be equal to that sought.}
-  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual: the value of the characteristic must be different
-                     from that sought.}
-  \item{\code{"LT"}}{\strong{L}ess \strong{T}han: the value of the characteristic must be less
-                     than that sought.}
-  \item{\code{"GT"}}{\strong{G}reater \strong{T}han: the value of the characteristic must be greater
-                     than that sought.}
-  \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual: the value of the caracteristic must be
-                     less than or equal to that sought.}
-  \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual: the value of the characteristic must
-                     be greater than or equal to that sought.}
+  \item{\code{"EQ", "=="}}{\strong{EQ}ual: the value of the characteristic must be equal to that
+                           sought.}
+  \item{\code{"NE", "!="}}{\strong{N}ot \strong{E}qual: the value of the characteristic must be
+                           different from that sought.}
+  \item{\code{"LT", "<"}}{\strong{L}ess \strong{T}han: the value of the characteristic must be less
+                          than that sought.}
+  \item{\code{"GT", ">"}}{\strong{G}reater \strong{T}han: the value of the characteristic must be
+                          greater than that sought.}
+  \item{\code{"LE", "<="}}{\strong{L}ess than or \strong{E}qual: the value of the caracteristic must
+                           be less than or equal to that sought.}
+  \item{\code{"GE", ">="}}{\strong{G}reater than or \strong{E}qual: the value of the characteristic
+                           must be greater than or equal to that sought.}
 }}
 }
 \value{
@@ -50,7 +52,13 @@ Extract the patterns satisfying a search criterion according to one characterist
 \examples{
 extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
                                      characteristic = "weight",
-                                     value = 3, condition = "GE")
+                                     value = 3)
+extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
+                                     characteristic = "weight",
+                                     value = 3, condition = ">=")
+extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
+                                     characteristic = "order",
+                                     value = 3, condition = "LT")
 
 }
 \seealso{

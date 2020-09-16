@@ -25,19 +25,21 @@ One of \code{"length"}, \code{"weight"}.}
 \item{value}{Sought value for the characteristic specified by the parameter \code{characteristic}.}
 
 \item{condition}{Search condition.
-One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
+One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"},
+\code{"=="}, \code{"!="}, \code{"<"}, \code{">"}, \code{"<="}, \code{">="}.
 \describe{
-  \item{\code{"EQ"}}{\strong{EQ}ual: the value of the characteristic must be equal to that sought.}
-  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual: the value of the characteristic must be different
-                     from that sought.}
-  \item{\code{"LT"}}{\strong{L}ess \strong{T}han: the value of the characteristic must be less
-                     than that sought.}
-  \item{\code{"GT"}}{\strong{G}reater \strong{T}han: the value of the characteristic must be greater
-                     than that sought.}
-  \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual: the value of the caracteristic must be
-                     less than or equal to that sought.}
-  \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual: the value of the characteristic must
-                     be greater than or equal to that sought.}
+  \item{\code{"EQ", "=="}}{\strong{EQ}ual: the value of the characteristic must be equal to that
+                           sought.}
+  \item{\code{"NE", "!="}}{\strong{N}ot \strong{E}qual: the value of the characteristic must be
+                           different from that sought.}
+  \item{\code{"LT", "<"}}{\strong{L}ess \strong{T}han: the value of the characteristic must be less
+                          than that sought.}
+  \item{\code{"GT", ">"}}{\strong{G}reater \strong{T}han: the value of the characteristic must be
+                          greater than that sought.}
+  \item{\code{"LE", "<="}}{\strong{L}ess than or \strong{E}qual: the value of the caracteristic must
+                           be less than or equal to that sought.}
+  \item{\code{"GE", ">="}}{\strong{G}reater than or \strong{E}qual: the value of the characteristic
+                           must be greater than or equal to that sought.}
 }}
 }
 \value{
@@ -49,7 +51,13 @@ Extract the nodes satisfying a search criterion according to one characteristic.
 \examples{
 extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
                                   characteristic = "weight",
-                                  value = 2, condition = "GE")
+                                  value = 2)
+extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
+                                  characteristic = "length",
+                                  value = 2, condition = ">=")
+extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
+                                  characteristic = "length",
+                                  value = 5, condition = "LT")
 
 }
 \seealso{

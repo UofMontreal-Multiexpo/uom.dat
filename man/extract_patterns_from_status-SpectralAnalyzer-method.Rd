@@ -20,11 +20,12 @@ Any subset of \code{object["patterns"]}.}
 
 \item{value}{Status value sought (one or more)}
 
-\item{condition}{Search condition. One of \code{"EQ"}, \code{"NE"}.
+\item{condition}{Search condition. One of \code{"EQ"}, \code{"NE"}, \code{"=="}, \code{"!="}.
 \describe{
-  \item{\code{"EQ"}}{\strong{EQ}ual: the status of the pattern must be one of the sought values.}
-  \item{\code{"NE"}}{\strong{N}ot \strong{E}qual: the status of the pattern must be different from
-                     the sought values.}
+  \item{\code{"EQ"}, \code{"=="}}{\strong{EQ}ual: the status of the pattern must be one of the
+                                  sought values.}
+  \item{\code{"NE"}, \code{"!="}}{\strong{N}ot \strong{E}qual: the status of the pattern must be
+                                  different from the sought values.}
 }}
 }
 \value{
@@ -40,7 +41,7 @@ extract_patterns_from_status(SA_instance, SA_instance["patterns"],
 
 extract_patterns_from_status(SA_instance, SA_instance["patterns"],
                              value = c("Persistent", "Declining"),
-                             condition = "NE")
+                             condition = "!=")
 
 }
 \seealso{

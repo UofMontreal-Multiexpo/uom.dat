@@ -3047,19 +3047,21 @@ setMethod(f = "extract_nodes_from_items",
 #'  One of \code{"length"}, \code{"weight"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
 #' @param condition Search condition.
-#'  One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
+#'  One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"},
+#'  \code{"=="}, \code{"!="}, \code{"<"}, \code{">"}, \code{"<="}, \code{">="}.
 #'  \describe{
-#'    \item{\code{"EQ"}}{\strong{EQ}ual: the value of the characteristic must be equal to that sought.}
-#'    \item{\code{"NE"}}{\strong{N}ot \strong{E}qual: the value of the characteristic must be different
-#'                       from that sought.}
-#'    \item{\code{"LT"}}{\strong{L}ess \strong{T}han: the value of the characteristic must be less
-#'                       than that sought.}
-#'    \item{\code{"GT"}}{\strong{G}reater \strong{T}han: the value of the characteristic must be greater
-#'                       than that sought.}
-#'    \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual: the value of the caracteristic must be
-#'                       less than or equal to that sought.}
-#'    \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual: the value of the characteristic must
-#'                       be greater than or equal to that sought.}
+#'    \item{\code{"EQ", "=="}}{\strong{EQ}ual: the value of the characteristic must be equal to that
+#'                             sought.}
+#'    \item{\code{"NE", "!="}}{\strong{N}ot \strong{E}qual: the value of the characteristic must be
+#'                             different from that sought.}
+#'    \item{\code{"LT", "<"}}{\strong{L}ess \strong{T}han: the value of the characteristic must be less
+#'                            than that sought.}
+#'    \item{\code{"GT", ">"}}{\strong{G}reater \strong{T}han: the value of the characteristic must be
+#'                            greater than that sought.}
+#'    \item{\code{"LE", "<="}}{\strong{L}ess than or \strong{E}qual: the value of the caracteristic must
+#'                             be less than or equal to that sought.}
+#'    \item{\code{"GE", ">="}}{\strong{G}reater than or \strong{E}qual: the value of the characteristic
+#'                             must be greater than or equal to that sought.}
 #'  }
 #' @return Subset of the data frame of nodes that match the search criteria.
 #' 
@@ -3069,7 +3071,13 @@ setMethod(f = "extract_nodes_from_items",
 #' @examples
 #' extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
 #'                                   characteristic = "weight",
-#'                                   value = 2, condition = "GE")
+#'                                   value = 2)
+#' extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
+#'                                   characteristic = "length",
+#'                                   value = 2, condition = ">=")
+#' extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
+#'                                   characteristic = "length",
+#'                                   value = 5, condition = "LT")
 #' 
 #' @aliases extract_nodes_from_characteristic
 #' @export
@@ -3082,12 +3090,26 @@ setMethod(f = "extract_nodes_from_characteristic",
             
             switch(EXPR = condition,
                    "EQ" = { return(nodes_characteristics[nodes_characteristics[characteristic] == value, ]) },
+                   "==" = { return(nodes_characteristics[nodes_characteristics[characteristic] == value, ]) },
+                   
                    "NE" = { return(nodes_characteristics[nodes_characteristics[characteristic] != value, ]) },
-                   "LT" = { return(nodes_characteristics[nodes_characteristics[characteristic] < value, ]) },
-                   "GT" = { return(nodes_characteristics[nodes_characteristics[characteristic] > value, ]) },
+                   "!=" = { return(nodes_characteristics[nodes_characteristics[characteristic] != value, ]) },
+                   
+                   "LT" = { return(nodes_characteristics[nodes_characteristics[characteristic] <  value, ]) },
+                   "<"  = { return(nodes_characteristics[nodes_characteristics[characteristic] <  value, ]) },
+                   
+                   "GT" = { return(nodes_characteristics[nodes_characteristics[characteristic] >  value, ]) },
+                   ">"  = { return(nodes_characteristics[nodes_characteristics[characteristic] >  value, ]) },
+                   
                    "LE" = { return(nodes_characteristics[nodes_characteristics[characteristic] <= value, ]) },
+                   "<=" = { return(nodes_characteristics[nodes_characteristics[characteristic] <= value, ]) },
+                   
                    "GE" = { return(nodes_characteristics[nodes_characteristics[characteristic] >= value, ]) },
-                   stop("condition must be one of \"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\"."))
+                   ">=" = { return(nodes_characteristics[nodes_characteristics[characteristic] >= value, ]) },
+                   
+                   stop(paste("condition must be one of",
+                              "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
+                              "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\".")))
           })
 
 
@@ -3254,19 +3276,21 @@ setMethod(f = "extract_patterns_from_items",
 #'  See \code{\link{extract_patterns_from_status}} to search by \code{"status"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
 #' @param condition Search condition.
-#'  One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"}.
+#'  One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"},
+#'  \code{"=="}, \code{"!="}, \code{"<"}, \code{">"}, \code{"<="}, \code{">="}.
 #'  \describe{
-#'    \item{\code{"EQ"}}{\strong{EQ}ual: the value of the characteristic must be equal to that sought.}
-#'    \item{\code{"NE"}}{\strong{N}ot \strong{E}qual: the value of the characteristic must be different
-#'                       from that sought.}
-#'    \item{\code{"LT"}}{\strong{L}ess \strong{T}han: the value of the characteristic must be less
-#'                       than that sought.}
-#'    \item{\code{"GT"}}{\strong{G}reater \strong{T}han: the value of the characteristic must be greater
-#'                       than that sought.}
-#'    \item{\code{"LE"}}{\strong{L}ess than or \strong{E}qual: the value of the caracteristic must be
-#'                       less than or equal to that sought.}
-#'    \item{\code{"GE"}}{\strong{G}reater than or \strong{E}qual: the value of the characteristic must
-#'                       be greater than or equal to that sought.}
+#'    \item{\code{"EQ", "=="}}{\strong{EQ}ual: the value of the characteristic must be equal to that
+#'                             sought.}
+#'    \item{\code{"NE", "!="}}{\strong{N}ot \strong{E}qual: the value of the characteristic must be
+#'                             different from that sought.}
+#'    \item{\code{"LT", "<"}}{\strong{L}ess \strong{T}han: the value of the characteristic must be less
+#'                            than that sought.}
+#'    \item{\code{"GT", ">"}}{\strong{G}reater \strong{T}han: the value of the characteristic must be
+#'                            greater than that sought.}
+#'    \item{\code{"LE", "<="}}{\strong{L}ess than or \strong{E}qual: the value of the caracteristic must
+#'                             be less than or equal to that sought.}
+#'    \item{\code{"GE", ">="}}{\strong{G}reater than or \strong{E}qual: the value of the characteristic
+#'                             must be greater than or equal to that sought.}
 #'  }
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
@@ -3277,7 +3301,13 @@ setMethod(f = "extract_patterns_from_items",
 #' @examples
 #' extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
 #'                                      characteristic = "weight",
-#'                                      value = 3, condition = "GE")
+#'                                      value = 3)
+#' extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
+#'                                      characteristic = "weight",
+#'                                      value = 3, condition = ">=")
+#' extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
+#'                                      characteristic = "order",
+#'                                      value = 3, condition = "LT")
 #' 
 #' @aliases extract_patterns_from_characteristic
 #' @export
@@ -3290,12 +3320,26 @@ setMethod(f = "extract_patterns_from_characteristic",
             
             switch(EXPR = condition,
                    "EQ" = { return(patterns_characteristics[patterns_characteristics[characteristic] == value, ]) },
+                   "==" = { return(patterns_characteristics[patterns_characteristics[characteristic] == value, ]) },
+                   
                    "NE" = { return(patterns_characteristics[patterns_characteristics[characteristic] != value, ]) },
-                   "LT" = { return(patterns_characteristics[patterns_characteristics[characteristic] < value, ]) },
-                   "GT" = { return(patterns_characteristics[patterns_characteristics[characteristic] > value, ]) },
+                   "!=" = { return(patterns_characteristics[patterns_characteristics[characteristic] != value, ]) },
+                   
+                   "LT" = { return(patterns_characteristics[patterns_characteristics[characteristic] <  value, ]) },
+                   "<"  = { return(patterns_characteristics[patterns_characteristics[characteristic] <  value, ]) },
+                   
+                   "GT" = { return(patterns_characteristics[patterns_characteristics[characteristic] >  value, ]) },
+                   ">"  = { return(patterns_characteristics[patterns_characteristics[characteristic] >  value, ]) },
+                   
                    "LE" = { return(patterns_characteristics[patterns_characteristics[characteristic] <= value, ]) },
+                   "<=" = { return(patterns_characteristics[patterns_characteristics[characteristic] <= value, ]) },
+                   
                    "GE" = { return(patterns_characteristics[patterns_characteristics[characteristic] >= value, ]) },
-                   stop("condition must be one of \"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\"."))
+                   ">=" = { return(patterns_characteristics[patterns_characteristics[characteristic] >= value, ]) },
+                   
+                   stop(paste("condition must be one of",
+                              "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
+                              "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\".")))
           })
 
 
@@ -3307,11 +3351,12 @@ setMethod(f = "extract_patterns_from_characteristic",
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
 #'  Any subset of \code{object["patterns"]}.
 #' @param value Status value sought (one or more)
-#' @param condition Search condition. One of \code{"EQ"}, \code{"NE"}.
+#' @param condition Search condition. One of \code{"EQ"}, \code{"NE"}, \code{"=="}, \code{"!="}.
 #'  \describe{
-#'    \item{\code{"EQ"}}{\strong{EQ}ual: the status of the pattern must be one of the sought values.}
-#'    \item{\code{"NE"}}{\strong{N}ot \strong{E}qual: the status of the pattern must be different from
-#'                       the sought values.}
+#'    \item{\code{"EQ"}, \code{"=="}}{\strong{EQ}ual: the status of the pattern must be one of the
+#'                                    sought values.}
+#'    \item{\code{"NE"}, \code{"!="}}{\strong{N}ot \strong{E}qual: the status of the pattern must be
+#'                                    different from the sought values.}
 #'  }
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
@@ -3326,7 +3371,7 @@ setMethod(f = "extract_patterns_from_characteristic",
 #' 
 #' extract_patterns_from_status(SA_instance, SA_instance["patterns"],
 #'                              value = c("Persistent", "Declining"),
-#'                              condition = "NE")
+#'                              condition = "!=")
 #' 
 #' @aliases extract_patterns_from_status
 #' @export
@@ -3336,8 +3381,11 @@ setMethod(f = "extract_patterns_from_status",
             
             switch(EXPR = condition,
                    "EQ" = { return(patterns_characteristics[patterns_characteristics$status %in% value, ]) },
+                   "==" = { return(patterns_characteristics[patterns_characteristics$status %in% value, ]) },
+                   
                    "NE" = { return(patterns_characteristics[!(patterns_characteristics$status %in% value), ]) },
-                   stop("condition must be \"EQ\" or \"NE\"."))
+                   "!=" = { return(patterns_characteristics[!(patterns_characteristics$status %in% value), ]) },
+                   stop("condition must be one of \"EQ\", \"NE\", \"==\", \"!=\"."))
           })
 
 
