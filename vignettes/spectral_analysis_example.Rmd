@@ -900,15 +900,8 @@ rules_4b
 ```
 ![](./img/rules_4b.png)
 
-```{r eval=FALSE}
+```{r}
 # Rules in which the substance "328" is the antecedent and the substance "3180" is the consequent (with confidence threshold of 0)
-rules_4c <- extract_rules(sa_object, from = "observations",
-                          parameter = list(supp = 0.001, conf = 0, minlen = 2, maxlen = 2),
-                          appearance = list(lhs = "328", rhs = "3180"))
-rules_4c
-```
-```{r eval=TRUE, echo=FALSE}
-# Duplication of the previous chunk with the option echo=FALSE so that the source is not divided into two blocks
 rules_4c <- extract_rules(sa_object, from = "observations",
                           parameter = list(supp = 0.001, conf = 0, minlen = 2, maxlen = 2),
                           appearance = list(lhs = "328", rhs = "3180"))

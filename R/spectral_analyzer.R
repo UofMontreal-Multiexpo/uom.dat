@@ -860,10 +860,8 @@ setMethod(f = "list_separate_patterns",
                           minlen = min_length,
                           maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length), 
                           target = target)
-            invisible(utils::capture.output({
-              result <- arules::eclat(transact, parameter = params)
-              res <- arules::inspect(result, linebreak = FALSE) # Permet aussi d'obtenir le support
-            }))
+            result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
+            res = as(result, "data.frame") # Contient aussi le support
             
             # Exraction des motifs issus du résultat et transformation en liste de vecteurs
             patterns = vector_notation(res$items)
@@ -2893,10 +2891,13 @@ setMethod(f = "extract_rules",
               if ("parameter" %in% names(args) && "target" %in% names(args$parameter)
                   && args$parameter$target != "rules") stop("target parameter must be \"rules\"")
               
+              # Spécification du non-affichage de la progression
+              if (!("control" %in% names(args))) args$control = list(verbose = FALSE)
+              else if (!("verbose" %in% names(args$control))) args$control$verbose = FALSE
+              
               # Extraction des règles d'association
-              invisible(utils::capture.output(
-                rules <- arules::apriori(transact, ...)
-              ))
+              # rules = arules::apriori(transact, ...)
+              rules = do.call(arules::apriori, c(data = transact, args))
               
             } else {
               if (is.character(from)) from = object@patterns$pattern
@@ -2911,24 +2912,22 @@ setMethod(f = "extract_rules",
             # Recherche et retrait des règles redondantes
             if (pruning) rules = rules[!arules::is.redundant(rules)]
             
-            # Conversion du type arules::rules en data frame
-            invisible(utils::capture.output(
-              rules_df <- arules::inspect(rules)
-            ))
+            # Si aucune règle ne correspond aux critères de recherche : NULL
+            if (length(rules) == 0) return(NULL)
             
-            # Si au moins une règle correspond aux critères de recherche
-            if (!is.null(rules_df)) {
-              # Changement de notation
-              if (!as_sets) {
-                rules_df[, c("lhs", "rhs")] = apply(rules_df[, c("lhs", "rhs")], 2, vector_notation)
-              }
-              
-              # Renommage des colonnes "lhs" et "rhs"
-              colnames(rules_df)[c(1,3)] = c("antecedent", "consequent")
-              rownames(rules_df) = NULL
+            # Conversion en data frame
+            rules_df = arules::DATAFRAME(rules)
+            
+            # Changement de notation
+            if (!as_sets) {
+              rules_df[, c("LHS", "RHS")] = apply(rules_df[, c("LHS", "RHS")], 2, vector_notation)
             }
             
-            return(rules_df)
+            # Renommage des colonnes "LHS" et "RHS" et replacement de la colonne "=>"
+            colnames(rules_df)[c(1,2)] = c("antecedent", "consequent")
+            rownames(rules_df) = NULL
+            rules_df[, " "] = "=>"
+            return(rules_df[, c(1, ncol(rules_df), seq(2, ncol(rules_df)-1))])
           })
 
 
