@@ -5,7 +5,7 @@
 \alias{check_access_for_category}
 \title{Validation of parameters for search by category}
 \usage{
-\S4method{check_access_for_category}{SpectralAnalyzer}(object, category, value)
+\S4method{check_access_for_category}{SpectralAnalyzer}(object, category, value, stop = TRUE)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
@@ -14,6 +14,12 @@
 columns of \code{object["items_categories"]}).}
 
 \item{value}{Sought value for the category specified by the argument \code{category}, or NA.}
+
+\item{stop}{If \code{TRUE}, stop the execution and print an error message if the parameters do not
+allow access to a category. If \code{FALSE}, see 'Value' section.}
+}
+\value{
+\code{TRUE} or \code{FALSE} whether the parameters allow access to a category.
 }
 \description{
 Check that the parameters provided match an existing category.

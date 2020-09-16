@@ -555,7 +555,7 @@ setGeneric(name = "extract_nodes_from_characteristic", def = function(object, no
 
 setGeneric(name = "extract_nodes_from_category", def = function(object, nodes_characteristics, category, value, target){ standardGeneric("extract_nodes_from_category") })
 
-setGeneric(name = "check_access_for_category", def = function(object, category, value){ standardGeneric("check_access_for_category") })
+setGeneric(name = "check_access_for_category", def = function(object, category, value, stop = TRUE){ standardGeneric("check_access_for_category") })
 
 setGeneric(name = "extract_patterns_from_items", def = function(object, patterns_characteristics, items, presence = "all"){ standardGeneric("extract_patterns_from_items") })
 
@@ -3165,6 +3165,9 @@ setMethod(f = "extract_nodes_from_category",
 #' @param category Name or number of the category to access (numbering according to the order of the
 #'  columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the argument \code{category}, or NA.
+#' @param stop If \code{TRUE}, stop the execution and print an error message if the parameters do not
+#'  allow access to a category. If \code{FALSE}, see 'Value' section.
+#' @return \code{TRUE} or \code{FALSE} whether the parameters allow access to a category.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{extract_patterns_from_category}}, \code{\link{extract_nodes_from_category}}.
@@ -3172,21 +3175,25 @@ setMethod(f = "extract_nodes_from_category",
 #' @keywords internal
 setMethod(f = "check_access_for_category",
           signature = "SpectralAnalyzer",
-          definition = function(object, category, value) {
+          definition = function(object, category, value, stop = TRUE) {
             
             # Vérification que le type de catégorie recherché existe
             if (is.character(category) & !(category %in% colnames(object@items_categories))) {
+              if (!stop) return(FALSE)
               stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
                                                       collapse = ", ") ,".")
             } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
+              if (!stop) return(FALSE)
               stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
             }
             
             # Vérification que la valeur de la catégorie recherchée existe
             if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
+              if (!stop) return(FALSE)
               stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
                                                    collapse = ", ") ,".")
             }
+            return(TRUE)
           })
 
 
