@@ -10,7 +10,7 @@
   entities,
   characteristics,
   category = NULL,
-  target = NULL,
+  condition = NULL,
   min_nb_values = 2
 )
 }
@@ -26,7 +26,7 @@ are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns
 \item{category}{Name or number of the category on which to search (numbering according to the order
 of the columns of \code{object["items_categories"]}).}
 
-\item{target}{Condition for a node or a pattern to be extracted.
+\item{condition}{Condition for a node or a pattern to be extracted.
 One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 \describe{
   \item{\code{"items"}, \code{"vertices"}}{Search for nodes or patterns associated (via their items)
@@ -46,15 +46,15 @@ Extract from the given nodes or patterns those which are complex by the number o
  contain or by the number of values with which they are associated, with regard to one category.
 }
 \details{
-If \code{category} and \code{target} are \code{NULL}, entities with more than \code{min_nb_values}
- items are sought. Otherwise, the search is related to the \code{category} (see \code{target}).
+If \code{category} and \code{condition} are \code{NULL}, entities with more than \code{min_nb_values}
+ items are sought. Otherwise, the search is related to the \code{category} (see \code{condition}).
 }
 \examples{
 get_complexes(SA_instance, "patterns", SA_instance["patterns"])
 get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
-              category = "family", target = "items")
+              category = "family", condition = "items")
 get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
-              category = 1, target = "links")
+              category = 1, condition = "links")
 
 }
 \seealso{

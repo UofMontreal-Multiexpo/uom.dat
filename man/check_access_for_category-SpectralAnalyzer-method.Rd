@@ -29,7 +29,8 @@ Print an error message if not.
 If \code{value = NA}, only the parameter \code{category} is checked.
 }
 \seealso{
-\code{\link{extract_patterns_from_category}}, \code{\link{extract_nodes_from_category}}.
+\code{\link{get_patterns}}, \code{\link{get_nodes}}.
+         \code{\link{get_patterns_from_category}}, \code{\link{get_nodes_from_category}}.
 }
 \author{
 Gauthier Magnin

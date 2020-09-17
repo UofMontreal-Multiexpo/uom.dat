@@ -549,21 +549,25 @@ setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE,
 
 setGeneric(name = "save_characteristics", def = function(object, entities, characteristics, ...){ standardGeneric("save_characteristics") })
 
-setGeneric(name = "extract_nodes_from_items", def = function(object, nodes_characteristics, items, presence = "all"){ standardGeneric("extract_nodes_from_items") })
-
-setGeneric(name = "extract_nodes_from_characteristic", def = function(object, nodes_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_nodes_from_characteristic") })
-
-setGeneric(name = "extract_nodes_from_category", def = function(object, nodes_characteristics, category, value, target){ standardGeneric("extract_nodes_from_category") })
-
 setGeneric(name = "check_access_for_category", def = function(object, category, value, stop = TRUE){ standardGeneric("check_access_for_category") })
 
-setGeneric(name = "extract_patterns_from_items", def = function(object, patterns_characteristics, items, presence = "all"){ standardGeneric("extract_patterns_from_items") })
+setGeneric(name = "get_nodes", def = function(object, nodes_characteristics, element, value, condition = "default"){ standardGeneric("get_nodes") })
 
-setGeneric(name = "extract_patterns_from_characteristic", def = function(object, patterns_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("extract_patterns_from_characteristic") })
+setGeneric(name = "get_nodes_from_items", def = function(object, nodes_characteristics, items, condition = "all"){ standardGeneric("get_nodes_from_items") })
 
-setGeneric(name = "extract_patterns_from_status", def = function(object, patterns_characteristics, value, condition = "EQ"){ standardGeneric("extract_patterns_from_status") })
+setGeneric(name = "get_nodes_from_characteristic", def = function(object, nodes_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("get_nodes_from_characteristic") })
 
-setGeneric(name = "extract_patterns_from_category", def = function(object, patterns_characteristics, category, value, target){ standardGeneric("extract_patterns_from_category") })
+setGeneric(name = "get_nodes_from_category", def = function(object, nodes_characteristics, category, value, condition){ standardGeneric("get_nodes_from_category") })
+
+setGeneric(name = "get_patterns", def = function(object, patterns_characteristics, element, value, condition = "default"){ standardGeneric("get_patterns") })
+
+setGeneric(name = "get_patterns_from_items", def = function(object, patterns_characteristics, items, condition = "all"){ standardGeneric("get_patterns_from_items") })
+
+setGeneric(name = "get_patterns_from_characteristic", def = function(object, patterns_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("get_patterns_from_characteristic") })
+
+setGeneric(name = "get_patterns_from_status", def = function(object, patterns_characteristics, value, condition = "EQ"){ standardGeneric("get_patterns_from_status") })
+
+setGeneric(name = "get_patterns_from_category", def = function(object, patterns_characteristics, category, value, condition){ standardGeneric("get_patterns_from_category") })
 
 setGeneric(name = "get_links", def = function(object, entities, characteristics){ standardGeneric("get_links") })
 
@@ -571,7 +575,7 @@ setGeneric(name = "get_isolates", def = function(object, entities, characteristi
 
 setGeneric(name = "get_non_isolates", def = function(object, entities, characteristics){ standardGeneric("get_non_isolates") })
 
-setGeneric(name = "get_complexes", def = function(object, entities, characteristics, category = NULL, target = NULL, min_nb_values = 2){ standardGeneric("get_complexes") })
+setGeneric(name = "get_complexes", def = function(object, entities, characteristics, category = NULL, condition = NULL, min_nb_values = 2){ standardGeneric("get_complexes") })
 
 
 
@@ -2369,13 +2373,13 @@ setMethod(f = "cluster_chart",
             
             # Vérifie qu'un seul item est mentionné
             if (length(item) != 1 && entities == "nodes")
-              stop("item must refer to only one item. For more, check out the functions extract_nodes_from_items and spectrosome_chart.")
+              stop("item must refer to only one item. For more, check out the functions get_nodes_from_items and spectrosome_chart.")
             if (length(item) != 1 && entities == "patterns")
-              stop("item must refer to only one item. For more, check out the functions extract_patterns_from_items and spectrosome_chart.")
+              stop("item must refer to only one item. For more, check out the functions get_patterns_from_items and spectrosome_chart.")
             
             # Extraction des noeuds ou motifs contenant l'item recherché (nop = nodes or patterns)
-            if (entities == "nodes") nop = extract_nodes_from_items(object, characteristics, item)
-            else if (entities == "patterns") nop = extract_patterns_from_items(object, characteristics, item)
+            if (entities == "nodes") nop = get_nodes_from_items(object, characteristics, item)
+            else if (entities == "patterns") nop = get_patterns_from_items(object, characteristics, item)
             else stop("entities must be \"nodes\" or \"patterns\".")
             
             # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
@@ -2993,6 +2997,146 @@ setMethod(f = "save_characteristics",
           })
 
 
+#' Validation of parameters for search by category
+#' 
+#' Check that the parameters provided match an existing category.
+#' Print an error message if not.
+#' 
+#' @details
+#' If \code{value = NA}, only the parameter \code{category} is checked.
+#' 
+#' @param object \code{SpectralAnalyzer} class object.
+#' @param category Name or number of the category to access (numbering according to the order of the
+#'  columns of \code{object["items_categories"]}).
+#' @param value Sought value for the category specified by the argument \code{category}, or NA.
+#' @param stop If \code{TRUE}, stop the execution and print an error message if the parameters do not
+#'  allow access to a category. If \code{FALSE}, see 'Value' section.
+#' @return \code{TRUE} or \code{FALSE} whether the parameters allow access to a category.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{get_patterns}}, \code{\link{get_nodes}}.
+#'          \code{\link{get_patterns_from_category}}, \code{\link{get_nodes_from_category}}.
+#' @aliases check_access_for_category
+#' @keywords internal
+setMethod(f = "check_access_for_category",
+          signature = "SpectralAnalyzer",
+          definition = function(object, category, value, stop = TRUE) {
+            
+            # Vérification que le type de catégorie recherché existe
+            if (is.character(category) & !(category %in% colnames(object@items_categories))) {
+              if (!stop) return(FALSE)
+              stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
+                                                      collapse = ", ") ,".")
+            } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
+              if (!stop) return(FALSE)
+              stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
+            }
+            
+            # Vérification que la valeur de la catégorie recherchée existe
+            if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
+              if (!stop) return(FALSE)
+              stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
+                                                   collapse = ", ") ,".")
+            }
+            return(TRUE)
+          })
+
+
+#' Search for nodes by item, characteristic or category
+#' 
+#' Extract the nodes satisfying search criteria according to items, characteristics or categories.
+#' 
+#' @details
+#' If `element = "items"` one or more items can be sought. The condition for a node to be extracted
+#'  is the presence of the sought items (argument `value`). The argument `condition` must be `"all"`
+#'  or `"any"` (default is `"all"`):
+#'  * `"all"`: all the sought items must be part of the node.
+#'  * `"any"`: at least one of the sought items must be part of the node.
+#' 
+#' If `element` refers to a characteristic (i.e. is `"length"` or `"weight"`), the condition for a node
+#'  to be extracted is a comparison of the `value` according to one of the comparison operators (default
+#'  is equality):
+#'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
+#'  * `"NE"`, `"!="`: **N**ot **E**qual. The value of the characteristic must be different from that
+#'    sought.
+#'  * `"LT"`, `"<"`: **L**ess **T**han. The value of the characteristic must be less than that sought.
+#'  * `"GT"`, `">"`: **G**reater **T**han. The value of the characteristic must be greater than that
+#'    sought.
+#'  * `"LE"`, `"<="`: **L**ess than or **E**qual. The value of the caracteristic must be less than or
+#'    equal to that sought.
+#'  * `"GE"`, `">="`: **G**reater than or **E**qual. The value of the characteristic must be greater
+#'    than or equal to that sought.
+#' 
+#' If `element` is the name or the number of a category, the condition for a node to be extracted is
+#'  the correspondence to the sought category `value`. The argument `condition` must be one of `"items"`,
+#'  `"links"`, `"vertices"`, `"edges"` (no default).
+#'  * `"items"`, `"vertices"`: search for nodes containing an item associated with the sought category
+#'    value.
+#'  * `"links"`, `"edges"`: search for nodes generating links corresponding to the sought category value.
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param nodes_characteristics Data frame of nodes and their characteristics.
+#'  Any subset of `object["nodes"]`.
+#' @param element Type of element on which to search.
+#'  One of `"items"`, `"length"`, `"weight"` or the name or number of a category on which to search
+#'  (numbering according to the order of the columns of `object["items_categories"]`).
+#' @param value Sought value(s) for the element specified by the argument `element`.
+#' @param condition Search condition, depending on `element`. See 'Details' section.
+#' @return Subset of the data frame of nodes that match the search criteria.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`get_patterns`], [`get_complexes`], [`get_isolates`], [`get_non_isolates`].
+#' 
+#' @examples
+#' ## Search on items
+#' get_nodes(SA_instance, SA_instance["nodes"], element = "items", value = 3146)
+#' get_nodes(SA_instance, SA_instance["nodes"],
+#'           element = "items", value = c(3146, 3180), condition = "all")
+#' get_nodes(SA_instance, SA_instance["nodes"],
+#'           element = "items", value = c(3146, 3180), condition = "any")
+#' 
+#' ## Search on characteristics
+#' get_nodes(SA_instance, SA_instance["nodes"], element = "weight", value = 2)
+#' get_nodes(SA_instance, SA_instance["nodes"],
+#'           element = "weight", value = 2, condition = ">=")
+#' get_nodes(SA_instance, SA_instance["nodes"],
+#'           element = "length", value = 5, condition = "LT")
+#' 
+#' ## Search on categories
+#' get_nodes(SA_instance, SA_instance["nodes"],
+#'           element = "family", value = "Chrome", condition = "items")
+#' get_nodes(SA_instance, SA_instance["nodes"],
+#'           element = 1, value = "Chrome", condition = "links")
+#' 
+#' @aliases get_nodes
+#' @md
+#' @export
+setMethod(f = "get_nodes",
+          signature = "SpectralAnalyzer",
+          definition = function(object, nodes_characteristics,
+                                element, value, condition = "default") {
+            
+            # Vérification du choix de l'élément sur lequel effectuer la recherche
+            if (!(element %in% c("items", "length", "weight")) && !check_access_for_category(object, element, NA, stop = FALSE))
+              stop("element must be one of \"items\", \"length\", \"weight\", or a category name or number.")
+            
+            # Appel à la fonction spécifique
+            if (element == "items") {
+              if (condition == "default")
+                return(get_nodes_from_items(object, nodes_characteristics, value))
+              else
+                return(get_nodes_from_items(object, nodes_characteristics, value, condition))
+            }
+            if (element %in% c("length", "weight")) {
+              if (condition == "default")
+                return(get_nodes_from_characteristic(object, nodes_characteristics, element, value))
+              else
+                return(get_nodes_from_characteristic(object, nodes_characteristics, element, value, condition))
+            }
+            return(get_nodes_from_category(object, nodes_characteristics, element, value, condition))
+          })
+
+
 #' Search for nodes by item
 #' 
 #' Extract the nodes containing one or more sought items.
@@ -3001,7 +3145,7 @@ setMethod(f = "save_characteristics",
 #' @param nodes_characteristics Data frame of nodes and their characteristics.
 #'  Any subset of \code{object["nodes"]}.
 #' @param items Sought items (one or more).
-#' @param presence Item presence condition for a node to be extracted.
+#' @param condition Item presence condition for a node to be extracted.
 #'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
 #'    \item{\code{"all"}}{All the sought items must be part of a node for this node to be extracted.}
@@ -3011,25 +3155,26 @@ setMethod(f = "save_characteristics",
 #' @return Subset of the data frame of nodes that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{extract_nodes_from_characteristic}}, \code{\link{extract_nodes_from_category}}.
+#' @seealso \code{\link{get_nodes}}, \code{\link{get_nodes_from_characteristic}},
+#'          \code{\link{get_nodes_from_category}}.
 #' 
 #' @examples
-#' extract_nodes_from_items(SA_instance, SA_instance["nodes"], items = 3146)
-#' extract_nodes_from_items(SA_instance, SA_instance["nodes"],
-#'                          items = c(3146, 3180), presence = "all")
-#' extract_nodes_from_items(SA_instance, SA_instance["nodes"],
-#'                          items = c(3146, 3180), presence = "any")
+#' get_nodes_from_items(SA_instance, SA_instance["nodes"], items = 3146)
+#' get_nodes_from_items(SA_instance, SA_instance["nodes"],
+#'                      items = c(3146, 3180), condition = "all")
+#' get_nodes_from_items(SA_instance, SA_instance["nodes"],
+#'                      items = c(3146, 3180), condition = "any")
 #' 
-#' @aliases extract_nodes_from_items
-#' @export
-setMethod(f = "extract_nodes_from_items",
+#' @aliases get_nodes_from_items
+#' @keywords internal
+setMethod(f = "get_nodes_from_items",
           signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics, items, presence = "all") {
+          definition = function(object, nodes_characteristics, items, condition = "all") {
             
-            if (!(presence %in% c("all", "any"))) stop("presence must be \"all\" or \"any\".")
+            if (!(condition %in% c("all", "any"))) stop("condition must be \"all\" or \"any\".")
             
-            if (presence == "all") func = all
-            else if (presence == "any") func = any
+            if (condition == "all") func = all
+            else if (condition == "any") func = any
             
             return(subset(nodes_characteristics, sapply(nodes_characteristics$node,
                                                         function(x) func(items %in% x))))
@@ -3066,22 +3211,23 @@ setMethod(f = "extract_nodes_from_items",
 #' @return Subset of the data frame of nodes that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_category}}.
+#' @seealso \code{\link{get_nodes}}, \code{\link{get_nodes_from_items}},
+#'          \code{\link{get_nodes_from_category}}.
 #' 
 #' @examples
-#' extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
-#'                                   characteristic = "weight",
-#'                                   value = 2)
-#' extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
-#'                                   characteristic = "length",
-#'                                   value = 2, condition = ">=")
-#' extract_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
-#'                                   characteristic = "length",
-#'                                   value = 5, condition = "LT")
+#' get_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
+#'                               characteristic = "weight",
+#'                               value = 2)
+#' get_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
+#'                               characteristic = "length",
+#'                               value = 2, condition = ">=")
+#' get_nodes_from_characteristic(SA_instance, SA_instance["nodes"],
+#'                               characteristic = "length",
+#'                               value = 5, condition = "LT")
 #' 
-#' @aliases extract_nodes_from_characteristic
-#' @export
-setMethod(f = "extract_nodes_from_characteristic",
+#' @aliases get_nodes_from_characteristic
+#' @keywords internal
+setMethod(f = "get_nodes_from_characteristic",
           signature = "SpectralAnalyzer",
           definition = function(object, nodes_characteristics, characteristic, value, condition = "EQ") {
             
@@ -3123,7 +3269,7 @@ setMethod(f = "extract_nodes_from_characteristic",
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the parameter \code{category}.
-#' @param target Condition for a node to be extracted.
+#' @param condition Category value search condition for a node to be extracted.
 #'  One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 #'  \describe{
 #'    \item{\code{"items"}, \code{"vertices"}}{Search for nodes containing an item associated with the
@@ -3134,33 +3280,34 @@ setMethod(f = "extract_nodes_from_characteristic",
 #' @return Subset of the data frame of nodes that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{extract_nodes_from_items}}, \code{\link{extract_nodes_from_characteristic}}.
+#' @seealso \code{\link{get_nodes}}, \code{\link{get_nodes_from_items}},
+#'          \code{\link{get_nodes_from_characteristic}}.
 #' 
 #' @examples
-#' extract_nodes_from_category(SA_instance, SA_instance["nodes"],
-#'                             category = "family", value = "Chrome",
-#'                             target = "items")
+#' get_nodes_from_category(SA_instance, SA_instance["nodes"],
+#'                         category = "family", value = "Chrome",
+#'                         condition = "items")
 #' 
-#' extract_nodes_from_category(SA_instance, SA_instance["nodes"],
-#'                             category = 1, value = "Chrome",
-#'                             target = "links")
+#' get_nodes_from_category(SA_instance, SA_instance["nodes"],
+#'                         category = 1, value = "Chrome",
+#'                         condition = "links")
 #' 
-#' @aliases extract_nodes_from_category
-#' @export
-setMethod(f = "extract_nodes_from_category",
+#' @aliases get_nodes_from_category
+#' @keywords internal
+setMethod(f = "get_nodes_from_category",
           signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics, category, value, target) {
+          definition = function(object, nodes_characteristics, category, value, condition) {
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
             
-            if (target == "items" || target == "vertices") {
+            if (condition == "items" || condition == "vertices") {
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
               # Extraction des noeuds contenant ces items
-              return(extract_nodes_from_items(object, nodes_characteristics, items, presence = "any"))
+              return(get_nodes_from_items(object, nodes_characteristics, items, condition = "any"))
               
-            } else if (target == "links" || target == "edges") {
+            } else if (condition == "links" || condition == "edges") {
               # Recherche de l'ensemble de liens correspondant aux motifs
               links = get_links(object, "nodes", nodes_characteristics)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
@@ -3171,51 +3318,127 @@ setMethod(f = "extract_nodes_from_category",
               # Récupération des noeuds associés
               return(nodes_characteristics[unique(unlist(links[, 1:2])), ])
             }
-            stop("target must be one of \"items\", \"links\", \"vertices\", \"edges\".")
+            stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".")
           })
 
 
-#' Validation of parameters for search by category
+#' Search for patterns by item, characteristic or category
 #' 
-#' Check that the parameters provided match an existing category.
-#' Print an error message if not.
+#' Extract the patterns satisfying search criteria according to items, characteristics or categories.
 #' 
 #' @details
-#' If \code{value = NA}, only the parameter \code{category} is checked.
+#' If `element = "items"` one or more items can be sought. The condition for a pattern to be extracted
+#'  is the presence of the sought items (argument `value`). The argument `condition` must be `"all"` or
+#'  `"any"` (default is `"all"`):
+#'  * `"all"`: all the sought items must be part of the pattern.
+#'  * `"any"`: at least one of the sought items must be part of the pattern.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
-#' @param category Name or number of the category to access (numbering according to the order of the
-#'  columns of \code{object["items_categories"]}).
-#' @param value Sought value for the category specified by the argument \code{category}, or NA.
-#' @param stop If \code{TRUE}, stop the execution and print an error message if the parameters do not
-#'  allow access to a category. If \code{FALSE}, see 'Value' section.
-#' @return \code{TRUE} or \code{FALSE} whether the parameters allow access to a category.
+#' If `element` refers to a characteristic other than status (i.e. is one of `"year"`, `"frequency"`,
+#'  `"weight"`, `"order"`, `"specificity"`), the condition for a pattern to be extracted is a comparaison
+#'  of the `value` according to one of the comparison operators (default is equality):
+#'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
+#'  * `"NE"`, `"!="`: **N**ot **E**qual. The value of the characteristic must be different from that
+#'    sought.
+#'  * `"LT"`, `"<"`: **L**ess **T**han. The value of the characteristic must be less than that sought.
+#'  * `"GT"`, `">"`: **G**reater **T**han. The value of the characteristic must be greater than that
+#'    sought.
+#'  * `"LE"`, `"<="`: **L**ess than or **E**qual. The value of the caracteristic must be less than or
+#'    equal to that sought.
+#'  * `"GE"`, `">="`: **G**reater than or **E**qual. The value of the characteristic must be greater
+#'    than or equal to that sought.
+#' 
+#' If `element` refers to the specific characteristic `"status"`, one or more status can be sought.
+#'  the condition for a pattern to be extracted is a comparison of the sought status (argument `value`)
+#'  according to one of the basic comparison operators (default is equality):
+#'  * `"EQ"`, `"=="`: **EQ**ual. The status of the pattern must be one of the sought values.
+#'  * `"NE"`, `"!="`: **N**ot **E**qual. The status of the pattern must be different from the sought
+#'    values.
+#' 
+#' If `element` is the name or the number of a category, the condition for a pattern to be extracted is
+#'  the correspondence to the sought category `value`. The argument `condition` must be one of `"items"`,
+#'  `"links"`, `"vertices"`, `"edges"` (no default).
+#'  * `"items"`, `"vertices"`: search for patterns containing an item associated with the sought
+#'    category value.
+#'  * `"links"`, `"edges"`: search for patterns generating links corresponding to the sought category
+#'    value.
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param patterns_characteristics Data frame of patterns and their characteristics.
+#'  Any subset of `object["patterns"]`.
+#' @param element Type of element on which to search.
+#'  One of `"items"`, `"year"`, `"frequency"`, `"weight"`, `"order"`, `"specificity"`, `"status"`
+#'  or the name or number of a category on which to search (numbering according to the order of the
+#'  columns of `object["items_categories"]`).
+#' @param value Sought value(s) for the element specified by the argument `element`.
+#' @param condition Search condition, depending on `element`. See 'Details' section.
+#' @return Subset of the data frame of patterns that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{extract_patterns_from_category}}, \code{\link{extract_nodes_from_category}}.
-#' @aliases check_access_for_category
-#' @keywords internal
-setMethod(f = "check_access_for_category",
+#' @seealso [`get_patterns`], [`get_complexes`], [`get_isolates`], [`get_non_isolates`].
+#' 
+#' @examples
+#' ## Search on items
+#' get_patterns(SA_instance, SA_instance["patterns"],
+#'              element = "items", value = 3146)
+#' get_patterns(SA_instance, SA_instance["patterns"],
+#'              element = "items", value = c(3146, 3180), condition = "all")
+#' get_patterns(SA_instance, SA_instance["patterns"],
+#'              element = "items", value = c(3146, 3180), condition = "any")
+#' 
+#' ## Search on characteristics
+#' get_patterns(SA_instance, SA_instance["patterns"],
+#'              element = "weight", value = 3)
+#' get_patterns(SA_instance, SA_instance["patterns"],
+#'              element = "weight", value = 3, condition = ">=")
+#' get_patterns(SA_instance, SA_instance["patterns"],
+#'              element = "order", value = 3, condition = "LT")
+#' 
+#' get_patterns(SA_instance, SA_instance["patterns"], element = "status",
+#'              value = SA_instance["Class"]$STATUS_PERSISTENT)
+#' get_patterns(SA_instance, SA_instance["patterns"], element = "status",
+#'              value = c("Persistent", "Declining"), condition = "!=")
+#' 
+#' ## Search on categories
+#' get_patterns(SA_instance, SA_instance["patterns"],
+#'              element = "family", value = "Chrome", condition = "items")
+#' get_patterns(SA_instance, SA_instance["patterns"],
+#'              element = 1, value = "Chrome", condition = "links")
+#' 
+#' @aliases get_patterns
+#' @md
+#' @export
+setMethod(f = "get_patterns",
           signature = "SpectralAnalyzer",
-          definition = function(object, category, value, stop = TRUE) {
+          definition = function(object, patterns_characteristics,
+                                element, value, condition = "default") {
             
-            # Vérification que le type de catégorie recherché existe
-            if (is.character(category) & !(category %in% colnames(object@items_categories))) {
-              if (!stop) return(FALSE)
-              stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
-                                                      collapse = ", ") ,".")
-            } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
-              if (!stop) return(FALSE)
-              stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
-            }
+            # Vérification du choix de l'élément sur lequel effectuer la recherche
+            if (!(element %in% c("items", "year", "frequency", "weight", "order", "specificity", "status"))
+                && !check_access_for_category(object, element, NA, stop = FALSE))
+              stop(paste("element must be one of \"items\"",
+                         "\"year\", \"frequency\", \"weight\", \"order\", \"specificity\", \"status\"",
+                         "or a category name or number."))
             
-            # Vérification que la valeur de la catégorie recherchée existe
-            if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
-              if (!stop) return(FALSE)
-              stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
-                                                   collapse = ", ") ,".")
+            # Appel à la fonction spécifique
+            if (element == "items") {
+              if (condition == "default")
+                return(get_patterns_from_items(object, patterns_characteristics, value))
+              else
+                return(get_patterns_from_items(object, patterns_characteristics, value, condition))
             }
-            return(TRUE)
+            if (element %in% c("year", "frequency", "weight", "order", "specificity")) {
+              if (condition == "default")
+                return(get_patterns_from_characteristic(object, patterns_characteristics, element, value))
+              else
+                return(get_patterns_from_characteristic(object, patterns_characteristics, element, value, condition))
+            }
+            if (element == "status") {
+              if (condition == "default")
+                return(get_patterns_from_status(object, patterns_characteristics, value))
+              else
+                return(get_patterns_from_status(object, patterns_characteristics, value, condition))
+            }
+            return(get_patterns_from_category(object, patterns_characteristics, element, value, condition))
           })
 
 
@@ -3227,7 +3450,7 @@ setMethod(f = "check_access_for_category",
 #' @param patterns_characteristics Data frame of patterns and their characteristics.
 #'  Any subset of \code{object["patterns"]}.
 #' @param items Sought items (one or more).
-#' @param presence Item presence condition for a pattern to be extracted.
+#' @param condition Item presence condition for a pattern to be extracted.
 #'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
 #'    \item{\code{"all"}}{All the sought items must be part of a pattern for this pattern to be
@@ -3238,26 +3461,26 @@ setMethod(f = "check_access_for_category",
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{extract_patterns_from_characteristic}}, \code{\link{extract_patterns_from_status}},
-#'          \code{\link{extract_patterns_from_category}}.
+#' @seealso \code{\link{get_patterns}}, \code{\link{get_patterns_from_characteristic}},
+#'          \code{\link{get_patterns_from_status}}, \code{\link{get_patterns_from_category}}.
 #' 
 #' @examples
-#' extract_patterns_from_items(SA_instance, SA_instance["patterns"], items = 3146)
-#' extract_patterns_from_items(SA_instance, SA_instance["patterns"],
-#'                             items = c(3146, 3180), presence = "all")
-#' extract_patterns_from_items(SA_instance, SA_instance["patterns"],
-#'                             items = c(3146, 3180), presence = "any")
+#' get_patterns_from_items(SA_instance, SA_instance["patterns"], items = 3146)
+#' get_patterns_from_items(SA_instance, SA_instance["patterns"],
+#'                         items = c(3146, 3180), condition = "all")
+#' get_patterns_from_items(SA_instance, SA_instance["patterns"],
+#'                         items = c(3146, 3180), condition = "any")
 #' 
-#' @aliases extract_patterns_from_items
-#' @export
-setMethod(f = "extract_patterns_from_items",
+#' @aliases get_patterns_from_items
+#' @keywords internal
+setMethod(f = "get_patterns_from_items",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, items, presence = "all") {
+          definition = function(object, patterns_characteristics, items, condition = "all") {
             
-            if (!(presence %in% c("all", "any"))) stop("presence must be \"all\" or \"any\".")
+            if (!(condition %in% c("all", "any"))) stop("condition must be \"all\" or \"any\".")
             
-            if (presence == "all") func = all
-            else if (presence == "any") func = any
+            if (condition == "all") func = all
+            else if (condition == "any") func = any
             
             return(subset(patterns_characteristics, sapply(patterns_characteristics$pattern,
                                                            function(x) func(items %in% x))))
@@ -3273,7 +3496,7 @@ setMethod(f = "extract_patterns_from_items",
 #'  Any subset of \code{object["patterns"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}
-#'  See \code{\link{extract_patterns_from_status}} to search by \code{"status"}.
+#'  See \code{\link{get_patterns_from_status}} to search by \code{"status"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
 #' @param condition Search condition.
 #'  One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"},
@@ -3295,23 +3518,23 @@ setMethod(f = "extract_patterns_from_items",
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_status}},
-#'          \code{\link{extract_patterns_from_category}}.
+#' @seealso \code{\link{get_patterns}}, \code{\link{get_patterns_from_items}},
+#'          \code{\link{get_patterns_from_status}}, \code{\link{get_patterns_from_category}}.
 #' 
 #' @examples
-#' extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
-#'                                      characteristic = "weight",
-#'                                      value = 3)
-#' extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
-#'                                      characteristic = "weight",
-#'                                      value = 3, condition = ">=")
-#' extract_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
-#'                                      characteristic = "order",
-#'                                      value = 3, condition = "LT")
+#' get_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
+#'                                  characteristic = "weight",
+#'                                  value = 3)
+#' get_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
+#'                                  characteristic = "weight",
+#'                                  value = 3, condition = ">=")
+#' get_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
+#'                                  characteristic = "order",
+#'                                  value = 3, condition = "LT")
 #' 
-#' @aliases extract_patterns_from_characteristic
-#' @export
-setMethod(f = "extract_patterns_from_characteristic",
+#' @aliases get_patterns_from_characteristic
+#' @keywords internal
+setMethod(f = "get_patterns_from_characteristic",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, characteristic, value, condition = "EQ") {
             
@@ -3361,21 +3584,21 @@ setMethod(f = "extract_patterns_from_characteristic",
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_characteristic}},
-#'          \code{\link{extract_patterns_from_category}}.
+#' @seealso \code{\link{get_patterns}}, \code{\link{get_patterns_from_items}},
+#'          \code{\link{get_patterns_from_characteristic}}, \code{\link{get_patterns_from_category}}.
 #' 
 #' @examples
-#' extract_patterns_from_status(SA_instance, SA_instance["patterns"],
-#'                              value = SA_instance["Class"]$STATUS_PERSISTENT,
-#'                              condition = "EQ")
+#' get_patterns_from_status(SA_instance, SA_instance["patterns"],
+#'                          value = SA_instance["Class"]$STATUS_PERSISTENT,
+#'                          condition = "EQ")
 #' 
-#' extract_patterns_from_status(SA_instance, SA_instance["patterns"],
-#'                              value = c("Persistent", "Declining"),
-#'                              condition = "!=")
+#' get_patterns_from_status(SA_instance, SA_instance["patterns"],
+#'                          value = c("Persistent", "Declining"),
+#'                          condition = "!=")
 #' 
-#' @aliases extract_patterns_from_status
-#' @export
-setMethod(f = "extract_patterns_from_status",
+#' @aliases get_patterns_from_status
+#' @keywords internal
+setMethod(f = "get_patterns_from_status",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns_characteristics, value, condition = "EQ") {
             
@@ -3385,6 +3608,7 @@ setMethod(f = "extract_patterns_from_status",
                    
                    "NE" = { return(patterns_characteristics[!(patterns_characteristics$status %in% value), ]) },
                    "!=" = { return(patterns_characteristics[!(patterns_characteristics$status %in% value), ]) },
+                   
                    stop("condition must be one of \"EQ\", \"NE\", \"==\", \"!=\"."))
           })
 
@@ -3399,7 +3623,7 @@ setMethod(f = "extract_patterns_from_status",
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the argument \code{category}.
-#' @param target Condition for a pattern to be extracted.
+#' @param condition Category value search condition for a pattern to be extracted.
 #'  One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 #'  \describe{
 #'    \item{\code{"items"}, \code{"vertices"}}{Search for patterns containing an item associated with
@@ -3410,34 +3634,34 @@ setMethod(f = "extract_patterns_from_status",
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{extract_patterns_from_items}}, \code{\link{extract_patterns_from_characteristic}},
-#'          \code{\link{extract_patterns_from_status}}.
+#' @seealso \code{\link{get_patterns}}, \code{\link{get_patterns_from_items}},
+#'          \code{\link{get_patterns_from_characteristic}}, \code{\link{get_patterns_from_status}}.
 #' 
 #' @examples
-#' extract_patterns_from_category(SA_instance, SA_instance["patterns"],
-#'                                category = "family", value = "Chrome",
-#'                                target = "items")
+#' get_patterns_from_category(SA_instance, SA_instance["patterns"],
+#'                            category = "family", value = "Chrome",
+#'                            condition = "items")
 #' 
-#' extract_patterns_from_category(SA_instance, SA_instance["patterns"],
-#'                                category = 1, value = "Chrome",
-#'                                target = "links")
+#' get_patterns_from_category(SA_instance, SA_instance["patterns"],
+#'                            category = 1, value = "Chrome",
+#'                            condition = "links")
 #' 
-#' @aliases extract_patterns_from_category
-#' @export
-setMethod(f = "extract_patterns_from_category",
+#' @aliases get_patterns_from_category
+#' @keywords internal
+setMethod(f = "get_patterns_from_category",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, category, value, target) {
+          definition = function(object, patterns_characteristics, category, value, condition) {
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
             
-            if (target == "items" || target == "vertices") {
+            if (condition == "items" || condition == "vertices") {
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
               # Extraction des motifs contenant ces items
-              return(extract_patterns_from_items(object, patterns_characteristics, items, presence = "any"))
+              return(get_patterns_from_items(object, patterns_characteristics, items, condition = "any"))
               
-            } else if (target == "links" || target == "edges") {
+            } else if (condition == "links" || condition == "edges") {
               # Recherche de l'ensemble de liens correspondant aux motifs
               links = get_links(object, "patterns", patterns_characteristics)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
@@ -3448,7 +3672,7 @@ setMethod(f = "extract_patterns_from_category",
               # Récupération des motifs associés
               return(patterns_characteristics[unique(unlist(links[, 1:2])), ])
             }
-            stop("target must be one of \"items\", \"links\", \"vertices\", \"edges\".")
+            stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".")
           })
 
 
@@ -3470,6 +3694,7 @@ setMethod(f = "extract_patterns_from_category",
 #' @return Data frame associating the linked nodes or linked patterns.
 #' 
 #' @author Gauthier Magnin
+#' @seealso \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_complexes}}.
 #' 
 #' @examples
 #' get_links(SA_instance, "patterns", SA_instance["patterns"])
@@ -3602,8 +3827,8 @@ setMethod(f = "get_non_isolates",
 #'  contain or by the number of values with which they are associated, with regard to one category.
 #' 
 #' @details
-#' If \code{category} and \code{target} are \code{NULL}, entities with more than \code{min_nb_values}
-#'  items are sought. Otherwise, the search is related to the \code{category} (see \code{target}).
+#' If \code{category} and \code{condition} are \code{NULL}, entities with more than \code{min_nb_values}
+#'  items are sought. Otherwise, the search is related to the \code{category} (see \code{condition}).
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param entities Type of entities to search for complexes.
@@ -3612,7 +3837,7 @@ setMethod(f = "get_non_isolates",
 #'  are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
-#' @param target Condition for a node or a pattern to be extracted.
+#' @param condition Condition for a node or a pattern to be extracted.
 #'  One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 #'  \describe{
 #'    \item{\code{"items"}, \code{"vertices"}}{Search for nodes or patterns associated (via their items)
@@ -3630,15 +3855,15 @@ setMethod(f = "get_non_isolates",
 #' @examples
 #' get_complexes(SA_instance, "patterns", SA_instance["patterns"])
 #' get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
-#'               category = "family", target = "items")
+#'               category = "family", condition = "items")
 #' get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
-#'               category = 1, target = "links")
+#'               category = 1, condition = "links")
 #' 
 #' @aliases get_complexes
 #' @export
 setMethod(f = "get_complexes",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, category = NULL, target = NULL, min_nb_values = 2) {
+          definition = function(object, entities, characteristics, category = NULL, condition = NULL, min_nb_values = 2) {
             
             if (entities != "nodes" && entities != "patterns")
               stop("entities must be \"nodes\" or \"patterns\".")
@@ -3652,7 +3877,7 @@ setMethod(f = "get_complexes",
               # Validation du paramètre d'accès à la catégorie
               check_access_for_category(object, category, NA)
               
-              if (target == "items" || target == "vertices") {
+              if (condition == "items" || condition == "vertices") {
                 # Catégories associées à chaque noeud ou motif
                 nop_category = lapply(characteristics[[substr(entities, 1, nchar(entities) - 1)]],
                                       function(x) unique(as.character(object@items_categories[x, category])))
@@ -3660,7 +3885,7 @@ setMethod(f = "get_complexes",
                 # Entités associées à au moins min_nb_values valeurs différentes pour la catégorie
                 return(characteristics[lapply(nop_category, length) >= min_nb_values, ])
                 
-              } else if (target == "links" || target == "edges") {
+              } else if (condition == "links" || condition == "edges") {
                 # Liens associés aux noeuds ou motifs
                 nop_links = get_links(object, entities, characteristics)
                 
@@ -3675,7 +3900,7 @@ setMethod(f = "get_complexes",
                 # Entités correspondantes
                 return(characteristics[as.character(id), ])
               }
-              stop("target must be one of \"items\", \"links\", \"vertices\", \"edges\".") 
+              stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".") 
             }
           })
 

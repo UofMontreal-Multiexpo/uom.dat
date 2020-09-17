@@ -488,10 +488,10 @@ Selection of patterns with filter according to weight...
 ```{r}
 # For example: patterns with at least a weight of 3
 min_weight <- 3
-patterns <- extract_patterns_from_characteristic(sa_object, sa_object["patterns"],
-                                                 characteristic = "weight",
-                                                 value = min_weight,
-                                                 condition = "GE")
+patterns <- get_patterns(sa_object, sa_object["patterns"],
+                         element = "weight",
+                         value = min_weight,
+                         condition = ">=")
 
 patterns
 ```
@@ -522,9 +522,10 @@ Selection of patterns with filter according to status...
 ```{r}
 # For example: patterns with a status "Persistent"
 status <- sa_object["Class"]$STATUS_PERSISTENT
-patterns <- extract_patterns_from_status(sa_object, sa_object["patterns"],
-                                         value = status,
-                                         condition = "EQ")
+patterns <- get_patterns(sa_object, sa_object["patterns"],
+                         element = "status",
+                         value = status,
+                         condition = "EQ")
 
 patterns
 ```
@@ -572,10 +573,10 @@ items[items$family == "Chrome", ]
 
 Selection of patterns which contain any substance in the family *Chrome*...
 ```{r}
-patterns <- extract_patterns_from_category(sa_object, sa_object["patterns"],
-                                           category = "family",
-                                           value = "Chrome",
-                                           target = "items")
+patterns <- get_patterns(sa_object, sa_object["patterns"],
+                         element = "family",
+                         value = "Chrome",
+                         condition = "items")
 patterns
 ```
 ![](./img/patterns_chrome_vertices.png)
@@ -621,10 +622,10 @@ items[items$family == "Chrome", ]
 
 Selection of patterns which generate links in which any substance belongs to the family *Chrome*...
 ```{r}
-patterns <- extract_patterns_from_category(sa_object, sa_object["patterns"],
-                                           category = "family",
-                                           value = "Chrome",
-                                           target = "links")
+patterns <- get_patterns(sa_object, sa_object["patterns"],
+                         element = "family",
+                         value = "Chrome",
+                         condition = "links")
 patterns
 ```
 ![](./img/patterns_chrome_edges.png)
@@ -702,7 +703,7 @@ spectrosome <- spectrosome_chart(another_sa_object, "patterns", another_sa_objec
 To focus on the patterns that make the junction between two or more families of substances (i.e. two values of one category), use the following...
 ```{r}
 patterns <- get_complexes(another_sa_object, "patterns", another_sa_object["patterns"],
-                          category = "family", target = "vertices")
+                          category = "family", condition = "vertices")
 
 spectrosome <- spectrosome_chart(another_sa_object, "patterns", patterns,
                                  vertex_col = "categories",
@@ -978,16 +979,11 @@ Making charts:
 
 Search for nodes or patterns:
 
+* [get_nodes](../html/get_nodes-SpectralAnalyzer-method.html)
+* [get_patterns](../html/get_patterns-SpectralAnalyzer-method.html)
 * [get_complexes](../html/get_complexes-SpectralAnalyzer-method.html)
 * [get_isolates](../html/get_isolates-SpectralAnalyzer-method.html)
 * [get_non_isolates](../html/get_non_isolates-SpectralAnalyzer-method.html)
-* [extract_nodes_from_items](../html/extract_nodes_from_items-SpectralAnalyzer-method.html)
-* [extract_nodes_from_characteristic](../html/extract_nodes_from_characteristic-SpectralAnalyzer-method.html)
-* [extract_nodes_from_category](../html/extract_nodes_from_category-SpectralAnalyzer-method.html)
-* [extract_patterns_from_items](../html/extract_patterns_from_items-SpectralAnalyzer-method.html)
-* [extract_patterns_from_characteristic](../html/extract_patterns_from_characteristic-SpectralAnalyzer-method.html)
-* [extract_patterns_from_status](../html/extract_patterns_from_status-SpectralAnalyzer-method.html)
-* [extract_patterns_from_category](../html/extract_patterns_from_category-SpectralAnalyzer-method.html)
 
 Search for links between nodes or between patterns:
 

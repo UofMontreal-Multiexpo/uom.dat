@@ -68,16 +68,11 @@ Making charts:
 
 Search for nodes or patterns:
 
+* [get_nodes](../html/get_nodes-SpectralAnalyzer-method.html)
+* [get_patterns](../html/get_patterns-SpectralAnalyzer-method.html)
 * [get_complexes](../html/get_complexes-SpectralAnalyzer-method.html)
 * [get_isolates](../html/get_isolates-SpectralAnalyzer-method.html)
 * [get_non_isolates](../html/get_non_isolates-SpectralAnalyzer-method.html)
-* [extract_nodes_from_items](../html/extract_nodes_from_items-SpectralAnalyzer-method.html)
-* [extract_nodes_from_characteristic](../html/extract_nodes_from_characteristic-SpectralAnalyzer-method.html)
-* [extract_nodes_from_category](../html/extract_nodes_from_category-SpectralAnalyzer-method.html)
-* [extract_patterns_from_items](../html/extract_patterns_from_items-SpectralAnalyzer-method.html)
-* [extract_patterns_from_characteristic](../html/extract_patterns_from_characteristic-SpectralAnalyzer-method.html)
-* [extract_patterns_from_status](../html/extract_patterns_from_status-SpectralAnalyzer-method.html)
-* [extract_patterns_from_category](../html/extract_patterns_from_category-SpectralAnalyzer-method.html)
 
 Search for links between nodes or between patterns:
 

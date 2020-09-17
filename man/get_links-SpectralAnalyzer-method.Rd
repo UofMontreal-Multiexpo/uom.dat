@@ -33,6 +33,9 @@ get_links(SA_instance, "patterns", SA_instance["patterns"])
 get_links(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
 
 }
+\seealso{
+\code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_complexes}}.
+}
 \author{
 Gauthier Magnin
 }
