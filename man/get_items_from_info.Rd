@@ -6,7 +6,7 @@
 \usage{
 get_items_from_info(
   observations,
-  ...,
+  info,
   presence = "all",
   additional = NULL,
   key = "CODE"
@@ -15,9 +15,8 @@ get_items_from_info(
 \arguments{
 \item{observations}{List of observations on which to do the search.}
 
-\item{...}{arguments of type \code{key = value} where \code{key} refers to the name of one
-variable contained in the observations and \code{value} corresponds to the sought value for
-this variable.}
+\item{info}{Named list of sought information. Element names must refer to the names of variables
+contained in the observations and values must correspond to the sought values for these variables.}
 
 \item{presence}{Information presence condition for an item to be extracted from an observation.
 One of \code{"all"}, \code{"any"}.
@@ -37,14 +36,15 @@ Vector of the item codes corresponding to the search if \code{additional} is
  equal to \code{NULL}. List of codes and information requested otherwise.
 }
 \description{
-Retrieve the items associated with observations corresponding to one or more search criteria.
+Retrieve the items associated with observations whose information matches to one or more sought
+ information.
 }
 \examples{
 obs <- make_observations(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME",
                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
-get_items_from_info(obs, JOB.TITLE = 44132017)
-get_items_from_info(obs, JOB.TITLE = 44132017, additional = "SAMPLE.ID")
+get_items_from_info(obs, info = list(JOB.TITLE = 44132017))
+get_items_from_info(obs, info = list(JOB.TITLE = 44132017), additional = "SAMPLE.ID")
 
 }
 \seealso{

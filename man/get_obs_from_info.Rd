@@ -4,14 +4,13 @@
 \alias{get_obs_from_info}
 \title{Search for observations by specific information}
 \usage{
-get_obs_from_info(observations, ..., presence = "all")
+get_obs_from_info(observations, info, presence = "all")
 }
 \arguments{
 \item{observations}{List of observations on which to do the search.}
 
-\item{...}{arguments of type \code{key = value} where \code{key} refers to the name of one
-variable contained in the observations and \code{value} corresponds to the sought value for
-this variable.}
+\item{info}{Named list of sought information. Element names must refer to the names of variables
+contained in the observations and values must correspond to the sought values for these variables.}
 
 \item{presence}{Information presence condition for an observation to be extracted.
 One of \code{"all"}, \code{"any"}.
@@ -26,12 +25,12 @@ One of \code{"all"}, \code{"any"}.
 Subset of the list of observations that match the search criteria.
 }
 \description{
-Extract the observations that match to one or more search criteria.
+Extract the observations whose information matches to one or more sought information.
 }
 \examples{
 obs <- make_observations(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME", "JOB.TITLE", "JOB.TASK"))
-get_obs_from_info(obs, JOB.TITLE = 44132001, JOB.TASK = "A8310")
+get_obs_from_info(obs, info = list(JOB.TITLE = 44132001, JOB.TASK = "A8310"))
 
 }
 \seealso{

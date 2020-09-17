@@ -505,12 +505,11 @@ get_obs_from_items = function(observations, items, presence = "all", key = "CODE
 
 #' Search for observations by specific information
 #' 
-#' Extract the observations that match to one or more search criteria.
+#' Extract the observations whose information matches to one or more sought information.
 #' 
 #' @param observations List of observations on which to do the search.
-#' @param ... arguments of type \code{key = value} where \code{key} refers to the name of one
-#'  variable contained in the observations and \code{value} corresponds to the sought value for
-#'  this variable.
+#' @param info Named list of sought information. Element names must refer to the names of variables
+#'  contained in the observations and values must correspond to the sought values for these variables.
 #' @param presence Information presence condition for an observation to be extracted.
 #'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
@@ -527,26 +526,25 @@ get_obs_from_items = function(observations, items, presence = "all", key = "CODE
 #' @examples
 #' obs <- make_observations(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME", "JOB.TITLE", "JOB.TASK"))
-#' get_obs_from_info(obs, JOB.TITLE = 44132001, JOB.TASK = "A8310")
+#' get_obs_from_info(obs, info = list(JOB.TITLE = 44132001, JOB.TASK = "A8310"))
 #' 
 #' @export
-get_obs_from_info = function(observations, ..., presence = "all") {
+get_obs_from_info = function(observations, info, presence = "all") {
   
   if (!(presence %in% c("all", "any"))) stop("presence must be \"all\" or \"any\".")
   func = if (presence == "all") all else any
   
-  args = list(...)
-  if (length(args) == 0) return(observations)
+  if (length(info) == 0) return(observations)
   
   # Vérification de la correspondance de chaque argument dans chaque observation
-  correspondence = sapply(args,
+  correspondence = sapply(info,
                           function(arg) {
-                            lapply(sapply(observations, "[[", names(args)[parent.frame()$i[]]),
+                            lapply(sapply(observations, "[[", names(info)[parent.frame()$i[]]),
                                    function(o) arg %in% o)
                           })
   
   # Indices des observations correspondant aux critères
-  if (length(args) == 1 && length(args[[1]]) == 1) {
+  if (length(info) == 1 && length(info[[1]]) == 1) {
     index = unlist(correspondence)
   } else {
     # Unlist indépendant pour chaque argument, nécessaire car certaines observations regroupent
@@ -560,12 +558,12 @@ get_obs_from_info = function(observations, ..., presence = "all") {
 
 #' Search for items by specific information
 #' 
-#' Retrieve the items associated with observations corresponding to one or more search criteria.
+#' Retrieve the items associated with observations whose information matches to one or more sought
+#'  information.
 #' 
 #' @param observations List of observations on which to do the search.
-#' @param ... arguments of type \code{key = value} where \code{key} refers to the name of one
-#'  variable contained in the observations and \code{value} corresponds to the sought value for
-#'  this variable.
+#' @param info Named list of sought information. Element names must refer to the names of variables
+#'  contained in the observations and values must correspond to the sought values for these variables.
 #' @param presence Information presence condition for an item to be extracted from an observation.
 #'  One of \code{"all"}, \code{"any"}.
 #'  \describe{
@@ -586,16 +584,16 @@ get_obs_from_info = function(observations, ..., presence = "all") {
 #' obs <- make_observations(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME",
 #'                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
-#' get_items_from_info(obs, JOB.TITLE = 44132017)
-#' get_items_from_info(obs, JOB.TITLE = 44132017, additional = "SAMPLE.ID")
+#' get_items_from_info(obs, info = list(JOB.TITLE = 44132017))
+#' get_items_from_info(obs, info = list(JOB.TITLE = 44132017), additional = "SAMPLE.ID")
 #' 
 #' @export
-get_items_from_info = function(observations, ..., presence = "all", additional = NULL, key = "CODE") {
+get_items_from_info = function(observations, info, presence = "all", additional = NULL, key = "CODE") {
   
   if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
   
   # Observations correspondant aux critères
-  obs = get_obs_from_info(observations, ..., presence = presence)
+  obs = get_obs_from_info(observations, info, presence = presence)
   
   # Vecteur des items
   if (is.null(additional)) {
