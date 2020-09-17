@@ -513,7 +513,7 @@ setGeneric(name = "define_dynamic_status", def = function(object, patterns, stat
 
 # Methods for creating spectrum graphs
 
-setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, identifiers = "original", title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf"){ standardGeneric("spectrum_chart") })
+setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, identifiers = "original", sort = TRUE, title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf"){ standardGeneric("spectrum_chart") })
 
 setGeneric(name = "plot_spectrum_chart", def = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
 
@@ -1391,6 +1391,8 @@ setMethod(f = "define_dynamic_status",
 #' @details
 #' The patterns are sorted according to their specificities (desc.), status (\code{"Persistent"},
 #'  \code{"Declining"}, \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
+#'  If two patterns have the same characteristics concerning thse ones, they are ordered relative to
+#'  each other in the order they are given.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns_characteristics Patterns (and their characteristics) whose spectrum is to be plotted.
@@ -1398,8 +1400,10 @@ setMethod(f = "define_dynamic_status",
 #' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame?
 #'  One of \code{"original"}, \code{"new"}. \cr
 #'  \code{"original"} to use the original identifiers.
-#'  \code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
-#'  about the sort that is performed).
+#'  \code{"new"} to use new identifiers based on the sorting of patterns or on the specific order given
+#'  by \code{patterns_characteristics}.
+#' @param sort If \code{TRUE}, the patterns are sorted on the chart as described in 'Details' section.
+#'  Otherwise, they are ordered on the chart in the order in which they are given.
 #' @param title Chart title.
 #' @param path Path of the directory in which to save the chart.
 #'  By default, the chart is saved in the working directory.
@@ -1421,7 +1425,7 @@ setMethod(f = "define_dynamic_status",
 #' @export
 setMethod(f = "spectrum_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, identifiers = "original",
+          definition = function(object, patterns_characteristics, identifiers = "original", sort = TRUE,
                                 title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf") {
             
             if (identifiers != "original" && identifiers != "new")
@@ -1433,14 +1437,16 @@ setMethod(f = "spectrum_chart",
             length_distribution = patterns_distributions[["length_distribution"]]
             
             # Tri des motifs selon spécificité, statut, poids, longueur
-            sorting_vector = order(1 - patterns_characteristics$specificity,
-                                   match(patterns_characteristics$status, names(object@Class$STATUS_COLORS)),
-                                   max(patterns_characteristics$weight) - patterns_characteristics$weight,
-                                   patterns_characteristics$order)
-            
-            patterns_characteristics = patterns_characteristics[sorting_vector, ]
-            weight_distribution = weight_distribution[sorting_vector]
-            length_distribution = length_distribution[sorting_vector]
+            if (sort) {
+              sorting_vector = order(1 - patterns_characteristics$specificity,
+                                     match(patterns_characteristics$status, names(object@Class$STATUS_COLORS)),
+                                     max(patterns_characteristics$weight) - patterns_characteristics$weight,
+                                     patterns_characteristics$order)
+              
+              patterns_characteristics = patterns_characteristics[sorting_vector, ]
+              weight_distribution = weight_distribution[sorting_vector]
+              length_distribution = length_distribution[sorting_vector]
+            }
             
             # Attribution d'identifiants aux motifs
             if (identifiers == "new") patterns_characteristics$ID = seq(nrow(patterns_characteristics))

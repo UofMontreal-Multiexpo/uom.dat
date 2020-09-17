@@ -9,6 +9,7 @@
   object,
   patterns_characteristics,
   identifiers = "original",
+  sort = TRUE,
   title = "Spectrum of patterns",
   path = getwd(),
   name = "spectrum_of_patterns.pdf"
@@ -23,8 +24,11 @@ Any subset of \code{object["patterns"]}.}
 \item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame?
 One of \code{"original"}, \code{"new"}. \cr
 \code{"original"} to use the original identifiers.
-\code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
-about the sort that is performed).}
+\code{"new"} to use new identifiers based on the sorting of patterns or on the specific order given
+by \code{patterns_characteristics}.}
+
+\item{sort}{If \code{TRUE}, the patterns are sorted on the chart as described in 'Details' section.
+Otherwise, they are ordered on the chart in the order in which they are given.}
 
 \item{title}{Chart title.}
 
@@ -43,6 +47,8 @@ Plot a spectrum chart and save it as a PDF file.
 \details{
 The patterns are sorted according to their specificities (desc.), status (\code{"Persistent"},
  \code{"Declining"}, \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
+ If two patterns have the same characteristics concerning thse ones, they are ordered relative to
+ each other in the order they are given.
 }
 \examples{
 spectrum_1 <- spectrum_chart(SA_instance, SA_instance["patterns"])
