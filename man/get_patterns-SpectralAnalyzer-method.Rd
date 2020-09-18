@@ -5,19 +5,14 @@
 \alias{get_patterns}
 \title{Search for patterns by item, characteristic or category}
 \usage{
-\S4method{get_patterns}{SpectralAnalyzer}(
-  object,
-  patterns_characteristics,
-  element,
-  value,
-  condition = "default"
-)
+\S4method{get_patterns}{SpectralAnalyzer}(object, pc, element, value, condition = "default")
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Data frame of patterns and their characteristics.
-Any subset of \code{object["patterns"]}.}
+\item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
+\code{object["patterns"]}.\cr
+\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
 
 \item{element}{Type of element on which to search.
 One of \code{"items"}, \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}, \code{"status"}
@@ -103,12 +98,12 @@ get_patterns(SA_instance, SA_instance["patterns"], element = "status",
 ## Search on categories
 get_patterns(SA_instance, SA_instance["patterns"],
              element = "family", value = "Chrome", condition = "items")
-get_patterns(SA_instance, SA_instance["patterns"],
+get_patterns(SA_instance, "patterns",
              element = 1, value = "Chrome", condition = "links")
 
 }
 \seealso{
-\code{\link{get_patterns}}, \code{\link{get_complexes}}, \code{\link{get_isolates}}, \code{\link{get_non_isolates}}.
+\code{\link{get_nodes}}, \code{\link{get_complexes}}, \code{\link{get_isolates}}, \code{\link{get_non_isolates}}.
 }
 \author{
 Gauthier Magnin

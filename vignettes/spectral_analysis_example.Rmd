@@ -254,10 +254,10 @@ sa_object["patterns"]
 Saving the nodes and the patterns in CSV files...
 ```{r}
 # Saving the nodes
-save_characteristics(sa_object, "nodes", sa_object["nodes"],
+save_characteristics(sa_object, sa_object["nodes"],
                      file = paste0(directory, "sao.nodes.csv"), row.names = FALSE)
 # Saving the patterns
-save_characteristics(sa_object, "patterns", sa_object["patterns"],
+save_characteristics(sa_object, sa_object["patterns"],
                      file = paste0(directory, "sao.patterns.csv"), row.names = FALSE)
 ```
 
@@ -275,7 +275,7 @@ dir.create(directory)
 
 Creation of the spectrosome of the nodes...
 ```{r}
-spectrosome <- spectrosome_chart(sa_object, "nodes", sa_object["nodes"],
+spectrosome <- spectrosome_chart(sa_object, sa_object["nodes"],
                                  path = directory,
                                  name = "spectrosome_of_nodes.png",
                                  title = "Network of nodes")
@@ -284,8 +284,7 @@ spectrosome <- spectrosome_chart(sa_object, "nodes", sa_object["nodes"],
 
 Saving vertex characteristics in a CSV file...
 ```{r}
-save_characteristics(sa_object, "nodes",
-                     spectrosome[["vertices"]],
+save_characteristics(sa_object, spectrosome[["vertices"]],
                      file = paste0(directory, "spectrosome_of_nodes-vertices.csv"),
                      row.names = FALSE)
 
@@ -312,7 +311,7 @@ spectrosome[["edges"]]
 Extraction of the node cluster relating to the item *3146*...
 ```{r}
 item <- 3146
-cluster <- cluster_chart(sa_object, "nodes", sa_object["nodes"], item,
+cluster <- cluster_chart(sa_object, sa_object["nodes"], item,
                          path = directory,
                          name = paste0("node_cluster_of_", item, ".png"),
                          title = paste("Network cluster of", item))
@@ -323,8 +322,7 @@ cluster <- cluster_chart(sa_object, "nodes", sa_object["nodes"], item,
 
 Saving vertex characteristics in a CSV file...
 ```{r}
-save_characteristics(sa_object, "nodes",
-                     cluster[["vertices"]],
+save_characteristics(sa_object, cluster[["vertices"]],
                      file = paste0(directory, "node_cluster_of_", item, "-vertices.csv"),
                      row.names = FALSE)
 
@@ -365,8 +363,7 @@ spectrum <- spectrum_chart(sa_object, sa_object["patterns"],
 
 Saving pattern characteristics in a CSV file...
 ```{r}
-save_characteristics(sa_object, "patterns",
-                     spectrum,
+save_characteristics(sa_object, spectrum,
                      file = paste0(directory, "spectrum_of_patterns.csv"),
                      row.names = FALSE)
 ```
@@ -377,7 +374,7 @@ Patterns presented in this spectrum are the ones already saved before as "sao.pa
 
 Creation of the spectrosome of the patterns...
 ```{r}
-spectrosome <- spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
+spectrosome <- spectrosome_chart(sa_object, sa_object["patterns"],
                                  path = directory,
                                  name = "spectrosome_of_patterns.png",
                                  title = "Network of patterns")
@@ -386,8 +383,7 @@ spectrosome <- spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
 
 Saving vertex characteristics in a CSV file...
 ```{r}
-save_characteristics(sa_object, "patterns",
-                     spectrosome[["vertices"]],
+save_characteristics(sa_object, spectrosome[["vertices"]],
                      file = paste0(directory, "spectrosome_of_patterns-vertices.csv"),
                      row.names = FALSE)
 # Here they are again the same patterns
@@ -425,8 +421,7 @@ tree <- tree_chart(sa_object, sa_object["patterns"],
 
 Saving pattern characteristics in a CSV file...
 ```{r}
-save_characteristics(sa_object, "patterns",
-                     tree,
+save_characteristics(sa_object, tree,
                      file = paste0(directory, "multi-association_tree.csv"),
                      row.names = FALSE)
 
@@ -443,7 +438,7 @@ See that only patterns with an order value greater than 1 are plotted on this ki
 Extraction of the pattern cluster relating to the item *3146*...
 ```{r}
 item <- 3146
-cluster <- cluster_chart(sa_object, "patterns", sa_object["patterns"], item,
+cluster <- cluster_chart(sa_object, sa_object["patterns"], item,
                          path = directory,
                          name = paste0("pattern_cluster_of_", item, ".png"),
                          title = paste("Network cluster of", item))
@@ -454,8 +449,7 @@ cluster <- cluster_chart(sa_object, "patterns", sa_object["patterns"], item,
 
 Saving vertex characteristics in CSV format...
 ```{r}
-save_characteristics(sa_object, "patterns",
-                     cluster[["vertices"]],
+save_characteristics(sa_object, cluster[["vertices"]],
                      file = paste0(directory, "pattern_cluster_of_", item, "-vertices.csv"),
                      row.names = FALSE)
 
@@ -508,7 +502,7 @@ spectrum <- spectrum_chart(sa_object, patterns,
 
 Associated spectrosome...
 ```{r}
-spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
+spectrosome <- spectrosome_chart(sa_object, patterns,
                                  path = directory,
                                  name = paste0("spectrosome_of_patterns-w", min_weight, ".png"),
                                  title = "Spectrosome with weight filter")
@@ -544,7 +538,7 @@ spectrum <- spectrum_chart(sa_object, patterns,
 
 Associated spectrosome...
 ```{r}
-spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
+spectrosome <- spectrosome_chart(sa_object, patterns,
                                  path = directory,
                                  name = paste0("spectrosome_of_patterns-", status, ".png"),
                                  title = "Spectrosome with status filter")
@@ -584,7 +578,7 @@ patterns
 Spectrosome related to this selection...
 ```{r}
 name <- "spectrosome_of_patterns-Chrome-vertices"
-spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
+spectrosome <- spectrosome_chart(sa_object, patterns,
                                  path = directory,
                                  name = name,
                                  title = "Spectrosome of category Chrome")
@@ -593,8 +587,7 @@ spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
 
 Saving vertex characteristics in a CSV file...
 ```{r}
-save_characteristics(sa_object, "patterns",
-                     spectrosome[["vertices"]],
+save_characteristics(sa_object, spectrosome[["vertices"]],
                      file = paste0(directory, name, "-vertices.csv"),
                      row.names = FALSE)
 
@@ -635,7 +628,7 @@ patterns
 Spectrosome related to this selection...
 ```{r}
 name <- "spectrosome_of_patterns-Chrome-edges"
-spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
+spectrosome <- spectrosome_chart(sa_object, patterns,
                                  path = directory,
                                  name = paste0(name, ".png"),
                                  title = paste("Spectrosome of category Chrome"))
@@ -644,8 +637,7 @@ spectrosome <- spectrosome_chart(sa_object, "patterns", patterns,
 
 Saving vertex characteristics in a CSV file...
 ```{r}
-save_characteristics(sa_object, "patterns",
-                     spectrosome[["vertices"]],
+save_characteristics(sa_object, spectrosome[["vertices"]],
                      file = paste0(directory, name, "-vertices.csv"),
                      row.names = FALSE)
 
@@ -692,7 +684,7 @@ another_sa_object <- spectral.analyzer(other_obs, items = other_categories,
 directory <- "./output/another_sa_object/"
 dir.create(directory)
 
-spectrosome <- spectrosome_chart(another_sa_object, "patterns", another_sa_object["patterns"],
+spectrosome <- spectrosome_chart(another_sa_object, another_sa_object["patterns"],
                                  vertex_size = "grouped", size_range = c(0.5, 1.5),
                                  displayisolates = FALSE, displaylabels = FALSE,
                                  path = directory, name = "without_isolates")
@@ -702,10 +694,10 @@ spectrosome <- spectrosome_chart(another_sa_object, "patterns", another_sa_objec
 
 To focus on the patterns that make the junction between two or more families of substances (i.e. two values of one category), use the following...
 ```{r}
-patterns <- get_complexes(another_sa_object, "patterns", another_sa_object["patterns"],
+patterns <- get_complexes(another_sa_object, another_sa_object["patterns"],
                           category = "family", condition = "vertices")
 
-spectrosome <- spectrosome_chart(another_sa_object, "patterns", patterns,
+spectrosome <- spectrosome_chart(another_sa_object, patterns,
                                  vertex_col = "categories",
                                  title = "Complexe patterns",
                                  path = directory, name = "complexe_patterns")
@@ -813,7 +805,7 @@ Some possible alternatives:
 
 ```{r}
 # Plot 3 spectrosomes coloring the vertices with the categories
-spectrosome_1 <- spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
+spectrosome_1 <- spectrosome_chart(sa_object, sa_object["patterns"],
                                    vertex_col = "categories",
                                    nb_graphs = 3,
                                    path = directory,
@@ -830,7 +822,7 @@ One can choose one of the three spectrosomes plotted and reuse it with the param
 ```{r}
 # Spectrosomes with several values for the parameter defining the minimum weight of a link to be plotted.
 for (min_weight in seq(2, 5)) {
-  spectrosome_w <- spectrosome_chart(sa_object, "patterns", sa_object["patterns"],
+  spectrosome_w <- spectrosome_chart(sa_object, sa_object["patterns"],
                                      min_link_weight = min_weight,
                                      vertex_col = "categories",
                                      path = directory,
@@ -916,7 +908,7 @@ Rules are saved in the same way as for nodes or patterns.
 directory <- "./output/rules/"
 dir.create(directory)
 
-save_characteristics(sa_object, "rules", rules_1,
+save_characteristics(sa_object, rules_1,
                      file = paste0(directory, "rules.csv"), row.names = FALSE)
 ```
 

@@ -5,19 +5,14 @@
 \alias{get_patterns_from_category}
 \title{Search for patterns by category}
 \usage{
-\S4method{get_patterns_from_category}{SpectralAnalyzer}(
-  object,
-  patterns_characteristics,
-  category,
-  value,
-  condition
-)
+\S4method{get_patterns_from_category}{SpectralAnalyzer}(object, pc, category, value, condition)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Data frame of patterns and their characteristics.
-Any subset of \code{object["patterns"]}.}
+\item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
+\code{object["patterns"]}.\cr
+\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
 
 \item{category}{Name or number of the category on which to search (numbering according to the order
 of the columns of \code{object["items_categories"]}).}

@@ -7,7 +7,7 @@
 \usage{
 \S4method{spectrum_chart}{SpectralAnalyzer}(
   object,
-  patterns_characteristics,
+  pc,
   identifiers = "original",
   sort = TRUE,
   title = "Spectrum of patterns",
@@ -18,14 +18,17 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Patterns (and their characteristics) whose spectrum is to be plotted.
-Any subset of \code{object["patterns"]}.}
+\item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
+is to be plotted. Any subset of \code{object["patterns"]}.\cr
+\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
 
-\item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame?
-One of \code{"original"}, \code{"new"}. \cr
-\code{"original"} to use the original identifiers.
-\code{"new"} to use new identifiers based on the sorting of patterns or on the specific order given
-by \code{patterns_characteristics}.}
+\item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame.
+One of \code{"original"}, \code{"new"}.
+\describe{
+  \item{\code{"original"}}{Use of the original identifiers.}
+  \item{\code{"new"}}{Use of new identifiers based on the sorting of patterns or on the order in
+                      \code{pc}.}
+}}
 
 \item{sort}{If \code{TRUE}, the patterns are sorted on the chart as described in 'Details' section.
 Otherwise, they are ordered on the chart in the order in which they are given.}
@@ -51,7 +54,7 @@ The patterns are sorted according to their specificities (desc.), status (\code{
  each other in the order they are given.
 }
 \examples{
-spectrum_1 <- spectrum_chart(SA_instance, SA_instance["patterns"])
+spectrum_1 <- spectrum_chart(SA_instance, "patterns")
 spectrum_2 <- spectrum_chart(SA_instance, SA_instance["patterns"][1:15, ],
                              name = "spectrum_of_patterns_1-15")
 

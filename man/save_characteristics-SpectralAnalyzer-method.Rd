@@ -5,12 +5,10 @@
 \alias{save_characteristics}
 \title{Saving nodes, patterns or association rules}
 \usage{
-\S4method{save_characteristics}{SpectralAnalyzer}(object, entities, characteristics, ...)
+\S4method{save_characteristics}{SpectralAnalyzer}(object, characteristics, ...)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
-
-\item{entities}{Type of entities to save. One of \code{"nodes"}, \code{"patterns"}, \code{"rules"}.}
 
 \item{characteristics}{Data frame of the characteristics of nodes, patterns or rules.}
 
@@ -20,18 +18,17 @@
 Save in CSV format a set of nodes, patterns or association rules as well as their characteristics.
 }
 \examples{
-save_characteristics(SA_instance, "nodes", SA_instance["nodes"],
+save_characteristics(SA_instance, SA_instance["nodes"],
                      file = "nodes.csv")
-save_characteristics(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+save_characteristics(SA_instance, SA_instance["patterns"][1:15, ],
                      file = "patterns.csv")
 
-spectrosome <- spectrosome_chart(SA_instance, "patterns",
-                                 SA_instance["patterns"])
-save_characteristics(SA_instance, "patterns", spectrosome[["vertices"]],
+spectrosome <- spectrosome_chart(SA_instance, "patterns")
+save_characteristics(SA_instance, spectrosome[["vertices"]],
                      file = "spectrosome_vertices.csv", row.names = FALSE)
 
 rules <- extract_rules(SA_instance, from = "observations")
-save_characteristics(SA_instance, "rules", rules,
+save_characteristics(SA_instance, rules,
                      file = "rules.csv", row.names = FALSE)
 
 }

@@ -7,7 +7,7 @@
 \usage{
 \S4method{tree_chart}{SpectralAnalyzer}(
   object,
-  patterns_characteristics,
+  pc,
   identifiers = "original",
   use_names = TRUE,
   n.cutoff = NULL,
@@ -23,14 +23,17 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Patterns (and their characteristics) whose tree is to be plotted.
-Any subset of \code{object["patterns"]}.}
+\item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose tree
+is to be plotted. Any subset of \code{object["patterns"]}.\cr
+\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
 
-\item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame?
-One of \code{"original"}, \code{"new"}. \cr
-\code{"original"} to use the original identifiers.
-\code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
-about the sort that is performed).}
+\item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame.
+One of \code{"original"}, \code{"new"}.
+\describe{
+  \item{\code{"original"}}{Use of the original identifiers.}
+  \item{\code{"new"}}{Use of new identifiers based on pattern sorting (see 'Details' section to learn
+                      more about the sort that is performed).}
+}}
 
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}
@@ -79,7 +82,7 @@ Therefore, if the number of values exceeds \code{20}, some colors will be used m
 See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 }
 \examples{
-tree_1 <- tree_chart(SA_instance, SA_instance["patterns"],
+tree_1 <- tree_chart(SA_instance, "patterns",
                      n.cutoff = 20, c.cutoff = 17)
 tree_2 <- tree_chart(SA_instance, SA_instance["patterns"][1:15, ],
                      c.cutoff = 17, name = "multi-association_tree_1-15")

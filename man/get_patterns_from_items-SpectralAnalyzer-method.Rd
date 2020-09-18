@@ -5,18 +5,14 @@
 \alias{get_patterns_from_items}
 \title{Search for patterns by item}
 \usage{
-\S4method{get_patterns_from_items}{SpectralAnalyzer}(
-  object,
-  patterns_characteristics,
-  items,
-  condition = "all"
-)
+\S4method{get_patterns_from_items}{SpectralAnalyzer}(object, pc, items, condition = "all")
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Data frame of patterns and their characteristics.
-Any subset of \code{object["patterns"]}.}
+\item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
+\code{object["patterns"]}.\cr
+\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
 
 \item{items}{Sought items (one or more).}
 

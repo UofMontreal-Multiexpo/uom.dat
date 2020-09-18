@@ -5,16 +5,16 @@
 \alias{get_non_isolates}
 \title{Search for non-isolated nodes or patterns}
 \usage{
-\S4method{get_non_isolates}{SpectralAnalyzer}(object, entities, characteristics)
+\S4method{get_non_isolates}{SpectralAnalyzer}(object, nopc)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{entities}{Type of entities to search for non-isolated.
-One of \code{"nodes"}, \code{"patterns"}.}
-
-\item{characteristics}{Data frame of the characteristics of the nodes or patterns whose non-isolated
-are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
+\item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+\strong{c}haracteristics. Nodes or patterns whose non-isolated are to be sought. Any subset of
+\code{object["nodes"]} or \code{object["patterns"]}.\cr
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{object["nodes"]} and \code{object["patterns"]}.}
 }
 \value{
 Subset of the data frame that corresponds to non-isolated entities.
@@ -23,8 +23,8 @@ Subset of the data frame that corresponds to non-isolated entities.
 Extract from the given nodes or patterns those which are not isolated.
 }
 \examples{
-get_non_isolates(SA_instance, "patterns", SA_instance["patterns"])
-get_non_isolates(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+get_non_isolates(SA_instance, "patterns")
+get_non_isolates(SA_instance, SA_instance["patterns"][1:10, ])
 
 }
 \seealso{

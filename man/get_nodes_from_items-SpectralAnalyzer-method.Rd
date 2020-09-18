@@ -5,22 +5,22 @@
 \alias{get_nodes_from_items}
 \title{Search for nodes by item}
 \usage{
-\S4method{get_nodes_from_items}{SpectralAnalyzer}(object, nodes_characteristics, items, condition = "all")
+\S4method{get_nodes_from_items}{SpectralAnalyzer}(object, nc, items, condition = "all")
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{nodes_characteristics}{Data frame of nodes and their characteristics.
-Any subset of \code{object["nodes"]}.}
+\item{nc}{Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of \code{object["nodes"]}.\cr
+\code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.}
 
 \item{items}{Sought items (one or more).}
 
 \item{condition}{Item presence condition for a node to be extracted.
 One of \code{"all"}, \code{"any"}.
 \describe{
-  \item{\code{"all"}}{All the sought items must be part of a node for this node to be extracted.}
-  \item{\code{"any"}}{At least one of the sought items must be part of a node for this node to be
-                      extracted.}
+\item{\code{"all"}}{All the sought items must be part of a node for this node to be extracted.}
+\item{`"any"}{At least one of the sought items must be part of a node for this node to be
+extracted.}
 }}
 }
 \value{
@@ -38,8 +38,7 @@ get_nodes_from_items(SA_instance, SA_instance["nodes"],
 
 }
 \seealso{
-\code{\link{get_nodes}}, \code{\link{get_nodes_from_characteristic}},
-         \code{\link{get_nodes_from_category}}.
+\code{\link{get_nodes}}, \code{\link{get_nodes_from_characteristic}}, \code{\link{get_nodes_from_category}}.
 }
 \author{
 Gauthier Magnin

@@ -7,7 +7,7 @@
 \usage{
 \S4method{get_nodes_from_characteristic}{SpectralAnalyzer}(
   object,
-  nodes_characteristics,
+  nc,
   characteristic,
   value,
   condition = "EQ"
@@ -16,8 +16,9 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{nodes_characteristics}{Data frame of nodes and their characteristics.
-Any subset of \code{object["nodes"]}.}
+\item{nc}{Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
+\code{object["nodes"]}.\cr
+\code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.}
 
 \item{characteristic}{Name of the characteristic on which to do the search.
 One of \code{"length"}, \code{"weight"}.}

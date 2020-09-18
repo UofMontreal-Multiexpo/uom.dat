@@ -7,8 +7,7 @@
 \usage{
 \S4method{cluster_chart}{SpectralAnalyzer}(
   object,
-  entities,
-  characteristics,
+  nopc,
   item,
   identifiers = "original",
   use_name = TRUE,
@@ -18,27 +17,30 @@
   vertex_col = "status",
   c.cutoff = NULL,
   display_mixt = TRUE,
-  title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
+  title = paste("Cluster of", item),
   path = getwd(),
-  name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
+  name = paste0("cluster_of_", item, ".png"),
   ...
 )
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{entities}{Type of entities for which to plot one of the clusters (nodes or patterns).
-One of \code{"nodes"}, \code{"patterns"}.}
-
-\item{characteristics}{Characteristics of nodes or patterns of which one of the clusters is to be
-plotted. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
+\item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+\strong{c}haracteristics. Nodes or patterns of which one of the clusters is to be plotted. Any subset
+of \code{object["nodes"]} or \code{object["patterns"]}.\cr
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{object["nodes"]} and \code{object["patterns"]}.}
 
 \item{item}{Identification code of the item whose cluster is to be plotted.}
 
 \item{identifiers}{Which IDs to use to identify the nodes or patterns on the chart and in the
-return data frames? One of \code{"original"}, \code{"new"}. \cr
-\code{"original"} to use the original identifiers.
-\code{"new"} to use new identifiers ordered according to \code{characteristics}.}
+return data frames. One of \code{"original"}, \code{"new"}.
+\describe{
+  \item{\code{"original"}}{Use of the original identifiers.}
+  \item{\code{"new"}}{Use of new identifiers ordered according to the subset corresponding to
+                      \code{nopc}.}
+}}
 
 \item{use_name}{If \code{TRUE}, display the item name if it is defined. Display its identification
 code otherwise.}
@@ -75,17 +77,15 @@ In all other cases, the vertices are colored gray.}
 links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 
 \item{title}{Chart title.
-By default, the title depends on the arguments \code{entities} and \code{item}.
-Example of default title: \code{"Node cluster of 25"} if \code{entities = "nodes"} and
-\code{item = 25}.}
+By default, the title depends on the argument \code{item}.
+Example of default title: \code{"Cluster of 25"} if \code{item = 25}.}
 
 \item{path}{Path of the directory in which to save the charts.
 By default, the charts are saved in the working directory.}
 
 \item{name}{Name of the file in which to save the chart.
-By default, the name depends on the arguments \code{entities} and \code{item}.
-Example of default name: \code{"node_cluster_of_25.png"} if \code{entities = "nodes"} and
-\code{item = 25}.}
+By default, the name depends on the argument \code{item}.
+Example of default name: \code{"cluster_of_25.png"} if \code{item = 25}.}
 
 \item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 \code{sna} for plotting the graph. See Details section.}
@@ -114,7 +114,7 @@ If mixed links are relative to category values that are not represented by singl
 The same is true for mixed vertices if the parameter \code{vertex_col} is \code{"categories"}.
 
 If the chart is to be plotted from a subset of all nodes or patterns and some become isolated
- because the other entities to which they are normally linked are not part of \code{characteristics},
+ because the other entities to which they are normally linked are not part of the subset \code{nopc},
  these nodes or patterns are placed at the end of the return data frame \code{edges}.
 These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
 
@@ -132,10 +132,9 @@ The following parameters, which can be redefined, have the following values:
  }
 }
 \examples{
-cluster_1 <- cluster_chart(SA_instance, "nodes", SA_instance["nodes"],
-                           item = 3146)
-cluster_2 <- cluster_chart(SA_instance, "patterns", SA_instance["patterns"],
-                           item = 3146)
+cluster_1 <- cluster_chart(SA_instance, "nodes", item = 3146,
+                           name = "node_cluster_of_3146")
+cluster_2 <- cluster_chart(SA_instance, SA_instance["patterns"], item = 3146)
 
 }
 \seealso{

@@ -7,8 +7,7 @@
 \usage{
 \S4method{spectrosome_chart}{SpectralAnalyzer}(
   object,
-  entities,
-  characteristics,
+  nopc,
   identifiers = "original",
   nb_graphs = 1,
   min_link_weight = 1,
@@ -21,25 +20,28 @@
   n.cutoff = NULL,
   c.cutoff = NULL,
   display_mixt = TRUE,
-  title = paste0("Network of ", entities),
+  title = "Spectrosome",
   path = getwd(),
-  name = paste0("spectrosome_of_", entities, ".png"),
+  name = "spectrosome.png",
   ...
 )
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{entities}{Type of entities for which to plot the spectrosome (nodes or patterns).
-One of \code{"nodes"}, \code{"patterns"}.}
-
-\item{characteristics}{Characteristics of nodes or patterns whose spectrosome is to be plotted.
-Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
+\item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+\strong{c}haracteristics. Nodes or patterns whose spectrosome is to be plotted. Any subset of
+\code{object["nodes"]} or \code{object["patterns"]}.\cr
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{object["nodes"]} and \code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the nodes or patterns on the chart and in the
-return data frames? One of \code{"original"}, \code{"new"}. \cr
-\code{"original"} to use the original identifiers.
-\code{"new"} to use new identifiers ordered according to \code{characteristics}.}
+return data frames. One of \code{"original"}, \code{"new"}.
+\describe{
+  \item{\code{"original"}}{Use of the original identifiers.}
+  \item{\code{"new"}}{Use of new identifiers ordered according to the subset corresponding to
+                      \code{nopc}.}
+}}
 
 \item{nb_graphs}{Number of graphics to generate and save. The place of the vertices differs between
 each copy.}
@@ -150,11 +152,10 @@ The following parameters, which can be redefined, have the following values:
  }
 }
 \examples{
-spectrosome_1 <- spectrosome_chart(SA_instance, "nodes", SA_instance["nodes"])
-spectrosome_2 <- spectrosome_chart(SA_instance, "patterns",
-                                   SA_instance["patterns"])
-spectrosome_3 <- spectrosome_chart(SA_instance, "patterns",
-                                   SA_instance["patterns"][1:15, ],
+spectrosome_1 <- spectrosome_chart(SA_instance, "nodes",
+                                   name = "spectrosome_of_nodes")
+spectrosome_2 <- spectrosome_chart(SA_instance, SA_instance["patterns"])
+spectrosome_3 <- spectrosome_chart(SA_instance, SA_instance["patterns"][1:15, ],
                                    name = "spectrosome_of_patterns_1-15")
 
 }

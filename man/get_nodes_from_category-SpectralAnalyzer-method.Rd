@@ -5,19 +5,14 @@
 \alias{get_nodes_from_category}
 \title{Search for nodes by category}
 \usage{
-\S4method{get_nodes_from_category}{SpectralAnalyzer}(
-  object,
-  nodes_characteristics,
-  category,
-  value,
-  condition
-)
+\S4method{get_nodes_from_category}{SpectralAnalyzer}(object, nc, category, value, condition)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{nodes_characteristics}{Data frame of nodes and their characteristics.
-Any subset of \code{object["nodes"]}.}
+\item{nc}{Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
+\code{object["nodes"]}.\cr
+\code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.}
 
 \item{category}{Name or number of the category on which to search (numbering according to the order
 of the columns of \code{object["items_categories"]}).}

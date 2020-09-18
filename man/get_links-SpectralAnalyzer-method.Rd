@@ -5,16 +5,16 @@
 \alias{get_links}
 \title{Get links between nodes or patterns}
 \usage{
-\S4method{get_links}{SpectralAnalyzer}(object, entities, characteristics)
+\S4method{get_links}{SpectralAnalyzer}(object, nopc)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{entities}{Type of entities to search for links.
-One of \code{"nodes"}, \code{"patterns"}.}
-
-\item{characteristics}{Data frame of the characteristics of the nodes or patterns whose links are
-to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
+\item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+\strong{c}haracteristics. Nodes or patterns whose links are be to sought. Any subset of
+\code{object["nodes"]} or \code{object["patterns"]}.\cr
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{object["nodes"]} and \code{object["patterns"]}.}
 }
 \value{
 Data frame associating the linked nodes or linked patterns.
@@ -23,14 +23,14 @@ Data frame associating the linked nodes or linked patterns.
 Extract from the links those corresponding to the desired nodes or patterns.
 }
 \details{
-If among the nodes or patterns some become isolated because the other entities to which they
- are normally linked are not part of \code{characteristics}, these nodes or patterns are placed
- at the end of the return data frame.
+If among the nodes or patterns for which the links are sought, some become isolated because the other
+ entities to which they are normally linked are not part of the subset \code{nopc}, these nodes or
+ patterns are placed at the end of the return data frame.
 These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
 }
 \examples{
-get_links(SA_instance, "patterns", SA_instance["patterns"])
-get_links(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+get_links(SA_instance, "patterns")
+get_links(SA_instance, SA_instance["patterns"][1:10, ])
 
 }
 \seealso{

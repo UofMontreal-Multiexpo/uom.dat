@@ -7,7 +7,7 @@
 \usage{
 \S4method{plot_tree_chart}{SpectralAnalyzer}(
   object,
-  patterns_characteristics,
+  pc,
   items_category,
   category = NULL,
   c.cutoff = NULL,
@@ -21,8 +21,8 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Patterns (and their characteristics) whose tree is to be plotted.
-Any subset of \code{object["patterns"]}.}
+\item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose tree
+is to be plotted. Any subset of \code{object["patterns"]}.}
 
 \item{items_category}{Data frame of items and one associated category.}
 

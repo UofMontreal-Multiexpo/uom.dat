@@ -5,20 +5,16 @@
 \alias{get_patterns_from_status}
 \title{Search for patterns by status}
 \usage{
-\S4method{get_patterns_from_status}{SpectralAnalyzer}(
-  object,
-  patterns_characteristics,
-  value,
-  condition = "EQ"
-)
+\S4method{get_patterns_from_status}{SpectralAnalyzer}(object, pc, value, condition = "EQ")
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Data frame of patterns and their characteristics.
-Any subset of \code{object["patterns"]}.}
+\item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
+\code{object["patterns"]}.\cr
+\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
 
-\item{value}{Status value sought (one or more)}
+\item{value}{Status value sought (one or more).}
 
 \item{condition}{Search condition. One of \code{"EQ"}, \code{"NE"}, \code{"=="}, \code{"!="}.
 \describe{

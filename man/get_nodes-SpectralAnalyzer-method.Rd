@@ -5,13 +5,13 @@
 \alias{get_nodes}
 \title{Search for nodes by item, characteristic or category}
 \usage{
-\S4method{get_nodes}{SpectralAnalyzer}(object, nodes_characteristics, element, value, condition = "default")
+\S4method{get_nodes}{SpectralAnalyzer}(object, nc, element, value, condition = "default")
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{nodes_characteristics}{Data frame of nodes and their characteristics.
-Any subset of \code{object["nodes"]}.}
+\item{nc}{Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of \code{object["nodes"]}.\cr
+\code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.}
 
 \item{element}{Type of element on which to search.
 One of \code{"items"}, \code{"length"}, \code{"weight"} or the name or number of a category on which to search
@@ -79,7 +79,7 @@ get_nodes(SA_instance, SA_instance["nodes"],
 ## Search on categories
 get_nodes(SA_instance, SA_instance["nodes"],
           element = "family", value = "Chrome", condition = "items")
-get_nodes(SA_instance, SA_instance["nodes"],
+get_nodes(SA_instance, "nodes",
           element = 1, value = "Chrome", condition = "links")
 
 }

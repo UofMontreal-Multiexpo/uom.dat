@@ -149,7 +149,12 @@ setMethod(f = "initialize",
             methods::validObject(.Object)
             
             # Attrtibuts de classe
-            .Object@Class = list("STATUS_PERSISTENT" = "Persistent",
+            .Object@Class = list("NODES" = "nodes",
+                                 "PATTERNS" = "patterns",
+                                 "RULES" = "rules",
+                                 "NODES_OR_PATTERNS" = "nop",
+                                 "NODES_PATTERNS_OR_RULES" = "npr",
+                                 "STATUS_PERSISTENT" = "Persistent",
                                  "STATUS_DECLINING" = "Declining",
                                  "STATUS_EMERGENT" = "Emergent",
                                  "STATUS_LATENT" = "Latent",
@@ -513,20 +518,20 @@ setGeneric(name = "define_dynamic_status", def = function(object, patterns, stat
 
 # Methods for creating spectrum graphs
 
-setGeneric(name = "spectrum_chart", def = function(object, patterns_characteristics, identifiers = "original", sort = TRUE, title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf"){ standardGeneric("spectrum_chart") })
+setGeneric(name = "spectrum_chart", def = function(object, pc, identifiers = "original", sort = TRUE, title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf"){ standardGeneric("spectrum_chart") })
 
-setGeneric(name = "plot_spectrum_chart", def = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
+setGeneric(name = "plot_spectrum_chart", def = function(object, pc, weights_by_node_type, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
 
 setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object, patterns){ standardGeneric("compute_pattern_distribution_in_nodes") })
 
 
 # Methods for creating spectrosome graphs and computing related indicators
 
-setGeneric(name = "spectrosome_chart", def = function(object, entities, characteristics, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, title = paste0("Network of ", entities), path = getwd(), name = paste0("spectrosome_of_", entities, ".png"), ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, nopc, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, title = "Spectrosome", path = getwd(), name = "spectrosome.png", ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, entities, characteristics, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item), path = getwd(), name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"), ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, nopc, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, title = paste("Cluster of", item), path = getwd(), name = paste0("cluster_of_", item, ".png"), ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -535,9 +540,9 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Methods for creating multi-association tree graphs
 
-setGeneric(name = "tree_chart", def = function(object, patterns_characteristics, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", title = "Multi-association tree", path = getwd(), name = "multi-association_tree.pdf"){ standardGeneric("tree_chart") })
+setGeneric(name = "tree_chart", def = function(object, pc, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", title = "Multi-association tree", path = getwd(), name = "multi-association_tree.pdf"){ standardGeneric("tree_chart") })
 
-setGeneric(name = "plot_tree_chart", def = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
+setGeneric(name = "plot_tree_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
 
 # Association rule extraction methods
@@ -547,35 +552,42 @@ setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE,
 
 # Methods for search and save
 
-setGeneric(name = "save_characteristics", def = function(object, entities, characteristics, ...){ standardGeneric("save_characteristics") })
+setGeneric(name = "save_characteristics", def = function(object, characteristics, ...){ standardGeneric("save_characteristics") })
+
+setGeneric(name = "get_nodes", def = function(object, nc, element, value, condition = "default"){ standardGeneric("get_nodes") })
+
+setGeneric(name = "get_nodes_from_items", def = function(object, nc, items, condition = "all"){ standardGeneric("get_nodes_from_items") })
+
+setGeneric(name = "get_nodes_from_characteristic", def = function(object, nc, characteristic, value, condition = "EQ"){ standardGeneric("get_nodes_from_characteristic") })
+
+setGeneric(name = "get_nodes_from_category", def = function(object, nc, category, value, condition){ standardGeneric("get_nodes_from_category") })
+
+setGeneric(name = "get_patterns", def = function(object, pc, element, value, condition = "default"){ standardGeneric("get_patterns") })
+
+setGeneric(name = "get_patterns_from_items", def = function(object, pc, items, condition = "all"){ standardGeneric("get_patterns_from_items") })
+
+setGeneric(name = "get_patterns_from_characteristic", def = function(object, pc, characteristic, value, condition = "EQ"){ standardGeneric("get_patterns_from_characteristic") })
+
+setGeneric(name = "get_patterns_from_status", def = function(object, pc, value, condition = "EQ"){ standardGeneric("get_patterns_from_status") })
+
+setGeneric(name = "get_patterns_from_category", def = function(object, pc, category, value, condition){ standardGeneric("get_patterns_from_category") })
+
+setGeneric(name = "get_links", def = function(object, nopc){ standardGeneric("get_links") })
+
+setGeneric(name = "get_isolates", def = function(object, nopc){ standardGeneric("get_isolates") })
+
+setGeneric(name = "get_non_isolates", def = function(object, nopc){ standardGeneric("get_non_isolates") })
+
+setGeneric(name = "get_complexes", def = function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2){ standardGeneric("get_complexes") })
+
+
+# Other specific methods
 
 setGeneric(name = "check_access_for_category", def = function(object, category, value, stop = TRUE){ standardGeneric("check_access_for_category") })
 
-setGeneric(name = "get_nodes", def = function(object, nodes_characteristics, element, value, condition = "default"){ standardGeneric("get_nodes") })
+setGeneric(name = "get_nopc", def = function(object, nopc, entities = object@Class$NODES_OR_PATTERNS){ standardGeneric("get_nopc") })
 
-setGeneric(name = "get_nodes_from_items", def = function(object, nodes_characteristics, items, condition = "all"){ standardGeneric("get_nodes_from_items") })
-
-setGeneric(name = "get_nodes_from_characteristic", def = function(object, nodes_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("get_nodes_from_characteristic") })
-
-setGeneric(name = "get_nodes_from_category", def = function(object, nodes_characteristics, category, value, condition){ standardGeneric("get_nodes_from_category") })
-
-setGeneric(name = "get_patterns", def = function(object, patterns_characteristics, element, value, condition = "default"){ standardGeneric("get_patterns") })
-
-setGeneric(name = "get_patterns_from_items", def = function(object, patterns_characteristics, items, condition = "all"){ standardGeneric("get_patterns_from_items") })
-
-setGeneric(name = "get_patterns_from_characteristic", def = function(object, patterns_characteristics, characteristic, value, condition = "EQ"){ standardGeneric("get_patterns_from_characteristic") })
-
-setGeneric(name = "get_patterns_from_status", def = function(object, patterns_characteristics, value, condition = "EQ"){ standardGeneric("get_patterns_from_status") })
-
-setGeneric(name = "get_patterns_from_category", def = function(object, patterns_characteristics, category, value, condition){ standardGeneric("get_patterns_from_category") })
-
-setGeneric(name = "get_links", def = function(object, entities, characteristics){ standardGeneric("get_links") })
-
-setGeneric(name = "get_isolates", def = function(object, entities, characteristics){ standardGeneric("get_isolates") })
-
-setGeneric(name = "get_non_isolates", def = function(object, entities, characteristics){ standardGeneric("get_non_isolates") })
-
-setGeneric(name = "get_complexes", def = function(object, entities, characteristics, category = NULL, condition = NULL, min_nb_values = 2){ standardGeneric("get_complexes") })
+setGeneric(name = "which_entities", def = function(object, npr, entities = object@Class$NODES_OR_PATTERNS){ standardGeneric("which_entities") })
 
 
 
@@ -1395,13 +1407,16 @@ setMethod(f = "define_dynamic_status",
 #'  each other in the order they are given.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns_characteristics Patterns (and their characteristics) whose spectrum is to be plotted.
-#'  Any subset of \code{object["patterns"]}.
-#' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame?
-#'  One of \code{"original"}, \code{"new"}. \cr
-#'  \code{"original"} to use the original identifiers.
-#'  \code{"new"} to use new identifiers based on the sorting of patterns or on the specific order given
-#'  by \code{patterns_characteristics}.
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
+#'  is to be plotted. Any subset of \code{object["patterns"]}.\cr
+#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
+#' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame.
+#'  One of \code{"original"}, \code{"new"}.
+#'  \describe{
+#'    \item{\code{"original"}}{Use of the original identifiers.}
+#'    \item{\code{"new"}}{Use of new identifiers based on the sorting of patterns or on the order in
+#'                        \code{pc}.}
+#'  }
 #' @param sort If \code{TRUE}, the patterns are sorted on the chart as described in 'Details' section.
 #'  Otherwise, they are ordered on the chart in the order in which they are given.
 #' @param title Chart title.
@@ -1417,7 +1432,7 @@ setMethod(f = "define_dynamic_status",
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' 
 #' @examples
-#' spectrum_1 <- spectrum_chart(SA_instance, SA_instance["patterns"])
+#' spectrum_1 <- spectrum_chart(SA_instance, "patterns")
 #' spectrum_2 <- spectrum_chart(SA_instance, SA_instance["patterns"][1:15, ],
 #'                              name = "spectrum_of_patterns_1-15")
 #' 
@@ -1425,49 +1440,51 @@ setMethod(f = "define_dynamic_status",
 #' @export
 setMethod(f = "spectrum_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, identifiers = "original", sort = TRUE,
+          definition = function(object, pc, identifiers = "original", sort = TRUE,
                                 title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf") {
+            
+            # Récupération des patterns
+            pc = get_nopc(object, pc, object@Class$PATTERNS)
             
             if (identifiers != "original" && identifiers != "new")
               stop("identifiers must be \"original\" or \"new\".")
             
             # Ensembles des poids et longueurs des noeuds contenant les motifs
-            patterns_distributions = compute_pattern_distribution_in_nodes(object, patterns_characteristics$pattern)
+            patterns_distributions = compute_pattern_distribution_in_nodes(object, pc$pattern)
             weight_distribution = patterns_distributions[["weight_distribution"]]
             length_distribution = patterns_distributions[["length_distribution"]]
             
             # Tri des motifs selon spécificité, statut, poids, longueur
             if (sort) {
-              sorting_vector = order(1 - patterns_characteristics$specificity,
-                                     match(patterns_characteristics$status, names(object@Class$STATUS_COLORS)),
-                                     max(patterns_characteristics$weight) - patterns_characteristics$weight,
-                                     patterns_characteristics$order)
+              sorting_vector = order(1 - pc$specificity,
+                                     match(pc$status, names(object@Class$STATUS_COLORS)),
+                                     max(pc$weight) - pc$weight,
+                                     pc$order)
               
-              patterns_characteristics = patterns_characteristics[sorting_vector, ]
+              pc = pc[sorting_vector, ]
               weight_distribution = weight_distribution[sorting_vector]
               length_distribution = length_distribution[sorting_vector]
             }
             
             # Attribution d'identifiants aux motifs
-            if (identifiers == "new") patterns_characteristics$ID = seq(nrow(patterns_characteristics))
-            else patterns_characteristics$ID = as.numeric(rownames(patterns_characteristics))
+            if (identifiers == "new") pc$ID = seq(nrow(pc))
+            else pc$ID = as.numeric(rownames(pc))
             
             # Décomposition des poids des motifs selon le type de noeuds (simple ou complexe)
-            weights = data.frame(complex_nodes = sapply(seq(nrow(patterns_characteristics)), function(x) {
+            weights = data.frame(complex_nodes = sapply(seq(nrow(pc)), function(x) {
               sum(weight_distribution[[x]][which(length_distribution[[x]] > 1)])
             }))
-            weights$simple_node = patterns_characteristics$weight - weights$complex_nodes
+            weights$simple_node = pc$weight - weights$complex_nodes
             
             
             # Traçage du graphique dans un fichier PDF
             grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
                            15, 8, pointsize = 10)
-            plot_spectrum_chart(object, patterns_characteristics, weights, title)
+            plot_spectrum_chart(object, pc, weights, title)
             grDevices::dev.off()
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
-            return(patterns_characteristics[order(patterns_characteristics$ID),
-                                            c(ncol(patterns_characteristics), seq(ncol(patterns_characteristics)-1))])
+            return(pc[order(pc$ID), c(ncol(pc), seq(ncol(pc)-1))])
           })
 
 
@@ -1476,8 +1493,8 @@ setMethod(f = "spectrum_chart",
 #' Plot a spectrum chart.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns_characteristics Patterns (and their characteristics) whose spectrum is to be plotted.
-#'  Any subset of \code{object["patterns"]}.
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
+#'  is to be plotted. Any subset of \code{object["patterns"]}.
 #' @param weights_by_node_type Data frame containing for each pattern, its wieght in complexe nodes
 #'  and its weight in simple nodes.
 #' @param title Chart title.
@@ -1487,14 +1504,15 @@ setMethod(f = "spectrum_chart",
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{spectrum_chart}}, \code{\link{compute_pattern_distribution_in_nodes}}.
+#' 
 #' @aliases plot_spectrum_chart
 #' @keywords internal
 setMethod(f = "plot_spectrum_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, weights_by_node_type, title = "Spectrum of patterns") {
+          definition = function(object, pc, weights_by_node_type, title = "Spectrum of patterns") {
             
             # Définition des couleurs des barres du barplot
-            bars_colors = object@Class$STATUS_COLORS[patterns_characteristics$status]
+            bars_colors = object@Class$STATUS_COLORS[pc$status]
             
             # Limite maximale de l'ordonnée concernant la spécificité
             # Écart à 1 ajouté pour que la ligne ne soit pas tronquée en haut du graphique
@@ -1502,34 +1520,34 @@ setMethod(f = "plot_spectrum_chart",
             y_lim_line = 1.045
             
             # Marge entre les barres et les axes à gauche et à droite
-            x_margin = 0.03 * nrow(patterns_characteristics)
+            x_margin = 0.03 * nrow(pc)
             
             ## Bar chart relatif au poids
             graphics::par(mfrow = c(1, 1))
             graphics::par(mar = c(7.1, 5.6, 4.1, 5.6) + 0.1)
             
             # Diagramme en barres selon le poids des motifs
-            las = if (length(patterns_characteristics$pattern) < 50) 1 else 3
-            y_lim_bar = max(patterns_characteristics$weight) * y_lim_line # Poids max aligné avec specificité de 1
+            las = if (length(pc$pattern) < 50) 1 else 3
+            y_lim_bar = max(pc$weight) * y_lim_line # Poids max aligné avec specificité de 1
             bar_plot = graphics::barplot(t(weights_by_node_type), main = title,
                                          col = NA, space = 0, lwd = 2,
-                                         xlim = c(-x_margin, nrow(patterns_characteristics) + x_margin), xaxs = "i",
+                                         xlim = c(-x_margin, nrow(pc) + x_margin), xaxs = "i",
                                          ylim = c(0, y_lim_bar), yaxt = "n",
                                          xlab = "Patterns IDs", ylab = "",
-                                         names.arg = patterns_characteristics$ID, las = las, font.axis = 2,
+                                         names.arg = pc$ID, las = las, font.axis = 2,
                                          cex.main = 1.3, cex.lab = 1.5, cex.axis = 1.5, cex.names = 0.9)
             bar_width_2 = diff(bar_plot[1:2]) / 2
             
             # Axe à gauche : suppression des nombres à virgule, orientation en fonction du nombre
             # et affichage éventuel d'un tick supplémentaire pour délimiter l'axe en haut du graphique
             ticks = unique(trunc(graphics::axTicks(2)))
-            if (max(ticks) < max(patterns_characteristics$weight)) {
-               ticks = append(ticks, max(patterns_characteristics$weight))
+            if (max(ticks) < max(pc$weight)) {
+               ticks = append(ticks, max(pc$weight))
             }
             graphics::axis(2, lwd = 2, cex.axis = 1.5, font.axis = 2,
                            at = ticks, las = if (any(ticks >= 10)) 3 else 1)
             graphics::mtext("Weight", side = 2, line = 3.1, cex = 1.5,
-                            at = max(patterns_characteristics$weight) / 2)
+                            at = max(pc$weight) / 2)
             
             # Coloration des barres
             for (i in seq(nrow(weights_by_node_type))) {
@@ -1544,14 +1562,14 @@ setMethod(f = "plot_spectrum_chart",
             graphics::par(new = TRUE)
             
             # Ligne de la spécificité et seuil
-            graphics::plot(x = seq(0.5, nrow(patterns_characteristics) - 0.5),
-                           y = patterns_characteristics$specificity,
+            graphics::plot(x = seq(0.5, nrow(pc) - 0.5),
+                           y = pc$specificity,
                            lwd = 3, type = "b", col = "black", pch = 20,
                            bty = "n", xlab = "", ylab = "", main = "",
-                           xlim = c(-x_margin, nrow(patterns_characteristics) + x_margin), xaxt = "n", xaxs = "i",
+                           xlim = c(-x_margin, nrow(pc) + x_margin), xaxt = "n", xaxs = "i",
                            ylim = c(0, y_lim_line), yaxt = "n", yaxs = "i")
             graphics::segments(x0 = 0, y0 = 0.5,
-                               x1 = nrow(patterns_characteristics) * (1 + x_margin),
+                               x1 = nrow(pc) * (1 + x_margin),
                                lwd = 0.5, lty = "dotted")
             
             # Axe et titre à droite
@@ -1561,8 +1579,8 @@ setMethod(f = "plot_spectrum_chart",
             
             ## Texte relatif aux tailles des motifs
             # Changement du système de coordonnées du au changement de graphique (bar -> line)
-            new_y = patterns_characteristics$weight * y_lim_line / y_lim_bar
-            shadowtext(bar_plot, new_y, utils::as.roman(patterns_characteristics$order),
+            new_y = pc$weight * y_lim_line / y_lim_bar
+            shadowtext(bar_plot, new_y, utils::as.roman(pc$order),
                        col = "black", bg = "white", cex = 0.8, pos = 3, offset = 1)
             
             
@@ -1572,8 +1590,8 @@ setMethod(f = "plot_spectrum_chart",
                              legend = names(object@Class$STATUS_COLORS), cex = 1.1)
             graphics::legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.135),
                              pch = NA_integer_,
-                             legend = paste0(utils::as.roman(min(patterns_characteristics$order)), " ... ",
-                                             utils::as.roman(max(patterns_characteristics$order)), ":  Order"),
+                             legend = paste0(utils::as.roman(min(pc$order)), " ... ",
+                                             utils::as.roman(max(pc$order)), ":  Order"),
                              cex = 1.1)
             graphics::legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.165),
                              pch = 20, lty = 1,
@@ -1667,14 +1685,18 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'  }
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param entities Type of entities for which to plot the spectrosome (nodes or patterns).
-#'  One of \code{"nodes"}, \code{"patterns"}.
-#' @param characteristics Characteristics of nodes or patterns whose spectrosome is to be plotted.
-#'  Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
+#' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+#'  \strong{c}haracteristics. Nodes or patterns whose spectrosome is to be plotted. Any subset of
+#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
-#'  return data frames? One of \code{"original"}, \code{"new"}. \cr
-#'  \code{"original"} to use the original identifiers.
-#'  \code{"new"} to use new identifiers ordered according to \code{characteristics}.
+#'  return data frames. One of \code{"original"}, \code{"new"}.
+#'  \describe{
+#'    \item{\code{"original"}}{Use of the original identifiers.}
+#'    \item{\code{"new"}}{Use of new identifiers ordered according to the subset corresponding to
+#'                        \code{nopc}.}
+#'  }
 #' @param nb_graphs Number of graphics to generate and save. The place of the vertices differs between
 #'  each copy.
 #' @param min_link_weight Minimum number of items in common between two entities to plot their link on
@@ -1736,33 +1758,32 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @seealso \code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' 
 #' @examples
-#' spectrosome_1 <- spectrosome_chart(SA_instance, "nodes", SA_instance["nodes"])
-#' spectrosome_2 <- spectrosome_chart(SA_instance, "patterns",
-#'                                    SA_instance["patterns"])
-#' spectrosome_3 <- spectrosome_chart(SA_instance, "patterns",
-#'                                    SA_instance["patterns"][1:15, ],
+#' spectrosome_1 <- spectrosome_chart(SA_instance, "nodes",
+#'                                    name = "spectrosome_of_nodes")
+#' spectrosome_2 <- spectrosome_chart(SA_instance, SA_instance["patterns"])
+#' spectrosome_3 <- spectrosome_chart(SA_instance, SA_instance["patterns"][1:15, ],
 #'                                    name = "spectrosome_of_patterns_1-15")
 #' 
 #' @aliases spectrosome_chart
 #' @export
 setMethod(f = "spectrosome_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics,
+          definition = function(object, nopc,
                                 identifiers = "original",
                                 nb_graphs = 1, min_link_weight = 1,
                                 vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 clusters = Inf, highlight = 3,
                                 use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE,
-                                title = paste0("Network of ", entities),
-                                path = getwd(), name = paste0("spectrosome_of_", entities, ".png"),
+                                title = "Spectrosome", path = getwd(), name = "spectrosome.png",
                                 ...) {
             
-            # Validation des paramètres
-            if (entities != "nodes" && entities != "patterns")
-              stop("entities must be \"nodes\" or \"patterns\".")
+            # Récupération des noeuds/patterns et recherche du type d'entités fourni
+            nopc = get_nopc(object, nopc)
+            entities = which_entities(object, nopc)
             
-            if (nrow(characteristics) < 2)
-              stop("characteristics must have at least 2 rows to draw a spectrosome.")
+            # Validation des paramètres
+            if (nrow(nopc) < 2)
+              stop("There must be at least 2 nodes or patterns to draw a spectrosome.")
             
             if (identifiers != "original" && identifiers != "new")
               stop("identifiers must be \"original\" or \"new\".")
@@ -1772,7 +1793,7 @@ setMethod(f = "spectrosome_chart",
             
             
             # Extraction des liens pour les éléments à visualiser (nop_links = nodes or patterns links)
-            nop_links = get_links(object, entities, characteristics)
+            nop_links = get_links(object, nopc)
             
             if (all(nop_links$weight == 0) && "displayisolates" %in% names(list(...)) && !(list(...)$displayisolates)) {
               warning("There is no graph to plot: displayisolates = FALSE and all entities are isolated.")
@@ -1781,29 +1802,29 @@ setMethod(f = "spectrosome_chart",
             
             if (entities == "nodes") {
               # Renommage de colonnes pour simplification ultérieure (cf. vertices_colors et vertices_shapes)
-              colnames(characteristics)[colnames(characteristics) == "node"] = "pattern"
-              colnames(characteristics)[colnames(characteristics) == "length"] = "order"
+              colnames(nopc)[colnames(nopc) == "node"] = "pattern"
+              colnames(nopc)[colnames(nopc) == "length"] = "order"
               
               # Texte affiché sur le graphique
               nop_subtitle_1 = "Nodes: %d (%d isolate"
               nop_subtitle_2 = "); Links: %d"
               
-              not_identical = !identical(object@nodes, characteristics)
+              not_identical = !identical(object@nodes, nopc)
               
             } else if (entities == "patterns") {
               # Texte affiché sur le graphique
               nop_subtitle_1 = "Patterns: %d (%d isolate"
               nop_subtitle_2 = "); Links: %d"
               
-              not_identical = !identical(object@patterns, characteristics)
+              not_identical = !identical(object@patterns, nopc)
             }
             
             # Identifiants des sommets du graphe
-            vertices_id = seq(nrow(characteristics))
+            vertices_id = seq(nrow(nopc))
             
             if (not_identical) {
               # Nouvelle numérotation des éléments conservés
-              names(vertices_id) = rownames(characteristics)
+              names(vertices_id) = rownames(nopc)
               nop_links$endpoint.1 = vertices_id[as.character(nop_links$endpoint.1)]
               nop_links$endpoint.2 = vertices_id[as.character(nop_links$endpoint.2)]
             }
@@ -1918,9 +1939,9 @@ setMethod(f = "spectrosome_chart",
             
             # Définition des couleurs des sommets en fonction du statut et nombre pour chaque statut
             if (entities == "patterns" && vertex_col == "status") {
-              vertices_colors = object@Class$STATUS_COLORS[characteristics$status]
+              vertices_colors = object@Class$STATUS_COLORS[nopc$status]
               count_status = sapply(names(object@Class$STATUS_COLORS),
-                                    function(status) sum(characteristics$status == status))
+                                    function(status) sum(nopc$status == status))
               
               # Légende associée
               legend_1 = c(names(object@Class$STATUS_COLORS), "", "Single items", "Multiple items")
@@ -1928,7 +1949,7 @@ setMethod(f = "spectrosome_chart",
               
             } else if (vertex_col != "categories") {
               # Noeuds ou motifs sans affichage du statut : couleur grise
-              vertices_colors = rep("grey", nrow(characteristics))
+              vertices_colors = rep("grey", nrow(nopc))
               
               # Légende associée
               legend_1 = c("Single items", "Multiple items")
@@ -1943,7 +1964,7 @@ setMethod(f = "spectrosome_chart",
               
               if (length(object@items_categories) == 0) {
                 v.categories_colors[[1]] = character(0)
-                vertices_colors[[1]] = rep("grey", nrow(characteristics))
+                vertices_colors[[1]] = rep("grey", nrow(nopc))
                 legend_1[[1]] = c("Single items", "Multiple items")
                 col_1[[1]] = c("black", "black")
                 
@@ -1952,7 +1973,7 @@ setMethod(f = "spectrosome_chart",
                 for (category in seq_len(ncol(object@items_categories))) {
                   
                   # Valeurs de la catégorie associées aux sommets
-                  vertices_categories = lapply(characteristics$pattern,
+                  vertices_categories = lapply(nopc$pattern,
                                                function(x) sort(unique(as.character(object@items_categories[x, category]))))
                   category_values = unique(unlist(vertices_categories))
                   vertices_categories = unlist(lapply(vertices_categories, function(x) {
@@ -1993,31 +2014,31 @@ setMethod(f = "spectrosome_chart",
             }
             
             # Sommets à plusieurs items en cercle ; triangle sinon
-            vertices_shapes = rep(100 , nrow(characteristics))
-            vertices_shapes[characteristics$order == 1] = 3
+            vertices_shapes = rep(100 , nrow(nopc))
+            vertices_shapes[nopc$order == 1] = 3
             
             # Définition des tailles des sommets
             switch(EXPR = vertex_size,
                    "relative" = {
                      # Interpolation linéaire des poids aux valeurs [size_range[1], size_range[2]]
-                     if (min(characteristics$weight) != max(characteristics$weight)) {
-                       func = stats::approxfun(x = c(min(characteristics$weight),
-                                                     max(characteristics$weight)),
+                     if (min(nopc$weight) != max(nopc$weight)) {
+                       func = stats::approxfun(x = c(min(nopc$weight),
+                                                     max(nopc$weight)),
                                                y = size_range)
-                       vertices_sizes = func(characteristics$weight)
+                       vertices_sizes = func(nopc$weight)
                      } else {
-                       vertices_sizes = rep(mean(size_range), length(characteristics$weight))
+                       vertices_sizes = rep(mean(size_range), length(nopc$weight))
                      }
                    },
                    "grouped" = {
                      # Groupement des valeurs des poids selon 5 quantiles
-                     breaks = round(stats::quantile(characteristics$weight, prob = seq(0, 1, 0.2)))
-                     intervals = cut(characteristics$weight, breaks = unique(breaks), include.lowest = TRUE)
+                     breaks = round(stats::quantile(nopc$weight, prob = seq(0, 1, 0.2)))
+                     intervals = cut(nopc$weight, breaks = unique(breaks), include.lowest = TRUE)
                      sizes = seq(size_range[1], size_range[2], length.out = length(levels(intervals)))
                      vertices_sizes = sizes[intervals]
                    },
                    "absolute" = {
-                     vertices_sizes = characteristics$weight
+                     vertices_sizes = nopc$weight
                    },
                    "equal" = {
                      # Valeur par défaut de l'argument vertex.cex de la fonction sna::gplot()
@@ -2040,7 +2061,7 @@ setMethod(f = "spectrosome_chart",
             if(!("displayisolates" %in% names(args))) args$displayisolates = TRUE
             if(!("label" %in% names(args))) {
               if (identifiers == "new") args$label = vertices_id
-              else args$label = rownames(characteristics)
+              else args$label = rownames(nopc)
             }
             
             # Duplication de la fonction utilisée par l'argument "mode" de la fonction sna::gplot
@@ -2081,7 +2102,7 @@ setMethod(f = "spectrosome_chart",
                 # Titres du graphique
                 title(main = title, cex.main = 1.5, line = 2.5)
                 nb_isolates = length(sna::isolates(network_data))
-                title(main = paste0(sprintf(nop_subtitle_1, nrow(characteristics), nb_isolates),
+                title(main = paste0(sprintf(nop_subtitle_1, nrow(nopc), nb_isolates),
                                     if (nb_isolates < 2) "" else "s",
                                     sprintf(nop_subtitle_2, sum(nop_links$weight != 0))),
                       font.main = 3, line = 1)
@@ -2167,8 +2188,8 @@ setMethod(f = "spectrosome_chart",
             degrees = sapply(vertices_id, function(ID) degree(object, ID, nop_links))
             # Renommage initial des colonnes avant retour
             if (entities == "nodes") {
-              colnames(characteristics)[colnames(characteristics) == "pattern"] = "node"
-              colnames(characteristics)[colnames(characteristics) == "order"] = "length"
+              colnames(nopc)[colnames(nopc) == "pattern"] = "node"
+              colnames(nopc)[colnames(nopc) == "order"] = "length"
             }
             
             # Réattribution des ID d'origine (non compatibles avec sna::gplot)
@@ -2176,11 +2197,11 @@ setMethod(f = "spectrosome_chart",
               nop_links$endpoint.1 = names(vertices_id[nop_links$endpoint.1])
               nop_links$endpoint.2 = names(vertices_id[nop_links$endpoint.2])
               
-              vertices_id = as.numeric(rownames(characteristics))
+              vertices_id = as.numeric(rownames(nopc))
             }
             
             # Noeuds ou motifs, caractéristiques, identifiants sur le graphique et degrés dans le graphe
-            return(list(vertices = data.frame(ID = vertices_id, characteristics, degree = degrees),
+            return(list(vertices = data.frame(ID = vertices_id, nopc, degree = degrees),
                         edges = nop_links,
                         coords = coords_list))
           })
@@ -2277,7 +2298,7 @@ setMethod(f = "cluster_text",
 #' The same is true for mixed vertices if the parameter \code{vertex_col} is \code{"categories"}.
 #' 
 #' If the chart is to be plotted from a subset of all nodes or patterns and some become isolated
-#'  because the other entities to which they are normally linked are not part of \code{characteristics},
+#'  because the other entities to which they are normally linked are not part of the subset \code{nopc},
 #'  these nodes or patterns are placed at the end of the return data frame \code{edges}.
 #' These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
 #' 
@@ -2295,15 +2316,19 @@ setMethod(f = "cluster_text",
 #'  }
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param entities Type of entities for which to plot one of the clusters (nodes or patterns).
-#'  One of \code{"nodes"}, \code{"patterns"}.
-#' @param characteristics Characteristics of nodes or patterns of which one of the clusters is to be
-#'  plotted. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
+#' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+#'  \strong{c}haracteristics. Nodes or patterns of which one of the clusters is to be plotted. Any subset
+#'  of \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @param item Identification code of the item whose cluster is to be plotted.
 #' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
-#'  return data frames? One of \code{"original"}, \code{"new"}. \cr
-#'  \code{"original"} to use the original identifiers.
-#'  \code{"new"} to use new identifiers ordered according to \code{characteristics}.
+#'  return data frames. One of \code{"original"}, \code{"new"}.
+#'  \describe{
+#'    \item{\code{"original"}}{Use of the original identifiers.}
+#'    \item{\code{"new"}}{Use of new identifiers ordered according to the subset corresponding to
+#'                        \code{nopc}.}
+#'  }
 #' @param use_name If \code{TRUE}, display the item name if it is defined. Display its identification
 #'  code otherwise.
 #' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the name
@@ -2332,15 +2357,13 @@ setMethod(f = "cluster_text",
 #' @param display_mixt If \code{TRUE}, display in the legend the category values included only in mixed
 #'  links (or in mixed vertices, if \code{vertex_col = "categories"}).
 #' @param title Chart title.
-#'  By default, the title depends on the arguments \code{entities} and \code{item}.
-#'  Example of default title: \code{"Node cluster of 25"} if \code{entities = "nodes"} and
-#'  \code{item = 25}.
+#'  By default, the title depends on the argument \code{item}.
+#'  Example of default title: \code{"Cluster of 25"} if \code{item = 25}.
 #' @param path Path of the directory in which to save the charts.
 #'  By default, the charts are saved in the working directory.
 #' @param name Name of the file in which to save the chart.
-#'  By default, the name depends on the arguments \code{entities} and \code{item}.
-#'  Example of default name: \code{"node_cluster_of_25.png"} if \code{entities = "nodes"} and
-#'  \code{item = 25}.
+#'  By default, the name depends on the argument \code{item}.
+#'  Example of default name: \code{"cluster_of_25.png"} if \code{item = 25}.
 #' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna} for plotting the graph. See Details section.
 #' @return \code{NULL} if none or only one node or pattern contains the sought item. \cr
@@ -2358,40 +2381,41 @@ setMethod(f = "cluster_text",
 #' @seealso \code{\link{spectrosome_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' 
 #' @examples
-#' cluster_1 <- cluster_chart(SA_instance, "nodes", SA_instance["nodes"],
-#'                            item = 3146)
-#' cluster_2 <- cluster_chart(SA_instance, "patterns", SA_instance["patterns"],
-#'                            item = 3146)
+#' cluster_1 <- cluster_chart(SA_instance, "nodes", item = 3146,
+#'                            name = "node_cluster_of_3146")
+#' cluster_2 <- cluster_chart(SA_instance, SA_instance["patterns"], item = 3146)
 #' 
 #' @aliases cluster_chart
 #' @export
 setMethod(f = "cluster_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, item,
+          definition = function(object, nopc, item,
                                 identifiers = "original",
                                 use_name = TRUE, n.cutoff = NULL,
                                 vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 c.cutoff = NULL, display_mixt = TRUE,
-                                title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item),
-                                path = getwd(),
-                                name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png"),
+                                title = paste("Cluster of", item),
+                                path = getwd(), name = paste0("cluster_of_", item, ".png"),
                                 ...) {
+            
+            # Récupération des noeuds/patterns et recherche du type d'entités fourni
+            nopc = get_nopc(object, nopc)
+            entities = which_entities(object, nopc)
             
             # Vérifie qu'un seul item est mentionné
             if (length(item) != 1 && entities == "nodes")
-              stop("item must refer to only one item. For more, check out the functions get_nodes_from_items and spectrosome_chart.")
+              stop("item must refer to only one item. For more, check out the functions get_nodes and spectrosome_chart.")
             if (length(item) != 1 && entities == "patterns")
-              stop("item must refer to only one item. For more, check out the functions get_patterns_from_items and spectrosome_chart.")
+              stop("item must refer to only one item. For more, check out the functions get_patterns and spectrosome_chart.")
             
-            # Extraction des noeuds ou motifs contenant l'item recherché (nop = nodes or patterns)
-            if (entities == "nodes") nop = get_nodes_from_items(object, characteristics, item)
-            else if (entities == "patterns") nop = get_patterns_from_items(object, characteristics, item)
-            else stop("entities must be \"nodes\" or \"patterns\".")
+            # Extraction des noeuds ou motifs contenant l'item recherché ("nop" = "nodes or patterns")
+            if (entities == "nodes") nop = get_nodes_from_items(object, nopc, item)
+            else if (entities == "patterns") nop = get_patterns_from_items(object, nopc, item)
             
             # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
             if (nrow(nop) > 1) {
               # Construction du spectrosome associé
-              to_return = spectrosome_chart(object, entities, nop,
+              to_return = spectrosome_chart(object, nop,
                                             identifiers = identifiers,
                                             vertex_size = vertex_size, vertex_col = vertex_col,
                                             use_names = use_name, n.cutoff = n.cutoff, c.cutoff = c.cutoff,
@@ -2419,8 +2443,7 @@ setMethod(f = "cluster_chart",
 #' @author Gauthier Magnin
 #' 
 #' @examples
-#' spectrosome <- spectrosome_chart(SA_instance, "patterns",
-#'                                  SA_instance["patterns"][1:15, ])
+#' spectrosome <- spectrosome_chart(SA_instance, SA_instance["patterns"][1:15, ])
 #' network_density(SA_instance, spectrosome[["edges"]])
 #' 
 #' @aliases network_density
@@ -2452,8 +2475,7 @@ setMethod(f = "network_density",
 #' @author Gauthier Magnin
 #' 
 #' @examples
-#' spectrosome <- spectrosome_chart(SA_instance, "patterns",
-#'                                  SA_instance["patterns"][1:15, ])
+#' spectrosome <- spectrosome_chart(SA_instance, SA_instance["patterns"][1:15, ])
 #' degree(SA_instance, 7, spectrosome[["edges"]])
 #' 
 #' @aliases degree
@@ -2489,13 +2511,16 @@ setMethod(f = "degree",
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns_characteristics Patterns (and their characteristics) whose tree is to be plotted.
-#'  Any subset of \code{object["patterns"]}.
-#' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame?
-#'  One of \code{"original"}, \code{"new"}. \cr
-#'  \code{"original"} to use the original identifiers.
-#'  \code{"new"} to use new identifiers based on pattern sorting (see Details section to learn more
-#'  about the sort that is performed).
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose tree
+#'  is to be plotted. Any subset of \code{object["patterns"]}.\cr
+#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
+#' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame.
+#'  One of \code{"original"}, \code{"new"}.
+#'  \describe{
+#'    \item{\code{"original"}}{Use of the original identifiers.}
+#'    \item{\code{"new"}}{Use of new identifiers based on pattern sorting (see 'Details' section to learn
+#'                        more about the sort that is performed).}
+#'  }
 #' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the names
@@ -2521,7 +2546,7 @@ setMethod(f = "degree",
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
 #' 
 #' @examples
-#' tree_1 <- tree_chart(SA_instance, SA_instance["patterns"],
+#' tree_1 <- tree_chart(SA_instance, "patterns",
 #'                      n.cutoff = 20, c.cutoff = 17)
 #' tree_2 <- tree_chart(SA_instance, SA_instance["patterns"][1:15, ],
 #'                      c.cutoff = 17, name = "multi-association_tree_1-15")
@@ -2530,17 +2555,20 @@ setMethod(f = "degree",
 #' @export
 setMethod(f = "tree_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, identifiers = "original",
+          definition = function(object, pc, identifiers = "original",
                                 use_names = TRUE, n.cutoff = NULL,
                                 display_status = TRUE, display_text = "ID",
                                 c.cutoff = NULL, sort_by = "category",
                                 title = "Multi-association tree", path = getwd(), name = "multi-association_tree.pdf") {
             
+            # Récupération des patterns
+            pc = get_nopc(object, pc, object@Class$PATTERNS)
+            
             if (identifiers != "original" && identifiers != "new")
               stop("identifiers must be \"original\" or \"new\".")
             
             # Motifs d'ordre > 1, triés par taille croissant, puis par poids décroissant
-            pat_charac = patterns_characteristics[patterns_characteristics$order != 1, ]
+            pat_charac = pc[pc$order != 1, ]
             pat_charac = pat_charac[order(pat_charac$order,
                                           max(pat_charac$weight) - pat_charac$weight), ]
             
@@ -2611,8 +2639,8 @@ setMethod(f = "tree_chart",
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns_characteristics Patterns (and their characteristics) whose tree is to be plotted.
-#'  Any subset of \code{object["patterns"]}.
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose tree
+#'  is to be plotted. Any subset of \code{object["patterns"]}.
 #' @param items_category Data frame of items and one associated category.
 #' @param category Name of the category to represent on the tree, used as the legend title.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
@@ -2637,7 +2665,10 @@ setMethod(f = "tree_chart",
 #' @keywords internal
 setMethod(f = "plot_tree_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree") {
+          definition = function(object, pc, items_category, category = NULL,
+                                c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL,
+                                display_status = TRUE, display_text = "ID",
+                                title = "Multi-association tree") {
             
             # Définition des marges et initialisation de la zone graphique
             if (!is.null(category)) graphics::par(mar = c(3.0, 0.5, 1.9, 0.5))
@@ -2692,7 +2723,7 @@ setMethod(f = "plot_tree_chart",
             line_margin = 0.5
             
             # Table des tailles des motifs et effectifs cumulés
-            order_tab = table(patterns_characteristics$order)
+            order_tab = table(pc$order)
             order_cumfreq = cumsum(order_tab)
             
             # Titre des taille des motifs et position en Y
@@ -2719,8 +2750,7 @@ setMethod(f = "plot_tree_chart",
             
             # Espace à droite : nombre de motifs - espace inexistant avant le premier motif
             #                   + nombre de lignes verticales
-            data_area = nrow(patterns_characteristics) - line_margin + 
-              length(unique(patterns_characteristics$order) - 1) * line_margin
+            data_area = nrow(pc) - line_margin + length(unique(pc$order) - 1) * line_margin
             # Espace ajouté pour afficher la dernière taille de motif s'il y a trop peu de motifs associés
             last_space = graphics::strwidth(utils::as.roman(names(order_tab[length(order_tab)]))) - (order_tab[length(order_tab)] + line_margin)
             if (last_space > 0) data_area = data_area + last_space
@@ -2758,11 +2788,11 @@ setMethod(f = "plot_tree_chart",
             graphics::text(0, order_y, order_text, col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
             
             # Pour chaque motif à dessiner
-            for (m in 1:nrow(patterns_characteristics)) {
+            for (m in 1:nrow(pc)) {
               
               # Nouvelle taille de motifs
               if (m %in% (1 + c(0, order_cumfreq))) {
-                order_nb = patterns_characteristics$order[m]
+                order_nb = pc$order[m]
                 width = width + line_margin
                 
                 # Séparation verticale
@@ -2771,7 +2801,7 @@ setMethod(f = "plot_tree_chart",
                 # Affichage de la taille des prochains motifs
                 if (m == 1) {
                   order_x = order_cumfreq[as.character(order_nb)] / 2 
-                } else if (m == nrow(patterns_characteristics)) {
+                } else if (m == nrow(pc)) {
                   order_x = width + (data_area - width) / 2
                 } else {
                   # Positionnement en X : position de la ligne qui vient d'être tracée
@@ -2783,7 +2813,7 @@ setMethod(f = "plot_tree_chart",
               }
               
               # Ordonnées (y) des items du motif (m)
-              y_m = sort(items_category[match(patterns_characteristics[m, "pattern"][[1]], items_category$item), "y"])
+              y_m = sort(items_category[match(pc[m, "pattern"][[1]], items_category$item), "y"])
               
               # Segment vertical entre les premier et dernier items du motif
               graphics::lines(c(width + 1, width + 1),
@@ -2798,14 +2828,14 @@ setMethod(f = "plot_tree_chart",
               # Affichage de l'identifiant ou de l'une des caractéristiques du motif
               if (!is.null(display_text)) {
                 graphics::text(0.75 + width, y_m[1] - 0.25,
-                               patterns_characteristics[m, display_text],
+                               pc[m, display_text],
                                col = "black", cex = 0.5, srt = 90, adj = 1)
               }
               # Affichage du statut du motif
               if (display_status) {
                 graphics::points(0.75 + width, y_m[length(y_m)] + 0.25,
                                  cex = 0.5, pch = 15,
-                                 col = object@Class$STATUS_COLORS[patterns_characteristics$status[m]])
+                                 col = object@Class$STATUS_COLORS[pc$status[m]])
               }
               
               width = width + 1
@@ -2959,7 +2989,6 @@ setMethod(f = "extract_rules",
 #' Save in CSV format a set of nodes, patterns or association rules as well as their characteristics.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param entities Type of entities to save. One of \code{"nodes"}, \code{"patterns"}, \code{"rules"}.
 #' @param characteristics Data frame of the characteristics of nodes, patterns or rules.
 #' @param ... Further arguments to the function \code{\link[utils:write.table]{utils::write.csv2}}.
 #' 
@@ -2967,32 +2996,34 @@ setMethod(f = "extract_rules",
 #' @seealso \code{\link[utils:write.table]{utils::write.csv2}}.
 #' 
 #' @examples
-#' save_characteristics(SA_instance, "nodes", SA_instance["nodes"],
+#' save_characteristics(SA_instance, SA_instance["nodes"],
 #'                      file = "nodes.csv")
-#' save_characteristics(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+#' save_characteristics(SA_instance, SA_instance["patterns"][1:15, ],
 #'                      file = "patterns.csv")
 #' 
-#' spectrosome <- spectrosome_chart(SA_instance, "patterns",
-#'                                  SA_instance["patterns"])
-#' save_characteristics(SA_instance, "patterns", spectrosome[["vertices"]],
+#' spectrosome <- spectrosome_chart(SA_instance, "patterns")
+#' save_characteristics(SA_instance, spectrosome[["vertices"]],
 #'                      file = "spectrosome_vertices.csv", row.names = FALSE)
 #' 
 #' rules <- extract_rules(SA_instance, from = "observations")
-#' save_characteristics(SA_instance, "rules", rules,
+#' save_characteristics(SA_instance, rules,
 #'                      file = "rules.csv", row.names = FALSE)
 #' 
 #' @aliases save_characteristics
 #' @export
 setMethod(f = "save_characteristics",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, ...) {
+          definition = function(object, characteristics, ...) {
+            
+            # Recherche du type d'entités fourni
+            entities = which_entities(object, characteristics, object@Class$NODES_PATTERNS_OR_RULES)
             
             # Nom des colonnes dans lesquelles chercher les vecteurs à convertir
-            if (entities == "nodes" || entities == "patterns") {
+            if (entities == object@Class$NODES || entities == object@Class$PATTERNS) {
               columns = substr(entities, 1, nchar(entities) - 1)
-            } else if (entities == "rules") {
+            } else if (entities == object@Class$RULES) {
               columns = c("antecedent", "consequent")
-            } else stop("entities must be one of \"nodes\", \"patterns\", \"rules\".")
+            }
             
             # Conversion des itemsets en chaînes de caractères
             itemsets = apply(characteristics[columns], 2, turn_list_into_char)
@@ -3000,51 +3031,6 @@ setMethod(f = "save_characteristics",
             
             # Enregistrement des données
             utils::write.csv2(x = characteristics, ...)
-          })
-
-
-#' Validation of parameters for search by category
-#' 
-#' Check that the parameters provided match an existing category.
-#' Print an error message if not.
-#' 
-#' @details
-#' If \code{value = NA}, only the parameter \code{category} is checked.
-#' 
-#' @param object \code{SpectralAnalyzer} class object.
-#' @param category Name or number of the category to access (numbering according to the order of the
-#'  columns of \code{object["items_categories"]}).
-#' @param value Sought value for the category specified by the argument \code{category}, or NA.
-#' @param stop If \code{TRUE}, stop the execution and print an error message if the parameters do not
-#'  allow access to a category. If \code{FALSE}, see 'Value' section.
-#' @return \code{TRUE} or \code{FALSE} whether the parameters allow access to a category.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{get_patterns}}, \code{\link{get_nodes}}.
-#'          \code{\link{get_patterns_from_category}}, \code{\link{get_nodes_from_category}}.
-#' @aliases check_access_for_category
-#' @keywords internal
-setMethod(f = "check_access_for_category",
-          signature = "SpectralAnalyzer",
-          definition = function(object, category, value, stop = TRUE) {
-            
-            # Vérification que le type de catégorie recherché existe
-            if (is.character(category) & !(category %in% colnames(object@items_categories))) {
-              if (!stop) return(FALSE)
-              stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
-                                                      collapse = ", ") ,".")
-            } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
-              if (!stop) return(FALSE)
-              stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
-            }
-            
-            # Vérification que la valeur de la catégorie recherchée existe
-            if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
-              if (!stop) return(FALSE)
-              stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
-                                                   collapse = ", ") ,".")
-            }
-            return(TRUE)
           })
 
 
@@ -3081,8 +3067,8 @@ setMethod(f = "check_access_for_category",
 #'  * `"links"`, `"edges"`: search for nodes generating links corresponding to the sought category value.
 #' 
 #' @param object `SpectralAnalyzer` class object.
-#' @param nodes_characteristics Data frame of nodes and their characteristics.
-#'  Any subset of `object["nodes"]`.
+#' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.\cr
+#'  `"nodes"` and `"n"` are specific values for `object["nodes"]`.
 #' @param element Type of element on which to search.
 #'  One of `"items"`, `"length"`, `"weight"` or the name or number of a category on which to search
 #'  (numbering according to the order of the columns of `object["items_categories"]`).
@@ -3111,7 +3097,7 @@ setMethod(f = "check_access_for_category",
 #' ## Search on categories
 #' get_nodes(SA_instance, SA_instance["nodes"],
 #'           element = "family", value = "Chrome", condition = "items")
-#' get_nodes(SA_instance, SA_instance["nodes"],
+#' get_nodes(SA_instance, "nodes",
 #'           element = 1, value = "Chrome", condition = "links")
 #' 
 #' @aliases get_nodes
@@ -3119,7 +3105,7 @@ setMethod(f = "check_access_for_category",
 #' @export
 setMethod(f = "get_nodes",
           signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics,
+          definition = function(object, nc,
                                 element, value, condition = "default") {
             
             # Vérification du choix de l'élément sur lequel effectuer la recherche
@@ -3129,17 +3115,17 @@ setMethod(f = "get_nodes",
             # Appel à la fonction spécifique
             if (element == "items") {
               if (condition == "default")
-                return(get_nodes_from_items(object, nodes_characteristics, value))
+                return(get_nodes_from_items(object, nc, value))
               else
-                return(get_nodes_from_items(object, nodes_characteristics, value, condition))
+                return(get_nodes_from_items(object, nc, value, condition))
             }
             if (element %in% c("length", "weight")) {
               if (condition == "default")
-                return(get_nodes_from_characteristic(object, nodes_characteristics, element, value))
+                return(get_nodes_from_characteristic(object, nc, element, value))
               else
-                return(get_nodes_from_characteristic(object, nodes_characteristics, element, value, condition))
+                return(get_nodes_from_characteristic(object, nc, element, value, condition))
             }
-            return(get_nodes_from_category(object, nodes_characteristics, element, value, condition))
+            return(get_nodes_from_category(object, nc, element, value, condition))
           })
 
 
@@ -3147,22 +3133,21 @@ setMethod(f = "get_nodes",
 #' 
 #' Extract the nodes containing one or more sought items.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
-#' @param nodes_characteristics Data frame of nodes and their characteristics.
-#'  Any subset of \code{object["nodes"]}.
+#' @param object `SpectralAnalyzer` class object.
+#' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.\cr
+#'  `"nodes"` and `"n"` are specific values for `object["nodes"]`.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a node to be extracted.
-#'  One of \code{"all"}, \code{"any"}.
+#'  One of `"all"`, `"any"`.
 #'  \describe{
-#'    \item{\code{"all"}}{All the sought items must be part of a node for this node to be extracted.}
-#'    \item{\code{"any"}}{At least one of the sought items must be part of a node for this node to be
-#'                        extracted.}
+#'    \item{`"all"`}{All the sought items must be part of a node for this node to be extracted.}
+#'    \item{`"any"}{At least one of the sought items must be part of a node for this node to be
+#'                  extracted.}
 #'  }
 #' @return Subset of the data frame of nodes that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_nodes}}, \code{\link{get_nodes_from_characteristic}},
-#'          \code{\link{get_nodes_from_category}}.
+#' @seealso [`get_nodes`], [`get_nodes_from_characteristic`], [`get_nodes_from_category`].
 #' 
 #' @examples
 #' get_nodes_from_items(SA_instance, SA_instance["nodes"], items = 3146)
@@ -3172,18 +3157,21 @@ setMethod(f = "get_nodes",
 #'                      items = c(3146, 3180), condition = "any")
 #' 
 #' @aliases get_nodes_from_items
+#' @md
 #' @keywords internal
 setMethod(f = "get_nodes_from_items",
           signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics, items, condition = "all") {
+          definition = function(object, nc, items, condition = "all") {
+            
+            # Récupération des noeuds
+            nc = get_nopc(object, nc, object@Class$NODES)
             
             if (!(condition %in% c("all", "any"))) stop("condition must be \"all\" or \"any\".")
             
             if (condition == "all") func = all
             else if (condition == "any") func = any
             
-            return(subset(nodes_characteristics, sapply(nodes_characteristics$node,
-                                                        function(x) func(items %in% x))))
+            return(subset(nc, sapply(nc$node, function(x) func(items %in% x))))
           })
 
 
@@ -3192,8 +3180,9 @@ setMethod(f = "get_nodes_from_items",
 #' Extract the nodes satisfying a search criterion according to one characteristic.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param nodes_characteristics Data frame of nodes and their characteristics.
-#'  Any subset of \code{object["nodes"]}.
+#' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
+#'  \code{object["nodes"]}.\cr
+#'  \code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"length"}, \code{"weight"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
@@ -3235,29 +3224,32 @@ setMethod(f = "get_nodes_from_items",
 #' @keywords internal
 setMethod(f = "get_nodes_from_characteristic",
           signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics, characteristic, value, condition = "EQ") {
+          definition = function(object, nc, characteristic, value, condition = "EQ") {
+            
+            # Récupération des noeuds
+            nc = get_nopc(object, nc, object@Class$NODES)
             
             if (!(characteristic %in% c("length", "weight")))
               stop("characteristic must be one of \"length\", \"weight\".")
             
             switch(EXPR = condition,
-                   "EQ" = { return(nodes_characteristics[nodes_characteristics[characteristic] == value, ]) },
-                   "==" = { return(nodes_characteristics[nodes_characteristics[characteristic] == value, ]) },
+                   "EQ" = { return(nc[nc[characteristic] == value, ]) },
+                   "==" = { return(nc[nc[characteristic] == value, ]) },
                    
-                   "NE" = { return(nodes_characteristics[nodes_characteristics[characteristic] != value, ]) },
-                   "!=" = { return(nodes_characteristics[nodes_characteristics[characteristic] != value, ]) },
+                   "NE" = { return(nc[nc[characteristic] != value, ]) },
+                   "!=" = { return(nc[nc[characteristic] != value, ]) },
                    
-                   "LT" = { return(nodes_characteristics[nodes_characteristics[characteristic] <  value, ]) },
-                   "<"  = { return(nodes_characteristics[nodes_characteristics[characteristic] <  value, ]) },
+                   "LT" = { return(nc[nc[characteristic] <  value, ]) },
+                   "<"  = { return(nc[nc[characteristic] <  value, ]) },
                    
-                   "GT" = { return(nodes_characteristics[nodes_characteristics[characteristic] >  value, ]) },
-                   ">"  = { return(nodes_characteristics[nodes_characteristics[characteristic] >  value, ]) },
+                   "GT" = { return(nc[nc[characteristic] >  value, ]) },
+                   ">"  = { return(nc[nc[characteristic] >  value, ]) },
                    
-                   "LE" = { return(nodes_characteristics[nodes_characteristics[characteristic] <= value, ]) },
-                   "<=" = { return(nodes_characteristics[nodes_characteristics[characteristic] <= value, ]) },
+                   "LE" = { return(nc[nc[characteristic] <= value, ]) },
+                   "<=" = { return(nc[nc[characteristic] <= value, ]) },
                    
-                   "GE" = { return(nodes_characteristics[nodes_characteristics[characteristic] >= value, ]) },
-                   ">=" = { return(nodes_characteristics[nodes_characteristics[characteristic] >= value, ]) },
+                   "GE" = { return(nc[nc[characteristic] >= value, ]) },
+                   ">=" = { return(nc[nc[characteristic] >= value, ]) },
                    
                    stop(paste("condition must be one of",
                               "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
@@ -3270,8 +3262,9 @@ setMethod(f = "get_nodes_from_characteristic",
 #' Extract the nodes corresponding to a sought category value.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param nodes_characteristics Data frame of nodes and their characteristics.
-#'  Any subset of \code{object["nodes"]}.
+#' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
+#'  \code{object["nodes"]}.\cr
+#'  \code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the parameter \code{category}.
@@ -3302,7 +3295,10 @@ setMethod(f = "get_nodes_from_characteristic",
 #' @keywords internal
 setMethod(f = "get_nodes_from_category",
           signature = "SpectralAnalyzer",
-          definition = function(object, nodes_characteristics, category, value, condition) {
+          definition = function(object, nc, category, value, condition) {
+            
+            # Récupération des noeuds
+            nc = get_nopc(object, nc, object@Class$NODES)
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
@@ -3311,18 +3307,18 @@ setMethod(f = "get_nodes_from_category",
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
               # Extraction des noeuds contenant ces items
-              return(get_nodes_from_items(object, nodes_characteristics, items, condition = "any"))
+              return(get_nodes_from_items(object, nc, items, condition = "any"))
               
             } else if (condition == "links" || condition == "edges") {
               # Recherche de l'ensemble de liens correspondant aux motifs
-              links = get_links(object, "nodes", nodes_characteristics)
+              links = get_links(object, nc)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
               categories_links = lapply(strsplit(links$items, "/"),
                                         function(x) sort(unique(as.character(object@items_categories[x, category]))))
               # Extraction des liens qui correspondent à la valeur de catégorie recherchée
               links = links[sapply(categories_links, function(x) value %in% x), ]
               # Récupération des noeuds associés
-              return(nodes_characteristics[unique(unlist(links[, 1:2])), ])
+              return(nc[unique(unlist(links[, 1:2])), ])
             }
             stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".")
           })
@@ -3369,8 +3365,9 @@ setMethod(f = "get_nodes_from_category",
 #'    value.
 #' 
 #' @param object `SpectralAnalyzer` class object.
-#' @param patterns_characteristics Data frame of patterns and their characteristics.
-#'  Any subset of `object["patterns"]`.
+#' @param pc Data frame of **p**atterns and their **c**haracteristics. Any subset of
+#'  `object["patterns"]`.\cr
+#'  `"patterns"` and `"p"` are specific values for `object["patterns"]`.
 #' @param element Type of element on which to search.
 #'  One of `"items"`, `"year"`, `"frequency"`, `"weight"`, `"order"`, `"specificity"`, `"status"`
 #'  or the name or number of a category on which to search (numbering according to the order of the
@@ -3380,7 +3377,7 @@ setMethod(f = "get_nodes_from_category",
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_patterns`], [`get_complexes`], [`get_isolates`], [`get_non_isolates`].
+#' @seealso [`get_nodes`], [`get_complexes`], [`get_isolates`], [`get_non_isolates`].
 #' 
 #' @examples
 #' ## Search on items
@@ -3407,7 +3404,7 @@ setMethod(f = "get_nodes_from_category",
 #' ## Search on categories
 #' get_patterns(SA_instance, SA_instance["patterns"],
 #'              element = "family", value = "Chrome", condition = "items")
-#' get_patterns(SA_instance, SA_instance["patterns"],
+#' get_patterns(SA_instance, "patterns",
 #'              element = 1, value = "Chrome", condition = "links")
 #' 
 #' @aliases get_patterns
@@ -3415,7 +3412,7 @@ setMethod(f = "get_nodes_from_category",
 #' @export
 setMethod(f = "get_patterns",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics,
+          definition = function(object, pc,
                                 element, value, condition = "default") {
             
             # Vérification du choix de l'élément sur lequel effectuer la recherche
@@ -3428,23 +3425,23 @@ setMethod(f = "get_patterns",
             # Appel à la fonction spécifique
             if (element == "items") {
               if (condition == "default")
-                return(get_patterns_from_items(object, patterns_characteristics, value))
+                return(get_patterns_from_items(object, pc, value))
               else
-                return(get_patterns_from_items(object, patterns_characteristics, value, condition))
+                return(get_patterns_from_items(object, pc, value, condition))
             }
             if (element %in% c("year", "frequency", "weight", "order", "specificity")) {
               if (condition == "default")
-                return(get_patterns_from_characteristic(object, patterns_characteristics, element, value))
+                return(get_patterns_from_characteristic(object, pc, element, value))
               else
-                return(get_patterns_from_characteristic(object, patterns_characteristics, element, value, condition))
+                return(get_patterns_from_characteristic(object, pc, element, value, condition))
             }
             if (element == "status") {
               if (condition == "default")
-                return(get_patterns_from_status(object, patterns_characteristics, value))
+                return(get_patterns_from_status(object, pc, value))
               else
-                return(get_patterns_from_status(object, patterns_characteristics, value, condition))
+                return(get_patterns_from_status(object, pc, value, condition))
             }
-            return(get_patterns_from_category(object, patterns_characteristics, element, value, condition))
+            return(get_patterns_from_category(object, pc, element, value, condition))
           })
 
 
@@ -3453,8 +3450,9 @@ setMethod(f = "get_patterns",
 #' Extract the patterns containing one or more sought items.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns_characteristics Data frame of patterns and their characteristics.
-#'  Any subset of \code{object["patterns"]}.
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
+#'  \code{object["patterns"]}.\cr
+#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a pattern to be extracted.
 #'  One of \code{"all"}, \code{"any"}.
@@ -3481,15 +3479,17 @@ setMethod(f = "get_patterns",
 #' @keywords internal
 setMethod(f = "get_patterns_from_items",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, items, condition = "all") {
+          definition = function(object, pc, items, condition = "all") {
+            
+            # Récupération des patterns
+            pc = get_nopc(object, pc, object@Class$PATTERNS)
             
             if (!(condition %in% c("all", "any"))) stop("condition must be \"all\" or \"any\".")
             
             if (condition == "all") func = all
             else if (condition == "any") func = any
             
-            return(subset(patterns_characteristics, sapply(patterns_characteristics$pattern,
-                                                           function(x) func(items %in% x))))
+            return(subset(pc, sapply(pc$pattern, function(x) func(items %in% x))))
           })
 
 
@@ -3498,8 +3498,9 @@ setMethod(f = "get_patterns_from_items",
 #' Extract the patterns satisfying a search criterion according to one characteristic.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns_characteristics Data frame of patterns and their characteristics.
-#'  Any subset of \code{object["patterns"]}.
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
+#'  \code{object["patterns"]}.\cr
+#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}
 #'  See \code{\link{get_patterns_from_status}} to search by \code{"status"}.
@@ -3542,29 +3543,32 @@ setMethod(f = "get_patterns_from_items",
 #' @keywords internal
 setMethod(f = "get_patterns_from_characteristic",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, characteristic, value, condition = "EQ") {
+          definition = function(object, pc, characteristic, value, condition = "EQ") {
+            
+            # Récupération des patterns
+            pc = get_nopc(object, pc, object@Class$PATTERNS)
             
             if (!(characteristic %in% c("year", "frequency", "weight", "order", "specificity")))
               stop("characteristic must be one of \"year\", \"frequency\", \"weight\", \"order\", \"specificity\".")
             
             switch(EXPR = condition,
-                   "EQ" = { return(patterns_characteristics[patterns_characteristics[characteristic] == value, ]) },
-                   "==" = { return(patterns_characteristics[patterns_characteristics[characteristic] == value, ]) },
+                   "EQ" = { return(pc[pc[characteristic] == value, ]) },
+                   "==" = { return(pc[pc[characteristic] == value, ]) },
                    
-                   "NE" = { return(patterns_characteristics[patterns_characteristics[characteristic] != value, ]) },
-                   "!=" = { return(patterns_characteristics[patterns_characteristics[characteristic] != value, ]) },
+                   "NE" = { return(pc[pc[characteristic] != value, ]) },
+                   "!=" = { return(pc[pc[characteristic] != value, ]) },
                    
-                   "LT" = { return(patterns_characteristics[patterns_characteristics[characteristic] <  value, ]) },
-                   "<"  = { return(patterns_characteristics[patterns_characteristics[characteristic] <  value, ]) },
+                   "LT" = { return(pc[pc[characteristic] <  value, ]) },
+                   "<"  = { return(pc[pc[characteristic] <  value, ]) },
                    
-                   "GT" = { return(patterns_characteristics[patterns_characteristics[characteristic] >  value, ]) },
-                   ">"  = { return(patterns_characteristics[patterns_characteristics[characteristic] >  value, ]) },
+                   "GT" = { return(pc[pc[characteristic] >  value, ]) },
+                   ">"  = { return(pc[pc[characteristic] >  value, ]) },
                    
-                   "LE" = { return(patterns_characteristics[patterns_characteristics[characteristic] <= value, ]) },
-                   "<=" = { return(patterns_characteristics[patterns_characteristics[characteristic] <= value, ]) },
+                   "LE" = { return(pc[pc[characteristic] <= value, ]) },
+                   "<=" = { return(pc[pc[characteristic] <= value, ]) },
                    
-                   "GE" = { return(patterns_characteristics[patterns_characteristics[characteristic] >= value, ]) },
-                   ">=" = { return(patterns_characteristics[patterns_characteristics[characteristic] >= value, ]) },
+                   "GE" = { return(pc[pc[characteristic] >= value, ]) },
+                   ">=" = { return(pc[pc[characteristic] >= value, ]) },
                    
                    stop(paste("condition must be one of",
                               "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
@@ -3577,9 +3581,10 @@ setMethod(f = "get_patterns_from_characteristic",
 #' Extract the patterns whose status match one or more sought values.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns_characteristics Data frame of patterns and their characteristics.
-#'  Any subset of \code{object["patterns"]}.
-#' @param value Status value sought (one or more)
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
+#'  \code{object["patterns"]}.\cr
+#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
+#' @param value Status value sought (one or more).
 #' @param condition Search condition. One of \code{"EQ"}, \code{"NE"}, \code{"=="}, \code{"!="}.
 #'  \describe{
 #'    \item{\code{"EQ"}, \code{"=="}}{\strong{EQ}ual: the status of the pattern must be one of the
@@ -3606,14 +3611,17 @@ setMethod(f = "get_patterns_from_characteristic",
 #' @keywords internal
 setMethod(f = "get_patterns_from_status",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, value, condition = "EQ") {
+          definition = function(object, pc, value, condition = "EQ") {
+            
+            # Récupération des patterns
+            pc = get_nopc(object, pc, object@Class$PATTERNS)
             
             switch(EXPR = condition,
-                   "EQ" = { return(patterns_characteristics[patterns_characteristics$status %in% value, ]) },
-                   "==" = { return(patterns_characteristics[patterns_characteristics$status %in% value, ]) },
+                   "EQ" = { return(pc[pc$status %in% value, ]) },
+                   "==" = { return(pc[pc$status %in% value, ]) },
                    
-                   "NE" = { return(patterns_characteristics[!(patterns_characteristics$status %in% value), ]) },
-                   "!=" = { return(patterns_characteristics[!(patterns_characteristics$status %in% value), ]) },
+                   "NE" = { return(pc[!(pc$status %in% value), ]) },
+                   "!=" = { return(pc[!(pc$status %in% value), ]) },
                    
                    stop("condition must be one of \"EQ\", \"NE\", \"==\", \"!=\"."))
           })
@@ -3624,8 +3632,9 @@ setMethod(f = "get_patterns_from_status",
 #' Extract the patterns corresponding to a sought category value.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns_characteristics Data frame of patterns and their characteristics.
-#'  Any subset of \code{object["patterns"]}.
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
+#'  \code{object["patterns"]}.\cr
+#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the argument \code{category}.
@@ -3656,7 +3665,10 @@ setMethod(f = "get_patterns_from_status",
 #' @keywords internal
 setMethod(f = "get_patterns_from_category",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns_characteristics, category, value, condition) {
+          definition = function(object, pc, category, value, condition) {
+            
+            # Récupération des patterns
+            pc = get_nopc(object, pc, object@Class$PATTERNS)
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
@@ -3665,18 +3677,18 @@ setMethod(f = "get_patterns_from_category",
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
               # Extraction des motifs contenant ces items
-              return(get_patterns_from_items(object, patterns_characteristics, items, condition = "any"))
+              return(get_patterns_from_items(object, pc, items, condition = "any"))
               
             } else if (condition == "links" || condition == "edges") {
               # Recherche de l'ensemble de liens correspondant aux motifs
-              links = get_links(object, "patterns", patterns_characteristics)
+              links = get_links(object, pc)
               # Valeurs associées à chaque lien pour le type de catégorie recherché
               categories_links = lapply(strsplit(links$items, "/"),
                                         function(x) sort(unique(as.character(object@items_categories[x, category]))))
               # Extraction des liens qui correspondent à la valeur de catégorie recherchée
               links = links[sapply(categories_links, function(x) value %in% x), ]
               # Récupération des motifs associés
-              return(patterns_characteristics[unique(unlist(links[, 1:2])), ])
+              return(pc[unique(unlist(links[, 1:2])), ])
             }
             stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".")
           })
@@ -3687,39 +3699,41 @@ setMethod(f = "get_patterns_from_category",
 #' Extract from the links those corresponding to the desired nodes or patterns.
 #' 
 #' @details
-#' If among the nodes or patterns some become isolated because the other entities to which they
-#'  are normally linked are not part of \code{characteristics}, these nodes or patterns are placed
-#'  at the end of the return data frame.
+#' If among the nodes or patterns for which the links are sought, some become isolated because the other
+#'  entities to which they are normally linked are not part of the subset \code{nopc}, these nodes or
+#'  patterns are placed at the end of the return data frame.
 #' These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param entities Type of entities to search for links.
-#'  One of \code{"nodes"}, \code{"patterns"}.
-#' @param characteristics Data frame of the characteristics of the nodes or patterns whose links are
-#'  to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
+#' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+#'  \strong{c}haracteristics. Nodes or patterns whose links are be to sought. Any subset of
+#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @return Data frame associating the linked nodes or linked patterns.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_complexes}}.
 #' 
 #' @examples
-#' get_links(SA_instance, "patterns", SA_instance["patterns"])
-#' get_links(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+#' get_links(SA_instance, "patterns")
+#' get_links(SA_instance, SA_instance["patterns"][1:10, ])
 #' 
 #' @aliases get_links
 #' @export
 setMethod(f = "get_links",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics) {
+          definition = function(object, nopc) {
             
-            if (entities != "nodes" && entities != "patterns")
-              stop("entities must be \"nodes\" or \"patterns\".")
+            # Récupération des noeuds/patterns et recherche du type d'entités fourni
+            nopc = get_nopc(object, nopc)
+            entities = which_entities(object, nopc)
             
             # Si les liens recherchés correspondent à l'intégralité des liens
-            if (entities == "nodes" && identical(object@nodes, characteristics)) {
+            if (entities == "nodes" && identical(object@nodes, nopc)) {
               return(object@nodes_links)
             }
-            if (entities == "patterns" && identical(object@patterns, characteristics)) {
+            if (entities == "patterns" && identical(object@patterns, nopc)) {
               return(object@patterns_links)
             }
             
@@ -3729,11 +3743,11 @@ setMethod(f = "get_links",
             
             # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
             # (nop_links = nodes or patterns links)
-            nop_links = all_links[all_links$endpoint.1 %in% rownames(characteristics)
-                                  & all_links$endpoint.2 %in% rownames(characteristics), ]
+            nop_links = all_links[all_links$endpoint.1 %in% rownames(nopc)
+                                  & all_links$endpoint.2 %in% rownames(nopc), ]
             
             # Identification des nouveaux sommets isolés
-            isolated = lapply(rownames(characteristics),
+            isolated = lapply(rownames(nopc),
                               function(x) {
                                 if (!(x %in% unlist(nop_links[, 1:2]))) {
                                   if (search_nodes) return(c(x, x, "", 0))
@@ -3771,28 +3785,32 @@ setMethod(f = "get_links",
 #' Extract from the given nodes or patterns those which are isolated.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param entities Type of entities to search for isolated.
-#'  One of \code{"nodes"}, \code{"patterns"}.
-#' @param characteristics Data frame of the characteristics of the nodes or patterns whose isolated
-#'  are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
+#' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+#'  \strong{c}haracteristics. Nodes or patterns whose isolated are to be sought. Any subset of
+#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @return Subset of the data frame that corresponds to isolated entities.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_non_isolates}}, \code{\link{get_complexes}}, \code{\link{get_links}}.
 #' 
 #' @examples
-#' get_isolates(SA_instance, "patterns", SA_instance["patterns"])
-#' get_isolates(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+#' get_isolates(SA_instance, "patterns")
+#' get_isolates(SA_instance, SA_instance["patterns"][1:10, ])
 #' 
 #' @aliases get_isolates
 #' @export
 setMethod(f = "get_isolates",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics) {
+          definition = function(object, nopc) {
             
-            links = get_links(object, entities, characteristics)
+            # Récupération des noeuds/patterns
+            nopc = get_nopc(object, nopc)
+            
+            links = get_links(object, nopc)
             row_id = as.character(links$endpoint.1[links$weight == 0])
-            return(characteristics[row_id, ])
+            return(nopc[row_id, ])
           })
 
 
@@ -3801,29 +3819,33 @@ setMethod(f = "get_isolates",
 #' Extract from the given nodes or patterns those which are not isolated.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param entities Type of entities to search for non-isolated.
-#'  One of \code{"nodes"}, \code{"patterns"}.
-#' @param characteristics Data frame of the characteristics of the nodes or patterns whose non-isolated
-#'  are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
+#' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+#'  \strong{c}haracteristics. Nodes or patterns whose non-isolated are to be sought. Any subset of
+#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @return Subset of the data frame that corresponds to non-isolated entities.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_isolates}}, \code{\link{get_complexes}}, \code{\link{get_links}}.
 #' 
 #' @examples
-#' get_non_isolates(SA_instance, "patterns", SA_instance["patterns"])
-#' get_non_isolates(SA_instance, "patterns", SA_instance["patterns"][1:10, ])
+#' get_non_isolates(SA_instance, "patterns")
+#' get_non_isolates(SA_instance, SA_instance["patterns"][1:10, ])
 #' 
 #' @aliases get_non_isolates
 #' @export
 setMethod(f = "get_non_isolates",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics) {
+          definition = function(object, nopc) {
             
-            links = get_links(object, entities, characteristics)
+            # Récupération des noeuds/patterns
+            nopc = get_nopc(object, nopc)
+            
+            links = get_links(object, nopc)
             row_id = as.character(sort(unique(unlist(links[links$weight != 0,
                                                            c("endpoint.1", "endpoint.2")]))))
-            return(characteristics[row_id, ])
+            return(nopc[row_id, ])
           })
 
 
@@ -3837,10 +3859,11 @@ setMethod(f = "get_non_isolates",
 #'  items are sought. Otherwise, the search is related to the \code{category} (see \code{condition}).
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param entities Type of entities to search for complexes.
-#'  One of \code{"nodes"}, \code{"patterns"}.
-#' @param characteristics Data frame of the characteristics of the nodes or patterns whose complexes
-#'  are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.
+#' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+#'  \strong{c}haracteristics. Nodes or patterns whose complexes are to be sought. Any subset of
+#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param condition Condition for a node or a pattern to be extracted.
@@ -3859,25 +3882,26 @@ setMethod(f = "get_non_isolates",
 #' @seealso \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}}.
 #' 
 #' @examples
-#' get_complexes(SA_instance, "patterns", SA_instance["patterns"])
-#' get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+#' get_complexes(SA_instance, "patterns")
+#' get_complexes(SA_instance, SA_instance["patterns"][1:15, ],
 #'               category = "family", condition = "items")
-#' get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+#' get_complexes(SA_instance, SA_instance["patterns"][1:15, ],
 #'               category = 1, condition = "links")
 #' 
 #' @aliases get_complexes
 #' @export
 setMethod(f = "get_complexes",
           signature = "SpectralAnalyzer",
-          definition = function(object, entities, characteristics, category = NULL, condition = NULL, min_nb_values = 2) {
+          definition = function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2) {
             
-            if (entities != "nodes" && entities != "patterns")
-              stop("entities must be \"nodes\" or \"patterns\".")
+            # Récupération des noeuds/patterns et recherche du type d'entités fourni
+            nopc = get_nopc(object, nopc)
+            entities = which_entities(object, nopc)
             
             if (is.null(category)) {
               # Entités possédant au moins min_nb_values items
               column = if (entities == "nodes") "length" else "order"
-              return(characteristics[characteristics[, column] >= min_nb_values, ])
+              return(nopc[nopc[, column] >= min_nb_values, ])
               
             } else {
               # Validation du paramètre d'accès à la catégorie
@@ -3885,15 +3909,15 @@ setMethod(f = "get_complexes",
               
               if (condition == "items" || condition == "vertices") {
                 # Catégories associées à chaque noeud ou motif
-                nop_category = lapply(characteristics[[substr(entities, 1, nchar(entities) - 1)]],
+                nop_category = lapply(nopc[[substr(entities, 1, nchar(entities) - 1)]],
                                       function(x) unique(as.character(object@items_categories[x, category])))
                 
                 # Entités associées à au moins min_nb_values valeurs différentes pour la catégorie
-                return(characteristics[lapply(nop_category, length) >= min_nb_values, ])
+                return(nopc[lapply(nop_category, length) >= min_nb_values, ])
                 
               } else if (condition == "links" || condition == "edges") {
                 # Liens associés aux noeuds ou motifs
-                nop_links = get_links(object, entities, characteristics)
+                nop_links = get_links(object, nopc)
                 
                 # Catégories associées à chaque lien
                 links_category = lapply(strsplit(nop_links$items, "/"),
@@ -3904,10 +3928,153 @@ setMethod(f = "get_complexes",
                                              c("endpoint.1", "endpoint.2")]))
                 
                 # Entités correspondantes
-                return(characteristics[as.character(id), ])
+                return(nopc[as.character(id), ])
               }
               stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".") 
             }
+          })
+
+
+
+#### Other specific methods ####
+
+
+#' Validation of parameters for search by category
+#' 
+#' Check that the parameters provided match an existing category.
+#' Print an error message if not.
+#' 
+#' @details
+#' If \code{value = NA}, only the parameter \code{category} is checked.
+#' 
+#' @param object \code{SpectralAnalyzer} class object.
+#' @param category Name or number of the category to access (numbering according to the order of the
+#'  columns of \code{object["items_categories"]}).
+#' @param value Sought value for the category specified by the argument \code{category}, or NA.
+#' @param stop If \code{TRUE}, stop the execution and print an error message if the parameters do not
+#'  allow access to a category. If \code{FALSE}, see 'Value' section.
+#' @return \code{TRUE} or \code{FALSE} whether the parameters allow access to a category.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{get_patterns}}, \code{\link{get_nodes}}.
+#'          \code{\link{get_patterns_from_category}}, \code{\link{get_nodes_from_category}}.
+#' 
+#' @aliases check_access_for_category
+#' @keywords internal
+setMethod(f = "check_access_for_category",
+          signature = "SpectralAnalyzer",
+          definition = function(object, category, value, stop = TRUE) {
+            
+            # Vérification que le type de catégorie recherché existe
+            if (is.character(category) & !(category %in% colnames(object@items_categories))) {
+              if (!stop) return(FALSE)
+              stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
+                                                      collapse = ", ") ,".")
+            } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
+              if (!stop) return(FALSE)
+              stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
+            }
+            
+            # Vérification que la valeur de la catégorie recherchée existe
+            if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
+              if (!stop) return(FALSE)
+              stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
+                                                   collapse = ", ") ,".")
+            }
+            return(TRUE)
+          })
+
+
+#' Search for the nodes or patterns characteristics
+#' 
+#' Find and return the data frame corresponding to the nodes or the patterns of the `SpectralAnalyzer`
+#'  object, or return the given data frame.
+#' 
+#' @details
+#' If `nopc` is a data frame, it is returned.
+#' 
+#' If `nopc` is a character value equal to:
+#'  * `"nodes"` or `"n"`: `object["nodes"]` is returned.
+#'  * `"patterns"` or `"p"`: `object["patterns"]` is returned.
+#' 
+#' The argument `entities` is only used to adapt a possible error message.
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param nopc Data frame of **n**odes **o**r **p**atterns and their **c**haracteristics or one of the
+#'  following character values: `"nodes"`, `"n"`, `"patterns"`, `"p"`.
+#' @param entities Type of the entities that the data frame can refer to (`NODES`, `PATTERNS` or
+#'  `NODES_OR_PATTERNS`).
+#' @return Data frame of nodes or patterns and their characteristics corresponding to the arguments.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`which_entities`].
+#' 
+#' @aliases get_nopc
+#' @md
+#' @keywords internal
+setMethod(f = "get_nopc",
+          signature = "SpectralAnalyzer",
+          definition = function(object, nopc, entities = object@Class$NODES_OR_PATTERNS) {
+            
+            if (is.character(nopc)) {
+              if (nopc == object@Class$NODES || nopc == substr(object@Class$NODES, 1, 1))
+                return(object@nodes)
+              if (nopc == object@Class$PATTERNS || nopc == substr(object@Class$PATTERNS, 1, 1))
+                return(object@patterns)
+              
+              var_name = deparse(substitute(nopc))
+              
+              if (entities == object@Class$NODES)
+                msg = paste(var_name, "must be \"nodes\" or a data frame of nodes and their characteristics.")
+              else if (entities == object@Class$PATTERNS)
+                msg = paste(var_name, "must be \"patterns\" or a data frame of patterns and their characteristics.")
+              else # object@Class$NODES_OR_PATTERNS
+                msg = paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics.")
+              
+              stop(msg)
+            }
+            return(nopc)
+          })
+
+
+#' Detect the type of entities
+#' 
+#' Detect the type of entities contained in a data frame among nodes, patterns and association rules.
+#' 
+#' @details
+#' The detection uses the column names of the data frame and search for `"node"`, `"pattern"` or
+#'  `"antecedent"` for a data frame of nodes, patterns or rules, respectively.
+#' 
+#' The argument `entities` is only used to adapt a possible error message.
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param npr Data frame of **n**odes, **p**atterns or association **r**ules and their characteristics.
+#' @param entities Define if the data frame is either a data frame of nodes or a data frame of patterns
+#'  (`NODES_OR_PATTERNS`), or if it can also be a data frame of rules (`NODES_PATTERNS_OR_RULES`).
+#' @return Character corresponding to `NODES`, `PATTERNS` or `RULES`.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`get_nopc`].
+#' 
+#' @aliases which_entities
+#' @md
+#' @keywords internal
+setMethod(f = "which_entities",
+          signature = "SpectralAnalyzer",
+          definition = function(object, npr, entities = object@Class$NODES_OR_PATTERNS) {
+            
+            if ("node" %in% colnames(npr)) return(object@Class$NODES)
+            if ("pattern" %in% colnames(npr)) return(object@Class$PATTERNS)
+            if ("antecedent" %in% colnames(npr)) return(object@Class$RULES)
+            
+            var_name = deparse(substitute(nopc))
+            
+            if (entities == object@Class$NODES_OR_PATTERNS)
+              stop(paste(var_name, "must be a data frame of nodes or patterns and their characteristics."))
+            
+            # entities = NODES_PATTERNS_OR_RULES
+            stop(paste(var_name, "must be a data frame of nodes or patterns and their",
+                       "characteristics or a data frame of association rules."))
           })
 
 

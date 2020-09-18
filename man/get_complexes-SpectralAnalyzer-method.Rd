@@ -7,8 +7,7 @@
 \usage{
 \S4method{get_complexes}{SpectralAnalyzer}(
   object,
-  entities,
-  characteristics,
+  nopc,
   category = NULL,
   condition = NULL,
   min_nb_values = 2
@@ -17,11 +16,11 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{entities}{Type of entities to search for complexes.
-One of \code{"nodes"}, \code{"patterns"}.}
-
-\item{characteristics}{Data frame of the characteristics of the nodes or patterns whose complexes
-are to be sought. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.}
+\item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+\strong{c}haracteristics. Nodes or patterns whose complexes are to be sought. Any subset of
+\code{object["nodes"]} or \code{object["patterns"]}.\cr
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{object["nodes"]} and \code{object["patterns"]}.}
 
 \item{category}{Name or number of the category on which to search (numbering according to the order
 of the columns of \code{object["items_categories"]}).}
@@ -50,10 +49,10 @@ If \code{category} and \code{condition} are \code{NULL}, entities with more than
  items are sought. Otherwise, the search is related to the \code{category} (see \code{condition}).
 }
 \examples{
-get_complexes(SA_instance, "patterns", SA_instance["patterns"])
-get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+get_complexes(SA_instance, "patterns")
+get_complexes(SA_instance, SA_instance["patterns"][1:15, ],
               category = "family", condition = "items")
-get_complexes(SA_instance, "patterns", SA_instance["patterns"][1:15, ],
+get_complexes(SA_instance, SA_instance["patterns"][1:15, ],
               category = 1, condition = "links")
 
 }

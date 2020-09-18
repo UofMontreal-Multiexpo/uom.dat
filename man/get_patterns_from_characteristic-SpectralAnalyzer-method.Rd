@@ -7,7 +7,7 @@
 \usage{
 \S4method{get_patterns_from_characteristic}{SpectralAnalyzer}(
   object,
-  patterns_characteristics,
+  pc,
   characteristic,
   value,
   condition = "EQ"
@@ -16,8 +16,9 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns_characteristics}{Data frame of patterns and their characteristics.
-Any subset of \code{object["patterns"]}.}
+\item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
+\code{object["patterns"]}.\cr
+\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
 
 \item{characteristic}{Name of the characteristic on which to do the search.
 One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}
