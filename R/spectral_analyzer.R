@@ -3232,28 +3232,18 @@ setMethod(f = "get_nodes_from_characteristic",
             if (!(characteristic %in% c("length", "weight")))
               stop("characteristic must be one of \"length\", \"weight\".")
             
-            switch(EXPR = condition,
-                   "EQ" = { return(nc[nc[characteristic] == value, ]) },
-                   "==" = { return(nc[nc[characteristic] == value, ]) },
-                   
-                   "NE" = { return(nc[nc[characteristic] != value, ]) },
-                   "!=" = { return(nc[nc[characteristic] != value, ]) },
-                   
-                   "LT" = { return(nc[nc[characteristic] <  value, ]) },
-                   "<"  = { return(nc[nc[characteristic] <  value, ]) },
-                   
-                   "GT" = { return(nc[nc[characteristic] >  value, ]) },
-                   ">"  = { return(nc[nc[characteristic] >  value, ]) },
-                   
-                   "LE" = { return(nc[nc[characteristic] <= value, ]) },
-                   "<=" = { return(nc[nc[characteristic] <= value, ]) },
-                   
-                   "GE" = { return(nc[nc[characteristic] >= value, ]) },
-                   ">=" = { return(nc[nc[characteristic] >= value, ]) },
-                   
-                   stop(paste("condition must be one of",
-                              "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
-                              "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\".")))
+            operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
+                          "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",
+                          "LE" = "<=", "<=" = "<=",    "GE" = ">=", ">=" = ">=")
+            
+            if (!(condition %in% names(operators))) {
+              stop(paste("condition must be one of",
+                         "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
+                         "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\"."))
+            }
+            
+            # Lignes de "nc" dont "characteristic" est "condition" (égal, etc.) à "value
+            return(nc[eval(parse(text = paste("nc[characteristic]", operators[condition], "value"))), ])
           })
 
 
@@ -3551,28 +3541,18 @@ setMethod(f = "get_patterns_from_characteristic",
             if (!(characteristic %in% c("year", "frequency", "weight", "order", "specificity")))
               stop("characteristic must be one of \"year\", \"frequency\", \"weight\", \"order\", \"specificity\".")
             
-            switch(EXPR = condition,
-                   "EQ" = { return(pc[pc[characteristic] == value, ]) },
-                   "==" = { return(pc[pc[characteristic] == value, ]) },
-                   
-                   "NE" = { return(pc[pc[characteristic] != value, ]) },
-                   "!=" = { return(pc[pc[characteristic] != value, ]) },
-                   
-                   "LT" = { return(pc[pc[characteristic] <  value, ]) },
-                   "<"  = { return(pc[pc[characteristic] <  value, ]) },
-                   
-                   "GT" = { return(pc[pc[characteristic] >  value, ]) },
-                   ">"  = { return(pc[pc[characteristic] >  value, ]) },
-                   
-                   "LE" = { return(pc[pc[characteristic] <= value, ]) },
-                   "<=" = { return(pc[pc[characteristic] <= value, ]) },
-                   
-                   "GE" = { return(pc[pc[characteristic] >= value, ]) },
-                   ">=" = { return(pc[pc[characteristic] >= value, ]) },
-                   
-                   stop(paste("condition must be one of",
-                              "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
-                              "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\".")))
+            operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
+                          "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",
+                          "LE" = "<=", "<=" = "<=",    "GE" = ">=", ">=" = ">=")
+            
+            if (!(condition %in% names(operators))) {
+              stop(paste("condition must be one of",
+                         "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
+                         "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\"."))
+            }
+            
+            # Lignes de "pc" dont "characteristic" est "condition" (égal, etc.) à "value
+            return(pc[eval(parse(text = paste("pc[characteristic]", operators[condition], "value"))), ])
           })
 
 
