@@ -91,7 +91,7 @@ get_patterns(SA_instance, SA_instance["patterns"],
              element = "order", value = 3, condition = "LT")
 
 get_patterns(SA_instance, SA_instance["patterns"], element = "status",
-             value = SA_instance["Class"]$STATUS_PERSISTENT)
+             value = "Persistent")
 get_patterns(SA_instance, SA_instance["patterns"], element = "status",
              value = c("Persistent", "Declining"), condition = "!=")
 

@@ -48,9 +48,10 @@ Data frame of the patterns and characteristics used, associated with the identif
 Plot a spectrum chart and save it as a PDF file.
 }
 \details{
-The patterns are sorted according to their specificities (desc.), status (\code{"Persistent"},
- \code{"Declining"}, \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
- If two patterns have the same characteristics concerning thse ones, they are ordered relative to
+The patterns are sorted according to their specificities (desc.), status (in order of
+ \code{object["status_colors"]}, default is  \code{"Persistent"}, \code{"Declining"},
+ \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
+ If two patterns have the same characteristics concerning these ones, they are ordered relative to
  each other in the order they are given.
 }
 \examples{

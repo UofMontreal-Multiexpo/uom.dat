@@ -11,7 +11,7 @@
 \item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{entities}{Type of entities for which to count links (nodes or patterns).
-One of \code{"nodes"}, \code{"patterns"}.}
+\code{SpectralAnalyzer.NODES} or \code{SpectralAnalyzer.PATTERNS}.}
 }
 \value{
 Invisible. Adjacency matrix: matrix of the number of links between each pair of nodes

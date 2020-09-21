@@ -515,7 +515,7 @@ spectrosome <- spectrosome_chart(sa_object, patterns,
 Selection of patterns with filter according to status...
 ```{r}
 # For example: patterns with a status "Persistent"
-status <- sa_object["Class"]$STATUS_PERSISTENT
+status <- "Persistent"
 patterns <- get_patterns(sa_object, sa_object["patterns"],
                          element = "status",
                          value = status,

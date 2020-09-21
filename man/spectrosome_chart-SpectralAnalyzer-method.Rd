@@ -67,10 +67,9 @@ Range of vertex size values (given as expansion factors).}
 
 \item{vertex_col}{Way how the colors of the vertices of the graph should be defined.
 One of \code{"status"}, \code{"categories"}, \code{"none"}.
-If \code{"status"} and \code{entities = "patterns"}, coloring according to the status of the patterns.
-If \code{"categories"}, coloring according to the categories associated with the items of the
-entities represented.
-In all other cases, the vertices are colored gray.}
+If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
+patterns. If \code{"categories"}, coloring according to the categories associated with the items of
+the entities represented. In all other cases, the vertices are colored gray.}
 
 \item{clusters}{Maximum number of clusters to name on the graph.
 If the actual number of clusters is greater, the names of the smaller clusters are not displayed.}

@@ -32,7 +32,7 @@ Extract the patterns whose status match one or more sought values.
 }
 \examples{
 get_patterns_from_status(SA_instance, SA_instance["patterns"],
-                         value = SA_instance["Class"]$STATUS_PERSISTENT,
+                         value = "Persistent",
                          condition = "EQ")
 
 get_patterns_from_status(SA_instance, SA_instance["patterns"],

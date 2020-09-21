@@ -28,6 +28,8 @@ See the attribute \code{categories_colors} to reassign colors to the category va
 
 \item{\code{categories_colors}}{Colors associated with the values of the categories associated with the items.}
 
+\item{\code{status_colors}}{Colors associated with the values of the status the patterns can have.}
+
 \item{\code{target}}{Type of patterns to enumerate during the analysis.}
 
 \item{\code{count}}{Minimum number of occurrences of a pattern to be kept when enumerating patterns.}
@@ -55,8 +57,6 @@ See the attribute \code{categories_colors} to reassign colors to the category va
 \item{\code{p_links}}{Set of weights of the links between the patterns.}
 
 \item{\code{patterns_links}}{Set of links between the patterns and characteristics of these links.}
-
-\item{\code{Class}}{List of class attributes (independent of the instance).}
 }}
 
 \references{

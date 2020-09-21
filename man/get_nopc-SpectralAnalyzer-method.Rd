@@ -5,7 +5,7 @@
 \alias{get_nopc}
 \title{Search for the nodes or patterns characteristics}
 \usage{
-\S4method{get_nopc}{SpectralAnalyzer}(object, nopc, entities = object@Class$NODES_OR_PATTERNS)
+\S4method{get_nopc}{SpectralAnalyzer}(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
