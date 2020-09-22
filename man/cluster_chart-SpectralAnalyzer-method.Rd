@@ -65,10 +65,13 @@ One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
 Range of vertex size values (given as expansion factors).}
 
 \item{vertex_col}{Way how the colors of the vertices of the graph should be defined.
-One of \code{"status"}, \code{"categories"}, \code{"none"}.
+One of \code{"status"}, \code{"categories"}, \code{"none"} or a vector of R predefined color names
+or hexadecimal values of length 1 or of length equal to the number of rows of \code{nopc}.
 If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-the entities represented. In all other cases, the vertices are colored gray.}
+the entities represented. If is one specific color, all vertices are colored with this color.
+If is a vector of size equal to the number of rows of \code{nopc}, the colors are directly
+assigned to these entities. If \code{"none"}, the vertices are colored gray.}
 
 \item{c.cutoff}{Limit number of characters to display in the legend for the categories represented.}
 

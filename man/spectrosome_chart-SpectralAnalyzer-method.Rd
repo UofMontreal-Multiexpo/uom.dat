@@ -66,10 +66,13 @@ One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
 Range of vertex size values (given as expansion factors).}
 
 \item{vertex_col}{Way how the colors of the vertices of the graph should be defined.
-One of \code{"status"}, \code{"categories"}, \code{"none"}.
+One of \code{"status"}, \code{"categories"}, \code{"none"} or a vector of R predefined color names
+or hexadecimal values of length 1 or of length equal to the number of nodes or patterns to plot.
 If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-the entities represented. In all other cases, the vertices are colored gray.}
+the entities represented. If is one specific color, all vertices are colored with this color.
+If is a vector of size equal to the number of nodes or patterns to plot, the colors are directly
+assigned to these entities. If \code{"none"}, the vertices are colored gray.}
 
 \item{clusters}{Maximum number of clusters to name on the graph.
 If the actual number of clusters is greater, the names of the smaller clusters are not displayed.}
@@ -95,7 +98,7 @@ Example of default title: \code{"Spectrosome of nodes"} if \code{nopc} contains 
 By default, the charts are saved in the working directory.}
 
 \item{name}{Name of the file in which to save the chart. Default name depends on the type of entities
-contained in \code{nopc}. Example of default name: \code{spectrosome_of_nodes"} if \code{nopc}
+contained in \code{nopc}. Example of default name: \code{"spectrosome_of_nodes"} if \code{nopc}
 contains nodes.}
 
 \item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package

@@ -1772,10 +1772,13 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
 #'  Range of vertex size values (given as expansion factors).
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
-#'  One of \code{"status"}, \code{"categories"}, \code{"none"}.
+#'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a vector of R predefined color names
+#'  or hexadecimal values of length 1 or of length equal to the number of nodes or patterns to plot.
 #'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 #'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-#'  the entities represented. In all other cases, the vertices are colored gray.
+#'  the entities represented. If is one specific color, all vertices are colored with this color.
+#'  If is a vector of size equal to the number of nodes or patterns to plot, the colors are directly
+#'  assigned to these entities. If \code{"none"}, the vertices are colored gray.
 #' @param clusters Maximum number of clusters to name on the graph.
 #'  If the actual number of clusters is greater, the names of the smaller clusters are not displayed.
 #' @param highlight Number of clusters to highlight among those named on the graph.
@@ -1792,7 +1795,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param path Path of the directory in which to save the charts.
 #'  By default, the charts are saved in the working directory.
 #' @param name Name of the file in which to save the chart. Default name depends on the type of entities
-#'  contained in \code{nopc}. Example of default name: \code{spectrosome_of_nodes"} if \code{nopc}
+#'  contained in \code{nopc}. Example of default name: \code{"spectrosome_of_nodes"} if \code{nopc}
 #'  contains nodes.
 #' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna} for plotting the graph. See Details section.
@@ -1843,8 +1846,12 @@ setMethod(f = "spectrosome_chart",
             if (identifiers != "original" && identifiers != "new")
               stop("identifiers must be \"original\" or \"new\".")
             
-            if (vertex_col != "status" && vertex_col != "categories" && vertex_col != "none")
-              stop("vertex_col must be \"status\", \"categories\" or \"none\".")
+            if (!(vertex_col %in% c("status", "categories", "none"))
+                && !(length(vertex_col) %in% c(1, nrow(nopc)))) {
+              stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
+                         "a vector of R predefined color names or hexadecimal values",
+                         "of length 1 or of length equal to the number of rows of nopc."))
+            }
             
             
             # Extraction des liens pour les éléments à visualiser (nop_links = nodes or patterns links)
@@ -1993,7 +2000,7 @@ setMethod(f = "spectrosome_chart",
             
             
             # Définition des couleurs des sommets en fonction du statut et nombre pour chaque statut
-            if (entities == SpectralAnalyzer.PATTERNS && vertex_col == "status") {
+            if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
               vertices_colors = object@status_colors[nopc$status]
               count_status = sapply(names(object@status_colors),
                                     function(status) sum(nopc$status == status))
@@ -2002,15 +2009,7 @@ setMethod(f = "spectrosome_chart",
               legend_1 = c(names(object@status_colors), "", "Single items", "Multiple items")
               col_1 = c(object@status_colors, "white", "black", "black")
               
-            } else if (vertex_col != "categories") {
-              # Noeuds ou motifs sans affichage du statut : couleur grise
-              vertices_colors = rep("grey", nrow(nopc))
-              
-              # Légende associée
-              legend_1 = c("Single items", "Multiple items")
-              col_1 = c("black", "black")
-              
-            } else {
+            } else if (vertex_col[1] == "categories") {
               # Couleurs en fonction de la catégorie
               v.categories_colors = list()
               vertices_colors = list()
@@ -2066,6 +2065,19 @@ setMethod(f = "spectrosome_chart",
                   col_1[[category]] = c(v.categories_colors[[category]], "white", "black", "black")
                 }
               }
+            } else {
+              if (vertex_col[1] == "none" || vertex_col[1] == "status") {
+                # "none" ou "status" et noeuds : couleur grise
+                vertices_colors = rep("grey", nrow(nopc))
+              } else if (length(vertex_col == 1)) {
+                vertices_colors = rep(vertex_col, nrow(nopc))
+              } else { # length(vertex_col) == nrow(nopc)
+                vertices_colors = vertex_col
+              }
+              
+              # Légende associée
+              legend_1 = c("Single items", "Multiple items")
+              col_1 = c("black", "black")
             }
             
             # Sommets à plusieurs items en cercle ; triangle sinon
@@ -2126,10 +2138,11 @@ setMethod(f = "spectrosome_chart",
             # Nombre de variantes du graphique
             nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
             
-            # Définition de valeurs par défaut pour le titre et le nom du fichier, et vérification du nom
+            # Définition de valeurs par défaut pour le titre et le nom du fichier, et vérifications
             if (is.null(title)) title = paste0("Spectrosome of ", entities)
             if (is.null(name)) name = paste0("spectrosome_of_", entities, ".png")
             else name = check_extension(name, "png")
+            path = turn_into_path(path)
             
             # Réutilisation ou non de coordonnées
             if ("coord" %in% names(args)) {
@@ -2154,7 +2167,7 @@ setMethod(f = "spectrosome_chart",
                                    sub(".png", paste0("-", colnames(object@items_categories)[j], ".png"), file_name))
                 
                 # Traçage des graphiques dans des fichiers PNG
-                grDevices::png(paste0(turn_into_path(path), file_name), 950, 700)
+                grDevices::png(paste0(path, file_name), 950, 700)
                 graphics::par(mar = c(0.5, 0.5, 4.5, 0.5))
                 graphics::plot.new()
                 
@@ -2167,10 +2180,10 @@ setMethod(f = "spectrosome_chart",
                       font.main = 3, line = 1)
                 
                 # Préparation des formes de la légende du graphique
-                if (entities == SpectralAnalyzer.PATTERNS && vertex_col == "status") {
+                if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
                   legend_pt.cex = c(rep(2, length(object@status_colors)), 1.7, 1.9, rep(2, length(categories_colors[[j]])))
                   legend_pch = c(rep(15, length(object@status_colors)), 0, 2, 1, 0, rep(20, length(categories_colors[[j]])))
-                } else if (vertex_col != "categories" || length(object@items_categories) == 0) {
+                } else if (vertex_col[1] != "categories" || length(object@items_categories) == 0) {
                   legend_pt.cex = c(1.9, rep(2, length(categories_colors[[j]])))
                   legend_pch = c(2, 1, 0, rep(20, length(categories_colors[[j]])))
                 } else {
@@ -2180,10 +2193,10 @@ setMethod(f = "spectrosome_chart",
                 
                 # Préparation de la légende des liens, à la suite des statuts et sommets
                 if (is.null(c.cutoff)) {
-                  legend_legend = c(if (vertex_col == "categories") legend_1[[j]] else legend_1,
+                  legend_legend = c(if (vertex_col[1] == "categories") legend_1[[j]] else legend_1,
                                     "", names(categories_colors[[j]]))
                 } else {
-                  if (vertex_col == "categories") {
+                  if (vertex_col[1] == "categories") {
                     if (length(object@items_categories) != 0) {
                       # Application du cutoff sur la légende des couleurs des sommets également
                       nb_vertices_leg = length(legend_1[[j]])
@@ -2197,7 +2210,7 @@ setMethod(f = "spectrosome_chart",
                     legend_legend = c(legend_1, "", substr(names(categories_colors[[j]]), 1, c.cutoff))
                   }
                 }
-                legend_col = c(if (vertex_col == "categories") col_1[[j]] else col_1,
+                legend_col = c(if (vertex_col[1] == "categories") col_1[[j]] else col_1,
                                "white", categories_colors[[j]])
                 
                 # Affichage de la légende
@@ -2208,7 +2221,7 @@ setMethod(f = "spectrosome_chart",
                               graphics::strwidth("1", units = "inches") * 4.5
                 
                 # Légende supplémentaire concernant la distribution des statuts
-                if (entities == SpectralAnalyzer.PATTERNS && vertex_col == "status") {
+                if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
                   status_legend = paste0("(", count_status, ")")
                   legend_size[1:4] = legend_size[1:4] + graphics::strwidth(status_legend, units = "inches") + 
                                                         graphics::strwidth("1", units = "inches") * 2.5
@@ -2220,15 +2233,24 @@ setMethod(f = "spectrosome_chart",
                 # Réinitialisation des marges de la zone graphique pour séparer légende et plot
                 graphics::par(new = TRUE, mai = graphics::par()$mai + c(0, max(legend_size), 0, 0))
                 
-                # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
-                coord = do.call(sna::gplot, c(list(
-                  dat = network_data, gmode = "graph",
-                  coord = coord,
-                  vertex.sides = vertices_shapes,
-                  vertex.cex = vertices_sizes,
-                  vertex.col = if (vertex_col == "categories") vertices_colors[[j]] else vertices_colors,
-                  edge.col = links_colors[[j]]
-                ), args))
+                tryCatch({
+                  # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
+                  coord = do.call(sna::gplot, c(list(
+                    dat = network_data, gmode = "graph",
+                    coord = coord,
+                    vertex.sides = vertices_shapes,
+                    vertex.cex = vertices_sizes,
+                    vertex.col = if (vertex_col[1] == "categories") vertices_colors[[j]] else vertices_colors,
+                    edge.col = links_colors[[j]]
+                  ), args))
+                },
+                error = function(e) {
+                  # Fermeture et suppression du fichier graphique avant affichage du message d'erreur
+                  grDevices::dev.off()
+                  file.remove(paste0(path, file_name))
+                  stop(e)
+                  # Exemple d'erreur possible : vertex_col contient des noms de couleurs incorrects
+                })
                 
                 # S'il y a bien des liens, identification et affichage des noms des clusters
                 if (sum(nop_links$weight != 0)) {
@@ -2407,10 +2429,13 @@ setMethod(f = "cluster_text",
 #' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
 #'  Range of vertex size values (given as expansion factors).
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
-#'  One of \code{"status"}, \code{"categories"}, \code{"none"}.
+#'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a vector of R predefined color names
+#'  or hexadecimal values of length 1 or of length equal to the number of rows of \code{nopc}.
 #'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 #'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-#'  the entities represented. In all other cases, the vertices are colored gray.
+#'  the entities represented. If is one specific color, all vertices are colored with this color.
+#'  If is a vector of size equal to the number of rows of \code{nopc}, the colors are directly
+#'  assigned to these entities. If \code{"none"}, the vertices are colored gray.
 #' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
 #' @param display_mixt If \code{TRUE}, display in the legend the category values included only in mixed
 #'  links (or in mixed vertices, if \code{vertex_col = "categories"}).
@@ -2473,6 +2498,18 @@ setMethod(f = "cluster_chart",
               # Définition de valeurs par défaut pour le titre et le nom du fichier
               if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)
               if (is.null(name)) name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png")
+              
+              # Vérification du paramètre de colorisation des sommets
+              if (!(vertex_col %in% c("status", "categories", "none"))
+                  && !(length(vertex_col) %in% c(1, nrow(nopc)))) {
+                stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
+                           "a vector of R predefined color names or hexadecimal values",
+                           "of length 1 or of length equal to the number of rows of nopc."))
+              } else if (length(vertex_col) == nrow(nopc)) {
+                # Sous-ensemble de vertex_col s'il définit une couleur pour chaque nop
+                names(vertex_col) = rownames(nopc)
+                vertex_col = vertex_col[rownames(nop)]
+              }
               
               # Construction du spectrosome associé
               to_return = spectrosome_chart(object, nop,
