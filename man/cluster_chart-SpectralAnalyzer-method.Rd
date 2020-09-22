@@ -17,9 +17,9 @@
   vertex_col = "status",
   c.cutoff = NULL,
   display_mixt = TRUE,
-  title = paste("Cluster of", item),
+  title = NULL,
   path = getwd(),
-  name = paste0("cluster_of_", item, ".png"),
+  name = NULL,
   ...
 )
 }
@@ -75,16 +75,16 @@ the entities represented. In all other cases, the vertices are colored gray.}
 \item{display_mixt}{If \code{TRUE}, display in the legend the category values included only in mixed
 links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 
-\item{title}{Chart title.
-By default, the title depends on the argument \code{item}.
-Example of default title: \code{"Cluster of 25"} if \code{item = 25}.}
+\item{title}{Chart title. Default title depends on the type of entities contained in \code{nopc} and
+on the argument \code{item}. Example of default title: \code{"Node cluster of 25"} if \code{nopc}
+contains nodes and \code{item = 25}.}
 
 \item{path}{Path of the directory in which to save the charts.
 By default, the charts are saved in the working directory.}
 
-\item{name}{Name of the file in which to save the chart.
-By default, the name depends on the argument \code{item}.
-Example of default name: \code{"cluster_of_25.png"} if \code{item = 25}.}
+\item{name}{Name of the file in which to save the chart. Default name depends on the type of entities
+contained in \code{nopc} and on the argument \code{item}. Example of default name:
+\code{"node_cluster_of_25"} if \code{nopc} contains nodes and \code{item = 25}.}
 
 \item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 \code{sna} for plotting the graph. See Details section.}

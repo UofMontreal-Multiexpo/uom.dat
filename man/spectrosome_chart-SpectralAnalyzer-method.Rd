@@ -20,9 +20,9 @@
   n.cutoff = NULL,
   c.cutoff = NULL,
   display_mixt = TRUE,
-  title = "Spectrosome",
+  title = NULL,
   path = getwd(),
-  name = "spectrosome.png",
+  name = NULL,
   ...
 )
 }
@@ -88,14 +88,15 @@ of the represented items.}
 \item{display_mixt}{If \code{TRUE}, display in the legend the category values included only in mixed
 links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 
-\item{title}{Chart title.}
+\item{title}{Chart title. Default title depends on the type of entities contained in \code{nopc}.
+Example of default title: \code{"Spectrosome of nodes"} if \code{nopc} contains nodes.}
 
 \item{path}{Path of the directory in which to save the charts.
 By default, the charts are saved in the working directory.}
 
-\item{name}{Name of the file in which to save the chart.
-If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
-file name.}
+\item{name}{Name of the file in which to save the chart. Default name depends on the type of entities
+contained in \code{nopc}. Example of default name: \code{spectrosome_of_nodes"} if \code{nopc}
+contains nodes.}
 
 \item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 \code{sna} for plotting the graph. See Details section.}
@@ -115,8 +116,12 @@ file name.}
 Plot one or more spectrosome charts and save them in PNG format.
 }
 \details{
-If categories are associated with the items, each category generates a spectrosome.
- The category name is appended to the end of the file name.
+If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
+ file name.
+ 
+If categories are associated with the items, each category generates a spectrosome and
+ therefore a file. If there is more than one category, its name is appended to the end of the file
+ name (after the possible addition of the number of the graph).
 
 If mixed links are relative to category values that are not represented by single links, these
  values are present in the legend below "Mixt", with no associated color.

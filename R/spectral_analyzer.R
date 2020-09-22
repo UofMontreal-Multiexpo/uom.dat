@@ -578,11 +578,11 @@ setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object
 
 # Methods for creating spectrosome graphs and computing related indicators
 
-setGeneric(name = "spectrosome_chart", def = function(object, nopc, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, title = "Spectrosome", path = getwd(), name = "spectrosome.png", ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, nopc, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, title = NULL, path = getwd(), name = NULL, ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, nopc, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, title = paste("Cluster of", item), path = getwd(), name = paste0("cluster_of_", item, ".png"), ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, nopc, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, title = NULL, path = getwd(), name = NULL, ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -1701,8 +1701,12 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' Plot one or more spectrosome charts and save them in PNG format.
 #' 
 #' @details
-#' If categories are associated with the items, each category generates a spectrosome.
-#'  The category name is appended to the end of the file name.
+#' If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
+#'  file name.
+#'  
+#' If categories are associated with the items, each category generates a spectrosome and
+#'  therefore a file. If there is more than one category, its name is appended to the end of the file
+#'  name (after the possible addition of the number of the graph).
 #' 
 #' If mixed links are relative to category values that are not represented by single links, these
 #'  values are present in the legend below "Mixt", with no associated color.
@@ -1783,12 +1787,13 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
 #' @param display_mixt If \code{TRUE}, display in the legend the category values included only in mixed
 #'  links (or in mixed vertices, if \code{vertex_col = "categories"}).
-#' @param title Chart title.
+#' @param title Chart title. Default title depends on the type of entities contained in \code{nopc}.
+#'  Example of default title: \code{"Spectrosome of nodes"} if \code{nopc} contains nodes.
 #' @param path Path of the directory in which to save the charts.
 #'  By default, the charts are saved in the working directory.
-#' @param name Name of the file in which to save the chart.
-#'  If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
-#'  file name.
+#' @param name Name of the file in which to save the chart. Default name depends on the type of entities
+#'  contained in \code{nopc}. Example of default name: \code{spectrosome_of_nodes"} if \code{nopc}
+#'  contains nodes.
 #' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna} for plotting the graph. See Details section.
 #' @return
@@ -1825,8 +1830,7 @@ setMethod(f = "spectrosome_chart",
                                 vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 clusters = Inf, highlight = 3,
                                 use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE,
-                                title = "Spectrosome", path = getwd(), name = "spectrosome.png",
-                                ...) {
+                                title = NULL, path = getwd(), name = NULL, ...) {
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             nopc = get_nopc(object, nopc)
@@ -2121,7 +2125,11 @@ setMethod(f = "spectrosome_chart",
             
             # Nombre de variantes du graphique
             nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
-            name = check_extension(name, "png")
+            
+            # Définition de valeurs par défaut pour le titre et le nom du fichier, et vérification du nom
+            if (is.null(title)) title = paste0("Spectrosome of ", entities)
+            if (is.null(name)) name = paste0("spectrosome_of_", entities, ".png")
+            else name = check_extension(name, "png")
             
             # Réutilisation ou non de coordonnées
             if ("coord" %in% names(args)) {
@@ -2406,14 +2414,14 @@ setMethod(f = "cluster_text",
 #' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
 #' @param display_mixt If \code{TRUE}, display in the legend the category values included only in mixed
 #'  links (or in mixed vertices, if \code{vertex_col = "categories"}).
-#' @param title Chart title.
-#'  By default, the title depends on the argument \code{item}.
-#'  Example of default title: \code{"Cluster of 25"} if \code{item = 25}.
+#' @param title Chart title. Default title depends on the type of entities contained in \code{nopc} and
+#'  on the argument \code{item}. Example of default title: \code{"Node cluster of 25"} if \code{nopc}
+#'  contains nodes and \code{item = 25}.
 #' @param path Path of the directory in which to save the charts.
 #'  By default, the charts are saved in the working directory.
-#' @param name Name of the file in which to save the chart.
-#'  By default, the name depends on the argument \code{item}.
-#'  Example of default name: \code{"cluster_of_25.png"} if \code{item = 25}.
+#' @param name Name of the file in which to save the chart. Default name depends on the type of entities
+#'  contained in \code{nopc} and on the argument \code{item}. Example of default name:
+#'  \code{"node_cluster_of_25"} if \code{nopc} contains nodes and \code{item = 25}.
 #' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna} for plotting the graph. See Details section.
 #' @return \code{NULL} if none or only one node or pattern contains the sought item. \cr
@@ -2444,9 +2452,7 @@ setMethod(f = "cluster_chart",
                                 use_name = TRUE, n.cutoff = NULL,
                                 vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 c.cutoff = NULL, display_mixt = TRUE,
-                                title = paste("Cluster of", item),
-                                path = getwd(), name = paste0("cluster_of_", item, ".png"),
-                                ...) {
+                                title = NULL, path = getwd(), name = NULL, ...) {
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             nopc = get_nopc(object, nopc)
@@ -2464,6 +2470,10 @@ setMethod(f = "cluster_chart",
             
             # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
             if (nrow(nop) > 1) {
+              # Définition de valeurs par défaut pour le titre et le nom du fichier
+              if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)
+              if (is.null(name)) name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png")
+              
               # Construction du spectrosome associé
               to_return = spectrosome_chart(object, nop,
                                             identifiers = identifiers,
