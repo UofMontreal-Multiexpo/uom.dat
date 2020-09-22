@@ -50,7 +50,8 @@ each copy.}
 the chart.}
 
 \item{vertex_size}{Way how the sizes of the vertices of the graph should be defined.
-One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
+One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
+or vector of length equal to the number of nodes or patterns to plot.
 \describe{
   \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
                            entities in \code{size_range}.}
@@ -60,14 +61,18 @@ One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
   \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
                            the entity.}
   \item{\code{"equal"}}{The vertices are all the same size of 1.}
+  \item{A single numeric value}{The vertices are all the size defined by this value.}
+  \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
+                                 nodes of patterns to plot.}
 }}
 
 \item{size_range}{If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
 Range of vertex size values (given as expansion factors).}
 
 \item{vertex_col}{Way how the colors of the vertices of the graph should be defined.
-One of \code{"status"}, \code{"categories"}, \code{"none"} or a vector of R predefined color names
-or hexadecimal values of length 1 or of length equal to the number of nodes or patterns to plot.
+One of \code{"status"}, \code{"categories"}, \code{"none"} or a single character value or vector
+of length equal to the number of nodes or patterns to plot, corresponding to R predefined color
+names or hexadecimal values.\cr
 If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 patterns. If \code{"categories"}, coloring according to the categories associated with the items of
 the entities represented. If is one specific color, all vertices are colored with this color.
@@ -159,8 +164,7 @@ The following parameters, which can be redefined, have the following values:
  }
 }
 \examples{
-spectrosome_1 <- spectrosome_chart(SA_instance, "nodes",
-                                   name = "spectrosome_of_nodes")
+spectrosome_1 <- spectrosome_chart(SA_instance, "nodes")
 spectrosome_2 <- spectrosome_chart(SA_instance, SA_instance["patterns"])
 spectrosome_3 <- spectrosome_chart(SA_instance, SA_instance["patterns"][1:15, ],
                                    name = "spectrosome_of_patterns_1-15")

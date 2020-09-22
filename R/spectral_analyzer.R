@@ -1758,7 +1758,8 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param min_link_weight Minimum number of items in common between two entities to plot their link on
 #'  the chart.
 #' @param vertex_size Way how the sizes of the vertices of the graph should be defined.
-#'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
+#'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
+#'  or vector of length equal to the number of nodes or patterns to plot.
 #'  \describe{
 #'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
 #'                             entities in \code{size_range}.}
@@ -1768,12 +1769,16 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
 #'                             the entity.}
 #'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
+#'    \item{A single numeric value}{The vertices are all the size defined by this value.}
+#'    \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
+#'                                   nodes of patterns to plot.}
 #'  }
 #' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
 #'  Range of vertex size values (given as expansion factors).
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
-#'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a vector of R predefined color names
-#'  or hexadecimal values of length 1 or of length equal to the number of nodes or patterns to plot.
+#'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a single character value or vector
+#'  of length equal to the number of nodes or patterns to plot, corresponding to R predefined color
+#'  names or hexadecimal values.\cr
 #'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 #'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
 #'  the entities represented. If is one specific color, all vertices are colored with this color.
@@ -1817,8 +1822,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @seealso \code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' 
 #' @examples
-#' spectrosome_1 <- spectrosome_chart(SA_instance, "nodes",
-#'                                    name = "spectrosome_of_nodes")
+#' spectrosome_1 <- spectrosome_chart(SA_instance, "nodes")
 #' spectrosome_2 <- spectrosome_chart(SA_instance, SA_instance["patterns"])
 #' spectrosome_3 <- spectrosome_chart(SA_instance, SA_instance["patterns"][1:15, ],
 #'                                    name = "spectrosome_of_patterns_1-15")
@@ -1851,6 +1855,12 @@ setMethod(f = "spectrosome_chart",
               stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
                          "a vector of R predefined color names or hexadecimal values",
                          "of length 1 or of length equal to the number of rows of nopc."))
+            }
+            if (!(vertex_size %in% c("relative", "grouped", "absolute", "equal"))
+                && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
+              stop(paste("vertex_size be one of \"relative\", \"grouped\", \"absolute\", \"equal\"",
+                         "or a numeric vector of length 1 or of length equal to the number of",
+                         "rows of nopc."))
             }
             
             
@@ -2085,33 +2095,40 @@ setMethod(f = "spectrosome_chart",
             vertices_shapes[nopc$order == 1] = 3
             
             # Définition des tailles des sommets
-            switch(EXPR = vertex_size,
-                   "relative" = {
-                     # Interpolation linéaire des poids aux valeurs [size_range[1], size_range[2]]
-                     if (min(nopc$weight) != max(nopc$weight)) {
-                       func = stats::approxfun(x = c(min(nopc$weight),
-                                                     max(nopc$weight)),
-                                               y = size_range)
-                       vertices_sizes = func(nopc$weight)
-                     } else {
-                       vertices_sizes = rep(mean(size_range), length(nopc$weight))
-                     }
-                   },
-                   "grouped" = {
-                     # Groupement des valeurs des poids selon 5 quantiles
-                     breaks = round(stats::quantile(nopc$weight, prob = seq(0, 1, 0.2)))
-                     intervals = cut(nopc$weight, breaks = unique(breaks), include.lowest = TRUE)
-                     sizes = seq(size_range[1], size_range[2], length.out = length(levels(intervals)))
-                     vertices_sizes = sizes[intervals]
-                   },
-                   "absolute" = {
-                     vertices_sizes = nopc$weight
-                   },
-                   "equal" = {
-                     # Valeur par défaut de l'argument vertex.cex de la fonction sna::gplot()
-                     vertices_sizes = 1
-                   },
-                   stop("Unknown value for vertex_size. Must be one of \"relative\", \"grouped\", \"absolute\", \"equal\"."))
+            if (is.numeric(vertex_size)) {
+              if (length(vertex_size) == 1) {
+                vertices_sizes = rep(vertex_size, nrow(nopc))
+              } else { # length(vertex_size == nrow(nopc)
+                vertices_sizes = vertex_size
+              }
+            } else {
+              switch(EXPR = vertex_size,
+                     "relative" = {
+                       # Interpolation linéaire des poids aux valeurs [size_range[1], size_range[2]]
+                       if (min(nopc$weight) != max(nopc$weight)) {
+                         func = stats::approxfun(x = c(min(nopc$weight),
+                                                       max(nopc$weight)),
+                                                 y = size_range)
+                         vertices_sizes = func(nopc$weight)
+                       } else {
+                         vertices_sizes = rep(mean(size_range), length(nopc$weight))
+                       }
+                     },
+                     "grouped" = {
+                       # Groupement des valeurs des poids selon 5 quantiles
+                       breaks = round(stats::quantile(nopc$weight, prob = seq(0, 1, 0.2)))
+                       intervals = cut(nopc$weight, breaks = unique(breaks), include.lowest = TRUE)
+                       sizes = seq(size_range[1], size_range[2], length.out = length(levels(intervals)))
+                       vertices_sizes = sizes[intervals]
+                     },
+                     "absolute" = {
+                       vertices_sizes = nopc$weight
+                     },
+                     "equal" = {
+                       # Valeur par défaut de l'argument vertex.cex de la fonction sna::gplot()
+                       vertices_sizes = 1
+                     }) 
+            }
             
             
             # Réseau généré avec le package network
@@ -2415,7 +2432,8 @@ setMethod(f = "cluster_text",
 #' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the name
 #'  of the item.
 #' @param vertex_size Way how the sizes of the vertices of the graph should be defined.
-#'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"}.
+#'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
+#'  or vector of length equal to the number of rows of \code{nopc}.
 #'  \describe{
 #'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
 #'                             entities in \code{size_range}.}
@@ -2425,12 +2443,16 @@ setMethod(f = "cluster_text",
 #'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
 #'                             the entity.}
 #'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
+#'    \item{A single numeric value}{The vertices are all the size defined by this value.}
+#'    \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
+#'                                   entities contained in \code{nopc}.}
 #'  }
 #' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
 #'  Range of vertex size values (given as expansion factors).
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
-#'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a vector of R predefined color names
-#'  or hexadecimal values of length 1 or of length equal to the number of rows of \code{nopc}.
+#'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a single character value or vector
+#'  of length equal to the number of rows of \code{nopc}, corresponding to R predefined color names or
+#'  hexadecimal values.\cr
 #'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 #'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
 #'  the entities represented. If is one specific color, all vertices are colored with this color.
@@ -2464,8 +2486,7 @@ setMethod(f = "cluster_text",
 #' @seealso \code{\link{spectrosome_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' 
 #' @examples
-#' cluster_1 <- cluster_chart(SA_instance, "nodes", item = 3146,
-#'                            name = "node_cluster_of_3146")
+#' cluster_1 <- cluster_chart(SA_instance, "nodes", item = 3146)
 #' cluster_2 <- cluster_chart(SA_instance, SA_instance["patterns"], item = 3146)
 #' 
 #' @aliases cluster_chart
@@ -2509,6 +2530,17 @@ setMethod(f = "cluster_chart",
                 # Sous-ensemble de vertex_col s'il définit une couleur pour chaque nop
                 names(vertex_col) = rownames(nopc)
                 vertex_col = vertex_col[rownames(nop)]
+              }
+              # Vérification du paramètre de taille des sommets
+              if (!(vertex_size %in% c("relative", "grouped", "absolute", "equal"))
+                  && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
+                stop(paste("vertex_size be one of \"relative\", \"grouped\", \"absolute\", \"equal\"",
+                           "or a numeric vector of length 1 or of length equal to the number of",
+                           "rows of nopc."))
+              } else if (length(vertex_size) == nrow(nopc)) {
+                # Sous-ensemble de vertex_size s'il définit une couleur pour chaque nop
+                names(vertex_size) = rownames(nopc)
+                vertex_size = vertex_size[rownames(nop)]
               }
               
               # Construction du spectrosome associé
