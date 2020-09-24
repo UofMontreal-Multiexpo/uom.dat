@@ -978,8 +978,18 @@ mcr_chart = function(values = NULL, references = NULL,
   thq = if (is.list(thq)) sapply(unname(thq), function(v) names(v)[1]) else names(thq)
   
   # Préparation des données et limites du graphique
-  if (log_transform) data = data.frame(x = log10(hi), y = log10(mcr - 1), thq = thq)
-  else data = data.frame(x = hi, y = mcr, thq = thq)
+  if (log_transform) {
+    data = data.frame(x = log10(hi), y = log10(mcr - 1), thq = thq)
+    
+    if (-Inf %in% data$y) {
+      warning(paste(sum(data$y == -Inf),
+                    "points has not been plotted because their MCR values are equal to 1.",
+                    "Use log_transform = FALSE to see all points."))
+      data = data[data$y != -Inf, ]
+    }
+  } else {
+    data = data.frame(x = hi, y = mcr, thq = thq)
+  }
   xlim = c(floor(min(data$x)), ceiling(max(data$x)))
   ylim = c(floor(min(data$y)), ceiling(max(data$y)))
   
