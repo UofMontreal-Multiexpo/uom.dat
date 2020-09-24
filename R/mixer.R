@@ -1057,10 +1057,13 @@ plot_mcr_log_part = function(chart, xlim, ylim,
   # Texte relatif aux groupes
   if (any(regions_lab)) {
     # Vérification des zones affichées (non-affichage du texte des zones qui ne sont pas affichées)
-    regions_lab = regions_lab & c(xlim[2] > 0, xlim[1] < 0, ylim[1] < 0, ylim[2] > 0)
+    regions_lab = regions_lab & c(ylim[1] < fun.mhq_1(xlim[2]), # Coin bas-droite en-dessous de la courbe f
+                                  xlim[1] < 0,
+                                  ylim[1] < 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[1] > fun.mhq_1(xlim[1])), # Coin bas-gauche au dessus de f
+                                  ylim[2] > 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[2] > fun.mhq_1(xlim[1]))) # Coin haut-gauche au dessus de f
     
     chart = chart + ggplot2::annotate(geom = "text",
-                                      x = c(xlim[2], xlim[1], root_fun / 2, xlim[2] / 2)[regions_lab],
+                                      x = c(xlim[2], xlim[1], root_fun / 2, if (xlim[1] > 0) xlim[2] - xlim[1] / 2 else xlim[2] / 2)[regions_lab],
                                       y = c(ylim[1], ylim[1], -0.05, ylim[2])[regions_lab],
                                       hjust = c(1, 0, 0.5, 0.5)[regions_lab],
                                       vjust = c(0, 0, 0.5, 1)[regions_lab],
@@ -1162,11 +1165,14 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
   # Texte relatif aux groupes
   if (any(regions_lab)) {
     # Vérification des zones affichées (non-affichage du texte des zones qui ne sont pas affichées)
-    regions_lab = regions_lab & c(xlim[2] > 1, xlim[1] < 1, ylim[2] > 1, ylim[2] > 2)
+    regions_lab = regions_lab & c(xlim[2] > ylim[1],
+                                  xlim[1] < 1,
+                                  ylim[1] < 2 && xlim[1] < 2 && xlim[2] > 1,
+                                  ylim[2] > 2 && xlim[1] < ylim[1] && xlim[2] > 1)
     
     chart = chart + ggplot2::annotate(geom = "text",
                                       x = c(xlim[2], xlim[1], 1.5, xlim[2])[regions_lab],
-                                      y = c(1.05, ylim[2], 1.95, ylim[2])[regions_lab],
+                                      y = c(ylim[1] + (ylim[2] - ylim[1]) / 100, ylim[2], 1.95, ylim[2])[regions_lab],
                                       hjust = c(1, 0, 0.5, 1)[regions_lab],
                                       vjust = c(0, 1, 1, 1)[regions_lab],
                                       label = c("Group I", "Group II", "Group IIIA", "Group IIIB")[regions_lab])
