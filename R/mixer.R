@@ -781,24 +781,21 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #' @seealso [`thq_pairs_freq`], [`classify_mixture`], [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
 #' @examples
-#' thq_freq_by_group(c(a = 1, b = 2, c = 3, d = 4, e = 5), c(5,4,3,2,1))
-#' thq_freq_by_group(hq = hazard_quotient(c(a = 1, b = 2, c = 3, d = 4, e = 5),
-#'                                        c(5,4,3,2,1)),
-#'                   groups = classify_mixtures(c(a = 1, b = 2, c = 3, d = 4, e = 5),
-#'                                              c(5,4,3,2,1)))
-#' thq_freq_by_group(thq = top_hazard_quotient(c(a = 1, b = 2, c = 3, d = 4, e = 5),
-#'                                             c(5,4,3,2,1)),
-#'                   groups = classify_mixtures(c(a = 1, b = 2, c = 3, d = 4, e = 5),
-#'                                              c(5,4,3,2,1)))
+#' ## Creating a matrix of 4*3 values and one reference value for each of the 4
+#' ## elements ("a", "b", "c", and "d").
+#' v <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+#'             ncol = 3, dimnames = list(letters[1:4]))
+#' r <- c(1, 2, 3, 0.5)
 #' 
-#' ## With and without levels parameter
-#' thq_freq_by_group(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                   ncol = 3, dimnames = list(letters[1:4])),
-#'                   references = c(1,2,3,0.5))
-#' thq_freq_by_group(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                   ncol = 3, dimnames = list(letters[1:4])),
-#'                   references = c(1,2,3,0.5),
-#'                   levels = letters[1:4])
+#' ## Without levels parameter and with the different usages
+#' thq_freq_by_group(v, r)
+#' thq_freq_by_group(hq = hazard_quotient(v, r),
+#'                   groups = classify_mixture(v, r))
+#' thq_freq_by_group(thq = top_hazard_quotient(v, r),
+#'                   groups = classify_mixture(v, r))
+#' 
+#' ## With levels parameter
+#' thq_freq_by_group(values = v, references = r, levels = letters[1:4])
 #' 
 #' @md
 #' @export
@@ -811,7 +808,7 @@ thq_freq_by_group = function(values = NULL, references = NULL,
     if (is.null(hq)) hq = hazard_quotient(values, references)
     thq = top_hazard_quotient(hq = hq,  k = 1)
   }
-  if (is.null(groups)) groups = classify_mixtures(values, references)
+  if (is.null(groups)) groups = classify_mixture(values, references)
   
   # Soit thq est une list (hq ou values est une matrix) soit thq est une valeur (hq ou values est un vector)
   thq_names = if(is.list(thq)) sapply(thq, names) else names(thq)
