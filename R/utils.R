@@ -208,3 +208,31 @@ check_extension = function(filename, ext) {
 }
 
 
+
+#### Utility functions to perform tests on data structures ####
+
+#' Check if a data structure is named
+#' 
+#' Check if the elements of a data structure are named.
+#' 
+#' @param x A vector, matrix, data frame or list.
+#' @return Logical value or logical vector of length 2.
+#' * If `x` is a vector: `TRUE` or `FALSE` if the vector is named or not.
+#' * If `x` is a matrix or a data frame: logical vector of length 2.
+#'   The first value determines if the rows are named. The second one determines if the columns are named.
+#' * If `x` is a list: logical vector of length 2.
+#'   The first value determines if the list is named. The second one determines if the elements inside
+#'   the list are named.
+#' 
+#' @md
+#' @keywords internal
+is.named = function(x) {
+  
+  if (is.list(x)) return(c(!is.null(names(x)), !is.null(names(unlist(unname(x))))))
+  if (is.matrix(x) || is.data.frame(x)) return(c(!is.null(rownames(x)), !is.null(colnames(x))))
+  if (is.vector(x)) return(!is.null(names(x)))
+  
+  stop("Unknow data structure.")
+}
+
+

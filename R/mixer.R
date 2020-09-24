@@ -1,3 +1,6 @@
+#' @include utils.R
+NULL
+
 
 #### Maximum Cumulative Ratio approach - main indicators ####
 
@@ -683,6 +686,11 @@ thq_pairs_freq = function(values = NULL, references = NULL,
                           hq = NULL, hi = NULL,
                           levels = NULL) {
   
+  # Vérification que les structures de données sont nommées
+  if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
+  if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
+  
+  # Calcul des données manquantes
   if (is.null(hq)) hq = hazard_quotient(values, references)
   if (is.null(hi)) hi = hazard_index(hq = hq)
   
@@ -804,6 +812,12 @@ thq_freq_by_group = function(values = NULL, references = NULL,
                              thq = NULL,
                              groups = NULL, levels = NULL) {
   
+  # Vérification que les structures de données sont nommées
+  if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
+  if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
+  if (!is.null(thq) && !is.named(thq)) stop("thq must be a vector of named numeric values.")
+  
+  # Calcul des données manquantes
   if (is.null(thq)) {
     if (is.null(hq)) hq = hazard_quotient(values, references)
     thq = top_hazard_quotient(hq = hq,  k = 1)
@@ -967,6 +981,12 @@ mcr_chart = function(values = NULL, references = NULL,
                      regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
                      regions_lab = !regions, regression = FALSE, log_transform = TRUE) {
   
+  # Vérification que les structures de données sont nommées
+  if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
+  if (!is.null(thq) && ((is.list(thq) && !is.named(thq)[2]) || !is.named(thq)))
+    stop("thq must be a vector of named numeric values or a list of such vectors.")
+  
+  # Calcul des données manquantes
   if (is.null(hi)) hi = hazard_index(values, references)
   if (is.null(mcr)) mcr = maximum_cumulative_ratio(values, references, hi = hi)
   if (is.null(thq)) thq = top_hazard_quotient(values, references, k = 1)
@@ -1312,6 +1332,11 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @export
 mcr_summary = function(values, references) {
   
+  # Vérification que la structure de données est nommée
+  if (is.matrix(values) && !is.named(values)[1]) stop("Rows of values must be named.")
+  else if (is.vector(values) && !is.named(values)) stop("values must be a vector of named numeric values.")
+  
+  # Calcul des indicateurs
   hq = hazard_quotient(values, references)
   hi = hazard_index(hq = hq)
   mhq = maximum_hazard_quotient(hq = hq)
