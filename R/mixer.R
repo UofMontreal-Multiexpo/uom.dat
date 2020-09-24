@@ -1311,12 +1311,12 @@ mcr_summary = function(values, references) {
   # Différence vector/matrix
   if (is.vector(values)) {
     return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
-                      THQ = top_hazard_quotient(hq = hq, k = 1),
+                      THQ = names(top_hazard_quotient(hq = hq, k = 1)),
                       MHQ = mhq, Missed = mt,
                       row.names = NULL))
   }
   return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
-                    THQ = sapply(unname(top_hazard_quotient(hq = hq, k = 1)), function(v) names(v)[1]),
+                    THQ = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1)))),
                     MHQ = mhq, Missed = mt))
 }
 
