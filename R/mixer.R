@@ -975,7 +975,7 @@ mcr_chart = function(values = NULL, references = NULL,
   if (is.null(thq)) thq = top_hazard_quotient(values, references, k = 1)
   
   # Récupération des noms des top
-  thq = sapply(unname(thq), function(v) names(v)[1])
+  thq = if (is.list(thq)) sapply(unname(thq), function(v) names(v)[1]) else names(thq)
   
   # Préparation des données et limites du graphique
   if (log_transform) data = data.frame(x = log10(hi), y = log10(mcr - 1), thq = thq)
