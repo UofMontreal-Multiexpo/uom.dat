@@ -36,8 +36,8 @@ VignetteBuilder: knitr
 RoxygenNote: 7.1.0
 Collate: 
     'data.R'
+    'utils.R'
     'mixer.R'
     'observation_maker.R'
     'oedb.analysis.tools-package.R'
-    'utils.R'
     'spectral_analyzer.R'
