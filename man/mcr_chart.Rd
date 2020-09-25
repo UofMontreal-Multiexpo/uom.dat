@@ -22,9 +22,11 @@ mcr_chart(hi, mcr, thq,
           log_transform = TRUE)
 }
 \arguments{
-\item{values}{Numeric named matrix. Vectors of values for which the chart is to be plotted.}
+\item{values}{Numeric named matrix or list of numeric named vectors. Vectors of values for which the
+chart is to be plotted.}
 
-\item{references}{Numeric vector. Reference values associated with the \code{values}.}
+\item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
+\code{values}. See 'Details' to know the way it is associated with \code{values}.}
 
 \item{hi}{Numeric vector. \strong{H}azard \strong{i}ndexes for which the chart is to be plotted.}
 
@@ -66,6 +68,14 @@ percentage of the reciprocal of the maximum cumulative ratio, the elements produ
 quotients and the associated MIAT groups.
 }
 \details{
+If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
+reference value for each row of the matrix).
+
+If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
+if \code{references} is a vector, there must be one reference for each name present in \code{values}.
+Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
+so that \code{values} and \code{references} can be matched.
+
 The chart being plotted with the \code{ggplot2} package, it can be modified or completed afterwards using
 \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 
@@ -73,12 +83,13 @@ Color specification can be done using the R predefined color names or hexadecima
 
 In the standard version of the chart, the grey area represents the region in which no point can be
 plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does
-not exist.
+not exist. However, in the latter, points having \eqn{MCR} equal to 1 cannot be plotted because
+the ordinate is then equal to \code{-Inf}.
 
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
 before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios
 then plot the chart. Thus, call the function with the arguments \code{hi}, \code{mcr} and \code{thq} is faster
-(if they are already computed).
+(if they are already computed). This is true only if \code{values} is not a list.
 
 \loadmathjax
 The mixtures are assigned to the groups according the following conditions:
@@ -141,6 +152,20 @@ mcr_chart(v, r,
 mcr_chart(hi = hazard_index(v, r),
           mcr = maximum_cumulative_ratio(v, r),
           thq = top_hazard_quotient(v, r),
+          log_transform = FALSE)
+
+## MCR chart on list
+mcr_chart(values = list(c(a = 0.1, b = 0.5),
+                        c(a = 0.2),
+                        c(b = 0.3, c = 0.4)),
+          references = c(a = 1, b = 2, c = 3),
+          log_transform = FALSE)
+mcr_chart(values = list(c(a = 0.1, b = 0.5),
+                        c(a = 0.2),
+                        c(b = 0.3, c = 0.4)),
+          references = list(c(1, 2),
+                            1,
+                            c(2, 3)),
           log_transform = FALSE)
 
 }

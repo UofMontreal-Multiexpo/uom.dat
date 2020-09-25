@@ -9,9 +9,11 @@ thq_freq_by_group(hq, groups, levels = NULL)
 thq_freq_by_group(thq, groups, levels = NULL)
 }
 \arguments{
-\item{values}{Numeric named matrix. Vectors of values for which the table is to be build.}
+\item{values}{Numeric named matrix or list of numeric named vectors. Vectors of values for which the
+table is to be build.}
 
-\item{references}{Numeric vector. Reference values associated with the \code{values}.}
+\item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
+\code{values}. See 'Details' to know the way it is associated with \code{values}.}
 
 \item{hq}{Numeric named matrix. \strong{H}azard \strong{q}uotients for which the table is to be build.}
 
@@ -32,11 +34,19 @@ Build a contingency table of the counts of each combination of name of the eleme
 top hazard quotient with the associated MIAT group.
 }
 \details{
+If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
+reference value for each row of the matrix).
+
+If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
+if \code{references} is a vector, there must be one reference for each name present in \code{values}.
+Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
+so that \code{values} and \code{references} can be matched.
+
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
 before searching for the maximum hazard quotients, computing the maximum cumulative ratios, performing
 the classification then build the table. Thus, call the function with the arguments \code{hq} and \code{groups}
 is faster and call it with the arguments \code{thq} and \code{groups} is even faster (if they are already
-computed).
+computed). This is true only if \code{values} is not a list.
 
 \loadmathjax
 The mixtures are assigned to the groups according the following conditions:
@@ -68,24 +78,33 @@ Due to the multiple possible usages, the arguments \code{hq}, \code{thq}, \code{
 explicitly named in the function call.
 }
 \examples{
-thq_freq_by_group(c(a = 1, b = 2, c = 3, d = 4, e = 5), c(5,4,3,2,1))
-thq_freq_by_group(hq = hazard_quotient(c(a = 1, b = 2, c = 3, d = 4, e = 5),
-                                       c(5,4,3,2,1)),
-                  groups = classify_mixtures(c(a = 1, b = 2, c = 3, d = 4, e = 5),
-                                             c(5,4,3,2,1)))
-thq_freq_by_group(thq = top_hazard_quotient(c(a = 1, b = 2, c = 3, d = 4, e = 5),
-                                            c(5,4,3,2,1)),
-                  groups = classify_mixtures(c(a = 1, b = 2, c = 3, d = 4, e = 5),
-                                             c(5,4,3,2,1)))
+## Creating a matrix of 4*3 values and one reference value for each of the 4
+## elements ("a", "b", "c", and "d").
+v <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+            ncol = 3, dimnames = list(letters[1:4]))
+r <- c(1, 2, 3, 0.5)
 
-## With and without levels parameter
-thq_freq_by_group(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-                                  ncol = 3, dimnames = list(letters[1:4])),
-                  references = c(1,2,3,0.5))
-thq_freq_by_group(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-                                  ncol = 3, dimnames = list(letters[1:4])),
-                  references = c(1,2,3,0.5),
-                  levels = letters[1:4])
+## Without levels parameter and with the different usages
+thq_freq_by_group(v, r)
+thq_freq_by_group(hq = hazard_quotient(v, r),
+                  groups = classify_mixture(v, r))
+thq_freq_by_group(thq = top_hazard_quotient(v, r),
+                  groups = classify_mixture(v, r))
+
+## With levels parameter
+thq_freq_by_group(values = v, references = r, levels = letters[1:4])
+
+## Building contingency table from a list
+thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
+                                c(a = 0.2),
+                                c(b = 0.3, c = 0.4)),
+                  references = c(a = 1, b = 2, c = 3))
+thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
+                                c(a = 0.2),
+                                c(b = 0.3, c = 0.4)),
+                  references = list(c(1, 2),
+                                    1,
+                                    c(2, 3)))
 
 }
 \references{

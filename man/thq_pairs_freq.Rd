@@ -8,10 +8,11 @@ thq_pairs_freq(values, references, levels = NULL)
 thq_pairs_freq(hq, hi, levels = NULL)
 }
 \arguments{
-\item{values}{Numeric named matrix. Vectors of values for which the top two hazard quotients are to be
-identified.}
+\item{values}{Numeric named matrix or list of numeric named vectors. Vectors of values for which the
+top two hazard quotients are to be identified.}
 
-\item{references}{Numeric vector. Reference values associated with the \code{values}.}
+\item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
+\code{values}. See 'Details' to know the way it is associated with \code{values}.}
 
 \item{hq}{Numeric named matrix. \strong{H}azard \strong{q}uotients for which the top two pairs are be to
 identified.}
@@ -22,7 +23,8 @@ identified.}
 pairs.}
 }
 \value{
-\code{NULL} if no hazard index is greater than 1.
+\code{NULL} if \code{values} is a matrix and no hazard index is greater than 1 or if \code{values} is a list and no
+vector has a hazard index greater than 1 or more than 1 value.
 
 Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients while hazard
 index is greater than 1.
@@ -32,12 +34,18 @@ Build a contingency table of the counts of each combination of the top two hazar
 which the associated hazard index is greater than 1.
 }
 \details{
+If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
+reference value for each row of the matrix).
+
+If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
+if \code{references} is a vector, there must be one reference for each name present in \code{values}.
+Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
+so that \code{values} and \code{references} can be matched.
+
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
 before identifying the highest hazard quotients then building the contingency table. Thus, call the
-function with the arguments \code{hq} and \code{hi} is faster (if they are already computed).
-
-The reference values are applied once on each column of \code{values} to compute the hazard indexes
-(i.e. it must have one reference value for each row of the matrix).
+function with the arguments \code{hq} and \code{hi} is faster (if they are already computed). This is true if
+\code{values} is not a list.
 
 \loadmathjax
 The hazard index of the vector \eqn{i} is given by:
@@ -79,6 +87,18 @@ thq_pairs_freq(values = matrix(c(.1, .2, .3, .4),
 hazard_index(values = matrix(c(.1, .2, .3, .4),
                              ncol = 2, dimnames = list(c("a","b"))),
              references = c(5,5))
+
+## Building contingency table from a list
+thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
+                             c(a = 1),
+                             c(b = 0.5, c = 0.5)),
+               references = c(a = 0.3, b = 0.6, c = 1))
+thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
+                             c(a = 1),
+                             c(b = 0.5, c = 0.5)),
+               references = list(c(0.3, 0.6),
+                                 0.3,
+                                 c(0.6, 1)))
 
 }
 \references{
