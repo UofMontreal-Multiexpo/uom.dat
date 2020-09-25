@@ -999,8 +999,10 @@ mcr_chart = function(values = NULL, references = NULL,
     data = data.frame(x = log10(hi), y = log10(mcr - 1), thq = thq)
     
     if (-Inf %in% data$y) {
-      warning(paste(sum(data$y == -Inf),
-                    "points has not been plotted because their MCR values are equal to 1.",
+      nb_inf = sum(data$y == -Inf)
+      warning(paste(nb_inf,
+                    if (nb_inf == 1) "point has not been plotted because its MCR value is equal to 1."
+                    else "points have not been plotted because their MCR values are equal to 1.",
                     "Use log_transform = FALSE to see all points."))
       data = data[data$y != -Inf, ]
     }
