@@ -20,7 +20,7 @@ Convert a list of character vectors or a character vector into itemsets written 
 Example of conversion: \code{c("item i", "item j")} becomes \code{{item i,item j}}.
 }
 \examples{
-sets = list("A", c("B", "C"), c("A", "B"), "A")
+sets <- list("A", c("B", "C"), c("A", "B"), "A")
 set_notation(sets, type = "character")
 set_notation(sets, type = "factor")
 

@@ -123,7 +123,7 @@ vector_notation = function(sets) {
 #' @seealso \code{\link{vector_notation}}.
 #' 
 #' @examples
-#' sets = list("A", c("B", "C"), c("A", "B"), "A")
+#' sets <- list("A", c("B", "C"), c("A", "B"), "A")
 #' set_notation(sets, type = "character")
 #' set_notation(sets, type = "factor")
 #' 
