@@ -232,7 +232,7 @@ is.named = function(x) {
   if (is.matrix(x) || is.data.frame(x)) return(c(!is.null(rownames(x)), !is.null(colnames(x))))
   if (is.vector(x)) return(!is.null(names(x)))
   
-  stop("Unknow data structure.")
+  stop("Unknown data structure.")
 }
 
 

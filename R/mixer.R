@@ -1565,8 +1565,8 @@ mcr_summary = function(values, references) {
   
   
   # Vérification que la structure de données est nommée
-  if (is.matrix(values) && !is.named(values)[1]) stop("Rows of values must be named.")
-  else if (is.vector(values) && !is.named(values)) stop("values must be a vector of named numeric values.")
+  if (is.matrix(values) && !is.named(values)[1]) stop("If values is a matrix, its rows must be named.")
+  else if (is.vector(values) && !is.named(values)) stop("If values is a vector, it must have named numeric values.")
   
   # Calcul des indicateurs
   hq = hazard_quotient(values, references)
@@ -1673,7 +1673,7 @@ mcr_summary_for_list = function(values, references) {
     
   } else if (is.vector(references)) {
     if (!is.named(references) || !is.named(values)[2])
-      stop("If values is a list and references is a vector. Both must contained named values.")
+      stop("If values is a list and references is a vector, both must contained named values.")
     
     summary = t(sapply(seq_len(length(values)),
                        function (i) mcr_summary(values[[i]], references[names(values[[i]])])))
