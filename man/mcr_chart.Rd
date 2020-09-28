@@ -60,7 +60,8 @@ is represented with 95\% confidence interval.}
 the standard version of the chart is plotted (i.e. \eqn{HI} versus \eqn{MCR}).}
 }
 \value{
-Invisible. Chart created with the \code{ggplot2} package.
+Chart created with the \code{ggplot2} package (invisible) or \code{NULL} if no points can be plotted
+(see 'Details).
 }
 \description{
 Plot \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)} with the

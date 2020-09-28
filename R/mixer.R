@@ -1079,7 +1079,8 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #' @param log_transform If `TRUE`, the log version of the chart is plotted (i.e.
 #'  \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}). If `FALSE`,
 #'  the standard version of the chart is plotted (i.e. \eqn{HI} versus \eqn{MCR}).
-#' @return Invisible. Chart created with the `ggplot2` package.
+#' @return Chart created with the `ggplot2` package (invisible) or `NULL` if no points can be plotted
+#'  (see 'Details).
 #' 
 #' @author Gauthier Magnin
 #' @references
@@ -1199,6 +1200,11 @@ mcr_chart = function(values = NULL, references = NULL,
     
     if (-Inf %in% data$y) {
       nb_inf = sum(data$y == -Inf)
+      
+      if (nb_inf == nrow(data)) {
+        warning("No points can be plotted because their MCR values are equal to 1.")
+        return(NULL)
+      }
       warning(paste(nb_inf,
                     if (nb_inf == 1) "point has not been plotted because its MCR value is equal to 1."
                     else "points have not been plotted because their MCR values are equal to 1.",
@@ -1227,7 +1233,7 @@ mcr_chart = function(values = NULL, references = NULL,
   # Régression linéaire
   if (regression) chart = chart + ggplot2::geom_smooth(method = "lm", formula = y ~ x)
   
-  graphics::plot(chart) 
+  graphics::plot(chart)
 }
 
 
