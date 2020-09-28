@@ -50,7 +50,10 @@ hazard_quotient = function(values, references) {
     hq = apply(values, 2, function(column) column / references)
     
     # Cas où la matrice ne possède qu'une seule ligne, le résultat de apply est un vecteur
-    if (is.vector(hq)) hq = matrix(hq, nrow = 1)
+    if (is.vector(hq)) {
+      hq = matrix(hq, nrow = 1)
+      rownames(hq) = rownames(values)
+    }
     
     colnames(hq) = paste0("V", seq_len(ncol(values)))
     return(hq)
