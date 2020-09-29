@@ -437,6 +437,10 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' 
 #' If `values` or `hq` is a matrix, `k` hazard quotients are highlight for each column.
 #' 
+#' If the number of hazard quotients that are greater than or equal to the \eqn{k-th} greater hazard
+#'  quotient is greater than `k`, only the first `k` values are considered and in the order given.
+#'  For example, if `hq = c(d = 5, b = 1, c = 3, a = 3)` and `k = 2`, the return is `c(d = 5, c = 3)`.
+#' 
 #' \loadmathjax
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
@@ -602,7 +606,7 @@ classify_mixture = function(values = NULL, references = NULL,
 
 
 
-#### Maximum Cumulative Ratio - summary functions ####
+#### Maximum Cumulative Ratio approach - summary functions ####
 
 
 #' Top Hazard Quotient pairs frequency

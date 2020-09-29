@@ -35,6 +35,10 @@ reference value for each row of the matrix).
 
 If \code{values} or \code{hq} is a matrix, \code{k} hazard quotients are highlight for each column.
 
+If the number of hazard quotients that are greater than or equal to the \eqn{k-th} greater hazard
+quotient is greater than \code{k}, only the first \code{k} values are considered and in the order given.
+For example, if \code{hq = c(d = 5, b = 1, c = 3, a = 3)} and \code{k = 2}, the return is \code{c(d = 5, c = 3)}.
+
 \loadmathjax
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
