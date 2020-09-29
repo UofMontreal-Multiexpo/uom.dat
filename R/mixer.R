@@ -1079,6 +1079,8 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #' @param log_transform If `TRUE`, the log version of the chart is plotted (i.e.
 #'  \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}). If `FALSE`,
 #'  the standard version of the chart is plotted (i.e. \eqn{HI} versus \eqn{MCR}).
+#' @param plot If `FALSE`, the chart is not plotted. If `TRUE`, the chart is plotted in the active
+#'  graphics device.
 #' @return Chart created with the `ggplot2` package (invisible) or `NULL` if no points can be plotted
 #'  (see 'Details).
 #' 
@@ -1145,7 +1147,7 @@ mcr_chart = function(values = NULL, references = NULL,
                      hi = NULL, mcr = NULL, thq = NULL,
                      thq_col = NULL, regions = FALSE,
                      regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
-                     regions_lab = !regions, regression = FALSE, log_transform = TRUE) {
+                     regions_lab = !regions, regression = FALSE, log_transform = TRUE, plot = TRUE) {
   
   # Cas spécifiques dans lequel values est une liste et non une matrice
   if (is.list(values)) {
@@ -1235,7 +1237,8 @@ mcr_chart = function(values = NULL, references = NULL,
   # Régression linéaire
   if (regression) chart = chart + ggplot2::geom_smooth(method = "lm", formula = y ~ x)
   
-  graphics::plot(chart)
+  if (plot) return(graphics::plot(chart))
+  return(chart)
 }
 
 

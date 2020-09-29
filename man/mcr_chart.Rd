@@ -58,6 +58,9 @@ is represented with 95\% confidence interval.}
 \item{log_transform}{If \code{TRUE}, the log version of the chart is plotted (i.e.
 \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}). If \code{FALSE},
 the standard version of the chart is plotted (i.e. \eqn{HI} versus \eqn{MCR}).}
+
+\item{plot}{If \code{FALSE}, the chart is not plotted. If \code{TRUE}, the chart is plotted in the active
+graphics device.}
 }
 \value{
 Chart created with the \code{ggplot2} package (invisible) or \code{NULL} if no points can be plotted
