@@ -17,7 +17,8 @@ table is to be build.}
 
 \item{hq}{Numeric named matrix. \strong{H}azard \strong{q}uotients for which the table is to be build.}
 
-\item{thq}{Numeric named vector. \strong{T}op \strong{h}azard \strong{q}uotients to use to the count.}
+\item{thq}{Numeric named vector or list of numeric named vectors. \strong{T}op \strong{h}azard \strong{q}uotients
+to use to the count. If list, only the first named value of each element of the list is considered.}
 
 \item{groups}{Character vector. MIAT groups associated with the hazard quotients \code{hq} or with the
 top hazard quotients \code{thq}.}

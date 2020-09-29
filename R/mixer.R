@@ -871,6 +871,8 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #'  `values`. See 'Details' to know the way it is associated with `values`.
 #' @param hq Numeric named matrix. **H**azard **q**uotients for which the table is to be build.
 #' @param thq Numeric named vector. **T**op **h**azard **q**uotients to use to the count.
+#' @param thq Numeric named vector or list of numeric named vectors. **T**op **h**azard **q**uotients
+#'  to use to the count. If list, only the first named value of each element of the list is considered.
 #' @param groups Character vector. MIAT groups associated with the hazard quotients `hq` or with the
 #'  top hazard quotients `thq`.
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
@@ -949,12 +951,13 @@ thq_freq_by_group = function(values = NULL, references = NULL,
       
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
     
-  } else { # Cas où values est une matrice
+  } else { # Cas où values est une matrice ou n'est pas renseigné
   
     # Vérification que les structures de données sont nommées
     if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
     if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
-    if (!is.null(thq) && !is.named(thq)) stop("thq must be a vector of named numeric values.")
+    if (!is.null(thq) && ((is.list(thq) && !is.named(thq)[2]) || !is.named(thq)))
+      stop("thq must be a vector of named numeric values or a list of such vectors.")
     
     # Calcul des données manquantes
     if (is.null(thq)) {
@@ -965,7 +968,7 @@ thq_freq_by_group = function(values = NULL, references = NULL,
   }
   
   # Soit thq est une list (hq ou values est une matrix) soit thq est une valeur (hq ou values est un vector)
-  thq_names = if(is.list(thq)) sapply(thq, names) else names(thq)
+  thq_names = if (is.list(thq)) sapply(unname(thq), function(v) names(v)[1]) else names(thq)
   if (!is.null(levels)) thq_names = factor(thq_names, levels = levels)
   freq_table = table(thq_names, factor(groups, levels = c("I", "II", "IIIA", "IIIB")))
   
@@ -1179,7 +1182,7 @@ mcr_chart = function(values = NULL, references = NULL,
       
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
     
-  } else { # Cas où values est une matrice
+  } else { # Cas où values est une matrice ou n'est pas renseigné
     
     # Vérification que les structures de données sont nommées
     if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
