@@ -1202,7 +1202,8 @@ mcr_chart = function(values = NULL, references = NULL,
       nb_inf = sum(data$y == -Inf)
       
       if (nb_inf == nrow(data)) {
-        warning("No points can be plotted because their MCR values are equal to 1.")
+        warning(paste("No points can be plotted because their MCR values are all equal to 1.",
+                      "Use log_transform = FALSE to see these points."))
         return(NULL)
       }
       warning(paste(nb_inf,
@@ -1216,6 +1217,7 @@ mcr_chart = function(values = NULL, references = NULL,
   }
   xlim = c(floor(min(data$x)), ceiling(max(data$x)))
   ylim = c(floor(min(data$y)), ceiling(max(data$y)))
+  if (ylim[1] == ylim[2]) ylim = ylim + c(-0.05, 0.05)
   
   # Initialisation du graphique (valeurs, thème et cadre)
   chart = ggplot2::ggplot(data = data, ggplot2::aes(x = x, y = y)) +
@@ -1389,7 +1391,7 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
   # Texte relatif aux groupes
   if (any(regions_lab)) {
     # Vérification des zones affichées (non-affichage du texte des zones qui ne sont pas affichées)
-    regions_lab = regions_lab & c(xlim[2] > ylim[1],
+    regions_lab = regions_lab & c(xlim[2] > 1 && xlim[2] > ylim[1],
                                   xlim[1] < 1,
                                   ylim[1] < 2 && xlim[1] < 2 && xlim[2] > 1,
                                   ylim[2] > 2 && xlim[1] < ylim[1] && xlim[2] > 1)
