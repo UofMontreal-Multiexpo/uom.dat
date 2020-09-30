@@ -20,4 +20,7 @@ A call to the garbage collector is made beforme timing.
 \seealso{
 \code{\link{dhms}}, \code{\link{system.time}}.
 }
+\author{
+Gauthier Magnin
+}
 \keyword{internal}

@@ -15,4 +15,7 @@ The character string corresponding to the argument \code{s}, starting with a cap
 \description{
 Change the first letter of a string to an uppercase.
 }
+\author{
+Gauthier Magnin
+}
 \keyword{internal}

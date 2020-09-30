@@ -23,4 +23,7 @@ the list are named.
 \description{
 Check if the elements of a data structure are named.
 }
+\author{
+Gauthier Magnin
+}
 \keyword{internal}

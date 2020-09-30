@@ -15,4 +15,7 @@ Character vector corresponding to the input list.
 \description{
 Each element of the list is turned into a character value so the list is turned into a character vector.
 }
+\author{
+Gauthier Magnin
+}
 \keyword{internal}

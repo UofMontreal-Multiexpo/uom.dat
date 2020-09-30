@@ -18,4 +18,7 @@ Character string \code{filename}, ending with the extension \code{ext}.
 Check if a filename has the desired extension.
 Add this extension if it has not.
 }
+\author{
+Gauthier Magnin
+}
 \keyword{internal}

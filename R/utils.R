@@ -43,6 +43,7 @@ dhms = function(t){
 #' 
 #' @param expr Valid \code{R} expression to be timed.
 #' 
+#' @author Gauthier Magnin
 #' @seealso \code{\link{dhms}}, \code{\link{system.time}}.
 #' @keywords internal
 display_time = function(expr) {
@@ -58,6 +59,7 @@ display_time = function(expr) {
 #' @param s Character string to be capitalized.
 #' @return The character string corresponding to the argument \code{s}, starting with a capital letter.
 #' 
+#' @author Gauthier Magnin
 #' @keywords internal
 cap = function(s) {
   return(paste0(toupper(substring(s, 1, 1)), substring(s, 2)))
@@ -71,6 +73,7 @@ cap = function(s) {
 #' @param x List to turn into a character vector.
 #' @return Character vector corresponding to the input list.
 #' 
+#' @author Gauthier Magnin
 #' @keywords internal
 turn_list_into_char = function(x) {
   
@@ -183,6 +186,7 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' @param path Character string to be used as a directory path.
 #' @return Character string \code{path}, ending with \code{"/"}.
 #' 
+#' @author Gauthier Magnin
 #' @keywords internal
 turn_into_path = function(path) {
   if (substring(path, nchar(path)) != "/") return(paste0(path, "/"))
@@ -199,6 +203,7 @@ turn_into_path = function(path) {
 #' @param ext Desired extension.
 #' @return Character string \code{filename}, ending with the extension \code{ext}.
 #' 
+#' @author Gauthier Magnin
 #' @keywords internal
 check_extension = function(filename, ext) {
   if (substr(ext, 1, 1) != ".") ext = paste0(".", ext)
@@ -224,6 +229,7 @@ check_extension = function(filename, ext) {
 #'   The first value determines if the list is named. The second one determines if the elements inside
 #'   the list are named.
 #' 
+#' @author Gauthier Magnin
 #' @md
 #' @keywords internal
 is.named = function(x) {

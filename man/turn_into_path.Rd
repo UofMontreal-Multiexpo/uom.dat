@@ -16,4 +16,7 @@ Character string \code{path}, ending with \code{"/"}.
 Check if a string can be used as a directory path.
 Add a \code{"/"} character if it cannot.
 }
+\author{
+Gauthier Magnin
+}
 \keyword{internal}
