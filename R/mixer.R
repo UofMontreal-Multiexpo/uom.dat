@@ -608,377 +608,229 @@ classify_mixture = function(values = NULL, references = NULL,
 
 #### Maximum Cumulative Ratio approach - summary functions ####
 
-
-#' Top Hazard Quotient pairs frequency
+#' Summary of indicators of the MCR approach
 #' 
-#' Build a contingency table of the counts of each combination of the top two hazard quotients pairs for
-#'  which the associated hazard index is greater than 1.
+#' Compute a set of indicators of the MCR approach, given values and references.
 #' 
 #' @details
+#' If `values` is a vector, the reference values are directly associated with these values.
+#' 
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
-#' 
+#'  
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
 #'  
-#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
-#'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
-#'  function with the arguments `hq` and `hi` is faster (if they are already computed). This is true if
-#'  `values` is not a list.
-#' 
 #' \loadmathjax
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
-#' 
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
-#' @note
-#' Due to the multiple possible usages, the arguments `hi`, `hq` and `levels` must be explicitly named in
-#'  the function call.
+#' The maximum hazard quotient of the vector \eqn{i} is given by:
+#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
+#'  where \eqn{N} denotes the number of hazard quotients.
 #' 
-#' @usage
-#' thq_pairs_freq(values, references, levels = NULL)
-#' thq_pairs_freq(hq, hi, levels = NULL)
-#' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
-#'  top two hazard quotients are to be identified.
-#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
-#'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @param hq Numeric named matrix. **H**azard **q**uotients for which the top two pairs are be to
-#'  identified.
-#' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
-#' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
-#'  pairs.
-#' @return
-#' `NULL` if `values` is a matrix and no hazard index is greater than 1 or if `values` is a list and no
-#'  vector has a hazard index greater than 1 or more than 1 value.
+#' The hazard index of the vector \eqn{i} is given by:
+#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
 #' 
-#' Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients while hazard
-#'  index is greater than 1.
+#' The maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
 #' 
-#' @author Gauthier Magnin
-#' @references Reyes JM, Price PS (2018).
-#'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
-#'             *Environment International*, 112, 77-84.
-#'             <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' @seealso [`thq_freq_by_group`], [`top_hazard_quotient`], [`hazard_quotient`], [`hazard_index`].
+#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
 #' 
-#' @examples
-#' thq_pairs_freq(values = matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                ncol = 2, dimnames = list(letters[1:5])),
-#'                references = c(1,2,3,4,5))
-#' thq_pairs_freq(hq = hazard_quotient(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                            ncol = 2, dimnames = list(letters[1:5])),
-#'                                     c(1,2,3,4,5)),
-#'                hi = hazard_index(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                         ncol = 2, dimnames = list(letters[1:5])),
-#'                                  c(1,2,3,4,5)))
-#' 
-#' ## With and without levels parameter
-#' thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                ncol = 3, dimnames = list(letters[1:4])),
-#'                references = c(1, 2, 3, .5),
-#'                levels = letters[1:4])
-#' thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                ncol = 3, dimnames = list(letters[1:4])),
-#'                references = c(1,2,3,0.5))
-#' 
-#' ## NULL because all HI are lower than or equal to 1
-#' thq_pairs_freq(values = matrix(c(.1, .2, .3, .4),
-#'                                ncol = 2, dimnames = list(c("a","b"))),
-#'                references = c(5,5))
-#' hazard_index(values = matrix(c(.1, .2, .3, .4),
-#'                              ncol = 2, dimnames = list(c("a","b"))),
-#'              references = c(5,5))
-#' 
-#' ## Building contingency table from a list
-#' thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
-#'                              c(a = 1),
-#'                              c(b = 0.5, c = 0.5)),
-#'                references = c(a = 0.3, b = 0.6, c = 1))
-#' thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
-#'                              c(a = 1),
-#'                              c(b = 0.5, c = 0.5)),
-#'                references = list(c(0.3, 0.6),
-#'                                  0.3,
-#'                                  c(0.6, 1)))
-#' 
-#' @md
-#' @export
-thq_pairs_freq = function(values = NULL, references = NULL,
-                          hq = NULL, hi = NULL,
-                          levels = NULL) {
-  
-  # Cas spécifiques dans lequel values est une liste et non une matrice
-  if (is.list(values)) {
-    
-    # Différence si references est une liste ou un vecteur
-    if (is.list(references)) {
-      
-      # Vérification que les structures de données sont nommées
-      if (any(sapply(values, length) != sapply(references, length)))
-        stop("If values and references are two lists, the lengths of their elements must match.")
-      if (!is.named(values)[2])
-        stop("If values is a list, it must contain vector of named numeric values.")
-      
-      # Calcul des indicateurs nécessaires
-      hq = sapply(seq_len(length(values)), function(i) hazard_quotient(values[[i]], references[[i]]))
-      hi = sapply(seq_len(length(values)), function(i) hazard_index(values[[i]], references[[i]]))
-      
-    } else if (is.vector(references)) {
-      
-      # Vérification que les structures de données sont nommées
-      if (!is.named(references) || !is.named(values)[2])
-        stop("If values is a list and references is a vector. Both must contained named values.")
-      
-      # Calcul des indicateurs nécessaires
-      hq = sapply(values, function(v) hazard_quotient(v, references[names(v)]))
-      hi = sapply(values, function(v) hazard_index(v, references[names(v)]))
-      
-    } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
-    
-    
-    # Si aucun HI n'est supérieur à 1
-    if (all(hi <= 1 | sapply(hq, length) == 1)) return(NULL)
-    
-    hq_to_use = hq[hi > 1 & sapply(hq, length) != 1]
-    
-    # Si un seul ensemble de valeurs satisfait le critère HI > 1
-    if (length(hq_to_use) == 1) {
-      thq = names(top_hazard_quotient(hq = hq_to_use[[1]], k = 2))
-      
-      if (!is.null(levels)) {
-        freq_table = table(factor(thq[1], levels = levels),
-                           factor(thq[2], levels = levels))
-        # Application de la symétrie
-        freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
-        return(freq_table)
-      }
-      return(table(thq[1], thq[2]))
-    }
-    
-    # Si plusieurs ensembles de valeurs satisfont le critère HI > 1
-    thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
-    
-    if (!is.null(levels)) {
-      freq_table = table(factor(thq[1, ], levels = levels),
-                         factor(thq[2, ], levels = levels))
-      # Application de la symétrie
-      freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
-      return(freq_table)
-    }
-    return(table(thq[1, ], thq[2, ]))
-    
-    
-  } else { # Cas où values est une matrice
-  
-    # Vérification que les structures de données sont nommées
-    if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
-    if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
-    
-    # Calcul des données manquantes
-    if (is.null(hq)) hq = hazard_quotient(values, references)
-    if (is.null(hi)) hi = hazard_index(hq = hq)
-    
-    # Si aucun HI n'est supérieur à 1
-    if (all(hi <= 1)) return(NULL)
-    
-    hq_to_use = hq[, hi > 1]
-    
-    # Si un seul ensemble de valeurs satisfait le critère HI > 1
-    if (is.vector(hq_to_use)) {
-      thq = names(top_hazard_quotient(hq = hq_to_use, k = 2))
-      
-      if (!is.null(levels)) {
-        freq_table = table(factor(thq[1], levels = levels),
-                           factor(thq[2], levels = levels))
-        # Application de la symétrie
-        freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
-        return(freq_table)
-      }
-      return(table(thq[1], thq[2]))
-    }
-    
-    # Si plusieurs ensembles de valeurs satisfont le critère HI > 1
-    thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
-    
-    if (!is.null(levels)) {
-      freq_table = table(factor(thq[1, ], levels = levels),
-                         factor(thq[2, ], levels = levels))
-      # Application de la symétrie
-      freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
-      return(freq_table)
-    }
-    return(table(thq[1, ], thq[2, ]))
-  }
-}
-
-
-#' Top Hazard Quotients frequency by group
-#' 
-#' Build a contingency table of the counts of each combination of name of the element producing the
-#'  top hazard quotient with the associated MIAT group.
-#' 
-#' @details
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
-#' 
-#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
-#'  if `references` is a vector, there must be one reference for each name present in `values`.
-#'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
-#'  so that `values` and `references` can be matched.
-#' 
-#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
-#'  before searching for the maximum hazard quotients, computing the maximum cumulative ratios, performing
-#'  the classification then build the table. Thus, call the function with the arguments `hq` and `groups`
-#'  is faster and call it with the arguments `thq` and `groups` is even faster (if they are already
-#'  computed). This is true only if `values` is not a list.
-#' 
-#' \loadmathjax
+#' The missed toxicity of the vector \eqn{i} is given by:
+#'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
+#'  
 #' The mixtures are assigned to the groups according the following conditions:
 #' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
 #' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
 #' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
+#' @param values Numeric named vector or matrix, or list of numeric named vectors.
+#'  Values whose indicators of the MCR approach are to be computed.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`. See 'Details' to know the way it is associated with `values`.
+#' @return Data frame of the main indicators computed on the given `values`:.
+#' * **HI**: Hazard Index.
+#' * **MCR**: Maximum Cumulative Ratio.
+#' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
+#' * **Group**: MIAT group.
+#' * **THQ**: Top Hazard Quotient.
+#' * **MHQ**: Maximum Hazard Quotient.
+#' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
 #' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+#' @author Gauthier Magnin
+#' @references 
+#' Price PS, Han X (2011).
+#' Maximum cumulative ratio (MCR) as a tool for assessing the value of performing a cumulative risk assessment.
+#' *International Journal of Environmental Research and Public Health*. 8(6): 2212-2225.
+#' <https://doi.org/10.3390/ijerph8062212>.
+#'             
+#' Reyes JM, Price PS (2018).
+#' An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
+#' *Environment International*, 112, 77-84.
+#' <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' 
+#' De Brouwere K, et al. (2014).
+#' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
+#' *The Science of the Total Environment*, 479-480, 267-276.
+#' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
+#' @seealso [`mcr_chart`], [`hazard_index`], [`maximum_cumulative_ratio`], [`reciprocal_of_mcr`],
+#'          [`classify_mixture`], [`top_hazard_quotient`], [`maximum_hazard_quotient`], [`missed_toxicity`].
+#' 
+#' @examples
+#' ## MCR summary on vector and matrix
+#' mcr_summary(c(a = 1, b = 2, c = 3, d = 4, e = 5, c(1,2,3,4,5))
+#' mcr_summary(values = matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
+#'                             ncol = 10, dimnames = list(letters[1:5])),
+#'             references = sample(seq(1,5), 5, replace = TRUE))
+#' 
+#' ## MCR summary on list
+#' mcr_summary(values = list(c(a = 0.1, b = 0.5),
+#'                           c(a = 0.2),
+#'                           c(b = 0.3, c = 0.4)),
+#'             references = c(a = 1, b = 2, c = 3))
+#' mcr_summary(values = list(c(a = 0.1, b = 0.5),
+#'                           c(a = 0.2),
+#'                           c(b = 0.3, c = 0.4)),
+#'             references = list(c(1, 2),
+#'                               1,
+#'                               c(2, 3)))
+#' 
+#' @md
+#' @export
+mcr_summary = function(values, references) {
+  
+  # Cas spécifiques dans lequel values est une liste
+  if (is.list(values)) return(mcr_summary_for_list(values, references))
+  
+  
+  # Vérification que la structure de données est nommée
+  if (is.matrix(values) && !is.named(values)[1]) stop("If values is a matrix, its rows must be named.")
+  else if (is.vector(values) && !is.named(values)) stop("If values is a vector, it must have named numeric values.")
+  
+  # Calcul des indicateurs
+  hq = hazard_quotient(values, references)
+  hi = hazard_index(hq = hq)
+  mhq = maximum_hazard_quotient(hq = hq)
+  mcr = maximum_cumulative_ratio(hi = hi, mhq = mhq)
+  mt = missed_toxicity(mcr = mcr)
+  
+  rmcr = reciprocal_of_mcr(mcr = mcr)
+  groups = classify_mixture(hi = hi, mhq = mhq, mcr = mcr)
+  
+  # Différence vector/matrix
+  if (is.vector(values)) {
+    return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+                      THQ = names(top_hazard_quotient(hq = hq, k = 1)),
+                      MHQ = mhq, Missed = mt,
+                      row.names = NULL))
+  }
+  return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+                    THQ = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1)))),
+                    MHQ = mhq, Missed = mt))
+}
+
+
+#' Summary of indicators of the MCR approach, on list
+#' 
+#' Compute a set of indicators of the MCR approach, given values and references.
+#' 
+#' @details
+#' If `references` is a vector, there must be one reference for each name present in `values`.
+#'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
+#'  so that `values` and `references` can be matched.
 #'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
-#' 
+#' \loadmathjax
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
-#' @note
-#' Due to the multiple possible usages, the arguments `hq`, `thq`, `groups` and `levels` must be
-#'  explicitly named in the function call.
+#' The maximum hazard quotient of the vector \eqn{i} is given by:
+#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
+#'  where \eqn{N} denotes the number of hazard quotients.
 #' 
-#' @usage
-#' thq_freq_by_group(values, references, levels = NULL)
-#' thq_freq_by_group(hq, groups, levels = NULL)
-#' thq_freq_by_group(thq, groups, levels = NULL)
-#' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
-#'  table is to be build.
-#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
-#'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @param hq Numeric named matrix. **H**azard **q**uotients for which the table is to be build.
-#' @param thq Numeric named vector. **T**op **h**azard **q**uotients to use to the count.
-#' @param thq Numeric named vector or list of numeric named vectors. **T**op **h**azard **q**uotients
-#'  to use to the count. If list, only the first named value of each element of the list is considered.
-#' @param groups Character vector. MIAT groups associated with the hazard quotients `hq` or with the
-#'  top hazard quotients `thq`.
-#' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
-#'  top hazard quotients.
-#' @return Contingency table. Frequency of element that produced the top hazard quotient with its
-#'  associated group.
+#' The hazard index of the vector \eqn{i} is given by:
+#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
+#' 
+#' The maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+#' 
+#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+#' 
+#' The missed toxicity of the vector \eqn{i} is given by:
+#'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
+#'  
+#' The mixtures are assigned to the groups according the following conditions:
+#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
+#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
+#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
+#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
+#' 
+#' @param values List of numeric named vectors. Values whose indicators of the MCR approach are to be
+#'  computed.
+#' @param references Numeric named vector or list of numeric vectors. Reference values associated with
+#'  the `values`. See 'Details' to know the way it is associated with `values`.
+#' @return Data frame of the main indicators computed on the given `values`:.
+#' * **HI**: Hazard Index.
+#' * **MCR**: Maximum Cumulative Ratio.
+#' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
+#' * **Group**: MIAT group.
+#' * **THQ**: Top Hazard Quotient.
+#' * **MHQ**: Maximum Hazard Quotient.
+#' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
 #' 
 #' @author Gauthier Magnin
-#' @references Reyes JM, Price PS (2018).
-#'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
-#'             *Environment International*, 112, 77-84.
-#'             <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' @seealso [`thq_pairs_freq`], [`classify_mixture`], [`top_hazard_quotient`], [`hazard_quotient`].
+#' @references 
+#' Price PS, Han X (2011).
+#' Maximum cumulative ratio (MCR) as a tool for assessing the value of performing a cumulative risk assessment.
+#' *International Journal of Environmental Research and Public Health*. 8(6): 2212-2225.
+#' <https://doi.org/10.3390/ijerph8062212>.
+#'             
+#' Reyes JM, Price PS (2018).
+#' An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
+#' *Environment International*, 112, 77-84.
+#' <https://doi.org/10.1016/j.envint.2017.12.008>.
 #' 
-#' @examples
-#' ## Creating a matrix of 4*3 values and one reference value for each of the 4
-#' ## elements ("a", "b", "c", and "d").
-#' v <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'             ncol = 3, dimnames = list(letters[1:4]))
-#' r <- c(1, 2, 3, 0.5)
-#' 
-#' ## Without levels parameter and with the different usages
-#' thq_freq_by_group(v, r)
-#' thq_freq_by_group(hq = hazard_quotient(v, r),
-#'                   groups = classify_mixture(v, r))
-#' thq_freq_by_group(thq = top_hazard_quotient(v, r),
-#'                   groups = classify_mixture(v, r))
-#' 
-#' ## With levels parameter
-#' thq_freq_by_group(values = v, references = r, levels = letters[1:4])
-#' 
-#' ## Building contingency table from a list
-#' thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
-#'                                 c(a = 0.2),
-#'                                 c(b = 0.3, c = 0.4)),
-#'                   references = c(a = 1, b = 2, c = 3))
-#' thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
-#'                                 c(a = 0.2),
-#'                                 c(b = 0.3, c = 0.4)),
-#'                   references = list(c(1, 2),
-#'                                     1,
-#'                                     c(2, 3)))
+#' De Brouwere K, et al. (2014).
+#' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
+#' *The Science of the Total Environment*, 479-480, 267-276.
+#' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
+#' @seealso [`mcr_summary`].
 #' 
 #' @md
-#' @export
-thq_freq_by_group = function(values = NULL, references = NULL,
-                             hq = NULL,
-                             thq = NULL,
-                             groups = NULL, levels = NULL) {
+#' @keywords internal
+mcr_summary_for_list = function(values, references) {
   
-  # Cas spécifiques dans lequel values est une liste et non une matrice
-  if (is.list(values)) {
+  # Différence si references est une liste ou un vecteur
+  if (is.list(references)) {
+    if (any(sapply(values, length) != sapply(references, length)))
+      stop("If values and references are two lists, the lengths of their elements must match.")
+    if (!is.named(values)[2])
+      stop("If values is a list, it must contain vector of named numeric values.")
     
-    # Différence si references est une liste ou un vecteur
-    if (is.list(references)) {
-      
-      # Vérification que les structures de données sont nommées
-      if (any(sapply(values, length) != sapply(references, length)))
-        stop("If values and references are two lists, the lengths of their elements must match.")
-      if (!is.named(values)[2])
-        stop("If values is a list, it must contain vector of named numeric values.")
-      
-      # Calcul des indicateurs nécessaires
-      thq = sapply(seq_len(length(values)), function(i) top_hazard_quotient(values[[i]], references[[i]], k = 1))
-      groups = sapply(seq_len(length(values)), function(i) classify_mixture(values[[i]], references[[i]]))
-      
-    } else if (is.vector(references)) {
-      
-      # Vérification que les structures de données sont nommées
-      if (!is.named(references) || !is.named(values)[2])
-        stop("If values is a list and references is a vector. Both must contained named values.")
-      
-      # Calcul des indicateurs nécessaires
-      thq = sapply(values, function(v) top_hazard_quotient(v, references[names(v)], k = 1))
-      groups = sapply(values, function(v) classify_mixture(v, references[names(v)]))
-      
-    } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
+    summary = t(sapply(seq_len(length(values)), function (i) mcr_summary(values[[i]], references[[i]])))
     
-  } else { # Cas où values est une matrice ou n'est pas renseigné
-  
-    # Vérification que les structures de données sont nommées
-    if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
-    if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
-    if (!is.null(thq) && ((is.list(thq) && !is.named(thq)[2]) || !is.named(thq)))
-      stop("thq must be a vector of named numeric values or a list of such vectors.")
+  } else if (is.vector(references)) {
+    if (!is.named(references) || !is.named(values)[2])
+      stop("If values is a list and references is a vector, both must contained named values.")
     
-    # Calcul des données manquantes
-    if (is.null(thq)) {
-      if (is.null(hq)) hq = hazard_quotient(values, references)
-      thq = top_hazard_quotient(hq = hq,  k = 1)
-    }
-    if (is.null(groups)) groups = classify_mixture(values, references)
-  }
+    summary = t(sapply(seq_len(length(values)),
+                       function (i) mcr_summary(values[[i]], references[names(values[[i]])])))
+    
+  } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
   
-  # Soit thq est une list (hq ou values est une matrix) soit thq est une valeur (hq ou values est un vector)
-  thq_names = if (is.list(thq)) sapply(unname(thq), function(v) names(v)[1]) else names(thq)
-  if (!is.null(levels)) thq_names = factor(thq_names, levels = levels)
-  freq_table = table(thq_names, factor(groups, levels = c("I", "II", "IIIA", "IIIB")))
+  # Unlist en deux temps sinon les facteurs sont transformés en numeric
+  to_return = as.data.frame(apply(summary[, c(1,2,3,6,7)], 2, unlist))
+  to_return[, "Group"] = unlist(summary[, "Group"])
+  to_return[, "THQ"] = unlist(summary[, "THQ"])
   
-  # Retrait du nom de dimension "thq_names" et retour
-  dimnames(freq_table) = unname(dimnames(freq_table))
-  return(freq_table)
+  return(to_return[, c("HI", "MCR", "Reciprocal", "Group", "THQ", "MHQ", "Missed")])
 }
 
 
@@ -1475,229 +1327,376 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 }
 
 
-#' Summary of indicators of the MCR approach
+#' Top Hazard Quotient pairs frequency
 #' 
-#' Compute a set of indicators of the MCR approach, given values and references.
+#' Build a contingency table of the counts of each combination of the top two hazard quotients pairs for
+#'  which the associated hazard index is greater than 1.
 #' 
 #' @details
-#' If `values` is a vector, the reference values are directly associated with these values.
-#' 
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
 #'  reference value for each row of the matrix).
-#'  
+#' 
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
 #'  
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
+#'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
+#'  function with the arguments `hq` and `hi` is faster (if they are already computed). This is true if
+#'  `values` is not a list.
+#' 
 #' \loadmathjax
+#' The hazard index of the vector \eqn{i} is given by:
+#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+#' 
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{N} denotes the number of hazard quotients.
+#' @note
+#' Due to the multiple possible usages, the arguments `hi`, `hq` and `levels` must be explicitly named in
+#'  the function call.
 #' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
-#' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#' 
-#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
-#' 
-#' The missed toxicity of the vector \eqn{i} is given by:
-#'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
-#'  
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
-#' 
-#' @param values Numeric named vector or matrix, or list of numeric named vectors.
-#'  Values whose indicators of the MCR approach are to be computed.
+#' @usage
+#' thq_pairs_freq(values, references, levels = NULL)
+#' thq_pairs_freq(hq, hi, levels = NULL)
+#' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
+#'  top two hazard quotients are to be identified.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @return Data frame of the main indicators computed on the given `values`:.
-#' * **HI**: Hazard Index.
-#' * **MCR**: Maximum Cumulative Ratio.
-#' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
-#' * **Group**: MIAT group.
-#' * **THQ**: Top Hazard Quotient.
-#' * **MHQ**: Maximum Hazard Quotient.
-#' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
+#' @param hq Numeric named matrix. **H**azard **q**uotients for which the top two pairs are be to
+#'  identified.
+#' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
+#' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
+#'  pairs.
+#' @return
+#' `NULL` if `values` is a matrix and no hazard index is greater than 1 or if `values` is a list and no
+#'  vector has a hazard index greater than 1 or more than 1 value.
+#' 
+#' Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients while hazard
+#'  index is greater than 1.
 #' 
 #' @author Gauthier Magnin
-#' @references 
-#' Price PS, Han X (2011).
-#' Maximum cumulative ratio (MCR) as a tool for assessing the value of performing a cumulative risk assessment.
-#' *International Journal of Environmental Research and Public Health*. 8(6): 2212-2225.
-#' <https://doi.org/10.3390/ijerph8062212>.
-#'             
-#' Reyes JM, Price PS (2018).
-#' An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
-#' *Environment International*, 112, 77-84.
-#' <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' 
-#' De Brouwere K, et al. (2014).
-#' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
-#' *The Science of the Total Environment*, 479-480, 267-276.
-#' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
-#' @seealso [`mcr_chart`], [`hazard_index`], [`maximum_cumulative_ratio`], [`reciprocal_of_mcr`],
-#'          [`classify_mixture`], [`top_hazard_quotient`], [`maximum_hazard_quotient`], [`missed_toxicity`].
+#' @references Reyes JM, Price PS (2018).
+#'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
+#'             *Environment International*, 112, 77-84.
+#'             <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' @seealso [`thq_freq_by_group`], [`top_hazard_quotient`], [`hazard_quotient`], [`hazard_index`].
 #' 
 #' @examples
-#' ## MCR summary on vector and matrix
-#' mcr_summary(c(a = 1, b = 2, c = 3, d = 4, e = 5, c(1,2,3,4,5))
-#' mcr_summary(values = matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
-#'                             ncol = 10, dimnames = list(letters[1:5])),
-#'             references = sample(seq(1,5), 5, replace = TRUE))
+#' thq_pairs_freq(values = matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                                ncol = 2, dimnames = list(letters[1:5])),
+#'                references = c(1,2,3,4,5))
+#' thq_pairs_freq(hq = hazard_quotient(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                                            ncol = 2, dimnames = list(letters[1:5])),
+#'                                     c(1,2,3,4,5)),
+#'                hi = hazard_index(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                                         ncol = 2, dimnames = list(letters[1:5])),
+#'                                  c(1,2,3,4,5)))
 #' 
-#' ## MCR summary on list
-#' mcr_summary(values = list(c(a = 0.1, b = 0.5),
-#'                           c(a = 0.2),
-#'                           c(b = 0.3, c = 0.4)),
-#'             references = c(a = 1, b = 2, c = 3))
-#' mcr_summary(values = list(c(a = 0.1, b = 0.5),
-#'                           c(a = 0.2),
-#'                           c(b = 0.3, c = 0.4)),
-#'             references = list(c(1, 2),
-#'                               1,
-#'                               c(2, 3)))
+#' ## With and without levels parameter
+#' thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+#'                                ncol = 3, dimnames = list(letters[1:4])),
+#'                references = c(1, 2, 3, .5),
+#'                levels = letters[1:4])
+#' thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+#'                                ncol = 3, dimnames = list(letters[1:4])),
+#'                references = c(1,2,3,0.5))
+#' 
+#' ## NULL because all HI are lower than or equal to 1
+#' thq_pairs_freq(values = matrix(c(.1, .2, .3, .4),
+#'                                ncol = 2, dimnames = list(c("a","b"))),
+#'                references = c(5,5))
+#' hazard_index(values = matrix(c(.1, .2, .3, .4),
+#'                              ncol = 2, dimnames = list(c("a","b"))),
+#'              references = c(5,5))
+#' 
+#' ## Building contingency table from a list
+#' thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
+#'                              c(a = 1),
+#'                              c(b = 0.5, c = 0.5)),
+#'                references = c(a = 0.3, b = 0.6, c = 1))
+#' thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
+#'                              c(a = 1),
+#'                              c(b = 0.5, c = 0.5)),
+#'                references = list(c(0.3, 0.6),
+#'                                  0.3,
+#'                                  c(0.6, 1)))
 #' 
 #' @md
 #' @export
-mcr_summary = function(values, references) {
+thq_pairs_freq = function(values = NULL, references = NULL,
+                          hq = NULL, hi = NULL,
+                          levels = NULL) {
   
-  # Cas spécifiques dans lequel values est une liste
-  if (is.list(values)) return(mcr_summary_for_list(values, references))
+  # Cas spécifiques dans lequel values est une liste et non une matrice
+  if (is.list(values)) {
+    
+    # Différence si references est une liste ou un vecteur
+    if (is.list(references)) {
+      
+      # Vérification que les structures de données sont nommées
+      if (any(sapply(values, length) != sapply(references, length)))
+        stop("If values and references are two lists, the lengths of their elements must match.")
+      if (!is.named(values)[2])
+        stop("If values is a list, it must contain vector of named numeric values.")
+      
+      # Calcul des indicateurs nécessaires
+      hq = sapply(seq_len(length(values)), function(i) hazard_quotient(values[[i]], references[[i]]))
+      hi = sapply(seq_len(length(values)), function(i) hazard_index(values[[i]], references[[i]]))
+      
+    } else if (is.vector(references)) {
+      
+      # Vérification que les structures de données sont nommées
+      if (!is.named(references) || !is.named(values)[2])
+        stop("If values is a list and references is a vector. Both must contained named values.")
+      
+      # Calcul des indicateurs nécessaires
+      hq = sapply(values, function(v) hazard_quotient(v, references[names(v)]))
+      hi = sapply(values, function(v) hazard_index(v, references[names(v)]))
+      
+    } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
+    
+    
+    # Si aucun HI n'est supérieur à 1
+    if (all(hi <= 1 | sapply(hq, length) == 1)) return(NULL)
+    
+    hq_to_use = hq[hi > 1 & sapply(hq, length) != 1]
+    
+    # Si un seul ensemble de valeurs satisfait le critère HI > 1
+    if (length(hq_to_use) == 1) {
+      thq = names(top_hazard_quotient(hq = hq_to_use[[1]], k = 2))
+      
+      if (!is.null(levels)) {
+        freq_table = table(factor(thq[1], levels = levels),
+                           factor(thq[2], levels = levels))
+        # Application de la symétrie
+        freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
+        return(freq_table)
+      }
+      return(table(thq[1], thq[2]))
+    }
+    
+    # Si plusieurs ensembles de valeurs satisfont le critère HI > 1
+    thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
+    
+    if (!is.null(levels)) {
+      freq_table = table(factor(thq[1, ], levels = levels),
+                         factor(thq[2, ], levels = levels))
+      # Application de la symétrie
+      freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
+      return(freq_table)
+    }
+    return(table(thq[1, ], thq[2, ]))
+    
+    
+  } else { # Cas où values est une matrice
   
-  
-  # Vérification que la structure de données est nommée
-  if (is.matrix(values) && !is.named(values)[1]) stop("If values is a matrix, its rows must be named.")
-  else if (is.vector(values) && !is.named(values)) stop("If values is a vector, it must have named numeric values.")
-  
-  # Calcul des indicateurs
-  hq = hazard_quotient(values, references)
-  hi = hazard_index(hq = hq)
-  mhq = maximum_hazard_quotient(hq = hq)
-  mcr = maximum_cumulative_ratio(hi = hi, mhq = mhq)
-  mt = missed_toxicity(mcr = mcr)
-  
-  rmcr = reciprocal_of_mcr(mcr = mcr)
-  groups = classify_mixture(hi = hi, mhq = mhq, mcr = mcr)
-  
-  # Différence vector/matrix
-  if (is.vector(values)) {
-    return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
-                      THQ = names(top_hazard_quotient(hq = hq, k = 1)),
-                      MHQ = mhq, Missed = mt,
-                      row.names = NULL))
+    # Vérification que les structures de données sont nommées
+    if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
+    if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
+    
+    # Calcul des données manquantes
+    if (is.null(hq)) hq = hazard_quotient(values, references)
+    if (is.null(hi)) hi = hazard_index(hq = hq)
+    
+    # Si aucun HI n'est supérieur à 1
+    if (all(hi <= 1)) return(NULL)
+    
+    hq_to_use = hq[, hi > 1]
+    
+    # Si un seul ensemble de valeurs satisfait le critère HI > 1
+    if (is.vector(hq_to_use)) {
+      thq = names(top_hazard_quotient(hq = hq_to_use, k = 2))
+      
+      if (!is.null(levels)) {
+        freq_table = table(factor(thq[1], levels = levels),
+                           factor(thq[2], levels = levels))
+        # Application de la symétrie
+        freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
+        return(freq_table)
+      }
+      return(table(thq[1], thq[2]))
+    }
+    
+    # Si plusieurs ensembles de valeurs satisfont le critère HI > 1
+    thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
+    
+    if (!is.null(levels)) {
+      freq_table = table(factor(thq[1, ], levels = levels),
+                         factor(thq[2, ], levels = levels))
+      # Application de la symétrie
+      freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
+      return(freq_table)
+    }
+    return(table(thq[1, ], thq[2, ]))
   }
-  return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
-                    THQ = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1)))),
-                    MHQ = mhq, Missed = mt))
 }
 
 
-#' Summary of indicators of the MCR approach, on list
+#' Top Hazard Quotients frequency by group
 #' 
-#' Compute a set of indicators of the MCR approach, given values and references.
+#' Build a contingency table of the counts of each combination of name of the element producing the
+#'  top hazard quotient with the associated MIAT group.
 #' 
 #' @details
-#' If `references` is a vector, there must be one reference for each name present in `values`.
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
+#' 
+#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
+#'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
-#'  
+#' 
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
+#'  before searching for the maximum hazard quotients, computing the maximum cumulative ratios, performing
+#'  the classification then build the table. Thus, call the function with the arguments `hq` and `groups`
+#'  is faster and call it with the arguments `thq` and `groups` is even faster (if they are already
+#'  computed). This is true only if `values` is not a list.
+#' 
 #' \loadmathjax
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
-#' 
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{N} denotes the number of hazard quotients.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
-#' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#' 
-#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
-#' 
-#' The missed toxicity of the vector \eqn{i} is given by:
-#'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
-#'  
 #' The mixtures are assigned to the groups according the following conditions:
 #' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
 #' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
 #' 
-#' @param values List of numeric named vectors. Values whose indicators of the MCR approach are to be
-#'  computed.
-#' @param references Numeric named vector or list of numeric vectors. Reference values associated with
-#'  the `values`. See 'Details' to know the way it is associated with `values`.
-#' @return Data frame of the main indicators computed on the given `values`:.
-#' * **HI**: Hazard Index.
-#' * **MCR**: Maximum Cumulative Ratio.
-#' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
-#' * **Group**: MIAT group.
-#' * **THQ**: Top Hazard Quotient.
-#' * **MHQ**: Maximum Hazard Quotient.
-#' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
+#' The maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
+#' 
+#' The hazard index of the vector \eqn{i} is given by:
+#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+#'  
+#' The maximum hazard quotient of the vector \eqn{i} is given by:
+#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+#' 
+#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
+#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
+#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' @note
+#' Due to the multiple possible usages, the arguments `hq`, `thq`, `groups` and `levels` must be
+#'  explicitly named in the function call.
+#' 
+#' @usage
+#' thq_freq_by_group(values, references, levels = NULL)
+#' thq_freq_by_group(hq, groups, levels = NULL)
+#' thq_freq_by_group(thq, groups, levels = NULL)
+#' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
+#'  table is to be build.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`. See 'Details' to know the way it is associated with `values`.
+#' @param hq Numeric named matrix. **H**azard **q**uotients for which the table is to be build.
+#' @param thq Numeric named vector. **T**op **h**azard **q**uotients to use to the count.
+#' @param thq Numeric named vector or list of numeric named vectors. **T**op **h**azard **q**uotients
+#'  to use to the count. If list, only the first named value of each element of the list is considered.
+#' @param groups Character vector. MIAT groups associated with the hazard quotients `hq` or with the
+#'  top hazard quotients `thq`.
+#' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
+#'  top hazard quotients.
+#' @return Contingency table. Frequency of element that produced the top hazard quotient with its
+#'  associated group.
 #' 
 #' @author Gauthier Magnin
-#' @references 
-#' Price PS, Han X (2011).
-#' Maximum cumulative ratio (MCR) as a tool for assessing the value of performing a cumulative risk assessment.
-#' *International Journal of Environmental Research and Public Health*. 8(6): 2212-2225.
-#' <https://doi.org/10.3390/ijerph8062212>.
-#'             
-#' Reyes JM, Price PS (2018).
-#' An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
-#' *Environment International*, 112, 77-84.
-#' <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' @references Reyes JM, Price PS (2018).
+#'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
+#'             *Environment International*, 112, 77-84.
+#'             <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' @seealso [`thq_pairs_freq`], [`classify_mixture`], [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
-#' De Brouwere K, et al. (2014).
-#' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
-#' *The Science of the Total Environment*, 479-480, 267-276.
-#' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
-#' @seealso [`mcr_summary`].
+#' @examples
+#' ## Creating a matrix of 4*3 values and one reference value for each of the 4
+#' ## elements ("a", "b", "c", and "d").
+#' v <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+#'             ncol = 3, dimnames = list(letters[1:4]))
+#' r <- c(1, 2, 3, 0.5)
+#' 
+#' ## Without levels parameter and with the different usages
+#' thq_freq_by_group(v, r)
+#' thq_freq_by_group(hq = hazard_quotient(v, r),
+#'                   groups = classify_mixture(v, r))
+#' thq_freq_by_group(thq = top_hazard_quotient(v, r),
+#'                   groups = classify_mixture(v, r))
+#' 
+#' ## With levels parameter
+#' thq_freq_by_group(values = v, references = r, levels = letters[1:4])
+#' 
+#' ## Building contingency table from a list
+#' thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
+#'                                 c(a = 0.2),
+#'                                 c(b = 0.3, c = 0.4)),
+#'                   references = c(a = 1, b = 2, c = 3))
+#' thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
+#'                                 c(a = 0.2),
+#'                                 c(b = 0.3, c = 0.4)),
+#'                   references = list(c(1, 2),
+#'                                     1,
+#'                                     c(2, 3)))
 #' 
 #' @md
-#' @keywords internal
-mcr_summary_for_list = function(values, references) {
+#' @export
+thq_freq_by_group = function(values = NULL, references = NULL,
+                             hq = NULL,
+                             thq = NULL,
+                             groups = NULL, levels = NULL) {
   
-  # Différence si references est une liste ou un vecteur
-  if (is.list(references)) {
-    if (any(sapply(values, length) != sapply(references, length)))
-      stop("If values and references are two lists, the lengths of their elements must match.")
-    if (!is.named(values)[2])
-      stop("If values is a list, it must contain vector of named numeric values.")
+  # Cas spécifiques dans lequel values est une liste et non une matrice
+  if (is.list(values)) {
     
-    summary = t(sapply(seq_len(length(values)), function (i) mcr_summary(values[[i]], references[[i]])))
+    # Différence si references est une liste ou un vecteur
+    if (is.list(references)) {
+      
+      # Vérification que les structures de données sont nommées
+      if (any(sapply(values, length) != sapply(references, length)))
+        stop("If values and references are two lists, the lengths of their elements must match.")
+      if (!is.named(values)[2])
+        stop("If values is a list, it must contain vector of named numeric values.")
+      
+      # Calcul des indicateurs nécessaires
+      thq = sapply(seq_len(length(values)), function(i) top_hazard_quotient(values[[i]], references[[i]], k = 1))
+      groups = sapply(seq_len(length(values)), function(i) classify_mixture(values[[i]], references[[i]]))
+      
+    } else if (is.vector(references)) {
+      
+      # Vérification que les structures de données sont nommées
+      if (!is.named(references) || !is.named(values)[2])
+        stop("If values is a list and references is a vector. Both must contained named values.")
+      
+      # Calcul des indicateurs nécessaires
+      thq = sapply(values, function(v) top_hazard_quotient(v, references[names(v)], k = 1))
+      groups = sapply(values, function(v) classify_mixture(v, references[names(v)]))
+      
+    } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
     
-  } else if (is.vector(references)) {
-    if (!is.named(references) || !is.named(values)[2])
-      stop("If values is a list and references is a vector, both must contained named values.")
-    
-    summary = t(sapply(seq_len(length(values)),
-                       function (i) mcr_summary(values[[i]], references[names(values[[i]])])))
-    
-  } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
+  } else { # Cas où values est une matrice ou n'est pas renseigné
   
-  # Unlist en deux temps sinon les facteurs sont transformés en numeric
-  to_return = as.data.frame(apply(summary[, c(1,2,3,6,7)], 2, unlist))
-  to_return[, "Group"] = unlist(summary[, "Group"])
-  to_return[, "THQ"] = unlist(summary[, "THQ"])
+    # Vérification que les structures de données sont nommées
+    if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
+    if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
+    if (!is.null(thq) && ((is.list(thq) && !is.named(thq)[2]) || !is.named(thq)))
+      stop("thq must be a vector of named numeric values or a list of such vectors.")
+    
+    # Calcul des données manquantes
+    if (is.null(thq)) {
+      if (is.null(hq)) hq = hazard_quotient(values, references)
+      thq = top_hazard_quotient(hq = hq,  k = 1)
+    }
+    if (is.null(groups)) groups = classify_mixture(values, references)
+  }
   
-  return(to_return[, c("HI", "MCR", "Reciprocal", "Group", "THQ", "MHQ", "Missed")])
+  # Soit thq est une list (hq ou values est une matrix) soit thq est une valeur (hq ou values est un vector)
+  thq_names = if (is.list(thq)) sapply(unname(thq), function(v) names(v)[1]) else names(thq)
+  if (!is.null(levels)) thq_names = factor(thq_names, levels = levels)
+  freq_table = table(thq_names, factor(groups, levels = c("I", "II", "IIIA", "IIIB")))
+  
+  # Retrait du nom de dimension "thq_names" et retour
+  dimnames(freq_table) = unname(dimnames(freq_table))
+  return(freq_table)
 }
 
 
