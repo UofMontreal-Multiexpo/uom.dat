@@ -4051,7 +4051,7 @@ setMethod(f = "get_complexes",
 #' Validation of parameters for search by category
 #' 
 #' Check that the parameters provided match an existing category.
-#' Print an error message if not.
+#' Stop the execution and print an error message if not.
 #' 
 #' @details
 #' If \code{value = NA}, only the parameter \code{category} is checked.

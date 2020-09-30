@@ -23,7 +23,7 @@ allow access to a category. If \code{FALSE}, see 'Value' section.}
 }
 \description{
 Check that the parameters provided match an existing category.
-Print an error message if not.
+Stop the execution and print an error message if not.
 }
 \details{
 If \code{value = NA}, only the parameter \code{category} is checked.
