@@ -138,7 +138,7 @@ set_notation = function(sets, type = "character") {
 
 
 
-#### Utility functions for plotting graphs ####
+#### Utility functions for plotting ####
 
 #' Text shading
 #' 
@@ -233,6 +233,246 @@ is.named = function(x) {
   if (is.vector(x)) return(!is.null(names(x)))
   
   stop("Unknown data structure.")
+}
+
+
+
+#### Utility functions for lists ####
+
+#' Set operations on list
+#' 
+#' Perform an intersection or union operation on the elements of a list.
+#' 
+#' @param list List on which to perform the operation.
+#' @param indices Indices or names of the elements on which to perform the operation.
+#' @return Vector of values corresponding to the intersection or the union of all specified elements
+#'  of the list.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`table_on_list`].
+#' 
+#' @examples
+#' l <- list("e1" = c("A", "B", "C"),
+#'           "e2" = "B",
+#'           "e3" = c("B", "C", "D"))
+#' 
+#' intersect_on_list(l)
+#' intersect_on_list(l, indices = c(1, 3))
+#' 
+#' union_on_list(l)
+#' union_on_list(l, indices = c("e1", "e2"))
+#' 
+#' @md
+#' @name set_operations_on_list
+NULL
+
+#' @rdname set_operations_on_list
+#' @aliases intersect_on_list
+#' @export
+intersect_on_list = function(list, indices = seq_along(list)) {
+  set = list[[indices[1]]]
+  for (i in indices[seq(2, length(indices))]) set = intersect(list[[i]], set)
+  return(sort(set))
+}
+
+#' @rdname set_operations_on_list
+#' @aliases union_on_list
+#' @export
+union_on_list = function(list, indices = seq_along(list)) {
+  return(sort(unique(unlist(list[indices]))))
+}
+
+
+#' Frequency table on list
+#' 
+#' Build a frequency table of the counts of each value in a list.
+#' 
+#' @param list List for which to build the frequency table.
+#' @param indices Indices or names of the elements on which to perform the operation. Can be a vector,
+#'  a matrix or a list.
+#' @param with_zero If `FALSE`, count only occurrences of effective values. If `TRUE`, add
+#'  the frequencies of the values which are in `list` but not in the elements specified by `indices`.
+#' @return Table, matrix or list of tables (according to `indices`) of the frequencies of the values of
+#'  the specified elements of the list.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`intersect_on_list`], [`union_on_list`].
+#' 
+#' @examples
+#' l <- list(e1 = c("E", "F", "I"),
+#'           e2 = "I",
+#'           e3 = c("C", "I"),
+#'           e4 = c("A", "C", "D", "F"),
+#'           e5 = c("B", "D", "E", "I", "G"))
+#' 
+#' ## With indices as a vector
+#' table_on_list(l)
+#' table_on_list(l, indices = c(1,2,3))
+#' table_on_list(l, indices = c("e1", "e2", "e3"), with_zero = TRUE)
+#' 
+#' ## With indices as a matrix
+#' table_on_list(l, indices = matrix(c("e1", "e2", "e3",
+#'                                     "e1", "e2", "e4",
+#'                                     "e2", "e3", "e5"),
+#'                                   nrow = 3, byrow = TRUE))
+#' table_on_list(l, indices = matrix(c(1, 2, 3,
+#'                                     1, 2, 4,
+#'                                     2, 3, 5),
+#'                                   nrow = 3, byrow = TRUE,
+#'                                   dimnames = list(c("v1", "v2", "v3"))),
+#'               with_zero = TRUE)
+#' 
+#' ## With indices as a list
+#' table_on_list(l, indices = list(c("e1", "e2", "e3"),
+#'                                 c("e1", "e2"),
+#'                                 "e1"))
+#' table_on_list(l, indices = list(v1 = c(1, 2, 3),
+#'                                 v2 = c(1, 2),
+#'                                 v3 = 1),
+#'               with_zero = TRUE)
+#' 
+#' @md
+#' @export
+table_on_list = function(list, indices = seq_along(list), with_zero = FALSE) {
+  
+  # Ensemble des valeurs existantes
+  if (with_zero) levels = sort(unique(unlist(list)))
+  
+  # Cas d'une liste d'indices
+  if (is.list(indices)) {
+    if (with_zero) {
+      return(t(sapply(indices, function(i) table(factor(unlist(list[i]), levels)) )))
+    }
+    return(lapply(indices, function(i) table(unlist(list[i]))))
+  }
+  
+  # Cas d'un unique vecteur d'indices
+  if (is.vector(indices)) {
+    if (with_zero) return(table(factor(unlist(list[indices]), levels)))
+    return(table(unlist(list[indices])))
+  }
+  
+  # Cas d'une matrice d'indices
+  if (is.matrix(indices)) {
+    if (with_zero) {
+      return(t(apply(indices, 1, function(set) table(factor(unlist(list[set]), levels)) )))
+    }
+    return(apply(indices, 1, function(set) table(unlist(list[set]))))
+  }
+  
+  stop("indices must be a vector, a matrix or a list.")
+}
+
+
+#' Turn a list into a logical matrix
+#' 
+#' Turn a list into a logical matrix using the values of the list or the names of these values.
+#' 
+#' @param x List to turn into a logical matrix.
+#' @param by_name  If `FALSE`, use the values of the elements of the list. If `TRUE`, use the names of
+#'  these values.
+#' @return Logical matrix in which row names are the names of the list and column names are the values
+#'  found in the elements of the list or the names of these values (according to `by_name`).
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`turn_logical_matrix_into_list`], [`invert_list`].
+#' 
+#' @examples
+#' l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
+#'           e2 = c(v1 = "I"),
+#'           e3 = c(v1 = "C", v2 = "I"),
+#'           e4 = c(v1 = "A", v2 = "C", v3 = "D", v4 = "F"),
+#'           e5 = c(v1 = "B", v2 = "D", v3 = "E", v4 = "I", v5 = "G"))
+#' 
+#' turn_list_into_logical_matrix(l, by_name = FALSE)
+#' turn_list_into_logical_matrix(l, by_name = TRUE)
+#' 
+#' @md
+#' @export
+turn_list_into_logical_matrix = function(x, by_name = FALSE) {
+  if (by_name) {
+    if (!is.named(x)[2]) stop("Values of the elements of x must be named.")
+    columns = unique(unlist(sapply(x, names)))
+    y = t(sapply(x, function(row) columns %in% names(row)))
+    
+  } else {
+    columns = sort(unique(unlist(x)))
+    y = t(sapply(x, function(row) columns %in% row))
+  }
+  
+  colnames(y) = columns
+  return(y)
+}
+
+
+#' Turn a logical matrix into a list
+#' 
+#' Turn a logical matrix into a named list using the names of the columns and rows of the matrix.
+#' 
+#' @param x Logical matrix to turn into a list.
+#' @param by_row If `TRUE`, use the names of the rows as names of the list. If `FALSE`, use the names of
+#'  the columns as names of the list.
+#' @return List in which the values correspond to the `TRUE` values of each row or of each column
+#'  (according to `by_row`).
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`turn_logical_matrix_into_list`], [`invert_list`].
+#' 
+#' @examples
+#' m <- matrix(c(FALSE, FALSE, FALSE, FALSE, TRUE,  TRUE,  FALSE, TRUE,
+#'               FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE,
+#'               FALSE, FALSE, TRUE,  FALSE, FALSE, FALSE, FALSE, TRUE,
+#'               TRUE,  FALSE, TRUE,  TRUE,  FALSE, TRUE,  FALSE, FALSE,
+#'               FALSE, TRUE,  FALSE, TRUE,  TRUE,  FALSE, TRUE,  TRUE),
+#'             nrow = 5, byrow = TRUE,
+#'             dimnames = list(c("e1", "e2", "e3", "e4", "e5"),
+#'                             c("A", "B", "C", "D", "E", "F", "G", "I")))
+#' 
+#' turn_logical_matrix_into_list(m, by_row = TRUE)
+#' turn_logical_matrix_into_list(m, by_row = FALSE)
+#' 
+#' @md
+#' @export
+turn_logical_matrix_into_list = function(x, by_row = TRUE) {
+  if (by_row && !is.named(x)[2]) stop("Columns of x must be named.")
+  if (!by_row && !is.named(x)[1]) stop("Rows of x must be named.")
+  
+  if (by_row) return(apply(x, 1, function(row) names(row)[row]))
+  return(apply(x, 2, function(column) names(column)[column]))
+}
+
+
+#' Inversion of list
+#' 
+#' Invert a list. Set the names of the list as the new values and set the values of the list as the
+#'  new names.
+#' 
+#' @param x List to invert.
+#' @param by_name  If `FALSE`, use the values of the elements of the list. If `TRUE`, use the names of
+#'  these values.
+#' @return List in which the values are the names of `x` and the names are the values found in the
+#'  elements of `x` or the names of these values (according to `by_name`).
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`turn_list_into_logical_matrix`], [`turn_logical_matrix_into_list`].
+#' 
+#' @examples
+#' l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
+#'           e2 = c(v1 = "I"),
+#'           e3 = c(v1 = "C", v2 = "I"),
+#'           e4 = c(v1 = "A", v2 = "C", v3 = "D", v4 = "F"),
+#'           e5 = c(v1 = "B", v2 = "D", v3 = "E", v4 = "I", v5 = "G"))
+#' 
+#' invert_list(l, by_name = FALSE)
+#' invert_list(l, by_name = TRUE)
+#' 
+#' @md
+#' @export
+invert_list = function(x, by_name = FALSE) {
+  if (!is.named(x)[1]) stop("x must be a named list.")
+  if (by_name && !is.named(x)[2]) stop("Values of the elements of x must be named.")
+  
+  return(apply(turn_list_into_logical_matrix(x, by_name), 2, function(n) names(x)[n]))
 }
 
 
