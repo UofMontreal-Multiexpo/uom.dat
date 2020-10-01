@@ -1700,3 +1700,132 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 }
 
 
+
+#### Application of the MCR approach according to classes ####
+
+#' Check data for MCR approach according to classes
+#' 
+#' Check the naming and structure of the data of values and references on which to apply the MCR approach
+#'  according to classes. Stop the execution and print an error message if the data do not satisfy the
+#'  naming and structure criteria.
+#' 
+#' @details
+#' The criteria about naming and structure are the following:
+#' * If `values` is a vector, its values must be named.
+#' * If `values` is a matrix, its rows must be named.
+#' * If `values` is a list, it must contain vectors of named values.
+#' * If `values` and `references` are two lists, lengths of the elements of these lists must match.
+#' * If `values` is a list and `references` is a vector, the values of the latter must be named.
+#' 
+#' @param values Numeric named vector or matrix, or list of numeric named vectors. Data structure
+#'  whose naming is to be checked.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`.
+#' @param vector Should be `TRUE` if `values` can be a vector.
+#' @param matrix Should be `TRUE` if `values` can be a matrix.
+#' @param list Should be `TRUE` if `values` can be a list.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
+#' @md
+#' @keywords internal
+check_data_for_mcr_by_class = function(values, references, vector = TRUE, matrix = TRUE, list = TRUE) {
+  
+  # Vérification du nommage de values et references si values peut être une liste, une matrice, un vecteur
+  if (list && is.list(values)) {
+    if (is.list(references)) {
+      if (any(sapply(values, length) != sapply(references, length)))
+        stop("If values and references are two lists, the lengths of their elements must match.")
+      if (!is.named(values)[2])
+        stop("If values is a list, it must contain vector of named numeric values.")
+      
+    } else if (is.vector(references)) {
+      if (!is.named(references) || !is.named(values)[2])
+        stop("If values is a list and references is a vector, both must contained named values.")
+    } else
+      stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
+  }
+  else if (matrix && is.matrix(values) && !is.named(values)[1]) stop("If values is a matrix, its rows must be named.")
+  else if (vector && is.vector(values) && !is.named(values)) stop("If values is a vector, it must have named numeric values.")
+}
+
+
+#' Subsets of values and references by class
+#' 
+#' Extract from values and references those corresponding to one specific class.
+#' 
+#' @details
+#' If `values` is a matrix, it must have one reference value for each row.
+#' 
+#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
+#'  if `references` is a vector, there must be one reference for each name present in `values`.
+#'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
+#'  so that `values` and `references` can be matched.
+#' 
+#' @param values Numeric named matrix or list of numeric named vectors. Values from which to extract a
+#'  subset according to one specific class.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`. See 'Details' to know the way it is associated with `values`.
+#' @param classes Logical matrix whose columns are named according to the classes and the row names
+#'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
+#'  is part of a specific class.
+#' @param class_name Name of the class of interest, the one for which to extract the corresponding
+#'  subsets of `values` and `references`.
+#' @return \describe{
+#'  \item{`values`}{Subset of values that correspond to the class of interest.}
+#'  \item{`references`}{Subset of references that correspond to the class of interest.}
+#' }
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`mcr_summary_by_class`], [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`],
+#'          [`thq_freq_by_group_by_class`].
+#' @md
+#' @keywords internal
+subset_from_class = function(values, references, classes, class_name) {
+  
+  # Cas d'une liste de valeurs
+  if (is.list(values)) {
+    
+    # Noms des éléments qui correspondent à la classe
+    items_in_class = rownames(classes)[classes[, class_name]]
+    
+    # Sous-ensembles de values et references correspondant aux éléments de la classe
+    values_class = list()
+    if (is.list(references)) {
+      references_class = list()
+    } else {
+      references_class = references[items_in_class]
+      # Retrait des NA (lorsque des noms associés à la classe ne font pas partie des références)
+      references_class = references_class[!is.na(references_class)]
+    }
+    nb_elements = 0
+    
+    # Ajout aux nouveaux ensembles de chaque élément qui fait partie de la classe
+    for (i in seq_along(values)) {
+      indices = names(values[[i]]) %in% items_in_class
+      
+      if (sum(indices) != 0) {
+        nb_elements = nb_elements + 1
+        values_class[[nb_elements]] = values[[i]][indices]
+        if (is.list(references))  references_class[[nb_elements]] = references[[i]][indices]
+      }
+    }
+  }
+  # Cas d'une matrice valeurs
+  else if (is.matrix(values)) {
+    
+    # Extraction des valeurs correpondant à la classe
+    # et retrait des NA (lorsque des noms associés à la classe ne font pas partie des valeurs)
+    indices = match(rownames(classes)[classes[, class_name]], rownames(values))
+    values_class = values[indices[!is.na(indices)], ]
+    references_class = references[indices[!is.na(indices)]]
+    
+    # Reconversion en matrice s'il n'y avait qu'une seule ligne
+    if (is.vector(values_class)) {
+      values_class = t(values_class)
+      rownames(values_class) = rownames(values)[indices[!is.na(indices)]]
+    }
+  }
+  
+  return(list(values = values_class, references = references_class))
+}
