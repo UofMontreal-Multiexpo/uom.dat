@@ -23,8 +23,8 @@ identified.}
 pairs.}
 }
 \value{
-\code{NULL} if \code{values} is a matrix and no hazard index is greater than 1 or if \code{values} is a list and no
-vector has a hazard index greater than 1 or more than 1 value.
+\code{NULL} if (1) \code{values} is a matrix having only one line or (2) \code{values} is a list and no vector has a
+hazard index greater than 1 or more than 1 value or (3) no hazard index is greater than 1.
 
 Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients while hazard
 index is greater than 1.

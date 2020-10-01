@@ -1372,8 +1372,8 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
 #'  pairs.
 #' @return
-#' `NULL` if `values` is a matrix and no hazard index is greater than 1 or if `values` is a list and no
-#'  vector has a hazard index greater than 1 or more than 1 value.
+#' `NULL` if (1) `values` is a matrix having only one line or (2) `values` is a list and no vector has a
+#'  hazard index greater than 1 or more than 1 value or (3) no hazard index is greater than 1.
 #' 
 #' Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients while hazard
 #'  index is greater than 1.
@@ -1460,7 +1460,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
     
     
-    # Si aucun HI n'est supérieur à 1
+    # Si aucun HI n'est supérieur à 1 ou qu'aucun vecteur ne contient plus d'une valeur
     if (all(hi <= 1 | sapply(hq, length) == 1)) return(NULL)
     
     hq_to_use = hq[hi > 1 & sapply(hq, length) != 1]
@@ -1502,8 +1502,8 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     if (is.null(hq)) hq = hazard_quotient(values, references)
     if (is.null(hi)) hi = hazard_index(hq = hq)
     
-    # Si aucun HI n'est supérieur à 1
-    if (all(hi <= 1)) return(NULL)
+    # Si une seule ligne (un seul élément) ou aucun HI n'est supérieur à 1
+    if (nrow(hq) == 1 || all(hi <= 1)) return(NULL)
     
     hq_to_use = hq[, hi > 1]
     
