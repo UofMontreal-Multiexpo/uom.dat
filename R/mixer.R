@@ -654,7 +654,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  Values whose indicators of the MCR approach are to be computed.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @return Data frame of the main indicators computed on the given `values`:.
+#' @return Data frame of the main indicators of the MCR approach, computed on the given `values`:
 #' * **HI**: Hazard Index.
 #' * **MCR**: Maximum Cumulative Ratio.
 #' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
@@ -1747,6 +1747,142 @@ check_data_for_mcr_by_class = function(values, references, vector = TRUE, matrix
   }
   else if (matrix && is.matrix(values) && !is.named(values)[1]) stop("If values is a matrix, its rows must be named.")
   else if (vector && is.vector(values) && !is.named(values)) stop("If values is a vector, it must have named numeric values.")
+}
+
+
+#' Summary by class of indicators of the MCR approach
+#' 
+#' Compute a set of indicators of the MCR approach according to classes, given values and references.
+#'  Indicators are computed for each set of values and for each class. For each class, only values
+#'  corresponding to this class are considered.
+#' 
+#' @inherit mcr_summary details
+#' 
+#' @param values Numeric named vector or matrix, or list of numeric named vectors.
+#'  Values whose indicators of the MCR approach are to be computed according to classes.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`. See 'Details' to know the way it is associated with `values`.
+#' @param classes List or logical matrix associating the `values` names with classes.
+#'  If list, its names are those present in `values` and the elements are vectors of associated classes.
+#'  If logical matrix, its columns are named according to the classes and the row names
+#'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
+#'  is part of a specific class.
+#' @return Data frame or list of data frames (according to `values`) of the main indicators of the MCR
+#'  approach, computed on the given `values` and for each class encountered:
+#' * **HI**: Hazard Index.
+#' * **MCR**: Maximum Cumulative Ratio.
+#' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
+#' * **Group**: MIAT group.
+#' * **THQ**: Top Hazard Quotient.
+#' * **MHQ**: Maximum Hazard Quotient.
+#' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
+#' 
+#' @author Gauthier Magnin
+#' @inherit mcr_summary references
+#' @seealso [`mcr_summary`], [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`],
+#'          [`thq_freq_by_group_by_class`].
+#' 
+#' @examples
+#' ## Association of classes (C1 to C8) with elements A, B, C, D and E
+#' classes <- list(A = c("C5", "C6", "C8"),
+#'                 B = "C8",
+#'                 C = c("C3", "C8"),
+#'                 D = c("C1", "C3", "C4", "C6"),
+#'                 E = c("C2", "C4", "C5", "C7", "C8"))
+#' 
+#' ## MCR summary by class on vectors
+#' mcr_summary_by_class(values = c(A = 1, B = 2, C = 3, D = 4, E = 5),
+#'                      references = c(1,2,3,4,5),
+#'                      classes = classes)
+#' mcr_summary_by_class(values = c(A = 1, B = 2, C = 3, D = 4),
+#'                      references = c(1, 2, 3, 4),
+#'                      classes)
+#' 
+#' ## MCR summary by class on matrices
+#' mcr_summary_by_class(values = matrix(c(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.),
+#'                                      ncol = 2,
+#'                                      dimnames = list(LETTERS[1:5],
+#'                                                      c("V1", "V2"))),
+#'                      references = c(1,2,3,4,5),
+#'                      classes)
+#' mcr_summary_by_class(values = matrix(c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9),
+#'                                      ncol = 2,
+#'                                      dimnames = list(LETTERS[1:4],
+#'                                                      c("V1", "V2"))),
+#'                      references = c(1,2,3,4),
+#'                      classes)
+#' 
+#' ## MCR summary by class on lists
+#' mcr_summary_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
+#'                                    V2 = c(A = 0.2),
+#'                                    V3 = c(B = 0.3, C = 0.4)),
+#'                      references = c(A = 1, B = 2, C = 3),
+#'                      classes)
+#' mcr_summary_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
+#'                                    V2 = c(A = 0.2),
+#'                                    V3 = c(B = 0.3, C = 0.4)),
+#'                      references = list(c(1, 2),
+#'                                        1,
+#'                                        c(2, 3)),
+#'                      classes)
+#' 
+#' @md
+#' @export
+mcr_summary_by_class = function(values, references, classes) {
+  
+  # Vérification des types des paramètres values et references
+  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
+  else if (!is.matrix(classes) || typeof(classes) != "logical")
+    stop("classes must be a list or a logical matrix.")
+  
+  # Vérification que les structures de données sont nommées
+  check_data_for_mcr_by_class(values, references)
+  
+  
+  # Cas d'une liste de valeurs
+  if (is.list(values)) {
+    # Pour chaque ensemble de valeurs, calcul des indicateurs MCR pour chaque classe
+    # Différence si references est une liste ou un vecteur
+    if (is.list(references)) {
+      to_return = lapply(seq_along(values),
+                         function(i) mcr_summary_by_class(values[[i]], references[[i]], classes))
+      return(stats::setNames(to_return, names(values)))
+    }
+    return(lapply(values, function(v) mcr_summary_by_class(v, references[names(v)], classes)))
+  }
+  
+  # Cas d'une matrice valeurs
+  if (is.matrix(values)) {
+    # Pour chaque colonne de valeurs, calcul des indicateurs MCR pour chaque classe
+    return(apply(values, 2, function(v) mcr_summary_by_class(v, references, classes)))
+  }
+  
+  # Cas d'un unique vecteur de valeurs
+  if (is.vector(values)) {
+    # Pour chaque classe, calcul des indicateurs MCR des valeurs et références correspondantes
+    summary = apply(classes, 2, function(column) {
+      # Extraction des valeurs correpondant à la classe
+      indices = match(rownames(classes)[column], names(values))
+      v = values[indices]
+      r = references[indices]
+      
+      # Retrait des NA (lorsque des noms associés à la classe en cours ne font pas partie des valeurs)
+      v = v[!is.na(v)]
+      if (length(v) == 0) return(NA)
+      return(mcr_summary(v, r[!is.na(r)]))
+    })
+    # Retrait des classes pour lesquelles il n'y a aucune valeur
+    summary = summary[!is.na(summary)]
+    
+    # Conversion en deux temps car les facteurs sont transformés en numeric
+    to_return = data.frame(matrix(unlist(summary), nrow = length(summary), byrow = TRUE))
+    rownames(to_return) = names(summary)
+    colnames(to_return) = names(summary[[1]])
+    to_return[, "Group"] = sapply(summary, "[[", "Group")
+    to_return[, "THQ"] = sapply(summary, "[[", "THQ")
+    
+    return(to_return)
+  }
 }
 
 
