@@ -10,7 +10,7 @@ thq_freq_by_group(thq, groups, levels = NULL)
 }
 \arguments{
 \item{values}{Numeric named matrix or list of numeric named vectors. Vectors of values for which the
-table is to be build.}
+table is to be built.}
 
 \item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
 \code{values}. See 'Details' to know the way it is associated with \code{values}.}
@@ -80,9 +80,9 @@ explicitly named in the function call.
 }
 \examples{
 ## Creating a matrix of 4*3 values and one reference value for each of the 4
-## elements ("a", "b", "c", and "d").
+## elements (A, B, C, and D).
 v <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-            ncol = 3, dimnames = list(letters[1:4]))
+            ncol = 3, dimnames = list(LETTERS[1:4]))
 r <- c(1, 2, 3, 0.5)
 
 ## Without levels parameter and with the different usages
@@ -93,16 +93,16 @@ thq_freq_by_group(thq = top_hazard_quotient(v, r),
                   groups = classify_mixture(v, r))
 
 ## With levels parameter
-thq_freq_by_group(values = v, references = r, levels = letters[1:4])
+thq_freq_by_group(values = v, references = r, levels = LETTERS[1:4])
 
 ## Building contingency table from a list
-thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
-                                c(a = 0.2),
-                                c(b = 0.3, c = 0.4)),
-                  references = c(a = 1, b = 2, c = 3))
-thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
-                                c(a = 0.2),
-                                c(b = 0.3, c = 0.4)),
+thq_freq_by_group(values = list(c(A = 0.1, B = 0.5),
+                                c(A = 0.2),
+                                c(B = 0.3, C = 0.4)),
+                  references = c(A = 1, B = 2, C = 3))
+thq_freq_by_group(values = list(c(A = 0.1, B = 0.5),
+                                c(A = 0.2),
+                                c(B = 0.3, C = 0.4)),
                   references = list(c(1, 2),
                                     1,
                                     c(2, 3)))

@@ -69,20 +69,20 @@ The mixtures are assigned to the groups according the following conditions:
 }
 }
 \examples{
-## MCR summary on vector and matrix
-mcr_summary(c(a = 1, b = 2, c = 3, d = 4, e = 5, c(1,2,3,4,5))
+## MCR summary on vectors and matrices
+mcr_summary(c(A = 1, B = 2, C = 3, D = 4, E = 5), c(1,2,3,4,5))
 mcr_summary(values = matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
-                            ncol = 10, dimnames = list(letters[1:5])),
+                            ncol = 10, dimnames = list(LETTERS[1:5])),
             references = sample(seq(1,5), 5, replace = TRUE))
 
-## MCR summary on list
-mcr_summary(values = list(c(a = 0.1, b = 0.5),
-                          c(a = 0.2),
-                          c(b = 0.3, c = 0.4)),
-            references = c(a = 1, b = 2, c = 3))
-mcr_summary(values = list(c(a = 0.1, b = 0.5),
-                          c(a = 0.2),
-                          c(b = 0.3, c = 0.4)),
+## MCR summary on lists
+mcr_summary(values = list(c(A = 0.1, B = 0.5),
+                          c(A = 0.2),
+                          c(B = 0.3, C = 0.4)),
+            references = c(A = 1, B = 2, C = 3))
+mcr_summary(values = list(c(A = 0.1, B = 0.5),
+                          c(A = 0.2),
+                          c(B = 0.3, C = 0.4)),
             references = list(c(1, 2),
                               1,
                               c(2, 3)))

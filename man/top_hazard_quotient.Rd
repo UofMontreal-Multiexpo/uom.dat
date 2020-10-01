@@ -37,7 +37,7 @@ If \code{values} or \code{hq} is a matrix, \code{k} hazard quotients are highlig
 
 If the number of hazard quotients that are greater than or equal to the \eqn{k-th} greater hazard
 quotient is greater than \code{k}, only the first \code{k} values are considered and in the order given.
-For example, if \code{hq = c(d = 5, b = 1, c = 3, a = 3)} and \code{k = 2}, the return is \code{c(d = 5, c = 3)}.
+For example, if \code{hq = c(D = 5, B = 1, C = 3, A = 3)} and \code{k = 2}, the return is \code{c(D = 5, C = 3)}.
 
 \loadmathjax
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
@@ -49,13 +49,13 @@ Due to the multiple possible usages, the arguments \code{hq} and \code{k} must b
 function call.
 }
 \examples{
-top_hazard_quotient(c(a = 1, b = 2, c = 3, d = 4, e = 5), c(5,4,3,2,1),
+top_hazard_quotient(c(A = 1, B = 2, C = 3, D = 4, E = 5), c(5,4,3,2,1),
                     k = 3)
-top_hazard_quotient(hq = hazard_quotient(c(a = 1, b = 2, c = 3, d = 4, e = 5),
+top_hazard_quotient(hq = hazard_quotient(c(A = 1, B = 2, C = 3, D = 4, E = 5),
                                          c(5,4,3,2,1)),
                     k = 3)
 top_hazard_quotient(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                                    ncol = 2, dimnames = list(letters[1:5])),
+                                    ncol = 2, dimnames = list(LETTERS[1:5])),
                     references = c(1,2,3,4,5))
 
 }

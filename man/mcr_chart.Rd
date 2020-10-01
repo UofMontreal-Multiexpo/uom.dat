@@ -131,14 +131,14 @@ named in the function call.
 }
 \examples{
 ## Creating a matrix of 5*50 values and one reference value for each of the 5
-## elements ("a", "b", "c", "d" and "e").
+## elements (A, B, C, D and E).
 v <- matrix(sample(seq(0.1, 1.1, by = 0.1), 250, replace = TRUE),
-            ncol = 50, dimnames = list(letters[1:5]))
+            ncol = 50, dimnames = list(LETTERS[1:5]))
 r <- sample(seq(1,5), 5, replace = TRUE)
 
 mcr_chart(v, r, regions = TRUE)
 mcr_chart(v, r,
-          thq_col = c(a = "blue", b = "green", c = "red", d = "yellow3", e = "grey"),
+          thq_col = c(A = "blue", B = "green", C = "red", D = "yellow3", E = "grey"),
           regions = FALSE,
           regions_lab = c(TRUE, TRUE, FALSE, TRUE),
           regression = TRUE)
@@ -148,7 +148,7 @@ mcr_chart(hi = hazard_index(v, r),
 
 mcr_chart(v, r, regions = TRUE, log_transform = FALSE)
 mcr_chart(v, r,
-          thq_col = c(a = "blue", b = "green", c = "red", d = "yellow3", e = "grey"),
+          thq_col = c(A = "blue", B = "green", C = "red", D = "yellow3", E = "grey"),
           regions = FALSE,
           regions_lab = c(TRUE, TRUE, FALSE, TRUE),
           regression = TRUE,
@@ -159,14 +159,14 @@ mcr_chart(hi = hazard_index(v, r),
           log_transform = FALSE)
 
 ## MCR chart on list
-mcr_chart(values = list(c(a = 0.1, b = 0.5),
-                        c(a = 0.2),
-                        c(b = 0.3, c = 0.4)),
-          references = c(a = 1, b = 2, c = 3),
+mcr_chart(values = list(c(A = 0.1, B = 0.5),
+                        c(A = 0.2),
+                        c(B = 0.3, C = 0.4)),
+          references = c(A = 1, B = 2, C = 3),
           log_transform = FALSE)
-mcr_chart(values = list(c(a = 0.1, b = 0.5),
-                        c(a = 0.2),
-                        c(b = 0.3, c = 0.4)),
+mcr_chart(values = list(c(A = 0.1, B = 0.5),
+                        c(A = 0.2),
+                        c(B = 0.3, C = 0.4)),
           references = list(c(1, 2),
                             1,
                             c(2, 3)),

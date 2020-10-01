@@ -30,9 +30,9 @@ NULL
 #' 
 #' @examples
 #' hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5))
-#' hazard_quotient(c(a = 1, b = 2, c = 3, d = 4, e = 5), c(1,2,3,4,5))
+#' hazard_quotient(c(A = 1, B = 2, C = 3, D = 4, E = 5), c(1,2,3,4,5))
 #' hazard_quotient(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                 ncol = 2, dimnames = list(letters[1:5])),
+#'                                 ncol = 2, dimnames = list(LETTERS[1:5])),
 #'                 references = c(1,2,3,4,5))
 #' 
 #' @md
@@ -439,7 +439,7 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' 
 #' If the number of hazard quotients that are greater than or equal to the \eqn{k-th} greater hazard
 #'  quotient is greater than `k`, only the first `k` values are considered and in the order given.
-#'  For example, if `hq = c(d = 5, b = 1, c = 3, a = 3)` and `k = 2`, the return is `c(d = 5, c = 3)`.
+#'  For example, if `hq = c(D = 5, B = 1, C = 3, A = 3)` and `k = 2`, the return is `c(D = 5, C = 3)`.
 #' 
 #' \loadmathjax
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
@@ -470,13 +470,13 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' @seealso [`hazard_quotient`], [`maximum_hazard_quotient`].
 #' 
 #' @examples
-#' top_hazard_quotient(c(a = 1, b = 2, c = 3, d = 4, e = 5), c(5,4,3,2,1),
+#' top_hazard_quotient(c(A = 1, B = 2, C = 3, D = 4, E = 5), c(5,4,3,2,1),
 #'                     k = 3)
-#' top_hazard_quotient(hq = hazard_quotient(c(a = 1, b = 2, c = 3, d = 4, e = 5),
+#' top_hazard_quotient(hq = hazard_quotient(c(A = 1, B = 2, C = 3, D = 4, E = 5),
 #'                                          c(5,4,3,2,1)),
 #'                     k = 3)
 #' top_hazard_quotient(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                     ncol = 2, dimnames = list(letters[1:5])),
+#'                                     ncol = 2, dimnames = list(LETTERS[1:5])),
 #'                     references = c(1,2,3,4,5))
 #' 
 #' @md
@@ -683,20 +683,20 @@ classify_mixture = function(values = NULL, references = NULL,
 #'          [`classify_mixture`], [`top_hazard_quotient`], [`maximum_hazard_quotient`], [`missed_toxicity`].
 #' 
 #' @examples
-#' ## MCR summary on vector and matrix
-#' mcr_summary(c(a = 1, b = 2, c = 3, d = 4, e = 5, c(1,2,3,4,5))
+#' ## MCR summary on vectors and matrices
+#' mcr_summary(c(A = 1, B = 2, C = 3, D = 4, E = 5), c(1,2,3,4,5))
 #' mcr_summary(values = matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
-#'                             ncol = 10, dimnames = list(letters[1:5])),
+#'                             ncol = 10, dimnames = list(LETTERS[1:5])),
 #'             references = sample(seq(1,5), 5, replace = TRUE))
 #' 
-#' ## MCR summary on list
-#' mcr_summary(values = list(c(a = 0.1, b = 0.5),
-#'                           c(a = 0.2),
-#'                           c(b = 0.3, c = 0.4)),
-#'             references = c(a = 1, b = 2, c = 3))
-#' mcr_summary(values = list(c(a = 0.1, b = 0.5),
-#'                           c(a = 0.2),
-#'                           c(b = 0.3, c = 0.4)),
+#' ## MCR summary on lists
+#' mcr_summary(values = list(c(A = 0.1, B = 0.5),
+#'                           c(A = 0.2),
+#'                           c(B = 0.3, C = 0.4)),
+#'             references = c(A = 1, B = 2, C = 3))
+#' mcr_summary(values = list(c(A = 0.1, B = 0.5),
+#'                           c(A = 0.2),
+#'                           c(B = 0.3, C = 0.4)),
 #'             references = list(c(1, 2),
 #'                               1,
 #'                               c(2, 3)))
@@ -959,14 +959,14 @@ mcr_summary_for_list = function(values, references) {
 #' 
 #' @examples
 #' ## Creating a matrix of 5*50 values and one reference value for each of the 5
-#' ## elements ("a", "b", "c", "d" and "e").
+#' ## elements (A, B, C, D and E).
 #' v <- matrix(sample(seq(0.1, 1.1, by = 0.1), 250, replace = TRUE),
-#'             ncol = 50, dimnames = list(letters[1:5]))
+#'             ncol = 50, dimnames = list(LETTERS[1:5]))
 #' r <- sample(seq(1,5), 5, replace = TRUE)
 #' 
 #' mcr_chart(v, r, regions = TRUE)
 #' mcr_chart(v, r,
-#'           thq_col = c(a = "blue", b = "green", c = "red", d = "yellow3", e = "grey"),
+#'           thq_col = c(A = "blue", B = "green", C = "red", D = "yellow3", E = "grey"),
 #'           regions = FALSE,
 #'           regions_lab = c(TRUE, TRUE, FALSE, TRUE),
 #'           regression = TRUE)
@@ -976,7 +976,7 @@ mcr_summary_for_list = function(values, references) {
 #' 
 #' mcr_chart(v, r, regions = TRUE, log_transform = FALSE)
 #' mcr_chart(v, r,
-#'           thq_col = c(a = "blue", b = "green", c = "red", d = "yellow3", e = "grey"),
+#'           thq_col = c(A = "blue", B = "green", C = "red", D = "yellow3", E = "grey"),
 #'           regions = FALSE,
 #'           regions_lab = c(TRUE, TRUE, FALSE, TRUE),
 #'           regression = TRUE,
@@ -987,14 +987,14 @@ mcr_summary_for_list = function(values, references) {
 #'           log_transform = FALSE)
 #' 
 #' ## MCR chart on list
-#' mcr_chart(values = list(c(a = 0.1, b = 0.5),
-#'                         c(a = 0.2),
-#'                         c(b = 0.3, c = 0.4)),
-#'           references = c(a = 1, b = 2, c = 3),
+#' mcr_chart(values = list(c(A = 0.1, B = 0.5),
+#'                         c(A = 0.2),
+#'                         c(B = 0.3, C = 0.4)),
+#'           references = c(A = 1, B = 2, C = 3),
 #'           log_transform = FALSE)
-#' mcr_chart(values = list(c(a = 0.1, b = 0.5),
-#'                         c(a = 0.2),
-#'                         c(b = 0.3, c = 0.4)),
+#' mcr_chart(values = list(c(A = 0.1, B = 0.5),
+#'                         c(A = 0.2),
+#'                         c(B = 0.3, C = 0.4)),
 #'           references = list(c(1, 2),
 #'                             1,
 #'                             c(2, 3)),
@@ -1387,40 +1387,40 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' 
 #' @examples
 #' thq_pairs_freq(values = matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                ncol = 2, dimnames = list(letters[1:5])),
+#'                                ncol = 2, dimnames = list(LETTERS[1:5])),
 #'                references = c(1,2,3,4,5))
 #' thq_pairs_freq(hq = hazard_quotient(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                            ncol = 2, dimnames = list(letters[1:5])),
+#'                                            ncol = 2, dimnames = list(LETTERS[1:5])),
 #'                                     c(1,2,3,4,5)),
 #'                hi = hazard_index(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                         ncol = 2, dimnames = list(letters[1:5])),
+#'                                         ncol = 2, dimnames = list(LETTERS[1:5])),
 #'                                  c(1,2,3,4,5)))
 #' 
 #' ## With and without levels parameter
 #' thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                ncol = 3, dimnames = list(letters[1:4])),
+#'                                ncol = 3, dimnames = list(LETTERS[1:4])),
 #'                references = c(1, 2, 3, .5),
-#'                levels = letters[1:4])
+#'                levels = LETTERS[1:4])
 #' thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                ncol = 3, dimnames = list(letters[1:4])),
+#'                                ncol = 3, dimnames = list(LETTERS[1:4])),
 #'                references = c(1,2,3,0.5))
 #' 
 #' ## NULL because all HI are lower than or equal to 1
 #' thq_pairs_freq(values = matrix(c(.1, .2, .3, .4),
-#'                                ncol = 2, dimnames = list(c("a","b"))),
+#'                                ncol = 2, dimnames = list(c("A","B"))),
 #'                references = c(5,5))
 #' hazard_index(values = matrix(c(.1, .2, .3, .4),
-#'                              ncol = 2, dimnames = list(c("a","b"))),
+#'                              ncol = 2, dimnames = list(c("A","B"))),
 #'              references = c(5,5))
 #' 
 #' ## Building contingency table from a list
-#' thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
-#'                              c(a = 1),
-#'                              c(b = 0.5, c = 0.5)),
-#'                references = c(a = 0.3, b = 0.6, c = 1))
-#' thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
-#'                              c(a = 1),
-#'                              c(b = 0.5, c = 0.5)),
+#' thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
+#'                              c(A = 1),
+#'                              c(B = 0.5, C = 0.5)),
+#'                references = c(A = 0.3, B = 0.6, C = 1))
+#' thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
+#'                              c(A = 1),
+#'                              c(B = 0.5, C = 0.5)),
 #'                references = list(c(0.3, 0.6),
 #'                                  0.3,
 #'                                  c(0.6, 1)))
@@ -1588,7 +1588,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #' thq_freq_by_group(hq, groups, levels = NULL)
 #' thq_freq_by_group(thq, groups, levels = NULL)
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
-#'  table is to be build.
+#'  table is to be built.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
 #' @param hq Numeric named matrix. **H**azard **q**uotients for which the table is to be build.
@@ -1611,9 +1611,9 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #' 
 #' @examples
 #' ## Creating a matrix of 4*3 values and one reference value for each of the 4
-#' ## elements ("a", "b", "c", and "d").
+#' ## elements (A, B, C, and D).
 #' v <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'             ncol = 3, dimnames = list(letters[1:4]))
+#'             ncol = 3, dimnames = list(LETTERS[1:4]))
 #' r <- c(1, 2, 3, 0.5)
 #' 
 #' ## Without levels parameter and with the different usages
@@ -1624,16 +1624,16 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #'                   groups = classify_mixture(v, r))
 #' 
 #' ## With levels parameter
-#' thq_freq_by_group(values = v, references = r, levels = letters[1:4])
+#' thq_freq_by_group(values = v, references = r, levels = LETTERS[1:4])
 #' 
 #' ## Building contingency table from a list
-#' thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
-#'                                 c(a = 0.2),
-#'                                 c(b = 0.3, c = 0.4)),
-#'                   references = c(a = 1, b = 2, c = 3))
-#' thq_freq_by_group(values = list(c(a = 0.1, b = 0.5),
-#'                                 c(a = 0.2),
-#'                                 c(b = 0.3, c = 0.4)),
+#' thq_freq_by_group(values = list(c(A = 0.1, B = 0.5),
+#'                                 c(A = 0.2),
+#'                                 c(B = 0.3, C = 0.4)),
+#'                   references = c(A = 1, B = 2, C = 3))
+#' thq_freq_by_group(values = list(c(A = 0.1, B = 0.5),
+#'                                 c(A = 0.2),
+#'                                 c(B = 0.3, C = 0.4)),
 #'                   references = list(c(1, 2),
 #'                                     1,
 #'                                     c(2, 3)))

@@ -62,40 +62,40 @@ the function call.
 }
 \examples{
 thq_pairs_freq(values = matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                               ncol = 2, dimnames = list(letters[1:5])),
+                               ncol = 2, dimnames = list(LETTERS[1:5])),
                references = c(1,2,3,4,5))
 thq_pairs_freq(hq = hazard_quotient(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                                           ncol = 2, dimnames = list(letters[1:5])),
+                                           ncol = 2, dimnames = list(LETTERS[1:5])),
                                     c(1,2,3,4,5)),
                hi = hazard_index(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                                        ncol = 2, dimnames = list(letters[1:5])),
+                                        ncol = 2, dimnames = list(LETTERS[1:5])),
                                  c(1,2,3,4,5)))
 
 ## With and without levels parameter
 thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-                               ncol = 3, dimnames = list(letters[1:4])),
+                               ncol = 3, dimnames = list(LETTERS[1:4])),
                references = c(1, 2, 3, .5),
-               levels = letters[1:4])
+               levels = LETTERS[1:4])
 thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-                               ncol = 3, dimnames = list(letters[1:4])),
+                               ncol = 3, dimnames = list(LETTERS[1:4])),
                references = c(1,2,3,0.5))
 
 ## NULL because all HI are lower than or equal to 1
 thq_pairs_freq(values = matrix(c(.1, .2, .3, .4),
-                               ncol = 2, dimnames = list(c("a","b"))),
+                               ncol = 2, dimnames = list(c("A","B"))),
                references = c(5,5))
 hazard_index(values = matrix(c(.1, .2, .3, .4),
-                             ncol = 2, dimnames = list(c("a","b"))),
+                             ncol = 2, dimnames = list(c("A","B"))),
              references = c(5,5))
 
 ## Building contingency table from a list
-thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
-                             c(a = 1),
-                             c(b = 0.5, c = 0.5)),
-               references = c(a = 0.3, b = 0.6, c = 1))
-thq_pairs_freq(values = list(c(a = 0.5, b = 0.5),
-                             c(a = 1),
-                             c(b = 0.5, c = 0.5)),
+thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
+                             c(A = 1),
+                             c(B = 0.5, C = 0.5)),
+               references = c(A = 0.3, B = 0.6, C = 1))
+thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
+                             c(A = 1),
+                             c(B = 0.5, C = 0.5)),
                references = list(c(0.3, 0.6),
                                  0.3,
                                  c(0.6, 1)))
