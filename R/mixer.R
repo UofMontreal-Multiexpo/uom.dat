@@ -2138,3 +2138,115 @@ mcr_chart_by_class = function(values, references, classes,
   
   return(charts[!is.na(charts)])
 }
+
+
+#' Top Hazard Quotient pairs frequency by class
+#' 
+#' Build contingency tables of the counts of each combination of the top two hazard quotients pairs for
+#'  which the associated hazard index is greater than 1, according to classes. For each class, one
+#'  table is built from the subset of values corresponding to this class.
+#' 
+#' @details
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
+#' 
+#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
+#'  if `references` is a vector, there must be one reference for each name present in `values`.
+#'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
+#'  so that `values` and `references` can be matched.
+#'  
+#' \loadmathjax
+#' The hazard index of the vector \eqn{i} is given by:
+#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+#' 
+#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
+#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
+#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
+#'  top two hazard quotients are to be identified, according to classes.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`. See 'Details' to know the way it is associated with `values`.
+#' @param classes List or logical matrix associating the `values` names with classes.
+#'  If list, its names are those present in `values` and the elements are vectors of associated classes.
+#'  If logical matrix, its columns are named according to the classes and the row names
+#'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
+#'  is part of a specific class.
+#' @param levels Levels to consider in the output tables. If `NULL`, only use of those that appear in the
+#'  pairs.
+#' @return List whose length corresponds to the number of classes encountered, containing:
+#' * `NULL` if among the values corresponding to the class, no one has more than 1 value or a hazard
+#'   index greater than 1.
+#' * Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients while
+#'   hazard index is greater than 1.
+#' 
+#' @author Gauthier Magnin
+#' @inherit thq_pairs_freq references
+#' @seealso [`thq_pairs_freq`], [`mcr_summary_by_class`], [`mcr_chart_by_class`],
+#'          [`thq_freq_by_group_by_class`].
+#' 
+#' @examples
+#' ## Creating a matrix of 5*50 values, one reference value for each of the 5
+#' ## elements (A, B, C, D and E) and association of classes (C1 to C8) with
+#' ## these elements.
+#' v <- matrix(sample(seq(0.1, 2.1, by = 0.1), 250, replace = TRUE),
+#'             ncol = 50, dimnames = list(LETTERS[1:5]))
+#' r <- sample(seq(1,5), 5, replace = TRUE)
+#' classes <- list(A = c("C5", "C6", "C8"),
+#'                 B = "C8",
+#'                 C = c("C3", "C8"),
+#'                 D = c("C1", "C3", "C4", "C6"),
+#'                 E = c("C2", "C4", "C5", "C7", "C8"))
+#' 
+#' ## Building contingency table from matrix, without and with levels parameter
+#' thq_pairs_freq_by_class(v, r, classes)
+#' thq_pairs_freq_by_class(v, r, classes, levels = LETTERS[1:5])
+#' 
+#' ## Building contingency table from list
+#' thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                       V2 = c(A = 2),
+#'                                       V3 = c(B = 3, C = 4)),
+#'                         references = list(c(1, 2),
+#'                                           1,
+#'                                           c(2, 3)),
+#'                         classes)
+#' thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                       V2 = c(A = 2),
+#'                                       V3 = c(B = 3, C = 4)),
+#'                         references = c(A = 1, B = 2, C = 3),
+#'                         classes,
+#'                         levels = LETTERS[1:3])
+#' 
+#' @md
+#' @export
+thq_pairs_freq_by_class = function(values, references, classes,
+                                   levels = NULL) {
+  
+  # Vérification des types des paramètres values et references
+  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
+  else if (!is.matrix(classes) || typeof(classes) != "logical")
+    stop("classes must be a list or a logical matrix.")
+  
+  # Vérification que les structures de données sont nommées
+  check_data_for_mcr_by_class(values, references, vector = FALSE)
+  
+  
+  # Pour chaque classe, une table concernant les valeurs et références correspondantes
+  tables = apply(classes, 2, function(column) {
+    
+    # Extraction des valeurs et références correpondant à la classe
+    new_vr = subset_from_class(values, references, classes, colnames(classes)[parent.frame()$i[]])
+    
+    # NA si la classe n'est pas représentée (cas différent si values est une liste ou une matrice)
+    if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
+        (is.matrix(values) && nrow(new_vr[["values"]]) == 0)) return(NA)
+    
+    # Retour d'une liste pour éviter que les tables ne fusionnent en une unique matrice
+    # (si levels est utilisé et qu'il n'y a aucun NA)
+    return(list(thq_pairs_freq(new_vr[["values"]], new_vr[["references"]], levels = levels)))
+  })
+  
+  if (is.matrix(values)) tables = lapply(tables, "[[", 1)
+  return(tables[!is.na(tables)])
+}
