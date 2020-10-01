@@ -855,9 +855,9 @@ mcr_summary_for_list = function(values, references) {
 #' Color specification can be done using the R predefined color names or hexadecimal values.
 #' 
 #' In the standard version of the chart, the grey area represents the region in which no point can be
-#'  plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does
-#'  not exist. However, in the latter, points having \eqn{MCR} equal to 1 cannot be plotted because
-#'  the ordinate is then equal to `-Inf`.
+#'  plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does not exist.
+#'  However, in the latter, points having \eqn{MCR} equal to 1 have an ordinate equal to `-Inf` and
+#'  therefore cannot be plotted and generate a warning message.
 #'  
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
 #'  before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios
@@ -941,7 +941,7 @@ mcr_summary_for_list = function(values, references) {
 #' @param plot If `FALSE`, the chart is not plotted. If `TRUE`, the chart is plotted in the active
 #'  graphics device.
 #' @return Chart created with the `ggplot2` package (invisible) or `NULL` if no points can be plotted
-#'  (see 'Details).
+#'  (see 'Details').
 #' 
 #' @author Gauthier Magnin
 #' @references
@@ -954,7 +954,7 @@ mcr_summary_for_list = function(values, references) {
 #' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
 #' *The Science of the Total Environment*, 479-480, 267-276.
 #' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
-#' @seealso [`mcr_summary`] [`maximum_cumulative_ratio`], [`hazard_index`], [`reciprocal_of_mcr`],
+#' @seealso [`mcr_summary`], [`maximum_cumulative_ratio`], [`hazard_index`], [`reciprocal_of_mcr`],
 #'          [`top_hazard_quotient`].
 #' 
 #' @examples
@@ -1964,4 +1964,177 @@ subset_from_class = function(values, references, classes, class_name) {
   }
   
   return(list(values = values_class, references = references_class))
+}
+
+
+#' MCR approach scatter plot by class
+#' 
+#' Create charts of \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}
+#'  with the percentage of the reciprocal of the maximum cumulative ratio, the elements producing the
+#'  top hazard quotients and the associated MIAT groups, according to classes. For each class, one chart
+#'  is created from the subset of values corresponding to this class.
+#' 
+#' @details
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
+#' 
+#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
+#'  if `references` is a vector, there must be one reference for each name present in `values`.
+#'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
+#'  so that `values` and `references` can be matched.
+#' 
+#' The charts being created with the `ggplot2` package, they can be modified or completed afterwards
+#'  using the returned object.
+#' 
+#' Color specification can be done using the R predefined color names or hexadecimal values.
+#' 
+#' In the standard version of the chart, the grey area represents the region in which no point can be
+#'  plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does not exist.
+#'  However, in the latter, points having \eqn{MCR} equal to 1 have an ordinate equal to `-Inf` and
+#'  therefore cannot be plotted and generate a warning message.
+#' 
+#' \loadmathjax
+#' The mixtures are assigned to the groups according the following conditions:
+#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
+#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
+#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
+#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
+#' 
+#' The maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
+#'  
+#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+#'  where \eqn{MCR}, \eqn{MHQ} and {HI} denotes the maximum cumulative ratio, the maximum hazard
+#'  quotient and the hazard index respectively.
+#' 
+#' The hazard index of the vector \eqn{i} is given by:
+#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+#'  
+#' The maximum hazard quotient of the vector \eqn{i} is given by:
+#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
+#'  where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+#' 
+#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
+#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
+#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
+#'  chart are to be created, according to classes.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`. See 'Details' to know the way it is associated with `values`.
+#' @param classes List or logical matrix associating the `values` names with classes.
+#'  If list, its names are those present in `values` and the elements are vectors of associated classes.
+#'  If logical matrix, its columns are named according to the classes and the row names
+#'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
+#'  is part of a specific class.
+#' @inheritParams mcr_chart
+#' @param log_transform If `TRUE`, the log version of the charts are created (i.e.
+#'  \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}). If `FALSE`,
+#'  the standard version of the charts are created (i.e. \eqn{HI} versus \eqn{MCR}).
+#' @param plot If `FALSE`, the charts are not plotted. If `TRUE`, the charts are all plotted in the
+#'  active graphics device.
+#' @return List of charts created with the `ggplot2` package or `NULL` if no points can be plotted
+#'  (see 'Details'). The length of the list corresponds to the number of classes encountered.
+#' 
+#' @author Gauthier Magnin
+#' @inherit mcr_chart references
+#' @seealso [`mcr_chart`], [`mcr_summary_by_class`], [`thq_pairs_freq_by_class`],
+#'          [`thq_freq_by_group_by_class`].
+#' 
+#' @examples
+#' ## Creating a matrix of 5*50 values and one reference value for each of the 5
+#' ## elements (A, B, C, D and E) and association of classes (C1 to C8) with
+#' ## these elements.
+#' v <- matrix(sample(seq(0.1, 1.1, by = 0.1), 250, replace = TRUE),
+#'             ncol = 50, dimnames = list(LETTERS[1:5]))
+#' r <- sample(seq(1,5), 5, replace = TRUE)
+#' classes <- list(A = c("C5", "C6", "C8"),
+#'                 B = "C8",
+#'                 C = c("C3", "C8"),
+#'                 D = c("C1", "C3", "C4", "C6"),
+#'                 E = c("C2", "C4", "C5", "C7", "C8"))
+#' 
+#' ## MCR charts on matrices
+#' charts1 <- mcr_chart_by_class(v, r, classes, regions = TRUE)
+#' View(charts1)
+#' plot(charts1$C3)
+#' 
+#' charts2 <- mcr_chart_by_class(v, r, classes,
+#'                               regions = TRUE, log_transform = FALSE)
+#' View(charts2)
+#' plot(charts2$C3)
+#' 
+#' ## MCR charts on lists
+#' charts3 <- mcr_chart_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
+#'                                             V2 = c(A = 0.2),
+#'                                             V3 = c(B = 0.3, C = 0.4)),
+#'                               references = list(c(1, 2),
+#'                                                 1,
+#'                                                 c(2, 3)),
+#'                               classes,
+#'                               log_transform = TRUE)
+#' View(charts3)
+#' plot(charts3$C8)
+#' 
+#' charts4 <- mcr_chart_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
+#'                                             V2 = c(A = 0.2),
+#'                                             V3 = c(B = 0.3, C = 0.4)),
+#'                               references = c(A = 1, B = 2, C = 3),
+#'                               classes,
+#'                               log_transform = FALSE)
+#' View(charts4)
+#' plot(charts4$C8)
+#' 
+#' @md
+#' @export
+mcr_chart_by_class = function(values, references, classes,
+                              thq_col = NULL, regions = FALSE,
+                              regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
+                              regions_lab = !regions, regression = FALSE, log_transform = TRUE, plot = FALSE) {
+  
+  # Vérification des types des paramètres values et references
+  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
+  else if (!is.matrix(classes) || typeof(classes) != "logical")
+    stop("classes must be a list or a logical matrix.")
+  
+  # Vérification que les structures de données sont nommées
+  check_data_for_mcr_by_class(values, references, vector = FALSE)
+  
+  # Booléens sur l'ensemble des noms des classes pour expliciter les warnings des appels à mcr_chart
+  class_warnings = stats::setNames(logical(ncol(classes)), colnames(classes))
+  
+  
+  # Pour chaque classe, un graphique des indicateurs MCR des valeurs et références correspondantes
+  charts = apply(classes, 2, function(column) {
+    
+    # Extraction des valeurs et références correpondant à la classe
+    class = colnames(classes)[parent.frame()$i[]]
+    new_vr = subset_from_class(values, references, classes, class)
+    
+    # NA si la classe n'est pas représentée (cas différent si values est une liste ou une matrice)
+    if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
+        (is.matrix(values) && nrow(new_vr[["values"]]) == 0)) return(NA)
+    
+    # Catch warning sans interrompre l'exécution de l'instruction
+    withCallingHandlers(return(mcr_chart(new_vr[["values"]], new_vr[["references"]],
+                                         thq_col = thq_col, regions = regions,
+                                         regions_col = regions_col, regions_alpha = regions_alpha,
+                                         regions_lab = regions_lab, regression = regression, log_transform = log_transform,
+                                         plot = plot)),
+                        warning = function(w) { class_warnings[class] <<- TRUE })
+    
+  })
+  
+  # Affichage d'un message en fonction des warnings rencontrés
+  if (any(class_warnings)) {
+    if (sum(class_warnings) == 1) message("One warning message in chart plotting for class ",
+                                          names(class_warnings)[class_warnings], ":")
+    else message("Warnings messages in chart plotting for classes ",
+                 paste(names(class_warnings)[class_warnings], collapse = ", "), ":")
+  }
+  
+  return(charts[!is.na(charts)])
 }
