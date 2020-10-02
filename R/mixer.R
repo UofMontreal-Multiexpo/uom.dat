@@ -2247,7 +2247,8 @@ thq_pairs_freq_by_class = function(values, references, classes,
     return(list(thq_pairs_freq(new_vr[["values"]], new_vr[["references"]], levels = levels)))
   })
   
-  if (is.matrix(values)) tables = lapply(tables, "[[", 1)
+  # Le délistage n'est pas toujours à effectuer
+  if ("list" %in% sapply(tables, class)) tables = lapply(tables, "[[", 1)
   return(tables[!is.na(tables)])
 }
 
@@ -2370,7 +2371,8 @@ thq_freq_by_group_by_class = function(values, references, classes,
     return(list(thq_freq_by_group(new_vr[["values"]], new_vr[["references"]], levels = levels)))
   })
   
-  if (is.matrix(values)) tables = lapply(tables, "[[", 1)
+  # Le délistage n'est pas toujours à effectuer
+  if ("list" %in% sapply(tables, class)) tables = lapply(tables, "[[", 1)
   return(tables[!is.na(tables)])
 }
 
