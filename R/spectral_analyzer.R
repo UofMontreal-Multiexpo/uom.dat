@@ -277,22 +277,15 @@ setMethod(f = "initialize",
 #' sa_object_2 <- spectral.analyzer(obs, items)
 #' 
 #' @export
-spectral.analyzer = function(observations, items = NULL, target = "closed frequent itemsets", count = 1, min_length = 1, max_length = Inf, status_limit = 2) {
-  
-  # Installation des packages nécessaires au fonctionnement
-  # Utile uniquement si les fonctions sont chargées sans charger le package (mode dev)
-  packages = c("arules", "ggplot2", "ggsci", "graphics", "grDevices", "mathjaxr", "methods", "network", "sna", "stats", "utils")
-  new_packages = packages[!(packages %in% utils::installed.packages()[, "Package"])]
-  
-  if(length(new_packages) != 0) { 
-    cat("Installing required packages:", paste(new_packages, collapse = ", "), "\n")
-    utils::install.packages(new_packages)
-  }
+spectral.analyzer = function(observations, items = NULL, target = "closed frequent itemsets",
+                             count = 1, min_length = 1, max_length = Inf, status_limit = 2) {
   
   # Instanciation avec ou sans la liste des items et des catégories associées
   ifelse(is.null(items),
-    return(methods::new(Class = "SpectralAnalyzer", observations = observations, target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)),
-    return(methods::new(Class = "SpectralAnalyzer", observations = observations, items = items, target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)))
+    return(methods::new(Class = "SpectralAnalyzer", observations = observations,
+                        target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)),
+    return(methods::new(Class = "SpectralAnalyzer", observations = observations, items = items,
+                        target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)))
 }
 
 
