@@ -1261,7 +1261,7 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
     chart = chart + ggplot2::annotate(geom = "text",
                                       x = c(xlim[2], xlim[1], 1.5, if (xlim[1] >= 1) (xlim[2] + xlim[1]) / 2 + xlim[1] else (xlim[2] + 1) / 2)[regions_lab],
                                       y = c(ylim[1] + (ylim[2] - ylim[1]) / 100, ylim[2], 1.95, ylim[2])[regions_lab],
-                                      hjust = c(1, 0, 0.5, 1)[regions_lab],
+                                      hjust = c(1, 0, 0.5, 0.5)[regions_lab],
                                       vjust = c(0, 1, 1, 1)[regions_lab],
                                       label = c("Group I", "Group II", "Group IIIA", "Group IIIB")[regions_lab])
   }
