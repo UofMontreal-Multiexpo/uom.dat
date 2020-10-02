@@ -2201,7 +2201,7 @@ mcr_chart_by_class = function(values, references, classes,
 #' 
 #' ## Building contingency table from matrix, without and with levels parameter
 #' thq_pairs_freq_by_class(v, r, classes)
-#' thq_pairs_freq_by_class(v, r, classes, levels = LETTERS[1:5])
+#' thq_pairs_freq_by_class(v, r, classes, levels = names(classes))
 #' 
 #' ## Building contingency table from list
 #' thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
@@ -2324,7 +2324,7 @@ thq_pairs_freq_by_class = function(values, references, classes,
 #' 
 #' ## Building contingency table from matrix, without and with levels parameter
 #' thq_freq_by_group_by_class(v, r, classes)
-#' thq_freq_by_group_by_class(v, r, classes, levels = LETTERS[1:5])
+#' thq_freq_by_group_by_class(v, r, classes, levels = names(classes))
 #' 
 #' ## Building contingency table from list
 #' thq_freq_by_group_by_class(values = list(V1 = c(A = 1, B = 5),
