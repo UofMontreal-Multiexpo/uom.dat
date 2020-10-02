@@ -2375,3 +2375,98 @@ thq_freq_by_group_by_class = function(values, references, classes,
 }
 
 
+#' MCR approach by class
+#' 
+#' Perform the MCR approach according to classes, given values and references. Wrapper of the four
+#'  functions allowing to perform the MCR pproach according to classes: `mcr_summary_by_class`,
+#'  `mcr_chart_by_class`, `thq_pairs_freq_by_class`, `thq_freq_by_group_by_class`.
+#' 
+#' @details
+#' If `values` is a vector, the reference values are directly associated with these values.
+#' 
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
+#'  
+#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
+#'  if `references` is a vector, there must be one reference for each name present in `values`.
+#'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
+#'  so that `values` and `references` can be matched.
+#' 
+#' @param values Numeric named vector or matrix, or list of numeric named vectors.
+#'  Values on which to perform the MCR approach according to classes.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`. See 'Details' to know the way it is associated with `values`.
+#' @param classes List or logical matrix associating the `values` names with classes.
+#'  If list, its names are those present in `values` and the elements are vectors of associated classes.
+#'  If logical matrix, its columns are named according to the classes and the row names
+#'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
+#'  is part of a specific class.
+#' @param FUN Either a function or a non-empty character string naming the function to apply on each
+#'  class, among `mcr_summary`, `mcr_chart`, `thq_pairs_freq`, `thq_freq_by_group`.
+#' @param ... Further arguments to the function `FUN`.
+#' @return See 'Value' of the corresponding help page:
+#'  * [`mcr_summary_by_class`] if `FUN` is `mcr_summary`.
+#'  * [`mcr_chart_by_class`] if `FUN` is `mcr_chart`.
+#'  * [`thq_pairs_freq_by_class`] if `FUN` is `thq_pairs_freq`.
+#'  * [`thq_freq_by_group_by_class`] if `FUN` is `thq_freq_by_group`.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`mcr_summary_by_class`], [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`],
+#'          [`thq_freq_by_group_by_class`].
+#' 
+#' @examples
+#' ## Creating a matrix of 5*50 values, one reference value for each of the 5
+#' ## elements (A, B, C, D and E) and association of classes (C1 to C8) with
+#' ## these elements.
+#' v <- matrix(sample(seq(0.1, 2.1, by = 0.1), 250, replace = TRUE),
+#'             ncol = 50, dimnames = list(LETTERS[1:5]))
+#' r <- sample(seq(1,5), 5, replace = TRUE)
+#' classes <- list(A = c("C5", "C6", "C8"),
+#'                 B = "C8",
+#'                 C = c("C3", "C8"),
+#'                 D = c("C1", "C3", "C4", "C6"),
+#'                 E = c("C2", "C4", "C5", "C7", "C8"))
+#' 
+#' ## Application to the 4 possible functions
+#' mcr_approach_by_class(values = c(A = 1, B = 2, C = 3, D = 4, E = 5),
+#'                       references = r,
+#'                       classes,
+#'                       mcr_summary)
+#' 
+#' mcr_approach_by_class(v, r, classes, mcr_chart,
+#'                       regions_lab = c(TRUE, TRUE, FALSE, TRUE),
+#'                       regression = TRUE,
+#'                       log_transform = FALSE)$C8
+#' 
+#' mcr_approach_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                     V2 = c(A = 2),
+#'                                     V3 = c(B = 3, C = 4)),
+#'                       references = list(c(1, 2),
+#'                                         1,
+#'                                         c(2, 3)),
+#'                       classes,
+#'                       FUN = "thq_pairs_freq", levels = names(classes))
+#' 
+#' mcr_approach_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                     V2 = c(A = 2),
+#'                                     V3 = c(B = 3, C = 4)),
+#'                       references = c(A = 1, B = 2, C = 3),
+#'                       classes,
+#'                       FUN = "thq_freq_by_group", levels = names(classes))
+#' 
+#' @md
+#' @export
+mcr_approach_by_class = function(values, references, classes, FUN, ...) {
+  
+  # Vérification du choix de la fonction (conversion en chaîne de caractères)
+  functions = c("mcr_summary", "mcr_chart", "thq_pairs_freq", "thq_freq_by_group")
+  if (class(FUN) == "function") FUN = deparse(substitute(FUN))
+  if (!(FUN %in% functions))
+    stop("FUN must refer to one of the following functions: ", paste(functions, collapse = ", "), ".")
+  
+  # Appel à la fonction concernée
+  return(do.call(paste0(FUN, "_by_class"),
+                 list(values, references, classes, ...)))
+}
+
+
