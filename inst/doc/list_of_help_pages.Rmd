@@ -57,7 +57,7 @@ Making *SpectralAnalyzer* objects:
 
 * [spectral.analyzer](../html/spectral.analyzer.html)
 * [reset](../html/reset-SpectralAnalyzer-method.html)
-* [\[<-](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html)
+* [\[](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html)
 
 Making charts:
 
@@ -121,10 +121,31 @@ Computation of additional indicators:
 
 Summarising indicators:
 
+* [mcr_summary](../html/mcr_summary.html)
+* [mcr_chart](../html/mcr_chart.html)
 * [thq_pairs_freq](../html/thq_pairs_freq.html)
 * [thq_freq_by_group](../html/thq_freq_by_group.html)
-* [mcr_chart](../html/mcr_chart.html)
-* [mcr_summary](../html/mcr_summary.html)
+
+Application of the approach according to a classification
+
+* [mcr_approach_by_class](../html/mcr_approach_by_class.html)
+* [mcr_summary_by_class](../html/mcr_summary_by_class.html)
+* [mcr_chart_by_class](../html/mcr_chart_by_class.html)
+* [thq_pairs_freq_by_class](../html/thq_pairs_freq_by_class.html)
+* [thq_freq_by_group_by_class](../html/thq_freq_by_group_by_class.html)
+
+
+
+# About lists
+
+For manipulating lists:
+
+* [intersect_on_list](../html/intersect_on_list.html)
+* [union_on_list](../html/union_on_list.html)
+* [table_on_list](../html/table_on_list.html)
+* [turn_list_into_logical_matrix](../html/turn_list_into_logical_matrix.html)
+* [turn_logical_matrix_into_list](../html/turn_logical_matrix_into_list.html)
+* [invert_list](../html/invert_list.html)
 
 
 
