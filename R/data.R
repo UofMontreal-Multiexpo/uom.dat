@@ -1,3 +1,4 @@
+
 #' Example of occupational exposure data
 #' 
 #' An illustrative dataset containing identified substances in specific situations.
@@ -15,6 +16,7 @@
 #'  }
 "oedb_sample"
 
+
 #' Classification of substances by family
 #' 
 #' Classification associating each substance with a unique code, a family and a subfamily.
@@ -27,6 +29,7 @@
 #'    \item{SUBFAMILY}{Subfamily of the substance.}
 #'  }
 "substances_classification"
+
 
 #' Example of a SpectralAnalyzer object
 #' 
@@ -70,3 +73,5 @@
 #' 
 #' For more about the attributes, see \code{\link{SpectralAnalyzer}}.
 "SA_instance"
+
+
