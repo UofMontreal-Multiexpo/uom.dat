@@ -26,6 +26,9 @@ ratio(s).
 Compute the maximum cumulative ratio as the ratio between a hazard index and a maximum hazard quotient.
 It represents the magnitude of the hazard that is underestimated by not performing a cumulative risk
 assessment, given the values and references generating the hazard index and maximum hazard quotient.
+It is bounded by \eqn{1} and \eqn{n}, the number of components. A value close to \eqn{1} means that
+one component is responsible for nearly all the toxicity. A value of \eqn{n} means that all
+components have equal toxicities.
 }
 \details{
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard index

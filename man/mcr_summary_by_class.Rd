@@ -139,8 +139,13 @@ Application of the maximum cumulative ratio (MCR) as a screening tool for the ev
 \url{https://doi.org/10.1016/j.scitotenv.2014.01.083}.
 }
 \seealso{
-\code{\link{mcr_summary}}, \code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_freq_by_class}},
-\code{\link{thq_freq_by_group_by_class}}.
+Summary independent of classes: \code{\link{mcr_summary}}.
+
+Other functions of the MCR approach applying according to classes: \code{\link{mcr_chart_by_class}},
+\code{\link{thq_pairs_freq_by_class}}, \code{\link{thq_freq_by_group_by_class}}.
+
+Specific indicators: \code{\link{hazard_index}}, \code{\link{maximum_cumulative_ratio}}, \code{\link{reciprocal_of_mcr}},
+\code{\link{classify_mixture}}, \code{\link{top_hazard_quotient}}, \code{\link{maximum_hazard_quotient}}, \code{\link{missed_toxicity}}.
 }
 \author{
 Gauthier Magnin

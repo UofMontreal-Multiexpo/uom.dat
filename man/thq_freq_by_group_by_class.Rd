@@ -29,7 +29,14 @@ its associated group. The length of the list corresponds to the number of classe
 \description{
 Build contingency tables of the counts of each combination of name of the element producing the
 top hazard quotient with the associated MIAT group, according to classes. For each class, one table
-is built from the subset of values corresponding to this class.
+is built from the subset of values corresponding to this class. The groups describe the following
+situations:
+\itemize{
+\item Group I: the mixture presents a potential risk already based on individual components.
+\item Group II: the assessment does not identify a concern.
+\item Group IIIA: the majority of the risk offered by the mixture is driven by one component.
+\item Group IIIB: the potential risk is driven by multiple components.
+}
 }
 \details{
 If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
@@ -105,8 +112,12 @@ An analysis of cumulative risks based on biomonitoring data for six phthalates u
 \url{https://doi.org/10.1016/j.envint.2017.12.008}.
 }
 \seealso{
-\code{\link{thq_freq_by_group}}, \code{\link{mcr_summary_by_class}}, \code{\link{mcr_chart_by_class}},
-\code{\link{thq_pairs_freq_by_class}}.
+Contingency table independent of classes: \code{\link{thq_freq_by_group}}.
+
+Other functions of the MCR approach applying according to classes: \code{\link{mcr_summary_by_class}},
+\code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_freq_by_class}}.
+
+Specific indicators: \code{\link{classify_mixture}}, \code{\link{top_hazard_quotient}}, \code{\link{hazard_quotient}}.
 }
 \author{
 Gauthier Magnin

@@ -187,6 +187,9 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
 #' Compute the maximum cumulative ratio as the ratio between a hazard index and a maximum hazard quotient.
 #' It represents the magnitude of the hazard that is underestimated by not performing a cumulative risk
 #'  assessment, given the values and references generating the hazard index and maximum hazard quotient.
+#' It is bounded by \eqn{1} and \eqn{n}, the number of components. A value close to \eqn{1} means that
+#'  one component is responsible for nearly all the toxicity. A value of \eqn{n} means that all
+#'  components have equal toxicities.
 #' 
 #' @details
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard index
@@ -507,7 +510,12 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 #' Classify mixture into the four MIAT groups
 #' 
 #' Classify mixtures into four groups according to the CEFIC-MIAT (Mixtures Industry Ad-hoc Team)
-#'  decision tree, each one requiring a different risk management strategy.
+#'  decision tree, each one requiring a different risk management strategy. The groups describe the
+#'  following situations:
+#'  * Group I: the mixture presents a potential risk already based on individual components.
+#'  * Group II: the assessment does not identify a concern.
+#'  * Group IIIA: the majority of the risk offered by the mixture is driven by one component.
+#'  * Group IIIB: the potential risk is driven by multiple components.
 #' 
 #' @details
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
@@ -955,7 +963,7 @@ mcr_summary_for_list = function(values, references) {
 #' *The Science of the Total Environment*, 479-480, 267-276.
 #' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
 #' @seealso [`mcr_summary`], [`maximum_cumulative_ratio`], [`hazard_index`], [`reciprocal_of_mcr`],
-#'          [`top_hazard_quotient`].
+#'          [`top_hazard_quotient`], [`classify_mixture`].
 #' 
 #' @examples
 #' ## Creating a matrix of 5*50 values and one reference value for each of the 5
@@ -1539,7 +1547,11 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #' Top Hazard Quotients frequency by group
 #' 
 #' Build a contingency table of the counts of each combination of name of the element producing the
-#'  top hazard quotient with the associated MIAT group.
+#'  top hazard quotient with the associated MIAT group. The groups describe the following situations:
+#'  * Group I: the mixture presents a potential risk already based on individual components.
+#'  * Group II: the assessment does not identify a concern.
+#'  * Group IIIA: the majority of the risk offered by the mixture is driven by one component.
+#'  * Group IIIB: the potential risk is driven by multiple components.
 #' 
 #' @details
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
@@ -1779,8 +1791,14 @@ check_data_for_mcr_by_class = function(values, references, vector = TRUE, matrix
 #' 
 #' @author Gauthier Magnin
 #' @inherit mcr_summary references
-#' @seealso [`mcr_summary`], [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`],
-#'          [`thq_freq_by_group_by_class`].
+#' @seealso
+#' Summary independent of classes: [`mcr_summary`].
+#' 
+#' Other functions of the MCR approach applying according to classes: [`mcr_chart_by_class`],
+#'  [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
+#' 
+#' Specific indicators: [`hazard_index`], [`maximum_cumulative_ratio`], [`reciprocal_of_mcr`],
+#'  [`classify_mixture`], [`top_hazard_quotient`], [`maximum_hazard_quotient`], [`missed_toxicity`].
 #' 
 #' @examples
 #' ## Association of classes (C1 to C8) with elements A, B, C, D and E
@@ -2041,8 +2059,14 @@ subset_from_class = function(values, references, classes, class_name) {
 #' 
 #' @author Gauthier Magnin
 #' @inherit mcr_chart references
-#' @seealso [`mcr_chart`], [`mcr_summary_by_class`], [`thq_pairs_freq_by_class`],
-#'          [`thq_freq_by_group_by_class`].
+#' @seealso
+#' Chart independent of classes: [`mcr_chart`].
+#' 
+#' Other functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
+#'  [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
+#' 
+#' Specific indicators: [`hazard_index`], [`maximum_cumulative_ratio`], [`reciprocal_of_mcr`],
+#'  [`top_hazard_quotient`], [`classify_mixture`].
 #' 
 #' @examples
 #' ## Creating a matrix of 5*50 values and one reference value for each of the 5
@@ -2257,7 +2281,12 @@ thq_pairs_freq_by_class = function(values, references, classes,
 #' 
 #' Build contingency tables of the counts of each combination of name of the element producing the
 #'  top hazard quotient with the associated MIAT group, according to classes. For each class, one table
-#'  is built from the subset of values corresponding to this class.
+#'  is built from the subset of values corresponding to this class. The groups describe the following
+#'  situations:
+#'  * Group I: the mixture presents a potential risk already based on individual components.
+#'  * Group II: the assessment does not identify a concern.
+#'  * Group IIIA: the majority of the risk offered by the mixture is driven by one component.
+#'  * Group IIIB: the potential risk is driven by multiple components.
 #' 
 #' @details
 #' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
@@ -2307,8 +2336,13 @@ thq_pairs_freq_by_class = function(values, references, classes,
 #' 
 #' @author Gauthier Magnin
 #' @inherit thq_freq_by_group references
-#' @seealso [`thq_freq_by_group`], [`mcr_summary_by_class`], [`mcr_chart_by_class`],
-#'          [`thq_pairs_freq_by_class`].
+#' @seealso  
+#' Contingency table independent of classes: [`thq_freq_by_group`].
+#' 
+#' Other functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
+#'  [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`].
+#' 
+#' Specific indicators: [`classify_mixture`], [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
 #' @examples
 #' ## Creating a matrix of 5*50 values, one reference value for each of the 5

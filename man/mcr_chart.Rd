@@ -186,7 +186,7 @@ Application of the maximum cumulative ratio (MCR) as a screening tool for the ev
 }
 \seealso{
 \code{\link{mcr_summary}}, \code{\link{maximum_cumulative_ratio}}, \code{\link{hazard_index}}, \code{\link{reciprocal_of_mcr}},
-\code{\link{top_hazard_quotient}}.
+\code{\link{top_hazard_quotient}}, \code{\link{classify_mixture}}.
 }
 \author{
 Gauthier Magnin

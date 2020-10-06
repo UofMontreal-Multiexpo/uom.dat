@@ -27,7 +27,14 @@ the mixture(s).
 }
 \description{
 Classify mixtures into four groups according to the CEFIC-MIAT (Mixtures Industry Ad-hoc Team)
-decision tree, each one requiring a different risk management strategy.
+decision tree, each one requiring a different risk management strategy. The groups describe the
+following situations:
+\itemize{
+\item Group I: the mixture presents a potential risk already based on individual components.
+\item Group II: the assessment does not identify a concern.
+\item Group IIIA: the majority of the risk offered by the mixture is driven by one component.
+\item Group IIIB: the potential risk is driven by multiple components.
+}
 }
 \details{
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes

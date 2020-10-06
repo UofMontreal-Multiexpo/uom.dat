@@ -32,7 +32,13 @@ associated group.
 }
 \description{
 Build a contingency table of the counts of each combination of name of the element producing the
-top hazard quotient with the associated MIAT group.
+top hazard quotient with the associated MIAT group. The groups describe the following situations:
+\itemize{
+\item Group I: the mixture presents a potential risk already based on individual components.
+\item Group II: the assessment does not identify a concern.
+\item Group IIIA: the majority of the risk offered by the mixture is driven by one component.
+\item Group IIIB: the potential risk is driven by multiple components.
+}
 }
 \details{
 If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
