@@ -1150,6 +1150,12 @@ plot_mcr_log_part = function(chart, xlim, ylim,
   xmax_fun = xlim[2] + 1
   root_fun = uniroot(fun.mhq_1, c(0, 1))$root   # fun.mhq_1(log10(2)) = 0
   
+  # Pour placement du label "Group IIIB" : abscisse maximale de la courbe fun.mhq_1 selon la limite
+  # fixée par ylim (fonction inverse de fun.mhq_1 := log10(10^y + 1))
+  xmax_fun.mhq_1_visible = log10(10^ylim[2] + 1)
+  x_to_use = if (xlim[2] <= xmax_fun.mhq_1_visible) xlim[2] else xmax_fun.mhq_1_visible
+  x_groupIIIB = if (xlim[1] > 0) (x_to_use + xlim[1]) / 2 else x_to_use / 2
+  
   # Texte relatif aux groupes
   if (any(regions_lab)) {
     # Vérification des zones affichées (non-affichage du texte des zones qui ne sont pas affichées)
@@ -1159,7 +1165,7 @@ plot_mcr_log_part = function(chart, xlim, ylim,
                                   ylim[2] > 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[2] > fun.mhq_1(xlim[1]))) # Coin haut-gauche au dessus de f
     
     chart = chart + ggplot2::annotate(geom = "text",
-                                      x = c(xlim[2], xlim[1], root_fun / 2, if (xlim[1] > 0) (xlim[2] + xlim[1]) / 2 else xlim[2] / 2)[regions_lab],
+                                      x = c(xlim[2], xlim[1], root_fun / 2, x_groupIIIB)[regions_lab],
                                       y = c(ylim[1], ylim[1], -0.05, ylim[2])[regions_lab],
                                       hjust = c(1, 0, 0.5, 0.5)[regions_lab],
                                       vjust = c(0, 0, 0.5, 1)[regions_lab],
@@ -1267,7 +1273,12 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
                                   ylim[2] > 2 && xlim[1] < ylim[1] && xlim[2] > 1)
     
     chart = chart + ggplot2::annotate(geom = "text",
-                                      x = c(xlim[2], xlim[1], 1.5, if (xlim[1] >= 1) (xlim[2] + xlim[1]) / 2 + xlim[1] else (xlim[2] + 1) / 2)[regions_lab],
+                                      x = c(xlim[2],
+                                            xlim[1],
+                                            1.5,
+                                            if (xlim[1] >= 1) (min(xlim[2], ylim[2]) + xlim[1]) / 2 + xlim[1]
+                                            else (min(xlim[2], ylim[2]) + 1) / 2
+                                          )[regions_lab],
                                       y = c(ylim[1] + (ylim[2] - ylim[1]) / 100, ylim[2], 1.95, ylim[2])[regions_lab],
                                       hjust = c(1, 0, 0.5, 0.5)[regions_lab],
                                       vjust = c(0, 1, 1, 1)[regions_lab],
