@@ -1902,6 +1902,8 @@ mcr_summary_by_class = function(values, references, classes) {
     })
     # Retrait des classes pour lesquelles il n'y a aucune valeur
     summary = summary[!is.na(summary)]
+    # NULL si les valeurs ne sont associées à aucune classe
+    if (length(summary) == 0) return(NULL)
     
     # Conversion en deux temps car les facteurs sont transformés en numeric
     to_return = data.frame(matrix(unlist(summary), nrow = length(summary), byrow = TRUE))
