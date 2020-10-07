@@ -90,6 +90,40 @@ turn_list_into_char = function(x) {
 }
 
 
+#' Turn into data frame
+#' 
+#' Turn a table, a matrix or a vector into a data frame.
+#' 
+#' @details
+#' If `x` is a vector, the output is a one-line data frame.
+#' Otherwise, the output has the same dimensions as `x`.
+#' 
+#' @param x Table, matrix or vector to turn into a data frame.
+#' @return Data frame corresponding to the input variable.
+#' 
+#' @author Gauthier Magnin
+#' @md
+#' @keywords internal
+turn_into_data_frame = function(x) {
+  
+  if (is.table(x)) {
+    df_x = as.data.frame(matrix(x, ncol = ncol(x)))
+    rownames(df_x) = rownames(x)
+    colnames(df_x) = colnames(x)
+    
+  } else if (is.matrix(x)) {
+    df_x = as.data.frame(x)
+    rownames(df_x) = rownames(x)
+    colnames(df_x) = colnames(x)
+    
+  } else if (is.vector(x)) {
+    df_x = as.data.frame(t(x))
+  }
+  
+  return(df_x)
+}
+
+
 #' Turn a set notation into a vector notation
 #' 
 #' Convert itemsets written in mathematical notation into a list of character vectors.
