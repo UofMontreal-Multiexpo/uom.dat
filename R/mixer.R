@@ -340,7 +340,8 @@ missed_toxicity = function(values = NULL, references = NULL,
 
 #' Reciprocal of Maximum Cumulative Ratio
 #' 
-#' Compute the reciprocal of maximum cumulative ratio.
+#' Compute the reciprocal of maximum cumulative ratio, which measures the percentage contribution of
+#'  the maximum hazard quotient to the total hazard.
 #' 
 #' @details
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard index
@@ -1779,7 +1780,46 @@ check_data_for_mcr_by_class = function(values, references, vector = TRUE, matrix
 #'  Indicators are computed for each set of values and for each class. For each class, only values
 #'  corresponding to this class are considered.
 #' 
-#' @inherit mcr_summary details
+#' @details
+#' If `values` is a vector, the reference values are directly associated with these values.
+#' 
+#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
+#'  reference value for each row of the matrix).
+#'  
+#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
+#'  if `references` is a vector, there must be one reference for each name present in `values`.
+#'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
+#'  so that `values` and `references` can be matched.
+#' 
+#' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
+#'  function with such a matrix is faster.
+#'  
+#' \loadmathjax
+#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
+#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
+#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' The maximum hazard quotient of the vector \eqn{i} is given by:
+#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
+#'  where \eqn{N} denotes the number of hazard quotients.
+#' 
+#' The hazard index of the vector \eqn{i} is given by:
+#'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
+#' 
+#' The maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+#' 
+#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
+#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+#' 
+#' The missed toxicity of the vector \eqn{i} is given by:
+#'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
+#'  
+#' The mixtures are assigned to the groups according the following conditions:
+#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
+#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
+#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
+#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
 #' 
 #' @param values Numeric named vector or matrix, or list of numeric named vectors.
 #'  Values whose indicators of the MCR approach are to be computed according to classes.
@@ -2013,6 +2053,9 @@ subset_from_class = function(values, references, classes, class_name) {
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
+#'  
+#' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
+#'  function with such a matrix is faster.
 #' 
 #' The charts being created with the `ggplot2` package, they can be modified or completed afterwards
 #'  using the returned object.
@@ -2192,6 +2235,9 @@ mcr_chart_by_class = function(values, references, classes,
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
 #'  
+#' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
+#'  function with such a matrix is faster.
+#'  
 #' \loadmathjax
 #' The hazard index of the vector \eqn{i} is given by:
 #'  \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
@@ -2309,6 +2355,9 @@ thq_pairs_freq_by_class = function(values, references, classes,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
+#'  
+#' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
+#'  function with such a matrix is faster.
 #' 
 #' \loadmathjax
 #' The mixtures are assigned to the groups according the following conditions:
@@ -2440,6 +2489,9 @@ thq_freq_by_group_by_class = function(values, references, classes,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
+#' 
+#' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
+#'  function with such a matrix is faster.
 #' 
 #' @param values Numeric named vector or matrix, or list of numeric named vectors.
 #'  Values on which to perform the MCR approach according to classes.

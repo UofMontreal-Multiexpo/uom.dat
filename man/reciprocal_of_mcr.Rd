@@ -28,7 +28,8 @@ Numeric value or vector (according to \code{values}, to \code{hi} and \code{mhq}
 reciprocal of maximum cumulative ratio(s).
 }
 \description{
-Compute the reciprocal of maximum cumulative ratio.
+Compute the reciprocal of maximum cumulative ratio, which measures the percentage contribution of
+the maximum hazard quotient to the total hazard.
 }
 \details{
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard index

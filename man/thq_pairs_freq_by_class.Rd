@@ -45,6 +45,9 @@ if \code{references} is a vector, there must be one reference for each name pres
 Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
 so that \code{values} and \code{references} can be matched.
 
+If \code{classes} is a list, it will be turned into a logical matrix before processing. Thus, call the
+function with such a matrix is faster.
+
 \loadmathjax
 The hazard index of the vector \eqn{i} is given by:
 \mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}

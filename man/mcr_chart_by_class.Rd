@@ -75,6 +75,9 @@ if \code{references} is a vector, there must be one reference for each name pres
 Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
 so that \code{values} and \code{references} can be matched.
 
+If \code{classes} is a list, it will be turned into a logical matrix before processing. Thus, call the
+function with such a matrix is faster.
+
 The charts being created with the \code{ggplot2} package, they can be modified or completed afterwards
 using the returned object.
 
