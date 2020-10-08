@@ -2167,10 +2167,10 @@ mcr_chart_by_class = function(values, references, classes,
   
   # Affichage d'un message en fonction des warnings rencontrés
   if (any(class_warnings)) {
-    if (sum(class_warnings) == 1) message("One warning message in chart plotting for class ",
-                                          names(class_warnings)[class_warnings], ":")
-    else message("Warnings messages in chart plotting for classes ",
-                 paste(names(class_warnings)[class_warnings], collapse = ", "), ":")
+    if (sum(class_warnings) == 1) message("One warning message in chart plotting for class \"",
+                                          names(class_warnings)[class_warnings], "\":")
+    else message("Warnings messages in chart plotting for classes \"",
+                 paste(names(class_warnings)[class_warnings], collapse = "\", \""), "\":")
   }
   
   return(charts[!is.na(charts)])
