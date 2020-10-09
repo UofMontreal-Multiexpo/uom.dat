@@ -1,4 +1,4 @@
-#' @include utils.R
+#' @include list_manager.R utils.R
 NULL
 
 
