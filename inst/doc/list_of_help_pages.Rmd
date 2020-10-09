@@ -138,14 +138,24 @@ Application of the approach according to a classification
 
 # About lists
 
-For manipulating lists:
+Computation on lists:
 
 * [intersect_on_list](../html/intersect_on_list.html)
 * [union_on_list](../html/union_on_list.html)
 * [table_on_list](../html/table_on_list.html)
-* [turn_list_into_logical_matrix](../html/turn_list_into_logical_matrix.html)
-* [turn_logical_matrix_into_list](../html/turn_logical_matrix_into_list.html)
+
+Transformation of lists:
+
 * [invert_list](../html/invert_list.html)
+* [turn_list_into_logical_matrix](../html/turn_list_into_logical_matrix.html)
+* [turn_list_into_char_matrix](../html/turn_list_into_char_matrix)
+* [turn_list_into_data_frame](../html/turn_list_into_data_frame)
+
+Transformation into lists:
+
+* [turn_logical_matrix_into_list](../html/turn_logical_matrix_into_list.html)
+* [turn_char_matrix_into_list](../html/turn_char_matrix_into_list)
+* [turn_data_frame_into_list](../html/turn_data_frame_into_list)
 
 
 
