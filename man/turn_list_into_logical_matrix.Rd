@@ -7,17 +7,17 @@
 turn_list_into_logical_matrix(x, by_name = FALSE)
 }
 \arguments{
-\item{x}{List to turn into a logical matrix.}
+\item{x}{List of vectors to turn into a logical matrix.}
 
-\item{by_name}{If \code{FALSE}, use the values of the elements of the list. If \code{TRUE}, use the names of
-these values.}
+\item{by_name}{If \code{FALSE}, use the values of the list. If \code{TRUE}, use the names of these values.}
 }
 \value{
 Logical matrix in which row names are the names of the list and column names are the values
-found in the elements of the list or the names of these values (according to \code{by_name}).
+of the list or the names of these values (according to \code{by_name}).
 }
 \description{
-Turn a list into a logical matrix using the values of the list or the names of these values.
+Turn a list into a logical matrix associating names of the list with its values or with the names of
+these values.
 }
 \examples{
 l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
@@ -31,7 +31,8 @@ turn_list_into_logical_matrix(l, by_name = TRUE)
 
 }
 \seealso{
-\code{\link{turn_logical_matrix_into_list}}, \code{\link{invert_list}}.
+\code{\link{turn_logical_matrix_into_list}}, \code{\link{turn_list_into_char_matrix}},
+\code{\link{turn_list_into_data_frame}}, \code{\link{invert_list}}.
 }
 \author{
 Gauthier Magnin

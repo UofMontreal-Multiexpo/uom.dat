@@ -13,7 +13,7 @@ turn_logical_matrix_into_list(x, by_row = TRUE)
 the columns as names of the list.}
 }
 \value{
-List in which the values correspond to the \code{TRUE} values of each row or of each column
+List in which the values correspond to the values \code{TRUE} of each row or of each column
 (according to \code{by_row}).
 }
 \description{
@@ -34,7 +34,8 @@ turn_logical_matrix_into_list(m, by_row = FALSE)
 
 }
 \seealso{
-\code{\link{turn_logical_matrix_into_list}}, \code{\link{invert_list}}.
+\code{\link{turn_list_into_logical_matrix}}, \code{\link{turn_char_matrix_into_list}},
+\code{\link{turn_data_frame_into_list}}, \code{\link{invert_list}}.
 }
 \author{
 Gauthier Magnin
