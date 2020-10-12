@@ -1760,20 +1760,23 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
   
   # Vérification du nommage de values et references si values peut être une liste, une matrice, un vecteur
   if (list && is.list(values)) {
-    if (is.null(references) && !is.named(values)[2])
-      stop("If values is a list, it must contain vector of named numeric values.")
     
-    if (is.list(references)) {
-      if (any(sapply(values, length) != sapply(references, length)))
-        stop("If values and references are two lists, the lengths of their elements must match.")
-      if (!is.named(values)[2])
+    if (is.null(references)){
+      if(!is.named(values)[2])
         stop("If values is a list, it must contain vector of named numeric values.")
-      
-    } else if (is.vector(references)) {
-      if (!is.named(references) || !is.named(values)[2])
-        stop("If values is a list and references is a vector, both must contained named values.")
-    } else
-      stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
+    } else {
+      if (is.list(references)) {
+        if (any(sapply(values, length) != sapply(references, length)))
+          stop("If values and references are two lists, the lengths of their elements must match.")
+        if (!is.named(values)[2])
+          stop("If values is a list, it must contain vector of named numeric values.")
+        
+      } else if (is.vector(references)) {
+        if (!is.named(references) || !is.named(values)[2])
+          stop("If values is a list and references is a vector, both must contained named values.")
+      } else
+        stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
+    }
   }
   else if (matrix && is.matrix(values) && !is.named(values)[1]) stop("If values is a matrix, its rows must be named.")
   else if (vector && is.vector(values) && !is.named(values)) stop("If values is a vector, it must have named numeric values.")
