@@ -177,6 +177,8 @@ Application of the maximum cumulative ratio (MCR) as a screening tool for the ev
 \seealso{
 Chart independent of classes: \code{\link{mcr_chart}}.
 
+Generic function to apply the MCR approach according to classes: \code{\link{mcr_approach_by_class}}.
+
 Other functions of the MCR approach applying according to classes: \code{\link{mcr_summary_by_class}},
 \code{\link{thq_pairs_freq_by_class}}, \code{\link{thq_freq_by_group_by_class}}.
 

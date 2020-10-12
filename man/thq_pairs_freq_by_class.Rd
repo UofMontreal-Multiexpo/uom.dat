@@ -97,8 +97,14 @@ An analysis of cumulative risks based on biomonitoring data for six phthalates u
 \url{https://doi.org/10.1016/j.envint.2017.12.008}.
 }
 \seealso{
-\code{\link{thq_pairs_freq}}, \code{\link{mcr_summary_by_class}}, \code{\link{mcr_chart_by_class}},
-\code{\link{thq_freq_by_group_by_class}}.
+Contingency table independent of classes: \code{\link{thq_pairs_freq}}.
+
+Generic function to apply the MCR approach according to classes: \code{\link{mcr_approach_by_class}}.
+
+Other functions of the MCR approach applying according to classes: \code{\link{mcr_summary_by_class}},
+\code{\link{mcr_chart_by_class}}, \code{\link{thq_freq_by_group_by_class}}.
+
+Specific indicators: \code{\link{top_hazard_quotient}}, \code{\link{hazard_quotient}}.
 }
 \author{
 Gauthier Magnin

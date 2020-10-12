@@ -117,6 +117,8 @@ An analysis of cumulative risks based on biomonitoring data for six phthalates u
 \seealso{
 Contingency table independent of classes: \code{\link{thq_freq_by_group}}.
 
+Generic function to apply the MCR approach according to classes: \code{\link{mcr_approach_by_class}}.
+
 Other functions of the MCR approach applying according to classes: \code{\link{mcr_summary_by_class}},
 \code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_freq_by_class}}.
 

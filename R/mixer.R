@@ -1848,8 +1848,10 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
 #' 
 #' @author Gauthier Magnin
 #' @inherit mcr_summary references
-#' @seealso
+#' @seealso 
 #' Summary independent of classes: [`mcr_summary`].
+#' 
+#' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
 #' 
 #' Other functions of the MCR approach applying according to classes: [`mcr_chart_by_class`],
 #'  [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
@@ -1905,7 +1907,7 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
 #' @export
 mcr_summary_by_class = function(values, references, classes) {
   
-  # Vérification des types des paramètres values et references
+  # Utilisation des classes sous forme de matrice binaire
   if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
   else if (!is.matrix(classes) || typeof(classes) != "logical")
     stop("classes must be a list or a logical matrix.")
@@ -1994,8 +1996,11 @@ mcr_summary_by_class = function(values, references, classes) {
 #' }
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`mcr_approach_by_class`], [`mcr_summary_by_class`], [`mcr_chart_by_class`],
-#'          [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
+#' @seealso 
+#' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
+#' 
+#' Specific functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
+#'  [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
 #' 
 #' @examples
 #' ## Association of classes (C1 to C8) with elements A, B, C, D and E
@@ -2180,8 +2185,10 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
 #' 
 #' @author Gauthier Magnin
 #' @inherit mcr_chart references
-#' @seealso
+#' @seealso 
 #' Chart independent of classes: [`mcr_chart`].
+#' 
+#' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
 #' 
 #' Other functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
 #'  [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
@@ -2240,7 +2247,7 @@ mcr_chart_by_class = function(values, references, classes,
                               regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
                               regions_lab = !regions, regression = FALSE, log_transform = TRUE, plot = FALSE) {
   
-  # Vérification des types des paramètres values et references
+  # Utilisation des classes sous forme de matrice binaire
   if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
   else if (!is.matrix(classes) || typeof(classes) != "logical")
     stop("classes must be a list or a logical matrix.")
@@ -2331,8 +2338,15 @@ mcr_chart_by_class = function(values, references, classes,
 #' 
 #' @author Gauthier Magnin
 #' @inherit thq_pairs_freq references
-#' @seealso [`thq_pairs_freq`], [`mcr_summary_by_class`], [`mcr_chart_by_class`],
-#'          [`thq_freq_by_group_by_class`].
+#' @seealso 
+#' Contingency table independent of classes: [`thq_pairs_freq`].
+#' 
+#' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
+#' 
+#' Other functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
+#'  [`mcr_chart_by_class`], [`thq_freq_by_group_by_class`].
+#' 
+#' Specific indicators: [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
 #' @examples
 #' ## Creating a matrix of 5*50 values, one reference value for each of the 5
@@ -2371,7 +2385,7 @@ mcr_chart_by_class = function(values, references, classes,
 thq_pairs_freq_by_class = function(values, references, classes,
                                    levels = NULL) {
   
-  # Vérification des types des paramètres values et references
+  # Utilisation des classes sous forme de matrice binaire
   if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
   else if (!is.matrix(classes) || typeof(classes) != "logical")
     stop("classes must be a list or a logical matrix.")
@@ -2463,8 +2477,10 @@ thq_pairs_freq_by_class = function(values, references, classes,
 #' 
 #' @author Gauthier Magnin
 #' @inherit thq_freq_by_group references
-#' @seealso  
+#' @seealso 
 #' Contingency table independent of classes: [`thq_freq_by_group`].
+#' 
+#' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
 #' 
 #' Other functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
 #'  [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`].
@@ -2508,7 +2524,7 @@ thq_pairs_freq_by_class = function(values, references, classes,
 thq_freq_by_group_by_class = function(values, references, classes,
                                       levels = NULL) {
   
-  # Vérification des types des paramètres values et references
+  # Utilisation des classes sous forme de matrice binaire
   if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
   else if (!is.matrix(classes) || typeof(classes) != "logical")
     stop("classes must be a list or a logical matrix.")
