@@ -1043,7 +1043,7 @@ mcr_chart = function(values = NULL, references = NULL,
       # Calcul des indicateurs nécessaires
       hi = sapply(values, function(v) hazard_index(v, references[names(v)]))
       mcr = sapply(values, function(v) maximum_cumulative_ratio(v, references[names(v)]))
-      thq = sapply(values, function(v) top_hazard_quotient(v, references[names(v)], k = 1))
+      thq = sapply(unname(values), function(v) top_hazard_quotient(v, references[names(v)], k = 1))
       
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
     
@@ -1692,7 +1692,7 @@ thq_freq_by_group = function(values = NULL, references = NULL,
         stop("If values is a list and references is a vector. Both must contained named values.")
       
       # Calcul des indicateurs nécessaires
-      thq = sapply(values, function(v) top_hazard_quotient(v, references[names(v)], k = 1))
+      thq = sapply(unname(values), function(v) top_hazard_quotient(v, references[names(v)], k = 1))
       groups = sapply(values, function(v) classify_mixture(v, references[names(v)]))
       
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
