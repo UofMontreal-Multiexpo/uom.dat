@@ -221,7 +221,7 @@ invert_list = function(x, by_name = FALSE) {
 turn_list_into_logical_matrix = function(x, by_name = FALSE) {
   if (by_name) {
     if (!is.named(x)[2]) stop("Values of the elements of x must be named.")
-    columns = unique(unlist(sapply(x, names)))
+    columns = sort(unique(unlist(sapply(x, names))))
     y = t(sapply(x, function(row) columns %in% names(row)))
     
   } else {
