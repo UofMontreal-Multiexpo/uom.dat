@@ -213,7 +213,7 @@ invert_list = function(x, by_name = FALSE) {
 #'           e4 = c(v1 = "A", v2 = "C", v3 = "D", v4 = "F"),
 #'           e5 = c(v1 = "B", v2 = "D", v3 = "E", v4 = "I", v5 = "G"))
 #' 
-#' turn_list_into_logical_matrix(l, by_name = FALSE)
+#' turn_list_into_logical_matrix(l)
 #' turn_list_into_logical_matrix(l, by_name = TRUE)
 #' 
 #' @md
@@ -344,7 +344,7 @@ turn_list_into_data_frame = function(x, by_name = FALSE,
 #'             dimnames = list(c("e1", "e2", "e3", "e4", "e5"),
 #'                             c("A", "B", "C", "D", "E", "F", "G", "I")))
 #' 
-#' turn_logical_matrix_into_list(m, by_row = TRUE)
+#' turn_logical_matrix_into_list(m)
 #' turn_logical_matrix_into_list(m, by_row = FALSE)
 #' 
 #' @md

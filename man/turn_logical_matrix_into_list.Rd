@@ -29,7 +29,7 @@ m <- matrix(c(FALSE, FALSE, FALSE, FALSE, TRUE,  TRUE,  FALSE, TRUE,
             dimnames = list(c("e1", "e2", "e3", "e4", "e5"),
                             c("A", "B", "C", "D", "E", "F", "G", "I")))
 
-turn_logical_matrix_into_list(m, by_row = TRUE)
+turn_logical_matrix_into_list(m)
 turn_logical_matrix_into_list(m, by_row = FALSE)
 
 }

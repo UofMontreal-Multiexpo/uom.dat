@@ -26,7 +26,7 @@ l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
           e4 = c(v1 = "A", v2 = "C", v3 = "D", v4 = "F"),
           e5 = c(v1 = "B", v2 = "D", v3 = "E", v4 = "I", v5 = "G"))
 
-turn_list_into_logical_matrix(l, by_name = FALSE)
+turn_list_into_logical_matrix(l)
 turn_list_into_logical_matrix(l, by_name = TRUE)
 
 }
