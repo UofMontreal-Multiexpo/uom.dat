@@ -2082,10 +2082,12 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
       
       if (sum(indices) != 0) {
         nb_elements = nb_elements + 1
-        values_class[[nb_elements]] = values[[i]][indices]
+        name_element = if (is.null(names(values))) nb_elements else names(values)[i]
+          
+        values_class[[name_element]] = values[[i]][indices]
         
         if (!is.null(references) && is.list(references))
-          references_class[[nb_elements]] = references[[i]][indices]
+          references_class[[name_element]] = references[[i]][indices]
       }
     }
   }
