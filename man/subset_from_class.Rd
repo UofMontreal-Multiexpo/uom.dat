@@ -4,7 +4,7 @@
 \alias{subset_from_class}
 \title{Subsets of values and references by class}
 \usage{
-subset_from_class(values, references, classes, class_name)
+subset_from_class(values, references = NULL, classes, class_name)
 }
 \arguments{
 \item{values}{Numeric named matrix or list of numeric named vectors. Values from which to extract a
@@ -13,7 +13,9 @@ subset according to one specific class.}
 \item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
 \code{values}. See 'Details' to know the way it is associated with \code{values}.}
 
-\item{classes}{Logical matrix whose columns are named according to the classes and the row names
+\item{classes}{List or logical matrix associating the \code{values} names with classes.
+If list, its names are those present in \code{values} and the elements are vectors of associated classes.
+If logical matrix, its columns are named according to the classes and the row names
 contain the names associated with the \code{values}. A \code{TRUE} value indicates that a specific name
 is part of a specific class.}
 
@@ -21,6 +23,8 @@ is part of a specific class.}
 subsets of \code{values} and \code{references}.}
 }
 \value{
+If \code{references = NULL}, subset of values that correspond to the class of interest. If not,
+list containing:
 \describe{
 \item{\code{values}}{Subset of values that correspond to the class of interest.}
 \item{\code{references}}{Subset of references that correspond to the class of interest.}
@@ -37,11 +41,49 @@ if \code{references} is a vector, there must be one reference for each name pres
 Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
 so that \code{values} and \code{references} can be matched.
 }
+\examples{
+## Association of classes (C1 to C8) with elements A, B, C, D and E
+classes <- list(A = c("C5", "C6", "C8"),
+                B = "C8",
+                C = c("C3", "C8"),
+                D = c("C1", "C3", "C4", "C6"),
+                E = c("C2", "C4", "C5", "C7", "C8"))
+
+## Subsets with values as a matrix
+subset_from_class(values = matrix(c(0.1,0.2,0.3,0.4,0.5,
+                                    0.6,0.7,0.8,0.9,1.),
+                                  ncol = 2,
+                                  dimnames = list(LETTERS[1:5], c("V1", "V2"))),
+                  references = c(1,2,3,4,5),
+                  classes = classes,
+                  class_name = "C8")
+
+## Subsets with values as a list
+v <- list(V1 = c(A = 0.1, D = 0.5),
+          V2 = c(D = 0.2),
+          V3 = c(A = 0.3, C = 0.4))
+
+subset_from_class(values = v,
+                  classes = classes,
+                  class_name = "C8")
+
+subset_from_class(values = v,
+                  references = c(A = 1, C = 3, D = 4),
+                  classes = classes,
+                  class_name = "C8")
+
+subset_from_class(values = v,
+                  references = list(c(1, 4),
+                                    4,
+                                    c(1, 3)),
+                  classes = classes,
+                  class_name = "C8")
+
+}
 \seealso{
-\code{\link{mcr_summary_by_class}}, \code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_freq_by_class}},
-\code{\link{thq_freq_by_group_by_class}}.
+\code{\link{mcr_approach_by_class}}, \code{\link{mcr_summary_by_class}}, \code{\link{mcr_chart_by_class}},
+\code{\link{thq_pairs_freq_by_class}}, \code{\link{thq_freq_by_group_by_class}}.
 }
 \author{
 Gauthier Magnin
 }
-\keyword{internal}

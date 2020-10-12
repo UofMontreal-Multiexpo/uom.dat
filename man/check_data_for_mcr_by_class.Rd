@@ -6,7 +6,7 @@
 \usage{
 check_data_for_mcr_by_class(
   values,
-  references,
+  references = NULL,
   vector = TRUE,
   matrix = TRUE,
   list = TRUE
@@ -39,9 +39,12 @@ The criteria about naming and structure are the following:
 \item If \code{values} and \code{references} are two lists, lengths of the elements of these lists must match.
 \item If \code{values} is a list and \code{references} is a vector, the values of the latter must be named.
 }
+
+If \code{references = NULL}, check the \code{values} only.
 }
 \seealso{
-\code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_freq_by_class}}, \code{\link{thq_freq_by_group_by_class}}.
+\code{\link{mcr_summary_by_class}} \code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_freq_by_class}},
+\code{\link{thq_freq_by_group_by_class}}.
 }
 \author{
 Gauthier Magnin
