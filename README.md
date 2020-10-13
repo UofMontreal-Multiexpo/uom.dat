@@ -26,7 +26,9 @@ In addition to the documentation of the package, data and functions (accessible 
 
 * An organized list of the datasets, functions, classes and methods, in the file `list_of_help_pages.html`.
 
-* An example of analysis, presented in the file `spectral_analysis_example.nb.html`.
+* An example of spectral analysis, presented in the file `spectral_analysis_example.nb.html`.
+
+* A description of the Maximum Cumulative Ratio approach providing an example of application, in the file `mcr_approach.html`. This one also presents the use of functions for classification data management.
 
 * A presentation of the data structures used by the **SpectralAnalyzer** class (attributes, function parameters and function returns) in the file `types_of_attributes_and_methods.pdf`.
 

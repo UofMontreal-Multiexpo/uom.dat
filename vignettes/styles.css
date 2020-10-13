@@ -1,0 +1,18 @@
+
+/* Changes to the default CSS style */
+
+h1:not(.title) {
+  margin-top: 2.2rem;
+}
+
+#TOC {
+  margin-bottom: 2.2rem;
+}
+
+
+
+/* New CSS style */
+
+#plan_announcement {
+  margin-top: 1.5rem;
+}

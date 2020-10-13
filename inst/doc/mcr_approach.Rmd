@@ -1,0 +1,946 @@
+---
+title: "Maximum cumulative ratio approach and classification management"
+author: "Gauthier Magnin"
+date: "Last update: `r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette: 
+    toc: true
+    toc_depth: 3
+    css: 
+     - !expr system.file("rmarkdown/templates/html_vignette/resources/vignette.css", package = "rmarkdown")
+     - styles.css
+    df_print: kable
+    fig_width: 7
+    fig_height: 4.5
+vignette: >
+  %\VignetteIndexEntry{Maximum cumulative ratio approach and classification management}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+# fig.align option seems to not be able to be set in the YAML header
+knitr::opts_chunk$set(fig.align = "center")
+```
+
+
+
+Proposed as a tool for the assessment of occupational exposure to chemical agents, the **Maximum Cumulative Ratio approach** helps determine wheter a cumulative risk assessment is necessary.
+
+This approach proposes a set of indicators, the main one (the maximum cumulative ratio) is defined as the ratio of the cumulative toxicity received by an individual from exposure to multiple chemical stressors to the largest toxicity from a single chemical stressor. The maximum cumulative ratio is a quantitiative measure of the difference in an individual's toxicity estimated using a chemical-by-chemical approach and using an additive model of toxicity. As such, it provides a conservative estimate of the degree to which individuals’ toxicities could be underestimated by not performing a cumulative risk assessment.
+
+Nevertheless, as the indicators of the Maximum Cumulative Ratio approach are based only on **effective values** and **reference values**, they can be applied to other fields and situations in which we would like to know the importance of the **cumulative aspect** compared to the **individual aspect**.
+
+
+<p id="plan_announcement">This document describes the Maximum Cumulative Ratio approach providing an example of application to occupational co-exposure data. The first section prepares the data that are used in other sections. The second one applies the approach to these data, computing indicators and plotting graphs. The third section proposes to apply this approach by considering a classification of the substances the data are from. Finally, the last one presents some computations and formatting of a classification system in general, and additional transformations on the structure containing the values being analyzed.</p>
+
+
+
+# 1. Data preparation
+
+## 1.1. Observations and values
+
+Foremost, we will create a list of observations as presented in the document "Spectral analysis and observation processing example". For short, these observations will simply group data from the dataset `oedb_sample`. The values we will use will be taken from these observations.
+```{r message=FALSE}
+# Loading the package
+library(oedb.analysis.tools)
+
+# Creation of specific observations
+observations <- make_INRS_observations(
+  oedb_sample,
+  mode = 1,
+  work_situations = data.frame(WS_ID = c(1, 2, 2, 3, 3),
+                               JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
+                               JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
+                               stringsAsFactors = FALSE),
+  variable_names = c("JOB.TITLE", "JOB.TASK"),
+  additional = c("NAME", "CONCENTRATION", "SAMPLE.ID", "JOB.TITLE", "JOB.TASK"),
+  unique_values = c("JOB.TITLE", "JOB.TASK")
+)
+```
+
+An observation contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession carried out for which the environment has been sampled. An observation looks like that:
+```{r}
+observations[[2]]
+```
+Here we can see an observation composed by 3 samples having the `SAMPLE.ID`s 18, 1 and 21 corresponding to the substances having the `CODE`s 57 and 77. The concentration values for these samples are respectively 0.007, 0.004 and 0.05.
+
+
+Now we will separate the concentration values and name them with the substances they correspond to. We will have a list of named values which will have the same length as the list of observations:
+```{r}
+concentration_values <- lapply(observations,
+                               function(obs) setNames(obs$CONCENTRATION, obs$NAME))
+
+# Let's print the second element of the new list,
+# corresponding to the second element of the previous list of observations
+concentration_values[[2]]
+```
+
+The analysis will be carried out on this set of concentration values.
+
+
+
+## 1.2. Classification
+
+Now let's take a look at the classification which will be used concerning the substances the values are from. This classification is the `TOXICITY` variable of the dataset `substances_information`. Here is a example of it:
+```{r}
+substances_information[349:353, c("CODE", "NAME", "TOXICITY")]
+```
+As we can see, some substances are associated to one or more classes while others are not associated with any class.
+
+To use this classification, we have to extract the `TOXICITY` list and name the elements with the associated `NAME`s:
+```{r}
+classification <- substances_information$TOXICITY
+names(classification) <- substances_information$NAME
+```
+
+We can then get the names of all our classes:
+```{r}
+class_names <- sort(unique(unlist(classification)))
+class_names
+```
+
+
+## 1.3. Reference values
+
+The dataset `substances_information` also contains the reference value of each substance in the variable `LIMIT`. However, some of them have no value for this variable. We will therefore set an arbitrary limit value for these variables without reference:
+```{r}
+# First, let's check that the value we are going to assign will be unique to substances
+# that have no limit
+cat("Number of substances having the limit 35:",
+    sum(substances_information$LIMIT == 35, na.rm = TRUE),
+    "\n")
+```
+
+```{r}
+# We could also keep a vector defining whether a substance had a limit
+no_limit <- is.na(substances_information$LIMIT)
+
+# Extract the limits in a new variable and setting a new limit for missing values
+reference_values <- substances_information$LIMIT
+reference_values[no_limit] <- 35
+```
+
+Now we have to name the vector of limits to easily understand which limit is for which substance and extract the subset of references corresponding to the substances the concentrations are for:
+```{r}
+# Naming the vector with the substances the limits are associated with
+names(reference_values) <- substances_information$NAME
+
+# Extraction of the names related to the concentrations and removing the duplicates
+substance_names <- unique(unlist(lapply(concentration_values, names)))
+cat("Number of distinct substances:", length(substance_names))
+```
+
+```{r results="hold"}
+# Extraction of the limits related to the concentrations
+reference_values <- reference_values[substance_names]
+
+# Let's see what we have
+cat("A subset of the reference values:\n")
+reference_values[1:4]
+```
+
+
+
+# 2. Application of the MCR approach
+
+## 2.1. Summary and specific indicators
+
+### 2.1.1. Compute a summary of the indicators
+
+The indicators of the MCR approach (short for Maximum Cumulative Ratio approach) can be computed using only one function: `mcr_summary`.
+
+```{r}
+cat("Number of sets of values:",
+    length(concentration_values))
+```
+
+```{r}
+# Computing the indicators of the MCR approach
+mcr_summary(values = concentration_values,
+            references = reference_values)
+```
+
+We can see that the output data frame has 14 rows: one for each set of values. It has 7 columns for the 7 indicators:
+
+* **HI**: Hazard Index.
+* **MCR**: Maximum Cumulative Ratio.
+* **Reciprocal**: Reciprocal of the maximum cumulative ratio.
+* **Group**: MIAT group.
+* **THQ**: Top Hazard Quotient.
+* **MHQ**: Maximum Hazard Quotient.
+* **Missed**: Missed toxicity.
+
+### 2.1.2. Definition of the indicators
+
+**Hazard Index**: sum of hazard quotients, i.e. sum of ratios between values and reference values.
+The hazard index of the vector of values $V$ is given by:
+$$ HI = \sum_{i=1}^{n} HQ_{i} = \sum_{i=1}^{n} \frac{V_i}{RV_i} $$
+where $n$ denotes the length of the vector $V$ (i.e. the number of values), $HQ$ denotes the hazard quotients, $V$ the values and $RV$ the reference values.
+
+**Maximum Hazard Quotient**: the primary hazard quotient.
+It is given by:
+$$ MHQ = \max_{i \in \lbrace 1,...,n\rbrace} HQ_i = \max_{i \in \lbrace 1,...,n\rbrace} \frac{V_i}{RV_i} $$
+where $n$ denotes the length of the vector $V$ (i.e. the number of values), $HQ$ denotes the hazard quotients, $V$ the values and $RV$ the reference values.
+
+**Top Hazard Quotient**: named value which produce the highest hazard quotient.
+
+**Maximum Cumulative Ratio**: ratio between a hazard index and a maximum hazard quotient. It represents the magnitude of the hazard that is underestimated by not performing a cumulative risk assessment. It is bounded by $1$ and $n$, the number of components. A value close to $1$ means that one component is responsible for nearly all the toxicity. A value of $n$ means that all components have equal toxicities.
+The maximum cumulative ratio is given by:
+$$ MCR = \frac{HI}{MHQ} $$
+
+**Reciprocal of the maximum cumulative ratio**: the inverse of the maximum cumulative ratio. It measures the percentage contribution of the maximum hazard quotient to the total hazard.
+It is given by:
+$$ Reciprocal~of~MCR = \frac{1}{MCR} = \frac{MHQ}{HI} $$
+
+**Missed toxicity**: hazard missed if a cumulative risk assessment is not performed.
+It is given by:
+$$ Missed~toxicity = 1 - \frac{1}{MCR} $$
+
+**MIAT group**: groups according to the CEFIC-MIAT (Mixtures Industry Ad-hoc Team) decision tree. Each group requires a different risk management strategy as they describe the following situations:
+
+* **Group I**: the mixture presents a potential risk already based on individual components.
+* **Group II**: the assessment does not identify a concern.
+* **Group IIIA**: the majority of the risk offered by the mixture is driven by one component.
+* **Group IIIB**: the potential risk is driven by multiple components.
+
+The vector of values $V$ is assigned to a group according to the following conditions:
+
+* Group I: $MHQ \ge 1$
+* Group II: $MHQ < 1, ~ HI \le 1$
+* Group IIIA: $MHQ < 1, ~ HI > 1, ~ MCR < 2$
+* Group IIIB: $MHQ < 1, ~ HI > 1, ~ MCR \ge 2$
+
+### 2.1.3. Compute a specific indicator
+
+All indicators of the MCR approach can be computed independantly by a specific function, for a specific set of values. The functions are the following:
+
+* `hazard_quotient`: compute hazard quotients.
+* `hazard_index`: compute hazard indexes.
+* `maximum_hazard_quotient`: compute and identify maximum hazard quotients.
+* `maximum_cumulative_ratio`: compute maximum cumulative ratios.
+* `reciprocal_of_mcr`: compute reciprocals of maximum cumulative ratios.
+* `missed_toxicity`: compute missed toxicities.
+* `top_hazard_quotient`: compute and identify highest hazard quotients.
+* `classify_mixture`: classify in the MIAT groups.
+
+```{r results="hold"}
+# Extraction of the names related to the concentrations of the second observation
+substance_names_2 <- unlist(names(concentration_values[[2]]))
+
+# Compute each of the indicators one by one, for the values of the second observation
+
+cat("Hazard quotients:\n")
+hazard_quotient(values = concentration_values[[2]],
+                references = reference_values[substance_names_2])
+
+cat("\nHazard index:\n")
+hazard_index(values = concentration_values[[2]],
+             references = reference_values[substance_names_2])
+
+cat("\nMaximum hazard quotient:\n")
+maximum_hazard_quotient(values = concentration_values[[2]],
+                        references = reference_values[substance_names_2])
+
+cat("\nMaximum cumulative ratio:\n")
+maximum_cumulative_ratio(values = concentration_values[[2]],
+                         references = reference_values[substance_names_2])
+
+cat("\nReciprocal of the maximum cumulative ratio:\n")
+reciprocal_of_mcr(values = concentration_values[[2]],
+                  references = reference_values[substance_names_2])
+
+cat("\nMissed toxicity:\n")
+missed_toxicity(values = concentration_values[[2]],
+                references = reference_values[substance_names_2])
+
+cat("\nTop hazard quotient:\n")
+top_hazard_quotient(values = concentration_values[[2]],
+                    references = reference_values[substance_names_2],
+                    k = 1)
+
+cat("\nMIAT group:\n")
+classify_mixture(values = concentration_values[[2]],
+                 references = reference_values[substance_names_2])
+```
+
+In the function `top_hazard_quotient`, the argument `k` defines how many of the highest hazard quotients to look for. Default is a number of top hazard quotients equal to the maximum cumulative ratio computed from the same values and references.
+
+
+## 2.2. Scatter plot
+
+### 2.2.1. Simple scatter plot
+
+The hazard and the maximum cumulative raio can be visualized by plotting $HI$ versus $MCR$ and displaying the percentage of the reciprocal of the maximum cumulative ratio, the elements producting the top hazard quotients and the associated MIAT groups. The function to use for this is `mcr_chart`.
+
+```{r}
+mcr_chart(values = concentration_values,
+          references = reference_values)
+```
+
+### 2.2.2. Arguments of the scatter plot
+
+#### Logarithmic transformation
+
+As described in the previous warning message, points having $MCR$ equal to $1$ cannot be plotted (because $log_{10}(MCR - 1)$ is then equal to $-Inf$). In this case, an alternative chart can be plotted using the argument `log_transform` which enable or disable the logarithmic transformation:
+```{r}
+mcr_chart(values = concentration_values,
+          references = reference_values,
+          log_transform = FALSE)
+```
+
+#### Coloring regions
+
+Other parameters allow to better identify the points. For chart like this one with a wide range of abscissa, group labels cannot be clearly visible. The argument `regions` allows to hide the labels and color the regions related to the MIAT groups:
+```{r}
+mcr_chart(values = concentration_values,
+          references = reference_values,
+          regions = TRUE,
+          log_transform = FALSE)
+```
+
+The grey region is the one in which no point can be plotted because the maximum cumulative ratio cannot be lower than $1$.
+
+#### ggplot2
+
+By the way, the chart being plotted with the `ggplot2` package, it can be modified or completed afterwards using the ggplot2 `last_plot` function or the returned object.
+We can for example change the limits:
+```{r warning=FALSE}
+library(ggplot2)
+
+last_plot() + coord_cartesian(xlim = c(-0.5, 5),
+                              ylim = c(0.5, 8))
+```
+
+#### Colors of the top hazard quotients
+
+The argument `thq_col` allows to assign specific colors to the top hazard quotients. For the following examples, let's go back to the logarithm form of the chart:
+```{r warning=FALSE}
+# Loading color library for a paleton of 20 colors
+library(ggsci)
+paleton <- pal_d3("category20")(20)
+
+# Because there are more than 20 references, we need to use extra colors
+new_thq_col <- c(paleton[1:20], "red", "green", "blue", "yellow", "black")
+
+mcr_chart(values = concentration_values,
+          references = reference_values,
+          thq_col = new_thq_col)
+```
+Note that, if the new set of colors are not named, they are associated with the top hazard quotients in the given order (the first color for the first THQ, and so on). If they are named, colors are explicitly associated with the possible values of the top hazard quotients (in our case, that would be with the substance names).
+
+#### Colors and transparency of the regions
+
+The arguments `regions_col` and `regions_alpha` allow to specify the colors and transparency of the regions:
+```{r warning=FALSE}
+mcr_chart(values = concentration_values,
+          references = reference_values,
+          regions = TRUE,
+          regions_col = c("#fdcc8a", "#fef0d9", "#fc8d59", "#d7301f"),
+          regions_alpha = 0.1)
+```
+
+Note that default region colors are colorblind safe and print friendly. If you are interested in such properties, I suggest you to use tools like the following website: [Color Brewer 2.0](https://colorbrewer2.org).
+
+#### Region labels
+
+The argument `regions_lab` allows to specify which of the four labels related to the MIAT groups to display:
+```{r warning=FALSE}
+mcr_chart(values = concentration_values,
+          references = reference_values,
+          regions_lab = c(TRUE, TRUE, FALSE, TRUE))
+```
+
+#### Linear regression
+
+Finally, we can easily plot the linear regression between the X and Y coordinates of the points with 95% confidence interval using the argument `regression`:
+```{r warning=FALSE}
+mcr_chart(values = concentration_values,
+          references = reference_values,
+          regions_lab = c(TRUE, TRUE, FALSE, TRUE),
+          regression = TRUE)
+```
+
+
+## 2.3. Contingency tables
+
+Two types of contingency tables can be built on the indicators of the MCR approach:
+
+* The counts of each combination of the top two hazard quotients pairs for which the associated hazard index is greater than 1, using the function `thq_pairs_freq`.
+* The counts of each combination of the top hazard quotient with the associated MIAT group, using the function `thq_freq_by_group`.
+
+```{r}
+# Frequency of the pairs that produced the top two hazard quotients while hazard index
+# is greater than 1
+thq_pairs_freq(values = concentration_values,
+               references = reference_values)
+```
+
+```{r}
+# Frequency of element that produced the top hazard quotient with its associated group
+thq_freq_by_group(values = concentration_values,
+                  references = reference_values)
+```
+
+For both functions, a `levels` parameter can be used to have the complete table, i.e. with component names that don't produce any top hazard quotient:
+```{r}
+table_levels <- names(reference_values)[-19]
+# For readability of the example, intentionnaly removal of the 19th name which is quite long
+
+thq_freq_by_group(values = concentration_values,
+                  references = reference_values,
+                  levels = sort(table_levels))
+```
+
+## 2.4. Additional analysis
+
+Several useful indicators can be computed complementarily to the MCR approach. Here we will present few examples.
+
+```{r}
+# Computing the indicators of the MCR approach
+mcr_s <- mcr_summary(values = concentration_values,
+                     references = reference_values)
+```
+
+First, the correlation of $MCR - 1$ against $HI$.
+
+A negative correlation (i.e. $MCR - 1$ declines as $HI$ increases) indicates that the majority of the risks comes from single components and that risk mitigation could focus on these individual components.
+A positive correlation indicates that the highest risks are produced by the accumulation of several components and that tracking these cumulation situations is required to fully characterize risks.
+
+```{r}
+cor(x = mcr_s$HI,
+    y = mcr_s$MCR - 1)
+```
+
+```{r}
+plot(x = mcr_s$HI,
+     y = mcr_s$MCR - 1)
+```
+
+Then, the temporal trend of one indicator, for instance the hazard index:
+```{r}
+# Use of the year information associated with the concentration values
+# in the original observations
+cor(x = sapply(observations, "[[", "YEAR"),
+    y = mcr_s$HI)
+```
+
+```{r}
+plot(x = sapply(observations, "[[", "YEAR"),
+     y = mcr_s$HI)
+```
+
+Finally, summaries of indicators according to the groups:
+```{r}
+# Sets of groups and of indicators
+groups <- c("I", "II", "IIIA", "IIIB")
+indicators <- c("HI", "MCR", "MHQ", "Missed")
+
+# Compute for each group, the summary of the results of each indicator
+list_of_summaries <-
+  lapply(groups, function(group) {
+    sapply(indicators, function(indicator) {
+      summary(mcr_s[mcr_s$Group == group, indicator])
+    })
+  })
+names(list_of_summaries) <- groups
+
+list_of_summaries
+```
+
+`NA` and `NaN` are returned for the last two groups because no set of values has been classified in these groups.
+
+
+
+# 3. Application of the MCR approach according to a classification
+
+As described in section [1.2. Classification](#classification), we will use the classification present in the variable `TOXICITY` of the dataset `substances_information`. It associates classes with substances and looks like that:
+```{r}
+classification[349:353]
+```
+
+Apply the MCR approach according to a classification means apply it depending on the different classes associated with the values. In other words, indicators will be computed for each subset of values related to a specific class, and for each class.
+For that, we can call the function `mcr_approach_by_class` with the values, the references, the classification and the function of the approach we want to apply.
+
+
+## 3.1. MCR summary according to classes
+
+Concerning the summary of the indicators, for each element of the argument `values`, a summary is given for subsets of values related to each class:
+```{r}
+# Make the summary for each class
+summaries <- mcr_approach_by_class(values = concentration_values,
+                                   references = reference_values,
+                                   classes = classification,
+                                   FUN = mcr_summary)
+
+cat("Number of summaries:", length(summaries))
+```
+As we have 14 sets of values, the output list has a length of 14. 
+
+```{r eval=FALSE}
+# Just look at few examples:
+# summaries of the concentration values of the observations 4 to 6
+summaries[4:6]
+```
+```{r echo=FALSE, results="hold"}
+# Beautify the display because knitkr::table is not call in a list (even if list of data frames)
+
+# Unfortunatly, loop does not seem to be compatible with the knitr::kable specific data.frame print
+s <- 4
+cat("[[", s, "]]\n", sep = "") ; s <- s + 1
+summaries[[s]] ; cat("\n")
+cat("[[", s, "]]\n", sep = "") ; s <- s + 1
+summaries[[s]]
+cat("[[", s, "]]\n", sep = "")
+summaries[[s]]
+
+```
+`NULL` results correspond to sets of values not belonging to any class.
+
+**Note that functions presented in section [2.1.3. Compute a specific indicator](#compute-a-specific-indicator) cannot be used via this function.**
+
+
+## 3.2. Scatter plots according to classes
+
+Concerning the scatter plot, one chart is built for each class encountered and the result is a list.
+```{r}
+# Make one chart for each class
+charts <- mcr_approach_by_class(values = concentration_values,
+                                references = reference_values,
+                                classes = classification,
+                                FUN = mcr_chart)
+```
+At most one warning message can be printed by class. These messages must be read with regard to the stated subset of classes.
+
+
+```{r}
+cat("Number of charts (i.e. number of classes encountered):", length(charts))
+```
+
+```{r}
+# Plot some of these charts
+charts[[1]]
+charts[[12]]
+charts[["Sensibilisants"]]
+```
+
+Of course, additional arguments related to the function `FUN` can be used. For example:
+```{r}
+# Add further arguments (regions and log_transform)
+charts <- mcr_approach_by_class(values = concentration_values,
+                                references = reference_values,
+                                classes = classification,
+                                FUN = mcr_chart,
+                                regions = TRUE,
+                                log_transform = FALSE)
+
+# Look at the chart of the second class (and add the class name as a title with ggplot2)
+charts[[2]] + ggtitle(names(charts)[2])
+```
+
+## 3.3. Contingency tables according to classes
+
+Finally, contingency tables can also be built for each class. The first one:
+```{r}
+# Build one contingency table for each class and look at some of them
+mcr_approach_by_class(values = concentration_values,
+                      references = reference_values,
+                      classes = classification,
+                      FUN = thq_pairs_freq)[10:12]
+```
+`NULL`s result of classes for which no contingency table can be built because the subsets of values don't contain more than one component or don't have hazard index greater than 1.
+
+The second contingency table:
+```{r}
+# Build one contingency table for each class and look at some of them
+mcr_approach_by_class(values = concentration_values,
+                      references = reference_values,
+                      classes = classification,
+                      FUN = thq_freq_by_group)[10:12]
+```
+
+
+
+# 4. Data management
+
+## 4.1. Classification management
+
+For this section, we will use a simpler classification system assigning classes C1 to C8 to elements A, B, C, D and E:
+```{r}
+classification_1 <- list(A = c("C5", "C6", "C8"),
+                         B = "C8",
+                         C = c("C3", "C8"),
+                         D = c("C1", "C3", "C4", "C6"),
+                         E = c("C2", "C4", "C5", "C7", "C8"))
+classification_1
+```
+
+
+### 4.1.1. Listing and counting classes
+
+Two functions allow to perform set operation on such a list: `union_on_list` and `intersect_on_list`. The former will allow us to identify the list of classes involved by two or more elements. The latter will allow us to identify the common classes between two or more elements. The specified indices can be either numbers or names.
+
+```{r}
+# Union with no other argument: identify all classes involved by all elements
+union_on_list(classification_1)
+```
+
+```{r}
+# Union with a set of indices: identify classes involved by specific elements
+union_on_list(classification_1,
+              indices = c("A", "C"))
+```
+
+```{r}
+# Intersection with no other argument: identify the common classes between all elements
+intersect_on_list(classification_1)
+```
+
+```{r}
+# Intersection with a set of indices: identify the common classes between specific elements
+intersect_on_list(classification_1,
+                  indices = c(1, 3))
+```
+
+Another function allows to build a frequency table of the counts of each class: `table_on_list`. In this case too, specified indices can be either numbers or names. But another argument (`with_zero`) allows to add in the table classes of the list that were not encountered at any of these indices.
+
+```{r}
+# Overall table
+table_on_list(classification_1)
+```
+
+```{r}
+# Table of classes encountered at specific indices
+table_on_list(classification_1,
+              indices = c(1, 2, 3))
+```
+
+```{r}
+# Table of classes encountered for specific elements, showing all classes
+table_on_list(classification_1,
+              indices = c("A", "B", "C"),
+              with_zero = TRUE)
+```
+
+Moreover, we can ask for several frequency tables using a matrix or a list of indices. In this case, if `with_zero` is set to `TRUE`, the result is simplified into a single matrix.
+
+```{r}
+# Preparing three vectors of indices in a matrix
+indices_matrix <- matrix(c("A", "B", "C",
+                           "A", "B", "D",
+                           "B", "C", "E"),
+                         nrow = 3,
+                         byrow = TRUE)
+# Building of tables
+table_on_list(classification_1, indices_matrix)
+```
+
+```{r}
+# Adding names to the three vectors of indices
+rownames(indices_matrix) <- c("v1", "v2", "v3")
+
+# Building of tables
+table_on_list(classification_1,
+              indices_matrix,
+              with_zero = TRUE)
+```
+
+```{r}
+# Preparing three vectors of indices in a list
+indices_list <- list(c("A", "B", "C"),
+                     c("A", "B"),
+                     "A")
+# Building of tables
+table_on_list(classification_1, indices_list)
+```
+
+```{r}
+# Building of tables of all classes
+table_on_list(classification_1,
+              indices_list,
+              with_zero = TRUE)
+```
+
+
+### 4.1.2. Change the classification structure
+
+If we want to turn the classification list into a binary matrix, we can use the function `turn_list_into_logical_matrix`. In such a matrix, `TRUE` indicates that a specific element is part of a specific class.
+```{r}
+classification_matrix <- turn_list_into_logical_matrix(classification_1)
+classification_matrix
+```
+
+Conversely, we can use the function `turn_logical_matrix_into_list` to turn a classification matrix into a list:
+```{r}
+classification_list <- turn_logical_matrix_into_list(classification_matrix)
+classification_list
+```
+
+However, if the initial structure is a list in which classes are the names and elements are the values, as in the following...
+```{r}
+classification_2 <- list(C1 = "D",
+                         C2 = "E",
+                         C3 = c("C", "D"),
+                         C4 = c("D", "E"),
+                         C5 = c("A", "E"),
+                         C6 = c("A", "D"),
+                         C7 = "E",
+                         C8 = c("A", "B", "C", "E"))
+classification_2
+```
+... we can use the function `invert_list` to get the structure to be similar to the first one presented:
+```{r}
+invert_list(classification_2)
+```
+
+In the same way, we can go from a structure listing the classes to which each element belongs to, to a structure listing the elements belonging to each of the classes:
+```{r}
+invert_list(classification_1)
+```
+
+Finally, if we have a data frame or a matrix of characters in which two of the columns define the associations between the elements and the classes as in the following...
+```{r}
+classification_3 <- matrix(c(rep("A", 3), "B", rep("C", 2), rep("D", 4), rep("E", 5),
+                             "C5", "C6", "C8",
+                             "C8",
+                             "C3", "C8",
+                             "C1", "C3", "C4", "C6",
+                             "C2", "C4", "C5", "C7", "C8"),
+                           ncol = 2,
+                           dimnames = list(NULL, c("element", "class")))
+classification_3
+```
+... we can use the functions `turn_data_frame_into_list` or `turn_char_matrix_into_list` to get the structure to be similar to the first one presented:
+```{r}
+turn_char_matrix_into_list(classification_3)
+```
+
+
+## 4.2. Value management
+
+Before starting this section, we will name the observations of which concentration values are from, to better identify them:
+```{r}
+# Naming the observations of which concentration values are from: O1 to O14
+names(concentration_values) <- paste0("O", 1:14)
+```
+
+
+### 4.2.1. Components of values
+
+Having our list of values which are concentration values for specific substances, we can call `turn_list_into_logical_matrix` to know which substances are presents in which sets of values. Each line refers to one observation (i.e. one set of values) and each column refers to one name found in the values of the list.
+```{r}
+# Just look at some columns
+turn_list_into_logical_matrix(concentration_values,
+                              by_name = TRUE)[, c(4:5,8,12:14,23:25)]
+```
+
+The argument `by_name` allows to construct the matrix on the names of the values instead of the values themselves.
+
+This argument can be used in the functions `turn_list_into_char_matrix` and `turn_list_into_data_frame` as well.
+
+
+### 4.2.2. Subset corresponding to a specific class
+
+It is possible to extract from the sets of values those which are related to a specific class. For that, we will use the function `subset_from_class` and choose one from the set of class names (defined in section [1.2. Classification](#classification)):
+```{r}
+# Extraction of the subsets for the ninth class
+subsets <- subset_from_class(values = concentration_values,
+                             references = reference_values,
+                             classes = classification,
+                             class_name = class_names[9])
+```
+The output of this function is a list containing two subsets: `values`, the subset of `concentration_values` corresponding to the class `class_name`; `references`, the subset of `reference_values` corresponding to this same class.
+
+Before looking at the subsets, we can compare the length of the all set of values and the subset related to the chosen class.
+```{r results="hold"}
+cat("Number of values of each observation:\n")
+sapply(concentration_values, length)
+
+cat("\nNumber of values related to the ninth class :\n")
+sapply(subsets[["values"]], length)
+```
+We can see that only 7 observations contain substances related to the class of interest.
+
+Let's take a look at the values from the 6th observation in which only two of the three values were kept:
+```{r results="hold"}
+cat("Values of the sixth observation:\n")
+concentration_values$O6
+
+cat("\nValues of the sixth observation related to the ninth class:\n")
+subsets[["values"]]$O6
+```
+
+To finish, we can look at the subset of references, which will also give the set of substances related to the class:
+```{r}
+subsets[["references"]]
+```
+
+
+
+# References
+
+Price PS, Han X (2011).
+Maximum cumulative ratio (MCR) as a tool for assessing the value of performing a cumulative risk assessment.
+*International Journal of Environmental Research and Public Health*. 8(6): 2212-2225.
+<https://doi.org/10.3390/ijerph8062212>.
+
+Reyes JM, Price PS (2018).
+An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
+*Environment International*, 112, 77-84.
+<https://doi.org/10.1016/j.envint.2017.12.008>.
+
+De Brouwere K, et al. (2014).
+Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
+*The Science of the Total Environment*, 479-480, 267-276.
+<https://doi.org/10.1016/j.scitotenv.2014.01.083>.
+
+
+---
+
+
+# List of datasets, functions, classes and methods
+
+The package help page: [oedb.analysis.tools](../html/oedb.analysis.tools-package.html)
+
+## Datasets
+
+Datasets used as examples:
+
+* [oedb_sample](../html/oedb_sample.html)
+* [substances_information](../html/substances_information.html)
+* [SA_instance](../html/SA_instance.html)
+
+
+## About observations
+
+Making observations:
+
+* [make_observations](../html/make_observations.html)
+* [make_INRS_observations](../html/make_INRS_observations.html)
+
+Search for observations:
+
+* [get_complex_obs](../html/get_complex_obs.html)
+* [get_simple_obs](../html/get_simple_obs.html)
+* [get_obs_from_items](../html/get_obs_from_items.html)
+* [get_obs_from_info](../html/get_obs_from_info.html)
+
+Search in observations:
+
+* [get_all_items](../html/get_all_items.html)
+* [get_items_from_info](../html/get_items_from_info.html)
+* [get_info_from_items](../html/get_info_from_items.html)
+
+Computations on observations:
+
+* [co_occurrence_proportions](../html/co_occurrence_proportions.html)
+
+
+## About spectral analysis
+
+The class: [SpectralAnalyzer](../html/SpectralAnalyzer-class.html)
+
+Making *SpectralAnalyzer* objects:
+
+* [spectral.analyzer](../html/spectral.analyzer.html)
+* [reset](../html/reset-SpectralAnalyzer-method.html)
+* [\[](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html)
+
+Making charts:
+
+* [spectrosome_chart](../html/spectrosome_chart-SpectralAnalyzer-method.html)
+* [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
+* [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
+* [tree_chart](../html/tree_chart-SpectralAnalyzer-method.html)
+
+Search for nodes or patterns:
+
+* [get_nodes](../html/get_nodes-SpectralAnalyzer-method.html)
+* [get_patterns](../html/get_patterns-SpectralAnalyzer-method.html)
+* [get_complexes](../html/get_complexes-SpectralAnalyzer-method.html)
+* [get_isolates](../html/get_isolates-SpectralAnalyzer-method.html)
+* [get_non_isolates](../html/get_non_isolates-SpectralAnalyzer-method.html)
+
+Search for links between nodes or between patterns:
+
+* [get_links](../html/get_links-SpectralAnalyzer-method.html)
+
+Computations on spectrosomes:
+
+* [degree](../html/degree-SpectralAnalyzer-method.html)
+* [network_density](../html/network_density-SpectralAnalyzer-method.html)
+
+Saving nodes or patterns:
+
+* [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
+
+
+## About association rules and sets
+
+Extracting and saving rules:
+
+* [extract_rules](../html/extract_rules-SpectralAnalyzer-method.html)
+* [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
+
+Switching between mathematical notation and vector notation for sets:
+
+* [vector_notation](../html/vector_notation.html)
+* [set_notation](../html/set_notation.html)
+
+
+## About the maximum cumulative ratio approach
+
+Computation of the main indicators:
+
+* [hazard_quotient](../html/hazard_quotient.html)
+* [hazard_index](../html/hazard_index.html)
+* [maximum_hazard_quotient](../html/maximum_hazard_quotient.html)
+* [maximum_cumulative_ratio](../html/maximum_cumulative_ratio.html)
+* [missed_toxicity](../html/missed_toxicity.html)
+
+Computation of additional indicators:
+
+* [reciprocal_of_mcr](../html/reciprocal_of_mcr.html)
+* [top_hazard_quotient](../html/top_hazard_quotient.html)
+* [classify_mixture](../html/classify_mixture.html)
+
+Summarising indicators:
+
+* [mcr_summary](../html/mcr_summary.html)
+* [mcr_chart](../html/mcr_chart.html)
+* [thq_pairs_freq](../html/thq_pairs_freq.html)
+* [thq_freq_by_group](../html/thq_freq_by_group.html)
+
+Application of the approach according to a classification
+
+* [mcr_approach_by_class](../html/mcr_approach_by_class.html)
+* [mcr_summary_by_class](../html/mcr_summary_by_class.html)
+* [mcr_chart_by_class](../html/mcr_chart_by_class.html)
+* [thq_pairs_freq_by_class](../html/thq_pairs_freq_by_class.html)
+* [thq_freq_by_group_by_class](../html/thq_freq_by_group_by_class.html)
+
+
+## About lists
+
+Computation on lists:
+
+* [intersect_on_list](../html/intersect_on_list.html)
+* [union_on_list](../html/union_on_list.html)
+* [table_on_list](../html/table_on_list.html)
+
+Transformation of lists:
+
+* [invert_list](../html/invert_list.html)
+* [turn_list_into_logical_matrix](../html/turn_list_into_logical_matrix.html)
+* [turn_list_into_char_matrix](../html/turn_list_into_char_matrix)
+* [turn_list_into_data_frame](../html/turn_list_into_data_frame)
+
+Transformation into lists:
+
+* [turn_logical_matrix_into_list](../html/turn_logical_matrix_into_list.html)
+* [turn_char_matrix_into_list](../html/turn_char_matrix_into_list)
+* [turn_data_frame_into_list](../html/turn_data_frame_into_list)
+
+
+
+---
