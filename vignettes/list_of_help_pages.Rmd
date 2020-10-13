@@ -9,6 +9,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{css, echo=FALSE}
+h1:not(.title) {
+  margin-top: 1.4rem;
+}
+```
+
+
+
 The package help page: [oedb.analysis.tools](../html/oedb.analysis.tools-package.html)
 
 
