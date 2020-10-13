@@ -18,7 +18,7 @@ SA_instance
 An example of an object of class \code{SpectralAnalyzer}.
 }
 \details{
-Here is the way it was created:
+Here is the way it was created using the dataset \code{\link{oedb_sample}}:
 \preformatted{
 ## Making a list of observations
 to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
@@ -36,13 +36,13 @@ obs <- make_INRS_observations(oedb_sample, mode = 1,
 
 ## Associating item identifiers with names and one category
 substances <- get_all_items(obs)
-families <- substances_classification[match(substances,
-                                            substances_classification$CODE),
-                                      "SUBFAMILY"]
+families <- substances_information[match(substances,
+                                         substances_information$CODE),
+                                   "SUBFAMILY"]
 families[is.na(families)] <- "Unknown"
-names <- substances_classification[match(substances,
-                                         substances_classification$CODE),
-                                   "NAME"]
+names <- substances_information[match(substances,
+                                      substances_information$CODE),
+                                "NAME"]
 
 items <- data.frame(item = substances, name = names, family = families)
 

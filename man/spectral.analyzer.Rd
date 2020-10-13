@@ -63,13 +63,13 @@ sa_object_1 <- spectral.analyzer(obs)
 ## Creating a SpectralAnalyzer after associating item identifiers with
 ## names and one category
 items_ids <- get_all_items(obs)
-category_1 <- substances_classification[match(items_ids,
-                                              substances_classification$CODE),
-                                        "SUBFAMILY"]
+category_1 <- substances_information[match(items_ids,
+                                           substances_information$CODE),
+                                     "SUBFAMILY"]
 category_1[is.na(category_1)] <- "Unknown"
-names <- substances_classification[match(items_ids,
-                                         substances_classification$CODE),
-                                   "NAME"]
+names <- substances_information[match(items_ids,
+                                      substances_information$CODE),
+                                "NAME"]
 
 items <- data.frame(item = items_ids, name = names, family = category_1)
 sa_object_2 <- spectral.analyzer(obs, items)

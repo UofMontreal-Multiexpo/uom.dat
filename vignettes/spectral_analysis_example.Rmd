@@ -149,7 +149,7 @@ observations <- observations4
 
 Here is a data frame associating substances to one family of substances and one subfamily:
 ```{r}
-substances_classification
+substances_information
 ```
 
 Classification of the substances from the observations according to their subfamily...
@@ -157,11 +157,11 @@ Classification of the substances from the observations according to their subfam
 # Search for separate substances
 substances <- get_all_items(observations)
 # Search for the subfamily associated to each substance
-families <- substances_classification$SUBFAMILY[match(substances, substances_classification$CODE)]
+families <- substances_information$SUBFAMILY[match(substances, substances_information$CODE)]
 # As a precaution, assignment of a specific value to substances for which no family has been found
 families[is.na(families)] <- "Unknown"
 # Search for the name associated to each substance
-names <- substances_classification$NAME[match(substances, substances_classification$CODE)]
+names <- substances_information$NAME[match(substances, substances_information$CODE)]
 
 # Print the number of separate substances
 cat(length(substances), "substances.")
@@ -925,7 +925,7 @@ The package help page: [oedb.analysis.tools](../html/oedb.analysis.tools-package
 Datasets used as examples:
 
 * [oedb_sample](../html/oedb_sample.html)
-* [substances_classification](../html/substances_classification.html)
+* [substances_information](../html/substances_information.html)
 * [SA_instance](../html/SA_instance.html)
 
 

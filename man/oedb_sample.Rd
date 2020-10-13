@@ -5,16 +5,17 @@
 \alias{oedb_sample}
 \title{Example of occupational exposure data}
 \format{
-A data frame with 131 rows and 8 variables:
+A data frame with 131 rows and 9 variables:
  \describe{
    \item{ID}{Identifier of an inspection in a specific business establishment.}
    \item{YEAR}{Year of the inspection.}
-   \item{CODE}{Code of the substance sampled.}
+   \item{CODE}{Code identifying the substance sampled.}
    \item{NAME}{Name of the substance sampled.}
    \item{SAMPLE.ID}{Identifier of the sample. Several samples may refer to the same inspection.}
    \item{ACTIVITY}{Economic activity of the business establishment inspected.}
-   \item{JOB.TITLE}{Specific job inspected.}
+   \item{JOB.TITLE}{Specific profession inspected.}
    \item{JOB.TASK}{Specific job task inspected.}
+   \item{CONCENTRATION}{Measured concentration value.}
  }
 }
 \usage{

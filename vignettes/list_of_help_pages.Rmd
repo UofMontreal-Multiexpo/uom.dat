@@ -18,7 +18,7 @@ The package help page: [oedb.analysis.tools](../html/oedb.analysis.tools-package
 Datasets used as examples:
 
 * [oedb_sample](../html/oedb_sample.html)
-* [substances_classification](../html/substances_classification.html)
+* [substances_information](../html/substances_information.html)
 * [SA_instance](../html/SA_instance.html)
 
 

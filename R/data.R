@@ -3,39 +3,43 @@
 #' 
 #' An illustrative dataset containing identified substances in specific situations.
 #' 
-#' @format A data frame with 131 rows and 8 variables:
+#' @format A data frame with 131 rows and 9 variables:
 #'  \describe{
 #'    \item{ID}{Identifier of an inspection in a specific business establishment.}
 #'    \item{YEAR}{Year of the inspection.}
-#'    \item{CODE}{Code of the substance sampled.}
+#'    \item{CODE}{Code identifying the substance sampled.}
 #'    \item{NAME}{Name of the substance sampled.}
 #'    \item{SAMPLE.ID}{Identifier of the sample. Several samples may refer to the same inspection.}
 #'    \item{ACTIVITY}{Economic activity of the business establishment inspected.}
-#'    \item{JOB.TITLE}{Specific job inspected.}
+#'    \item{JOB.TITLE}{Specific profession inspected.}
 #'    \item{JOB.TASK}{Specific job task inspected.}
+#'    \item{CONCENTRATION}{Measured concentration value.}
 #'  }
 "oedb_sample"
 
 
-#' Classification of substances by family
+#' Information about substances
 #' 
-#' Classification associating each substance with a unique code, a family and a subfamily.
+#' Information about substances such as family of substances, toxicity classes...
 #' 
-#' @format A data frame with 1,151 rows and 4 variables:
+#' @format A data frame with 1,151 rows and 6 variables:
 #'  \describe{
-#'    \item{CODE}{Code of a substance.}
+#'    \item{CODE}{Unique identifier of a substance.}
 #'    \item{NAME}{Name of the substance corresponding to the code.}
-#'    \item{FAMILY}{Family of the substance.}
-#'    \item{SUBFAMILY}{Subfamily of the substance.}
+#'    \item{FAMILY}{Family the substance belongs to.}
+#'    \item{SUBFAMILY}{Subfamily the substance belongs to.}
+#'    \item{TOXICITY}{Toxicity classes associated with the substance.}
+#'    \item{LIMIT}{Exposure limit value.}
 #'  }
-"substances_classification"
+#' @source Data from the \href{http://en.inrs.fr/}{INRS}.
+"substances_information"
 
 
 #' Example of a SpectralAnalyzer object
 #' 
 #' An example of an object of class \code{SpectralAnalyzer}.
 #' 
-#' Here is the way it was created:
+#' Here is the way it was created using the dataset \code{\link{oedb_sample}}:
 #' \preformatted{
 #' ## Making a list of observations
 #' to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
@@ -53,13 +57,13 @@
 #' 
 #' ## Associating item identifiers with names and one category
 #' substances <- get_all_items(obs)
-#' families <- substances_classification[match(substances,
-#'                                             substances_classification$CODE),
-#'                                       "SUBFAMILY"]
+#' families <- substances_information[match(substances,
+#'                                          substances_information$CODE),
+#'                                    "SUBFAMILY"]
 #' families[is.na(families)] <- "Unknown"
-#' names <- substances_classification[match(substances,
-#'                                          substances_classification$CODE),
-#'                                    "NAME"]
+#' names <- substances_information[match(substances,
+#'                                       substances_information$CODE),
+#'                                 "NAME"]
 #' 
 #' items <- data.frame(item = substances, name = names, family = families)
 #' 
