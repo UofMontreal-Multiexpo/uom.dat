@@ -50,7 +50,7 @@ work_situations
 ```
 These are work situations the user could identify beforehand. **The data frame must have a *WS_ID* column to identify the different work situations described.** The other columns correspond to the variables to use to describe a work situation and have the same names as the variables in the database used.
 
-For this fictitious example, the variables named *JOB.TITLE* and *JOB.TASK* are used and random combinations were picked. Several couples with the same *WS_ID* are considered to correspond to the same work situation. Three work situations are described. The first one has one combination of the two variables. The second has two combinations which are considered as works with similar conditions. The last one is formed in the same way as the second one.
+For this fictitious example, the variables named `JOB.TITLE` and `JOB.TASK` are used and random combinations were picked. Several couples with the same `WS_ID` are considered to correspond to the same work situation. Three work situations are described. The first one has one combination of the two variables. The second has two combinations which are considered as works with similar conditions. The last one is formed in the same way as the second one.
 
 
 Defining the set of variables used to search for situations that have not been described in the previous data frame...
@@ -101,7 +101,7 @@ cat(length(observations2), "observations.\n")
 observations2[2]
 ```
 
-3. For one inspection, as many work situations as different *JOB.TITLE*-*JOB.TASK* pairs...
+3. For one inspection, as many work situations as different `JOB.TITLE`-`JOB.TASK` pairs...
 ```{r}
 observations3 <- make_INRS_observations(oedb_sample,
                                         mode = 3,
@@ -117,7 +117,7 @@ cat(length(observations3), "observations.\n")
 observations3[2]
 ```
 
-4. Combination of points 2 and 3: search of the work situations described previously and one observation per situation not described (*JOB.TITLE*-*JOB.TASK* pair) concerning the remaining samples...
+4. Combination of points 2 and 3: search of the work situations described previously and one observation per situation not described (`JOB.TITLE`-`JOB.TASK` pair) concerning the remaining samples...
 ```{r}
 observations4 <- make_INRS_observations(oedb_sample,
                                         mode = 1,
@@ -197,7 +197,7 @@ Add other variables to the data frame to associate additional categories.
 
 ### 1.3.2. Instanciation of the object in charge of the analysis
 
-Use of the default values to create a spectral analyzer (see the documentation for function *spectral.analyzer()*)...
+Use of the default values to create a spectral analyzer (see the help manual of the function `spectral.analyzer`)...
 ```{r}
 sa_object <- spectral.analyzer(observations, items)
 ```
@@ -222,7 +222,7 @@ View(sa_object)
 
 Some of these attributes will be saved in output files (see the following sections).
 
-To have a description of the attributes, use `help("SpectralAnalyzer")`.
+To have a description of the attributes, type `help("SpectralAnalyzer")`.
 To know more about the types of attributes and methods variables, see *Types_of_attributes_and_methods.pdf* in the *doc* directory.
 
 
@@ -818,7 +818,7 @@ spectrosome_1 <- spectrosome_chart(sa_object, sa_object["patterns"],
 
 ![Fig. 16.c: Spectrosome in which vertices are colored according to the category associated with the items, example 3.](./output/alternatives/spectrosome_of_patterns-no_status-3.png)
 
-One can choose one of the three spectrosomes plotted and reuse it with the parameter *coord*. For instance, one can plot again the third spectrosome with another constraint on links:
+One can choose one of the three spectrosomes plotted and reuse it with the parameter `coord`. For instance, one can plot again the third spectrosome with another constraint on links:
 ```{r}
 # Spectrosomes with several values for the parameter defining the minimum weight of a link to be plotted.
 for (min_weight in seq(2, 5)) {
@@ -901,7 +901,7 @@ rules_4c <- extract_rules(sa_object, from = "observations",
 rules_4c
 ```
 
-The *NULL* result means that no association rule exists between the substances *328* as antecedent and *3180* as consequent. In other words, the presence of the substance *328* implies the absence of the substance *3180*.
+The `NULL` result means that no association rule exists between the substances *328* as antecedent and *3180* as consequent. In other words, the presence of the substance *328* implies the absence of the substance *3180*.
 
 Rules are saved in the same way as for nodes or patterns.
 ```{r}
