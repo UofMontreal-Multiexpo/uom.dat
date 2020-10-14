@@ -845,8 +845,8 @@ for (min_weight in seq(2, 5)) {
 There are 4 ways to look for association rules (i.e. implication between two itemsets):
 
 1. Looking for all rules within the observations.
-2. Looking for rules whose union of the antecedent and the consequent form an entier pattern.
-3. Looking for rules whose union of the antecedent and the consequent form an entier itemset among those defined in argument.
+2. Looking for rules whose union of the antecedent and the consequent form an entire pattern.
+3. Looking for rules whose union of the antecedent and the consequent form an entire itemset among those defined in argument.
 4. Looking for rules related to items specified in arguments as antecedent or consequent.
 
 **Note that only rules with one item in the consequent are created.**

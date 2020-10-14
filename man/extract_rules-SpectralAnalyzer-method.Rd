@@ -10,45 +10,71 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{from}{Character or list of item sets for which to extract the association rules.
+\item{from}{Character or list of itemsets for which to extract the association rules.
 \itemize{
   \item{If \code{"observations"}, look for all rules within the observations saved in \code{object}
         or for rules with specific items.}
   \item{If \code{"patterns"}, look for rules whose union of the antecedent and the consequent form
-        an entire pattern among those of \code{object["patterns"]$pattern}.}
-  \item{Otherwise, a list of item sets defined the same way as \code{object["patterns"]$pattern}.
-        The search is then done the same way as for \code{"patterns"}.}
+        an entire pattern among those contained in `object` (more precisely, in
+        \code{object["patterns"]$pattern}).}
+  \item{Otherwise, a list of itemsets defined the same way as \code{object["patterns"]$pattern}.
+        Look for rules whose union of the antecedent and the consequent form an entire itemset.}
 }}
 
-\item{pruning}{If \code{TRUE}, remove redundant rules.}
+\item{pruning}{If \code{TRUE}, remove redundant rules (see 'Details' to know how a redundant rule
+is defined).}
 
-\item{as_sets}{If \code{FALSE}, antecedents and consequents of the rules will be character vectors.
-If \code{TRUE}, they will be factors written in mathematical notation (i.e. set notation).}
+\item{as_sets}{If \code{FALSE}, antecedents and consequents of the returned rules will be character
+vectors. If \code{TRUE}, they will be factors written in mathematical notation (i.e. set notation).}
 
-\item{...}{Additional arguments to configure the extraction. See Details.}
+\item{...}{Additional arguments to configure the extraction. See 'Details'.}
 }
 \value{
 Data frame containing the extracted rules and their characteristics.
  If \code{from} is not \code{"observations"}, the column \code{"itemset"} refers to the index of the
- item set from which the rule was generated, in the list of patterns (if \code{from = "patterns"})
+ itemset from which the rule was generated, in the list of patterns (if \code{from = "patterns"})
  or the given list (otherwise).
 }
 \description{
-Extract association rules from the observations. Can be used to find all rules, rules relating to
- patterns (or other specific item sets) or relating to specific items.
+Extract association rules from the observations (i.e. presence implication between two disjoint
+ itemsets). Can be used to find all rules, rules relating to patterns (or other specific itemsets)
+ or relating to specific items.
 }
 \details{
 Only creates rules with one item in the consequent. The reason is detailed on
  \href{https://borgelt.net/doc/apriori/apriori.html#conseq}{this web page} by the author of the
  algorithms used. Here are some extracts: \cr
- \emph{"There are usually already (many) more association rules than item sets if only a single
- item is allowed in the consequents."} \cr
- \emph{"Multiple items in the consequents of association rules therefore come at a considerable
- cost."} \cr
- \emph{"There is no true benefit."}
+ "\emph{There are usually already (many) more association rules than item sets if only a single
+ item is allowed in the consequents.}" \cr
+ "\emph{Multiple items in the consequents of association rules therefore come at a considerable
+ cost.}" \cr
+ "\emph{There is no true benefit.}"
+
+\loadmathjax
+The characteristics of an association rule of the form \mjeqn{X \rightarrow Y}{X -> Y} are:
+ \itemize{
+   \item{The \strong{support}: support of the itemset \mjeqn{X \cup Y}{X union Y}, i.e. the ratio
+         of the number of observations that contain \mjeqn{X \cup Y}{X union Y} and the total number
+         of observations.}
+   \item{The \strong{confidence}: ratio of the support of \mjeqn{X \cup Y}{X union Y} and the
+         support of \eqn{X}.}
+   \item{The \strong{lift}: ratio of the confidence of \mjeqn{X \rightarrow Y}{X -> Y} and the
+         support of \eqn{Y}.}
+ }
+ 
+Support and confidence indices measure the strength of a rule.
+ A rule can be said to be \strong{valid} if its confidence and its support are greater than two
+ chosen thresholds. A rule is said to be \strong{exact} if its confidence is 1, otherwise the rule
+ is \strong{partial}.
+The lift measures the importance of a rule. It is the contribution of the rule compared to the
+ consideration of the consequent only. A lift greater than 1 reflects a positive correlation of
+ \eqn{X} and \eqn{Y}, and therefore the significant nature of the association. An association rule
+ is not directed.
 
 A rule is redundant if a more general rule with the same or higher confidence exists. A rule is more
- general if it has the same consequent but one or more items removed from the antecedent.
+ general if it has the same consequent but one or more items removed from the antecedent. In other
+ words, having inferred a dependency \mjeqn{X \rightarrow Y}{X -> Y}, any other dependency of the
+ form \mjeqn{X \cup A \rightarrow Y}{X union A -> Y} is considered redundant.
 
 If \code{from = "observations"}, additional arguments are \code{parameter}, \code{appearance} and
  \code{control} of function \code{\link[arules:apriori]{apriori}} from the package \code{arules}.
@@ -60,6 +86,10 @@ If \code{from} is \code{"patterns"} or a list, additional arguments are \code{co
  \code{control} of function \code{\link[arules:ruleInduction]{ruleInduction}} from the package
  \code{arules}. These arguments allow to specify minmum confidence (default \code{0.8}) and some
  operating parameters of the rule extraction algorithm.
+
+Defining minimum support \eqn{s} and confidence \eqn{c} means that the union of items in the
+ antecedent and consequent of rules must be present in a minimum of \eqn{s}\% of observations
+ and at least \eqn{c}\% of observations must satisfy the antecedent.
 }
 \examples{
 ## Basic rule extraction
