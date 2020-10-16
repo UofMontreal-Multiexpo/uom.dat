@@ -11,7 +11,8 @@ spectral.analyzer(
   count = 1,
   min_length = 1,
   max_length = Inf,
-  status_limit = 2
+  status_limit = 2,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ The default \code{Inf} corresponds to a pattern search without maximum size limi
 
 \item{status_limit}{Time interval for which to characterize the status of the patterns in relation
 to the total period of observations (number of years).}
+
+\item{verbose}{Logical value indicating whether to report progress.}
 }
 \value{
 New object of class \code{SpectralAnalyzer}.

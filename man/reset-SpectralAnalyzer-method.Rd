@@ -5,12 +5,14 @@
 \alias{reset}
 \title{Partial reset of a spectral analyzer}
 \usage{
-\S4method{reset}{SpectralAnalyzer}(object, from = 1)
+\S4method{reset}{SpectralAnalyzer}(object, from = 1, verbose = TRUE)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{from}{Step from which to recompute the attributes.}
+
+\item{verbose}{Logical value indicating whether to report progress.}
 }
 \description{
 Redefine the attributes of a spectral analyzer from a specific step.

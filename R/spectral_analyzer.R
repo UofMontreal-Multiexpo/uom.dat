@@ -172,7 +172,7 @@ setClass(Class = "SpectralAnalyzer",
 # Initiator
 setMethod(f = "initialize",
           signature = "SpectralAnalyzer",
-          definition = function(.Object, observations, items, target, count, min_length, max_length, status_limit) {
+          definition = function(.Object, observations, items, target, count, min_length, max_length, status_limit, verbose) {
             
             .Object@observations = observations
             
@@ -214,7 +214,7 @@ setMethod(f = "initialize",
             methods::validObject(.Object)
             
             # Initialisation des attributs restants
-            reset(.Object, from = 1)
+            reset(.Object, from = 1, verbose = verbose)
             
             methods::validObject(.Object)
             return(.Object)
@@ -267,6 +267,7 @@ setMethod(f = "initialize",
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
 #' @param status_limit Time interval for which to characterize the status of the patterns in relation
 #'  to the total period of observations (number of years).
+#' @param verbose Logical value indicating whether to report progress.
 #' @return New object of class \code{SpectralAnalyzer}.
 #' 
 #' @author Gauthier Magnin
@@ -295,19 +296,20 @@ setMethod(f = "initialize",
 #' 
 #' @export
 spectral.analyzer = function(observations, items = NULL, target = "closed frequent itemsets",
-                             count = 1, min_length = 1, max_length = Inf, status_limit = 2) {
+                             count = 1, min_length = 1, max_length = Inf, status_limit = 2,
+                             verbose = TRUE) {
   
   # Instanciation avec ou sans la liste des items et des catégories associées
   ifelse(is.null(items),
     return(methods::new(Class = "SpectralAnalyzer", observations = observations,
-                        target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)),
+                        target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit, verbose = verbose)),
     return(methods::new(Class = "SpectralAnalyzer", observations = observations, items = items,
-                        target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit)))
+                        target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit, verbose = verbose)))
 }
 
 
 # Declaration of the SpectralAnalyzer (re)set method
-setGeneric(name = "reset", def = function(object, from = 1){ standardGeneric("reset") })
+setGeneric(name = "reset", def = function(object, from = 1, verbose = TRUE){ standardGeneric("reset") })
 
 #' Partial reset of a spectral analyzer
 #' 
@@ -330,6 +332,7 @@ setGeneric(name = "reset", def = function(object, from = 1){ standardGeneric("re
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param from Step from which to recompute the attributes.
+#' @param verbose Logical value indicating whether to report progress.
 #' 
 #' @author Gauthier Magnin
 #' @seealso The \code{\link{SpectralAnalyzer}} constructor: \code{\link{spectral.analyzer}}.
@@ -344,7 +347,7 @@ setGeneric(name = "reset", def = function(object, from = 1){ standardGeneric("re
 #' @export
 setMethod(f = "reset",
           signature = "SpectralAnalyzer",
-          definition = function(object, from = 1) {
+          definition = function(object, from = 1, verbose = TRUE) {
             
             # Nom de l'objet pour modification interne dans l'environnement parent
             object_name = deparse(substitute(object))
@@ -387,8 +390,12 @@ setMethod(f = "reset",
             # Réalisation
             for (i in seq(nrow(steps))) {
               if (steps_todo[i]) {
-                cat(steps[i, 1][[1]])
-                eval(parse(text = paste("display_time(", steps[i, 2], ")")))
+                if (verbose) {
+                  cat(steps[i, 1][[1]])
+                  eval(parse(text = paste("display_time(", steps[i, 2], ")")))
+                } else {
+                  eval(parse(text = steps[i, 2]))
+                }
               }
             }
             
