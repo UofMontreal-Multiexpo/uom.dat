@@ -32,7 +32,7 @@ oedb_sample
 In this database, samples for which substances sought were not found have been removed; a filter was carried out on a particular work sector and a specific subset of data was extracted. Each line corresponds to a sample.
 
 Here is the help page describing these data (accessible using `help(oedb_sample)`):
-![](./img/help.oedb_sample.png)
+![](./spectral_analysis_example/help.oedb_sample.png)
 
 
 
@@ -218,7 +218,7 @@ Let's take a look at the structure of the object...
 # Try this on your console to see more than the following picture
 View(sa_object)
 ```
-![Fig. 1: View of the spectral analyzer object example.](./img/View_sa_object.png)
+![Fig. 1: View of the spectral analyzer object example.](./spectral_analysis_example/View_sa_object.png)
 
 Some of these attributes will be saved in output files (see the following sections).
 
@@ -244,12 +244,12 @@ Take a look at the nodes and the patterns...
 ```{r}
 sa_object["nodes"]
 ```
-![](./img/sa_object_nodes.png)
+![](./spectral_analysis_example/sa_object_nodes.png)
 
 ```{r}
 sa_object["patterns"]
 ```
-![](./img/sa_object_patterns.png)
+![](./spectral_analysis_example/sa_object_patterns.png)
 
 Saving the nodes and the patterns in CSV files...
 ```{r}
@@ -290,7 +290,7 @@ save_characteristics(sa_object, spectrosome[["vertices"]],
 
 spectrosome[["vertices"]]
 ```
-![](./img/nodes_vertices.png)
+![](./spectral_analysis_example/nodes_vertices.png)
 
 The vertices of this spectrosome are actually the nodes already saved before as *sao.nodes.csv* in section 1.4., but the new data frame also lists the identifiers of the vertices in the graph as well as their degrees (i.e. the number of adjacent vertices).
 
@@ -328,7 +328,7 @@ save_characteristics(sa_object, cluster[["vertices"]],
 
 cluster[["vertices"]]
 ```
-![](./img/node_cluster_3146_vertices.png)
+![](./spectral_analysis_example/node_cluster_3146_vertices.png)
 
 Saving edges characteristics as well...
 ```{r}
@@ -359,7 +359,7 @@ spectrum <- spectrum_chart(sa_object, sa_object["patterns"],
                            name = "spectrum_of_patterns.pdf",
                            title = "Spectrum of patterns")
 ```
-![Fig. 4: Spectrum of patterns.](./img/spectrum_of_patterns.png)
+![Fig. 4: Spectrum of patterns.](./spectral_analysis_example/spectrum_of_patterns.png)
 
 Saving pattern characteristics in a CSV file...
 ```{r}
@@ -415,7 +415,7 @@ tree <- tree_chart(sa_object, sa_object["patterns"],
                    name = "multi-association_tree.pdf",
                    title = "Multi-association tree")
 ```
-![Fig. 6 : Multi-association tree.](./img/multi-association_tree.png)
+![Fig. 6 : Multi-association tree.](./spectral_analysis_example/multi-association_tree.png)
 
 **Note that too many values for the displayed category or too long names prevent the legend from being displayed entirely, hence the use of the *c.cutoff* parameter to reduce the size of these values. Likewise, the *n.cutoff* allow to shorten the names of long substances.**
 
@@ -427,7 +427,7 @@ save_characteristics(sa_object, tree,
 
 tree
 ```
-![](./img/multi-association_tree_patterns.png)
+![](./spectral_analysis_example/multi-association_tree_patterns.png)
 
 See that only patterns with an order value greater than 1 are plotted on this kind of chart.
 
@@ -455,7 +455,7 @@ save_characteristics(sa_object, cluster[["vertices"]],
 
 cluster[["vertices"]]
 ```
-![](./img/pattern_cluster_3146_vertices.png)
+![](./spectral_analysis_example/pattern_cluster_3146_vertices.png)
 
 Saving edges characteristics as well...
 ```{r}
@@ -489,7 +489,7 @@ patterns <- get_patterns(sa_object, sa_object["patterns"],
 
 patterns
 ```
-![](./img/patterns_w3.png)
+![](./spectral_analysis_example/patterns_w3.png)
 
 Associated spectrum...
 ```{r}
@@ -498,7 +498,7 @@ spectrum <- spectrum_chart(sa_object, patterns,
                            name = paste0("spectrum_of_patterns-w", min_weight, ".pdf"),
                            title = paste("Spectrum with weight filter"))
 ```
-![Fig. 8: Spectrum of patterns with weigh filter.](./img/spectrum_of_patterns_w3.png)
+![Fig. 8: Spectrum of patterns with weigh filter.](./spectral_analysis_example/spectrum_of_patterns_w3.png)
 
 Associated spectrosome...
 ```{r}
@@ -523,7 +523,7 @@ patterns <- get_patterns(sa_object, sa_object["patterns"],
 
 patterns
 ```
-![](./img/patterns_persistent.png)
+![](./spectral_analysis_example/patterns_persistent.png)
 
 **Note that after applying a filter, the patterns keep their line identifiers from the whole set of patterns.**
 
@@ -534,7 +534,7 @@ spectrum <- spectrum_chart(sa_object, patterns,
                            name = paste0("spectrum_of_patterns-", status, ".pdf"),
                            title = paste("Spectrum with status filter"))
 ```
-![Fig. 10: Spectrum of patterns with stauts filter.](./img/spectrum_of_patterns_persistent.png)
+![Fig. 10: Spectrum of patterns with stauts filter.](./spectral_analysis_example/spectrum_of_patterns_persistent.png)
 
 Associated spectrosome...
 ```{r}
@@ -573,7 +573,7 @@ patterns <- get_patterns(sa_object, sa_object["patterns"],
                          condition = "items")
 patterns
 ```
-![](./img/patterns_chrome_vertices.png)
+![](./spectral_analysis_example/patterns_chrome_vertices.png)
 
 Spectrosome related to this selection...
 ```{r}
@@ -593,7 +593,7 @@ save_characteristics(sa_object, spectrosome[["vertices"]],
 
 spectrosome[["vertices"]]
 ```
-![](./img/spectrosome_vertices_chrome_vertices.png)
+![](./spectral_analysis_example/spectrosome_vertices_chrome_vertices.png)
 
 And saving edges characteristics in CSV format...
 ```{r}
@@ -621,7 +621,7 @@ patterns <- get_patterns(sa_object, sa_object["patterns"],
                          condition = "links")
 patterns
 ```
-![](./img/patterns_chrome_edges.png)
+![](./spectral_analysis_example/patterns_chrome_edges.png)
 
 **Note that the difference between this section and the previous one is that there is less patterns because some of the previous ones are not linked with other by a substance in the sought category (although they are effectively linked by other substances).**
 
@@ -643,7 +643,7 @@ save_characteristics(sa_object, spectrosome[["vertices"]],
 
 spectrosome[["vertices"]]
 ```
-![](./img/spectrosome_vertices_chrome_edges.png)
+![](./spectral_analysis_example/spectrosome_vertices_chrome_edges.png)
 
 And saving edges characteristics in a CSV file...
 ```{r}
@@ -726,7 +726,7 @@ View(get_obs_from_items(sa_object["observations"],
                         items = 25,
                         presence = "all"))
 ```
-![](./img/View_observations_25.png)
+![](./spectral_analysis_example/View_observations_25.png)
 
 Selection of observations corresponding to a desired work situation...
 ```{r}
@@ -735,7 +735,7 @@ View(get_obs_from_info(sa_object["observations"],
                        JOB.TITLE = 44132001,
                        JOB.TASK = "A8310"))
 ```
-![](./img/View_observations_MT.png)
+![](./spectral_analysis_example/View_observations_MT.png)
 
 Search for substances found in observations associated with a work situation...
 ```{r}
@@ -856,14 +856,14 @@ There are 4 ways to look for association rules (i.e. implication between two ite
 rules_1 <- extract_rules(sa_object, from = "observations")
 rules_1
 ```
-![](./img/rules_1.png)
+![](./spectral_analysis_example/rules_1.png)
 
 ```{r}
 # Rules forming the patterns (without support threshold)
 rules_2 <- extract_rules(sa_object, from = "patterns")
 rules_2
 ```
-![](./img/rules_2.png)
+![](./spectral_analysis_example/rules_2.png)
 
 ```{r}
 # Rules forming 2 specific itemsets
@@ -871,7 +871,7 @@ rules_3 <- extract_rules(sa_object, from = list(c("931", "3180"),
                                                 c("25", "192", "328")))
 rules_3
 ```
-![](./img/rules_3.png)
+![](./spectral_analysis_example/rules_3.png)
 
 ```{r}
 # Rules having the substance "328" as consequent and only one substance as antecedent
@@ -880,7 +880,7 @@ rules_4a <- extract_rules(sa_object, from = "observations",
                           appearance = list(rhs = "328"))
 rules_4a
 ```
-![](./img/rules_4a.png)
+![](./spectral_analysis_example/rules_4a.png)
 
 The confidence of 1 means that the substance *328* is found each time the substance *192* is found. In other words, the presence of the substance *192* implies that of the substance *328*.
 
@@ -891,7 +891,7 @@ rules_4b <- extract_rules(sa_object, from = "observations",
                           appearance = list(lhs = "497"))
 rules_4b
 ```
-![](./img/rules_4b.png)
+![](./spectral_analysis_example/rules_4b.png)
 
 ```{r}
 # Rules in which the substance "328" is the antecedent and the substance "3180" is the consequent (with confidence threshold of 0)
