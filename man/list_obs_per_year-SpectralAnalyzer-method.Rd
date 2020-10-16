@@ -3,7 +3,7 @@
 \name{list_obs_per_year,SpectralAnalyzer-method}
 \alias{list_obs_per_year,SpectralAnalyzer-method}
 \alias{list_obs_per_year}
-\title{Enumeration of separate observations per year}
+\title{Enumeration of the observations per year}
 \usage{
 \S4method{list_obs_per_year}{SpectralAnalyzer}(object)
 }

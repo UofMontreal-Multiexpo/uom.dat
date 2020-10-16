@@ -318,15 +318,15 @@ setGeneric(name = "reset", def = function(object, from = 1, verbose = TRUE){ sta
 #' @details
 #' The steps of construction of a spectral analyzer are:
 #' \enumerate{
-#'   \item{Enumeration of separate observations per year.}
-#'   \item{Enumeration of the nodes and calculation of the number of occurrence.}
-#'   \item{Counting the links between nodes.}
+#'   \item{Enumeration of the observations per year.}
+#'   \item{Enumeration of the nodes and calculation of the number of occurrences.}
+#'   \item{Counting links between nodes.}
 #'   \item{Elaboration of links between nodes.}
-#'   \item{Enumeration of separate patterns.}
+#'   \item{Mining for itemsets.}
 #'   \item{Linking nodes to patterns.}
 #'   \item{Characterization of patterns per year.}
 #'   \item{Computation of pattern characteristics.}
-#'   \item{Counting the links between patterns.}
+#'   \item{Counting links between patterns.}
 #'   \item{Elaboration of links between patterns.}
 #' }
 #' 
@@ -356,17 +356,17 @@ setMethod(f = "reset",
             steps = matrix(c(
               
               # Initialisation des attributs utiles à la construction d'un spectrosome des noeuds
-                "*** Step 1/10:  Enumeration of separate observations per year... ",
+                "*** Step 1/10:  Enumeration of the observations per year... ",
                 expression(  list_obs_per_year(object)  ),
-                "\n*** Step 2/10:  Enumeration of the nodes and calculation of the number of occurrence... ",
+                "\n*** Step 2/10:  Enumeration of the nodes and calculation of the number of occurrences... ",
                 expression(  list_separate_obs(object)  ),
-                "\n*** Step 3/10:  Counting the links between nodes... ",
+                "\n*** Step 3/10:  Counting links between nodes... ",
                 expression(  count_links(object, SpectralAnalyzer.NODES)  ),
                 "\n*** Step 4/10:  Elaboration of links between nodes... ",
                 expression(  search_links(object, SpectralAnalyzer.NODES)  ),
                 
               # Initialisation des attributs utiles à la construction d'un spectre
-                "\n*** Step 5/10:  Enumeration of separate patterns... ",
+                "\n*** Step 5/10:  Mining for itemsets... ",
                 expression(  list_separate_patterns(object, object@target, object@count,
                                                     object@min_length, object@max_length)  ),
                 "\n*** Step 6/10:  Linking nodes to patterns... ",
@@ -377,7 +377,7 @@ setMethod(f = "reset",
                 expression(  compute_patterns_characteristics(object)  ),
                 
               # Initialisation des attributs utiles à la construction d'un spectrosome des motifs
-                "\n*** Step 9/10:  Counting the links between patterns... ",
+                "\n*** Step 9/10:  Counting links between patterns... ",
                 expression(  count_links(object, SpectralAnalyzer.PATTERNS)  ),
                 "\n*** Step 10/10: Elaboration of links between patterns... ",
                 expression(  search_links(object, SpectralAnalyzer.PATTERNS)  )
@@ -661,7 +661,7 @@ setGeneric(name = "which_entities", def = function(object, npr, entities = Spect
 
 #### Computation methods used for the construction of the nodes ####
 
-#' Enumeration of separate observations per year
+#' Enumeration of the observations per year
 #' 
 #' Identify the separate observations per year and count their number of occurrences for each one.
 #' The resulting matrix is assigned to the attribute \code{nodes_per_year} of \code{object}.
@@ -1163,7 +1163,7 @@ setMethod(f = "compute_specificity",
           })
 
 
-#' Compute the reporting index (RI)
+#' Computation of the Reporting Index (RI)
 #' 
 #' Compute the reporting index of each pattern for a given period.
 #' This index provides information on the proportion and importance of the occurrences of a pattern,

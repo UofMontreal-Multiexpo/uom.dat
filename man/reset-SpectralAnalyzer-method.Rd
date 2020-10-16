@@ -20,15 +20,15 @@ Redefine the attributes of a spectral analyzer from a specific step.
 \details{
 The steps of construction of a spectral analyzer are:
 \enumerate{
-  \item{Enumeration of separate observations per year.}
-  \item{Enumeration of the nodes and calculation of the number of occurrence.}
-  \item{Counting the links between nodes.}
+  \item{Enumeration of the observations per year.}
+  \item{Enumeration of the nodes and calculation of the number of occurrences.}
+  \item{Counting links between nodes.}
   \item{Elaboration of links between nodes.}
-  \item{Enumeration of separate patterns.}
+  \item{Mining for itemsets.}
   \item{Linking nodes to patterns.}
   \item{Characterization of patterns per year.}
   \item{Computation of pattern characteristics.}
-  \item{Counting the links between patterns.}
+  \item{Counting links between patterns.}
   \item{Elaboration of links between patterns.}
 }
 }

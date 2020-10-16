@@ -3,7 +3,7 @@
 \name{compute_reporting_indexes,SpectralAnalyzer-method}
 \alias{compute_reporting_indexes,SpectralAnalyzer-method}
 \alias{compute_reporting_indexes}
-\title{Compute the reporting index (RI)}
+\title{Computation of the Reporting Index (RI)}
 \usage{
 \S4method{compute_reporting_indexes}{SpectralAnalyzer}(object, patterns, t = NULL, period = Inf)
 }
