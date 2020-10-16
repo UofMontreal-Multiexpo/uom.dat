@@ -470,12 +470,14 @@ get_simple_obs = function(observations, key = "CODE") {
 #' @param observations List of observations on which to do the search.
 #' @param items Sought items.
 #' @param presence Item presence condition for an observation to be extracted.
-#'  One of \code{"all"}, \code{"any"}.
+#'  One of \code{"all"}, \code{"any"}, \code{"exact"}.
 #'  \describe{
 #'    \item{\code{"all"}}{All the sought items must be part of an observation for this
 #'                        observation to be extracted.}
 #'    \item{\code{"any"}}{At least one of the sought items must be part of an observation for
 #'                        this observation to be extracted.}
+#'    \item{\code{"exact"}}{The item set contained in an observation must be exactly the same as the
+#'                          sought item set for this observation to be extracted.}
 #'  }
 #' @param key Access key to the items in an observation.
 #' @return Subset of the list of observations that match the search criteria.
@@ -487,19 +489,23 @@ get_simple_obs = function(observations, key = "CODE") {
 #' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
 #' get_obs_from_items(obs, items = c(25, 192), presence = "all")
 #' get_obs_from_items(obs, items = c(25, 192), presence = "any")
+#' get_obs_from_items(obs, items = c(25, 192), presence = "exact")
 #' 
 #' @export
 get_obs_from_items = function(observations, items, presence = "all", key = "CODE") {
   
-  if (!(presence %in% c("all", "any"))) stop("presence must be \"all\" or \"any\".")
+  if (!(presence %in% c("all", "any", "exact"))) stop("presence must be \"all\", \"any\" or \"exact\".")
   if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
   
-  func = if (presence == "all") all else any
+  if (presence == "exact") {
+    index = which(sapply(lapply(observations, "[[", key), function(x) setequal(items, x)))
+    
+  } else {
+    func = if (presence == "all") all else any
+    index = which(sapply(lapply(observations, "[[", key), function(x) func(items %in% x)))
+  }
   
-  index = which(sapply(lapply(observations, "[[", key), function (x) func(items %in% x)))
-  extraction = observations[index]
-  
-  return(stats::setNames(extraction, index))
+  return(stats::setNames(observations[index], index))
 }
 
 
@@ -616,12 +622,14 @@ get_items_from_info = function(observations, info, presence = "all", additional 
 #' @param items Sought items.
 #' @param info_names Names of information to extract from observations.
 #' @param presence Item presence condition for information to be extracted from an observation.
-#' One of \code{"all"}, \code{"any"}.
+#' One of \code{"all"}, \code{"any"}, \code{"exact"}.
 #'  \describe{
 #'   \item{\code{"all"}}{All the sought items must be part of an observation for its information
 #'                       to be extracted.}
 #'   \item{\code{"any"}}{At least one of the sought items must be part of an observation for its
 #'                       information to be extracted.}
+#'    \item{\code{"exact"}}{The item set contained in an observation must be exactly the same as the
+#'                          sought item set for this observation to be extracted.}
 #'  }
 #' @param key Access key to the items in an observation.
 #' @return Vector or list of information corresponding to the search.

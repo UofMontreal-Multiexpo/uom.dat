@@ -31,11 +31,12 @@ Extract the patterns satisfying search criteria according to items, characterist
 }
 \details{
 If \code{element = "items"} one or more items can be sought. The condition for a pattern to be extracted
-is the presence of the sought items (argument \code{value}). The argument \code{condition} must be \code{"all"} or
-\code{"any"} (default is \code{"all"}):
+is the presence of the sought items (argument \code{value}). The argument \code{condition} must be \code{"all"},
+\code{"any"} or \code{"exact"} (default is \code{"all"}):
 \itemize{
 \item \code{"all"}: all the sought items must be part of the pattern.
 \item \code{"any"}: at least one of the sought items must be part of the pattern.
+\item \code{"exact"}: the item set contained in the pattern must be exactly the same as the sought item set.
 }
 
 If \code{element} refers to a characteristic other than status (i.e. is one of \code{"year"}, \code{"frequency"},
@@ -79,20 +80,22 @@ get_patterns(SA_instance, SA_instance["patterns"],
              element = "items", value = 3146)
 get_patterns(SA_instance, SA_instance["patterns"],
              element = "items", value = c(3146, 3180), condition = "all")
-get_patterns(SA_instance, SA_instance["patterns"],
+get_patterns(SA_instance, "patterns",
              element = "items", value = c(3146, 3180), condition = "any")
+get_patterns(SA_instance, "patterns",
+             element = "items", value = c(3146, 3180), condition = "exact")
 
 ## Search on characteristics
 get_patterns(SA_instance, SA_instance["patterns"],
              element = "weight", value = 3)
-get_patterns(SA_instance, SA_instance["patterns"],
+get_patterns(SA_instance, "patterns",
              element = "weight", value = 3, condition = ">=")
-get_patterns(SA_instance, SA_instance["patterns"],
+get_patterns(SA_instance, "patterns",
              element = "order", value = 3, condition = "LT")
 
 get_patterns(SA_instance, SA_instance["patterns"], element = "status",
              value = "Persistent")
-get_patterns(SA_instance, SA_instance["patterns"], element = "status",
+get_patterns(SA_instance, "patterns", element = "status",
              value = c("Persistent", "Declining"), condition = "!=")
 
 ## Search on categories

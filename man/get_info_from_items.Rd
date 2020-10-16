@@ -20,12 +20,14 @@ get_info_from_items(
 \item{info_names}{Names of information to extract from observations.}
 
 \item{presence}{Item presence condition for information to be extracted from an observation.
-One of \code{"all"}, \code{"any"}.
+One of \code{"all"}, \code{"any"}, \code{"exact"}.
  \describe{
   \item{\code{"all"}}{All the sought items must be part of an observation for its information
                       to be extracted.}
   \item{\code{"any"}}{At least one of the sought items must be part of an observation for its
                       information to be extracted.}
+   \item{\code{"exact"}}{The item set contained in an observation must be exactly the same as the
+                         sought item set for this observation to be extracted.}
  }}
 
 \item{key}{Access key to the items in an observation.}

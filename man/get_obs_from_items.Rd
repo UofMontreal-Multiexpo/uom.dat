@@ -12,12 +12,14 @@ get_obs_from_items(observations, items, presence = "all", key = "CODE")
 \item{items}{Sought items.}
 
 \item{presence}{Item presence condition for an observation to be extracted.
-One of \code{"all"}, \code{"any"}.
+One of \code{"all"}, \code{"any"}, \code{"exact"}.
 \describe{
   \item{\code{"all"}}{All the sought items must be part of an observation for this
                       observation to be extracted.}
   \item{\code{"any"}}{At least one of the sought items must be part of an observation for
                       this observation to be extracted.}
+  \item{\code{"exact"}}{The item set contained in an observation must be exactly the same as the
+                        sought item set for this observation to be extracted.}
 }}
 
 \item{key}{Access key to the items in an observation.}
@@ -32,6 +34,7 @@ Extract the observations containing one or more sought items.
 obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
 get_obs_from_items(obs, items = c(25, 192), presence = "all")
 get_obs_from_items(obs, items = c(25, 192), presence = "any")
+get_obs_from_items(obs, items = c(25, 192), presence = "exact")
 
 }
 \seealso{

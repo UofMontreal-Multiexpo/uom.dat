@@ -3209,10 +3209,11 @@ setMethod(f = "save_characteristics",
 #' 
 #' @details
 #' If `element = "items"` one or more items can be sought. The condition for a node to be extracted
-#'  is the presence of the sought items (argument `value`). The argument `condition` must be `"all"`
-#'  or `"any"` (default is `"all"`):
+#'  is the presence of the sought items (argument `value`). The argument `condition` must be `"all"`,
+#'  `"any"` or `"exact"` (default is `"all"`):
 #'  * `"all"`: all the sought items must be part of the node.
 #'  * `"any"`: at least one of the sought items must be part of the node.
+#'  * `"exact"`: the item set contained in the node must be exactly the same as the sought item set.
 #' 
 #' If `element` refers to a characteristic (i.e. is `"length"` or `"weight"`), the condition for a node
 #'  to be extracted is a comparison of the `value` according to one of the comparison operators (default
@@ -3253,14 +3254,16 @@ setMethod(f = "save_characteristics",
 #' get_nodes(SA_instance, SA_instance["nodes"], element = "items", value = 3146)
 #' get_nodes(SA_instance, SA_instance["nodes"],
 #'           element = "items", value = c(3146, 3180), condition = "all")
-#' get_nodes(SA_instance, SA_instance["nodes"],
+#' get_nodes(SA_instance, "nodes",
 #'           element = "items", value = c(3146, 3180), condition = "any")
+#' get_nodes(SA_instance, "nodes",
+#'           element = "items", value = c(3146, 3180), condition = "exact")
 #' 
 #' ## Search on characteristics
 #' get_nodes(SA_instance, SA_instance["nodes"], element = "weight", value = 2)
-#' get_nodes(SA_instance, SA_instance["nodes"],
+#' get_nodes(SA_instance, "nodes",
 #'           element = "weight", value = 2, condition = ">=")
-#' get_nodes(SA_instance, SA_instance["nodes"],
+#' get_nodes(SA_instance, "nodes",
 #'           element = "length", value = 5, condition = "LT")
 #' 
 #' ## Search on categories
@@ -3307,11 +3310,13 @@ setMethod(f = "get_nodes",
 #'  `"nodes"` and `"n"` are specific values for `object["nodes"]`.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a node to be extracted.
-#'  One of `"all"`, `"any"`.
+#'  One of `"all"`, `"any"`, `"exact"`.
 #'  \describe{
 #'    \item{`"all"`}{All the sought items must be part of a node for this node to be extracted.}
-#'    \item{`"any"}{At least one of the sought items must be part of a node for this node to be
+#'    \item{`"any"`}{At least one of the sought items must be part of a node for this node to be
 #'                  extracted.}
+#'    \item{`"exact"`}{The item set contained in a node must be exactly the same as the
+#'                     sought item set for this node to be extracted.}
 #'  }
 #' @return Subset of the data frame of nodes that match the search criteria.
 #' 
@@ -3324,6 +3329,8 @@ setMethod(f = "get_nodes",
 #'                      items = c(3146, 3180), condition = "all")
 #' get_nodes_from_items(SA_instance, SA_instance["nodes"],
 #'                      items = c(3146, 3180), condition = "any")
+#' get_nodes_from_items(SA_instance, SA_instance["nodes"],
+#'                      items = c(3146, 3180), condition = "exact")
 #' 
 #' @aliases get_nodes_from_items
 #' @md
@@ -3335,11 +3342,12 @@ setMethod(f = "get_nodes_from_items",
             # Récupération des noeuds
             nc = get_nopc(object, nc, SpectralAnalyzer.NODES)
             
-            if (!(condition %in% c("all", "any"))) stop("condition must be \"all\" or \"any\".")
+            if (!(condition %in% c("all", "any", "exact")))
+              stop("condition must be \"all\", \"any\" or \"exact\".")
             
-            if (condition == "all") func = all
-            else if (condition == "any") func = any
+            if (condition == "exact") return(subset(nc, sapply(nc$node, function(x) setequal(items, x))))
             
+            func = if (condition == "all") all else any
             return(subset(nc, sapply(nc$node, function(x) func(items %in% x))))
           })
 
@@ -3489,10 +3497,11 @@ setMethod(f = "get_nodes_from_category",
 #' 
 #' @details
 #' If `element = "items"` one or more items can be sought. The condition for a pattern to be extracted
-#'  is the presence of the sought items (argument `value`). The argument `condition` must be `"all"` or
-#'  `"any"` (default is `"all"`):
+#'  is the presence of the sought items (argument `value`). The argument `condition` must be `"all"`,
+#'  `"any"` or `"exact"` (default is `"all"`):
 #'  * `"all"`: all the sought items must be part of the pattern.
 #'  * `"any"`: at least one of the sought items must be part of the pattern.
+#'  * `"exact"`: the item set contained in the pattern must be exactly the same as the sought item set.
 #' 
 #' If `element` refers to a characteristic other than status (i.e. is one of `"year"`, `"frequency"`,
 #'  `"weight"`, `"order"`, `"specificity"`), the condition for a pattern to be extracted is a comparaison
@@ -3544,20 +3553,22 @@ setMethod(f = "get_nodes_from_category",
 #'              element = "items", value = 3146)
 #' get_patterns(SA_instance, SA_instance["patterns"],
 #'              element = "items", value = c(3146, 3180), condition = "all")
-#' get_patterns(SA_instance, SA_instance["patterns"],
+#' get_patterns(SA_instance, "patterns",
 #'              element = "items", value = c(3146, 3180), condition = "any")
+#' get_patterns(SA_instance, "patterns",
+#'              element = "items", value = c(3146, 3180), condition = "exact")
 #' 
 #' ## Search on characteristics
 #' get_patterns(SA_instance, SA_instance["patterns"],
 #'              element = "weight", value = 3)
-#' get_patterns(SA_instance, SA_instance["patterns"],
+#' get_patterns(SA_instance, "patterns",
 #'              element = "weight", value = 3, condition = ">=")
-#' get_patterns(SA_instance, SA_instance["patterns"],
+#' get_patterns(SA_instance, "patterns",
 #'              element = "order", value = 3, condition = "LT")
 #' 
 #' get_patterns(SA_instance, SA_instance["patterns"], element = "status",
 #'              value = "Persistent")
-#' get_patterns(SA_instance, SA_instance["patterns"], element = "status",
+#' get_patterns(SA_instance, "patterns", element = "status",
 #'              value = c("Persistent", "Declining"), condition = "!=")
 #' 
 #' ## Search on categories
@@ -3614,12 +3625,14 @@ setMethod(f = "get_patterns",
 #'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a pattern to be extracted.
-#'  One of \code{"all"}, \code{"any"}.
+#'  One of \code{"all"}, \code{"any"}, \code{"exact"}.
 #'  \describe{
 #'    \item{\code{"all"}}{All the sought items must be part of a pattern for this pattern to be
 #'                        extracted.}
 #'    \item{\code{"any"}}{At least one of the sought items must be part of a pattern for this pattern
 #'                        to be extracted.}
+#'    \item{\code{"exact"}}{The item set contained in a pattern must be exactly the same as the
+#'                          sought item set for this pattern to be extracted.}
 #'  }
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
@@ -3633,6 +3646,8 @@ setMethod(f = "get_patterns",
 #'                         items = c(3146, 3180), condition = "all")
 #' get_patterns_from_items(SA_instance, SA_instance["patterns"],
 #'                         items = c(3146, 3180), condition = "any")
+#' get_patterns_from_items(SA_instance, SA_instance["patterns"],
+#'                         items = c(3146, 3180), condition = "exact")
 #' 
 #' @aliases get_patterns_from_items
 #' @keywords internal
@@ -3643,11 +3658,12 @@ setMethod(f = "get_patterns_from_items",
             # Récupération des patterns
             pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
             
-            if (!(condition %in% c("all", "any"))) stop("condition must be \"all\" or \"any\".")
+            if (!(condition %in% c("all", "any", "exact")))
+              stop("condition must be \"all\", \"any\" or \"exact\".")
             
-            if (condition == "all") func = all
-            else if (condition == "any") func = any
+            if (condition == "exact") return(subset(pc, sapply(pc$pattern, function(x) setequal(items, x))))
             
+            func = if (condition == "all") all else any
             return(subset(pc, sapply(pc$pattern, function(x) func(items %in% x))))
           })
 

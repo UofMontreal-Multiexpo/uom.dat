@@ -29,11 +29,12 @@ Extract the nodes satisfying search criteria according to items, characteristics
 }
 \details{
 If \code{element = "items"} one or more items can be sought. The condition for a node to be extracted
-is the presence of the sought items (argument \code{value}). The argument \code{condition} must be \code{"all"}
-or \code{"any"} (default is \code{"all"}):
+is the presence of the sought items (argument \code{value}). The argument \code{condition} must be \code{"all"},
+\code{"any"} or \code{"exact"} (default is \code{"all"}):
 \itemize{
 \item \code{"all"}: all the sought items must be part of the node.
 \item \code{"any"}: at least one of the sought items must be part of the node.
+\item \code{"exact"}: the item set contained in the node must be exactly the same as the sought item set.
 }
 
 If \code{element} refers to a characteristic (i.e. is \code{"length"} or \code{"weight"}), the condition for a node
@@ -66,14 +67,16 @@ value.
 get_nodes(SA_instance, SA_instance["nodes"], element = "items", value = 3146)
 get_nodes(SA_instance, SA_instance["nodes"],
           element = "items", value = c(3146, 3180), condition = "all")
-get_nodes(SA_instance, SA_instance["nodes"],
+get_nodes(SA_instance, "nodes",
           element = "items", value = c(3146, 3180), condition = "any")
+get_nodes(SA_instance, "nodes",
+          element = "items", value = c(3146, 3180), condition = "exact")
 
 ## Search on characteristics
 get_nodes(SA_instance, SA_instance["nodes"], element = "weight", value = 2)
-get_nodes(SA_instance, SA_instance["nodes"],
+get_nodes(SA_instance, "nodes",
           element = "weight", value = 2, condition = ">=")
-get_nodes(SA_instance, SA_instance["nodes"],
+get_nodes(SA_instance, "nodes",
           element = "length", value = 5, condition = "LT")
 
 ## Search on categories
