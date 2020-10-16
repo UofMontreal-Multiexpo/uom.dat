@@ -713,11 +713,25 @@ Let's go back to our original example.
 
 ## 5.1. Processing on observations
 
-Enumerate all items in a list of observations...
+### 5.1.1. Items and proportions
+
+Enumerate all substances in the list of observations...
 ```{r}
 get_all_items(sa_object["observations"])
 ```
 
+Compute some proportions...
+```{r}
+# Proportion of situations involving more than one substance
+length(get_complex_obs(sa_object["observations"])) / length(sa_object["observations"])
+```
+
+```{r}
+# Proportion of involvement of each substance in multiple exposures
+co_occurrence_proportions(sa_object["observations"])
+```
+
+### 5.1.2. Filters on observations
 
 Selection of observations containing a desired substance or set of substances...
 ```{r}
@@ -728,6 +742,16 @@ View(get_obs_from_items(sa_object["observations"],
 ```
 ![](./spectral_analysis_example/View_observations_25.png)
 
+This way we can select observations containing a specific pattern...
+```{r}
+# Observations in which there is the itemset of the 2nd pattern
+# (corresponding to the items having the codes 932 and 3180)
+View(get_obs_from_items(sa_object["observations"],
+                        items = sa_object["patterns"]$pattern[[2]],
+                        presence = "all"))
+```
+![](./spectral_analysis_example/View_observations_pattern_2.png)
+
 Selection of observations corresponding to a desired work situation...
 ```{r}
 # Search for observations for which the additional information "JOB.TITLE" and "JOB.TASK" correspond respectively to 44132001 and "A8310"
@@ -737,14 +761,16 @@ View(get_obs_from_info(sa_object["observations"],
 ```
 ![](./spectral_analysis_example/View_observations_MT.png)
 
-Search for substances found in observations associated with a work situation...
+### 5.1.3. Search for items or information
+
+Search for substances found in observations associated with a specific work situation...
 ```{r}
 get_items_from_info(sa_object["observations"],
                     JOB.TITLE = 44121004,
                     JOB.TASK = "A5440")
 ```
 
-Search for situations associated with a desired substance...
+Search for work situations associated with a desired substance...
 ```{r}
 # Search for the information "JOB.TITLE" and "JOB.TASK" associated to observations in which there is the item 3146
 get_info_from_items(sa_object["observations"],
@@ -752,14 +778,13 @@ get_info_from_items(sa_object["observations"],
                     info_names = c("JOB.TITLE", "JOB.TASK"))
 ```
 
-Compute some proportions...
+Search for work situations associated with a specific pattern...
 ```{r}
-# Proportion of situations involving more than one substance
-length(get_complex_obs(sa_object["observations"])) / length(sa_object["observations"])
-```
-```{r}
-# Proportion of involvement of each substance in multiple exposures
-co_occurrence_proportions(sa_object["observations"])
+# Search for the information "JOB.TITLE" and "JOB.TASK" associated to the 2nd pattern
+# (corresponding to the items having the codes 932 and 3180)
+get_info_from_items(sa_object["observations"],
+                    items = sa_object["patterns"]$pattern[[2]],
+                    info_names = c("JOB.TITLE", "JOB.TASK"))
 ```
 
 
