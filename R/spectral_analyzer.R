@@ -230,6 +230,26 @@ setMethod(f = "initialize",
 #'  the values of \code{CODE} in the argument \code{observations} without any categorization or
 #'  specific denomination.
 #' 
+#' The type of patterns mined can be:
+#'  \itemize{
+#'    \item{\code{"frequent itemsets"}: itemsets appearing in the observations according to an
+#'          occurrence threshold defined by the parameter \code{count}.}
+#'    \item{\code{"closed frequent itemsets"}: maximal itemsets of equivalence classes. An equivalence
+#'          class is defined as the set of itemsets appearing in the same observations.}
+#'    \item{\code{"maximally frequent itemsets"}: frequent itemsets which do not have any frequent
+#'          superset. Also named as the maximals by inclusion of the frequent itemsets
+#'          or the positive boundary of the frequent itemsets.}
+#'  }
+#' 
+#' The \strong{frequent itemsets} are an exhaustive list of frequent itemsets.
+#'  The \strong{closed frequent itemsets} synthesize the information so as to reduce the memory space
+#'  required without real loss of information thanks to the equivalence classes.
+#'  The \strong{maximal frequent itemsets} required even less memory since they are a subset of the
+#'  closed frequent itemsets.
+#'  
+#' For an explanation with illustrated examples about the different types of itemsets, read the
+#'  vignette titled "\emph{Mining itemsets}".
+#' 
 #' @param observations List of observations containing the items corresponding to each observation.
 #'  Each observation is itself a list containing at least two elements named \code{"CODE"} and
 #'  \code{"YEAR"}. \code{"YEAR"} must be numeric and \code{"CODE"} must be character or numeric values.
@@ -240,10 +260,7 @@ setMethod(f = "initialize",
 #'  The columns \code{item} and \code{name} must be of type \code{character}. The default value,
 #'  \code{NULL}, specifies that no name or category is defined.
 #' @param target Type of patterns to enumerate. One of \code{"frequent itemsets"},
-#'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
-#'  By default, \code{"closed frequent itemsets"} provide a summary of frequent patterns in order to
-#'  save the necessary memory space. To use even less memory, use \code{"maximally frequent itemsets"}.
-#'  To enumerate all possible patterns, use \code{"frequent itemsets"}.
+#'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"} (see 'Details').
 #' @param count Minimum number of occurrences of a pattern to be considered as "frequent".
 #' @param min_length Minimum number of items that a pattern must have to be kept when enumerating.
 #' @param max_length Maximum number of items that a pattern must have to be kept when enumerating.
