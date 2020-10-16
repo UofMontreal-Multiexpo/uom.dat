@@ -30,7 +30,8 @@ Imports:
 Suggests:
     knitr,
     mathjaxr,
-    rmarkdown
+    rmarkdown,
+    tools
 RdMacros: mathjaxr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0
