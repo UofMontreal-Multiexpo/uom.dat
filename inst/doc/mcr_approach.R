@@ -191,6 +191,14 @@ thq_freq_by_group(values = concentration_values,
                   levels = sort(table_levels))
 
 ## -----------------------------------------------------------------------------
+# Frequency of the pairs that produced the top two hazard quotients without condition
+# over the hazard indexes or over the lengths of the sets of values (i.e. all sets of
+# values are considered)
+thq_pairs_freq(values = concentration_values,
+               references = reference_values,
+               threshold = FALSE, alone = TRUE)
+
+## -----------------------------------------------------------------------------
 # Computing the indicators of the MCR approach
 mcr_s <- mcr_summary(values = concentration_values,
                      references = reference_values)

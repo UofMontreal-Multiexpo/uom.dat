@@ -1386,7 +1386,7 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  top two hazard quotients are to be identified.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @param hq Numeric named matrix. **H**azard **q**uotients for which the top two pairs are be to
+#' @param hq Numeric named matrix. **H**azard **q**uotients for which the top two pairs are to be
 #'  identified.
 #' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
@@ -1438,8 +1438,18 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' hazard_index(values = matrix(c(.1, .2, .3, .4),
 #'                              ncol = 2, dimnames = list(c("A","B"))),
 #'              references = c(5,5))
+#' thq_pairs_freq(values = matrix(c(.1, .2, .3, .4),
+#'                                ncol = 2, dimnames = list(c("A","B"))),
+#'                references = c(5,5),
+#'                threshold = FALSE)
 #' 
 #' ## Building contingency table from a list
+#' thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
+#'                              c(A = 1),
+#'                              c(B = 0.5, C = 0.5)),
+#'                references = list(c(0.3, 0.6),
+#'                                  0.3,
+#'                                  c(0.6, 1)))
 #' thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
 #'                              c(A = 1),
 #'                              c(B = 0.5, C = 0.5)),
@@ -1447,9 +1457,8 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
 #'                              c(A = 1),
 #'                              c(B = 0.5, C = 0.5)),
-#'                references = list(c(0.3, 0.6),
-#'                                  0.3,
-#'                                  c(0.6, 1)))
+#'                references = c(A = 0.3, B = 0.6, C = 1),
+#'                alone = TRUE)
 #' 
 #' @md
 #' @export
