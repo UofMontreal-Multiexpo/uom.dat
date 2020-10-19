@@ -4,7 +4,14 @@
 \alias{thq_pairs_freq_by_class}
 \title{Top Hazard Quotient pairs frequency by class}
 \usage{
-thq_pairs_freq_by_class(values, references, classes, levels = NULL)
+thq_pairs_freq_by_class(
+  values,
+  references,
+  classes,
+  levels = NULL,
+  threshold = TRUE,
+  alone = FALSE
+)
 }
 \arguments{
 \item{values}{Numeric named matrix or list of numeric named vectors. Vectors of values for which the
@@ -21,14 +28,19 @@ is part of a specific class.}
 
 \item{levels}{Levels to consider in the output tables. If \code{NULL}, only use of those that appear in the
 pairs.}
+
+\item{threshold}{If \code{TRUE}, only values associated with hazard indexes greater than 1 are considered.
+If \code{FALSE}, all values are considered.}
+
+\item{alone}{If \code{TRUE}, take into account single top hazard quotients (i.e. sets of values of length
+1). If so, a level named \code{"NULL"} is added for such top hazard quotients.}
 }
 \value{
 List whose length corresponds to the number of classes encountered, containing:
 \itemize{
 \item \code{NULL} if among the values corresponding to the class, no one has more than 1 value or a hazard
-index greater than 1.
-\item Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients while
-hazard index is greater than 1.
+index greater than 1 (accordingly to \code{alone} and \code{threshold}).
+\item Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients.
 }
 }
 \description{
@@ -88,6 +100,22 @@ thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
                         references = c(A = 1, B = 2, C = 3),
                         classes,
                         levels = LETTERS[1:3])
+
+# Use of the parameters alone and threshold
+thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
+                                      V2 = c(A = 2),
+                                      V3 = c(B = 3, C = 4)),
+                        references = c(A = 1, B = 2, C = 3),
+                        classes,
+                        levels = LETTERS[1:3],
+                        alone = TRUE)
+thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
+                                      V2 = c(A = 2),
+                                      V3 = c(B = 3, C = 4)),
+                        references = c(A = 1, B = 2, C = 3),
+                        classes,
+                        levels = LETTERS[1:3],
+                        threshold = FALSE, alone = TRUE)
 
 }
 \references{

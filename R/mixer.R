@@ -2362,11 +2362,14 @@ mcr_chart_by_class = function(values, references, classes,
 #'  is part of a specific class.
 #' @param levels Levels to consider in the output tables. If `NULL`, only use of those that appear in the
 #'  pairs.
+#' @param threshold If `TRUE`, only values associated with hazard indexes greater than 1 are considered.
+#'  If `FALSE`, all values are considered.
+#' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
+#'  1). If so, a level named `"NULL"` is added for such top hazard quotients.
 #' @return List whose length corresponds to the number of classes encountered, containing:
 #' * `NULL` if among the values corresponding to the class, no one has more than 1 value or a hazard
-#'   index greater than 1.
-#' * Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients while
-#'   hazard index is greater than 1.
+#'   index greater than 1 (accordingly to `alone` and `threshold`).
+#' * Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients.
 #' 
 #' @author Gauthier Magnin
 #' @inherit thq_pairs_freq references
@@ -2412,10 +2415,26 @@ mcr_chart_by_class = function(values, references, classes,
 #'                         classes,
 #'                         levels = LETTERS[1:3])
 #' 
+#' # Use of the parameters alone and threshold
+#' thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                       V2 = c(A = 2),
+#'                                       V3 = c(B = 3, C = 4)),
+#'                         references = c(A = 1, B = 2, C = 3),
+#'                         classes,
+#'                         levels = LETTERS[1:3],
+#'                         alone = TRUE)
+#' thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                       V2 = c(A = 2),
+#'                                       V3 = c(B = 3, C = 4)),
+#'                         references = c(A = 1, B = 2, C = 3),
+#'                         classes,
+#'                         levels = LETTERS[1:3],
+#'                         threshold = FALSE, alone = TRUE)
+#' 
 #' @md
 #' @export
 thq_pairs_freq_by_class = function(values, references, classes,
-                                   levels = NULL) {
+                                   levels = NULL, threshold = TRUE, alone = FALSE) {
   
   # Utilisation des classes sous forme de matrice binaire
   if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
@@ -2438,7 +2457,8 @@ thq_pairs_freq_by_class = function(values, references, classes,
     
     # Retour d'une liste pour éviter que les tables ne fusionnent en une unique matrice
     # (si levels est utilisé et qu'il n'y a aucun NA)
-    return(list(thq_pairs_freq(new_vr[["values"]], new_vr[["references"]], levels = levels)))
+    return(list(thq_pairs_freq(new_vr[["values"]], new_vr[["references"]],
+                               levels = levels, threshold = threshold, alone = alone)))
   })
   
   # Le délistage n'est pas toujours à effectuer
