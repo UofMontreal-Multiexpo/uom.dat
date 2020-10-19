@@ -1391,12 +1391,14 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
 #'  pairs.
+#' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
+#'  than 1 are considered. If `FALSE`, all values or hazard quotients are considered.
 #' @return
-#' `NULL` if (1) `values` is a matrix having only one line or (2) `values` is a list and no vector has a
-#'  hazard index greater than 1 or more than 1 value or (3) no hazard index is greater than 1.
+#' `NULL` if (1) `values` is a matrix having only one line or (2) `values` is a list in which no vector
+#'   has more than 1 value or (3) `threshold = TRUE` and no hazard index is greater than 1.
 #' 
-#' Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients while hazard
-#'  index is greater than 1.
+#' Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients considering
+#'  all values or only those related to hazard indexes greater than 1 (accordingly to `threshold`).
 #' 
 #' @author Gauthier Magnin
 #' @references Reyes JM, Price PS (2018).
@@ -1449,7 +1451,7 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @export
 thq_pairs_freq = function(values = NULL, references = NULL,
                           hq = NULL, hi = NULL,
-                          levels = NULL) {
+                          levels = NULL, threshold = TRUE) {
   
   # Cas spécifiques dans lequel values est une liste et non une matrice
   if (is.list(values)) {
@@ -1481,11 +1483,11 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     
     
     # Si aucun HI n'est supérieur à 1 ou qu'aucun vecteur ne contient plus d'une valeur
-    if (all(hi <= 1 | sapply(hq, length) == 1)) return(NULL)
+    if (all(threshold & hi <= 1 | sapply(hq, length) == 1)) return(NULL)
     
-    hq_to_use = hq[hi > 1 & sapply(hq, length) != 1]
+    hq_to_use = if (threshold) hq[hi > 1 & sapply(hq, length) != 1] else hq[sapply(hq, length) != 1]
     
-    # Si un seul ensemble de valeurs satisfait le critère HI > 1
+    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
     if (length(hq_to_use) == 1) {
       thq = names(top_hazard_quotient(hq = hq_to_use[[1]], k = 2))
       
@@ -1499,7 +1501,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
       return(table(thq[1], thq[2]))
     }
     
-    # Si plusieurs ensembles de valeurs satisfont le critère HI > 1
+    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
     thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
     
     if (!is.null(levels)) {
@@ -1523,11 +1525,11 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     if (is.null(hi)) hi = hazard_index(hq = hq)
     
     # Si une seule ligne (un seul élément) ou aucun HI n'est supérieur à 1
-    if (nrow(hq) == 1 || all(hi <= 1)) return(NULL)
+    if (nrow(hq) == 1 || (threshold && all(hi <= 1))) return(NULL)
     
-    hq_to_use = hq[, hi > 1]
+    hq_to_use = if (threshold) hq[, hi > 1] else hq
     
-    # Si un seul ensemble de valeurs satisfait le critère HI > 1
+    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
     if (is.vector(hq_to_use)) {
       thq = names(top_hazard_quotient(hq = hq_to_use, k = 2))
       
@@ -1541,7 +1543,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
       return(table(thq[1], thq[2]))
     }
     
-    # Si plusieurs ensembles de valeurs satisfont le critère HI > 1
+    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
     thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
     
     if (!is.null(levels)) {
