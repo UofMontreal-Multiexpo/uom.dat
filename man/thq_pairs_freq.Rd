@@ -4,8 +4,8 @@
 \alias{thq_pairs_freq}
 \title{Top Hazard Quotient pairs frequency}
 \usage{
-thq_pairs_freq(values, references, levels = NULL)
-thq_pairs_freq(hq, hi, levels = NULL)
+thq_pairs_freq(values, references, levels = NULL, threshold = TRUE, alone = FALSE)
+thq_pairs_freq(hq, hi, levels = NULL, threshold = TRUE, alone = FALSE)
 }
 \arguments{
 \item{values}{Numeric named matrix or list of numeric named vectors. Vectors of values for which the
@@ -24,10 +24,15 @@ pairs.}
 
 \item{threshold}{If \code{TRUE}, only values or hazard quotients associated with hazard indexes greater
 than 1 are considered. If \code{FALSE}, all values or hazard quotients are considered.}
+
+\item{alone}{If \code{TRUE}, take into account single top hazard quotients (i.e. sets of values of length
+1). If so, a level named \code{"NULL"} is added for such top hazard quotients.}
 }
 \value{
-\code{NULL} if (1) \code{values} is a matrix having only one line or (2) \code{values} is a list in which no vector
-has more than 1 value or (3) \code{threshold = TRUE} and no hazard index is greater than 1.
+\code{NULL} if (1) \code{alone = FALSE} and \code{values} is a matrix having only one line
+or (2) \code{alone = FALSE} and \code{values} is a list in which no vector has more than 1 value
+or (3) \code{threshold = TRUE} and no hazard index is greater than 1.
+or (4) \code{threshold = TRUE}, \code{alone = FALSE} and no set of values meets the two conditions.
 
 Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients considering
 all values or only those related to hazard indexes greater than 1 (accordingly to \code{threshold}).

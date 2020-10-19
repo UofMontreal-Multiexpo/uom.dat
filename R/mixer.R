@@ -1380,8 +1380,8 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  the function call.
 #' 
 #' @usage
-#' thq_pairs_freq(values, references, levels = NULL)
-#' thq_pairs_freq(hq, hi, levels = NULL)
+#' thq_pairs_freq(values, references, levels = NULL, threshold = TRUE, alone = FALSE)
+#' thq_pairs_freq(hq, hi, levels = NULL, threshold = TRUE, alone = FALSE)
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  top two hazard quotients are to be identified.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -1393,9 +1393,13 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  pairs.
 #' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
 #'  than 1 are considered. If `FALSE`, all values or hazard quotients are considered.
+#' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
+#'  1). If so, a level named `"NULL"` is added for such top hazard quotients.
 #' @return
-#' `NULL` if (1) `values` is a matrix having only one line or (2) `values` is a list in which no vector
-#'   has more than 1 value or (3) `threshold = TRUE` and no hazard index is greater than 1.
+#' `NULL` if (1) `alone = FALSE` and `values` is a matrix having only one line
+#'        or (2) `alone = FALSE` and `values` is a list in which no vector has more than 1 value
+#'        or (3) `threshold = TRUE` and no hazard index is greater than 1.
+#'        or (4) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
 #' 
 #' Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients considering
 #'  all values or only those related to hazard indexes greater than 1 (accordingly to `threshold`).
@@ -1451,7 +1455,7 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @export
 thq_pairs_freq = function(values = NULL, references = NULL,
                           hq = NULL, hi = NULL,
-                          levels = NULL, threshold = TRUE) {
+                          levels = NULL, threshold = TRUE, alone = FALSE) {
   
   # Cas spécifiques dans lequel values est une liste et non une matrice
   if (is.list(values)) {
@@ -1482,16 +1486,23 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
     
     
-    # Si aucun HI n'est supérieur à 1 ou qu'aucun vecteur ne contient plus d'une valeur
-    if (all(threshold & hi <= 1 | sapply(hq, length) == 1)) return(NULL)
+    hq_to_use = hq[(!threshold | hi > 1) & (alone | sapply(hq, length) != 1)]
     
-    hq_to_use = if (threshold) hq[hi > 1 & sapply(hq, length) != 1] else hq[sapply(hq, length) != 1]
+    # Quand une seule valeur, paire avec "NULL"
+    if (alone) {
+      index_alone = which(sapply(hq_to_use, length) == 1)
+      hq_to_use[index_alone] = lapply(hq_to_use[index_alone], c, "NULL" = 0)
+    }
+    
+    # Si aucun HI n'est supérieur à 1 ou qu'aucun vecteur ne contient plus d'une valeur
+    if (length(hq_to_use) == 0) return(NULL)
     
     # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
     if (length(hq_to_use) == 1) {
       thq = names(top_hazard_quotient(hq = hq_to_use[[1]], k = 2))
       
       if (!is.null(levels)) {
+        if (alone) levels = c(levels, "NULL")
         freq_table = table(factor(thq[1], levels = levels),
                            factor(thq[2], levels = levels))
         # Application de la symétrie
@@ -1505,6 +1516,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
     
     if (!is.null(levels)) {
+      if (alone) levels = c(levels, "NULL")
       freq_table = table(factor(thq[1, ], levels = levels),
                          factor(thq[2, ], levels = levels))
       # Application de la symétrie
@@ -1525,7 +1537,10 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     if (is.null(hi)) hi = hazard_index(hq = hq)
     
     # Si une seule ligne (un seul élément) ou aucun HI n'est supérieur à 1
-    if (nrow(hq) == 1 || (threshold && all(hi <= 1))) return(NULL)
+    if ((!alone && nrow(hq) == 1) || (threshold && all(hi <= 1))) return(NULL)
+    
+    # Quand une seule valeur, paire avec "NULL"
+    if (alone && nrow(hq) == 1) hq = rbind(hq, "NULL" = 0)
     
     hq_to_use = if (threshold) hq[, hi > 1] else hq
     
@@ -1534,6 +1549,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
       thq = names(top_hazard_quotient(hq = hq_to_use, k = 2))
       
       if (!is.null(levels)) {
+        if (alone) levels = c(levels, "NULL")
         freq_table = table(factor(thq[1], levels = levels),
                            factor(thq[2], levels = levels))
         # Application de la symétrie
@@ -1547,6 +1563,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
     
     if (!is.null(levels)) {
+      if (alone) levels = c(levels, "NULL")
       freq_table = table(factor(thq[1, ], levels = levels),
                          factor(thq[2, ], levels = levels))
       # Application de la symétrie
@@ -1618,7 +1635,6 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
 #' @param hq Numeric named matrix. **H**azard **q**uotients for which the table is to be build.
-#' @param thq Numeric named vector. **T**op **h**azard **q**uotients to use to the count.
 #' @param thq Numeric named vector or list of numeric named vectors. **T**op **h**azard **q**uotients
 #'  to use to the count. If list, only the first named value of each element of the list is considered.
 #' @param groups Character vector. MIAT groups associated with the hazard quotients `hq` or with the
