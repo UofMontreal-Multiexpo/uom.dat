@@ -1479,7 +1479,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
         stop("If values is a list, it must contain vector of named numeric values.")
       
       # Calcul des indicateurs nécessaires
-      hq = sapply(seq_len(length(values)), function(i) hazard_quotient(values[[i]], references[[i]]))
+      hq = lapply(seq_len(length(values)), function(i) hazard_quotient(values[[i]], references[[i]]))
       hi = sapply(seq_len(length(values)), function(i) hazard_index(values[[i]], references[[i]]))
       
     } else if (is.vector(references)) {
@@ -1489,7 +1489,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
         stop("If values is a list and references is a vector. Both must contained named values.")
       
       # Calcul des indicateurs nécessaires
-      hq = sapply(values, function(v) hazard_quotient(v, references[names(v)]))
+      hq = lapply(seq_along(values), function(i) hazard_quotient(values[[i]], references[names(values[[i]])]))
       hi = sapply(values, function(v) hazard_index(v, references[names(v)]))
       
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
