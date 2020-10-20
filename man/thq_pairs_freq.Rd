@@ -32,7 +32,7 @@ pairs.}
 than 1 are considered. If \code{FALSE}, all values or hazard quotients are considered.}
 
 \item{alone}{If \code{TRUE}, take into account single top hazard quotients (i.e. sets of values of length
-1). If so, a level named \code{"NULL"} is added for such top hazard quotients.}
+1). If so, a level named \code{"NULL"} is added as combination with such top hazard quotients.}
 }
 \value{
 \code{NULL} if (1) \code{alone = FALSE} and \code{values} is a matrix having only one line
@@ -58,8 +58,7 @@ so that \code{values} and \code{references} can be matched.
 
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
 before identifying the highest hazard quotients then building the contingency table. Thus, call the
-function with the arguments \code{hq} and \code{hi} is faster (if they are already computed). This is true if
-\code{values} is not a list.
+function with the arguments \code{hq} and \code{hi} is faster (if they are already computed).
 
 \loadmathjax
 The hazard index of the vector \eqn{i} is given by:
