@@ -822,7 +822,7 @@ mcr_summary_for_list = function(values, references) {
         any(sapply(values, length) != sapply(references, length)))
       stop("If values and references are two lists, their lengths and the ones of their elements must match.")
     if (!is.named(values)[2])
-      stop("If values is a list, it must contain vector of named numeric values.")
+      stop("If values is a list, it must contain vectors of named numeric values.")
     
     summary = t(sapply(seq_len(length(values)), function (i) mcr_summary(values[[i]], references[[i]])))
     
@@ -1029,7 +1029,7 @@ mcr_chart = function(values = NULL, references = NULL,
           any(sapply(values, length) != sapply(references, length)))
         stop("If values and references are two lists, their lengths and the ones of their elements must match.")
       if (!is.named(values)[2])
-        stop("If values is a list, it must contain vector of named numeric values.")
+        stop("If values is a list, it must contain vectors of named numeric values.")
       
       # Calcul des indicateurs nécessaires
       hi = sapply(seq_len(length(values)), function(i) hazard_index(values[[i]], references[[i]]))
@@ -1990,14 +1990,14 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
     
     if (is.null(references)){
       if(!is.named(values)[2])
-        stop("If values is a list, it must contain vector of named numeric values.")
+        stop("If values is a list, it must contain vectors of named numeric values.")
     } else {
       if (is.list(references)) {
         if (length(values) != length(references) ||
             any(sapply(values, length) != sapply(references, length)))
           stop("If values and references are two lists, their lengths and the ones of their elements must match.")
         if (!is.named(values)[2])
-          stop("If values is a list, it must contain vector of named numeric values.")
+          stop("If values is a list, it must contain vectors of named numeric values.")
         
       } else if (is.vector(references)) {
         if (!is.named(references) || !is.named(values)[2])
