@@ -4,8 +4,14 @@
 \alias{thq_pairs_freq}
 \title{Top Hazard Quotient pairs frequency}
 \usage{
-thq_pairs_freq(values, references, levels = NULL, threshold = TRUE, alone = FALSE)
-thq_pairs_freq(hq, hi, levels = NULL, threshold = TRUE, alone = FALSE)
+thq_pairs_freq(values, references,
+               levels = NULL,
+               threshold = TRUE,
+               alone = FALSE)
+thq_pairs_freq(hq, hi,
+               levels = NULL,
+               threshold = TRUE,
+               alone = FALSE)
 }
 \arguments{
 \item{values}{Numeric named matrix or list of numeric named vectors. Vectors of values for which the
@@ -14,8 +20,8 @@ top two hazard quotients are to be identified.}
 \item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
 \code{values}. See 'Details' to know the way it is associated with \code{values}.}
 
-\item{hq}{Numeric named matrix. \strong{H}azard \strong{q}uotients for which the top two pairs are to be
-identified.}
+\item{hq}{Numeric named matrix or list of numeric named vectors. \strong{H}azard \strong{q}uotients for which
+the top two pairs are to be identified.}
 
 \item{hi}{Numeric vector. \strong{H}azard \strong{i}ndexes associated with the hazard quotients \code{hq}.}
 
@@ -65,8 +71,8 @@ The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
 }
 \note{
-Due to the multiple possible usages, the arguments \code{hi}, \code{hq} and \code{levels} must be explicitly named in
-the function call.
+Due to the multiple possible usages, all arguments except \code{values} and \code{references} must be explicitly
+named in the function call.
 }
 \examples{
 thq_pairs_freq(values = matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),

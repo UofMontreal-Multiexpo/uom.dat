@@ -1376,18 +1376,24 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
 #' @note
-#' Due to the multiple possible usages, the arguments `hi`, `hq` and `levels` must be explicitly named in
-#'  the function call.
+#' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
+#'  named in the function call.
 #' 
 #' @usage
-#' thq_pairs_freq(values, references, levels = NULL, threshold = TRUE, alone = FALSE)
-#' thq_pairs_freq(hq, hi, levels = NULL, threshold = TRUE, alone = FALSE)
+#' thq_pairs_freq(values, references,
+#'                levels = NULL,
+#'                threshold = TRUE,
+#'                alone = FALSE)
+#' thq_pairs_freq(hq, hi,
+#'                levels = NULL,
+#'                threshold = TRUE,
+#'                alone = FALSE)
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  top two hazard quotients are to be identified.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @param hq Numeric named matrix. **H**azard **q**uotients for which the top two pairs are to be
-#'  identified.
+#' @param hq Numeric named matrix or list of numeric named vectors. **H**azard **q**uotients for which
+#'  the top two pairs are to be identified.
 #' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
 #'  pairs.
@@ -1466,36 +1472,53 @@ thq_pairs_freq = function(values = NULL, references = NULL,
                           hq = NULL, hi = NULL,
                           levels = NULL, threshold = TRUE, alone = FALSE) {
   
-  # Cas spécifiques dans lequel values est une liste et non une matrice
-  if (is.list(values)) {
+  # Si des levels sont définis et que l'on prend en compte les éléments seuls, ajout d'un facteur "NULL"
+  if (!is.null(levels) && alone) levels = c(levels, "NULL")
+  
+  if (is.list(values) || is.list(hq)) {
     
-    # Différence si references est une liste ou un vecteur
-    if (is.list(references)) {
+    # Si HI et/ou HQ n'est pas renseigné
+    if (is.null(hi) || is.null(hq)) {
       
       # Vérification que les structures de données sont nommées
-      if (any(sapply(values, length) != sapply(references, length)))
-        stop("If values and references are two lists, the lengths of their elements must match.")
-      if (!is.named(values)[2])
+      if (!is.null(values) && !is.named(values)[2])
         stop("If values is a list, it must contain vector of named numeric values.")
+      if (!is.null(hq) && !is.named(hq)[2])
+        stop("If hq is a list, it must contain vector of named numeric values.")
       
-      # Calcul des indicateurs nécessaires
-      hq = lapply(seq_len(length(values)), function(i) hazard_quotient(values[[i]], references[[i]]))
-      hi = sapply(seq_len(length(values)), function(i) hazard_index(values[[i]], references[[i]]))
-      
-    } else if (is.vector(references)) {
-      
-      # Vérification que les structures de données sont nommées
-      if (!is.named(references) || !is.named(values)[2])
-        stop("If values is a list and references is a vector. Both must contained named values.")
-      
-      # Calcul des indicateurs nécessaires
-      hq = lapply(seq_along(values), function(i) hazard_quotient(values[[i]], references[names(values[[i]])]))
-      hi = sapply(values, function(v) hazard_index(v, references[names(v)]))
-      
-    } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
+      # Différence si references est une liste ou un vecteur
+      if (is.list(references)) {
+        
+        # Vérification que les ensembles de valeurs des listes ont les mêmes longueures
+        if (length(values) != length(references) ||
+            any(sapply(values, length) != sapply(references, length)))
+          stop("If values and references are two lists, their lengths and the ones of their elements must match.")
+        
+        # Calcul des indicateurs manquants
+        if (is.null(hq)) hq = lapply(seq_along(values),
+                                     function(i) hazard_quotient(values[[i]], references[[i]]))
+        if (is.null(hi)) hi = sapply(seq_along(values),
+                                     function(i) hazard_index(values[[i]], references[[i]]))
+        
+      } else if (is.vector(references)) {
+        
+        # Vérification que references contient des données nommées
+        if (!is.named(references)) stop("If values is a list and references is a vector, references must contained named values.")
+        
+        # Calcul des indicateurs manquants
+        if (is.null(hq)) hq = lapply(seq_along(values),
+                                     function(i) hazard_quotient(values[[i]], references[names(values[[i]])]))
+        if (is.null(hi)) hi = sapply(values,
+                                     function(v) hazard_index(v, references[names(v)]))
+        
+      } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
+    }
     
-    
+    # Sélection des HQ à utiliser, selon les critères sur HI et sur la taille des ensembles de valeurs
     hq_to_use = hq[(!threshold | hi > 1) & (alone | sapply(hq, length) != 1)]
+    
+    # Si aucun HI n'est supérieur à 1 ou qu'aucun vecteur ne contient plus d'une valeur
+    if (length(hq_to_use) == 0) return(NULL)
     
     # Quand une seule valeur, paire avec "NULL"
     if (alone) {
@@ -1503,15 +1526,12 @@ thq_pairs_freq = function(values = NULL, references = NULL,
       hq_to_use[index_alone] = lapply(hq_to_use[index_alone], c, "NULL" = 0)
     }
     
-    # Si aucun HI n'est supérieur à 1 ou qu'aucun vecteur ne contient plus d'une valeur
-    if (length(hq_to_use) == 0) return(NULL)
-    
     # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
     if (length(hq_to_use) == 1) {
       thq = names(top_hazard_quotient(hq = hq_to_use[[1]], k = 2))
       
       if (!is.null(levels)) {
-        if (alone) levels = c(levels, "NULL")
+        # Création d'une table en utilisant les levels prédéfinis
         freq_table = table(factor(thq[1], levels = levels),
                            factor(thq[2], levels = levels))
         # Application de la symétrie
@@ -1525,7 +1545,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
     
     if (!is.null(levels)) {
-      if (alone) levels = c(levels, "NULL")
+      # Création d'une table en utilisant les levels prédéfinis
       freq_table = table(factor(thq[1, ], levels = levels),
                          factor(thq[2, ], levels = levels))
       # Application de la symétrie
@@ -1533,10 +1553,10 @@ thq_pairs_freq = function(values = NULL, references = NULL,
       return(freq_table)
     }
     return(table(thq[1, ], thq[2, ]))
+
+        
+  } else if (is.matrix(values) || is.matrix(hq)) { # Cas où values ou hq est une matrice
     
-    
-  } else { # Cas où values est une matrice
-  
     # Vérification que les structures de données sont nommées
     if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
     if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
@@ -1551,6 +1571,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     # Quand une seule valeur, paire avec "NULL"
     if (alone && nrow(hq) == 1) hq = rbind(hq, "NULL" = 0)
     
+    # Sélection des HQ à utiliser, selon l'utilisation ou non du critère HI > 1
     hq_to_use = if (threshold) hq[, hi > 1] else hq
     
     # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
@@ -1558,7 +1579,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
       thq = names(top_hazard_quotient(hq = hq_to_use, k = 2))
       
       if (!is.null(levels)) {
-        if (alone) levels = c(levels, "NULL")
+        # Création d'une table en utilisant les levels prédéfinis
         freq_table = table(factor(thq[1], levels = levels),
                            factor(thq[2], levels = levels))
         # Application de la symétrie
@@ -1572,7 +1593,7 @@ thq_pairs_freq = function(values = NULL, references = NULL,
     thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
     
     if (!is.null(levels)) {
-      if (alone) levels = c(levels, "NULL")
+      # Création d'une table en utilisant les levels prédéfinis
       freq_table = table(factor(thq[1, ], levels = levels),
                          factor(thq[2, ], levels = levels))
       # Application de la symétrie
@@ -1580,6 +1601,11 @@ thq_pairs_freq = function(values = NULL, references = NULL,
       return(freq_table)
     }
     return(table(thq[1, ], thq[2, ]))
+    
+  } else {
+    if (!is.null(hq)) stop("hq must be a numeric named matrix or list of numeric named vectors.")
+    if (!is.null(values)) stop("values must be a numeric named matrix or list of numeric named vectors.")
+    stop("One of values or hq must not be NULL.")
   }
 }
 
