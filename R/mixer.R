@@ -714,7 +714,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #' @export
 mcr_summary = function(values, references) {
   
-  # Cas spécifiques dans lequel values est une liste
+  # Cas spécifique dans lequel values est une liste
   if (is.list(values)) return(mcr_summary_for_list(values, references))
   
   
@@ -818,8 +818,9 @@ mcr_summary_for_list = function(values, references) {
   
   # Différence si references est une liste ou un vecteur
   if (is.list(references)) {
-    if (any(sapply(values, length) != sapply(references, length)))
-      stop("If values and references are two lists, the lengths of their elements must match.")
+    if (length(values) != length(references) ||
+        any(sapply(values, length) != sapply(references, length)))
+      stop("If values and references are two lists, their lengths and the ones of their elements must match.")
     if (!is.named(values)[2])
       stop("If values is a list, it must contain vector of named numeric values.")
     
@@ -1024,8 +1025,9 @@ mcr_chart = function(values = NULL, references = NULL,
     if (is.list(references)) {
       
       # Vérification que les structures de données sont nommées
-      if (any(sapply(values, length) != sapply(references, length)))
-        stop("If values and references are two lists, the lengths of their elements must match.")
+      if (length(values) != length(references) ||
+          any(sapply(values, length) != sapply(references, length)))
+        stop("If values and references are two lists, their lengths and the ones of their elements must match.")
       if (!is.named(values)[2])
         stop("If values is a list, it must contain vector of named numeric values.")
       
@@ -1729,8 +1731,9 @@ thq_freq_by_group = function(values = NULL, references = NULL,
     if (is.list(references)) {
       
       # Vérification que les structures de données sont nommées
-      if (any(sapply(values, length) != sapply(references, length)))
-        stop("If values and references are two lists, the lengths of their elements must match.")
+      if (length(values) != length(references) ||
+          any(sapply(values, length) != sapply(references, length)))
+        stop("If values and references are two lists, their lengths and the ones of their elements must match.")
       if (!is.named(values)[2])
         stop("If values is a list, it must contain vector of named numeric values.")
       
@@ -1819,8 +1822,9 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
         stop("If values is a list, it must contain vector of named numeric values.")
     } else {
       if (is.list(references)) {
-        if (any(sapply(values, length) != sapply(references, length)))
-          stop("If values and references are two lists, the lengths of their elements must match.")
+        if (length(values) != length(references) ||
+            any(sapply(values, length) != sapply(references, length)))
+          stop("If values and references are two lists, their lengths and the ones of their elements must match.")
         if (!is.named(values)[2])
           stop("If values is a list, it must contain vector of named numeric values.")
         
