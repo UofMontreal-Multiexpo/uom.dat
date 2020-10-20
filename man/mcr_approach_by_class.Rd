@@ -20,7 +20,7 @@ contain the names associated with the \code{values}. A \code{TRUE} value indicat
 is part of a specific class.}
 
 \item{FUN}{Either a function or a non-empty character string naming the function to apply on each
-class, among \code{mcr_summary}, \code{mcr_chart}, \code{thq_pairs_freq}, \code{thq_freq_by_group}.}
+class, among \code{mcr_summary}, \code{mcr_chart}, \code{thq_pairs}, \code{thq_by_group}.}
 
 \item{...}{Further arguments to the function \code{FUN}.}
 }
@@ -29,14 +29,14 @@ See 'Value' of the corresponding help page:
 \itemize{
 \item \code{\link{mcr_summary_by_class}} if \code{FUN} is \code{mcr_summary}.
 \item \code{\link{mcr_chart_by_class}} if \code{FUN} is \code{mcr_chart}.
-\item \code{\link{thq_pairs_freq_by_class}} if \code{FUN} is \code{thq_pairs_freq}.
-\item \code{\link{thq_freq_by_group_by_class}} if \code{FUN} is \code{thq_freq_by_group}.
+\item \code{\link{thq_pairs_by_class}} if \code{FUN} is \code{thq_pairs}.
+\item \code{\link{thq_by_group_by_class}} if \code{FUN} is \code{thq_by_group}.
 }
 }
 \description{
 Perform the MCR approach according to classes, given values and references. Wrapper of the four
 functions allowing to perform the MCR pproach according to classes: \code{mcr_summary_by_class},
-\code{mcr_chart_by_class}, \code{thq_pairs_freq_by_class}, \code{thq_freq_by_group_by_class}.
+\code{mcr_chart_by_class}, \code{thq_pairs_by_class}, \code{thq_by_group_by_class}.
 }
 \details{
 If \code{values} is a vector, the reference values are directly associated with these values.
@@ -83,19 +83,19 @@ mcr_approach_by_class(values = list(V1 = c(A = 1, B = 5),
                                         1,
                                         c(2, 3)),
                       classes,
-                      FUN = "thq_pairs_freq", levels = names(classes))
+                      FUN = "thq_pairs", levels = names(classes))
 
 mcr_approach_by_class(values = list(V1 = c(A = 1, B = 5),
                                     V2 = c(A = 2),
                                     V3 = c(B = 3, C = 4)),
                       references = c(A = 1, B = 2, C = 3),
                       classes,
-                      FUN = "thq_freq_by_group", levels = names(classes))
+                      FUN = "thq_by_group", levels = names(classes))
 
 }
 \seealso{
-\code{\link{mcr_summary_by_class}}, \code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_freq_by_class}},
-\code{\link{thq_freq_by_group_by_class}}.
+\code{\link{mcr_summary_by_class}}, \code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_by_class}},
+\code{\link{thq_by_group_by_class}}.
 }
 \author{
 Gauthier Magnin

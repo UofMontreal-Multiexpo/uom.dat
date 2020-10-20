@@ -391,7 +391,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Maximum cumulative ratio approach and classification management</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2020-10-19</h4>
+<h4 class="date">Last update: 2020-10-20</h4>
 
 
 <div id="TOC">
@@ -991,13 +991,13 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <h2>2.3. Contingency tables</h2>
 <p>Two types of contingency tables can be built on the indicators of the MCR approach:</p>
 <ul>
-<li>The counts of each combination of the top two hazard quotients pairs for which the associated hazard index is greater than <span class="math inline">\(1\)</span>, using the function <code>thq_pairs_freq</code>.</li>
-<li>The counts of each combination of the top hazard quotient with the associated MIAT group, using the function <code>thq_freq_by_group</code>.</li>
+<li>The counts of each combination of the top two hazard quotients pairs for which the associated hazard index is greater than <span class="math inline">\(1\)</span>, using the function <code>thq_pairs</code>.</li>
+<li>The counts of each combination of the top hazard quotient with the associated MIAT group, using the function <code>thq_by_group</code>.</li>
 </ul>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># Frequency of the pairs that produced the top two hazard quotients while hazard index</span></span>
 <span id="cb32-2"><a href="#cb32-2"></a><span class="co"># is greater than 1</span></span>
-<span id="cb32-3"><a href="#cb32-3"></a><span class="kw">thq_pairs_freq</span>(<span class="dt">values =</span> concentration_values,</span>
-<span id="cb32-4"><a href="#cb32-4"></a>               <span class="dt">references =</span> reference_values)</span></code></pre></div>
+<span id="cb32-3"><a href="#cb32-3"></a><span class="kw">thq_pairs</span>(<span class="dt">values =</span> concentration_values,</span>
+<span id="cb32-4"><a href="#cb32-4"></a>          <span class="dt">references =</span> reference_values)</span></code></pre></div>
 <pre><code>##                                             
 ##                                              Chrome VI et ses composés
 ##   Butanone                                                           0
@@ -1017,8 +1017,8 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 ##   Hydrocarbures aliphatiques et alicycliques       0       1
 ##   Styrène                                          2       0</code></pre>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="co"># Frequency of element that produced the top hazard quotient with its associated group</span></span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="kw">thq_freq_by_group</span>(<span class="dt">values =</span> concentration_values,</span>
-<span id="cb34-3"><a href="#cb34-3"></a>                  <span class="dt">references =</span> reference_values)</span></code></pre></div>
+<span id="cb34-2"><a href="#cb34-2"></a><span class="kw">thq_by_group</span>(<span class="dt">values =</span> concentration_values,</span>
+<span id="cb34-3"><a href="#cb34-3"></a>             <span class="dt">references =</span> reference_values)</span></code></pre></div>
 <pre><code>##                                            I II IIIA IIIB
 ## 4,4&#39;-Diisocyanate de diphénylméthane       0  1    0    0
 ## Benzène                                    0  1    0    0
@@ -1031,9 +1031,9 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>table_levels &lt;-<span class="st"> </span><span class="kw">names</span>(reference_values)[<span class="op">-</span><span class="dv">19</span>]</span>
 <span id="cb36-2"><a href="#cb36-2"></a><span class="co"># For readability of the example, intentionnaly removal of the 19th name which is quite long</span></span>
 <span id="cb36-3"><a href="#cb36-3"></a></span>
-<span id="cb36-4"><a href="#cb36-4"></a><span class="kw">thq_freq_by_group</span>(<span class="dt">values =</span> concentration_values,</span>
-<span id="cb36-5"><a href="#cb36-5"></a>                  <span class="dt">references =</span> reference_values,</span>
-<span id="cb36-6"><a href="#cb36-6"></a>                  <span class="dt">levels =</span> <span class="kw">sort</span>(table_levels))</span></code></pre></div>
+<span id="cb36-4"><a href="#cb36-4"></a><span class="kw">thq_by_group</span>(<span class="dt">values =</span> concentration_values,</span>
+<span id="cb36-5"><a href="#cb36-5"></a>             <span class="dt">references =</span> reference_values,</span>
+<span id="cb36-6"><a href="#cb36-6"></a>             <span class="dt">levels =</span> <span class="kw">sort</span>(table_levels))</span></code></pre></div>
 <pre><code>##                                            I II IIIA IIIB
 ## 1-Méthoxypropane-2-ol                      0  0    0    0
 ## 4,4&#39;-Diisocyanate de diphénylméthane       0  1    0    0
@@ -1059,7 +1059,7 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 ## Styrène                                    2  0    0    0
 ## Toluène                                    0  0    0    0
 ## Zinc                                       0  0    0    0</code></pre>
-<p>For the first of the two functions (<code>thq_pairs_freq</code>), two other parameters exists:</p>
+<p>For the first of the two functions (<code>thq_pairs</code>), two other parameters exists:</p>
 <ul>
 <li><code>threshold</code>, allowing to disable the condition over the hazard index so that top hazard quotients associated with hazard index less than or equal to <span class="math inline">\(1\)</span> are taken into account.</li>
 <li><code>alone</code>, to also consider single top hazard quotients (i.e. top hazard quotients from sets of one single value). The resulting top hazard quotients are associated with a level named <code>&quot;NULL&quot;</code>.</li>
@@ -1067,9 +1067,9 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># Frequency of the pairs that produced the top two hazard quotients without condition</span></span>
 <span id="cb38-2"><a href="#cb38-2"></a><span class="co"># over the hazard indexes or over the lengths of the sets of values (i.e. all sets of</span></span>
 <span id="cb38-3"><a href="#cb38-3"></a><span class="co"># values are considered)</span></span>
-<span id="cb38-4"><a href="#cb38-4"></a><span class="kw">thq_pairs_freq</span>(<span class="dt">values =</span> concentration_values,</span>
-<span id="cb38-5"><a href="#cb38-5"></a>               <span class="dt">references =</span> reference_values,</span>
-<span id="cb38-6"><a href="#cb38-6"></a>               <span class="dt">threshold =</span> <span class="ot">FALSE</span>, <span class="dt">alone =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<span id="cb38-4"><a href="#cb38-4"></a><span class="kw">thq_pairs</span>(<span class="dt">values =</span> concentration_values,</span>
+<span id="cb38-5"><a href="#cb38-5"></a>          <span class="dt">references =</span> reference_values,</span>
+<span id="cb38-6"><a href="#cb38-6"></a>          <span class="dt">threshold =</span> <span class="ot">FALSE</span>, <span class="dt">alone =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>##                                             
 ##                                              4,4&#39;-Diisocyanate de diphénylméthane
 ##   4,4&#39;-Diisocyanate de diphénylméthane                                          1
@@ -1545,7 +1545,7 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <span id="cb73-2"><a href="#cb73-2"></a><span class="kw">mcr_approach_by_class</span>(<span class="dt">values =</span> concentration_values,</span>
 <span id="cb73-3"><a href="#cb73-3"></a>                      <span class="dt">references =</span> reference_values,</span>
 <span id="cb73-4"><a href="#cb73-4"></a>                      <span class="dt">classes =</span> classification,</span>
-<span id="cb73-5"><a href="#cb73-5"></a>                      <span class="dt">FUN =</span> thq_pairs_freq)[<span class="dv">10</span><span class="op">:</span><span class="dv">12</span>]</span></code></pre></div>
+<span id="cb73-5"><a href="#cb73-5"></a>                      <span class="dt">FUN =</span> thq_pairs)[<span class="dv">10</span><span class="op">:</span><span class="dv">12</span>]</span></code></pre></div>
 <pre><code>## $`Atteintes hépatiques`
 ## NULL
 ## 
@@ -1567,7 +1567,7 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <span id="cb75-2"><a href="#cb75-2"></a><span class="kw">mcr_approach_by_class</span>(<span class="dt">values =</span> concentration_values,</span>
 <span id="cb75-3"><a href="#cb75-3"></a>                      <span class="dt">references =</span> reference_values,</span>
 <span id="cb75-4"><a href="#cb75-4"></a>                      <span class="dt">classes =</span> classification,</span>
-<span id="cb75-5"><a href="#cb75-5"></a>                      <span class="dt">FUN =</span> thq_freq_by_group)[<span class="dv">10</span><span class="op">:</span><span class="dv">12</span>]</span></code></pre></div>
+<span id="cb75-5"><a href="#cb75-5"></a>                      <span class="dt">FUN =</span> thq_by_group)[<span class="dv">10</span><span class="op">:</span><span class="dv">12</span>]</span></code></pre></div>
 <pre><code>## $`Atteintes hépatiques`
 ##                       I II IIIA IIIB
 ## 1-Méthoxypropane-2-ol 0  2    0    0
@@ -2054,16 +2054,16 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <ul>
 <li><a href="../html/mcr_summary.html">mcr_summary</a></li>
 <li><a href="../html/mcr_chart.html">mcr_chart</a></li>
-<li><a href="../html/thq_pairs_freq.html">thq_pairs_freq</a></li>
-<li><a href="../html/thq_freq_by_group.html">thq_freq_by_group</a></li>
+<li><a href="../html/thq_pairs.html">thq_pairs</a></li>
+<li><a href="../html/thq_by_group.html">thq_by_group</a></li>
 </ul>
 <p>Application of the approach according to a classification</p>
 <ul>
 <li><a href="../html/mcr_approach_by_class.html">mcr_approach_by_class</a></li>
 <li><a href="../html/mcr_summary_by_class.html">mcr_summary_by_class</a></li>
 <li><a href="../html/mcr_chart_by_class.html">mcr_chart_by_class</a></li>
-<li><a href="../html/thq_pairs_freq_by_class.html">thq_pairs_freq_by_class</a></li>
-<li><a href="../html/thq_freq_by_group_by_class.html">thq_freq_by_group_by_class</a></li>
+<li><a href="../html/thq_pairs_by_class.html">thq_pairs_by_class</a></li>
+<li><a href="../html/thq_by_group_by_class.html">thq_by_group_by_class</a></li>
 </ul>
 </div>
 <div id="about-lists" class="section level2">

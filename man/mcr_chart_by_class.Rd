@@ -180,7 +180,7 @@ Chart independent of classes: \code{\link{mcr_chart}}.
 Generic function to apply the MCR approach according to classes: \code{\link{mcr_approach_by_class}}.
 
 Other functions of the MCR approach applying according to classes: \code{\link{mcr_summary_by_class}},
-\code{\link{thq_pairs_freq_by_class}}, \code{\link{thq_freq_by_group_by_class}}.
+\code{\link{thq_pairs_by_class}}, \code{\link{thq_by_group_by_class}}.
 
 Specific indicators: \code{\link{hazard_index}}, \code{\link{maximum_cumulative_ratio}}, \code{\link{reciprocal_of_mcr}},
 \code{\link{top_hazard_quotient}}, \code{\link{classify_mixture}}.

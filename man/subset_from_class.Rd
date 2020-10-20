@@ -84,7 +84,7 @@ subset_from_class(values = v,
 Generic function to apply the MCR approach according to classes: \code{\link{mcr_approach_by_class}}.
 
 Specific functions of the MCR approach applying according to classes: \code{\link{mcr_summary_by_class}},
-\code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_freq_by_class}}, \code{\link{thq_freq_by_group_by_class}}.
+\code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_by_class}}, \code{\link{thq_by_group_by_class}}.
 }
 \author{
 Gauthier Magnin

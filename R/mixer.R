@@ -1381,14 +1381,14 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  named in the function call.
 #' 
 #' @usage
-#' thq_pairs_freq(values, references,
-#'                levels = NULL,
-#'                threshold = TRUE,
-#'                alone = FALSE)
-#' thq_pairs_freq(hq, hi,
-#'                levels = NULL,
-#'                threshold = TRUE,
-#'                alone = FALSE)
+#' thq_pairs(values, references,
+#'           levels = NULL,
+#'           threshold = TRUE,
+#'           alone = FALSE)
+#' thq_pairs(hq, hi,
+#'           levels = NULL,
+#'           threshold = TRUE,
+#'           alone = FALSE)
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  top two hazard quotients are to be identified.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -1416,72 +1416,72 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
 #'             *Environment International*, 112, 77-84.
 #'             <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' @seealso [`thq_freq_by_group`], [`top_hazard_quotient`], [`hazard_quotient`], [`hazard_index`].
+#' @seealso [`thq_by_group`], [`top_hazard_quotient`], [`hazard_quotient`], [`hazard_index`].
 #' 
 #' @examples
-#' thq_pairs_freq(values = matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                ncol = 2, dimnames = list(LETTERS[1:5])),
-#'                references = c(1,2,3,4,5))
-#' thq_pairs_freq(hq = hazard_quotient(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                            ncol = 2, dimnames = list(LETTERS[1:5])),
-#'                                     c(1,2,3,4,5)),
-#'                hi = hazard_index(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                         ncol = 2, dimnames = list(LETTERS[1:5])),
-#'                                  c(1,2,3,4,5)))
+#' thq_pairs(values = matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                           ncol = 2, dimnames = list(LETTERS[1:5])),
+#'           references = c(1,2,3,4,5))
+#' thq_pairs(hq = hazard_quotient(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                                       ncol = 2, dimnames = list(LETTERS[1:5])),
+#'                                c(1,2,3,4,5)),
+#'           hi = hazard_index(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                                    ncol = 2, dimnames = list(LETTERS[1:5])),
+#'                             c(1,2,3,4,5)))
 #' 
 #' ## With and without levels parameter
-#' thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                ncol = 3, dimnames = list(LETTERS[1:4])),
-#'                references = c(1, 2, 3, .5),
-#'                levels = LETTERS[1:4])
-#' thq_pairs_freq(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                ncol = 3, dimnames = list(LETTERS[1:4])),
-#'                references = c(1,2,3,0.5))
+#' thq_pairs(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+#'                           ncol = 3, dimnames = list(LETTERS[1:4])),
+#'           references = c(1, 2, 3, .5),
+#'           levels = LETTERS[1:4])
+#' thq_pairs(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+#'                           ncol = 3, dimnames = list(LETTERS[1:4])),
+#'           references = c(1,2,3,0.5))
 #' 
 #' ## NULL because all HI are lower than or equal to 1
-#' thq_pairs_freq(values = matrix(c(.1, .2, .3, .4),
-#'                                ncol = 2, dimnames = list(c("A","B"))),
-#'                references = c(5,5))
+#' thq_pairs(values = matrix(c(.1, .2, .3, .4),
+#'                           ncol = 2, dimnames = list(c("A","B"))),
+#'           references = c(5,5))
 #' hazard_index(values = matrix(c(.1, .2, .3, .4),
 #'                              ncol = 2, dimnames = list(c("A","B"))),
 #'              references = c(5,5))
-#' thq_pairs_freq(values = matrix(c(.1, .2, .3, .4),
-#'                                ncol = 2, dimnames = list(c("A","B"))),
-#'                references = c(5,5),
-#'                threshold = FALSE)
+#' thq_pairs(values = matrix(c(.1, .2, .3, .4),
+#'                           ncol = 2, dimnames = list(c("A","B"))),
+#'           references = c(5,5),
+#'           threshold = FALSE)
 #' 
 #' ## Building contingency table from a list
-#' thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
-#'                              c(A = 1),
-#'                              c(B = 0.5, C = 0.5)),
-#'                references = list(c(0.3, 0.6),
-#'                                  0.3,
-#'                                  c(0.6, 1)))
-#' thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
-#'                              c(A = 1),
-#'                              c(B = 0.5, C = 0.5)),
-#'                references = c(A = 0.3, B = 0.6, C = 1))
-#' thq_pairs_freq(values = list(c(A = 0.5, B = 0.5),
-#'                              c(A = 1),
-#'                              c(B = 0.5, C = 0.5)),
-#'                references = c(A = 0.3, B = 0.6, C = 1),
-#'                alone = TRUE)
+#' thq_pairs(values = list(c(A = 0.5, B = 0.5),
+#'                         c(A = 1),
+#'                         c(B = 0.5, C = 0.5)),
+#'           references = list(c(0.3, 0.6),
+#'                             0.3,
+#'                             c(0.6, 1)))
+#' thq_pairs(values = list(c(A = 0.5, B = 0.5),
+#'                         c(A = 1),
+#'                         c(B = 0.5, C = 0.5)),
+#'           references = c(A = 0.3, B = 0.6, C = 1))
+#' thq_pairs(values = list(c(A = 0.5, B = 0.5),
+#'                         c(A = 1),
+#'                         c(B = 0.5, C = 0.5)),
+#'           references = c(A = 0.3, B = 0.6, C = 1),
+#'           alone = TRUE)
 #' 
 #' @md
 #' @export
-thq_pairs_freq = function(values = NULL, references = NULL,
-                          hq = NULL, hi = NULL,
-                          levels = NULL, threshold = TRUE, alone = FALSE) {
+thq_pairs = function(values = NULL, references = NULL,
+                     hq = NULL, hi = NULL,
+                     levels = NULL, threshold = TRUE, alone = FALSE) {
   
   # Si des levels sont définis et que l'on prend en compte les éléments seuls, ajout d'un facteur "NULL"
   if (!is.null(levels) && alone) levels = c(levels, "NULL")
   
   # Différence si values ou hq est une liste ou une matrice
   if (is.list(values) || is.list(hq)) {
-    return(thq_pairs_freq_for_list(values, references, hq, hi, levels, threshold, alone))
+    return(thq_pairs_for_list(values, references, hq, hi, levels, threshold, alone))
     
   } else if (is.matrix(values) || is.matrix(hq)) {
-    return(thq_pairs_freq_for_matrix(values, references, hq, hi, levels, threshold, alone))
+    return(thq_pairs_for_matrix(values, references, hq, hi, levels, threshold, alone))
     
   } else {
     if (!is.null(hq)) stop("hq must be a numeric named matrix or list of numeric named vectors.")
@@ -1520,14 +1520,14 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #'  named in the function call.
 #' 
 #' @usage
-#' thq_pairs_freq(values, references,
-#'                levels = NULL,
-#'                threshold = TRUE,
-#'                alone = FALSE)
-#' thq_pairs_freq(hq, hi,
-#'                levels = NULL,
-#'                threshold = TRUE,
-#'                alone = FALSE)
+#' thq_pairs_for_list(values, references,
+#'                    levels = NULL,
+#'                    threshold = TRUE,
+#'                    alone = FALSE)
+#' thq_pairs_for_list(hq, hi,
+#'                    levels = NULL,
+#'                    threshold = TRUE,
+#'                    alone = FALSE)
 #' @param values List of numeric named vectors. Vectors of values for which the top two hazard
 #'  quotients are to be identified.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -1554,13 +1554,13 @@ thq_pairs_freq = function(values = NULL, references = NULL,
 #'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
 #'             *Environment International*, 112, 77-84.
 #'             <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' @seealso [`thq_pairs_freq`], [`thq_pairs_freq_for_matrix`].
+#' @seealso [`thq_pairs`], [`thq_pairs_for_matrix`].
 #' 
 #' @md
 #' @keywords internal
-thq_pairs_freq_for_list = function(values = NULL, references = NULL,
-                                   hq = NULL, hi = NULL,
-                                   levels = NULL, threshold = TRUE, alone = FALSE) {
+thq_pairs_for_list = function(values = NULL, references = NULL,
+                              hq = NULL, hi = NULL,
+                              levels = NULL, threshold = TRUE, alone = FALSE) {
   
   # Si HI et/ou HQ n'est pas renseigné
   if (is.null(hi) || is.null(hq)) {
@@ -1668,14 +1668,14 @@ thq_pairs_freq_for_list = function(values = NULL, references = NULL,
 #'  named in the function call.
 #' 
 #' @usage
-#' thq_pairs_freq(values, references,
-#'                levels = NULL,
-#'                threshold = TRUE,
-#'                alone = FALSE)
-#' thq_pairs_freq(hq, hi,
-#'                levels = NULL,
-#'                threshold = TRUE,
-#'                alone = FALSE)
+#' thq_pairs_for_matrix(values, references,
+#'                      levels = NULL,
+#'                      threshold = TRUE,
+#'                      alone = FALSE)
+#' thq_pairs_for_matrix(hq, hi,
+#'                      levels = NULL,
+#'                      threshold = TRUE,
+#'                      alone = FALSE)
 #' @param values Numeric named matrix. Vectors of values for which the top two hazard quotients are to
 #'  be identified.
 #' @param references Numeric vector. Reference values associated with the `values`. See 'Details' to
@@ -1702,13 +1702,13 @@ thq_pairs_freq_for_list = function(values = NULL, references = NULL,
 #'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
 #'             *Environment International*, 112, 77-84.
 #'             <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' @seealso [`thq_pairs_freq`], [`thq_pairs_freq_for_list`].
+#' @seealso [`thq_pairs`], [`thq_pairs_for_list`].
 #' 
 #' @md
 #' @keywords internal
-thq_pairs_freq_for_matrix = function(values = NULL, references = NULL,
-                                     hq = NULL, hi = NULL,
-                                     levels = NULL, threshold = TRUE, alone = FALSE) {
+thq_pairs_for_matrix = function(values = NULL, references = NULL,
+                                hq = NULL, hi = NULL,
+                                levels = NULL, threshold = TRUE, alone = FALSE) {
   
   # Vérification que les structures de données sont nommées
   if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
@@ -1809,9 +1809,9 @@ thq_pairs_freq_for_matrix = function(values = NULL, references = NULL,
 #'  explicitly named in the function call.
 #' 
 #' @usage
-#' thq_freq_by_group(values, references, levels = NULL)
-#' thq_freq_by_group(hq, groups, levels = NULL)
-#' thq_freq_by_group(thq, groups, levels = NULL)
+#' thq_by_group(values, references, levels = NULL)
+#' thq_by_group(hq, groups, levels = NULL)
+#' thq_by_group(thq, groups, levels = NULL)
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  table is to be built.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -1832,7 +1832,7 @@ thq_pairs_freq_for_matrix = function(values = NULL, references = NULL,
 #'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
 #'             *Environment International*, 112, 77-84.
 #'             <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' @seealso [`thq_pairs_freq`], [`classify_mixture`], [`top_hazard_quotient`], [`hazard_quotient`].
+#' @seealso [`thq_pairs`], [`classify_mixture`], [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
 #' @examples
 #' ## Creating a matrix of 4*3 values and one reference value for each of the 4
@@ -1842,33 +1842,33 @@ thq_pairs_freq_for_matrix = function(values = NULL, references = NULL,
 #' r <- c(1, 2, 3, 0.5)
 #' 
 #' ## Without levels parameter and with the different usages
-#' thq_freq_by_group(v, r)
-#' thq_freq_by_group(hq = hazard_quotient(v, r),
-#'                   groups = classify_mixture(v, r))
-#' thq_freq_by_group(thq = top_hazard_quotient(v, r),
-#'                   groups = classify_mixture(v, r))
+#' thq_by_group(v, r)
+#' thq_by_group(hq = hazard_quotient(v, r),
+#'              groups = classify_mixture(v, r))
+#' thq_by_group(thq = top_hazard_quotient(v, r),
+#'              groups = classify_mixture(v, r))
 #' 
 #' ## With levels parameter
-#' thq_freq_by_group(values = v, references = r, levels = LETTERS[1:4])
+#' thq_by_group(values = v, references = r, levels = LETTERS[1:4])
 #' 
 #' ## Building contingency table from a list
-#' thq_freq_by_group(values = list(c(A = 0.1, B = 0.5),
-#'                                 c(A = 0.2),
-#'                                 c(B = 0.3, C = 0.4)),
-#'                   references = c(A = 1, B = 2, C = 3))
-#' thq_freq_by_group(values = list(c(A = 0.1, B = 0.5),
-#'                                 c(A = 0.2),
-#'                                 c(B = 0.3, C = 0.4)),
-#'                   references = list(c(1, 2),
-#'                                     1,
-#'                                     c(2, 3)))
+#' thq_by_group(values = list(c(A = 0.1, B = 0.5),
+#'                            c(A = 0.2),
+#'                            c(B = 0.3, C = 0.4)),
+#'              references = c(A = 1, B = 2, C = 3))
+#' thq_by_group(values = list(c(A = 0.1, B = 0.5),
+#'                            c(A = 0.2),
+#'                            c(B = 0.3, C = 0.4)),
+#'              references = list(c(1, 2),
+#'                                1,
+#'                                c(2, 3)))
 #' 
 #' @md
 #' @export
-thq_freq_by_group = function(values = NULL, references = NULL,
-                             hq = NULL,
-                             thq = NULL,
-                             groups = NULL, levels = NULL) {
+thq_by_group = function(values = NULL, references = NULL,
+                        hq = NULL,
+                        thq = NULL,
+                        groups = NULL, levels = NULL) {
   
   if (!is.null(thq) && ((is.list(thq) && !is.named(thq)[2]) || !is.named(thq)))
     stop("thq must be a vector of named numeric values or a list of such vectors.")
@@ -1979,8 +1979,8 @@ thq_freq_by_group = function(values = NULL, references = NULL,
 #' @param list Should be `TRUE` if `values` can be a list.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`mcr_summary_by_class`] [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`],
-#'          [`thq_freq_by_group_by_class`].
+#' @seealso [`mcr_summary_by_class`] [`mcr_chart_by_class`], [`thq_pairs_by_class`],
+#'          [`thq_by_group_by_class`].
 #' @md
 #' @keywords internal
 check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE, matrix = TRUE, list = TRUE) {
@@ -2085,7 +2085,7 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
 #' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
 #' 
 #' Other functions of the MCR approach applying according to classes: [`mcr_chart_by_class`],
-#'  [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
+#'  [`thq_pairs_by_class`], [`thq_by_group_by_class`].
 #' 
 #' Specific indicators: [`hazard_index`], [`maximum_cumulative_ratio`], [`reciprocal_of_mcr`],
 #'  [`classify_mixture`], [`top_hazard_quotient`], [`maximum_hazard_quotient`], [`missed_toxicity`].
@@ -2231,7 +2231,7 @@ mcr_summary_by_class = function(values, references, classes) {
 #' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
 #' 
 #' Specific functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
-#'  [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
+#'  [`mcr_chart_by_class`], [`thq_pairs_by_class`], [`thq_by_group_by_class`].
 #' 
 #' @examples
 #' ## Association of classes (C1 to C8) with elements A, B, C, D and E
@@ -2424,7 +2424,7 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
 #' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
 #' 
 #' Other functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
-#'  [`thq_pairs_freq_by_class`], [`thq_freq_by_group_by_class`].
+#'  [`thq_pairs_by_class`], [`thq_by_group_by_class`].
 #' 
 #' Specific indicators: [`hazard_index`], [`maximum_cumulative_ratio`], [`reciprocal_of_mcr`],
 #'  [`top_hazard_quotient`], [`classify_mixture`].
@@ -2573,14 +2573,14 @@ mcr_chart_by_class = function(values, references, classes,
 #' * Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients.
 #' 
 #' @author Gauthier Magnin
-#' @inherit thq_pairs_freq references
+#' @inherit thq_pairs references
 #' @seealso 
-#' Contingency table independent of classes: [`thq_pairs_freq`].
+#' Contingency table independent of classes: [`thq_pairs`].
 #' 
 #' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
 #' 
 #' Other functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
-#'  [`mcr_chart_by_class`], [`thq_freq_by_group_by_class`].
+#'  [`mcr_chart_by_class`], [`thq_by_group_by_class`].
 #' 
 #' Specific indicators: [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
@@ -2598,44 +2598,44 @@ mcr_chart_by_class = function(values, references, classes,
 #'                 E = c("C2", "C4", "C5", "C7", "C8"))
 #' 
 #' ## Building contingency table from matrix, without and with levels parameter
-#' thq_pairs_freq_by_class(v, r, classes)
-#' thq_pairs_freq_by_class(v, r, classes, levels = names(classes))
+#' thq_pairs_by_class(v, r, classes)
+#' thq_pairs_by_class(v, r, classes, levels = names(classes))
 #' 
 #' ## Building contingency table from list
-#' thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                       V2 = c(A = 2),
-#'                                       V3 = c(B = 3, C = 4)),
-#'                         references = list(c(1, 2),
-#'                                           1,
-#'                                           c(2, 3)),
-#'                         classes)
-#' thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                       V2 = c(A = 2),
-#'                                       V3 = c(B = 3, C = 4)),
-#'                         references = c(A = 1, B = 2, C = 3),
-#'                         classes,
-#'                         levels = LETTERS[1:3])
+#' thq_pairs_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                  V2 = c(A = 2),
+#'                                  V3 = c(B = 3, C = 4)),
+#'                    references = list(c(1, 2),
+#'                                      1,
+#'                                      c(2, 3)),
+#'                    classes)
+#' thq_pairs_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                  V2 = c(A = 2),
+#'                                  V3 = c(B = 3, C = 4)),
+#'                    references = c(A = 1, B = 2, C = 3),
+#'                    classes,
+#'                    levels = LETTERS[1:3])
 #' 
 #' # Use of the parameters alone and threshold
-#' thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                       V2 = c(A = 2),
-#'                                       V3 = c(B = 3, C = 4)),
-#'                         references = c(A = 1, B = 2, C = 3),
-#'                         classes,
-#'                         levels = LETTERS[1:3],
-#'                         alone = TRUE)
-#' thq_pairs_freq_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                       V2 = c(A = 2),
-#'                                       V3 = c(B = 3, C = 4)),
-#'                         references = c(A = 1, B = 2, C = 3),
-#'                         classes,
-#'                         levels = LETTERS[1:3],
-#'                         threshold = FALSE, alone = TRUE)
+#' thq_pairs_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                  V2 = c(A = 2),
+#'                                  V3 = c(B = 3, C = 4)),
+#'                    references = c(A = 1, B = 2, C = 3),
+#'                    classes,
+#'                    levels = LETTERS[1:3],
+#'                    alone = TRUE)
+#' thq_pairs_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                  V2 = c(A = 2),
+#'                                  V3 = c(B = 3, C = 4)),
+#'                    references = c(A = 1, B = 2, C = 3),
+#'                    classes,
+#'                    levels = LETTERS[1:3],
+#'                    threshold = FALSE, alone = TRUE)
 #' 
 #' @md
 #' @export
-thq_pairs_freq_by_class = function(values, references, classes,
-                                   levels = NULL, threshold = TRUE, alone = FALSE) {
+thq_pairs_by_class = function(values, references, classes,
+                              levels = NULL, threshold = TRUE, alone = FALSE) {
   
   # Utilisation des classes sous forme de matrice binaire
   if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
@@ -2658,8 +2658,8 @@ thq_pairs_freq_by_class = function(values, references, classes,
     
     # Retour d'une liste pour éviter que les tables ne fusionnent en une unique matrice
     # (si levels est utilisé et qu'il n'y a aucun NA)
-    return(list(thq_pairs_freq(new_vr[["values"]], new_vr[["references"]],
-                               levels = levels, threshold = threshold, alone = alone)))
+    return(list(thq_pairs(new_vr[["values"]], new_vr[["references"]],
+                          levels = levels, threshold = threshold, alone = alone)))
   })
   
   # Le délistage n'est pas toujours à effectuer
@@ -2729,14 +2729,14 @@ thq_pairs_freq_by_class = function(values, references, classes,
 #'  its associated group. The length of the list corresponds to the number of classes encountered.
 #' 
 #' @author Gauthier Magnin
-#' @inherit thq_freq_by_group references
+#' @inherit thq_by_group references
 #' @seealso 
-#' Contingency table independent of classes: [`thq_freq_by_group`].
+#' Contingency table independent of classes: [`thq_by_group`].
 #' 
 #' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
 #' 
 #' Other functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
-#'  [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`].
+#'  [`mcr_chart_by_class`], [`thq_pairs_by_class`].
 #' 
 #' Specific indicators: [`classify_mixture`], [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
@@ -2754,28 +2754,28 @@ thq_pairs_freq_by_class = function(values, references, classes,
 #'                 E = c("C2", "C4", "C5", "C7", "C8"))
 #' 
 #' ## Building contingency table from matrix, without and with levels parameter
-#' thq_freq_by_group_by_class(v, r, classes)
-#' thq_freq_by_group_by_class(v, r, classes, levels = names(classes))
+#' thq_by_group_by_class(v, r, classes)
+#' thq_by_group_by_class(v, r, classes, levels = names(classes))
 #' 
 #' ## Building contingency table from list
-#' thq_freq_by_group_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                          V2 = c(A = 2),
-#'                                          V3 = c(B = 3, C = 4)),
-#'                            references = list(c(1, 2),
-#'                                              1,
-#'                                              c(2, 3)),
-#'                            classes)
-#' thq_freq_by_group_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                          V2 = c(A = 2),
-#'                                          V3 = c(B = 3, C = 4)),
-#'                            references = c(A = 1, B = 2, C = 3),
-#'                            classes,
-#'                            levels = LETTERS[1:3])
+#' thq_by_group_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                     V2 = c(A = 2),
+#'                                     V3 = c(B = 3, C = 4)),
+#'                       references = list(c(1, 2),
+#'                                         1,
+#'                                         c(2, 3)),
+#'                       classes)
+#' thq_by_group_by_class(values = list(V1 = c(A = 1, B = 5),
+#'                                     V2 = c(A = 2),
+#'                                     V3 = c(B = 3, C = 4)),
+#'                       references = c(A = 1, B = 2, C = 3),
+#'                       classes,
+#'                       levels = LETTERS[1:3])
 #' 
 #' @md
 #' @export
-thq_freq_by_group_by_class = function(values, references, classes,
-                                      levels = NULL) {
+thq_by_group_by_class = function(values, references, classes,
+                                 levels = NULL) {
   
   # Utilisation des classes sous forme de matrice binaire
   if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
@@ -2798,7 +2798,7 @@ thq_freq_by_group_by_class = function(values, references, classes,
     
     # Retour d'une liste pour éviter que les tables ne fusionnent en une unique matrice
     # (si levels est utilisé et qu'il n'y a aucun NA)
-    return(list(thq_freq_by_group(new_vr[["values"]], new_vr[["references"]], levels = levels)))
+    return(list(thq_by_group(new_vr[["values"]], new_vr[["references"]], levels = levels)))
   })
   
   # Le délistage n'est pas toujours à effectuer
@@ -2811,7 +2811,7 @@ thq_freq_by_group_by_class = function(values, references, classes,
 #' 
 #' Perform the MCR approach according to classes, given values and references. Wrapper of the four
 #'  functions allowing to perform the MCR pproach according to classes: `mcr_summary_by_class`,
-#'  `mcr_chart_by_class`, `thq_pairs_freq_by_class`, `thq_freq_by_group_by_class`.
+#'  `mcr_chart_by_class`, `thq_pairs_by_class`, `thq_by_group_by_class`.
 #' 
 #' @details
 #' If `values` is a vector, the reference values are directly associated with these values.
@@ -2837,17 +2837,17 @@ thq_freq_by_group_by_class = function(values, references, classes,
 #'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
 #'  is part of a specific class.
 #' @param FUN Either a function or a non-empty character string naming the function to apply on each
-#'  class, among `mcr_summary`, `mcr_chart`, `thq_pairs_freq`, `thq_freq_by_group`.
+#'  class, among `mcr_summary`, `mcr_chart`, `thq_pairs`, `thq_by_group`.
 #' @param ... Further arguments to the function `FUN`.
 #' @return See 'Value' of the corresponding help page:
 #'  * [`mcr_summary_by_class`] if `FUN` is `mcr_summary`.
 #'  * [`mcr_chart_by_class`] if `FUN` is `mcr_chart`.
-#'  * [`thq_pairs_freq_by_class`] if `FUN` is `thq_pairs_freq`.
-#'  * [`thq_freq_by_group_by_class`] if `FUN` is `thq_freq_by_group`.
+#'  * [`thq_pairs_by_class`] if `FUN` is `thq_pairs`.
+#'  * [`thq_by_group_by_class`] if `FUN` is `thq_by_group`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`mcr_summary_by_class`], [`mcr_chart_by_class`], [`thq_pairs_freq_by_class`],
-#'          [`thq_freq_by_group_by_class`].
+#' @seealso [`mcr_summary_by_class`], [`mcr_chart_by_class`], [`thq_pairs_by_class`],
+#'          [`thq_by_group_by_class`].
 #' 
 #' @examples
 #' ## Creating a matrix of 5*50 values, one reference value for each of the 5
@@ -2880,21 +2880,21 @@ thq_freq_by_group_by_class = function(values, references, classes,
 #'                                         1,
 #'                                         c(2, 3)),
 #'                       classes,
-#'                       FUN = "thq_pairs_freq", levels = names(classes))
+#'                       FUN = "thq_pairs", levels = names(classes))
 #' 
 #' mcr_approach_by_class(values = list(V1 = c(A = 1, B = 5),
 #'                                     V2 = c(A = 2),
 #'                                     V3 = c(B = 3, C = 4)),
 #'                       references = c(A = 1, B = 2, C = 3),
 #'                       classes,
-#'                       FUN = "thq_freq_by_group", levels = names(classes))
+#'                       FUN = "thq_by_group", levels = names(classes))
 #' 
 #' @md
 #' @export
 mcr_approach_by_class = function(values, references, classes, FUN, ...) {
   
   # Vérification du choix de la fonction (conversion en chaîne de caractères)
-  functions = c("mcr_summary", "mcr_chart", "thq_pairs_freq", "thq_freq_by_group")
+  functions = c("mcr_summary", "mcr_chart", "thq_pairs", "thq_by_group")
   if (class(FUN) == "function") FUN = deparse(substitute(FUN))
   if (!(FUN %in% functions))
     stop("FUN must refer to one of the following functions: ", paste(functions, collapse = ", "), ".")

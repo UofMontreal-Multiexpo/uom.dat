@@ -43,8 +43,8 @@ The criteria about naming and structure are the following:
 If \code{references = NULL}, check the \code{values} only.
 }
 \seealso{
-\code{\link{mcr_summary_by_class}} \code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_freq_by_class}},
-\code{\link{thq_freq_by_group_by_class}}.
+\code{\link{mcr_summary_by_class}} \code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_by_class}},
+\code{\link{thq_by_group_by_class}}.
 }
 \author{
 Gauthier Magnin

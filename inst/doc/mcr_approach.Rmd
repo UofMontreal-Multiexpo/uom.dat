@@ -366,20 +366,20 @@ mcr_chart(values = concentration_values,
 
 Two types of contingency tables can be built on the indicators of the MCR approach:
 
-* The counts of each combination of the top two hazard quotients pairs for which the associated hazard index is greater than $1$, using the function `thq_pairs_freq`.
-* The counts of each combination of the top hazard quotient with the associated MIAT group, using the function `thq_freq_by_group`.
+* The counts of each combination of the top two hazard quotients pairs for which the associated hazard index is greater than $1$, using the function `thq_pairs`.
+* The counts of each combination of the top hazard quotient with the associated MIAT group, using the function `thq_by_group`.
 
 ```{r}
 # Frequency of the pairs that produced the top two hazard quotients while hazard index
 # is greater than 1
-thq_pairs_freq(values = concentration_values,
-               references = reference_values)
+thq_pairs(values = concentration_values,
+          references = reference_values)
 ```
 
 ```{r}
 # Frequency of element that produced the top hazard quotient with its associated group
-thq_freq_by_group(values = concentration_values,
-                  references = reference_values)
+thq_by_group(values = concentration_values,
+             references = reference_values)
 ```
 
 For both functions, a `levels` parameter can be used to have the complete table, i.e. with component names that don't produce any top hazard quotient:
@@ -387,12 +387,12 @@ For both functions, a `levels` parameter can be used to have the complete table,
 table_levels <- names(reference_values)[-19]
 # For readability of the example, intentionnaly removal of the 19th name which is quite long
 
-thq_freq_by_group(values = concentration_values,
-                  references = reference_values,
-                  levels = sort(table_levels))
+thq_by_group(values = concentration_values,
+             references = reference_values,
+             levels = sort(table_levels))
 ```
 
-For the first of the two functions (`thq_pairs_freq`), two other parameters exists:
+For the first of the two functions (`thq_pairs`), two other parameters exists:
 
 * `threshold`, allowing to disable the condition over the hazard index so that top hazard quotients associated with hazard index less than or equal to $1$ are taken into account.
 * `alone`, to also consider single top hazard quotients (i.e. top hazard quotients from sets of one single value). The resulting top hazard quotients are associated with a level named `"NULL"`.
@@ -401,9 +401,9 @@ For the first of the two functions (`thq_pairs_freq`), two other parameters exis
 # Frequency of the pairs that produced the top two hazard quotients without condition
 # over the hazard indexes or over the lengths of the sets of values (i.e. all sets of
 # values are considered)
-thq_pairs_freq(values = concentration_values,
-               references = reference_values,
-               threshold = FALSE, alone = TRUE)
+thq_pairs(values = concentration_values,
+          references = reference_values,
+          threshold = FALSE, alone = TRUE)
 ```
 
 
@@ -561,7 +561,7 @@ Finally, contingency tables can also be built for each class. The first one:
 mcr_approach_by_class(values = concentration_values,
                       references = reference_values,
                       classes = classification,
-                      FUN = thq_pairs_freq)[10:12]
+                      FUN = thq_pairs)[10:12]
 ```
 `NULL`s result of classes for which no contingency table can be built because the subsets of values don't contain more than one component or don't have hazard index greater than 1.
 
@@ -571,7 +571,7 @@ The second contingency table:
 mcr_approach_by_class(values = concentration_values,
                       references = reference_values,
                       classes = classification,
-                      FUN = thq_freq_by_group)[10:12]
+                      FUN = thq_by_group)[10:12]
 ```
 
 
@@ -923,16 +923,16 @@ Summarising indicators:
 
 * [mcr_summary](../html/mcr_summary.html)
 * [mcr_chart](../html/mcr_chart.html)
-* [thq_pairs_freq](../html/thq_pairs_freq.html)
-* [thq_freq_by_group](../html/thq_freq_by_group.html)
+* [thq_pairs](../html/thq_pairs.html)
+* [thq_by_group](../html/thq_by_group.html)
 
 Application of the approach according to a classification
 
 * [mcr_approach_by_class](../html/mcr_approach_by_class.html)
 * [mcr_summary_by_class](../html/mcr_summary_by_class.html)
 * [mcr_chart_by_class](../html/mcr_chart_by_class.html)
-* [thq_pairs_freq_by_class](../html/thq_pairs_freq_by_class.html)
-* [thq_freq_by_group_by_class](../html/thq_freq_by_group_by_class.html)
+* [thq_pairs_by_class](../html/thq_pairs_by_class.html)
+* [thq_by_group_by_class](../html/thq_by_group_by_class.html)
 
 
 ## About lists

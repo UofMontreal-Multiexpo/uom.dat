@@ -174,29 +174,29 @@ mcr_chart(values = concentration_values,
 ## -----------------------------------------------------------------------------
 # Frequency of the pairs that produced the top two hazard quotients while hazard index
 # is greater than 1
-thq_pairs_freq(values = concentration_values,
-               references = reference_values)
+thq_pairs(values = concentration_values,
+          references = reference_values)
 
 ## -----------------------------------------------------------------------------
 # Frequency of element that produced the top hazard quotient with its associated group
-thq_freq_by_group(values = concentration_values,
-                  references = reference_values)
+thq_by_group(values = concentration_values,
+             references = reference_values)
 
 ## -----------------------------------------------------------------------------
 table_levels <- names(reference_values)[-19]
 # For readability of the example, intentionnaly removal of the 19th name which is quite long
 
-thq_freq_by_group(values = concentration_values,
-                  references = reference_values,
-                  levels = sort(table_levels))
+thq_by_group(values = concentration_values,
+             references = reference_values,
+             levels = sort(table_levels))
 
 ## -----------------------------------------------------------------------------
 # Frequency of the pairs that produced the top two hazard quotients without condition
 # over the hazard indexes or over the lengths of the sets of values (i.e. all sets of
 # values are considered)
-thq_pairs_freq(values = concentration_values,
-               references = reference_values,
-               threshold = FALSE, alone = TRUE)
+thq_pairs(values = concentration_values,
+          references = reference_values,
+          threshold = FALSE, alone = TRUE)
 
 ## -----------------------------------------------------------------------------
 # Computing the indicators of the MCR approach
@@ -300,14 +300,14 @@ charts[[2]] + ggtitle(names(charts)[2])
 mcr_approach_by_class(values = concentration_values,
                       references = reference_values,
                       classes = classification,
-                      FUN = thq_pairs_freq)[10:12]
+                      FUN = thq_pairs)[10:12]
 
 ## -----------------------------------------------------------------------------
 # Build one contingency table for each class and look at some of them
 mcr_approach_by_class(values = concentration_values,
                       references = reference_values,
                       classes = classification,
-                      FUN = thq_freq_by_group)[10:12]
+                      FUN = thq_by_group)[10:12]
 
 ## -----------------------------------------------------------------------------
 classification_1 <- list(A = c("C5", "C6", "C8"),
