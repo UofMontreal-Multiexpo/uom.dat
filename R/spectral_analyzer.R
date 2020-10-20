@@ -78,7 +78,7 @@ setClassUnion("listORarray", c("list", "array"))
 #'  value.
 #' See the attribute \code{categories_colors} to reassign colors to the category values.
 #' 
-#' @slot observations List of observations containing the items corresponding to each observation.
+#' @slot observations List of observations containing the items corresponding to each one.
 #' @slot items Set of codes identifying the items found in the observations.
 #' @slot items_categories Categories associated with the items.
 #' @slot categories_colors Colors associated with the values of the categories associated with the items.
@@ -92,7 +92,7 @@ setClassUnion("listORarray", c("list", "array"))
 #' @slot nodes_per_year Number of occurrences of each node per year.
 #' @slot n_links Set of weights of the links between the nodes.
 #' @slot nodes_links Set of links between the nodes and characteristics of these links.
-#' @slot obs_patterns Set of associations between patterns and observation.
+#' @slot nodes_patterns Set of associations between patterns and nodes.
 #' @slot patterns Set of separate patterns and their characteristics.
 #' @slot patterns_per_year Number of occurrences of each pattern per year.
 #' @slot p_links Set of weights of the links between the patterns.
@@ -134,7 +134,7 @@ setClass(Class = "SpectralAnalyzer",
            n_links = "matrix",
            nodes_links = "data.frame",
            
-           obs_patterns = "matrix",
+           nodes_patterns = "matrix",
            
            patterns = "data.frame",
            patterns_per_year = "matrix",
@@ -370,7 +370,7 @@ setMethod(f = "reset",
                 expression(  list_separate_patterns(object, object@target, object@count,
                                                     object@min_length, object@max_length)  ),
                 "\n*** Step 6/10:  Linking nodes to patterns... ",
-                expression(  list_patterns_by_obs(object)  ),
+                expression(  list_patterns_by_node(object)  ),
                 "\n*** Step 7/10:  Characterization of patterns per year... ",
                 expression(  list_patterns_per_year(object)  ),
                 "\n*** Step 8/10:  Computation of pattern characteristics... ",
@@ -495,7 +495,7 @@ setMethod(f = "[",
                    "nodes"             = { return(x@nodes) },
                    "n_links"           = { return(x@n_links) },
                    "nodes_links"       = { return(x@nodes_links) },
-                   "obs_patterns"      = { return(x@obs_patterns) },
+                   "nodes_patterns"    = { return(x@nodes_patterns) },
                    "patterns_per_year" = { return(x@patterns_per_year) },
                    "patterns"          = { return(x@patterns) },
                    "p_links"           = { return(x@p_links) },
@@ -530,7 +530,7 @@ setReplaceMethod(f = "[",
                           "nodes"             = { x@nodes = value },
                           "n_links"           = { x@n_links = value },
                           "nodes_links"       = { x@nodes_links = value },
-                          "obs_patterns"      = { x@obs_patterns = value },
+                          "nodes_patterns"    = { x@nodes_patterns = value },
                           "patterns_per_year" = { x@patterns_per_year = value },
                           "patterns"          = { x@patterns = value },
                           "p_links"           = { x@p_links = value },
@@ -563,7 +563,7 @@ setGeneric(name = "search_links", def = function(object, entities){ standardGene
 
 setGeneric(name = "list_separate_patterns", def = function(object, target, count = 1, min_length = 1, max_length = Inf){ standardGeneric("list_separate_patterns") })
 
-setGeneric(name = "list_patterns_by_obs", def = function(object){ standardGeneric("list_patterns_by_obs") })
+setGeneric(name = "list_patterns_by_node", def = function(object){ standardGeneric("list_patterns_by_node") })
 
 setGeneric(name = "list_patterns_per_year", def = function(object){ standardGeneric("list_patterns_per_year") })
 
@@ -979,16 +979,16 @@ setMethod(f = "list_separate_patterns",
 #' Linking nodes to patterns
 #' 
 #' Associate each separate observation (i.e. each node) with the patterns included in it.
-#' The resulting matrix is assigned to the attribute \code{obs_patterns} of \code{object}.
+#' The resulting matrix is assigned to the attribute \code{nodes_patterns} of \code{object}.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @return Invisible. Logical matrix in which rows correspond to observations and columns correspond
-#'  to patterns. A value of \code{TRUE} means the pattern is included in the observation (or the node).
+#' @return Invisible. Logical matrix in which rows correspond to nodes and columns correspond to
+#'  patterns. A value of \code{TRUE} means the pattern is included in the node.
 #' 
 #' @author Gauthier Magnin
-#' @aliases list_patterns_by_obs
+#' @aliases list_patterns_by_node
 #' @keywords internal
-setMethod(f = "list_patterns_by_obs",
+setMethod(f = "list_patterns_by_node",
           signature = "SpectralAnalyzer",
           definition = function(object) {
             
@@ -1010,9 +1010,9 @@ setMethod(f = "list_patterns_by_obs",
             colnames(associations) = object@patterns$pattern
             
             # Définition de l'attribut et retour
-            object@obs_patterns = associations
+            object@nodes_patterns = associations
             assign(object_name, object, envir = parent.frame())
-            return(invisible(object@obs_patterns))
+            return(invisible(object@nodes_patterns))
           })
 
 
@@ -1041,7 +1041,7 @@ setMethod(f = "list_patterns_per_year",
             # Calcul des poids par année pour chaque motif
             weights = lapply(seq_along(object@patterns$pattern), function(p) {
               # Sélection des noeuds associées au motif
-              nodes_names = object@obs_patterns[, p]
+              nodes_names = object@nodes_patterns[, p]
               nodes = nodes_per_year[rownames(nodes_per_year) %in% names(nodes_names[nodes_names]), ]
               
               # Somme des poids selon l'année
@@ -1085,7 +1085,7 @@ setMethod(f = "compute_patterns_characteristics",
             # Nombre de noeuds contenant le motif
             frequencies = tapply(seq_along(object@patterns$pattern), seq_along(object@patterns$pattern),
                                  function(p) {
-                                   sum(object@obs_patterns[, p])
+                                   sum(object@nodes_patterns[, p])
                                  })
             
             # Association de nouvelles caractéristiques aux motifs
@@ -1140,7 +1140,7 @@ setMethod(f = "compute_specificity",
             # Pour chaque motif
             for (i in seq_along(patterns)) {
               # Recherche des poids des noeuds qui contiennent le motif
-              a = object@nodes$weight[object@obs_patterns[, i]]
+              a = object@nodes$weight[object@nodes_patterns[, i]]
               
               # Calcul de h
               h_m = -1 * sum((a / w[i] * log(a / w[i])))
@@ -1700,7 +1700,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
             for (i in seq_along(patterns)) {
               # Ensemble des noeuds contenant le motif
               pat = as.character(patterns[i])
-              nodes = object@nodes[object@obs_patterns[, pat], ]
+              nodes = object@nodes[object@nodes_patterns[, pat], ]
               
               weight_distribution[[i]] = nodes$weight
               length_distribution[[i]] = nodes$length

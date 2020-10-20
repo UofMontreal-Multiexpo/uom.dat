@@ -20,7 +20,7 @@ See the attribute \code{categories_colors} to reassign colors to the category va
 \section{Slots}{
 
 \describe{
-\item{\code{observations}}{List of observations containing the items corresponding to each observation.}
+\item{\code{observations}}{List of observations containing the items corresponding to each one.}
 
 \item{\code{items}}{Set of codes identifying the items found in the observations.}
 
@@ -48,7 +48,7 @@ See the attribute \code{categories_colors} to reassign colors to the category va
 
 \item{\code{nodes_links}}{Set of links between the nodes and characteristics of these links.}
 
-\item{\code{obs_patterns}}{Set of associations between patterns and observation.}
+\item{\code{nodes_patterns}}{Set of associations between patterns and nodes.}
 
 \item{\code{patterns}}{Set of separate patterns and their characteristics.}
 
