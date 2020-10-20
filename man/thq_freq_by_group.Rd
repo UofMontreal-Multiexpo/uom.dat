@@ -15,7 +15,8 @@ table is to be built.}
 \item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
 \code{values}. See 'Details' to know the way it is associated with \code{values}.}
 
-\item{hq}{Numeric named matrix. \strong{H}azard \strong{q}uotients for which the table is to be build.}
+\item{hq}{Numeric named matrix or list of numeric named vectors. \strong{H}azard \strong{q}uotients for which
+the table is to be built.}
 
 \item{thq}{Numeric named vector or list of numeric named vectors. \strong{T}op \strong{h}azard \strong{q}uotients
 to use to the count. If list, only the first named value of each element of the list is considered.}
@@ -53,7 +54,7 @@ Arguments \code{values} and \code{references} are used to compute the hazard quo
 before searching for the maximum hazard quotients, computing the maximum cumulative ratios, performing
 the classification then build the table. Thus, call the function with the arguments \code{hq} and \code{groups}
 is faster and call it with the arguments \code{thq} and \code{groups} is even faster (if they are already
-computed). This is true only if \code{values} is not a list.
+computed).
 
 \loadmathjax
 The mixtures are assigned to the groups according the following conditions:

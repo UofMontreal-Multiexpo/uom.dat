@@ -1779,7 +1779,7 @@ thq_pairs_freq_for_matrix = function(values = NULL, references = NULL,
 #'  before searching for the maximum hazard quotients, computing the maximum cumulative ratios, performing
 #'  the classification then build the table. Thus, call the function with the arguments `hq` and `groups`
 #'  is faster and call it with the arguments `thq` and `groups` is even faster (if they are already
-#'  computed). This is true only if `values` is not a list.
+#'  computed).
 #' 
 #' \loadmathjax
 #' The mixtures are assigned to the groups according the following conditions:
@@ -1816,7 +1816,8 @@ thq_pairs_freq_for_matrix = function(values = NULL, references = NULL,
 #'  table is to be built.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @param hq Numeric named matrix. **H**azard **q**uotients for which the table is to be build.
+#' @param hq Numeric named matrix or list of numeric named vectors. **H**azard **q**uotients for which
+#'  the table is to be built.
 #' @param thq Numeric named vector or list of numeric named vectors. **T**op **h**azard **q**uotients
 #'  to use to the count. If list, only the first named value of each element of the list is considered.
 #' @param groups Character vector. MIAT groups associated with the hazard quotients `hq` or with the
@@ -1869,52 +1870,77 @@ thq_freq_by_group = function(values = NULL, references = NULL,
                              thq = NULL,
                              groups = NULL, levels = NULL) {
   
-  # Cas spécifiques dans lequel values est une liste et non une matrice
-  if (is.list(values)) {
-    
-    # Différence si references est une liste ou un vecteur
-    if (is.list(references)) {
-      
-      # Vérification que les structures de données sont nommées
-      if (length(values) != length(references) ||
-          any(sapply(values, length) != sapply(references, length)))
-        stop("If values and references are two lists, their lengths and the ones of their elements must match.")
-      if (!is.named(values)[2])
-        stop("If values is a list, it must contain vector of named numeric values.")
-      
-      # Calcul des indicateurs nécessaires
-      thq = sapply(seq_len(length(values)), function(i) top_hazard_quotient(values[[i]], references[[i]], k = 1))
-      groups = sapply(seq_len(length(values)), function(i) classify_mixture(values[[i]], references[[i]]))
-      
-    } else if (is.vector(references)) {
-      
-      # Vérification que les structures de données sont nommées
-      if (!is.named(references) || !is.named(values)[2])
-        stop("If values is a list and references is a vector. Both must contained named values.")
-      
-      # Calcul des indicateurs nécessaires
-      thq = sapply(unname(values), function(v) top_hazard_quotient(v, references[names(v)], k = 1))
-      groups = sapply(values, function(v) classify_mixture(v, references[names(v)]))
-      
-    } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
-    
-  } else { # Cas où values est une matrice ou n'est pas renseigné
+  if (!is.null(thq) && ((is.list(thq) && !is.named(thq)[2]) || !is.named(thq)))
+    stop("thq must be a vector of named numeric values or a list of such vectors.")
   
-    # Vérification que les structures de données sont nommées
-    if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
-    if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
-    if (!is.null(thq) && ((is.list(thq) && !is.named(thq)[2]) || !is.named(thq)))
-      stop("thq must be a vector of named numeric values or a list of such vectors.")
+  # Si thq et/ou groups n'est pas renseigné
+  if (is.null(thq) || is.null(groups)) {
+  
+    # Cas spécifique dans lequel values ou hq est une liste et non une matrice
+    if (is.list(values) || is.list(hq)) {
+      
+      # Vérification que les structures de données sont nommées
+      if (!is.null(values) && !is.named(values)[2])
+        stop("If values is a list, it must contain vectors of named numeric values.")
+      if (!is.null(hq) && !is.named(hq)[2])
+        stop("If hq is a list, it must contain vector of named numeric values.")
+      
+      # Si ni HQ ni THQ n'est renseigné
+      if (is.null(thq) && is.null(hq)) {
+      
+        # Différence si references est une liste ou un vecteur
+        if (is.list(references)) {
+          
+          # Vérification que les structures de données sont nommées
+          if (length(values) != length(references) ||
+              any(sapply(values, length) != sapply(references, length)))
+            stop("If values and references are two lists, their lengths and the ones of their elements must match.")
+          
+          # Calcul des indicateurs manquants
+          if (is.null(thq)) thq = sapply(seq_len(length(values)),
+                                         function(i) top_hazard_quotient(values[[i]], references[[i]], k = 1))
+          if (is.null(groups)) groups = sapply(seq_len(length(values)),
+                                               function(i) classify_mixture(values[[i]], references[[i]]))
+          
+        } else if (is.vector(references)) {
+          
+          # Vérification que les structures de données sont nommées
+          if (!is.named(references)) stop("If values is a list and references is a vector. Both must contained named values.")
+          
+          # Calcul des indicateurs manquants
+          if (is.null(thq)) thq = sapply(unname(values),
+                                         function(v) top_hazard_quotient(v, references[names(v)], k = 1))
+          if (is.null(groups)) groups = sapply(values,
+                                               function(v) classify_mixture(v, references[names(v)]))
+          
+        } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
+        
+      } else if (!is.null(hq)) { # Si HQ est renseigné
+        # Calcul des indicateurs manquants
+        if (is.null(thq)) thq = sapply(unname(hq), function(hqs) top_hazard_quotient(hq = hqs, k = 1))
+        if (is.null(groups)) groups = sapply(hq, function(hqs) classify_mixture(hi = hazard_index(hq = hqs),
+                                                                                mhq = maximum_hazard_quotient(hq = hqs)))
+      }
+    } else { # Cas où values ou hq est une matrice, ou aucun des deux n'est renseigné
     
-    # Calcul des données manquantes
-    if (is.null(thq)) {
-      if (is.null(hq)) hq = hazard_quotient(values, references)
-      thq = top_hazard_quotient(hq = hq,  k = 1)
+      # Vérification que les structures de données sont nommées
+      if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
+      if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
+      
+      # Calcul des données manquantes
+      if (is.null(thq)) {
+        if (is.null(hq)) hq = hazard_quotient(values, references)
+        thq = top_hazard_quotient(hq = hq, k = 1)
+      }
+      if (is.null(groups)) {
+        if (is.null(hq)) groups = classify_mixture(values, references)
+        else groups = classify_mixture(hi = hazard_index(hq = hq),
+                                       mhq = maximum_hazard_quotient(hq = hq))
+      }
     }
-    if (is.null(groups)) groups = classify_mixture(values, references)
   }
   
-  # Soit thq est une list (hq ou values est une matrix) soit thq est une valeur (hq ou values est un vector)
+  # Soit thq est une list (hq ou values est une liste) soit thq est un vecteur (hq ou values est une matrice)
   thq_names = if (is.list(thq)) sapply(unname(thq), function(v) names(v)[1]) else names(thq)
   if (!is.null(levels)) thq_names = factor(thq_names, levels = levels)
   freq_table = table(thq_names, factor(groups, levels = c("I", "II", "IIIA", "IIIB")))
