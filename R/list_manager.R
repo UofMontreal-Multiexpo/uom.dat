@@ -280,9 +280,8 @@ turn_list_into_char_matrix = function(x, by_name = FALSE, inline = TRUE) {
 #' @param x List of vectors to turn into a data frame.
 #' @param by_name If `FALSE`, use the values of the list. If `TRUE`, use the names of these values.
 #' @inheritParams base::as.data.frame
-#' @return Data frame in which the first column (or row if `inline = FALSE`) contains the names of the
-#'  list and the second column (row if `inline = FALSE`) contains the values of the list or the names of
-#'  these values (according to `by_name`).
+#' @return Data frame in which the first column contains the names of the list and the second column
+#'  contains the values of the list or the names of these values (according to `by_name`).
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`turn_data_frame_into_list`], [`turn_list_into_logical_matrix`],
