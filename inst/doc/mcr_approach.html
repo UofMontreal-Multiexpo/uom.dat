@@ -1622,21 +1622,18 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <p>Another function allows to build a frequency table of the counts of each class: <code>table_on_list</code>. In this case too, specified indices can be either numbers or names. But another argument (<code>with_zero</code>) allows to add in the table classes of the list that were not encountered at any of these indices.</p>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1"></a><span class="co"># Overall table</span></span>
 <span id="cb87-2"><a href="#cb87-2"></a><span class="kw">table_on_list</span>(classification_<span class="dv">1</span>)</span></code></pre></div>
-<pre><code>## 
-## C1 C2 C3 C4 C5 C6 C7 C8 
+<pre><code>## C1 C2 C3 C4 C5 C6 C7 C8 
 ##  1  1  2  2  2  2  1  4</code></pre>
 <div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1"></a><span class="co"># Table of classes encountered at specific indices</span></span>
 <span id="cb89-2"><a href="#cb89-2"></a><span class="kw">table_on_list</span>(classification_<span class="dv">1</span>,</span>
 <span id="cb89-3"><a href="#cb89-3"></a>              <span class="dt">indices =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div>
-<pre><code>## 
-## C3 C5 C6 C8 
+<pre><code>## C3 C5 C6 C8 
 ##  1  1  1  3</code></pre>
 <div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1"></a><span class="co"># Table of classes encountered for specific elements, showing all classes</span></span>
 <span id="cb91-2"><a href="#cb91-2"></a><span class="kw">table_on_list</span>(classification_<span class="dv">1</span>,</span>
 <span id="cb91-3"><a href="#cb91-3"></a>              <span class="dt">indices =</span> <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>),</span>
 <span id="cb91-4"><a href="#cb91-4"></a>              <span class="dt">with_zero =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>## 
-## C1 C2 C3 C4 C5 C6 C7 C8 
+<pre><code>## C1 C2 C3 C4 C5 C6 C7 C8 
 ##  0  0  1  0  1  1  0  3</code></pre>
 <p>Moreover, we can ask for several frequency tables using a matrix or a list of indices. In this case, if <code>with_zero</code> is set to <code>TRUE</code>, the result is simplified into a single matrix.</p>
 <div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1"></a><span class="co"># Preparing three vectors of indices in a matrix</span></span>
@@ -1648,17 +1645,14 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <span id="cb93-7"><a href="#cb93-7"></a><span class="co"># Building of tables</span></span>
 <span id="cb93-8"><a href="#cb93-8"></a><span class="kw">table_on_list</span>(classification_<span class="dv">1</span>, indices_matrix)</span></code></pre></div>
 <pre><code>## [[1]]
-## 
 ## C3 C5 C6 C8 
 ##  1  1  1  3 
 ## 
 ## [[2]]
-## 
 ## C1 C3 C4 C5 C6 C8 
 ##  1  1  1  1  2  2 
 ## 
 ## [[3]]
-## 
 ## C2 C3 C4 C5 C7 C8 
 ##  1  1  1  1  1  3</code></pre>
 <div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1"></a><span class="co"># Adding names to the three vectors of indices</span></span>
@@ -1679,17 +1673,14 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <span id="cb97-5"><a href="#cb97-5"></a><span class="co"># Building of tables</span></span>
 <span id="cb97-6"><a href="#cb97-6"></a><span class="kw">table_on_list</span>(classification_<span class="dv">1</span>, indices_list)</span></code></pre></div>
 <pre><code>## [[1]]
-## 
 ## C3 C5 C6 C8 
 ##  1  1  1  3 
 ## 
 ## [[2]]
-## 
 ## C5 C6 C8 
 ##  1  1  2 
 ## 
 ## [[3]]
-## 
 ## C5 C6 C8 
 ##  1  1  1</code></pre>
 <div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1"></a><span class="co"># Building of tables of all classes</span></span>

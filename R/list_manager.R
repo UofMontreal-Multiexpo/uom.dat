@@ -105,24 +105,20 @@ table_on_list = function(list, indices = seq_along(list), with_zero = FALSE) {
   
   # Cas d'une liste d'indices
   if (is.list(indices)) {
-    if (with_zero) {
-      return(t(sapply(indices, function(i) table(factor(unlist(list[i]), levels)) )))
-    }
-    return(lapply(indices, function(i) table(unlist(list[i]))))
+    if (with_zero) return(t(sapply(indices, function(i) table(factor(unlist(list[i]), levels)) )))
+    return(lapply(indices, function(i) table(unlist(list[i]), dnn = NULL) ))
   }
   
   # Cas d'un unique vecteur d'indices
   if (is.vector(indices)) {
-    if (with_zero) return(table(factor(unlist(list[indices]), levels)))
-    return(table(unlist(list[indices])))
+    if (with_zero) return(table(factor(unlist(list[indices]), levels), dnn = NULL))
+    return(table(unlist(list[indices]), dnn = NULL))
   }
   
   # Cas d'une matrice d'indices
   if (is.matrix(indices)) {
-    if (with_zero) {
-      return(t(apply(indices, 1, function(set) table(factor(unlist(list[set]), levels)) )))
-    }
-    return(apply(indices, 1, function(set) table(unlist(list[set]))))
+    if (with_zero) return(t(apply(indices, 1, function(set) table(factor(unlist(list[set]), levels)) )))
+    return(apply(indices, 1, function(set) table(unlist(list[set]), dnn = NULL) ))
   }
   
   stop("indices must be a vector, a matrix or a list.")
