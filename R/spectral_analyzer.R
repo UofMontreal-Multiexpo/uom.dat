@@ -83,11 +83,14 @@ setClassUnion("listORarray", c("list", "array"))
 #' @slot items_categories Categories associated with the items.
 #' @slot categories_colors Colors associated with the values of the categories associated with the items.
 #' @slot status_colors Colors associated with the values of the status the patterns can have.
-#' @slot target Type of patterns to enumerate during the analysis.
-#' @slot count Minimum number of occurrences of a pattern to be kept when enumerating patterns.
-#' @slot min_length Minimum number of items that a pattern must have to be kept when enumerating patterns.
-#' @slot max_length Maximum number of items that a pattern must have to be kept when enumerating patterns.
-#' @slot status_limit Time interval for which to characterize the status of the patterns in relation to the total period of observations.
+#' @slot parameters List of parameters for pattern search and characterization:
+#'  \describe{
+#'    \item{target}{Type of patterns to enumerate during the analysis.}
+#'    \item{count}{Minimum number of occurrences of a pattern to be kept when enumerating patterns.}
+#'    \item{min_length}{Minimum number of items that a pattern must have to be kept when enumerating patterns.}
+#'    \item{max_length}{Maximum number of items that a pattern must have to be kept when enumerating patterns.}
+#'    \item{status_limit}{Time interval for which to characterize the status of the patterns in relation to the total period of observations.}
+#'  }
 #' @slot nodes Set of nodes: set of separate observations, and characteristics of these nodes.
 #' @slot nodes_per_year Number of occurrences of each node per year.
 #' @slot n_links Set of weights of the links between the nodes.
@@ -123,11 +126,7 @@ setClass(Class = "SpectralAnalyzer",
            categories_colors = "list",
            status_colors = "vector",
            
-           target = "character",
-           count = "numeric",
-           min_length = "numeric",
-           max_length = "numeric",
-           status_limit = "numeric",
+           parameters = "list",
            
            nodes = "data.frame",
            nodes_per_year = "matrix",
@@ -147,10 +146,22 @@ setClass(Class = "SpectralAnalyzer",
            if(any(grepl("/", object@items))) stop("Item codes must not contain the character \"/\".")
            
            # Vérification des paramètres d'initialisation
-           if(object@count < 1) stop("count must be greater than zero.")
-           if(object@min_length < 1) stop("min_length must be greater than zero.")
-           if(object@max_length < object@min_length) stop("max_length must be greater than or equal to min_length.")
-           if(object@status_limit < 1) stop("status_limit must be greater than zero.")
+           if (!all(c("target", "count", "min_length", "max_length", "status_limit") %in% names(object@parameters)))
+             stop("parameters must contain elements target, count, min_length, max_length and status_limit.")
+           
+           if (!is.character(object@parameters$target)) stop("target must be a character value.")
+           if (!is.numeric(object@parameters$count)) stop("count must be a numeric value.")
+           if (!is.numeric(object@parameters$min_length)) stop("min_length must be a numeric value.")
+           if (!is.numeric(object@parameters$max_length)) stop("max_length must be a numeric value.")
+           if (!is.numeric(object@parameters$status_limit)) stop("status_limit must be a numeric value.")
+           
+           if (!(object@parameters$target %in% c("frequent itemsets", "closed frequent itemsets", "maximally frequent itemsets")))
+             stop("target must be one of \"frequent itemsets\", \"closed frequent itemsets\", \"maximally frequent itemsets\".")
+           if (object@parameters$count < 1) stop("count must be greater than zero.")
+           if (object@parameters$min_length < 1) stop("min_length must be greater than zero.")
+           if (object@parameters$max_length < object@parameters$min_length)
+             stop("max_length must be greater than or equal to min_length.")
+           if (object@parameters$status_limit < 1) stop("status_limit must be greater than zero.")
            
            # Vérification du type des catégories associées aux items
            if (!all(sapply(seq_len(ncol(object@items_categories)),
@@ -204,11 +215,11 @@ setMethod(f = "initialize",
                                              SpectralAnalyzer.STATUS_LATENT)
             
             # Descripteurs de la recherche de motifs
-            .Object@target = target
-            .Object@count = count
-            .Object@min_length = min_length
-            .Object@max_length = max_length
-            .Object@status_limit = status_limit
+            .Object@parameters = list(target = target,
+                                      count = count,
+                                      min_length = min_length,
+                                      max_length = max_length,
+                                      status_limit = status_limit)
             
             # Vérification des premiers attributs
             methods::validObject(.Object)
@@ -367,8 +378,10 @@ setMethod(f = "reset",
                 
               # Initialisation des attributs utiles à la construction d'un spectre
                 "\n*** Step 5/10:  Mining for itemsets... ",
-                expression(  list_separate_patterns(object, object@target, object@count,
-                                                    object@min_length, object@max_length)  ),
+                expression(  list_separate_patterns(object, object@parameters$target,
+                                                    object@parameters$count,
+                                                    object@parameters$min_length,
+                                                    object@parameters$max_length)  ),
                 "\n*** Step 6/10:  Linking nodes to patterns... ",
                 expression(  list_patterns_by_node(object)  ),
                 "\n*** Step 7/10:  Characterization of patterns per year... ",
@@ -474,6 +487,7 @@ setMethod(f = "summary",
 #' SA_instance["items"]
 #' SA_instance["patterns"]
 #' SA_instance[1]
+#' SA_instance["target"]
 #' 
 #' @aliases [,SpectralAnalyzer-method
 #' @export
@@ -486,11 +500,14 @@ setMethod(f = "[",
                    "items_categories"  = { return(x@items_categories) },
                    "categories_colors" = { return(x@categories_colors) },
                    "status_colors"     = { return(x@status_colors) },
-                   "target"            = { return(x@target) },
-                   "count"             = { return(x@count) },
-                   "min_length"        = { return(x@min_length) },
-                   "max_length"        = { return(x@max_length) },
-                   "status_limit"      = { return(x@status_limit) },
+                   
+                   "parameters"        = { return(x@parameters) },
+                   "target"            = { return(x@parameters$target) },
+                   "count"             = { return(x@parameters$count) },
+                   "min_length"        = { return(x@parameters$min_length) },
+                   "max_length"        = { return(x@parameters$max_length) },
+                   "status_limit"      = { return(x@parameters$status_limit) },
+                   
                    "nodes_per_year"    = { return(x@nodes_per_year) },
                    "nodes"             = { return(x@nodes) },
                    "n_links"           = { return(x@n_links) },
@@ -500,6 +517,7 @@ setMethod(f = "[",
                    "patterns"          = { return(x@patterns) },
                    "p_links"           = { return(x@p_links) },
                    "patterns_links"    = { return(x@patterns_links) },
+                   
                    stop("Unknown attribute."))
           })
 
@@ -521,11 +539,14 @@ setReplaceMethod(f = "[",
                           "items_categories"  = { x@items_categories = value },
                           "categories_colors" = { x@categories_colors = value },
                           "status_colors"     = { x@status_colors = value },
-                          "target"            = { x@target = value },
-                          "count"             = { x@count = value },
-                          "min_length"        = { x@min_length = value },
-                          "max_length"        = { x@max_length = value },
-                          "status_limit"      = { x@status_limit = value },
+                          
+                          "parameters"        = { x@parameters = value },
+                          "target"            = { x@parameters$target = value },
+                          "count"             = { x@parameters$count = value },
+                          "min_length"        = { x@parameters$min_length = value },
+                          "max_length"        = { x@parameters$max_length = value },
+                          "status_limit"      = { x@parameters$status_limit = value },
+                          
                           "nodes_per_year"    = { x@nodes_per_year = value },
                           "nodes"             = { x@nodes = value },
                           "n_links"           = { x@n_links = value },
@@ -535,6 +556,7 @@ setReplaceMethod(f = "[",
                           "patterns"          = { x@patterns = value },
                           "p_links"           = { x@p_links = value },
                           "patterns_links"    = { x@patterns_links = value },
+                          
                           stop("Unknown attribute."))
                    
                    methods::validObject(x)
@@ -1099,7 +1121,7 @@ setMethod(f = "compute_patterns_characteristics",
             # Calcul de la spécificité et du statut dynamique de chaque motif
             specificity = compute_specificity(object, object@patterns$pattern, object@patterns$frequency, object@patterns$weight)
             object@patterns$specificity = specificity
-            object@patterns$status = define_dynamic_status(object, object@patterns$pattern, object@status_limit)$status
+            object@patterns$status = define_dynamic_status(object, object@patterns$pattern, object@parameters$status_limit)$status
             
             # Changement de l'ordre des colonnes
             object@patterns = object@patterns[, c("pattern", "year", "frequency", "weight", "order", "specificity", "status")]

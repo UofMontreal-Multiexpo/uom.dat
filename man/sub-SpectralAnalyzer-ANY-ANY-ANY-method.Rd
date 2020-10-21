@@ -80,6 +80,7 @@ Extraction and replacement can be done by using an attribute name or its numeric
 SA_instance["items"]
 SA_instance["patterns"]
 SA_instance[1]
+SA_instance["target"]
 
 SA_instance["target"] <- "maximally frequent itemsets"
 SA_instance["count"] <- 2

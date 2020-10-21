@@ -30,15 +30,14 @@ See the attribute \code{categories_colors} to reassign colors to the category va
 
 \item{\code{status_colors}}{Colors associated with the values of the status the patterns can have.}
 
-\item{\code{target}}{Type of patterns to enumerate during the analysis.}
-
-\item{\code{count}}{Minimum number of occurrences of a pattern to be kept when enumerating patterns.}
-
-\item{\code{min_length}}{Minimum number of items that a pattern must have to be kept when enumerating patterns.}
-
-\item{\code{max_length}}{Maximum number of items that a pattern must have to be kept when enumerating patterns.}
-
-\item{\code{status_limit}}{Time interval for which to characterize the status of the patterns in relation to the total period of observations.}
+\item{\code{parameters}}{List of parameters for pattern search and characterization:
+\describe{
+  \item{target}{Type of patterns to enumerate during the analysis.}
+  \item{count}{Minimum number of occurrences of a pattern to be kept when enumerating patterns.}
+  \item{min_length}{Minimum number of items that a pattern must have to be kept when enumerating patterns.}
+  \item{max_length}{Maximum number of items that a pattern must have to be kept when enumerating patterns.}
+  \item{status_limit}{Time interval for which to characterize the status of the patterns in relation to the total period of observations.}
+}}
 
 \item{\code{nodes}}{Set of nodes: set of separate observations, and characteristics of these nodes.}
 
