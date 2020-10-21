@@ -1478,16 +1478,20 @@ thq_pairs = function(values = NULL, references = NULL,
   
   # Différence si values ou hq est une liste ou une matrice
   if (is.list(values) || is.list(hq)) {
-    return(thq_pairs_for_list(values, references, hq, hi, levels, threshold, alone))
+    freq_table = thq_pairs_for_list(values, references, hq, hi, levels, threshold, alone)
     
   } else if (is.matrix(values) || is.matrix(hq)) {
-    return(thq_pairs_for_matrix(values, references, hq, hi, levels, threshold, alone))
+    freq_table = thq_pairs_for_matrix(values, references, hq, hi, levels, threshold, alone)
     
   } else {
     if (!is.null(hq)) stop("hq must be a numeric named matrix or list of numeric named vectors.")
     if (!is.null(values)) stop("values must be a numeric named matrix or list of numeric named vectors.")
     stop("One of values or hq must not be NULL.")
   }
+  
+  # Retrait des noms de dimension "" qui génèrent un retour à la ligne en output
+  dimnames(freq_table) = unname(dimnames(freq_table))
+  return(freq_table)
 }
 
 
