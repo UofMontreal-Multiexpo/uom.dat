@@ -32,9 +32,7 @@ invert_list(l, by_name = TRUE)
 
 }
 \seealso{
-\code{\link{turn_list_into_logical_matrix}}, \code{\link{turn_list_into_char_matrix}},
-\code{\link{turn_list_into_data_frame}}, \code{\link{turn_logical_matrix_into_list}},
-\code{\link{turn_char_matrix_into_list}}, \code{\link{turn_data_frame_into_list}}.
+\code{\link{coerce_list}}, \code{\link{coerce_to_list}}.
 }
 \author{
 Gauthier Magnin

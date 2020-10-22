@@ -391,7 +391,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Maximum cumulative ratio approach and classification management</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2020-10-21</h4>
+<h4 class="date">Last update: 2020-10-22</h4>
 
 
 <div id="TOC">
@@ -1694,8 +1694,8 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 </div>
 <div id="change-the-classification-structure" class="section level3">
 <h3>4.1.2. Change the classification structure</h3>
-<p>If we want to turn the classification list into a binary matrix, we can use the function <code>turn_list_into_logical_matrix</code>. In such a matrix, <code>TRUE</code> indicates that a specific element is part of a specific class.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1"></a>classification_matrix &lt;-<span class="st"> </span><span class="kw">turn_list_into_logical_matrix</span>(classification_<span class="dv">1</span>)</span>
+<p>If we want to turn the classification list into a binary matrix, we can use the function <code>coerce_list</code>. In such a matrix, <code>TRUE</code> indicates that a specific element is part of a specific class.</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1"></a>classification_matrix &lt;-<span class="st"> </span><span class="kw">coerce_list</span>(classification_<span class="dv">1</span>, <span class="dt">to =</span> <span class="st">&quot;logical matrix&quot;</span>)</span>
 <span id="cb101-2"><a href="#cb101-2"></a>classification_matrix</span></code></pre></div>
 <pre><code>##      C1    C2    C3    C4    C5    C6    C7    C8
 ## A FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE  TRUE
@@ -1703,8 +1703,8 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 ## C FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE
 ## D  TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE FALSE
 ## E FALSE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE</code></pre>
-<p>Conversely, we can use the function <code>turn_logical_matrix_into_list</code> to turn a classification matrix into a list:</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1"></a>classification_list &lt;-<span class="st"> </span><span class="kw">turn_logical_matrix_into_list</span>(classification_matrix)</span>
+<p>Conversely, we can use the function <code>coerce_to_list</code> to turn a classification matrix into a list:</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1"></a>classification_list &lt;-<span class="st"> </span><span class="kw">coerce_to_list</span>(classification_matrix)</span>
 <span id="cb103-2"><a href="#cb103-2"></a>classification_list</span></code></pre></div>
 <pre><code>## $A
 ## [1] &quot;C5&quot; &quot;C6&quot; &quot;C8&quot;
@@ -1794,7 +1794,7 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 ## 
 ## $C8
 ## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;E&quot;</code></pre>
-<p>Finally, if we have a data frame or a matrix of characters in which two of the columns define the associations between the elements and the classes as in the following…</p>
+<p>Finally, if we have a data frame or a matrix in which two columns define the associations between the elements and the classes as in the following…</p>
 <div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1"></a>classification_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">3</span>), <span class="st">&quot;B&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;C&quot;</span>, <span class="dv">2</span>), <span class="kw">rep</span>(<span class="st">&quot;D&quot;</span>, <span class="dv">4</span>), <span class="kw">rep</span>(<span class="st">&quot;E&quot;</span>, <span class="dv">5</span>),</span>
 <span id="cb111-2"><a href="#cb111-2"></a>                             <span class="st">&quot;C5&quot;</span>, <span class="st">&quot;C6&quot;</span>, <span class="st">&quot;C8&quot;</span>,</span>
 <span id="cb111-3"><a href="#cb111-3"></a>                             <span class="st">&quot;C8&quot;</span>,</span>
@@ -1820,8 +1820,8 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 ## [13,] &quot;E&quot;     &quot;C5&quot; 
 ## [14,] &quot;E&quot;     &quot;C7&quot; 
 ## [15,] &quot;E&quot;     &quot;C8&quot;</code></pre>
-<p>… we can use the functions <code>turn_data_frame_into_list</code> or <code>turn_char_matrix_into_list</code> to get the structure to be similar to the first one presented:</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1"></a><span class="kw">turn_char_matrix_into_list</span>(classification_<span class="dv">3</span>)</span></code></pre></div>
+<p>… we can also use the function <code>coerce_to_list</code> to get the structure to be similar to the first one presented:</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1"></a><span class="kw">coerce_to_list</span>(classification_<span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## $A
 ## [1] &quot;C5&quot; &quot;C6&quot; &quot;C8&quot;
 ## 
@@ -1845,10 +1845,11 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <span id="cb115-2"><a href="#cb115-2"></a><span class="kw">names</span>(concentration_values) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;O&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">14</span>)</span></code></pre></div>
 <div id="components-of-values" class="section level3">
 <h3>4.2.1. Components of values</h3>
-<p>Having our list of values which are concentration values for specific substances, we can call <code>turn_list_into_logical_matrix</code> to know which substances are presents in which sets of values. Each line refers to one observation (i.e. one set of values) and each column refers to one name found in the values of the list.</p>
+<p>Having our list of values which are concentration values for specific substances, we can call <code>coerce_list</code> to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one observation (i.e. one set of values) and each column refers to one name found in the values of the list.</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1"></a><span class="co"># Just look at some columns</span></span>
-<span id="cb116-2"><a href="#cb116-2"></a><span class="kw">turn_list_into_logical_matrix</span>(concentration_values,</span>
-<span id="cb116-3"><a href="#cb116-3"></a>                              <span class="dt">by_name =</span> <span class="ot">TRUE</span>)[, <span class="kw">c</span>(<span class="dv">4</span><span class="op">:</span><span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">12</span><span class="op">:</span><span class="dv">14</span>,<span class="dv">23</span><span class="op">:</span><span class="dv">25</span>)]</span></code></pre></div>
+<span id="cb116-2"><a href="#cb116-2"></a><span class="kw">coerce_list</span>(concentration_values,</span>
+<span id="cb116-3"><a href="#cb116-3"></a>            <span class="dt">to =</span> <span class="st">&quot;logical matrix&quot;</span>,</span>
+<span id="cb116-4"><a href="#cb116-4"></a>            <span class="dt">by_name =</span> <span class="ot">TRUE</span>)[, <span class="kw">c</span>(<span class="dv">4</span><span class="op">:</span><span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">12</span><span class="op">:</span><span class="dv">14</span>,<span class="dv">23</span><span class="op">:</span><span class="dv">25</span>)]</span></code></pre></div>
 <pre><code>##     Acétone Aluminium Butanone Cuivre Ethanol   Fer Styrène Toluène  Zinc
 ## O1    FALSE     FALSE    FALSE  FALSE    TRUE FALSE   FALSE   FALSE FALSE
 ## O2    FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
@@ -1865,7 +1866,6 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 ## O13   FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
 ## O14   FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE</code></pre>
 <p>The argument <code>by_name</code> allows to construct the matrix on the names of the values instead of the values themselves.</p>
-<p>This argument can be used in the functions <code>turn_list_into_char_matrix</code> and <code>turn_list_into_data_frame</code> as well.</p>
 </div>
 <div id="subset-corresponding-to-a-specific-class" class="section level3">
 <h3>4.2.2. Subset corresponding to a specific class</h3>
@@ -2047,24 +2047,17 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 </div>
 <div id="about-lists" class="section level2">
 <h2>About lists</h2>
-<p>Computation on lists:</p>
+<p>Computations on lists:</p>
 <ul>
 <li><a href="../html/intersect_on_list.html">intersect_on_list</a></li>
 <li><a href="../html/union_on_list.html">union_on_list</a></li>
 <li><a href="../html/table_on_list.html">table_on_list</a></li>
 </ul>
-<p>Transformation of lists:</p>
+<p>Transformation of lists and transformation into lists:</p>
 <ul>
 <li><a href="../html/invert_list.html">invert_list</a></li>
-<li><a href="../html/turn_list_into_logical_matrix.html">turn_list_into_logical_matrix</a></li>
-<li><a href="../html/turn_list_into_char_matrix">turn_list_into_char_matrix</a></li>
-<li><a href="../html/turn_list_into_data_frame">turn_list_into_data_frame</a></li>
-</ul>
-<p>Transformation into lists:</p>
-<ul>
-<li><a href="../html/turn_logical_matrix_into_list.html">turn_logical_matrix_into_list</a></li>
-<li><a href="../html/turn_char_matrix_into_list">turn_char_matrix_into_list</a></li>
-<li><a href="../html/turn_data_frame_into_list">turn_data_frame_into_list</a></li>
+<li><a href="../html/coerce_list.html">coerce_list</a></li>
+<li><a href="../html/coerce_to_list.html">coerce_to_list</a></li>
 </ul>
 <hr />
 </div>

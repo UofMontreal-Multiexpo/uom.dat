@@ -384,11 +384,11 @@ table_on_list(classification_1,
               with_zero = TRUE)
 
 ## -----------------------------------------------------------------------------
-classification_matrix <- turn_list_into_logical_matrix(classification_1)
+classification_matrix <- coerce_list(classification_1, to = "logical matrix")
 classification_matrix
 
 ## -----------------------------------------------------------------------------
-classification_list <- turn_logical_matrix_into_list(classification_matrix)
+classification_list <- coerce_to_list(classification_matrix)
 classification_list
 
 ## -----------------------------------------------------------------------------
@@ -420,7 +420,7 @@ classification_3 <- matrix(c(rep("A", 3), "B", rep("C", 2), rep("D", 4), rep("E"
 classification_3
 
 ## -----------------------------------------------------------------------------
-turn_char_matrix_into_list(classification_3)
+coerce_to_list(classification_3)
 
 ## -----------------------------------------------------------------------------
 # Naming the observations of which concentration values are from: O1 to O14
@@ -428,8 +428,9 @@ names(concentration_values) <- paste0("O", 1:14)
 
 ## -----------------------------------------------------------------------------
 # Just look at some columns
-turn_list_into_logical_matrix(concentration_values,
-                              by_name = TRUE)[, c(4:5,8,12:14,23:25)]
+coerce_list(concentration_values,
+            to = "logical matrix",
+            by_name = TRUE)[, c(4:5,8,12:14,23:25)]
 
 ## -----------------------------------------------------------------------------
 # Extraction of the subsets for the ninth class

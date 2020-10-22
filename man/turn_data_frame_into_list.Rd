@@ -13,27 +13,36 @@ turn_data_frame_into_list(x, indices = c(1, 2))
 the list.}
 }
 \value{
-List in which the names correspond to the column of \code{x} corresponding to the first element
-of \code{indices} and the values correspond to the column of \code{x} corresponding to the second element of
+List whose names correspond to the column of \code{x} corresponding to the first element
+of \code{indices} and whose values correspond to the column of \code{x} corresponding to the second element of
 \code{indices}.
 }
 \description{
 Turn two columns of a data frame into a list.
 }
 \examples{
-df <- data.frame(V1 = c("e1", "e1", "e1", "e2", "e3", "e3", "e4",
-                        "e4", "e4", "e4", "e5", "e5", "e5", "e5", "e5"),
-                 V2 = c("E", "F", "I", "I", "C", "I", "A",
-                        "C", "D", "F", "B", "D", "E", "I", "G"),
-                 stringsAsFactors = FALSE)
+df1 <- data.frame(V1 = c("e1", "e1", "e1", "e2", "e3", "e3", "e4", "e4",
+                         "e4", "e4", "e5", "e5", "e5", "e5", "e5"),
+                  V2 = c("E", "F", "I", "I", "C", "I", "A", "C",
+                         "D", "F", "B", "D", "E", "G", "I"),
+                  stringsAsFactors = FALSE)
 
-turn_data_frame_into_list(df)
+turn_data_frame_into_list(df1)
+
+df2 <- data.frame(V1 = c(1, 1, 1, 2, 3, 3, 4, 4,
+                         4, 4, 5, 5, 5, 5, 5),
+                  V2 = c("E", "F", "I", "I", "C", "I", "A", "C",
+                         "D", "F", "B", "D", "E", "G", "I"),
+                  stringsAsFactors = FALSE)
+
+turn_data_frame_into_list(df2)
 
 }
 \seealso{
-\code{\link{turn_list_into_data_frame}}, \code{\link{turn_logical_matrix_into_list}},
-\code{\link{turn_char_matrix_into_list}}, \code{\link{invert_list}}.
+\code{\link{coerce_to_list}}, \code{\link{turn_logical_matrix_into_list}}, \code{\link{turn_char_matrix_into_list}},
+\code{\link{turn_list_into_data_frame}}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

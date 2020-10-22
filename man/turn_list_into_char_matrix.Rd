@@ -15,12 +15,12 @@ turn_list_into_char_matrix(x, by_name = FALSE, inline = TRUE)
 associations are made in column: one association per column.}
 }
 \value{
-Char matrix in which the first column (or row if \code{inline = FALSE}) contains the names of the
-list and the second column (row if \code{inline = FALSE}) are the values of the list or the names of these
-values (according to \code{by_name}).
+Character matrix in which the first column (or row if \code{inline = FALSE}) contains the names of
+the list and the second one contains the related values or the names of these values (according to
+\code{by_name}).
 }
 \description{
-Turn a list into a char matrix associating names of the list with its values or with the names of
+Turn a list into a character matrix associating names of the list with its values or with the names of
 these values.
 }
 \examples{
@@ -36,9 +36,10 @@ turn_list_into_char_matrix(l, inline = FALSE)
 
 }
 \seealso{
-\code{\link{turn_char_matrix_into_list}}, \code{\link{turn_list_into_logical_matrix}},
-\code{\link{turn_list_into_data_frame}}, \code{\link{invert_list}}.
+\code{\link{coerce_list}}, \code{\link{turn_list_into_logical_matrix}}, \code{\link{turn_list_into_data_frame}},
+\code{\link{turn_char_matrix_into_list}}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

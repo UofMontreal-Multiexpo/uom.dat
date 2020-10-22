@@ -27,7 +27,7 @@ l <- list(e1 = c("E", "F", "I"),
           e2 = "I",
           e3 = c("C", "I"),
           e4 = c("A", "C", "D", "F"),
-          e5 = c("B", "D", "E", "I", "G"))
+          e5 = c("B", "D", "E", "G", "I"))
 
 ## With indices as a vector
 table_on_list(l)

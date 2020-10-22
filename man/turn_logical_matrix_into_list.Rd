@@ -13,8 +13,8 @@ turn_logical_matrix_into_list(x, by_row = TRUE)
 the columns as names of the list.}
 }
 \value{
-List in which the values correspond to the values \code{TRUE} of each row or of each column
-(according to \code{by_row}).
+List whose values correspond to the values \code{TRUE} of each row or of each column (according to
+\code{by_row}).
 }
 \description{
 Turn a logical matrix into a named list using the names of the columns and rows of the matrix.
@@ -34,9 +34,10 @@ turn_logical_matrix_into_list(m, by_row = FALSE)
 
 }
 \seealso{
-\code{\link{turn_list_into_logical_matrix}}, \code{\link{turn_char_matrix_into_list}},
-\code{\link{turn_data_frame_into_list}}, \code{\link{invert_list}}.
+\code{\link{coerce_to_list}}, \code{\link{turn_char_matrix_into_list}}, \code{\link{turn_data_frame_into_list}},
+\code{\link{turn_list_into_logical_matrix}}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

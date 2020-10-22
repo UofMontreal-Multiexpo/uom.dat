@@ -19,8 +19,8 @@ turn_list_into_data_frame(
     to a factor?}
 }
 \value{
-Data frame in which the first column contains the names of the list and the second column
-contains the values of the list or the names of these values (according to \code{by_name}).
+Data frame in which the first column contains the names of the list and the second one
+contains the related values or the names of these values (according to \code{by_name}).
 }
 \description{
 Turn a list into a data frame associating names of the list with its values or with the names of
@@ -38,9 +38,10 @@ turn_list_into_data_frame(l, by_name = TRUE)
 
 }
 \seealso{
-\code{\link{turn_data_frame_into_list}}, \code{\link{turn_list_into_logical_matrix}},
-\code{\link{turn_list_into_char_matrix}}, \code{\link{invert_list}}.
+\code{\link{coerce_list}}, \code{\link{turn_list_into_logical_matrix}}, \code{\link{turn_list_into_char_matrix}},
+\code{\link{turn_data_frame_into_list}}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

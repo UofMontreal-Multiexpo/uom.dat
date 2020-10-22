@@ -679,15 +679,15 @@ table_on_list(classification_1,
 
 ### 4.1.2. Change the classification structure
 
-If we want to turn the classification list into a binary matrix, we can use the function `turn_list_into_logical_matrix`. In such a matrix, `TRUE` indicates that a specific element is part of a specific class.
+If we want to turn the classification list into a binary matrix, we can use the function `coerce_list`. In such a matrix, `TRUE` indicates that a specific element is part of a specific class.
 ```{r}
-classification_matrix <- turn_list_into_logical_matrix(classification_1)
+classification_matrix <- coerce_list(classification_1, to = "logical matrix")
 classification_matrix
 ```
 
-Conversely, we can use the function `turn_logical_matrix_into_list` to turn a classification matrix into a list:
+Conversely, we can use the function `coerce_to_list` to turn a classification matrix into a list:
 ```{r}
-classification_list <- turn_logical_matrix_into_list(classification_matrix)
+classification_list <- coerce_to_list(classification_matrix)
 classification_list
 ```
 
@@ -713,7 +713,7 @@ In the same way, we can go from a structure listing the classes to which each el
 invert_list(classification_1)
 ```
 
-Finally, if we have a data frame or a matrix of characters in which two of the columns define the associations between the elements and the classes as in the following...
+Finally, if we have a data frame or a matrix in which two columns define the associations between the elements and the classes as in the following...
 ```{r}
 classification_3 <- matrix(c(rep("A", 3), "B", rep("C", 2), rep("D", 4), rep("E", 5),
                              "C5", "C6", "C8",
@@ -725,9 +725,9 @@ classification_3 <- matrix(c(rep("A", 3), "B", rep("C", 2), rep("D", 4), rep("E"
                            dimnames = list(NULL, c("element", "class")))
 classification_3
 ```
-... we can use the functions `turn_data_frame_into_list` or `turn_char_matrix_into_list` to get the structure to be similar to the first one presented:
+... we can also use the function `coerce_to_list` to get the structure to be similar to the first one presented:
 ```{r}
-turn_char_matrix_into_list(classification_3)
+coerce_to_list(classification_3)
 ```
 
 
@@ -742,16 +742,15 @@ names(concentration_values) <- paste0("O", 1:14)
 
 ### 4.2.1. Components of values
 
-Having our list of values which are concentration values for specific substances, we can call `turn_list_into_logical_matrix` to know which substances are presents in which sets of values. Each line refers to one observation (i.e. one set of values) and each column refers to one name found in the values of the list.
+Having our list of values which are concentration values for specific substances, we can call `coerce_list` to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one observation (i.e. one set of values) and each column refers to one name found in the values of the list.
 ```{r}
 # Just look at some columns
-turn_list_into_logical_matrix(concentration_values,
-                              by_name = TRUE)[, c(4:5,8,12:14,23:25)]
+coerce_list(concentration_values,
+            to = "logical matrix",
+            by_name = TRUE)[, c(4:5,8,12:14,23:25)]
 ```
 
 The argument `by_name` allows to construct the matrix on the names of the values instead of the values themselves.
-
-This argument can be used in the functions `turn_list_into_char_matrix` and `turn_list_into_data_frame` as well.
 
 
 ### 4.2.2. Subset corresponding to a specific class
@@ -937,24 +936,17 @@ Application of the approach according to a classification
 
 ## About lists
 
-Computation on lists:
+Computations on lists:
 
 * [intersect_on_list](../html/intersect_on_list.html)
 * [union_on_list](../html/union_on_list.html)
 * [table_on_list](../html/table_on_list.html)
 
-Transformation of lists:
+Transformation of lists and transformation into lists:
 
 * [invert_list](../html/invert_list.html)
-* [turn_list_into_logical_matrix](../html/turn_list_into_logical_matrix.html)
-* [turn_list_into_char_matrix](../html/turn_list_into_char_matrix)
-* [turn_list_into_data_frame](../html/turn_list_into_data_frame)
-
-Transformation into lists:
-
-* [turn_logical_matrix_into_list](../html/turn_logical_matrix_into_list.html)
-* [turn_char_matrix_into_list](../html/turn_char_matrix_into_list)
-* [turn_data_frame_into_list](../html/turn_data_frame_into_list)
+* [coerce_list](../html/coerce_list.html)
+* [coerce_to_list](../html/coerce_to_list.html)
 
 
 

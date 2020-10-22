@@ -68,7 +68,7 @@ union_on_list = function(list, indices = seq_along(list)) {
 #'           e2 = "I",
 #'           e3 = c("C", "I"),
 #'           e4 = c("A", "C", "D", "F"),
-#'           e5 = c("B", "D", "E", "I", "G"))
+#'           e5 = c("B", "D", "E", "G", "I"))
 #' 
 #' ## With indices as a vector
 #' table_on_list(l)
@@ -164,9 +164,7 @@ turn_list_into_char = function(x) {
 #'  elements of `x` or the names of these values (according to `by_name`).
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`turn_list_into_logical_matrix`], [`turn_list_into_char_matrix`],
-#'          [`turn_list_into_data_frame`], [`turn_logical_matrix_into_list`],
-#'          [`turn_char_matrix_into_list`], [`turn_data_frame_into_list`].
+#' @seealso [`coerce_list`], [`coerce_to_list`].
 #' 
 #' @examples
 #' l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
@@ -188,6 +186,62 @@ invert_list = function(x, by_name = FALSE) {
 }
 
 
+#' Turn a list into a matrix or a data frame
+#' 
+#' Turn a list into a logical matrix, a character matrix or a data frame, associating names of the list
+#'  with its values or with the names of these values.
+#' 
+#' @param x List of vectors to turn into a matrix or a data frame.
+#' @param to Data structure into which to transform the list. One of `"logical matrix"` (or `"lm"` for
+#'  short), `"character matrix"` (or `"cm"`), `"data.frame"` (or `"df"`).
+#' @param by_name If `FALSE`, use the values of the list. If `TRUE`, use the names of these values.
+#' @param stringsAsFactors logical: should the character vectors be converted to factors?
+#'  Ignored if `to` doesn't refer to data frame.
+#' @return 
+#' If `to` refers to logical matrix, logical matrix in which row names are the names of the list and
+#'  column names are the values of the list or the names of these values (according to `by_name`).
+#' 
+#' Otherwise, character matrix or data frame (according to `to`) in which the first column contains the
+#'  names of the list and the second one contains the related values or the names of these values
+#'  (according to `by_name`).
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`invert_list`], [`coerce_to_list`].
+#' 
+#' @examples
+#' l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
+#'           e2 = c(v1 = "I"),
+#'           e3 = c(v1 = "C", v2 = "I"),
+#'           e4 = c(v1 = "A", v2 = "C", v3 = "D", v4 = "F"),
+#'           e5 = c(v1 = "B", v2 = "D", v3 = "E", v4 = "I", v5 = "G"))
+#' 
+#' coerce_list(l, "logical matrix")
+#' coerce_list(l, "lm", by_name = TRUE)
+#' 
+#' coerce_list(l, "character matrix")
+#' coerce_list(l, "cm", by_name = TRUE)
+#' 
+#' coerce_list(l, "data.frame")
+#' coerce_list(l, "df", by_name = TRUE)
+#' 
+#' @md
+#' @export
+coerce_list = function(x, to, by_name = FALSE,
+                       stringsAsFactors = default.stringsAsFactors()) {
+  
+  # Unification des termes possibles
+  if (to == "logical matrix") to = "lm"
+  else if (to == "character matrix") to = "cm"
+  else if (to == "data.frame") to = "df"
+  
+  # Appel de la fonction adéquate
+  if (to == "lm") return(turn_list_into_logical_matrix(x, by_name))
+  else if (to == "cm") return(turn_list_into_char_matrix(x, by_name))
+  else if (to == "df") return(turn_list_into_data_frame(x, by_name, stringsAsFactors))
+  else stop("to must be one of \"logical matrix\", \"character matrix\", \"data.frame\".")
+}
+
+
 #' Turn a list into a logical matrix
 #' 
 #' Turn a list into a logical matrix associating names of the list with its values or with the names of
@@ -199,8 +253,8 @@ invert_list = function(x, by_name = FALSE) {
 #'  of the list or the names of these values (according to `by_name`).
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`turn_logical_matrix_into_list`], [`turn_list_into_char_matrix`],
-#'          [`turn_list_into_data_frame`], [`invert_list`].
+#' @seealso [`coerce_list`], [`turn_list_into_char_matrix`], [`turn_list_into_data_frame`],
+#'          [`turn_logical_matrix_into_list`].
 #' 
 #' @examples
 #' l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
@@ -213,7 +267,7 @@ invert_list = function(x, by_name = FALSE) {
 #' turn_list_into_logical_matrix(l, by_name = TRUE)
 #' 
 #' @md
-#' @export
+#' @keywords internal
 turn_list_into_logical_matrix = function(x, by_name = FALSE) {
   if (by_name) {
     if (!is.named(x)[2]) stop("Values of the elements of x must be named.")
@@ -232,20 +286,20 @@ turn_list_into_logical_matrix = function(x, by_name = FALSE) {
 
 #' Turn a list into a char matrix
 #' 
-#' Turn a list into a char matrix associating names of the list with its values or with the names of
+#' Turn a list into a character matrix associating names of the list with its values or with the names of
 #'  these values.
 #' 
 #' @param x List of vectors to turn into a matrix.
 #' @param by_name If `FALSE`, use the values of the list. If `TRUE`, use the names of these values.
 #' @param inline If `TRUE` associations are made in line: one association per line. If `FALSE`:
 #'  associations are made in column: one association per column.
-#' @return Char matrix in which the first column (or row if `inline = FALSE`) contains the names of the
-#'  list and the second column (row if `inline = FALSE`) are the values of the list or the names of these
-#'  values (according to `by_name`).
+#' @return Character matrix in which the first column (or row if `inline = FALSE`) contains the names of
+#'  the list and the second one contains the related values or the names of these values (according to
+#'  `by_name`).
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`turn_char_matrix_into_list`], [`turn_list_into_logical_matrix`],
-#'          [`turn_list_into_data_frame`], [`invert_list`].
+#' @seealso [`coerce_list`], [`turn_list_into_logical_matrix`], [`turn_list_into_data_frame`],
+#'          [`turn_char_matrix_into_list`].
 #' 
 #' @examples
 #' l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
@@ -259,7 +313,7 @@ turn_list_into_logical_matrix = function(x, by_name = FALSE) {
 #' turn_list_into_char_matrix(l, inline = FALSE)
 #' 
 #' @md
-#' @export
+#' @keywords internal
 turn_list_into_char_matrix = function(x, by_name = FALSE, inline = TRUE) {
   
   if (by_name && !is.named(x)[2]) stop("Values of the elements of x must be named.")
@@ -280,12 +334,12 @@ turn_list_into_char_matrix = function(x, by_name = FALSE, inline = TRUE) {
 #' @param x List of vectors to turn into a data frame.
 #' @param by_name If `FALSE`, use the values of the list. If `TRUE`, use the names of these values.
 #' @inheritParams base::as.data.frame
-#' @return Data frame in which the first column contains the names of the list and the second column
-#'  contains the values of the list or the names of these values (according to `by_name`).
+#' @return Data frame in which the first column contains the names of the list and the second one
+#'  contains the related values or the names of these values (according to `by_name`).
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`turn_data_frame_into_list`], [`turn_list_into_logical_matrix`],
-#'          [`turn_list_into_char_matrix`], [`invert_list`].
+#' @seealso [`coerce_list`], [`turn_list_into_logical_matrix`], [`turn_list_into_char_matrix`],
+#'          [`turn_data_frame_into_list`].
 #' 
 #' @examples
 #' l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
@@ -298,7 +352,7 @@ turn_list_into_char_matrix = function(x, by_name = FALSE, inline = TRUE) {
 #' turn_list_into_data_frame(l, by_name = TRUE)
 #' 
 #' @md
-#' @export
+#' @keywords internal
 turn_list_into_data_frame = function(x, by_name = FALSE,
                                      stringsAsFactors = default.stringsAsFactors()) {
   
@@ -315,6 +369,69 @@ turn_list_into_data_frame = function(x, by_name = FALSE,
 
 #### Functions for transformation into lists ####
 
+#' Turn a matrix or a data frame into a list
+#' 
+#' Turn a logical matrix, a two-column character matrix or a two-column data frame into a list.
+#' 
+#' @param x Matrix or data frame to turn into a list.
+#' @param by_row Only considered if `x` is a logical matrix.
+#'  If `TRUE`, use row names as names of the list and column names as values.
+#'  If `FALSE`, use column names as names of the list and row names as values.
+#' @return 
+#' If `x` is a logical matrix, list whose values correspond to the values `TRUE` of each row or of each
+#'  column (according to `by_row`).
+#' 
+#' Otherwise, list whose names correspond to the first column of `x` and whose values correspond to the
+#'  second column of `x`.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`invert_list`], [`coerce_list`].
+#' 
+#' @examples
+#' m1 <- matrix(c(FALSE, FALSE, FALSE, FALSE, TRUE,  TRUE,  FALSE, TRUE,
+#'               FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE,
+#'               FALSE, FALSE, TRUE,  FALSE, FALSE, FALSE, FALSE, TRUE,
+#'               TRUE,  FALSE, TRUE,  TRUE,  FALSE, TRUE,  FALSE, FALSE,
+#'               FALSE, TRUE,  FALSE, TRUE,  TRUE,  FALSE, TRUE,  TRUE),
+#'             nrow = 5, byrow = TRUE,
+#'             dimnames = list(c("e1", "e2", "e3", "e4", "e5"),
+#'                             c("A", "B", "C", "D", "E", "F", "G", "I")))
+#' 
+#' coerce_to_list(m1)
+#' coerce_to_list(m1, by_row = FALSE)
+#' 
+#' 
+#' m2 <- matrix(c("e1", "e1", "e1", "e2", "e3", "e3", "e4",
+#'                "e4", "e4", "e4", "e5", "e5", "e5", "e5", "e5",
+#'                "E", "F", "I", "I", "C", "I", "A",
+#'                "C", "D", "F", "B", "D", "E", "G", "I"),
+#'              ncol = 2)
+#' 
+#' coerce_to_list(m2)
+#' 
+#' 
+#' df <- data.frame(V1 = c("e1", "e1", "e1", "e2", "e3", "e3", "e4",
+#'                         "e4", "e4", "e4", "e5", "e5", "e5", "e5", "e5"),
+#'                  V2 = c("E", "F", "I", "I", "C", "I", "A",
+#'                         "C", "D", "F", "B", "D", "E", "G", "I"),
+#'                  stringsAsFactors = FALSE)
+#' 
+#' coerce_to_list(df)
+#' 
+#' @md
+#' @export
+coerce_to_list = function(x, by_row = TRUE) {
+  
+  if (is.matrix(x)) {
+    if (is.logical(x)) turn_logical_matrix_into_list(x, by_row)
+    else turn_char_matrix_into_list(x)
+    
+  }
+  else if (is.data.frame(x)) turn_data_frame_into_list(x)
+  else stop("x must be a matrix or a data frame.")
+}
+
+
 #' Turn a logical matrix into a list
 #' 
 #' Turn a logical matrix into a named list using the names of the columns and rows of the matrix.
@@ -322,12 +439,12 @@ turn_list_into_data_frame = function(x, by_name = FALSE,
 #' @param x Logical matrix to turn into a list.
 #' @param by_row If `TRUE`, use the names of the rows as names of the list. If `FALSE`, use the names of
 #'  the columns as names of the list.
-#' @return List in which the values correspond to the values `TRUE` of each row or of each column
-#'  (according to `by_row`).
+#' @return List whose values correspond to the values `TRUE` of each row or of each column (according to
+#'  `by_row`).
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`turn_list_into_logical_matrix`], [`turn_char_matrix_into_list`],
-#'          [`turn_data_frame_into_list`], [`invert_list`].
+#' @seealso [`coerce_to_list`], [`turn_char_matrix_into_list`], [`turn_data_frame_into_list`],
+#'          [`turn_list_into_logical_matrix`].
 #' 
 #' @examples
 #' m <- matrix(c(FALSE, FALSE, FALSE, FALSE, TRUE,  TRUE,  FALSE, TRUE,
@@ -343,7 +460,7 @@ turn_list_into_data_frame = function(x, by_name = FALSE,
 #' turn_logical_matrix_into_list(m, by_row = FALSE)
 #' 
 #' @md
-#' @export
+#' @keywords internal
 turn_logical_matrix_into_list = function(x, by_row = TRUE) {
   if (by_row && !is.named(x)[2]) stop("Columns of x must be named.")
   if (!by_row && !is.named(x)[1]) stop("Rows of x must be named.")
@@ -355,26 +472,26 @@ turn_logical_matrix_into_list = function(x, by_row = TRUE) {
 
 #' Turn a char matrix into a list
 #' 
-#' Turn two columns or to lines of a char matrix into a named list.
+#' Turn two columns or two lines of a chararacter matrix into a named list.
 #' 
-#' @param x Char matrix to turn into a list.
+#' @param x Character matrix to turn into a list.
 #' @param indices Two-element vector indicating the names of the associated rows or columns (according
 #'  to `inline`) to use to create the list 
 #' @param inline `TRUE` if associations in `x` are made in line (i.e. there is one association per line).
 #'  `FALSE` if associations are made in column (i.e. there is one association per column).
-#' @return List in which the names correspond to the row (or column if `inline = FALSE`) of `x`
-#'  corresponding to the first element of `indices` and the values correspond to the row (column if
+#' @return List whose names correspond to the column (or row if `inline = FALSE`) of `x`
+#'  corresponding to the first element of `indices` and whose values correspond to the column (row if
 #'  `inline = FALSE`) of `x` corresponding to the second element of `indices`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`turn_list_into_char_matrix`], [`turn_logical_matrix_into_list`],
-#'          [`turn_data_frame_into_list`], [`invert_list`].
+#' @seealso [`coerce_to_list`], [`turn_logical_matrix_into_list`], [`turn_data_frame_into_list`],
+#'          [`turn_list_into_char_matrix`].
 #' 
 #' @examples
 #' m1 <- matrix(c("e1", "e1", "e1", "e2", "e3", "e3", "e4",
 #'                "e4", "e4", "e4", "e5", "e5", "e5", "e5", "e5",
 #'                "E", "F", "I", "I", "C", "I", "A",
-#'                "C", "D", "F", "B", "D", "E", "I", "G"),
+#'                "C", "D", "F", "B", "D", "E", "G", "I"),
 #'              ncol = 2)
 #' 
 #' turn_char_matrix_into_list(m1)
@@ -382,15 +499,17 @@ turn_logical_matrix_into_list = function(x, by_row = TRUE) {
 #' m2 <- matrix(c("e1", "e1", "e1", "e2", "e3", "e3", "e4",
 #'                "e4", "e4", "e4", "e5", "e5", "e5", "e5", "e5",
 #'                "E", "F", "I", "I", "C", "I", "A",
-#'                "C", "D", "F", "B", "D", "E", "I", "G"),
+#'                "C", "D", "F", "B", "D", "E", "G", "I"),
 #'              nrow = 2, byrow = TRUE)
 #' 
 #' turn_char_matrix_into_list(m2, inline = FALSE)
 #' 
 #' @md
-#' @export
+#' @keywords internal
 turn_char_matrix_into_list = function(x, indices = c(1, 2), inline = TRUE) {
   
+  if (inline && ncol(x) < 2) stop("x must have at least 2 columns.")
+  if (!inline && nrow(x) < 2) stop("x must have at least 2 lines.")
   if (length(indices) != 2) stop("indices must have a length of 2.")
   
   if (!inline) return(sapply(unique(x[indices[1], ]),
@@ -408,27 +527,36 @@ turn_char_matrix_into_list = function(x, indices = c(1, 2), inline = TRUE) {
 #' @param x Data frame to turn into a list.
 #' @param indices Two-element vector indicating the names of the associated columns to use to create
 #'  the list.
-#' @return List in which the names correspond to the column of `x` corresponding to the first element
-#'  of `indices` and the values correspond to the column of `x` corresponding to the second element of
+#' @return List whose names correspond to the column of `x` corresponding to the first element
+#'  of `indices` and whose values correspond to the column of `x` corresponding to the second element of
 #'  `indices`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`turn_list_into_data_frame`], [`turn_logical_matrix_into_list`],
-#'          [`turn_char_matrix_into_list`], [`invert_list`].
+#' @seealso [`coerce_to_list`], [`turn_logical_matrix_into_list`], [`turn_char_matrix_into_list`],
+#'          [`turn_list_into_data_frame`].
 #' 
 #' @examples
-#' df <- data.frame(V1 = c("e1", "e1", "e1", "e2", "e3", "e3", "e4",
-#'                         "e4", "e4", "e4", "e5", "e5", "e5", "e5", "e5"),
-#'                  V2 = c("E", "F", "I", "I", "C", "I", "A",
-#'                         "C", "D", "F", "B", "D", "E", "I", "G"),
-#'                  stringsAsFactors = FALSE)
+#' df1 <- data.frame(V1 = c("e1", "e1", "e1", "e2", "e3", "e3", "e4", "e4",
+#'                          "e4", "e4", "e5", "e5", "e5", "e5", "e5"),
+#'                   V2 = c("E", "F", "I", "I", "C", "I", "A", "C",
+#'                          "D", "F", "B", "D", "E", "G", "I"),
+#'                   stringsAsFactors = FALSE)
 #' 
-#' turn_data_frame_into_list(df)
+#' turn_data_frame_into_list(df1)
+#' 
+#' df2 <- data.frame(V1 = c(1, 1, 1, 2, 3, 3, 4, 4,
+#'                          4, 4, 5, 5, 5, 5, 5),
+#'                   V2 = c("E", "F", "I", "I", "C", "I", "A", "C",
+#'                          "D", "F", "B", "D", "E", "G", "I"),
+#'                   stringsAsFactors = FALSE)
+#' 
+#' turn_data_frame_into_list(df2)
 #' 
 #' @md
-#' @export
+#' @keywords internal
 turn_data_frame_into_list = function(x, indices = c(1, 2)) {
   
+  if (ncol(x) < 2) stop("x must have at least 2 columns.")
   if (length(indices) != 2) stop("indices must have a length of 2.")
   
   to_return = sapply(unique(x[, indices[1]]),

@@ -7,7 +7,7 @@
 turn_char_matrix_into_list(x, indices = c(1, 2), inline = TRUE)
 }
 \arguments{
-\item{x}{Char matrix to turn into a list.}
+\item{x}{Character matrix to turn into a list.}
 
 \item{indices}{Two-element vector indicating the names of the associated rows or columns (according
 to \code{inline}) to use to create the list}
@@ -16,18 +16,18 @@ to \code{inline}) to use to create the list}
 \code{FALSE} if associations are made in column (i.e. there is one association per column).}
 }
 \value{
-List in which the names correspond to the row (or column if \code{inline = FALSE}) of \code{x}
-corresponding to the first element of \code{indices} and the values correspond to the row (column if
+List whose names correspond to the column (or row if \code{inline = FALSE}) of \code{x}
+corresponding to the first element of \code{indices} and whose values correspond to the column (row if
 \code{inline = FALSE}) of \code{x} corresponding to the second element of \code{indices}.
 }
 \description{
-Turn two columns or to lines of a char matrix into a named list.
+Turn two columns or two lines of a chararacter matrix into a named list.
 }
 \examples{
 m1 <- matrix(c("e1", "e1", "e1", "e2", "e3", "e3", "e4",
                "e4", "e4", "e4", "e5", "e5", "e5", "e5", "e5",
                "E", "F", "I", "I", "C", "I", "A",
-               "C", "D", "F", "B", "D", "E", "I", "G"),
+               "C", "D", "F", "B", "D", "E", "G", "I"),
              ncol = 2)
 
 turn_char_matrix_into_list(m1)
@@ -35,16 +35,17 @@ turn_char_matrix_into_list(m1)
 m2 <- matrix(c("e1", "e1", "e1", "e2", "e3", "e3", "e4",
                "e4", "e4", "e4", "e5", "e5", "e5", "e5", "e5",
                "E", "F", "I", "I", "C", "I", "A",
-               "C", "D", "F", "B", "D", "E", "I", "G"),
+               "C", "D", "F", "B", "D", "E", "G", "I"),
              nrow = 2, byrow = TRUE)
 
 turn_char_matrix_into_list(m2, inline = FALSE)
 
 }
 \seealso{
-\code{\link{turn_list_into_char_matrix}}, \code{\link{turn_logical_matrix_into_list}},
-\code{\link{turn_data_frame_into_list}}, \code{\link{invert_list}}.
+\code{\link{coerce_to_list}}, \code{\link{turn_logical_matrix_into_list}}, \code{\link{turn_data_frame_into_list}},
+\code{\link{turn_list_into_char_matrix}}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

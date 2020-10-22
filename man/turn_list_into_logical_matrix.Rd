@@ -31,9 +31,10 @@ turn_list_into_logical_matrix(l, by_name = TRUE)
 
 }
 \seealso{
-\code{\link{turn_logical_matrix_into_list}}, \code{\link{turn_list_into_char_matrix}},
-\code{\link{turn_list_into_data_frame}}, \code{\link{invert_list}}.
+\code{\link{coerce_list}}, \code{\link{turn_list_into_char_matrix}}, \code{\link{turn_list_into_data_frame}},
+\code{\link{turn_logical_matrix_into_list}}.
 }
 \author{
 Gauthier Magnin
 }
+\keyword{internal}

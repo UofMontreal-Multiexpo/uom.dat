@@ -98,7 +98,7 @@ cat(length(observations2), "observations.\n")
 ```
 ```{r}
 # Print one observation
-observations2[2]
+observations2[[2]]
 ```
 
 3. For one inspection, as many work situations as different `JOB.TITLE`-`JOB.TASK` pairs...
@@ -114,7 +114,7 @@ cat(length(observations3), "observations.\n")
 ```
 ```{r}
 # Print one observation
-observations3[2]
+observations3[[2]]
 ```
 
 4. Combination of points 2 and 3: search of the work situations described previously and one observation per situation not described (`JOB.TITLE`-`JOB.TASK` pair) concerning the remaining samples...
@@ -131,7 +131,7 @@ cat(length(observations4), "observations.\n")
 ```
 ```{r}
 # Print one observation
-observations4[2]
+observations4[[2]]
 ```
 
 **Note that the function used to create the last three lists of observations need the dataset to contain 3 variables named *ID*, *YEAR* and *CODE* to be able to function.**
@@ -1065,24 +1065,17 @@ Application of the approach according to a classification
 
 ## About lists
 
-Computation on lists:
+Computations on lists:
 
 * [intersect_on_list](../html/intersect_on_list.html)
 * [union_on_list](../html/union_on_list.html)
 * [table_on_list](../html/table_on_list.html)
 
-Transformation of lists:
+Transformation of lists and transformation into lists:
 
 * [invert_list](../html/invert_list.html)
-* [turn_list_into_logical_matrix](../html/turn_list_into_logical_matrix.html)
-* [turn_list_into_char_matrix](../html/turn_list_into_char_matrix)
-* [turn_list_into_data_frame](../html/turn_list_into_data_frame)
-
-Transformation into lists:
-
-* [turn_logical_matrix_into_list](../html/turn_logical_matrix_into_list.html)
-* [turn_char_matrix_into_list](../html/turn_char_matrix_into_list)
-* [turn_data_frame_into_list](../html/turn_data_frame_into_list)
+* [coerce_list](../html/coerce_list.html)
+* [coerce_to_list](../html/coerce_to_list.html)
 
 
 
