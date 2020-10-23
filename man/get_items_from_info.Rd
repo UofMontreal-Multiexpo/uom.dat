@@ -43,8 +43,10 @@ Retrieve the items associated with observations whose information matches to one
 obs <- make_observations(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME",
                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
+
 get_items_from_info(obs, info = list(JOB.TITLE = 44132017))
-get_items_from_info(obs, info = list(JOB.TITLE = 44132017), additional = "SAMPLE.ID")
+get_items_from_info(obs, info = list(JOB.TITLE = 44132017),
+                    additional = "SAMPLE.ID")
 
 }
 \seealso{

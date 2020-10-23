@@ -532,7 +532,9 @@ get_obs_from_items = function(observations, items, presence = "all", key = "CODE
 #' @examples
 #' obs <- make_observations(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME", "JOB.TITLE", "JOB.TASK"))
-#' get_obs_from_info(obs, info = list(JOB.TITLE = 44132001, JOB.TASK = "A8310"))
+#' 
+#' get_obs_from_info(obs, info = list(JOB.TITLE = 44132001,
+#'                                    JOB.TASK = "A8310"))
 #' 
 #' @export
 get_obs_from_info = function(observations, info, presence = "all") {
@@ -590,8 +592,10 @@ get_obs_from_info = function(observations, info, presence = "all") {
 #' obs <- make_observations(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME",
 #'                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
+#' 
 #' get_items_from_info(obs, info = list(JOB.TITLE = 44132017))
-#' get_items_from_info(obs, info = list(JOB.TITLE = 44132017), additional = "SAMPLE.ID")
+#' get_items_from_info(obs, info = list(JOB.TITLE = 44132017),
+#'                     additional = "SAMPLE.ID")
 #' 
 #' @export
 get_items_from_info = function(observations, info, presence = "all", additional = NULL, key = "CODE") {

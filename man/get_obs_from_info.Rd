@@ -30,7 +30,9 @@ Extract the observations whose information matches to one or more sought informa
 \examples{
 obs <- make_observations(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME", "JOB.TITLE", "JOB.TASK"))
-get_obs_from_info(obs, info = list(JOB.TITLE = 44132001, JOB.TASK = "A8310"))
+
+get_obs_from_info(obs, info = list(JOB.TITLE = 44132001,
+                                   JOB.TASK = "A8310"))
 
 }
 \seealso{
