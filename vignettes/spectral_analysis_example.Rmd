@@ -671,7 +671,7 @@ family_subst <- read.delim("Thesaurus_agents_clean_family_freq_07112019.txt", st
 family_subst$Code[nchar(family_subst$Code) == 2] <- paste0("00", family_subst$Code[nchar(family_subst$Code) == 2])
 family_subst$Code[nchar(family_subst$Code) == 3] <- paste0("0", family_subst$Code[nchar(family_subst$Code) == 3])
 
-other_substances <- sort(unique(unlist(sapply(other_obs, "[", "CODE"))))
+other_substances <- sort(unique(unlist(sapply(other_obs, "[", "SUBST"))))
 other_families <- family_subst$Family[match(other_substances, family_subst$Code)]
 other_families[is.na(other_families)] <- "Unknown"
 other_categories <- data.frame(item = other_substances, family = other_families)
@@ -684,10 +684,10 @@ another_sa_object <- spectral.analyzer(other_obs, items = other_categories,
 directory <- "./output/another_sa_object/"
 dir.create(directory)
 
-spectrosome <- spectrosome_chart(another_sa_object, another_sa_object["patterns"],
-                                 vertex_size = "grouped", size_range = c(0.5, 1.5),
-                                 displayisolates = FALSE, displaylabels = FALSE,
-                                 path = directory, name = "without_isolates")
+spectrosome_c <- spectrosome_chart(another_sa_object, another_sa_object["patterns"],
+                                   vertex_size = "grouped", size_range = c(0.5, 1.5),
+                                   displayisolates = FALSE, displaylabels = FALSE,
+                                   path = directory, name = "without_isolates")
 ```
 
 ![Fig. 14: Spectrosome of patterns from another spectral analyzer, without displaying the isolates or the labels](./output/another_sa_object/without_isolates.png)
@@ -697,10 +697,10 @@ To focus on the patterns that make the junction between two or more families of 
 patterns <- get_complexes(another_sa_object, another_sa_object["patterns"],
                           category = "family", condition = "vertices")
 
-spectrosome <- spectrosome_chart(another_sa_object, patterns,
-                                 vertex_col = "categories",
-                                 title = "Complexe patterns",
-                                 path = directory, name = "complexe_patterns")
+spectrosome_c <- spectrosome_chart(another_sa_object, patterns,
+                                   vertex_col = "categories",
+                                   title = "Complexe patterns",
+                                   path = directory, name = "complexe_patterns")
 ```
 
 ![Fig. 15: Spectrosome of patterns which are associated with more than one family of substances.](./output/another_sa_object/complexe_patterns.png)
@@ -720,15 +720,28 @@ Enumerate all substances in the list of observations...
 get_all_items(sa_object["observations"])
 ```
 
-Compute some proportions...
+Count the number of occurrences of each substance (which is not necessarily the number of observations containing the substance)...
 ```{r}
-# Proportion of situations involving more than one substance
-length(get_complex_obs(sa_object["observations"])) / length(sa_object["observations"])
+# List of substances by observation (simply extract the "CODE" elements of each one)
+substances_by_obs <- lapply(sa_object["observations"], "[[", "CODE")
+# Total number of occurrences of each substance
+table_on_list(substances_by_obs)
 ```
 
 ```{r}
+# Number of involvement of each substance in multiple exposures
+complexity_index(sa_object["observations"])
+```
+
+Compute some proportions...
+```{r}
 # Proportion of involvement of each substance in multiple exposures
-co_occurrence_proportions(sa_object["observations"])
+complexity_ratio(sa_object["observations"])
+```
+
+```{r}
+# Proportion of observations involving more than one substance
+length(get_complex_obs(sa_object["observations"])) / length(sa_object["observations"])
 ```
 
 ### 5.1.2. Filters on observations
@@ -976,7 +989,9 @@ Search in observations:
 
 Computations on observations:
 
-* [co_occurrence_proportions](../html/co_occurrence_proportions.html)
+* [complexity_ratio](../html/complexity_ratio.html)
+* [complexity_index](../html/complexity_index.html)
+* [co_occurrence_matrix](../html/co_occurrence_matrix.html)
 
 
 ## About spectral analysis

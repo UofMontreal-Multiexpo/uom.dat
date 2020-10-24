@@ -53,7 +53,9 @@ Search in observations:
 
 Computations on observations:
 
-* [co_occurrence_proportions](../html/co_occurrence_proportions.html)
+* [complexity_ratio](../html/complexity_ratio.html)
+* [complexity_index](../html/complexity_index.html)
+* [co_occurrence_matrix](../html/co_occurrence_matrix.html)
 
 
 

@@ -665,40 +665,108 @@ get_info_from_items = function(observations, items, info_names, presence = "all"
 
 #### Functions for computations on observations ####
 
-#' Proportions of co-occurrence of each item with any other item
+#' Complexity Ratio, by item
 #' 
-#' For each item, compute the ratio between the number of occurrences of the item in complex observations
-#'  and the number of occurrences of the item in all observations. In other words, compute the inverse of
-#'  the ratio between the number of times the items appears alone and the number of times the item appears.
+#' For each item, compute the ratio between the number of complex observations containing the item and
+#'  the total number of observations containing the item. In other words, compute the complement of the
+#'  ratio between the number of times the item appears alone and the number of times the item appears.
 #' 
 #' @param observations List of observations.
 #' @param key Access key to the items in an observation.
-#' @return Vector of the proportions of occurrences of each item in complex observations among all
-#'  observations.
+#' @return Vector of complexity ratios: for each item, the proportion of complex observations containing
+#'  it among all observations containing it.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_all_items}}, \code{\link{get_obs_from_items}},
-#'          \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}.
+#' @seealso [`complexity_index`], [`co_occurrence_matrix`],
+#'          [`get_all_items`], [`get_obs_from_items`], [`get_complex_obs`], [`get_simple_obs`].
 #' 
 #' @examples
 #' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
-#' co_occurrence_proportions(obs)
+#' complexity_ratio(obs)
 #' 
+#' @md
 #' @export
-co_occurrence_proportions = function(observations, key = "CODE") {
+complexity_ratio = function(observations, key = "CODE") {
   
-  # Vecteurs des items et proportions qui leurs seront associées
+  # Pour chaque item, nombre d'observations complexes contenant l'item / nombre d'obs contenant l'item
+  return(sapply(get_all_items(observations, key),
+                function(item) {
+                  obs_item = get_obs_from_items(observations, item, key = key)
+                  return(stats::setNames(length(get_complex_obs(obs_item, key)) / length(obs_item), item))
+                }))
+}
+
+
+#' Complexity Index, by item
+#' 
+#' For each item, count the number of complex observations containing the item.
+#' 
+#' @param observations List of observations.
+#' @param key Access key to the items in an observation.
+#' @return Vector of complexity indexes: for each item, the number of complex observations containing it.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`complexity_ratio`], [`co_occurrence_matrix`],
+#'          [`get_all_items`], [`get_obs_from_items`], [`get_complex_obs`], [`get_simple_obs`].
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+#' complexity_index(obs)
+#' 
+#' @md
+#' @export
+complexity_index = function(observations, key = "CODE") {
+  
+  # Pour chaque item, nombre d'observations complexes parmi les observations contenant l'item
+  return(sapply(get_all_items(observations, key),
+                function(item)
+                  stats::setNames(length(
+                    get_complex_obs(get_obs_from_items(observations, item, key = key), key)
+                  ), item)))
+}
+
+
+#' Co-occurrence matrix
+#' 
+#' Build the co-occurrence matrix: the matrix of the number of observations containing a specific pair of
+#'  items, for each possible pair.
+#' 
+#' @param observations List of observations.
+#' @param key Access key to the items in an observation.
+#' @return Co-occurrence matrix between each pair of items.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`complexity_ratio`], [`complexity_index`],
+#'          [`get_all_items`], [`get_obs_from_items`], [`get_complex_obs`], [`get_simple_obs`].
+#' 
+#' @examples
+#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
+#' co_occurrence_matrix(obs)
+#' 
+#' @md
+#' @export
+co_occurrence_matrix = function(observations, key = "CODE") {
+  
+  # Pour chaque pair d'items, recherche du nombre d'observations dans lesquelles la paire apparaît
   items = get_all_items(observations, key)
-  proportions = numeric(length(items))
-  names(proportions) = items
+  pairs = combn(items, 2)
+  co = apply(pairs, 2, function(pair) length(get_obs_from_items(observations, pair, key = key)))
   
-  # Calcul des proportions pour chaque item
-  for (item in items) {
-    obs_item = get_obs_from_items(observations, item, key = key)
-    proportions[as.character(item)] = length(get_complex_obs(obs_item, key)) / length(obs_item)
+  # Création d'une matrice qui correspondra à la table de contingence
+  co_table = matrix(nrow = length(items), ncol = length(items))
+  rownames(co_table) = colnames(co_table) = items
+  
+  # Conversion en caractère des identifiants des items pour accès à la matrice
+  pairs = apply(pairs, c(1,2), as.character)
+  
+  # Remplissage de la matrice
+  for (c in seq_len(ncol(pairs))) {
+    co_table[pairs[1, c], pairs[2, c]] = co[c]
+    co_table[pairs[2, c], pairs[1, c]] = co[c]
   }
+  diag(co_table) = table_on_list(lapply(observations, "[[", key))
   
-  return(proportions)
+  return(co_table)
 }
 
 
