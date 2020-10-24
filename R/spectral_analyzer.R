@@ -1912,15 +1912,15 @@ setMethod(f = "spectrosome_chart",
             }
             
             if (entities == SpectralAnalyzer.NODES) {
-              # Renommage de colonnes pour simplification ultérieure (cf. vertices_colors et vertices_shapes)
-              colnames(nopc)[colnames(nopc) == "node"] = "pattern"
-              colnames(nopc)[colnames(nopc) == "length"] = "order"
-              
               # Texte affiché sur le graphique
               nop_subtitle_1 = "Nodes: %d (%d isolate"
               nop_subtitle_2 = "); Links: %d"
               
               not_identical = !identical(object@nodes, nopc)
+              
+              # Renommage de colonnes pour simplification ultérieure (cf. vertices_colors et vertices_shapes)
+              colnames(nopc)[colnames(nopc) == "node"] = "pattern"
+              colnames(nopc)[colnames(nopc) == "length"] = "order"
               
             } else if (entities == SpectralAnalyzer.PATTERNS) {
               # Texte affiché sur le graphique
@@ -2331,8 +2331,8 @@ setMethod(f = "spectrosome_chart",
             
             # Réattribution des ID d'origine (non compatibles avec sna::gplot)
             if (identifiers == "original" && not_identical) {
-              nop_links$endpoint.1 = names(vertices_id[nop_links$endpoint.1])
-              nop_links$endpoint.2 = names(vertices_id[nop_links$endpoint.2])
+              nop_links$endpoint.1 = as.integer(names(vertices_id[nop_links$endpoint.1]))
+              nop_links$endpoint.2 = as.integer(names(vertices_id[nop_links$endpoint.2]))
               
               vertices_id = as.numeric(rownames(nopc))
             }
