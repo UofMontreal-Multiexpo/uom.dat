@@ -705,7 +705,7 @@ setMethod(f = "list_obs_per_year",
             
             # Conversion de la liste d'observations en une data.frame (et tri des items de chaque observation)
             obs_df = data.frame(year = sapply(object@observations, "[[", "YEAR"))
-            obs_df$node = sapply(sapply(object@observations, "[[", "CODE"), sort)
+            obs_df$node = lapply(lapply(object@observations, "[[", "CODE"), sort)
             
             # Concaténation des identifiants des items (nécessaire pour la fonction "table" et un tri plus rapide)
             obs_df$node = sapply(obs_df$node, paste0, collapse = "/")
