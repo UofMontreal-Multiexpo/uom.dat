@@ -663,6 +663,7 @@ Let's take a look at another example which has a way more patterns (the creation
 ```{r eval = FALSE, echo = FALSE}
 # No run, no show
 # Creation of the SA object specific to this section
+IMIS <- readRDS("IMIS_clean_20191107.RDS")
 other_obs <- make_observations(IMIS,
                                by = c("COMPANY_INDEX", "JOB.TITLE", "YEAR"),
                                additional = "SUBST")
@@ -675,6 +676,7 @@ other_substances <- sort(unique(unlist(sapply(other_obs, "[", "SUBST"))))
 other_families <- family_subst$Family[match(other_substances, family_subst$Code)]
 other_families[is.na(other_families)] <- "Unknown"
 other_categories <- data.frame(item = other_substances, family = other_families)
+for(i in seq_along(other_obs)) names(other_obs[[i]])[4] <- "CODE"
 
 another_sa_object <- spectral.analyzer(other_obs, items = other_categories,
                                        target = "maximally frequent itemsets", count = 100)
