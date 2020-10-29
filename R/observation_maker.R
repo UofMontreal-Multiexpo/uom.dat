@@ -672,6 +672,8 @@ get_info_from_items = function(observations, items, info_names, presence = "all"
 #'  ratio between the number of times the item appears alone and the number of times the item appears.
 #' 
 #' @param observations List of observations.
+#' @param items Items for which to compute the complexity ratio. The default `NULL` means to compute
+#'  it for each existing item.
 #' @param key Access key to the items in an observation.
 #' @return Vector of complexity ratios: for each item, the proportion of complex observations containing
 #'  it among all observations containing it.
@@ -683,13 +685,16 @@ get_info_from_items = function(observations, items, info_names, presence = "all"
 #' @examples
 #' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
 #' complexity_ratio(obs)
+#' complexity_ratio(obs, items = c(25, 148, 3146))
 #' 
 #' @md
 #' @export
-complexity_ratio = function(observations, key = "CODE") {
+complexity_ratio = function(observations, items = NULL, key = "CODE") {
+  
+  if (is.null(items)) items = get_all_items(observations, key)
   
   # Pour chaque item, nombre d'observations complexes contenant l'item / nombre d'obs contenant l'item
-  return(sapply(get_all_items(observations, key),
+  return(sapply(items,
                 function(item) {
                   obs_item = get_obs_from_items(observations, item, key = key)
                   return(stats::setNames(length(get_complex_obs(obs_item, key)) / length(obs_item), item))
@@ -702,6 +707,8 @@ complexity_ratio = function(observations, key = "CODE") {
 #' For each item, count the number of complex observations containing the item.
 #' 
 #' @param observations List of observations.
+#' @param items Items for which to calculate the complexity index. The default `NULL` means to calculate
+#'  it for each existing item.
 #' @param key Access key to the items in an observation.
 #' @return Vector of complexity indexes: for each item, the number of complex observations containing it.
 #' 
@@ -712,13 +719,16 @@ complexity_ratio = function(observations, key = "CODE") {
 #' @examples
 #' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
 #' complexity_index(obs)
+#' complexity_index(obs, items = c(19, 25, 148))
 #' 
 #' @md
 #' @export
-complexity_index = function(observations, key = "CODE") {
+complexity_index = function(observations, items = NULL, key = "CODE") {
+  
+  if (is.null(items)) items = get_all_items(observations, key)
   
   # Pour chaque item, nombre d'observations complexes parmi les observations contenant l'item
-  return(sapply(get_all_items(observations, key),
+  return(sapply(items,
                 function(item)
                   stats::setNames(length(
                     get_complex_obs(get_obs_from_items(observations, item, key = key), key)

@@ -4,10 +4,13 @@
 \alias{complexity_ratio}
 \title{Complexity Ratio, by item}
 \usage{
-complexity_ratio(observations, key = "CODE")
+complexity_ratio(observations, items = NULL, key = "CODE")
 }
 \arguments{
 \item{observations}{List of observations.}
+
+\item{items}{Items for which to compute the complexity ratio. The default \code{NULL} means to compute
+it for each existing item.}
 
 \item{key}{Access key to the items in an observation.}
 }
@@ -23,6 +26,7 @@ ratio between the number of times the item appears alone and the number of times
 \examples{
 obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
 complexity_ratio(obs)
+complexity_ratio(obs, items = c(25, 148, 3146))
 
 }
 \seealso{

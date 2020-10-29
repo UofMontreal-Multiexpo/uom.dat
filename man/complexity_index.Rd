@@ -4,10 +4,13 @@
 \alias{complexity_index}
 \title{Complexity Index, by item}
 \usage{
-complexity_index(observations, key = "CODE")
+complexity_index(observations, items = NULL, key = "CODE")
 }
 \arguments{
 \item{observations}{List of observations.}
+
+\item{items}{Items for which to calculate the complexity index. The default \code{NULL} means to calculate
+it for each existing item.}
 
 \item{key}{Access key to the items in an observation.}
 }
@@ -20,6 +23,7 @@ For each item, count the number of complex observations containing the item.
 \examples{
 obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
 complexity_index(obs)
+complexity_index(obs, items = c(19, 25, 148))
 
 }
 \seealso{
