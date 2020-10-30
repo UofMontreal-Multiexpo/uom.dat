@@ -18,7 +18,7 @@ There are two ways to install the package **oedb.analysis.tools**.
 
 The function `install_github` from the `devtools` package can be used to install the present one. However, as this repository is private, you need a personal access token for this function to work.
 
-A personal access token can be used to access the GitHub API. To have one if you don't already have one:
+A personal access token provides access to the GitHub API. To have one if you don't already have one:
 
 * Go to <https://github.com/settings/tokens>.
 * Click on button "Generate new token".
@@ -27,7 +27,7 @@ A personal access token can be used to access the GitHub API. To have one if you
 * Click on button "Generate token".
 * Copy the given token.
 
-You must use this token as the `auth_token` argument of the following instruction:
+Then you must run the following instruction using your token as the `auth_token` argument:
 ```r
 devtools::install_github("UofMontreal-Multiexpo/oedb-analysis-tools",
                          auth_token = "my_personal_access_token")
@@ -37,7 +37,11 @@ devtools::install_github("UofMontreal-Multiexpo/oedb-analysis-tools",
 
 1. Clone the repository or download a ZIP copy.
 2. In RStudio, open the project file `oedb-analysis-tools.Rproj`.
-3. Install the required packages by running `install.packages(c("arules", "ggplot2", "ggsci", "graphics", "grDevices", "mathjaxr", "methods", "network", "sna", "stats", "utils"))`.
+3. Install the required packages by running:
+   ```r
+   install.packages(c("arules", "ggplot2", "ggsci", "graphics", "grDevices",
+                      "mathjaxr", "methods", "network", "sna", "stats", "utils"))
+   ```
 4. In the "Build" menu, click on the "Install and Restart" menu item.
 
 You can now close the project **oedb.analysis.tools** and work on your own one using our package.
