@@ -17,7 +17,7 @@ with this method.
 Use of the maximum compression level (9).
 }
 \seealso{
-\code{\link[tools:resaveRdaFiles]{tools::resaveRdaFiles}}, \code{\link[tools:checkRdaFiles]{tools::checkRdaFiles}}.
+\code{\link[tools:checkRdaFiles]{tools::resaveRdaFiles}}, \code{\link[tools:checkRdaFiles]{tools::checkRdaFiles}}.
 }
 \author{
 Gauthier Magnin
