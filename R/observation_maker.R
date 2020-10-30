@@ -739,9 +739,12 @@ complexity_index = function(observations, items = NULL, key = "CODE") {
 #' Co-occurrence matrix
 #' 
 #' Build the co-occurrence matrix: the matrix of the number of observations containing a specific pair of
-#'  items, for each possible pair.
+#'  items, for each possible pair. The diagonal is the number of observations containing each specific
+#'  item.
 #' 
 #' @param observations List of observations.
+#' @param items Items for which to count co-occurrences between pairs. The default `NULL` means to count
+#'  them considering each existing item.
 #' @param key Access key to the items in an observation.
 #' @return Co-occurrence matrix between each pair of items.
 #' 
@@ -752,13 +755,15 @@ complexity_index = function(observations, items = NULL, key = "CODE") {
 #' @examples
 #' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
 #' co_occurrence_matrix(obs)
+#' co_occurrence_matrix(obs, items = c(19, 25, 148, 3146))
 #' 
 #' @md
 #' @export
-co_occurrence_matrix = function(observations, key = "CODE") {
+co_occurrence_matrix = function(observations, items = NULL, key = "CODE") {
+  
+  if (is.null(items)) items = get_all_items(observations, key)
   
   # Pour chaque pair d'items, recherche du nombre d'observations dans lesquelles la paire apparaît
-  items = get_all_items(observations, key)
   pairs = combn(items, 2)
   co = apply(pairs, 2, function(pair) length(get_obs_from_items(observations, pair, key = key)))
   
@@ -774,7 +779,7 @@ co_occurrence_matrix = function(observations, key = "CODE") {
     co_table[pairs[1, c], pairs[2, c]] = co[c]
     co_table[pairs[2, c], pairs[1, c]] = co[c]
   }
-  diag(co_table) = table_on_list(lapply(observations, "[[", key))
+  diag(co_table) = table_on_list(lapply(observations, "[[", key))[as.character(items)]
   
   return(co_table)
 }

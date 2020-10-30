@@ -4,10 +4,13 @@
 \alias{co_occurrence_matrix}
 \title{Co-occurrence matrix}
 \usage{
-co_occurrence_matrix(observations, key = "CODE")
+co_occurrence_matrix(observations, items = NULL, key = "CODE")
 }
 \arguments{
 \item{observations}{List of observations.}
+
+\item{items}{Items for which to count co-occurrences between pairs. The default \code{NULL} means to count
+them considering each existing item.}
 
 \item{key}{Access key to the items in an observation.}
 }
@@ -16,11 +19,13 @@ Co-occurrence matrix between each pair of items.
 }
 \description{
 Build the co-occurrence matrix: the matrix of the number of observations containing a specific pair of
-items, for each possible pair.
+items, for each possible pair. The diagonal is the number of observations containing each specific
+item.
 }
 \examples{
 obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
 co_occurrence_matrix(obs)
+co_occurrence_matrix(obs, items = c(19, 25, 148, 3146))
 
 }
 \seealso{
