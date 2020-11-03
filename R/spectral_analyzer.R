@@ -4159,6 +4159,13 @@ setMethod(f = "check_access_for_category",
           signature = "SpectralAnalyzer",
           definition = function(object, category, value, stop = TRUE) {
             
+            # S'il n'existe pas de catégorie, la valeur doit être NULL ou NA
+            if (is.null(category) || is.na(category)) return(TRUE)
+            if (ncol(object@items_categories) == 0) {
+              if (!stop) return(FALSE)
+              stop("There is no category associated with the items.")
+            }
+            
             # Vérification que le type de catégorie recherché existe
             if (is.character(category) & !(category %in% colnames(object@items_categories))) {
               if (!stop) return(FALSE)
