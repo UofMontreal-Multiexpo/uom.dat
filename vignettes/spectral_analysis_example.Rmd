@@ -715,7 +715,7 @@ Let's go back to our original example.
 
 ## 5.1. Processing on observations
 
-### 5.1.1. Items and proportions
+### 5.1.1. Items, proportions and co-occurrences
 
 Enumerate all substances in the list of observations...
 ```{r}
@@ -745,6 +745,33 @@ complexity_ratio(sa_object["observations"])
 # Proportion of observations involving more than one substance
 length(get_complex_obs(sa_object["observations"])) / length(sa_object["observations"])
 ```
+
+Compute the co-occurrence matrix (for each pair of substances, the number of observations containing it)...
+```{r}
+cor_matrix <- co_occurrence_matrix(sa_object["observations"])
+cor_matrix
+```
+
+And plot these co-occurrence values in two ways...
+```{r}
+# 1. A graph
+co_occurrence_chart(sa_object, sa_object["items"], category = "family")
+```
+![](./spectral_analysis_example/co_occurrence_chart.png)
+
+```{r}
+# 2. A visualization of the matrix using the 'corrplot' package.
+library(corrplot)
+
+corrplot(cor_matrix, is.corr = FALSE)
+```
+
+```{r}
+corrplot.mixed(cor_matrix, is.corr = FALSE,
+               upper = "color", tl.col = "black",
+               order = "hclust")
+```
+![](./spectral_analysis_example/co_occurrence_matrix.png)
 
 ### 5.1.2. Filters on observations
 
@@ -995,6 +1022,10 @@ Computations on observations:
 * [complexity_index](../html/complexity_index.html)
 * [co_occurrence_matrix](../html/co_occurrence_matrix.html)
 
+Making charts about observations:
+
+* [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
+
 
 ## About spectral analysis
 
@@ -1012,6 +1043,7 @@ Making charts:
 * [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
 * [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
 * [tree_chart](../html/tree_chart-SpectralAnalyzer-method.html)
+* [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
 
 Search for nodes or patterns:
 

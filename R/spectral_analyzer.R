@@ -635,6 +635,11 @@ setGeneric(name = "tree_chart", def = function(object, pc, identifiers = "origin
 setGeneric(name = "plot_tree_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
 
+# Methods for creating co-occurrence graphs
+
+setGeneric(name = "co_occurrence_chart", def = function(object, items, category = NULL, min_occ = 1, max_occ = Inf, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 2, vertex_alpha = 0.5, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_tension = 0.7, edge_alpha = 1, palette = "Blues", palette_direction = 1){ standardGeneric("co_occurrence_chart") })
+
+
 # Association rule extraction methods
 
 setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
@@ -3014,6 +3019,181 @@ setMethod(f = "plot_tree_chart",
             graphics::text(items_category$x, items_category$y, text_labels,
                            cex = 0.75, pos = 2, col = item_colors, xpd = TRUE)
           })
+
+
+
+#### Methods for creating co-occurrence graphs ####
+
+#' Co-occurrence chart
+#' 
+#' Plot a graph in which vertices are items and edges are their co-occurences in observations (i.e. for
+#'  each pair of items, the number of observations containing it).
+#' 
+#' @details
+#' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
+#'  afterwards using [`ggplot2::last_plot`] or the returned object.
+#' 
+#' The colors associated with the values of the possible category represented are selected circularly
+#'  among the 20 colors of the palette `category20` from D3 (see `ggsci::pal_d3("category20")`).
+#' Therefore, if the number of values exceeds \eqn{20}, some colors will be used more than once.
+#'  For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
+#'  value.
+#' See the attribute `categories_colors` of `object` to reassign colors to the category values.
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
+#'  Any subset of `object["items"]`.\cr
+#'  `"items"` and `"i"` are specific values for `object["items"]`.
+#' @param category Name or number of the category to represent on the graph (numbering according to
+#'  the order of the columns of `object["items_categories"]`).
+#' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
+#' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
+#' @param use_names If `TRUE`, display item names if they are defined. Display their identification
+#'  codes otherwise.
+#' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
+#'  of the represented items.
+#' @param c.cutoff Limit number of characters to display in the legend for the category represented.
+#' @param sort_by Sorting method of displayed items. One of \code{"category"}, \code{"item"}.
+#' @param vertex_size Size of the vertices.
+#' @param vertex_alpha Opacity of the vertices (from 0 to 1).
+#' @param vertex_margin Margin before the vertices (i.e. distance between the ends of the edges and the
+#'  centers of the vertices).
+#' @param label_size Size of the labels associated with the vertices.
+#' @param label_margin Margin before the labels (i.e. distance between the centers of the vertices and
+#'  the labels).
+#' @param edge_tension Looseness of the connecting lines (from 0 to 1).
+#'  The closer the value is to 1, the straighter the lines will be.
+#'  The closer the value is to 0, the more the lines will be curved.
+#' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
+#' @param palette Name (or number) of the sequential palette to use for coloring the edges.
+#'  One of `"Blues"`, `"BuGn"`, `"BuPu"`, `"GnBu"`, `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`,
+#'  `"PuBu"`, `"PuBuGn"`, `"PuRd"`, `"Purples"`, `"RdPu"`, `"Reds"`, `"YlGn"`, `"YlGnBu"`, `"YlOrBr"`,
+#'  `"YlOrRd"`.
+#' @param palette_direction Direction in which to use the color palette.
+#'  If `1`, colors are in original order: from the lightest to the darkest.
+#'  If `-1`, the order of colors is reversed: from the darkest to the lightest.
+#' @return Graph created with the packages `ggraph` and `ggplot2`.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`co_occurrence_matrix`].
+#' 
+#' @examples
+#' co_occurrence_chart(SA_instance, SA_instance["items"], "family")
+#' co_occurrence_chart(SA_instance, "items", category = 1, n.cutoff = 20) +
+#'   ggplot2::expand_limits(x = c(-1.3, 1.3), y = c(-1.3, 1.3))
+#' co_occurrence_chart(SA_instance, "items", category = "family",
+#'                     min_occ = 2, palette = "OrRd")
+#' co_occurrence_chart(SA_instance, SA_instance["items"][2:13], "family")
+#' 
+#' @aliases co_occurrence_chart
+#' @md
+#' @export
+setMethod(f = "co_occurrence_chart",
+          signature = "SpectralAnalyzer",
+          definition = function(object, items, category = NULL, min_occ = 1, max_occ = Inf,
+                                use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category",
+                                vertex_size = 2, vertex_alpha = 0.5, vertex_margin = 0.05,
+                                label_size = 3, label_margin = 0.05,
+                                edge_tension = 0.7, edge_alpha = 1,
+                                palette = "Blues", palette_direction = 1) {
+  
+  # Validation du paramètre d'accès à la catégorie et des items fournis
+  check_access_for_category(object, category, NA)
+  if (is.null(category) && sort_by == "category") sort_by = "item"
+  if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
+    items = object@items
+  if (!is.named(items)) items = object@items[match(items, object@items)]
+  
+  # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
+  hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
+  
+  # Tri par nom, par identifiant ou selon les valeurs de la catégorie
+  if (use_names && sort_by == "item") hierarchy = hierarchy[order(names(items)), ]
+  else if (sort_by == "item") hierarchy = hierarchy[order(items), ]
+  else hierarchy = hierarchy[order(object@items_categories[as.character(items), category]), ]
+  
+  # Sommets du graphe
+  vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
+  if (use_names) {
+    vertices$label = names(items[match(vertices$name, items)])
+    if (!is.null(n.cutoff)) vertices$label = substr(vertices$label, 1, n.cutoff)
+  } else {
+    vertices$label = items[match(vertices$name, items)]
+  }
+  vertices$vertex_coord_multiplier = 1 + vertex_margin
+  vertices$label_coord_multiplier = 1 + vertex_margin + label_margin
+  
+  # Gestion de la catégorie et de sa légende
+  if (!is.null(category)) {
+    vertices$group = object@items_categories[vertices$name, category]
+    category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA
+    
+    if (!is.null(c.cutoff)) {
+      names(category_legend) = substr(names(category_legend), 1, c.cutoff)
+      vertices$group = substr(vertices$group, 1, c.cutoff)
+    }
+  }
+  
+  # Liens à tracer entre les sommets (différent des arêtes de l'arbre)
+  co_occ = as.data.frame(as.table(co_occurrence_matrix(object@observations, items, key = "CODE")),
+                         stringsAsFactors = FALSE)
+  co_occ = co_occ[co_occ$Var1 != co_occ$Var2 & !duplicated(t(apply(co_occ[, c(1,2)], 1, sort))), ]
+  connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
+  
+  # Recherche des numéros des sommets à lier
+  from = match(connections[, 2], vertices$name)
+  to = match(connections[, 1], vertices$name)
+  
+  # Tri des liens selon l'ordre des sommets pour que les couleurs soit appliquées correctement
+  the_order = order(from, to)
+  from = from[the_order]
+  to = to[the_order]
+  connections = connections[the_order, ]
+  
+  # Graphe
+  tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
+  
+  graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
+    
+    ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
+                                         y = y * vertex_coord_multiplier,
+                                         filter = leaf,
+                                         color = if (!is.null(category)) group),
+                            size = vertex_size, alpha = vertex_alpha) +
+    
+    ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
+                                                    colors = connections$Freq),
+                             ggplot2::aes(color = colors),
+                             tension = edge_tension, alpha = edge_alpha) +
+    ggraph::scale_edge_color_distiller("Co-occurrence", palette = palette, direction = palette_direction,
+                                       # Définition de l'échelle (pour n'avoir que des entiers)
+                                       limits = c(1, max(co_occ$Freq)),
+                                       breaks = unique(floor(pretty(seq(1, max(co_occ$Freq))))),
+                                       # Paramètre nécessaire si non-chargement de ggraph
+                                       guide = ggraph::guide_edge_colorbar()) +
+    
+    ggraph::geom_node_text(ggplot2::aes(x = x * label_coord_multiplier,
+                                        y = y * label_coord_multiplier,
+                                        filter = leaf,
+                                        label = label,
+                                        angle = atan(y / x) * 180 / pi, # Angle en degré
+                                        hjust = ifelse(x < 0, 1, 0),
+                                        color = if (!is.null(category)) group), 
+                           size = label_size) +
+    ggplot2::theme_void() +
+    ggplot2::coord_fixed()
+  
+  if (!is.null(category)) {
+    category_name = if (is.numeric(category)) colnames(object@items_categories)[category] else category
+    return(graph + ggplot2::scale_color_manual(cap(category_name),
+                                               values = category_legend,
+                                               guide = ggplot2::guide_legend(order = 1,
+                                                 # Retrait des "a" par-dessus les points de la légende
+                                                 # et de l'écart entre les lignes induit par label
+                                                 override.aes = list(label = "", size = 1.5, alpha = 1))))
+  }
+  return(graph)
+})
 
 
 

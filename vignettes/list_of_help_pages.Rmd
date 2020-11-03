@@ -57,6 +57,10 @@ Computations on observations:
 * [complexity_index](../html/complexity_index.html)
 * [co_occurrence_matrix](../html/co_occurrence_matrix.html)
 
+Making charts about observations:
+
+* [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
+
 
 
 # About spectral analysis
@@ -75,6 +79,7 @@ Making charts:
 * [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
 * [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
 * [tree_chart](../html/tree_chart-SpectralAnalyzer-method.html)
+* [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
 
 Search for nodes or patterns:
 
