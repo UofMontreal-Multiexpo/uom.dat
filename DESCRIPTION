@@ -19,15 +19,18 @@ Depends: R (>= 3.5.0)
 Imports:
     arules,
     ggplot2,
+    ggraph,
     ggsci,
     graphics,
     grDevices,
+    igraph,
     methods,
     network,
     sna,
     stats,
     utils
 Suggests:
+    corrplot,
     knitr,
     mathjaxr,
     rmarkdown,

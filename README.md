@@ -39,8 +39,9 @@ devtools::install_github("UofMontreal-Multiexpo/oedb-analysis-tools",
 2. In RStudio, open the project file `oedb-analysis-tools.Rproj`.
 3. Install the required packages by running:
    ```r
-   install.packages(c("arules", "ggplot2", "ggsci", "graphics", "grDevices",
-                      "mathjaxr", "methods", "network", "sna", "stats", "utils"))
+   install.packages(c("arules", "ggplot2", "ggraph", "ggsci", "graphics",
+                      "grDevices", "igraph", "mathjaxr", "methods", "network",
+                      "sna", "stats", "utils"))
    ```
 4. In the "Build" menu, click on the "Install and Restart" menu item.
 
