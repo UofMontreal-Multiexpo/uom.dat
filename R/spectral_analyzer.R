@@ -3304,12 +3304,6 @@ setMethod(f = "co_occurrence_chart",
   
   graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
     
-    ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
-                                         y = y * vertex_coord_multiplier,
-                                         filter = leaf,
-                                         color = if (!is.null(category)) group),
-                            size = vertex_size, alpha = vertex_alpha) +
-    
     ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
                                                     colors = connections$Freq),
                              ggplot2::aes(color = colors),
@@ -3320,6 +3314,12 @@ setMethod(f = "co_occurrence_chart",
                                        breaks = unique(floor(pretty(seq(1, max(co_occ$Freq))))),
                                        # Paramètre nécessaire si non-chargement de ggraph
                                        guide = ggraph::guide_edge_colorbar()) +
+    
+    ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
+                                         y = y * vertex_coord_multiplier,
+                                         filter = leaf,
+                                         color = if (!is.null(category)) group),
+                            size = vertex_size, alpha = vertex_alpha) +
     
     ggraph::geom_node_text(ggplot2::aes(x = x * label_coord_multiplier,
                                         y = y * label_coord_multiplier,
