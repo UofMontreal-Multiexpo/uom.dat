@@ -105,7 +105,7 @@ co_occurrence_chart(SA_instance, SA_instance["items"][2:13], "family")
 
 }
 \seealso{
-\code{\link{co_occurrence_matrix}}.
+\code{\link{co_occurrence_matrix}}, \code{\link{category_tree_chart}}.
 }
 \author{
 Gauthier Magnin

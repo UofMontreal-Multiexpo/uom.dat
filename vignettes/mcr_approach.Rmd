@@ -316,12 +316,12 @@ last_plot() + coord_cartesian(xlim = c(-0.5, 5),
 
 The argument `thq_col` allows to assign specific colors to the top hazard quotients. For the following examples, let's go back to the logarithm form of the chart:
 ```{r warning=FALSE}
-# Loading color library for a paleton of 20 colors
+# Loading color library for a palette of 20 colors
 library(ggsci)
-paleton <- pal_d3("category20")(20)
+palette <- pal_d3("category20")(20)
 
 # Because there are more than 20 references, we need to use extra colors
-new_thq_col <- c(paleton[1:20], "red", "green", "blue", "yellow", "black")
+new_thq_col <- c(palette[1:20], "red", "green", "blue", "yellow", "black")
 
 mcr_chart(values = concentration_values,
           references = reference_values,
@@ -872,6 +872,7 @@ Making charts:
 * [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
 * [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
 * [tree_chart](../html/tree_chart-SpectralAnalyzer-method.html)
+* [category_tree_chart](../html/category_tree_chart-SpectralAnalyzer-method.html)
 * [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
 
 Search for nodes or patterns:

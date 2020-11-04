@@ -142,12 +142,12 @@ last_plot() + coord_cartesian(xlim = c(-0.5, 5),
                               ylim = c(0.5, 8))
 
 ## ----warning=FALSE------------------------------------------------------------
-# Loading color library for a paleton of 20 colors
+# Loading color library for a palette of 20 colors
 library(ggsci)
-paleton <- pal_d3("category20")(20)
+palette <- pal_d3("category20")(20)
 
 # Because there are more than 20 references, we need to use extra colors
-new_thq_col <- c(paleton[1:20], "red", "green", "blue", "yellow", "black")
+new_thq_col <- c(palette[1:20], "red", "green", "blue", "yellow", "black")
 
 mcr_chart(values = concentration_values,
           references = reference_values,

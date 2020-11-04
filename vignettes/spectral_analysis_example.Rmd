@@ -713,7 +713,7 @@ spectrosome_c <- spectrosome_chart(another_sa_object, patterns,
 
 Let's go back to our original example.
 
-## 5.1. Processing on observations
+## 5.1. Processing on observations and items
 
 ### 5.1.1. Items, proportions and co-occurrences
 
@@ -772,6 +772,12 @@ corrplot.mixed(cor_matrix, is.corr = FALSE,
                order = "hclust")
 ```
 ![](./spectral_analysis_example/co_occurrence_matrix.png)
+
+Plot a tree of the substances according to their family...
+```{r}
+category_tree_chart(sa_object, "family")
+```
+![](./spectral_analysis_example/category_tree_chart.png)
 
 ### 5.1.2. Filters on observations
 
@@ -1043,6 +1049,7 @@ Making charts:
 * [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
 * [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
 * [tree_chart](../html/tree_chart-SpectralAnalyzer-method.html)
+* [category_tree_chart](../html/category_tree_chart-SpectralAnalyzer-method.html)
 * [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
 
 Search for nodes or patterns:

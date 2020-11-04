@@ -635,7 +635,9 @@ setGeneric(name = "tree_chart", def = function(object, pc, identifiers = "origin
 setGeneric(name = "plot_tree_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
 
 
-# Methods for creating co-occurrence graphs
+# Methods for creating category trees and co-occurrence graphs
+
+setGeneric(name = "category_tree_chart", def = function(object, category = NULL, items = object["items"], use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, vertex_size = 4, vertex_alpha = 1, leaf_size = 2, leaf_alpha = 0.5, leaf_margin = 0.05, label_size = 3, label_margin = 0.05){ standardGeneric("category_tree_chart") })
 
 setGeneric(name = "co_occurrence_chart", def = function(object, items, category = NULL, min_occ = 1, max_occ = Inf, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 2, vertex_alpha = 0.5, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_tension = 0.7, edge_alpha = 1, palette = "Blues", palette_direction = 1){ standardGeneric("co_occurrence_chart") })
 
@@ -3022,7 +3024,154 @@ setMethod(f = "plot_tree_chart",
 
 
 
-#### Methods for creating co-occurrence graphs ####
+#### Methods for creating category trees and co-occurrence graphs ####
+
+#' Category tree
+#' 
+#' Plot a tree representing the values of one category and the related items. Vertices at depth 1
+#'  represent the values of the chosen category and vertices at depth 2 represent items related to each
+#'  specific category value.
+#' 
+#' @details
+#' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
+#'  afterwards using [`ggplot2::last_plot`] or the returned object.
+#' 
+#' The colors associated with the values of the possible category represented are selected circularly
+#'  among the 20 colors of the palette `category20` from D3 (see `ggsci::pal_d3("category20")`).
+#' Therefore, if the number of values exceeds \eqn{20}, some colors will be used more than once.
+#'  For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
+#'  value.
+#' See the attribute `categories_colors` of `object` to reassign colors to the category values.
+#'
+#' @param object `SpectralAnalyzer` class object.
+#' @param category Name or number of the category to represent on the tree (numbering according to
+#'  the order of the columns of `object["items_categories"]`).
+#' @param items Items to represent on the tree.
+#'  Any subset of `object["items"]`.\cr
+#'  `"items"` and `"i"` are specific values for `object["items"]`.
+#' @param use_names  If `TRUE`, display item names if they are defined. Display their identification
+#'  codes otherwise.
+#' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
+#'  of the represented items.
+#' @param c.cutoff Limit number of characters to display in the legend for the category represented.
+#' @param vertex_size Size of vertices at depth 1, representing the category values.
+#' @param vertex_alpha Opacity of vertices at depth 1 (from 0 to 1).
+#' @param leaf_size Size of the leaves (vertices at depth 2), representing the items.
+#' @param leaf_alpha Opacity of the leaves (from 0 to 1).
+#' @param leaf_margin Margin before the leaves (i.e. distance between the ends of the edges and the
+#'  centers of the leaves).
+#' @param label_size Size of the labels associated with the leaves.
+#' @param label_margin Margin before the labels (i.e. distance between the centers of the leaves and
+#'  the labels).
+#' @return Graph created with the packages `ggraph` and `ggplot2`.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`co_occurrence_chart`].
+#'
+#' @examples
+#' category_tree_chart(SA_instance, "family")
+#' category_tree_chart(SA_instance, 1,
+#'                     items = c(19, 25, 27, 77, 87, 163, 192, 1603, 3146, 3350))
+#' category_tree_chart(SA_instance, 1, items = SA_instance["items"][2:11]) +
+#'   ggplot2::expand_limits(x = c(-1.3, 1.3), y = c(-1.3, 1.3))
+#' 
+#' @aliases category_tree_chart
+#' @md
+#' @export
+setMethod(f = "category_tree_chart",
+          signature = "SpectralAnalyzer",
+          definition = function(object, category = NULL, items = object["items"],
+                                use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL,
+                                vertex_size = 4, vertex_alpha = 1,
+                                leaf_size = 2, leaf_alpha = 0.5, leaf_margin = 0.05,
+                                label_size = 3, label_margin = 0.05) {
+            
+  # Validation du paramètre d'accès à la catégorie et des items fournis
+  check_access_for_category(object, category, NA)
+  if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
+    items = object@items
+  if (!is.named(items)) items = object@items[match(items, object@items)]
+  
+  
+  # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
+  if (!is.null(category)) {
+    depth_1 = data.frame(parent = "root",
+                         child = as.character(sort(unique(object@items_categories[as.character(items),
+                                                                                  category]))),
+                         stringsAsFactors = FALSE)
+    depth_2 = data.frame(parent = as.character(object@items_categories[as.character(items), category]),
+                         child = items,
+                         stringsAsFactors = FALSE)
+    hierarchy = rbind(depth_1, depth_2[order(depth_2$parent), ]) # Ordonnés par catégorie
+  } else {
+    hierarchy = data.frame(parent = "root",
+                           child = items[order(if (use_names) names(items) else items)],
+                           stringsAsFactors = FALSE)
+  }
+  
+  # Sommets du graphe
+  vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
+  if (use_names) {
+    vertices$label = names(items[match(vertices$name, items)])
+    if (!is.null(n.cutoff)) vertices$label = substr(vertices$label, 1, n.cutoff)
+  } else {
+    vertices$label = items[match(vertices$name, items)]
+  }
+  
+  # Position, tailles et opacités des sommets en fonction de sommet interne ou feuille
+  vertices$is.leaf = is.na(match(vertices$name, hierarchy$parent))
+  vertices$leaf_coord_multiplier = ifelse(vertices$is.leaf, 1 + leaf_margin, 1)
+  vertices$label_coord_multiplier = ifelse(vertices$is.leaf, 1 + leaf_margin + label_margin, 1)
+  vertices$size = ifelse(vertices$is.leaf, leaf_size, vertex_size)
+  vertices$alpha = ifelse(vertices$is.leaf, leaf_alpha, vertex_alpha)
+  
+  # Gestion de la catégorie et de sa légende
+  if (!is.null(category)) {
+    vertices$group = object@items_categories[vertices$name, category]
+    vertices$group[is.na(vertices$group)][-1] = vertices$name[is.na(vertices$group)][-1]
+    category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA/root
+    
+    if (!is.null(c.cutoff)) {
+      names(category_legend) = substr(names(category_legend), 1, c.cutoff)
+      vertices$group = substr(vertices$group, 1, c.cutoff)
+    }
+    edge_col = ifelse(vertices$is.leaf[-1], category_legend[as.character(vertices$group[-1])], "black")
+  }
+  
+  # Graphe
+  tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
+  
+  graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) + 
+    ggraph::geom_edge_diagonal(ggplot2::aes(color = if (!is.null(category)) edge_col)) +
+    ggraph::geom_node_point(ggplot2::aes(x = x * leaf_coord_multiplier,
+                                         y = y * leaf_coord_multiplier,
+                                         filter = (name != "root"),
+                                         color = if (!is.null(category)) group),
+                            size = vertices$size[-1],
+                            alpha = vertices$alpha[-1]) + 
+    ggraph::geom_node_text(ggplot2::aes(x = x * label_coord_multiplier,
+                                        y = y * label_coord_multiplier,
+                                        filter = is.leaf,
+                                        label = label,
+                                        angle = atan(y / x) * 180 / pi, # Angle en degré
+                                        hjust = ifelse(x < 0, 1, 0),
+                                        color = if (!is.null(category)) group), 
+                           size = label_size) +
+    ggplot2::theme_void() +
+    ggplot2::coord_fixed()
+  
+  if (!is.null(category)) {
+    category_name = if (is.numeric(category)) colnames(object@items_categories)[category] else category
+    return(graph + 
+             ggplot2::scale_color_manual(cap(category_name), values = category_legend,
+                                         # Suppression des "a" par-dessus les points de la légende
+                                         # et de l'écart entre les lignes induit par label
+                                         guide = ggplot2::guide_legend(
+                                           override.aes = list(label = "", size = 1.5))))
+  }
+  return(graph)
+})
+
 
 #' Co-occurrence chart
 #' 
@@ -3075,7 +3224,7 @@ setMethod(f = "plot_tree_chart",
 #' @return Graph created with the packages `ggraph` and `ggplot2`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`co_occurrence_matrix`].
+#' @seealso [`co_occurrence_matrix`], [`category_tree_chart`].
 #' 
 #' @examples
 #' co_occurrence_chart(SA_instance, SA_instance["items"], "family")
