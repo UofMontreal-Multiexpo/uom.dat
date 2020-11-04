@@ -14,9 +14,9 @@
   c.cutoff = NULL,
   vertex_size = 4,
   vertex_alpha = 1,
-  leaf_size = 2,
-  leaf_alpha = 0.5,
-  leaf_margin = 0.05,
+  leaf_size = 3,
+  leaf_alpha = 1,
+  leaf_margin = 0,
   label_size = 3,
   label_margin = 0.05
 )

@@ -15,12 +15,12 @@
   n.cutoff = NULL,
   c.cutoff = NULL,
   sort_by = "category",
-  vertex_size = 2,
-  vertex_alpha = 0.5,
+  vertex_size = 3,
+  vertex_alpha = 1,
   vertex_margin = 0.05,
   label_size = 3,
   label_margin = 0.05,
-  edge_tension = 0.7,
+  edge_tension = 0.8,
   edge_alpha = 1,
   palette = "Blues",
   palette_direction = 1
@@ -98,7 +98,7 @@ See the attribute \code{categories_colors} of \code{object} to reassign colors t
 \examples{
 co_occurrence_chart(SA_instance, SA_instance["items"], "family")
 co_occurrence_chart(SA_instance, "items", category = 1, n.cutoff = 20) +
-  ggplot2::expand_limits(x = c(-1.3, 1.3), y = c(-1.3, 1.3))
+  ggplot2::expand_limits(x = c(-1.5, 1.5), y = c(-1.5, 1.5))
 co_occurrence_chart(SA_instance, "items", category = "family",
                     min_occ = 2, palette = "OrRd")
 co_occurrence_chart(SA_instance, SA_instance["items"][2:13], "family")
