@@ -628,11 +628,11 @@ setGeneric(name = "network_density", def = function(object, links){ standardGene
 setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("degree") })
 
 
-# Methods for creating multi-association tree graphs
+# Methods for creating pattern itemsets graphs
 
-setGeneric(name = "tree_chart", def = function(object, pc, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", title = "Multi-association tree", path = getwd(), name = "multi-association_tree.pdf"){ standardGeneric("tree_chart") })
+setGeneric(name = "pattern_chart", def = function(object, pc, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf"){ standardGeneric("pattern_chart") })
 
-setGeneric(name = "plot_tree_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Multi-association tree"){ standardGeneric("plot_tree_chart") })
+setGeneric(name = "plot_pattern_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Pattern itemsets"){ standardGeneric("plot_pattern_chart") })
 
 
 # Methods for creating category trees and co-occurrence graphs
@@ -2664,14 +2664,14 @@ setMethod(f = "degree",
 
 
 
-#### Methods for creating multi-association tree graphs ####
+#### Methods for creating pattern itemsets graphs ####
 
-#' Multi-association tree
+#' Pattern chart
 #' 
-#' Plot a multi-association tree chart and save it as a PDF file.
+#' Plot a chart of the pattern itemsets and save it as a PDF file.
 #' 
 #' @details
-#' If categories are associated with items, each category generates a tree.
+#' If categories are associated with items, each category generates a chart.
 #'  The category name is appended to the end of the file name.
 #' 
 #' Patterns of order 1 are not drawn. Only items included in higher-order patterns are.
@@ -2686,7 +2686,7 @@ setMethod(f = "degree",
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose tree
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose chart
 #'  is to be plotted. Any subset of \code{object["patterns"]}.\cr
 #'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame.
@@ -2721,20 +2721,20 @@ setMethod(f = "degree",
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
 #' 
 #' @examples
-#' tree_1 <- tree_chart(SA_instance, "patterns",
-#'                      n.cutoff = 20, c.cutoff = 17)
-#' tree_2 <- tree_chart(SA_instance, SA_instance["patterns"][1:15, ],
-#'                      c.cutoff = 17, name = "multi-association_tree_1-15")
+#' patterns_1 <- pattern_chart(SA_instance, "patterns",
+#'                             n.cutoff = 20, c.cutoff = 17)
+#' patterns_2 <- pattern_chart(SA_instance, SA_instance["patterns"][1:15, ],
+#'                             c.cutoff = 17, name = "pattern_itemsets_1-15")
 #' 
-#' @aliases tree_chart
+#' @aliases pattern_chart
 #' @export
-setMethod(f = "tree_chart",
+setMethod(f = "pattern_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, pc, identifiers = "original",
                                 use_names = TRUE, n.cutoff = NULL,
                                 display_status = TRUE, display_text = "ID",
                                 c.cutoff = NULL, sort_by = "category",
-                                title = "Multi-association tree", path = getwd(), name = "multi-association_tree.pdf") {
+                                title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf") {
             
             # Récupération des patterns
             pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
@@ -2791,7 +2791,7 @@ setMethod(f = "tree_chart",
               # Traçage du graphique dans un fichier PDF
               grDevices::pdf(paste0(turn_into_path(path), file_name),
                              14, 10, paper = "a4r", pointsize = 11)
-              plot_tree_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, display_status, display_text, title)
+              plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, display_status, display_text, title)
               grDevices::dev.off()
             }
             
@@ -2801,9 +2801,9 @@ setMethod(f = "tree_chart",
           })
 
 
-#' Multi-association tree plotting
+#' Pattern chart plotting
 #' 
-#' Plot a multi-association tree chart
+#' Plot a chart of the pattern itemsets.
 #' 
 #' @details
 #' The colors associated with the values of the possible category represented are selected circularly
@@ -2814,10 +2814,10 @@ setMethod(f = "tree_chart",
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose tree
+#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose chart
 #'  is to be plotted. Any subset of \code{object["patterns"]}.
 #' @param items_category Data frame of items and one associated category.
-#' @param category Name of the category to represent on the tree, used as the legend title.
+#' @param category Name of the category to represent on the chart, used as the legend title.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification
 #'  codes otherwise.
@@ -2835,15 +2835,15 @@ setMethod(f = "tree_chart",
 #'             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
 #'             \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
-#' @seealso \code{\link{tree_chart}}.
-#' @aliases plot_tree_chart
+#' @seealso \code{\link{pattern_chart}}.
+#' @aliases plot_pattern_chart
 #' @keywords internal
-setMethod(f = "plot_tree_chart",
+setMethod(f = "plot_pattern_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, pc, items_category, category = NULL,
                                 c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL,
                                 display_status = TRUE, display_text = "ID",
-                                title = "Multi-association tree") {
+                                title = "Pattern itemsets") {
             
             # Définition des marges et initialisation de la zone graphique
             if (!is.null(category)) graphics::par(mar = c(3.0, 0.5, 1.9, 0.5))

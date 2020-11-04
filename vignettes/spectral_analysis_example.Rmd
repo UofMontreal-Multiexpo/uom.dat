@@ -345,12 +345,41 @@ cluster[["edges"]]
 
 ## 3.1. Pattern visualizations
 
-### 3.1.1. Spectrum
-
 ```{r}
 directory <- "./output/spec_patterns/"
 dir.create(directory)
 ```
+
+### 3.1.1. Pattern itemsets
+
+Representation of the patterns as itemsets...
+```{r}
+p_chart <- pattern_chart(sa_object, sa_object["patterns"],
+                         n.cutoff = 20,
+                         c.cutoff = 17,
+                         path = directory,
+                         name = "pattern_itemsets.pdf",
+                         title = "Pattern itemsets")
+```
+![Fig. 4: Itemsets corresponding to the mined patterns.](./spectral_analysis_example/pattern_itemsets.png)
+
+**Note that too many values for the displayed category or too long names prevent the legend from being displayed entirely, hence the use of the *c.cutoff* parameter to reduce the size of these values. Likewise, the *n.cutoff* allow to shorten the names of long substances.**
+
+Saving pattern characteristics in a CSV file...
+```{r}
+save_characteristics(sa_object, p_chart,
+                     file = paste0(directory, "pattern_itemsets.csv"),
+                     row.names = FALSE)
+
+p_chart
+```
+![](./spectral_analysis_example/pattern_itemsets_patterns.png)
+
+See that only patterns with an order value greater than 1 are plotted on this kind of chart.
+
+
+
+### 3.1.2. Spectrum
 
 Creation of the pattern spectrum...
 ```{r}
@@ -359,7 +388,7 @@ spectrum <- spectrum_chart(sa_object, sa_object["patterns"],
                            name = "spectrum_of_patterns.pdf",
                            title = "Spectrum of patterns")
 ```
-![Fig. 4: Spectrum of patterns.](./spectral_analysis_example/spectrum_of_patterns.png)
+![Fig. 5: Spectrum of patterns.](./spectral_analysis_example/spectrum_of_patterns.png)
 
 Saving pattern characteristics in a CSV file...
 ```{r}
@@ -370,7 +399,7 @@ save_characteristics(sa_object, spectrum,
 Patterns presented in this spectrum are the ones already saved before as "sao.patterns.csv" in section 1.4.
 
 
-### 3.1.2. Spectrosome
+### 3.1.3. Spectrosome
 
 Creation of the spectrosome of the patterns...
 ```{r}
@@ -379,7 +408,7 @@ spectrosome <- spectrosome_chart(sa_object, sa_object["patterns"],
                                  name = "spectrosome_of_patterns.png",
                                  title = "Network of patterns")
 ```
-![Fig. 5: Spectrosome of the patterns.](./output/spec_patterns/spectrosome_of_patterns.png)
+![Fig. 6: Spectrosome of the patterns.](./output/spec_patterns/spectrosome_of_patterns.png)
 
 Saving vertex characteristics in a CSV file...
 ```{r}
@@ -402,34 +431,6 @@ spectrosome[["edges"]]
 # Print the network density
 cat("Network density:", network_density(sa_object, spectrosome[["edges"]]))
 ```
-
-
-### 3.1.3. Multi-association tree
-
-Creation of the multi-association tree...
-```{r}
-tree <- tree_chart(sa_object, sa_object["patterns"],
-                   n.cutoff = 20,
-                   c.cutoff = 17,
-                   path = directory,
-                   name = "multi-association_tree.pdf",
-                   title = "Multi-association tree")
-```
-![Fig. 6 : Multi-association tree.](./spectral_analysis_example/multi-association_tree.png)
-
-**Note that too many values for the displayed category or too long names prevent the legend from being displayed entirely, hence the use of the *c.cutoff* parameter to reduce the size of these values. Likewise, the *n.cutoff* allow to shorten the names of long substances.**
-
-Saving pattern characteristics in a CSV file...
-```{r}
-save_characteristics(sa_object, tree,
-                     file = paste0(directory, "multi-association_tree.csv"),
-                     row.names = FALSE)
-
-tree
-```
-![](./spectral_analysis_example/multi-association_tree_patterns.png)
-
-See that only patterns with an order value greater than 1 are plotted on this kind of chart.
 
 
 
@@ -1048,7 +1049,7 @@ Making charts:
 * [spectrosome_chart](../html/spectrosome_chart-SpectralAnalyzer-method.html)
 * [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
 * [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
-* [tree_chart](../html/tree_chart-SpectralAnalyzer-method.html)
+* [pattern_chart](../html/pattern_chart-SpectralAnalyzer-method.html)
 * [category_tree_chart](../html/category_tree_chart-SpectralAnalyzer-method.html)
 * [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
 
