@@ -975,7 +975,14 @@ rules_4c <- extract_rules(sa_object, from = "observations",
 rules_4c
 ```
 
-The `NULL` result means that no association rule exists between the substances *328* as antecedent and *3180* as consequent. In other words, the presence of the substance *328* implies the absence of the substance *3180*.
+The `NULL` result means that no association rule exists between the substances *328* as antecedent and *3180* as consequent. In other words, the presence of the substance *328* implies the absence of the substance *3180* and the presence of the *3180* implies the absence of the *328*.
+
+Furthermore, the confidence of a rule can be used to infer the confidence of the implication of the absence of the consequent, using the complement to 1:
+```{r}
+cat("Confidence of the rule 497 => 3345:    ", rules_4b[1, "confidence"])
+cat("\nConfidence of the rule 497 => not 3345:", 1 - rules_4b[1, "confidence"])
+```
+
 
 Rules are saved in the same way as for nodes or patterns.
 ```{r}

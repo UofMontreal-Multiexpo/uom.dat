@@ -53,23 +53,24 @@ Only creates rules with one item in the consequent. The reason is detailed on
 \loadmathjax
 The characteristics of an association rule of the form \mjeqn{X \rightarrow Y}{X -> Y} are:
  \itemize{
-   \item{The \strong{support}: support of the itemset \mjeqn{X \cup Y}{X union Y}, i.e. the ratio
-         of the number of observations that contain \mjeqn{X \cup Y}{X union Y} and the total number
-         of observations.}
-   \item{The \strong{confidence}: ratio of the support of \mjeqn{X \cup Y}{X union Y} and the
-         support of \eqn{X}.}
-   \item{The \strong{lift}: ratio of the confidence of \mjeqn{X \rightarrow Y}{X -> Y} and the
+   \item{The \strong{support}: support of the itemset \mjeqn{X \cup Y}{X union Y}, i.e. the
+         proportion of observations containing \mjeqn{X \cup Y}{X union Y} among all observations.}
+   \item{The \strong{confidence}: quotient of the support of \mjeqn{X \cup Y}{X union Y} and the
+         support of \eqn{X}, i.e. the proportion of observations in which the rule is correct
+         relative to the number of observations containing the antecedent \eqn{X}.}
+   \item{The \strong{lift}: quotient of the confidence of \mjeqn{X \rightarrow Y}{X -> Y} and the
          support of \eqn{Y}.}
  }
  
 Support and confidence indices measure the strength of a rule.
  A rule can be said to be \strong{valid} if its confidence and its support are greater than two
- chosen thresholds. A rule is said to be \strong{exact} if its confidence is 1, otherwise the rule
- is \strong{partial}.
-The lift measures the importance of a rule. It is the contribution of the rule compared to the
- consideration of the consequent only. A lift greater than 1 reflects a positive correlation of
- \eqn{X} and \eqn{Y}, and therefore the significant nature of the association. An association rule
- is not directed.
+ chosen thresholds. A rule is said to be \strong{exact} if its confidence is \eqn{1}, otherwise the
+ rule is \strong{partial}.
+The lift measures the importance of a rule. A lift greater than \eqn{1} reflects a positive
+ correlation between the presences of \eqn{X} and \eqn{Y}, and therefore the significant nature of
+ the association.
+The direction of the rule (i.e. \mjeqn{X \rightarrow Y}{X -> Y} or \mjeqn{Y \rightarrow X}{Y -> X})
+ does not impact the support and the lift but does impact the confidence.
 
 A rule is redundant if a more general rule with the same or higher confidence exists. A rule is more
  general if it has the same consequent but one or more items removed from the antecedent. In other
