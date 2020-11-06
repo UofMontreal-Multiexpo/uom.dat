@@ -3156,18 +3156,15 @@ setMethod(f = "category_tree_chart",
                                         angle = atan(y / x) * 180 / pi, # Angle en degré
                                         hjust = ifelse(x < 0, 1, 0),
                                         color = if (!is.null(category)) group), 
-                           size = label_size) +
+                           size = label_size, show.legend = FALSE) +
     ggplot2::theme_void() +
     ggplot2::coord_fixed()
   
   if (!is.null(category)) {
     category_name = if (is.numeric(category)) colnames(object@items_categories)[category] else category
-    return(graph + 
-             ggplot2::scale_color_manual(cap(category_name), values = category_legend,
-                                         # Suppression des "a" par-dessus les points de la légende
-                                         # et de l'écart entre les lignes induit par label
-                                         guide = ggplot2::guide_legend(
-                                           override.aes = list(label = "", size = 1.5))))
+    return(graph + ggplot2::scale_color_manual(cap(category_name),
+                                               values = category_legend,
+                                               guide = ggplot2::guide_legend(override.aes = list(size = 1.5))))
   }
   return(graph)
 })
@@ -3293,7 +3290,7 @@ setMethod(f = "co_occurrence_chart",
   from = match(connections[, 2], vertices$name)
   to = match(connections[, 1], vertices$name)
   
-  # Tri des liens selon l'ordre des sommets pour que les couleurs soit appliquées correctement
+  # Tri des liens selon l'ordre des sommets pour que les couleurs soient appliquées correctement
   the_order = order(from, to)
   from = from[the_order]
   to = to[the_order]
@@ -3328,7 +3325,7 @@ setMethod(f = "co_occurrence_chart",
                                         angle = atan(y / x) * 180 / pi, # Angle en degré
                                         hjust = ifelse(x < 0, 1, 0),
                                         color = if (!is.null(category)) group), 
-                           size = label_size) +
+                           size = label_size, show.legend = FALSE) +
     ggplot2::theme_void() +
     ggplot2::coord_fixed()
   
@@ -3336,10 +3333,9 @@ setMethod(f = "co_occurrence_chart",
     category_name = if (is.numeric(category)) colnames(object@items_categories)[category] else category
     return(graph + ggplot2::scale_color_manual(cap(category_name),
                                                values = category_legend,
-                                               guide = ggplot2::guide_legend(order = 1,
-                                                 # Retrait des "a" par-dessus les points de la légende
-                                                 # et de l'écart entre les lignes induit par label
-                                                 override.aes = list(label = "", size = 1.5, alpha = 1))))
+                                               guide = ggplot2::guide_legend(
+                                                 order = 1,
+                                                 override.aes = list(size = 1.5, alpha = 1))))
   }
   return(graph)
 })
