@@ -201,7 +201,7 @@ setMethod(f = "initialize",
               if (length(.Object@items_categories) != 0) {
                 .Object@categories_colors = lapply(.Object@items_categories, function(category) {
                   # Sélection circulaire parmi les 20 couleurs d'une palette de D3
-                  colors = ggsci::pal_d3("category20")(20)[seq_along(levels(category)) %% 21]
+                  colors = ggsci::pal_d3("category20")(20)[(seq_along(levels(category)) - 1) %% 20 + 1]
                   return(stats::setNames(colors, levels(category)))
                 })
               }
