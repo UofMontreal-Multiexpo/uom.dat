@@ -373,3 +373,44 @@ check_param = function(x, types = NULL, values = NULL, range = NULL,
 }
 
 
+#' Improved 'if' statement
+#' 
+#' Perform a comparison between two elements and return the resulting logical value or evaluate
+#'  an expression.
+#' 
+#' @param x First element to be compared.
+#' @param operator Relational operator to use to compare `x` and `y`.
+#'  One of `"=="`, `"!="`, `"<"`, `">"`, `"<="`, `">="`.
+#' @param y Second element to be compared.
+#' @param expr Expression to evaluate if the condition is met.
+#' @param alt.expr Expression to evaluate if the condition is not met.
+#' @return
+#'  If the condition expressed by `x`, `operator` and `y` is met and `expr` is not `NULL`:
+#'  result of the evaluation of `expr`.
+#'  
+#'  If the condition is not met and `alt.expr` is not `NULL`:
+#'  result of the evaluation of `alt.expr`.
+#'  
+#'  Logical value resulting of the comparison otherwise.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`base::expression`], [`base::if`].
+#' 
+#' @md
+#' @keywords internal
+if_2.0 = function(x, operator, y, expr = NULL, alt.expr = NULL) {
+  
+  check_param(operator, values = c("==", "!=", "<", ">", "<=", ">="))
+  check_param(expr, types = c("expression", "NULL"))
+  check_param(alt.expr, types = c("expression", "NULL"))
+  
+  if (eval(parse(text = paste(x, operator, y)))) {
+    if (is.null(expr)) return(TRUE)
+    eval(expr, envir = parent.frame(n = 1))
+  } else {
+    if (is.null(alt.expr)) return(FALSE)
+    eval(alt.expr, envir = parent.frame(n = 1))
+  }
+}
+
+
