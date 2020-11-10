@@ -305,3 +305,71 @@ is.named = function(x) {
 }
 
 
+#' Validation of a parameter
+#' 
+#' Check that a parameter is of a specific type, is member of a set of values or is in a range of values.
+#' Stop the execution and print an error message if not.
+#' The expected type, range or possible values are detailed in the error message.
+#' 
+#' @details
+#' Related validation is ignored if `types`, `values` or `range` is `NULL`.
+#' 
+#' Parameter type is checked using the [`base::mode`] function.
+#' 
+#' @param x Parameter to validate.
+#' @param types Types among which `x` must be.
+#' @param values Values among which `x` must be.
+#' @param range Two-element numeric vector. Range in which `x` must be. Ignored if `values` is not `NULL`.
+#' @param quotes If `TRUE`, surround in quotes the possible values in the error message.
+#' @param stop If `TRUE`, stop the execution and print an error message if the parameter is not valid.
+#'  If `FALSE`, see 'Value' section.
+#' @param prefix Text to be prefixed to the message.
+#' @param suffix Text to be suffixed to the message.
+#' @return `TRUE` or `FALSE` whether the parameter is valid.
+#' 
+#' @author Gauthier Magnin
+#' @md
+#' @keywords internal
+check_param = function(x, types = NULL, values = NULL, range = NULL,
+                       quotes = TRUE, stop = TRUE,
+                       prefix = "", suffix = "") {
+  
+  # Nom de la variable dans l'appel de fonction
+  var_name = deparse(substitute(x))
+  
+  # Vérification du type associé à la variable
+  if (!is.null(types) && !is.element(mode(x), types)) {
+    if (length(types) == 1) {
+      error_msg = paste0("of type ", types)
+    } else if (length(types) == 2) {
+      error_msg = paste0("of type ", types[1], " or ", types[2])
+    } else {
+      error_msg = paste0("one of types ", paste(types, collapse = ", "))
+    }
+    if (stop) stop(prefix, var_name, " must be ", error_msg, suffix, ".")
+    return(FALSE)
+  }
+  
+  # Vérification de l'appartenance à un ensemble de valeurs
+  if (!is.null(values) && !is.element(x, values)) {
+    if (length(values) == 2) {
+      if (!quotes) error_msg = paste0(values[1], " or ", values[2])
+      else error_msg = paste0("\"", values[1], "\" or \"", values[2], "\"")
+    } else {
+      if (!quotes) error_msg = paste0("one of ", paste(values, collapse = ", "))
+      else error_msg = paste0("one of ", paste0("\"", values, "\"", collapse = ", "))
+    }
+  }
+  # Vérification de l'appartenance à une étendue
+  else if (!is.null(range) && (x < range[1] || x > range[2])) {
+    error_msg = paste0("in range [", range[1], ",", range[2], "]")
+  }
+  
+  if (exists("error_msg", inherits = FALSE)) {
+    if (stop) stop(prefix, var_name, " must be ", error_msg, suffix, ".")
+    return(FALSE)
+  }
+  return(TRUE)
+}
+
+
