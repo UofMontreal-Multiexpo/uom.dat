@@ -3199,7 +3199,7 @@ setMethod(f = "category_tree_chart",
 #' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
 #'  of the represented items.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
-#' @param sort_by Sorting method of displayed items. One of \code{"category"}, \code{"item"}.
+#' @param sort_by Sorting method of displayed items. One of `"category"`, `"item"`.
 #' @param vertex_size Size of the vertices.
 #' @param vertex_alpha Opacity of the vertices (from 0 to 1).
 #' @param vertex_margin Margin before the vertices (i.e. distance between the ends of the edges and the
@@ -3208,8 +3208,8 @@ setMethod(f = "category_tree_chart",
 #' @param label_margin Margin before the labels (i.e. distance between the centers of the vertices and
 #'  the labels).
 #' @param edge_tension Looseness of the connecting lines (from 0 to 1).
-#'  The closer the value is to 1, the straighter the lines will be.
-#'  The closer the value is to 0, the more the lines will be curved.
+#'  The closer the value is to 0, the straighter the lines will be.
+#'  The closer the value is to 1, the more the lines will be curved.
 #' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
 #' @param palette Name (or number) of the sequential palette to use for coloring the edges.
 #'  One of `"Blues"`, `"BuGn"`, `"BuPu"`, `"GnBu"`, `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`,
@@ -3217,7 +3217,7 @@ setMethod(f = "category_tree_chart",
 #'  `"YlOrRd"`.
 #' @param palette_direction Direction in which to use the color palette.
 #'  If `1`, colors are in original order: from the lightest to the darkest.
-#'  If `-1`, the order of colors is reversed: from the darkest to the lightest.
+#'  If `-1`, color order is reversed: from the darkest to the lightest.
 #' @return Graph created with the packages `ggraph` and `ggplot2`.
 #' 
 #' @author Gauthier Magnin

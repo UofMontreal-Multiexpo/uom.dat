@@ -63,8 +63,8 @@ centers of the vertices).}
 the labels).}
 
 \item{edge_tension}{Looseness of the connecting lines (from 0 to 1).
-The closer the value is to 1, the straighter the lines will be.
-The closer the value is to 0, the more the lines will be curved.}
+The closer the value is to 0, the straighter the lines will be.
+The closer the value is to 1, the more the lines will be curved.}
 
 \item{edge_alpha}{Opacity of the lines connecting vertices (from 0 to 1).}
 
@@ -75,7 +75,7 @@ One of \code{"Blues"}, \code{"BuGn"}, \code{"BuPu"}, \code{"GnBu"}, \code{"Green
 
 \item{palette_direction}{Direction in which to use the color palette.
 If \code{1}, colors are in original order: from the lightest to the darkest.
-If \code{-1}, the order of colors is reversed: from the darkest to the lightest.}
+If \code{-1}, color order is reversed: from the darkest to the lightest.}
 }
 \value{
 Graph created with the packages \code{ggraph} and \code{ggplot2}.
