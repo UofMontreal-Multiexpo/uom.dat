@@ -277,7 +277,7 @@ resave_with_best_compression = function(paths){
 
 
 
-#### Utility functions to perform tests on data structures ####
+#### Utility functions to perform tests on variables and conditions ####
 
 #' Check if a data structure is named
 #' 
@@ -295,7 +295,7 @@ resave_with_best_compression = function(paths){
 #' @author Gauthier Magnin
 #' @md
 #' @keywords internal
-is.named = function(x) {
+is_named = function(x) {
   
   if (is.list(x)) return(c(!is.null(names(x)), !is.null(names(unlist(unname(x))))))
   if (is.matrix(x) || is.data.frame(x)) return(c(!is.null(rownames(x)), !is.null(colnames(x))))

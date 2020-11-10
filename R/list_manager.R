@@ -179,8 +179,8 @@ turn_list_into_char = function(x) {
 #' @md
 #' @export
 invert_list = function(x, by_name = FALSE) {
-  if (!is.named(x)[1]) stop("x must be a named list.")
-  if (by_name && !is.named(x)[2]) stop("Values of the elements of x must be named.")
+  if (!is_named(x)[1]) stop("x must be a named list.")
+  if (by_name && !is_named(x)[2]) stop("Values of the elements of x must be named.")
   
   return(apply(turn_list_into_logical_matrix(x, by_name), 2, function(n) names(x)[n]))
 }
@@ -270,7 +270,7 @@ coerce_list = function(x, to, by_name = FALSE,
 #' @keywords internal
 turn_list_into_logical_matrix = function(x, by_name = FALSE) {
   if (by_name) {
-    if (!is.named(x)[2]) stop("Values of the elements of x must be named.")
+    if (!is_named(x)[2]) stop("Values of the elements of x must be named.")
     columns = sort(unique(unlist(sapply(x, names))))
     y = t(sapply(x, function(row) columns %in% names(row)))
     
@@ -316,7 +316,7 @@ turn_list_into_logical_matrix = function(x, by_name = FALSE) {
 #' @keywords internal
 turn_list_into_char_matrix = function(x, by_name = FALSE, inline = TRUE) {
   
-  if (by_name && !is.named(x)[2]) stop("Values of the elements of x must be named.")
+  if (by_name && !is_named(x)[2]) stop("Values of the elements of x must be named.")
   
   FUN = if (inline) cbind else rbind
   l_names = if (is.null(names(x))) seq_along(x) else names(x)
@@ -356,7 +356,7 @@ turn_list_into_char_matrix = function(x, by_name = FALSE, inline = TRUE) {
 turn_list_into_data_frame = function(x, by_name = FALSE,
                                      stringsAsFactors = default.stringsAsFactors()) {
   
-  if (by_name && !is.named(x)[2]) stop("Values of the elements of x must be named.")
+  if (by_name && !is_named(x)[2]) stop("Values of the elements of x must be named.")
   
   l_names = if (is.null(names(x))) seq_along(x) else names(x)
   
@@ -462,8 +462,8 @@ coerce_to_list = function(x, by_row = TRUE) {
 #' @md
 #' @keywords internal
 turn_logical_matrix_into_list = function(x, by_row = TRUE) {
-  if (by_row && !is.named(x)[2]) stop("Columns of x must be named.")
-  if (!by_row && !is.named(x)[1]) stop("Rows of x must be named.")
+  if (by_row && !is_named(x)[2]) stop("Columns of x must be named.")
+  if (!by_row && !is_named(x)[1]) stop("Rows of x must be named.")
   
   if (by_row) return(apply(x, 1, function(row) names(row)[row]))
   return(apply(x, 2, function(column) names(column)[column]))

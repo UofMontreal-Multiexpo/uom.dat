@@ -719,8 +719,8 @@ mcr_summary = function(values, references) {
   
   
   # Vérification que la structure de données est nommée
-  if (is.matrix(values) && !is.named(values)[1]) stop("If values is a matrix, its rows must be named.")
-  else if (is.vector(values) && !is.named(values)) stop("If values is a vector, it must have named numeric values.")
+  if (is.matrix(values) && !is_named(values)[1]) stop("If values is a matrix, its rows must be named.")
+  else if (is.vector(values) && !is_named(values)) stop("If values is a vector, it must have named numeric values.")
   
   # Calcul des indicateurs
   hq = hazard_quotient(values, references)
@@ -821,13 +821,13 @@ mcr_summary_for_list = function(values, references) {
     if (length(values) != length(references) ||
         any(sapply(values, length) != sapply(references, length)))
       stop("If values and references are two lists, their lengths and the ones of their elements must match.")
-    if (!is.named(values)[2])
+    if (!is_named(values)[2])
       stop("If values is a list, it must contain vectors of named numeric values.")
     
     summary = t(sapply(seq_len(length(values)), function (i) mcr_summary(values[[i]], references[[i]])))
     
   } else if (is.vector(references)) {
-    if (!is.named(references) || !is.named(values)[2])
+    if (!is_named(references) || !is_named(values)[2])
       stop("If values is a list and references is a vector, both must contained named values.")
     
     summary = t(sapply(seq_len(length(values)),
@@ -1028,7 +1028,7 @@ mcr_chart = function(values = NULL, references = NULL,
       if (length(values) != length(references) ||
           any(sapply(values, length) != sapply(references, length)))
         stop("If values and references are two lists, their lengths and the ones of their elements must match.")
-      if (!is.named(values)[2])
+      if (!is_named(values)[2])
         stop("If values is a list, it must contain vectors of named numeric values.")
       
       # Calcul des indicateurs nécessaires
@@ -1039,7 +1039,7 @@ mcr_chart = function(values = NULL, references = NULL,
     } else if (is.vector(references)) {
       
       # Vérification que les structures de données sont nommées
-      if (!is.named(references) || !is.named(values)[2])
+      if (!is_named(references) || !is_named(values)[2])
         stop("If values is a list and references is a vector. Both must contained named values.")
       
       # Calcul des indicateurs nécessaires
@@ -1052,8 +1052,8 @@ mcr_chart = function(values = NULL, references = NULL,
   } else { # Cas où values est une matrice ou n'est pas renseigné
     
     # Vérification que les structures de données sont nommées
-    if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
-    if (!is.null(thq) && ((is.list(thq) && !is.named(thq)[2]) || !is.named(thq)))
+    if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
+    if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || !is_named(thq)))
       stop("thq must be a vector of named numeric values or a list of such vectors.")
     
     # Calcul des données manquantes
@@ -1570,9 +1570,9 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
   if (is.null(hi) || is.null(hq)) {
     
     # Vérification que les structures de données sont nommées
-    if (!is.null(values) && !is.named(values)[2])
+    if (!is.null(values) && !is_named(values)[2])
       stop("If values is a list, it must contain vector of named numeric values.")
-    if (!is.null(hq) && !is.named(hq)[2])
+    if (!is.null(hq) && !is_named(hq)[2])
       stop("If hq is a list, it must contain vector of named numeric values.")
     
     # Différence si references est une liste ou un vecteur
@@ -1592,7 +1592,7 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
     } else if (is.vector(references)) {
       
       # Vérification que references contient des données nommées
-      if (!is.named(references)) stop("If values is a list and references is a vector, references must contained named values.")
+      if (!is_named(references)) stop("If values is a list and references is a vector, references must contained named values.")
       
       # Calcul des indicateurs manquants
       if (is.null(hq)) hq = lapply(seq_along(values),
@@ -1715,8 +1715,8 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
                                 levels = NULL, threshold = TRUE, alone = FALSE) {
   
   # Vérification que les structures de données sont nommées
-  if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
-  if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
+  if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
+  if (!is.null(hq) && !is_named(hq)[1]) stop("Rows of hq must be named.")
   
   # Calcul des données manquantes
   if (is.null(hq)) hq = hazard_quotient(values, references)
@@ -1874,7 +1874,7 @@ thq_by_group = function(values = NULL, references = NULL,
                         thq = NULL,
                         groups = NULL, levels = NULL) {
   
-  if (!is.null(thq) && ((is.list(thq) && !is.named(thq)[2]) || !is.named(thq)))
+  if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || !is_named(thq)))
     stop("thq must be a vector of named numeric values or a list of such vectors.")
   
   # Si thq et/ou groups n'est pas renseigné
@@ -1884,9 +1884,9 @@ thq_by_group = function(values = NULL, references = NULL,
     if (is.list(values) || is.list(hq)) {
       
       # Vérification que les structures de données sont nommées
-      if (!is.null(values) && !is.named(values)[2])
+      if (!is.null(values) && !is_named(values)[2])
         stop("If values is a list, it must contain vectors of named numeric values.")
-      if (!is.null(hq) && !is.named(hq)[2])
+      if (!is.null(hq) && !is_named(hq)[2])
         stop("If hq is a list, it must contain vector of named numeric values.")
       
       # Si ni HQ ni THQ n'est renseigné
@@ -1909,7 +1909,7 @@ thq_by_group = function(values = NULL, references = NULL,
         } else if (is.vector(references)) {
           
           # Vérification que les structures de données sont nommées
-          if (!is.named(references)) stop("If values is a list and references is a vector. Both must contained named values.")
+          if (!is_named(references)) stop("If values is a list and references is a vector. Both must contained named values.")
           
           # Calcul des indicateurs manquants
           if (is.null(thq)) thq = sapply(unname(values),
@@ -1928,8 +1928,8 @@ thq_by_group = function(values = NULL, references = NULL,
     } else { # Cas où values ou hq est une matrice, ou aucun des deux n'est renseigné
     
       # Vérification que les structures de données sont nommées
-      if (!is.null(values) && !is.named(values)[1]) stop("Rows of values must be named.")
-      if (!is.null(hq) && !is.named(hq)[1]) stop("Rows of hq must be named.")
+      if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
+      if (!is.null(hq) && !is_named(hq)[1]) stop("Rows of hq must be named.")
       
       # Calcul des données manquantes
       if (is.null(thq)) {
@@ -1993,25 +1993,25 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
   if (list && is.list(values)) {
     
     if (is.null(references)){
-      if(!is.named(values)[2])
+      if(!is_named(values)[2])
         stop("If values is a list, it must contain vectors of named numeric values.")
     } else {
       if (is.list(references)) {
         if (length(values) != length(references) ||
             any(sapply(values, length) != sapply(references, length)))
           stop("If values and references are two lists, their lengths and the ones of their elements must match.")
-        if (!is.named(values)[2])
+        if (!is_named(values)[2])
           stop("If values is a list, it must contain vectors of named numeric values.")
         
       } else if (is.vector(references)) {
-        if (!is.named(references) || !is.named(values)[2])
+        if (!is_named(references) || !is_named(values)[2])
           stop("If values is a list and references is a vector, both must contained named values.")
       } else
         stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
     }
   }
-  else if (matrix && is.matrix(values) && !is.named(values)[1]) stop("If values is a matrix, its rows must be named.")
-  else if (vector && is.vector(values) && !is.named(values)) stop("If values is a vector, it must have named numeric values.")
+  else if (matrix && is.matrix(values) && !is_named(values)[1]) stop("If values is a matrix, its rows must be named.")
+  else if (vector && is.vector(values) && !is_named(values)) stop("If values is a vector, it must have named numeric values.")
 }
 
 

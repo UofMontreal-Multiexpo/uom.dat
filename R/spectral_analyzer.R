@@ -3090,7 +3090,7 @@ setMethod(f = "category_tree_chart",
   check_access_for_category(object, category, NA)
   if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
     items = object@items
-  if (!is.named(items)) items = object@items[match(items, object@items)]
+  if (!is_named(items)) items = object@items[match(items, object@items)]
   
   
   # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
@@ -3248,7 +3248,7 @@ setMethod(f = "co_occurrence_chart",
   if (is.null(category) && sort_by == "category") sort_by = "item"
   if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
     items = object@items
-  if (!is.named(items)) items = object@items[match(items, object@items)]
+  if (!is_named(items)) items = object@items[match(items, object@items)]
   
   # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
