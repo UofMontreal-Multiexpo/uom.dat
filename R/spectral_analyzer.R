@@ -642,9 +642,11 @@ setGeneric(name = "category_tree_chart", def = function(object, category = NULL,
 setGeneric(name = "co_occurrence_chart", def = function(object, items, category = NULL, min_occ = 1, max_occ = Inf, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_tension = 0.8, edge_alpha = 1, palette = "Blues", palette_direction = 1){ standardGeneric("co_occurrence_chart") })
 
 
-# Association rule extraction methods
+# Methods for association rule extraction and visualization
 
 setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
+
+setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameters = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_tension = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1){ standardGeneric("rules_chart") })
 
 
 # Methods for search and save
@@ -3342,7 +3344,7 @@ setMethod(f = "co_occurrence_chart",
 
 
 
-#### Methods for association rule extraction ####
+#### Methods for association rule extraction and visualization ####
 
 #' Rules extraction
 #' 
@@ -3424,6 +3426,7 @@ setMethod(f = "co_occurrence_chart",
 #'  or the given list (otherwise).
 #' 
 #' @author Gauthier Magnin
+#' @seealso [`rules_chart`].
 #' 
 #' @examples
 #' ## Basic rule extraction
@@ -3503,6 +3506,380 @@ setMethod(f = "extract_rules",
             rules_df[, " "] = "=>"
             return(rules_df[, c(1, ncol(rules_df), seq(2, ncol(rules_df)-1))])
           })
+
+
+#' Length-two association rule visualization
+#' 
+#' Plot a graph in which vertices are items and edges are association rules in which the antecedent is
+#'  an item and the consequent is another item.
+#' 
+#' @details
+#' \loadmathjax
+#' For an association rule \mjeqn{X \rightarrow Y}{X -> Y}, the reciprocal rule is the rule
+#'  \mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support and lift but can have two
+#'  different confidence values.
+#' 
+#' If `display` refers to the selection of rules of highest or lowest confidence and if an association
+#'  rule and its reciprocal have the same confidence, both rules are represented.
+#' 
+#' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
+#'  afterwards using [`ggplot2::last_plot`] or the returned object.
+#' 
+#' The colors associated with the values of the possible category represented are selected circularly
+#'  among the 20 colors of the palette `category20` from D3 (see `ggsci::pal_d3("category20")`).
+#' Therefore, if the number of values exceeds \eqn{20}, some colors will be used more than once.
+#'  For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
+#'  value.
+#' See the attribute `categories_colors` of `object` to reassign colors to the category values.
+#' 
+#' @note
+#' If the argument `display` refers to the characteristic confidence, edges may not be displayed in
+#'  the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
+#'  clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot. Moreover, such
+#'  plotting may take a while.
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param rules Data frame of association rules to plot (given by the [`extract_rules`] function).
+#'  Only those of length 2 are considered. If `NULL`, rules of length 2 are extracted from
+#'  `object["observations"]` using the mining parameters `parameters`.
+#' @param items Items to consider in the given or extracted rules. If `NULL`, only items from the given
+#' `rules` are considered.
+#'  Any subset of `object["items"]`.\cr
+#'  `"items"` and `"i"` are specific values for `object["items"]`.
+#' @param parameters List of mining parameters specifying minimum support and minimum confidence of
+#'  association rules to extract. Ignored if `rules` is not `NULL`. See
+#'  [APparameter][arules::APparameter] for more.
+#' @param display Rule characteristic to visualize or to use to choose between one rule and its reciprocal.
+#'  One of `"support"`, `"lift"`, `"highest confidence"`, `"lowest confidence"`, `"confidence"`,
+#'  `"supp"`, `"hi.conf"`, `"lo.conf"`, `"conf"`.
+#'  \describe{
+#'    \item{`"support"`, `"supp"`}{The support of the two rules existing between two items is represented.}
+#'    \item{`"lift"`}{The lift of the two rules existing between two items is represented.}
+#'    \item{`"highest confidence"`, `"hi.conf"`}{The confidence of the rule having the highest one
+#'          between the two rules existing between two items is represented.}
+#'    \item{`"lowest confidence"`, `"lo.conf"`}{The confidence of the rule having the lowest one
+#'          between the two rules existing between two items is represented.}
+#'    \item{`"confidence"`, `"conf"`}{The two confidence values of the two rules existing between two
+#'          items are both represented.}
+#'  }
+#' @param threshold Threshold above which the characteristic referred by `display` must be greater for
+#'  a rule to be considered.
+#' @param use_names If `TRUE`, display item names if they are defined. Display their identification
+#'  codes otherwise.
+#' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
+#'  of the represented items.
+#' @param category Name or number of the category to represent on the graph (numbering according to
+#'  the order of the columns of `object["items_categories"]`).
+#' @param c.cutoff Limit number of characters to display in the legend for the category represented.
+#' @param sort_by Sorting method of displayed items. One of `"category"`, `"item"`.
+#' @param vertex_size Size of the vertices.
+#' @param vertex_alpha Opacity of the vertices (from 0 to 1).
+#' @param vertex_margin Margin before the vertices (i.e. distance between the ends of the edges and the
+#'  centers of the vertices).
+#' @param label_size Size of the labels associated with the vertices.
+#' @param label_margin Margin before the labels (i.e. distance between the centers of the vertices and
+#'  the labels).
+#' @param edge_tension Looseness of the connecting lines (from 0 to 1).
+#'  The closer the value is to 0, the straighter the lines will be.
+#'  The closer the value is to 1, the more the lines will be curved.
+#' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
+#'  Ignored if `display` is `"confidence"` (or `"conf"`).
+#' @param palette
+#'  Name of the palette to use for coloring the edges.
+#'  
+#'  If `display` refers to the confidence, one of `"category10"`, `"red"`, `"pink"`,
+#'  `"purple"`, `"deep-purple"`, `"indigo"`, `"blue"`, `"light-blue"`, `"cyan"`, `"teal"`, `"green"`,
+#'  `"light-green"`, `"lime"`, `"yellow"`, `"amber"`, `"orange"`, `"deep-orange"`, `"brown"`, `"grey"`,
+#'  `"blue-grey"`. Default is `"blue"`.
+#'  
+#'  If `display` refers to the support or the lift, one of `"Blues"`, `"BuGn"`, `"BuPu"`, `"GnBu"`,
+#'  `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`, `"PuBu"`, `"PuBuGn"`, `"PuRd"`, `"Purples"`, `"RdPu"`,
+#'  `"Reds"`, `"YlGn"`, `"YlGnBu"`, `"YlOrBr"`, `"YlOrRd"`. Default is `"Blues"`.
+#' @param palette_direction Direction in which to use the color palette.
+#'  If `1`, colors are in original order: from the lightest to the darkest.
+#'  If `-1`, color order is reversed: from the darkest to the lightest.
+#' @return `NULL` if no association rules meets the criteria defined by `items`, `parameters` and
+#'  `threshold`. \cr
+#'  Otherwise:
+#'  \describe{
+#'    \item{`graph`}{Graph created with the packages `ggraph` and `ggplot2`.}
+#'    \item{`rules`}{Association rules represented on the graph (i.e. of length 2 and considering
+#'                   `items`, `parameters` and `threshold`).}
+#'  }
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`extract_rules`].
+#' 
+#' @examples
+#' ## All rules of length 2 (plotting may take a while)
+#' result <- rules_chart(SA_instance, items = SA_instance["items"], category = "family")
+#' plot(result$graph)
+#' result$rules
+#' 
+#' ## Rules from a data frame
+#' rules_chart(SA_instance, rules = result$rules[11:20, ], category = 1)
+#' 
+#' ## Display of confidence or display rules of highest or of lowest confidence
+#' rules_chart(SA_instance, items = c(497, 930, 402), category = 1,
+#'             display = "confidence")
+#' rules_chart(SA_instance, items = c(497, 930, 402), category = 1,
+#'             display = "confidence", palette = "category10")
+#' rules_chart(SA_instance, items = c(497, 930, 402), category = 1,
+#'             display = "highest confidence", palette_direction = 1)
+#' rules_chart(SA_instance, items = c(497, 930, 402), category = 1,
+#'             display = "lowest confidence", palette_direction = -1)
+#' 
+#' ## Display of support or lift
+#' rules_chart(SA_instance, items = "items", category = 1, display = "support")
+#' rules_chart(SA_instance, items = "items", category = 1, display = "lift")
+#' rules_chart(SA_instance, items = "items", category = 1, display = "lift",
+#'             threshold = 5, n.cutoff = 20)$graph +
+#'   ggplot2::expand_limits(x = c(-1.5, 1.5), y = c(-1.5, 1.5))
+#' 
+#' @aliases rules_chart
+#' @md
+#' @export
+setMethod(f = "rules_chart",
+          signature = "SpectralAnalyzer",
+          definition = function(object, rules = NULL, items = NULL,
+                                parameters = list(supp = 0.001, conf = 0),
+                                display = "highest confidence", threshold = 0,
+                                use_names = TRUE, n.cutoff = NULL,
+                                category = NULL, c.cutoff = NULL,
+                                sort_by = "category",
+                                vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
+                                label_size = 3, label_margin = 0.05,
+                                edge_tension = 0.8, edge_alpha = 1,
+                                palette = "default", palette_direction = 1) {
+  
+  # Conversion des factor de rules en character si nécessaire
+  a_factor = FALSE
+  c_factor = FALSE
+  if (!is.null(rules)) {
+    if (is.factor(rules$antecedent)) {
+      rules$antecedent = vector_notation(rules$antecedent)
+      a_factor = TRUE
+    }
+    if (is.factor(rules$consequent)) {
+      rules$consequent = vector_notation(rules$consequent)
+      c_factor = TRUE
+    }
+  }
+  
+  # Validation des items fournis
+  if (is.null(items)) {
+    if (!is.null(rules)) items = unique(unlist(rules[, c("antecedent", "consequent")]))
+    else stop("At least one of the two arguments items and rules must not be NULL.")
+  } else if (length(items) == 1 && is.character(items) && (items == "items" || items == "i")) {
+    items = object@items
+  }
+  if (!is_named(items)) items = object@items[match(items, object@items)]
+  
+  # Validation des paramètres de recherche RA fournis
+  if (is.null(rules)) {
+    if (is.null(parameters)) parameters = list(minlen = 2, maxlen = 2)
+    else parameters$minlen = parameters$maxlen = 2
+  }
+  
+  # Validation du paramètre d'accès à la catégorie
+  check_access_for_category(object, category, NA)
+  check_param(sort_by, values = c("category", "item"))
+  if (is.null(category) && sort_by == "category") sort_by = "item"
+  
+  # Validation du paramètre de choix de la caractéristique à afficher
+  check_param(display, values = c("support", "supp", "confidence", "conf",
+                                  "highest confidence", "hi.conf", "lowest confidence", "lo.conf", "lift"))
+  col_to_display = c(support = "support", supp = "support", confidence = "confidence",
+                     conf = "confidence", "highest confidence" = "confidence", hi.conf = "confidence",
+                     "lowest confidence" = "confidence", lo.conf = "confidence", lift = "lift")[display]
+  if (display == "hi.conf" || display == "highest confidence") operator = ">"
+  else if (display == "lo.conf" || display == "lowest confidence") operator = "<"
+  else operator = NULL
+  
+  # Validation des paramètres de choix de la palette
+  if (palette == "default") palette = if (col_to_display == "confidence") "blue" else "Blues"
+  check_param(palette_direction, values = c(1, -1), quotes = FALSE)
+  if (col_to_display == "confidence") {
+    check_param(palette,
+                values = c("category10", "red", "pink", "purple", "deep-purple", "indigo", "blue",
+                           "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow",
+                           "amber", "orange", "deep-orange", "brown", "grey", "blue-grey"),
+                prefix = "If display refers to the confidence, ")
+  } else {
+    check_param(palette,
+                values = c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd",
+                           "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu",
+                           "YlOrBr", "YlOrRd"),
+                prefix = "If display refers to the support or the lift, ")
+  }
+  
+  
+  # Calcul des règles et retrait des règles inappropriées
+  if (is.null(rules)) {
+    # Calcul des règles sans ou avec spécification des items
+    if (is.null(items) || identical(items, object@items)) {
+      rules = extract_rules(object, "observations", parameter = parameters)
+    } else {
+      rules = extract_rules(object, "observations", parameter = parameters,
+                            appearance = list(both = items))
+    }
+    
+    if (is.null(items)) {
+      items = object@items[match(unique(unlist(rules[, c("antecedent", "consequent")])), object@items)]
+    }
+  } else {
+    # Retrait des règles qui ne sont pas de taille 2
+    rules = rules[sapply(rules[, "antecedent"], length) == 1
+                  & sapply(rules[, "consequent"], length) == 1, ]
+    
+    # Retrait des règles relatives à des items qui ne sont pas recherchés
+    rules = rules[rules[, "antecedent"] %in% items
+                  & rules[, "consequent"] %in% items, ]
+  }
+  # Application du seuil sur la caractéristique à afficher
+  rules = rules[rules[, col_to_display] > threshold, ]
+  
+  # Simplification de la structure (listes -> vecteurs)
+  rules[, "antecedent"] = unlist(rules[, "antecedent"])
+  rules[, "consequent"] = unlist(rules[, "consequent"])
+  
+  # Recherche des règles réciproques (A -> B ; B -> A)
+  to_keep = rep(TRUE, nrow(rules))
+  dup_from_first = duplicated(t(apply(rules[, c("antecedent", "consequent")], 1, sort)))
+  
+  # Conservation des règles réciproques ayant une confiance plus faible ou plus haute (et équivalente)
+  if (!is.null(operator)) {
+    dup_from_last = duplicated(t(apply(rules[, c("antecedent", "consequent")], 1, sort)), fromLast = TRUE)
+    
+    # Pour chaque règle en double, recherche de son double et comparaison de la confiance
+    for (i1 in which(dup_from_first)) {
+      
+      for (i2 in which(dup_from_last)) {
+        if (all(rules[i2, c("antecedent", "consequent")] == rules[i1, c("consequent", "antecedent")]))
+          break
+      }
+      
+      if_2.0(rules[i1, "confidence"], operator, rules[i2, "confidence"], expression(to_keep[i2] <- FALSE))
+      if_2.0(rules[i2, "confidence"], operator, rules[i1, "confidence"], expression(to_keep[i1] <- FALSE))
+    }
+  } else if (col_to_display == "support" || col_to_display == "lift") {
+    # Suppression des règles réciproques car correspondent à des doublons
+    to_keep[dup_from_first] = FALSE
+  }
+  
+  
+  # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
+  hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
+  
+  # Tri par nom, par identifiant ou selon les valeurs de la catégorie
+  if (use_names && sort_by == "item") hierarchy = hierarchy[order(names(items)), ]
+  else if (sort_by == "item") hierarchy = hierarchy[order(items), ]
+  else hierarchy = hierarchy[order(object@items_categories[as.character(items), category]), ]
+  
+  # Sommets du graphe
+  vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
+  if (use_names) {
+    vertices$label = names(items[match(vertices$name, items)])
+    if (!is.null(n.cutoff)) vertices$label = substr(vertices$label, 1, n.cutoff)
+  } else {
+    vertices$label = items[match(vertices$name, items)]
+  }
+  vertices$vertex_coord_multiplier = 1 + vertex_margin
+  vertices$label_coord_multiplier = 1 + vertex_margin + label_margin
+  
+  # Gestion de la catégorie et de sa légende
+  if (!is.null(category)) {
+    vertices$group = object@items_categories[vertices$name, category]
+    category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA
+    
+    if (!is.null(c.cutoff)) {
+      names(category_legend) = substr(names(category_legend), 1, c.cutoff)
+      vertices$group = substr(vertices$group, 1, c.cutoff)
+    }
+  }
+  
+  # Recherche des numéros des sommets à lier
+  from = match(rules[to_keep, "antecedent"], vertices$name)
+  to = match(rules[to_keep, "consequent"], vertices$name)
+  
+  # Tri des liens selon l'ordre des sommets pour que les couleurs soient appliquées correctement
+  the_order = order(from, to)
+  from = from[the_order]
+  to = to[the_order]
+  rules_to_plot = rules[to_keep, ][the_order, ]
+  
+  # Return NULL si aucune règle ne satisfait les différents critères
+  if (nrow(rules_to_plot) == 0) return(NULL)
+  
+  # Discrétisation du support, de la confiance ou du lift des règles
+  if (col_to_display == "confidence") {
+    rules_to_plot$confidence = cut(rules_to_plot[, "confidence"],
+                                   breaks = seq(0, 1, 0.1), include.lowest = TRUE)
+  }
+  
+  # Graphe
+  tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
+  
+  graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
+    
+    ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
+                                                    colors = rules_to_plot[, col_to_display]),
+                             ggplot2::aes(color = colors,
+                                          alpha = if (col_to_display == "confidence") stat(index) else edge_alpha),
+                             tension = edge_tension) +
+    
+    ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
+                                         y = y * vertex_coord_multiplier,
+                                         filter = leaf,
+                                         color = if (!is.null(category)) group),
+                            size = vertex_size, alpha = vertex_alpha) +
+    ggraph::geom_node_text(ggplot2::aes(x = x * label_coord_multiplier,
+                                        y = y * label_coord_multiplier,
+                                        filter = leaf,
+                                        label = label,
+                                        angle = atan(y / x) * 180 / pi, # Angle en degré
+                                        hjust = ifelse(x < 0, 1, 0),
+                                        color = if (!is.null(category)) group),
+                           size = label_size, show.legend = FALSE) +
+    ggplot2::theme_void() +
+    ggplot2::coord_fixed()
+  
+  if (col_to_display == "confidence") {
+    graph = graph + ggraph::scale_edge_alpha('Rule direction',
+                                             guide = ggraph::guide_edge_direction(order = 2)) +
+      
+      ggraph::scale_edge_color_manual("Confidence",
+                                      values = setNames(
+                                        if (palette == "category10") ggsci::pal_d3("category10")(10)
+                                        else ggsci::pal_material(palette, reverse = palette_direction == -1)(10),
+                                        levels(rules_to_plot[, "confidence"])),
+                                      guide = ggplot2::guide_legend(order = 3))
+  } else {
+    graph = graph + 
+      ggraph::scale_edge_color_distiller(cap(col_to_display),
+                                         palette = palette, direction = palette_direction,
+                                         limits = c(0, max(rules_to_plot[, col_to_display])),
+                                         # Paramètre nécessaire si non-chargement de ggraph
+                                         guide = ggraph::guide_edge_colorbar())
+  }
+  
+  if (!is.null(category)) {
+    category_name = if (is.numeric(category)) colnames(object@items_categories)[category] else category
+    graph = graph + ggplot2::scale_color_manual(cap(category_name),
+                                                values = category_legend,
+                                                guide = ggplot2::guide_legend(
+                                                  order = 1,
+                                                  override.aes = list(size = 1.5, alpha = 1)))
+  }
+  
+  # Reconversion des règles en factor si elles ont été données ainsi
+  if (a_factor) rules$antecedent = set_notation(rules$antecedent)
+  if (c_factor) rules$consequent = set_notation(rules$consequent)
+  
+  # Si mode debug, retour supplémentaire de la sélection de règles réellement tracées
+  if (DEBUG_MODE) return(list(graph = graph, rules = rules, plotted_rules = rules_to_plot))
+  return(list(graph = graph, rules = rules))
+})
 
 
 

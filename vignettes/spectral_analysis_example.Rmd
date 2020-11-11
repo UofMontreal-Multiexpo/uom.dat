@@ -914,7 +914,9 @@ for (min_weight in seq(2, 5)) {
 ![Fig. 17.d: Spectrosome with the constraint of a minimum link weight of 5.](./output/alternatives/spectrosome_of_patterns-weight5.png)
 
 
-## 5.4. Extracting association rules
+## 5.4. Working with association rules
+
+### 5.4.1. Extracting association rules
 
 There are 4 ways to look for association rules (i.e. implication between two itemsets):
 
@@ -980,9 +982,10 @@ The `NULL` result means that no association rule exists between the substances *
 Furthermore, the confidence of a rule can be used to infer the confidence of the implication of the absence of the consequent, using the complement to 1:
 ```{r}
 cat("Confidence of the rule 497 => 3345:    ", rules_4b[1, "confidence"])
-cat("\nConfidence of the rule 497 => not 3345:", 1 - rules_4b[1, "confidence"])
+cat("Confidence of the rule 497 => not 3345:", 1 - rules_4b[1, "confidence"])
 ```
 
+### 5.4.2. Visualizing and saving association rules
 
 Rules are saved in the same way as for nodes or patterns.
 ```{r}
@@ -992,6 +995,18 @@ dir.create(directory)
 save_characteristics(sa_object, rules_1,
                      file = paste0(directory, "rules.csv"), row.names = FALSE)
 ```
+
+Association rules of length 2 can be plotted using the function `rules_chart`. If no rule is given as argument, all rules of length 2 are automatically extracted before being plotted:
+```{r}
+rc <- rules_chart(SA_instance, items = SA_instance["items"], category = "family")
+rc$rules
+```
+
+```{r}
+plot(rc$graph)
+```
+![](./spectral_analysis_example/rules_chart.png)
+
 
 
 ---
@@ -1084,9 +1099,10 @@ Saving nodes or patterns:
 
 ## About association rules and sets
 
-Extracting and saving rules:
+Extracting, visualizing and saving rules:
 
 * [extract_rules](../html/extract_rules-SpectralAnalyzer-method.html)
+* [rules_chart](../html/rules_chart-SpectralAnalyzer-method.html)
 * [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
 
 Switching between mathematical notation and vector notation for sets:

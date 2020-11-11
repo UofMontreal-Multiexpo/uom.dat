@@ -113,6 +113,9 @@ rules_6 <- extract_rules(SA_instance, from = "observations",
                          appearance = list(lhs = "328", rhs = "3180"))
 
 }
+\seealso{
+[`rules_chart`].
+}
 \author{
 Gauthier Magnin
 }
