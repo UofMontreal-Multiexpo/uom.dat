@@ -3,7 +3,7 @@
 \name{get_nopc,SpectralAnalyzer-method}
 \alias{get_nopc,SpectralAnalyzer-method}
 \alias{get_nopc}
-\title{Search for the nodes or patterns characteristics}
+\title{Get nodes or patterns characteristics}
 \usage{
 \S4method{get_nopc}{SpectralAnalyzer}(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS)
 }
@@ -35,7 +35,7 @@ If \code{nopc} is a character value equal to:
 The argument \code{entities} is only used to adapt a possible error message.
 }
 \seealso{
-\code{\link{which_entities}}.
+\code{\link{which_entities}}, \code{\link{get_items}}.
 }
 \author{
 Gauthier Magnin

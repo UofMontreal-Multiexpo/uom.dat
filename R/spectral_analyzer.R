@@ -684,6 +684,8 @@ setGeneric(name = "get_complexes", def = function(object, nopc, category = NULL,
 
 setGeneric(name = "check_access_for_category", def = function(object, category, value, stop = TRUE){ standardGeneric("check_access_for_category") })
 
+setGeneric(name = "get_items", def = function(object, items){ standardGeneric("get_items") })
+
 setGeneric(name = "get_nopc", def = function(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_nopc") })
 
 setGeneric(name = "which_entities", def = function(object, npr, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("which_entities") })
@@ -3090,9 +3092,7 @@ setMethod(f = "category_tree_chart",
             
   # Validation du paramètre d'accès à la catégorie et des items fournis
   check_access_for_category(object, category, NA)
-  if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
-    items = object@items
-  if (!is_named(items)) items = object@items[match(items, object@items)]
+  items = get_items(object, items)
   
   
   # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
@@ -3248,9 +3248,7 @@ setMethod(f = "co_occurrence_chart",
   # Validation du paramètre d'accès à la catégorie et des items fournis
   check_access_for_category(object, category, NA)
   if (is.null(category) && sort_by == "category") sort_by = "item"
-  if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
-    items = object@items
-  if (!is_named(items)) items = object@items[match(items, object@items)]
+  items = get_items(object, items)
   
   # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
@@ -3684,10 +3682,8 @@ setMethod(f = "rules_chart",
   if (is.null(items)) {
     if (!is.null(rules)) items = unique(unlist(rules[, c("antecedent", "consequent")]))
     else stop("At least one of the two arguments items and rules must not be NULL.")
-  } else if (length(items) == 1 && is.character(items) && (items == "items" || items == "i")) {
-    items = object@items
   }
-  if (!is_named(items)) items = object@items[match(items, object@items)]
+  items = get_items(object, items)
   
   # Validation des paramètres de recherche RA fournis
   if (is.null(rules)) {
@@ -4903,7 +4899,49 @@ setMethod(f = "check_access_for_category",
           })
 
 
-#' Search for the nodes or patterns characteristics
+#' Get items
+#' 
+#' Find and return the vector or subset of the vector corresponding to the items of the
+#'  `SpectralAnalyzer` object, or return the given vector.
+#' 
+#' @details
+#' If `items` is a named vector corresponding to a subset of `object["items"]`, it is returned.
+#' 
+#' If `items` is a vector corresponding to an unnamed subset of `object["items"]`, the corresponding
+#'  named subset of `object["items"]` is returned.
+#' 
+#' If `items` is a character value equal to `"items"` or `"i"`, `object["items"]` is returned.
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param items Vector of items or one of the following character value: `"items"`, `"i"`.
+#' @return Named vector of items corresponding to the arguments.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`get_nopc`], [`which_entities`].
+#' 
+#' @aliases get_items
+#' @md
+#' @keywords internal
+setMethod(f = "get_items",
+          signature = "SpectralAnalyzer",
+          definition = function(object, items) {
+            
+            # Valeur spécifique faisant référence à l'intégralité des items
+            if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
+              return(object@items)
+            
+            # Vecteur d'items (sous-ensemble de object@items)
+            if (all(items %in% object@items)) {
+              # Avec ou sans les noms associées
+              if (is_named(items)) return(items)
+              return(object@items[match(items, object@items)])
+            }
+            
+            stop("items must be \"items\" or a subset of object[\"items\"].")
+          })
+
+
+#' Get nodes or patterns characteristics
 #' 
 #' Find and return the data frame corresponding to the nodes or the patterns of the `SpectralAnalyzer`
 #'  object, or return the given data frame.
@@ -4925,7 +4963,7 @@ setMethod(f = "check_access_for_category",
 #' @return Data frame of nodes or patterns and their characteristics corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`which_entities`].
+#' @seealso [`which_entities`], [`get_items`].
 #' 
 #' @aliases get_nopc
 #' @md
