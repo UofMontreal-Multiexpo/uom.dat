@@ -644,7 +644,7 @@ setGeneric(name = "co_occurrence_chart", def = function(object, items, category 
 
 # Methods for association rule extraction and visualization
 
-setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
+setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
 
 setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameters = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_tension = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1){ standardGeneric("rules_chart") })
 
@@ -3417,16 +3417,21 @@ setMethod(f = "co_occurrence_chart",
 #'  }
 #' @param pruning If \code{TRUE}, remove redundant rules (see 'Details' to know how a redundant rule
 #'  is defined).
+#' @param arules If \code{TRUE}, rules are returned as object of class
+#'  \code{\link[arules:rules-class]{rules}} from the package \code{arules}.
 #' @param as_sets If \code{FALSE}, antecedents and consequents of the returned rules will be character
 #'  vectors. If \code{TRUE}, they will be factors written in mathematical notation (i.e. set notation).
+#'  Ignored if \code{arules} is \code{TRUE}.
 #' @param ... Additional arguments to configure the extraction. See 'Details'.
-#' @return Data frame containing the extracted rules and their characteristics.
+#' @return Data frame or object of class \code{rules} (according to the \code{arules} argument)
+#'  containing the extracted rules and their characteristics.
+#'  
 #'  If \code{from} is not \code{"observations"}, the column \code{"itemset"} refers to the index of the
 #'  itemset from which the rule was generated, in the list of patterns (if \code{from = "patterns"})
 #'  or the given list (otherwise).
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`rules_chart`].
+#' @seealso \code{\link{rules_chart}}, \code{\link[arules:rules-class]{arules::rules}}.
 #' 
 #' @examples
 #' ## Basic rule extraction
@@ -3448,11 +3453,15 @@ setMethod(f = "co_occurrence_chart",
 #'                                           minlen = 2, maxlen = 2),
 #'                          appearance = list(lhs = "328", rhs = "3180"))
 #' 
+#' ## Getting rules as rules class object from the package arules
+#' rules_7 <- extract_rules(SA_instance, from = "observations", arules = TRUE)
+#' arules::inspect(rules_7)
+#' 
 #' @aliases extract_rules
 #' @export
 setMethod(f = "extract_rules",
           signature = "SpectralAnalyzer",
-          definition = function(object, from, pruning = FALSE, as_sets = FALSE, ...) {
+          definition = function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...) {
             
             # Validation du paramètre de choix des itemsets desquels extraire les règles
             if (is.character(from) && from != "observations" && from != "patterns")
@@ -3489,8 +3498,13 @@ setMethod(f = "extract_rules",
             # Recherche et retrait des règles redondantes
             if (pruning) rules = rules[!arules::is.redundant(rules)]
             
+            
             # Si aucune règle ne correspond aux critères de recherche : NULL
             if (length(rules) == 0) return(NULL)
+            
+            # Si demandé, retour des règles sous forme de classe rules du package arules
+            if (arules) return(rules)
+            
             
             # Conversion en data frame
             rules_df = arules::DATAFRAME(rules)

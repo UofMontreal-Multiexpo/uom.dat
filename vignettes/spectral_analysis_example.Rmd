@@ -1007,6 +1007,15 @@ plot(rc$graph)
 ```
 ![](./spectral_analysis_example/rules_chart.png)
 
+### 5.4.3. Association rules as rules class object from the package arules
+
+The argument `arules` of the function `extract_rules` allows to get rules as an object of class `rules` from the package `arules`. Such rules can be plotted using functions of the package `arulesViz` (see [arulesViz documentation](https://cran.csiro.au/web/packages/arulesViz/vignettes/arulesViz.pdf) for more visualizations).
+```{r}
+library(arulesViz)
+a_rules <- extract_rules(sa_object, from = "observations", arules = TRUE)
+plot(a_rules)
+```
+
 
 
 ---
