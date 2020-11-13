@@ -4985,14 +4985,14 @@ setMethod(f = "which_entities",
             if ("pattern" %in% colnames(npr)) return(SpectralAnalyzer.PATTERNS)
             if ("antecedent" %in% colnames(npr)) return(SpectralAnalyzer.RULES)
             
-            var_name = deparse(substitute(nopc))
+            var_name = deparse(substitute(npr))
             
             if (entities == SpectralAnalyzer.NODES_OR_PATTERNS)
               stop(paste(var_name, "must be a data frame of nodes or patterns and their characteristics."))
             
             # entities = NODES_PATTERNS_OR_RULES
             stop(paste(var_name, "must be a data frame of nodes or patterns and their",
-                       "characteristics or a data frame of association rules."))
+                       "characteristics, or a data frame of association rules."))
           })
 
 
