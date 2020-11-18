@@ -41,6 +41,8 @@ reset(SA_instance, from = 5)
 }
 \seealso{
 The \code{\link{SpectralAnalyzer}} constructor: \code{\link{spectral.analyzer}}.
+
+Initialization: \code{\link{init}}, \code{\link{is_init}}.
 }
 \author{
 Gauthier Magnin

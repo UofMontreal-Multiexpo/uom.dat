@@ -12,6 +12,7 @@ spectral.analyzer(
   min_length = 1,
   max_length = Inf,
   status_limit = 2,
+  init = TRUE,
   verbose = TRUE
 )
 }
@@ -39,6 +40,10 @@ The default \code{Inf} corresponds to a pattern search without maximum size limi
 
 \item{status_limit}{Time interval for which to characterize the status of the patterns in relation
 to the total period of observations (number of years).}
+
+\item{init}{If \code{TRUE}, attributes relating to nodes, links between nodes, patterns and links
+between patterns are initialized.
+If \code{FALSE}, only attributes relating to observations, items and categories are initialized.}
 
 \item{verbose}{Logical value indicating whether to report progress.}
 }
@@ -96,7 +101,8 @@ sa_object_2 <- spectral.analyzer(obs, items)
 
 }
 \seealso{
-\code{\link{SpectralAnalyzer}}, \code{\link{reset}}.
+\code{\link{SpectralAnalyzer}}, \code{\link{reset}}, \code{\link{init}},
+         \code{\link{is_init}}.
 }
 \author{
 Gauthier Magnin

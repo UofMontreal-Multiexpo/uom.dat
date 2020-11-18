@@ -1072,6 +1072,8 @@ The class: [SpectralAnalyzer](../html/SpectralAnalyzer-class.html)
 Making *SpectralAnalyzer* objects:
 
 * [spectral.analyzer](../html/spectral.analyzer.html)
+* [init](../html/init-SpectralAnalyzer-method.html)
+* [is_init](../html/is_init-SpectralAnalyzer-method.html)
 * [reset](../html/reset-SpectralAnalyzer-method.html)
 * [\[](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html)
 

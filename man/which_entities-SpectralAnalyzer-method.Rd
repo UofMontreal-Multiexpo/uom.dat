@@ -10,7 +10,8 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{npr}{Data frame of \strong{n}odes, \strong{p}atterns or association \strong{r}ules and their characteristics.}
+\item{npr}{Data frame of \strong{n}odes, \strong{p}atterns or association \strong{r}ules and their characteristics.\cr
+\code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}, \code{"rules"} and \code{"r"} are specific values.}
 
 \item{entities}{Define if the data frame is either a data frame of nodes or a data frame of patterns
 (\code{NODES_OR_PATTERNS}), or if it can also be a data frame of rules (\code{NODES_PATTERNS_OR_RULES}).}
@@ -28,7 +29,7 @@ The detection uses the column names of the data frame and search for \code{"node
 The argument \code{entities} is only used to adapt a possible error message.
 }
 \seealso{
-\code{\link{get_nopc}}.
+\code{\link{get_nopc}}, \code{\link{which_associated_links}}, \code{\link{which_name}}, \code{\link{simplify_naming}}.
 }
 \author{
 Gauthier Magnin
