@@ -20,7 +20,7 @@ Character corresponding to \code{NODES_LINKS} or \code{PATTERNS_LINKS}.
 Give a type of links given a type of entities (nodes or patterns).
 }
 \seealso{
-\code{\link{which_entities}}, \code{\link{which_name}}, \code{\link{simplify_naming}}.
+\code{\link{which_entities}}, \code{\link{which_name}}.
 }
 \author{
 Gauthier Magnin

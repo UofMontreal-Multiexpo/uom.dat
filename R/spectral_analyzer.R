@@ -638,8 +638,6 @@ setGeneric(name = "which_associated_links", def = function(object, name){ standa
 
 setGeneric(name = "which_name", def = function(object, name){ standardGeneric("which_name") })
 
-setGeneric(name = "simplify_naming", def = function(object, name){ standardGeneric("simplify_naming") })
-
 
 
 #### Initialization methods ####
@@ -806,24 +804,22 @@ setMethod(f = "init",
   
   check_param(part, values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODES_LINKS,
                                SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERNS_LINKS,
-                               simplify_naming(object, c(SpectralAnalyzer.NODES,
-                                                         SpectralAnalyzer.NODES_LINKS,
-                                                         SpectralAnalyzer.PATTERNS,
-                                                         SpectralAnalyzer.PATTERNS_LINKS))),
+                               first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODES_LINKS,
+                                                  SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERNS_LINKS))),
               suffix = " or NULL")
   
-  if (part == SpectralAnalyzer.NODES || part == simplify_naming(object, SpectralAnalyzer.NODES)) {
+  if (part == SpectralAnalyzer.NODES || part == first_characters(SpectralAnalyzer.NODES)) {
     to_return = init_nodes(object, verbose)
   }
-  else if (part == SpectralAnalyzer.NODES_LINKS || part == simplify_naming(object, SpectralAnalyzer.NODES_LINKS)) {
+  else if (part == SpectralAnalyzer.NODES_LINKS || part == first_characters(SpectralAnalyzer.NODES_LINKS)) {
     check_init(object, SpectralAnalyzer.NODES)
     to_return = init_nodes_links(object, verbose)
   }
-  else if (part == SpectralAnalyzer.PATTERNS || part == simplify_naming(object, SpectralAnalyzer.PATTERNS)) {
+  else if (part == SpectralAnalyzer.PATTERNS || part == first_characters(SpectralAnalyzer.PATTERNS)) {
     check_init(object, SpectralAnalyzer.NODES)
     to_return = init_patterns(object, verbose)
   }
-  else if (part == SpectralAnalyzer.PATTERNS_LINKS || part == simplify_naming(object, SpectralAnalyzer.PATTERNS_LINKS)) {
+  else if (part == SpectralAnalyzer.PATTERNS_LINKS || part == first_characters(SpectralAnalyzer.PATTERNS_LINKS)) {
     check_init(object, SpectralAnalyzer.PATTERNS)
     to_return = init_patterns_links(object, verbose)
   }
@@ -1033,19 +1029,17 @@ setMethod(f = "is_init",
   
   check_param(part, values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODES_LINKS,
                                SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERNS_LINKS,
-                               simplify_naming(object, c(SpectralAnalyzer.NODES,
-                                                         SpectralAnalyzer.NODES_LINKS,
-                                                         SpectralAnalyzer.PATTERNS,
-                                                         SpectralAnalyzer.PATTERNS_LINKS))),
+                               first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODES_LINKS,
+                                                  SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERNS_LINKS))),
               suffix = " or NULL")
   
-  if (part == SpectralAnalyzer.NODES || part == simplify_naming(object, SpectralAnalyzer.NODES))
+  if (part == SpectralAnalyzer.NODES || part == first_characters(SpectralAnalyzer.NODES))
     return(is_init_nodes(object))
-  if (part == SpectralAnalyzer.NODES_LINKS || part == simplify_naming(object, SpectralAnalyzer.NODES_LINKS))
+  if (part == SpectralAnalyzer.NODES_LINKS || part == first_characters(SpectralAnalyzer.NODES_LINKS))
     return(is_init_nodes_links(object))
-  if (part == SpectralAnalyzer.PATTERNS || part == simplify_naming(object, SpectralAnalyzer.PATTERNS))
+  if (part == SpectralAnalyzer.PATTERNS || part == first_characters(SpectralAnalyzer.PATTERNS))
     return(is_init_patterns(object))
-  if (part == SpectralAnalyzer.PATTERNS_LINKS || part == simplify_naming(object, SpectralAnalyzer.PATTERNS_LINKS))
+  if (part == SpectralAnalyzer.PATTERNS_LINKS || part == first_characters(SpectralAnalyzer.PATTERNS_LINKS))
     return(is_init_patterns_links(object))
 })
 
@@ -1152,10 +1146,8 @@ setMethod(f = "check_init",
   if (is.null(part) || length(part) == 1) {
     check_param(part, values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODES_LINKS,
                                  SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERNS_LINKS,
-                                 simplify_naming(object, c(SpectralAnalyzer.NODES,
-                                                           SpectralAnalyzer.NODES_LINKS,
-                                                           SpectralAnalyzer.PATTERNS,
-                                                           SpectralAnalyzer.PATTERNS_LINKS))),
+                                 first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODES_LINKS,
+                                                    SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERNS_LINKS))),
                 suffix = " or NULL")
     
     condition = is_init(object, part)
@@ -1165,20 +1157,18 @@ setMethod(f = "check_init",
     
     if (is.null(part)) stop(prefix, beginning, "are not all initialized", suffix, ".")
     
-    if (part == simplify_naming(object, SpectralAnalyzer.NODES)) part = SpectralAnalyzer.NODES
-    else if (part == simplify_naming(object, SpectralAnalyzer.NODES_LINKS)) part = SpectralAnalyzer.NODES_LINKS
-    else if (part == simplify_naming(object, SpectralAnalyzer.PATTERNS)) part = SpectralAnalyzer.PATTERNS
-    else if (part == simplify_naming(object, SpectralAnalyzer.PATTERNS_LINKS)) part = SpectralAnalyzer.PATTERNS_LINKS
+    if (part == first_characters(SpectralAnalyzer.NODES)) part = SpectralAnalyzer.NODES
+    else if (part == first_characters(SpectralAnalyzer.NODES_LINKS)) part = SpectralAnalyzer.NODES_LINKS
+    else if (part == first_characters(SpectralAnalyzer.PATTERNS)) part = SpectralAnalyzer.PATTERNS
+    else if (part == first_characters(SpectralAnalyzer.PATTERNS_LINKS)) part = SpectralAnalyzer.PATTERNS_LINKS
     stop(prefix, beginning, "relating to ", part, " must first be initialized", suffix, ".")
   }
   else {
     for (i in seq_along(part))
       check_param(part[i], values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODES_LINKS,
                                       SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERNS_LINKS,
-                                      simplify_naming(object, c(SpectralAnalyzer.NODES,
-                                                                SpectralAnalyzer.NODES_LINKS,
-                                                                SpectralAnalyzer.PATTERNS,
-                                                                SpectralAnalyzer.PATTERNS_LINKS))))
+                                      first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODES_LINKS,
+                                                         SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERNS_LINKS))))
     
     conditions = sapply(part, is_init, object = object)
     if (!stop || all(conditions)) return(conditions)
@@ -5547,7 +5537,7 @@ setMethod(f = "get_nopc",
 #' @return Character corresponding to `NODES`, `PATTERNS` or `RULES`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_nopc`], [`which_associated_links`], [`which_name`], [`simplify_naming`].
+#' @seealso [`get_nopc`], [`which_associated_links`], [`which_name`].
 #' 
 #' @aliases which_entities
 #' @md
@@ -5557,11 +5547,11 @@ setMethod(f = "which_entities",
           definition = function(object, npr, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
             
             if (is.character(npr)) {
-              if (npr == SpectralAnalyzer.NODES || npr == simplify_naming(object, SpectralAnalyzer.NODES))
+              if (npr == SpectralAnalyzer.NODES || npr == first_characters(SpectralAnalyzer.NODES))
                 return(SpectralAnalyzer.NODES)
-              if (npr == SpectralAnalyzer.PATTERNS || npr == simplify_naming(object, SpectralAnalyzer.PATTERNS))
+              if (npr == SpectralAnalyzer.PATTERNS || npr == first_characters(SpectralAnalyzer.PATTERNS))
                 return(SpectralAnalyzer.PATTERNS)
-              if (npr == SpectralAnalyzer.RULES || npr == simplify_naming(object, SpectralAnalyzer.RULES))
+              if (npr == SpectralAnalyzer.RULES || npr == first_characters(SpectralAnalyzer.RULES))
                 return(SpectralAnalyzer.RULES)
               
               var_name = deparse(substitute(npr))
@@ -5599,7 +5589,7 @@ setMethod(f = "which_entities",
 #' @return Character corresponding to `NODES_LINKS` or `PATTERNS_LINKS`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`which_entities`], [`which_name`], [`simplify_naming`].
+#' @seealso [`which_entities`], [`which_name`].
 #' 
 #' @aliases which_associated_links
 #' @md
@@ -5608,9 +5598,9 @@ setMethod(f = "which_associated_links",
           signature = "SpectralAnalyzer",
           definition = function(object, name) {
             
-            if (name == SpectralAnalyzer.NODES || name == simplify_naming(object, SpectralAnalyzer.NODES))
+            if (name == SpectralAnalyzer.NODES || name == first_characters(SpectralAnalyzer.NODES))
               return(SpectralAnalyzer.NODES_LINKS)
-            if (name == SpectralAnalyzer.PATTERNS || name == simplify_naming(object, SpectralAnalyzer.PATTERNS))
+            if (name == SpectralAnalyzer.PATTERNS || name == first_characters(SpectralAnalyzer.PATTERNS))
               return(SpectralAnalyzer.PATTERNS_LINKS)
             
             stop("name must refer to nodes or patterns.")
@@ -5628,7 +5618,7 @@ setMethod(f = "which_associated_links",
 #' @return Character corresponding to `NODES`, `PATTERNS`, `RULES`, `NODES_LINKS` or `PATTERN_LINKS`
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`which_entities`], [`which_associated_links`], [`simplify_naming`].
+#' @seealso [`which_entities`], [`which_associated_links`].
 #' 
 #' @aliases which_name
 #' @md
@@ -5639,51 +5629,16 @@ setMethod(f = "which_name",
             
             if (length(name) > 1) return(sapply(name, which_name, object = object))
             
-            if (name == SpectralAnalyzer.NODES || name == simplify_naming(object, SpectralAnalyzer.NODES))
+            if (name == SpectralAnalyzer.NODES || name == first_characters(SpectralAnalyzer.NODES))
               return(SpectralAnalyzer.NODES)
-            if (name == SpectralAnalyzer.PATTERNS || name == simplify_naming(object, SpectralAnalyzer.PATTERNS))
+            if (name == SpectralAnalyzer.PATTERNS || name == first_characters(SpectralAnalyzer.PATTERNS))
               return(SpectralAnalyzer.PATTERNS)
-            if (name == SpectralAnalyzer.RULES || name == simplify_naming(object, SpectralAnalyzer.RULES))
+            if (name == SpectralAnalyzer.RULES || name == first_characters(SpectralAnalyzer.RULES))
               return(SpectralAnalyzer.RULES)
-            if (name == SpectralAnalyzer.NODES_LINKS || name == simplify_naming(object, SpectralAnalyzer.NODES_LINKS))
+            if (name == SpectralAnalyzer.NODES_LINKS || name == first_characters(SpectralAnalyzer.NODES_LINKS))
               return(SpectralAnalyzer.NODES_LINKS)
-            if (name == SpectralAnalyzer.PATTERNS_LINKS || name == simplify_naming(object, SpectralAnalyzer.PATTERNS_LINKS))
+            if (name == SpectralAnalyzer.PATTERNS_LINKS || name == first_characters(SpectralAnalyzer.PATTERNS_LINKS))
               return(SpectralAnalyzer.PATTERNS_LINKS)
-          })
-
-
-#' Simplify names referring to entities or links
-#' 
-#' Simplify names referring to entities or links by extracting only the first letter of each word
-#'  (each word being separated by the caracter `"_"`).
-#' 
-#' @param object `SpectralAnalyzer` class object.
-#' @param name Character corresponding to `NODES`, `PATTERNS`, `RULES`, `NODES_LINKS`, `PATTERN_LINKS` or
-#'  their simplifications. One or more.
-#' @return Simplified form of the characters given by `name`.
-#' 
-#' @author Gauthier Magnin
-#' @seealso [`which_entities`], [`which_associated_links`], [`which_name`].
-#' 
-#' @aliases simplify_naming
-#' @md
-#' @keywords internal
-setMethod(f = "simplify_naming",
-          signature = "SpectralAnalyzer",
-          definition = function(object, name) {
-            
-            if (length(name) == 1) {
-              if (name %in% c(SpectralAnalyzer.NODES, SpectralAnalyzer.PATTERNS, SpectralAnalyzer.RULES))
-                return(substr(name, 1, 1))
-              if (name == SpectralAnalyzer.NODES_LINKS || name == SpectralAnalyzer.PATTERNS_LINKS)
-                return(paste0(substr(strsplit(name, split = "_")[[1]], 1, 1), collapse = ""))
-            } else {
-              return(sapply(strsplit(name, split = "_"),
-                            function(n) {
-                              paste0(substr(n, start = 1, stop = 1), collapse = "")
-                            }))
-            }
-            stop("Argument name invalid.")
           })
 
 

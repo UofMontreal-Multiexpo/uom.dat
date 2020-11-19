@@ -29,7 +29,7 @@ The detection uses the column names of the data frame and search for \code{"node
 The argument \code{entities} is only used to adapt a possible error message.
 }
 \seealso{
-\code{\link{get_nopc}}, \code{\link{which_associated_links}}, \code{\link{which_name}}, \code{\link{simplify_naming}}.
+\code{\link{get_nopc}}, \code{\link{which_associated_links}}, \code{\link{which_name}}.
 }
 \author{
 Gauthier Magnin

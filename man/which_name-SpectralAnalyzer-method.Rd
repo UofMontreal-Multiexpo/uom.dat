@@ -21,7 +21,7 @@ Character corresponding to \code{NODES}, \code{PATTERNS}, \code{RULES}, \code{NO
 Give the type of entities or links given a name referring to it.
 }
 \seealso{
-\code{\link{which_entities}}, \code{\link{which_associated_links}}, \code{\link{simplify_naming}}.
+\code{\link{which_entities}}, \code{\link{which_associated_links}}.
 }
 \author{
 Gauthier Magnin

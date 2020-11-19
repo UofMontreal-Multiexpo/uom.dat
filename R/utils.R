@@ -56,13 +56,38 @@ display_time = function(expr) {
 #' 
 #' Change the first letter of a string to an uppercase.
 #' 
-#' @param s Character string to be capitalized.
-#' @return The character string corresponding to the argument \code{s}, starting with a capital letter.
+#' @param x Character string to be capitalized.
+#' @return The character string corresponding to the argument `x`, starting with a capital letter.
 #' 
 #' @author Gauthier Magnin
+#' @seealso [`first_characters`].
+#' 
+#' @md
 #' @keywords internal
-cap = function(s) {
-  return(paste0(toupper(substring(s, 1, 1)), substring(s, 2)))
+cap = function(x) {
+  return(paste0(toupper(substring(x, 1, 1)), substring(x, 2)))
+}
+
+
+#' Find the first characters
+#' 
+#' Search for the first character of each word and concatenate them.
+#' 
+#' @param x Character string (one or more) from which the first characters are to be extracted.
+#' @param sep Character string each of which is a word separator.
+#' @return Character vector of size equal to that of `x` containing the first concatenated characters
+#'  of all words.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`cap`].
+#' 
+#' @md
+#' @keywords internal
+first_characters = function(x, sep = " _-") {
+  return(sapply(strsplit(x, split = paste0("[", sep, "]")),
+                function(s) {
+                  paste0(substr(s, start = 1, stop = 1), collapse = "")
+                }))
 }
 
 

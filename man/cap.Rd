@@ -4,16 +4,19 @@
 \alias{cap}
 \title{Capitalize a character string}
 \usage{
-cap(s)
+cap(x)
 }
 \arguments{
-\item{s}{Character string to be capitalized.}
+\item{x}{Character string to be capitalized.}
 }
 \value{
-The character string corresponding to the argument \code{s}, starting with a capital letter.
+The character string corresponding to the argument \code{x}, starting with a capital letter.
 }
 \description{
 Change the first letter of a string to an uppercase.
+}
+\seealso{
+\code{\link{first_characters}}.
 }
 \author{
 Gauthier Magnin
