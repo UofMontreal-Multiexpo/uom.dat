@@ -25,6 +25,10 @@
 
 \item{verbose}{Logical value indicating whether to report progress.}
 }
+\value{
+Invisible. Object of class \code{\link[arules:itemsets-class]{itemsets}} (from the package \code{arules})
+for the method \code{init_patterns}. \code{NULL} otherwise.
+}
 \description{
 Initialize the attributes related to nodes, links between nodes, patterns and/or links between
 patterns.

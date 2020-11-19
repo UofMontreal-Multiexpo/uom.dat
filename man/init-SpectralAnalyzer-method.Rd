@@ -22,6 +22,10 @@ One of the following:
 
 \item{verbose}{Logical value indicating whether to report progress.}
 }
+\value{
+Invisible. \code{NULL} if \code{part} does not refer to patterns. If it does refer to patterns,
+object of class \code{\link[arules:itemsets-class]{itemsets}} (from the package \code{arules}).
+}
 \description{
 Initialize the attributes related to nodes, links between nodes, patterns and/or links between
 patterns.
@@ -54,7 +58,7 @@ is_init(sa_object)
 
 }
 \seealso{
-\code{\link{is_init}}, \code{\link{reset}}.
+\code{\link{is_init}}, \code{\link{reset}}, \code{\link[arules:itemsets-class]{arules::itemsets}}.
 }
 \author{
 Gauthier Magnin

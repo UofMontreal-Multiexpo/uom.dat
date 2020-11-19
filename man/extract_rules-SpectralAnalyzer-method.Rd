@@ -41,7 +41,7 @@ Ignored if \code{arules} is \code{TRUE}.}
 \item{...}{Additional arguments to configure the extraction. See 'Details'.}
 }
 \value{
-Data frame or object of class \code{rules} (according to the \code{arules} argument)
+Data frame or object of class \code{rules} (according to the argument \code{arules})
  containing the extracted rules and their characteristics.
  
  If \code{from} is not \code{"observations"}, the column \code{"itemset"} refers to the index of the

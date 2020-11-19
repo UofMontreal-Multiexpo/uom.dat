@@ -10,7 +10,8 @@
   target,
   count = 1,
   min_length = 1,
-  max_length = Inf
+  max_length = Inf,
+  arules = FALSE
 )
 }
 \arguments{
@@ -25,10 +26,14 @@
 
 \item{max_length}{Maximum number of items that a pattern must have to be kept when enumerating.
 The default \code{Inf} corresponds to a pattern search without maximum size limit.}
+
+\item{arules}{If \code{TRUE}, patterns are returned as object of class
+\code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.}
 }
 \value{
-Invisible. Data frame in which a line is an association between a pattern and its
- frequency in the set of observations.
+Invisible. Object of class \code{itemsets} or data frame in which a line is an association
+ between a pattern and its frequency in the set of observations (according to the argument
+ \code{arules}).
 }
 \description{
 Identify the patterns generated from the observations.

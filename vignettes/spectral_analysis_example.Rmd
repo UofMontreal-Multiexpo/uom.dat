@@ -263,7 +263,7 @@ save_characteristics(sa_object, sa_object["patterns"],
 
 
 
-# 2. Dealing with nodes
+# 2. Working with nodes
 
 ## 2.1. Node visualization
 
@@ -341,7 +341,7 @@ cluster[["edges"]]
 
 
 
-# 3. Dealing with patterns
+# 3. Working with patterns
 
 ## 3.1. Pattern visualizations
 
@@ -710,7 +710,7 @@ spectrosome_c <- spectrosome_chart(another_sa_object, patterns,
 
 
 
-# 5. Ad-hoc analysis
+# 5. Ad-hoc analysis and alternative initialization
 
 Let's go back to our original example.
 
@@ -1014,6 +1014,39 @@ The argument `arules` of the function `extract_rules` allows to get rules as an 
 library(arulesViz)
 a_rules <- extract_rules(sa_object, from = "observations", arules = TRUE)
 plot(a_rules)
+```
+
+
+
+## 5.5. Alternative initialization and patterns
+
+If some of the features are not interesting for a specific analysis and the amount of data implies a long object creation time, we may want to save time by not initializing some attributes.
+
+For example, if spectrosomes and clusters of nodes do not matter for an analysis, we can manually initialize all attributes of a `SpectralAnalyzer` object except those concerning the links between the nodes:
+```{r}
+alt_sa_object <- spectral.analyzer(observations, items, init = FALSE)
+init(alt_sa_object, "nodes")
+```
+
+```{r}
+init(alt_sa_object, "patterns")
+```
+
+```{r}
+# init(alt_sa_object, "nodes_links")
+init(alt_sa_object, "patterns_links")
+```
+
+```{r}
+is_init(alt_sa_object)
+```
+
+In this way the patterns can be obtained as `itemsets`, an object of a class from the package `arules`. See [arules documentation](https://cran.r-project.org/web/packages/arules/vignettes/arules.pdf) to know how to work with this class.
+
+```{r}
+itemsets <- init(alt_sa_object, "patterns", verbose = FALSE)
+library(arules)
+inspect(itemsets)
 ```
 
 

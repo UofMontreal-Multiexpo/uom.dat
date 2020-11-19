@@ -527,7 +527,7 @@ setGeneric(name = "search_links", def = function(object, entities){ standardGene
 
 # Computation methods used for the construction of the patterns
 
-setGeneric(name = "list_separate_patterns", def = function(object, target, count = 1, min_length = 1, max_length = Inf){ standardGeneric("list_separate_patterns") })
+setGeneric(name = "list_separate_patterns", def = function(object, target, count = 1, min_length = 1, max_length = Inf, arules = FALSE){ standardGeneric("list_separate_patterns") })
 
 setGeneric(name = "list_patterns_by_node", def = function(object){ standardGeneric("list_patterns_by_node") })
 
@@ -771,9 +771,11 @@ setMethod(f = "reset",
 #'    \item{`NULL`}{All attributes.}
 #'  }
 #' @param verbose Logical value indicating whether to report progress.
+#' @return Invisible. `NULL` if `part` does not refer to patterns. If it does refer to patterns,
+#'  object of class [`itemsets`][arules::itemsets-class] (from the package `arules`).
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`is_init`], [`reset`].
+#' @seealso [`is_init`], [`reset`], [`arules::itemsets`][arules::itemsets-class].
 #' 
 #' @examples
 #' ## Creating a SpectralAnalyzer and initialize some parts of it
@@ -839,6 +841,8 @@ setMethod(f = "init",
 #' 
 #' @param object `SpectralAnalyzer` class object.
 #' @param verbose Logical value indicating whether to report progress.
+#' @return Invisible. Object of class [`itemsets`][arules::itemsets-class] (from the package `arules`)
+#'  for the method `init_patterns`. `NULL` otherwise.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`init`], [`is_init`].
@@ -910,10 +914,11 @@ setMethod(f = "init_patterns",
             
             if (verbose) {
               cat("*** Step P.1/4: Mining for itemsets... ")
-              display_time(list_separate_patterns(object, object@parameters$target,
-                                                  object@parameters$count,
-                                                  object@parameters$min_length,
-                                                  object@parameters$max_length))
+              display_time(arules_p <- list_separate_patterns(object, object@parameters$target,
+                                                              object@parameters$count,
+                                                              object@parameters$min_length,
+                                                              object@parameters$max_length,
+                                                              arules = TRUE))
               
               cat("\n*** Step P.2/4: Linking nodes to patterns... ")
               display_time(list_patterns_by_node(object))
@@ -924,10 +929,11 @@ setMethod(f = "init_patterns",
               cat("\n*** Step P.4/4: Computation of pattern characteristics... ")
               display_time(compute_patterns_characteristics(object))
             } else {
-              list_separate_patterns(object, object@parameters$target,
-                                     object@parameters$count,
-                                     object@parameters$min_length,
-                                     object@parameters$max_length)
+              arules_p = list_separate_patterns(object, object@parameters$target,
+                                                object@parameters$count,
+                                                object@parameters$min_length,
+                                                object@parameters$max_length,
+                                                arules = TRUE)
               list_patterns_by_node(object)
               list_patterns_per_year(object)
               compute_patterns_characteristics(object)
@@ -935,7 +941,7 @@ setMethod(f = "init_patterns",
             
             # Redéfinition de l'objet
             assign(object_name, object, envir = parent.frame())
-            return(invisible())
+            return(invisible(arules_p))
           })
 
 #' @rdname specific_init-SpectralAnalyzer-method
@@ -1467,15 +1473,19 @@ setMethod(f = "search_links",
 #' @param min_length Minimum number of items that a pattern must have to be kept when enumerating.
 #' @param max_length Maximum number of items that a pattern must have to be kept when enumerating.
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
-#' @return Invisible. Data frame in which a line is an association between a pattern and its
-#'  frequency in the set of observations.
+#' @param arules If \code{TRUE}, patterns are returned as object of class
+#'  \code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.
+#' @return Invisible. Object of class \code{itemsets} or data frame in which a line is an association
+#'  between a pattern and its frequency in the set of observations (according to the argument
+#'  \code{arules}).
 #' 
 #' @author Gauthier Magnin
 #' @aliases list_separate_patterns
 #' @keywords internal
 setMethod(f = "list_separate_patterns",
           signature = "SpectralAnalyzer",
-          definition = function(object, target, count = 1, min_length = 1, max_length = Inf) {
+          definition = function(object, target, count = 1, min_length = 1, max_length = Inf,
+                                arules = FALSE) {
             
             # Nom de l'objet pour modification interne dans l'environnement parent
             object_name = deparse(substitute(object))
@@ -1507,6 +1517,7 @@ setMethod(f = "list_separate_patterns",
             # Définition de l'attribut et retour
             object@patterns = patterns_df
             assign(object_name, object, envir = parent.frame())
+            if (arules) return(invisible(result))
             return(invisible(patterns_df))
           })
 
@@ -3929,7 +3940,7 @@ setMethod(f = "co_occurrence_chart",
 #'  vectors. If \code{TRUE}, they will be factors written in mathematical notation (i.e. set notation).
 #'  Ignored if \code{arules} is \code{TRUE}.
 #' @param ... Additional arguments to configure the extraction. See 'Details'.
-#' @return Data frame or object of class \code{rules} (according to the \code{arules} argument)
+#' @return Data frame or object of class \code{rules} (according to the argument \code{arules})
 #'  containing the extracted rules and their characteristics.
 #'  
 #'  If \code{from} is not \code{"observations"}, the column \code{"itemset"} refers to the index of the
