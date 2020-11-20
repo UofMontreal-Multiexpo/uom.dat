@@ -32,6 +32,16 @@ The steps for initializing a spectral analyzer are:
   \item{Elaboration of links between patterns.}
 }
 }
+\note{
+The following steps may be quite long (depending on the case):
+ \itemize{
+   \item{Step 4: elaboration of links between nodes (depending on the amount of data).}
+   \item{Steps 5 and 6: mining for itemsets and linking nodes to patterns (depending on the
+     mining parameters and the amount of data).}
+   \item{Step 10: elaboration of links between patterns (depending on the amount of patterns,
+     resulting from the mining parameters and the amount of data).}
+ }
+}
 \examples{
 ## Change one attribute (for instance, the pattern enumeration target) and
 ## enumerate the patterns again for a new analysis

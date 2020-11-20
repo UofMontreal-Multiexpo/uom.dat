@@ -25,8 +25,8 @@ An observation can contain any additional information in its list.}
 
 \item{items}{Data frame associating a name (column \code{name}) and possibly one or more categories
 (additional columns) to each item (column \code{item}). Each category must be of type \code{factor}.
-The columns \code{item} and \code{name} must be of type \code{character}. The default value,
-\code{NULL}, specifies that no name or category is defined.}
+The columns \code{item} and \code{name} must be of type \code{character}. The default value
+(\code{NULL}) specifies that no name or category is defined.}
 
 \item{target}{Type of patterns to mine. One of \code{"frequent itemsets"},
 \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"} (see 'Details').}
@@ -79,18 +79,30 @@ For an explanation with illustrated examples about the different types of itemse
  vignette titled "\emph{Mining itemsets}".
  
 The steps for initializing a spectral analyzer are:
-\enumerate{
-  \item{Enumeration of the observations per year.}
-  \item{Enumeration of the nodes and calculation of the number of occurrences.}
-  \item{Counting links between nodes.}
-  \item{Elaboration of links between nodes.}
-  \item{Mining for itemsets.}
-  \item{Linking nodes to patterns.}
-  \item{Characterization of patterns per year.}
-  \item{Computation of pattern characteristics.}
-  \item{Counting links between patterns.}
-  \item{Elaboration of links between patterns.}
+ \enumerate{
+   \item{Enumeration of the observations per year.}
+   \item{Enumeration of the nodes and calculation of the number of occurrences.}
+   \item{Counting links between nodes.}
+   \item{Elaboration of links between nodes.}
+   \item{Mining for itemsets.}
+   \item{Linking nodes to patterns.}
+   \item{Characterization of patterns per year.}
+   \item{Computation of pattern characteristics.}
+   \item{Counting links between patterns.}
+   \item{Elaboration of links between patterns.}
+ }
+ 
+The argument \code{init} and the method \code{\link{init}} allow to skip initialization steps.
 }
+\note{
+The following steps may be quite long (depending on the case):
+ \itemize{
+   \item{Step 4: elaboration of links between nodes (depending on the amount of data).}
+   \item{Steps 5 and 6: mining for itemsets and linking nodes to patterns (depending on the
+     mining parameters and the amount of data).}
+   \item{Step 10: elaboration of links between patterns (depending on the amount of patterns,
+     resulting from the mining parameters and the amount of data).}
+ }
 }
 \examples{
 ## Creating a SpectralAnalyzer from a list of observations
