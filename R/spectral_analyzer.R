@@ -248,7 +248,7 @@ setMethod(f = "initialize",
             .Object@observations = observations
             
             # Ensemble des éléments observés et catégories associées
-            if (missing(items)) {
+            if (missing(items) || is.null(items)) {
               .Object@items = get_all_items(observations)
               names(.Object@items) = .Object@items
             } else {
@@ -390,12 +390,11 @@ spectral.analyzer = function(observations, items = NULL, target = "closed freque
                              count = 1, min_length = 1, max_length = Inf, status_limit = 2,
                              init = TRUE, verbose = TRUE) {
   
-  # Instanciation avec ou sans la liste des items et des catégories associées
-  ifelse(is.null(items),
-    return(methods::new(Class = "SpectralAnalyzer", observations = observations,
-                        target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit, init = init, verbose = verbose)),
-    return(methods::new(Class = "SpectralAnalyzer", observations = observations, items = items,
-                        target = target, count = count, min_length = min_length, max_length = max_length, status_limit = status_limit, init = init, verbose = verbose)))
+  return(methods::new(Class = "SpectralAnalyzer",
+                      observations = observations, items = items,
+                      target = target, count = count, min_length = min_length, max_length = max_length,
+                      status_limit = status_limit,
+                      init = init, verbose = verbose))
 }
 
 
