@@ -3911,7 +3911,7 @@ setMethod(f = "co_occurrence_chart",
                                        limits = c(1, max(co_occ$Freq)),
                                        breaks = unique(floor(pretty(seq(1, max(co_occ$Freq))))),
                                        # Paramètre nécessaire si non-chargement de ggraph
-                                       guide = ggraph::guide_edge_colorbar()) +
+                                       guide = ggraph::guide_edge_colorbar(order = 1)) +
     
     ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
                                          y = y * vertex_coord_multiplier,
@@ -3935,7 +3935,7 @@ setMethod(f = "co_occurrence_chart",
     return(graph + ggplot2::scale_color_manual(cap(category_name),
                                                values = category_legend,
                                                guide = ggplot2::guide_legend(
-                                                 order = 1,
+                                                 order = 2,
                                                  override.aes = list(size = 1.5, alpha = 1))))
   }
   return(graph)
@@ -4459,7 +4459,7 @@ setMethod(f = "rules_chart",
     ggplot2::coord_fixed()
   
   if (col_to_display == "confidence") {
-    graph = graph + ggraph::scale_edge_alpha('Rule direction',
+    graph = graph + ggraph::scale_edge_alpha("Rule direction",
                                              guide = ggraph::guide_edge_direction(order = 2)) +
       
       ggraph::scale_edge_color_manual("Confidence",
@@ -4467,14 +4467,14 @@ setMethod(f = "rules_chart",
                                         if (palette == "category10") ggsci::pal_d3("category10")(10)
                                         else ggsci::pal_material(palette, reverse = palette_direction == -1)(10),
                                         levels(rules_to_plot[, "confidence"])),
-                                      guide = ggplot2::guide_legend(order = 3))
+                                      guide = ggplot2::guide_legend(order = 1))
   } else {
     graph = graph + 
       ggraph::scale_edge_color_distiller(cap(col_to_display),
                                          palette = palette, direction = palette_direction,
                                          limits = c(0, max(rules_to_plot[, col_to_display])),
                                          # Paramètre nécessaire si non-chargement de ggraph
-                                         guide = ggraph::guide_edge_colorbar())
+                                         guide = ggraph::guide_edge_colorbar(order = 1))
   }
   
   if (!is.null(category)) {
@@ -4482,7 +4482,7 @@ setMethod(f = "rules_chart",
     graph = graph + ggplot2::scale_color_manual(cap(category_name),
                                                 values = category_legend,
                                                 guide = ggplot2::guide_legend(
-                                                  order = 1,
+                                                  order = 3,
                                                   override.aes = list(size = 1.5, alpha = 1)))
   }
   
