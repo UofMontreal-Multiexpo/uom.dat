@@ -698,7 +698,7 @@ setGeneric(name = "get_nopc", def = function(object, nopc, entities = SpectralAn
 
 setGeneric(name = "which_entities", def = function(object, npr, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("which_entities") })
 
-setGeneric(name = "which_associated_links", def = function(object, name){ standardGeneric("which_associated_links") })
+setGeneric(name = "which_associated_links", def = function(object, entities){ standardGeneric("which_associated_links") })
 
 setGeneric(name = "which_name", def = function(object, name){ standardGeneric("which_name") })
 
@@ -5658,7 +5658,7 @@ setMethod(f = "which_entities",
 #' Give a type of links given a type of entities (nodes or patterns).
 #' 
 #' @param object `SpectralAnalyzer` class object.
-#' @param name Type of entities for which to give the type of links.
+#' @param entities Type of entities for which to give the type of links.
 #'  Character corresponding to `NODES`, `PATTERNS` or their simplifications.
 #' @return Character corresponding to `NODES_LINKS` or `PATTERNS_LINKS`.
 #' 
@@ -5670,14 +5670,14 @@ setMethod(f = "which_entities",
 #' @keywords internal
 setMethod(f = "which_associated_links",
           signature = "SpectralAnalyzer",
-          definition = function(object, name) {
+          definition = function(object, entities) {
             
-            if (name == SpectralAnalyzer.NODES || name == first_characters(SpectralAnalyzer.NODES))
+            if (entities == SpectralAnalyzer.NODES || entities == first_characters(SpectralAnalyzer.NODES))
               return(SpectralAnalyzer.NODES_LINKS)
-            if (name == SpectralAnalyzer.PATTERNS || name == first_characters(SpectralAnalyzer.PATTERNS))
+            if (entities == SpectralAnalyzer.PATTERNS || entities == first_characters(SpectralAnalyzer.PATTERNS))
               return(SpectralAnalyzer.PATTERNS_LINKS)
             
-            stop("name must refer to nodes or patterns.")
+            stop("entities must refer to nodes or patterns.")
           })
 
 

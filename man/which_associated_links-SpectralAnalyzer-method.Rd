@@ -5,12 +5,12 @@
 \alias{which_associated_links}
 \title{Type of links relating to a type of entities}
 \usage{
-\S4method{which_associated_links}{SpectralAnalyzer}(object, name)
+\S4method{which_associated_links}{SpectralAnalyzer}(object, entities)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{name}{Type of entities for which to give the type of links.
+\item{entities}{Type of entities for which to give the type of links.
 Character corresponding to \code{NODES}, \code{PATTERNS} or their simplifications.}
 }
 \value{
