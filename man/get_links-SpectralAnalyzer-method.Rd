@@ -13,14 +13,15 @@
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 \strong{c}haracteristics. Nodes or patterns whose links are be to sought. Any subset of
 \code{object["nodes"]} or \code{object["patterns"]}.\cr
-\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 \code{object["nodes"]} and \code{object["patterns"]}.}
 }
 \value{
 Data frame associating the linked nodes or linked patterns.
 }
 \description{
-Extract from the links those corresponding to the desired nodes or patterns.
+Extract from the data frame of links between nodes or patterns those corresponding to the given
+ nodes or patterns.
 }
 \details{
 If among the nodes or patterns for which the links are sought, some become isolated because the other

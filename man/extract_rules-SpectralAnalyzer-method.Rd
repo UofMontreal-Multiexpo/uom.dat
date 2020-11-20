@@ -22,14 +22,14 @@
   \item{If \code{"observations"}, look for all rules within the observations saved in \code{object}
         or for rules with specific items.}
   \item{If \code{"patterns"}, look for rules whose union of the antecedent and the consequent form
-        an entire pattern among those contained in `object` (more precisely, in
+        an entire pattern among those contained in \code{object} (more precisely, in
         \code{object["patterns"]$pattern}).}
   \item{Otherwise, a list of itemsets defined the same way as \code{object["patterns"]$pattern}.
         Look for rules whose union of the antecedent and the consequent form an entire itemset.}
 }}
 
-\item{pruning}{If \code{TRUE}, remove redundant rules (see 'Details' to know how a redundant rule
-is defined).}
+\item{pruning}{If \code{TRUE}, remove redundant rules (see 'Details' to know how redundant rules
+are defined).}
 
 \item{arules}{If \code{TRUE}, rules are returned as object of class
 \code{\link[arules:rules-class]{rules}} from the package \code{arules}.}
@@ -45,8 +45,8 @@ Data frame or object of class \code{rules} (according to the argument \code{arul
  containing the extracted rules and their characteristics.
  
  If \code{from} is not \code{"observations"}, the column \code{"itemset"} refers to the index of the
- itemset from which the rule was generated, in the list of patterns (if \code{from = "patterns"})
- or the given list (otherwise).
+ itemset from which the rule was generated in the list of patterns (if \code{from = "patterns"})
+ or in the given list (otherwise).
 }
 \description{
 Extract association rules from the observations (i.e. presence implication between two disjoint
@@ -98,7 +98,7 @@ If \code{from = "observations"}, additional arguments are \code{parameter}, \cod
 
 If \code{from} is \code{"patterns"} or a list, additional arguments are \code{confidence} and
  \code{control} of function \code{\link[arules:ruleInduction]{ruleInduction}} from the package
- \code{arules}. These arguments allow to specify minmum confidence (default \code{0.8}) and some
+ \code{arules}. These arguments allow to specify minimum confidence (default \code{0.8}) and some
  operating parameters of the rule extraction algorithm.
 
 Defining minimum support \eqn{s} and confidence \eqn{c} means that the union of items in the

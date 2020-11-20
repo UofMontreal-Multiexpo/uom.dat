@@ -20,11 +20,11 @@
 \item{target}{Type of patterns to enumerate. One of \code{"frequent itemsets"},
 \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.}
 
-\item{count}{Minimum number of occurrences of a pattern to be considered as "frequent".}
+\item{count}{Minimum number of occurrences of a pattern to be considered as frequent.}
 
-\item{min_length}{Minimum number of items that a pattern must have to be kept when enumerating.}
+\item{min_length}{Minimum number of items that a pattern must have to be kept when mining patterns.}
 
-\item{max_length}{Maximum number of items that a pattern must have to be kept when enumerating.
+\item{max_length}{Maximum number of items that a pattern must have to be kept when mining patterns.
 The default \code{Inf} corresponds to a pattern search without maximum size limit.}
 
 \item{arules}{If \code{TRUE}, patterns are returned as object of class

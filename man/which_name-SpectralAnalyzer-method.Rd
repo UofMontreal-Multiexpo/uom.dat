@@ -15,7 +15,8 @@ Character corresponding to \code{NODES}, \code{PATTERNS}, \code{RULES}, \code{NO
 their simplifications. One or more.}
 }
 \value{
-Character corresponding to \code{NODES}, \code{PATTERNS}, \code{RULES}, \code{NODES_LINKS} or \code{PATTERN_LINKS}
+Vector of characters (of the same size as \code{name}) corresponding to \code{NODES}, \code{PATTERNS},
+\code{RULES}, \code{NODES_LINKS} or \code{PATTERN_LINKS}.
 }
 \description{
 Give the type of entities or links given a name referring to it.

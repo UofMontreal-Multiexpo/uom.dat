@@ -29,7 +29,7 @@ the order of the columns of \code{object["items_categories"]}).}
 
 \item{items}{Items to represent on the tree.
 Any subset of \code{object["items"]}.\cr
-\code{"items"} and \code{"i"} are specific values for \code{object["items"]}.}
+\code{"items"} and \code{"i"} are special values for \code{object["items"]}.}
 
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}

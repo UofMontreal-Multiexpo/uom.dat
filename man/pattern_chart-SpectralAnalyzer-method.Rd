@@ -25,7 +25,7 @@
 
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose chart
 is to be plotted. Any subset of \code{object["patterns"]}.\cr
-\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
+\code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame.
 One of \code{"original"}, \code{"new"}.
@@ -46,7 +46,7 @@ of the represented items.}
 \item{display_text}{Text to display on the chart next to the patterns.
 Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"},
 \code{"frequency"}, \code{"specificity"}, \code{"year"}).
-The \code{NULL} value specifies that none of this information should be displayed.}
+\code{NULL} value specifies to display no information.}
 
 \item{c.cutoff}{Limit number of characters to display in the legend for the categories represented.}
 
@@ -54,8 +54,7 @@ The \code{NULL} value specifies that none of this information should be displaye
 
 \item{title}{Chart title.}
 
-\item{path}{Path of the directory in which to save the chart.
-By default, the chart is saved in the working directory.}
+\item{path}{Path of the directory in which to save the chart. Default is the working directory.}
 
 \item{name}{Name of the file in which to save the chart.}
 }

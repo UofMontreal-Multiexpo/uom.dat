@@ -21,7 +21,7 @@
 \value{
 If \code{part} is not \code{NULL}, \code{TRUE} if the related attributes are initialized.
 If \code{part} is \code{NULL}, 4 logical values corresponding to the initialization related to \code{nodes},
-\code{nodes_links}, \code{patterns}, \code{patterns_links} (in this order).
+\code{nodes_links}, \code{patterns} and \code{patterns_links} (in this order).
 }
 \description{
 Test if the attributes related to nodes, links between nodes, patterns or links between patterns
@@ -55,7 +55,7 @@ is_init(sa_object)
 
 }
 \seealso{
-\code{\link{init}}.
+\code{\link{init}}, \code{\link{reset}}, \code{\link{spectral.analyzer}}.
 }
 \author{
 Gauthier Magnin

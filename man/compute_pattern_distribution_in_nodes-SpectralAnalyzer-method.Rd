@@ -10,18 +10,19 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{patterns}{Patterns whose distributions are to be calculated.}
+\item{patterns}{Patterns whose distributions are to be computed.}
 }
 \value{
 \describe{
    \item{\code{weight_distribution}}{The distribution, for each pattern, of the weights of nodes in
-                                     which they are included.}
+                                     which it is included.}
    \item{\code{length_distribution}}{The distribution, for each pattern, of the lengths of nodes in
-                                     which they are included.}
+                                     which it is included.}
  }
 }
 \description{
-Compute the distributions of the weights and lenghts of the nodes in which each pattern is included.
+For each pattern, compute the distributions of the weights and lengths of the nodes in which
+ it is included.
 }
 \author{
 Gauthier Magnin

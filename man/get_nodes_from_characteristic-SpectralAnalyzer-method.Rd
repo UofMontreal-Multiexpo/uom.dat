@@ -18,7 +18,7 @@
 
 \item{nc}{Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
 \code{object["nodes"]}.\cr
-\code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.}
+\code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.}
 
 \item{characteristic}{Name of the characteristic on which to do the search.
 One of \code{"length"}, \code{"weight"}.}

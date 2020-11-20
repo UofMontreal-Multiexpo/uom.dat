@@ -13,14 +13,15 @@
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 \strong{c}haracteristics. Nodes or patterns whose non-isolated are to be sought. Any subset of
 \code{object["nodes"]} or \code{object["patterns"]}.\cr
-\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 \code{object["nodes"]} and \code{object["patterns"]}.}
 }
 \value{
 Subset of the data frame that corresponds to non-isolated entities.
 }
 \description{
-Extract from the given nodes or patterns those which are not isolated.
+Extract from the given nodes or patterns those which are not isolated (i.e. those which are linked
+ to any other entity).
 }
 \examples{
 get_non_isolates(SA_instance, "patterns")

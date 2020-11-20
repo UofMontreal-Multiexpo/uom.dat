@@ -41,7 +41,7 @@ of the represented items.}
 \item{display_text}{Text to display on the chart next to the patterns.
 Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"},
 \code{"frequency"}, \code{"specificity"}, \code{"year"}).
-The \code{NULL} value specifies that none of this information should be displayed.}
+\code{NULL} value specifies to display no information.}
 
 \item{title}{Chart title.}
 }

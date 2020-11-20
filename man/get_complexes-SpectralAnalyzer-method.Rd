@@ -19,7 +19,7 @@
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 \strong{c}haracteristics. Nodes or patterns whose complexes are to be sought. Any subset of
 \code{object["nodes"]} or \code{object["patterns"]}.\cr
-\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 \code{object["nodes"]} and \code{object["patterns"]}.}
 
 \item{category}{Name or number of the category on which to search (numbering according to the order
@@ -31,7 +31,7 @@ One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
   \item{\code{"items"}, \code{"vertices"}}{Search for nodes or patterns associated (via their items)
         with several values of the category \code{category}.}
   \item{\code{"links"}, \code{"edges"}}{Search for nodes or patterns generating links corresponding
-        with several values of the category \code{category}.}
+        to several values of the category \code{category}.}
 }}
 
 \item{min_nb_values}{Minimum number of different values of the category \code{category} a node, a

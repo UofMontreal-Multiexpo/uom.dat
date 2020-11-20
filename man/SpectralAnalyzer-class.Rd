@@ -7,6 +7,9 @@
 \title{Spectral Analyzer}
 \description{
 S4 object class allowing spectral analyzes.
+ It consists of mining frequent itemsets from data, compute characteristics of these itemsets
+ (specificity, dynamic status...) and plot them on charts (spectrum, spectrosome...).
+ Items from itemsets can be associated with categories used in charts and computations.
 }
 \details{
 Default colors are assigned to the values of each category associated with the items.
@@ -20,11 +23,13 @@ See the attribute \code{categories_colors} to reassign colors to the category va
 \section{Slots}{
 
 \describe{
-\item{\code{observations}}{List of observations containing the items corresponding to each one.}
+\item{\code{observations}}{List of observations containing the items corresponding to each one.
+It represents the dataset in which frequent itemsets are to be mined.}
 
 \item{\code{items}}{Set of codes identifying the items found in the observations.}
 
-\item{\code{items_categories}}{Categories associated with the items.}
+\item{\code{items_categories}}{Categories associated with the items. Each item is associated with one value
+for each category.}
 
 \item{\code{categories_colors}}{Colors associated with the values of the categories associated with the items.}
 
@@ -32,30 +37,72 @@ See the attribute \code{categories_colors} to reassign colors to the category va
 
 \item{\code{parameters}}{List of parameters for pattern search and characterization:
 \describe{
-  \item{target}{Type of patterns to enumerate during the analysis.}
-  \item{count}{Minimum number of occurrences of a pattern to be kept when enumerating patterns.}
-  \item{min_length}{Minimum number of items that a pattern must have to be kept when enumerating patterns.}
-  \item{max_length}{Maximum number of items that a pattern must have to be kept when enumerating patterns.}
-  \item{status_limit}{Time interval for which to characterize the status of the patterns in relation to the total period of observations.}
+  \item{\code{target}}{Type of patterns to mine during the analysis.}
+  \item{\code{count}}{Minimum number of occurrences that a pattern must appear to be kept when
+                      mining patterns.}
+  \item{\code{min_length}}{Minimum number of items that a pattern must have to be kept when mining
+                           patterns.}
+  \item{\code{max_length}}{Maximum number of items that a pattern must have to be kept when mining
+                           patterns.}
+  \item{\code{status_limit}}{Time interval for which to characterize the status of the patterns in
+                             relation to the total period of observations (number of years).}
 }}
 
-\item{\code{nodes}}{Set of nodes: set of separate observations, and characteristics of these nodes.}
+\item{\code{nodes}}{Set of nodes (separate observations) and characteristics of these nodes.
+Data frame of 3 variables:
+\describe{
+  \item{\code{node}}{Set of items composing the node.}
+  \item{\code{length}}{Number of items composing the node.}
+  \item{\code{weight}}{Number of observations for which the set of items matches exactly.}
+}}
 
-\item{\code{nodes_per_year}}{Number of occurrences of each node per year.}
+\item{\code{nodes_per_year}}{Number of occurrences of each node, per year.}
 
-\item{\code{n_links}}{Set of weights of the links between the nodes.}
+\item{\code{n_links}}{Set of weights of the links between the nodes. Adjacency matrix containing the number
+of items in common between each pair of nodes.}
 
-\item{\code{nodes_links}}{Set of links between the nodes and characteristics of these links.}
+\item{\code{nodes_links}}{Set of links between the nodes and characteristics of these links.
+Isolated nodes (i.e. unrelated to any other node) appear at the bottom of the data structure.
+Data frame of 4 variables:
+\describe{
+  \item{\code{endpoint.1}, \code{endpoint.2}}{Identifiers of two nodes from the attribute
+                                              \code{nodes}.}
+  \item{\code{items}}{Items in common between the two nodes.}
+  \item{\code{weight}}{Number of items in common between the two nodes.}
+}}
 
-\item{\code{nodes_patterns}}{Set of associations between patterns and nodes.}
+\item{\code{nodes_patterns}}{Set of associations between patterns and nodes determining whether a pattern
+is included in a node.}
 
-\item{\code{patterns}}{Set of separate patterns and their characteristics.}
+\item{\code{patterns}}{Set of mined patterns and characteristics of these patterns.
+Data frame of 7 variables:
+\describe{
+  \item{\code{pattern}}{Set of items composing the pattern.}
+  \item{\code{year}}{Year of appearance of the pattern among the observations.}
+  \item{\code{frequency}}{Number of nodes containing the set of items of the pattern.}
+  \item{\code{weight}}{Number of observations containing the set of items of the pattern.}
+  \item{\code{order}}{Number of items composing the pattern.}
+  \item{\code{specificity}}{Specificity of the information conveyed by the pattern. It corresponds
+    to the nature of a pattern of being specific of a particular combination or ubiquitous and
+    allowing the formation of numerous combinations (with regard to the observations).}
+  \item{\code{status}}{Dynamic status of the pattern: persistent, declining, emergent or latent.}
+}}
 
-\item{\code{patterns_per_year}}{Number of occurrences of each pattern per year.}
+\item{\code{patterns_per_year}}{Number of occurrences of each pattern, per year.}
 
-\item{\code{p_links}}{Set of weights of the links between the patterns.}
+\item{\code{p_links}}{Set of weights of the links between the patterns. Adjacency matrix containing the number
+of items in common between each pair of patterns.}
 
-\item{\code{patterns_links}}{Set of links between the patterns and characteristics of these links.}
+\item{\code{patterns_links}}{Set of links between the patterns and characteristics of these links.
+Isolated patterns (i.e. unrelated to any other pattern) appear at the bottom of the data structure.
+Data frame of 5 variables:
+\describe{
+  \item{\code{endpoint.1}, \code{endpoint.2}}{Identifiers of two patterns from the attribute
+                                              \code{patterns}.}
+  \item{\code{items}}{Items in common between the two patterns.}
+  \item{\code{weight}}{Number of items in common between the two patterns.}
+  \item{\code{year}}{Year of appearance of the link between the two patterns.}
+}}
 }}
 
 \references{

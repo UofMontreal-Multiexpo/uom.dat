@@ -12,7 +12,7 @@
 
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 \code{object["patterns"]}.\cr
-\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
+\code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{element}{Type of element on which to search.
 One of \code{"items"}, \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}, \code{"status"}
@@ -55,7 +55,7 @@ equal to that sought.
 than or equal to that sought.
 }
 
-If \code{element} refers to the specific characteristic \code{"status"}, one or more status can be sought.
+If \code{element} refers to the characteristic \code{"status"}, one or more status can be sought.
 the condition for a pattern to be extracted is a comparison of the sought status (argument \code{value})
 according to one of the basic comparison operators (default is equality):
 \itemize{
@@ -65,8 +65,8 @@ values.
 }
 
 If \code{element} is the name or the number of a category, the condition for a pattern to be extracted is
-the correspondence to the sought category \code{value}. The argument \code{condition} must be one of \code{"items"},
-\code{"links"}, \code{"vertices"}, \code{"edges"} (no default).
+the correspondence to the sought category  value (argument \code{value}). The argument \code{condition} must
+be one of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"} (no default).
 \itemize{
 \item \code{"items"}, \code{"vertices"}: search for patterns containing an item associated with the sought
 category value.

@@ -15,10 +15,10 @@
 \item{verbose}{Logical value indicating whether to report progress.}
 }
 \description{
-Redefine the attributes of a spectral analyzer from a specific step.
+Reset the attributes of a spectral analyzer from a specific step.
 }
 \details{
-The steps of construction of a spectral analyzer are:
+The steps for initializing a spectral analyzer are:
 \enumerate{
   \item{Enumeration of the observations per year.}
   \item{Enumeration of the nodes and calculation of the number of occurrences.}

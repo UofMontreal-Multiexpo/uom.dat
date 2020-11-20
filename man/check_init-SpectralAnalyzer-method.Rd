@@ -2,6 +2,7 @@
 % Please edit documentation in R/spectral_analyzer.R
 \name{check_init,SpectralAnalyzer-method}
 \alias{check_init,SpectralAnalyzer-method}
+\alias{check_init}
 \title{Initialization validation}
 \usage{
 \S4method{check_init}{SpectralAnalyzer}(object, part = NULL, stop = TRUE, prefix = "", suffix = "")
@@ -36,7 +37,7 @@ If \code{part} is \code{NULL}, 4 logical values corresponding to the initializat
 \code{nodes_links}, \code{patterns}, \code{patterns_links} (in this order).
 }
 \description{
-Check that a part of a SpectralAnalyzer object is initialized.
+Check that a part of a \code{SpectralAnalyzer} object is initialized.
 Stop the execution and print an error message if not.
 }
 \details{

@@ -31,17 +31,35 @@ Initialize the attributes related to nodes, links between nodes, patterns and/or
 patterns.
 }
 \details{
-The initialization of the nodes consists of the initialization of the attributes \code{n_links} and
-\code{nodes_links}.
+The initialization of the nodes consists of the initialization of the attributes  \code{nodes} and
+\code{nodes_per_year}:
+\enumerate{
+\item{Enumeration of the observations per year.}
+\item{Enumeration of the nodes and calculation of the number of occurrences.}
+}
 
 The initialization of the links between nodes consists of the initialization of the attributes
-\code{nodes} and \code{nodes_per_year}.
+\code{n_links} and \code{nodes_links}:
+\enumerate{
+\item{Counting links between nodes.}
+\item{Elaboration of links between nodes.}
+}
 
 The initialization of the patterns consists of the initialization of the attributes \code{patterns},
-\code{patterns_per_year} and \code{nodes_patterns}.
+\code{patterns_per_year} and \code{nodes_patterns}:
+\enumerate{
+\item{Mining for itemsets.}
+\item{Linking nodes to patterns.}
+\item{Characterization of patterns per year.}
+\item{Computation of pattern characteristics.}
+}
 
 The initialization of the links between patterns consists of the initialization of the attributes
-\code{p_links} and \code{patterns_links}.
+\code{p_links} and \code{patterns_links}:
+\enumerate{
+\item{Counting links between patterns.}
+\item{Elaboration of links between patterns.}
+}
 }
 \examples{
 ## Creating a SpectralAnalyzer and initialize some parts of it
@@ -58,7 +76,7 @@ is_init(sa_object)
 
 }
 \seealso{
-\code{\link{is_init}}, \code{\link{reset}}, \code{\link[arules:itemsets-class]{arules::itemsets}}.
+\code{\link{is_init}}, \code{\link{reset}}, \code{\link{spectral.analyzer}}, \code{\link[arules:itemsets-class]{arules::itemsets}}.
 }
 \author{
 Gauthier Magnin

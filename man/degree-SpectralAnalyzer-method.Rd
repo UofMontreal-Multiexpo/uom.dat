@@ -10,7 +10,7 @@
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
 
-\item{ID}{Identifier of the vertex (node or pattern) whose degree is to be calculated.}
+\item{ID}{Identifier of the vertex (node or pattern) whose degree is to be computed.}
 
 \item{links}{Data frame of the links (or edges) of a spectrosome graph.}
 }

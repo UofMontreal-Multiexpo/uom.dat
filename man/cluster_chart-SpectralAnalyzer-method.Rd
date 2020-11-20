@@ -29,7 +29,7 @@
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 \strong{c}haracteristics. Nodes or patterns of which one of the clusters is to be plotted. Any subset
 of \code{object["nodes"]} or \code{object["patterns"]}.\cr
-\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 \code{object["nodes"]} and \code{object["patterns"]}.}
 
 \item{item}{Identification code of the item whose cluster is to be plotted.}
@@ -45,7 +45,7 @@ return data frames. One of \code{"original"}, \code{"new"}.
 \item{use_name}{If \code{TRUE}, display the item name if it is defined. Display its identification
 code otherwise.}
 
-\item{n.cutoff}{If \code{use_names = TRUE}, limit number of characters to display concerning the name
+\item{n.cutoff}{If \code{use_name = TRUE}, limit number of characters to display concerning the name
 of the item.}
 
 \item{vertex_size}{Way how the sizes of the vertices of the graph should be defined.
@@ -65,30 +65,30 @@ or vector of length equal to the number of rows of \code{nopc}.
                                  entities contained in \code{nopc}.}
 }}
 
-\item{size_range}{If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
-Range of vertex size values (given as expansion factors).}
+\item{size_range}{If \code{vertex_size} is \code{"relative"} or \code{"grouped"},
+range of vertex size values (given as expansion factors). Ignored otherwise.}
 
 \item{vertex_col}{Way how the colors of the vertices of the graph should be defined.
 One of \code{"status"}, \code{"categories"}, \code{"none"} or a single character value or vector
-of length equal to the number of rows of \code{nopc}, corresponding to R predefined color names or
-hexadecimal values.\cr
+of length equal to the number of rows of \code{nopc} (characters corresponding to R predefined
+color names or hexadecimal values).
+
 If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-the entities represented. If is one specific color, all vertices are colored with this color.
-If is a vector of size equal to the number of rows of \code{nopc}, the colors are directly
+the entities represented. If one specific color, all vertices are colored with this color.
+If a vector of size equal to the number of rows of \code{nopc}, the colors are directly
 assigned to these entities. If \code{"none"}, the vertices are colored gray.}
 
 \item{c.cutoff}{Limit number of characters to display in the legend for the categories represented.}
 
-\item{display_mixt}{If \code{TRUE}, display in the legend the category values included only in mixed
-links (or in mixed vertices, if \code{vertex_col = "categories"}).}
+\item{display_mixt}{If \code{TRUE}, also display in the legend the category values included only in
+mixed links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 
 \item{title}{Chart title. Default title depends on the type of entities contained in \code{nopc} and
 on the argument \code{item}. Example of default title: \code{"Node cluster of 25"} if \code{nopc}
 contains nodes and \code{item = 25}.}
 
-\item{path}{Path of the directory in which to save the charts.
-By default, the charts are saved in the working directory.}
+\item{path}{Path of the directory in which to save the charts. Default is the working directory.}
 
 \item{name}{Name of the file in which to save the chart. Default name depends on the type of entities
 contained in \code{nopc} and on the argument \code{item}. Example of default name:
@@ -98,7 +98,7 @@ contained in \code{nopc} and on the argument \code{item}. Example of default nam
 \code{sna} for plotting the graph. See Details section.}
 }
 \value{
-\code{NULL} if none or only one node or pattern contains the sought item. \cr
+\code{NULL} if none or only one node or pattern contains the sought item.\cr
  Otherwise:
  \describe{
    \item{\code{vertices}}{Data frame of the nodes or patterns and characteristics used,
@@ -110,7 +110,8 @@ contained in \code{nopc} and on the argument \code{item}. Example of default nam
  }
 }
 \description{
-Identify the cluster associated with one specific item and plot a spectrosome of this cluster.
+Identify the cluster corresponding to one specific item and plot a spectrosome of this cluster.
+ Only nodes or patterns sharing this item are ploted.
 }
 \details{
 If categories are associated with the items, each category generates a spectrosome.

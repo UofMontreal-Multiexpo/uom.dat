@@ -32,7 +32,7 @@
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 \strong{c}haracteristics. Nodes or patterns whose spectrosome is to be plotted. Any subset of
 \code{object["nodes"]} or \code{object["patterns"]}.\cr
-\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 \code{object["nodes"]} and \code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the nodes or patterns on the chart and in the
@@ -43,7 +43,7 @@ return data frames. One of \code{"original"}, \code{"new"}.
                       \code{nopc}.}
 }}
 
-\item{nb_graphs}{Number of graphics to generate and save. The place of the vertices differs between
+\item{nb_graphs}{Number of graphs to generate and save. The position of the vertices differs between
 each copy.}
 
 \item{min_link_weight}{Minimum number of items in common between two entities to plot their link on
@@ -66,17 +66,18 @@ or vector of length equal to the number of nodes or patterns to plot.
                                  nodes of patterns to plot.}
 }}
 
-\item{size_range}{If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
-Range of vertex size values (given as expansion factors).}
+\item{size_range}{If \code{vertex_size} is \code{"relative"} or \code{"grouped"},
+range of vertex size values (given as expansion factors). Ignored otherwise.}
 
 \item{vertex_col}{Way how the colors of the vertices of the graph should be defined.
 One of \code{"status"}, \code{"categories"}, \code{"none"} or a single character value or vector
-of length equal to the number of nodes or patterns to plot, corresponding to R predefined color
-names or hexadecimal values.\cr
+of length equal to the number of nodes or patterns to plot (characters corresponding to R
+predefined color names or hexadecimal values).
+
 If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-the entities represented. If is one specific color, all vertices are colored with this color.
-If is a vector of size equal to the number of nodes or patterns to plot, the colors are directly
+the entities represented. If one specific color, all vertices are colored with this color.
+If a vector of size equal to the number of nodes or patterns to plot, the colors are directly
 assigned to these entities. If \code{"none"}, the vertices are colored gray.}
 
 \item{clusters}{Maximum number of clusters to name on the graph.
@@ -93,14 +94,13 @@ of the represented items.}
 
 \item{c.cutoff}{Limit number of characters to display in the legend for the categories represented.}
 
-\item{display_mixt}{If \code{TRUE}, display in the legend the category values included only in mixed
-links (or in mixed vertices, if \code{vertex_col = "categories"}).}
+\item{display_mixt}{If \code{TRUE}, also display in the legend the category values included only in
+mixed links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 
 \item{title}{Chart title. Default title depends on the type of entities contained in \code{nopc}.
 Example of default title: \code{"Spectrosome of nodes"} if \code{nopc} contains nodes.}
 
-\item{path}{Path of the directory in which to save the charts.
-By default, the charts are saved in the working directory.}
+\item{path}{Path of the directory in which to save the charts. Default is the working directory.}
 
 \item{name}{Name of the file in which to save the chart. Default name depends on the type of entities
 contained in \code{nopc}. Example of default name: \code{"spectrosome_of_nodes"} if \code{nopc}
@@ -121,7 +121,10 @@ contains nodes.}
  }
 }
 \description{
-Plot one or more spectrosome charts and save them in PNG format.
+Plot one or more spectrosome charts and save them in PNG format. Graph in which vertices are the
+ nodes or the patterns and edges are the items they have in common. Clusters corresponding to nodes
+ or patterns sharing one item are mentioned by displaying the name or code identifying the item
+ between these nodes or patterns.
 }
 \details{
 If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
@@ -154,7 +157,7 @@ Additional arguments can be supplied to the function in charge of plotting the g
  See the list of parameters: \code{\link[sna:gplot]{sna::gplot}}.
 Among them, the following parameters are already defined and cannot be modified: \code{dat},
  \code{gmode}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
-The following parameters, which can be redefined, have the following values:
+The following parameters, which are among those that can be redefined, have the following values:
  \itemize{
    \item{\code{mode = "fruchtermanreingold"}}
    \item{\code{displaylabels = TRUE}}

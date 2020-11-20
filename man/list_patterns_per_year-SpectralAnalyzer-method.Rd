@@ -11,11 +11,11 @@
 \item{object}{\code{SpectralAnalyzer} class object.}
 }
 \value{
-Invisible. Matrix of the weights of each pattern, pear year.
+Invisible. Matrix of the weights of each pattern, per year.
  The lines correspond to the patterns. The column correspond to the years.
 }
 \description{
-Count the number of occurrences of each pattern pear year.
+Count the number of occurrences of each pattern per year.
 The resulting matrix is assigned to the attribute \code{patterns_per_year} of \code{object}.
 }
 \author{

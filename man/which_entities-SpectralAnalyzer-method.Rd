@@ -11,7 +11,7 @@
 \item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{npr}{Data frame of \strong{n}odes, \strong{p}atterns or association \strong{r}ules and their characteristics.\cr
-\code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}, \code{"rules"} and \code{"r"} are specific values.}
+\code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}, \code{"rules"} and \code{"r"} are special values.}
 
 \item{entities}{Define if the data frame is either a data frame of nodes or a data frame of patterns
 (\code{NODES_OR_PATTERNS}), or if it can also be a data frame of rules (\code{NODES_PATTERNS_OR_RULES}).}

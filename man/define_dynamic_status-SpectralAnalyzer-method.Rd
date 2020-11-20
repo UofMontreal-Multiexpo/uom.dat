@@ -26,19 +26,20 @@ period [2014 - 2015].
 oldest observation and ending in the year \code{t}.}
 }
 \value{
-Data frame associating each pattern with its dynamic status.
+Data frame associating each pattern with its dynamic status (persistent, declining,
+emergent or latent).
 }
 \description{
 Define the dynamic status of each pattern.
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-            The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
-            \url{https://doi.org/10.1371/journal.pone.0190196}.
+The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
+\url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
 \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
-         \code{\link{compute_ksi_threshold}}, \code{\link{compute_ri_threshold}}.
+\code{\link{compute_ksi_threshold}}, \code{\link{compute_ri_threshold}}.
 }
 \author{
 Gauthier Magnin

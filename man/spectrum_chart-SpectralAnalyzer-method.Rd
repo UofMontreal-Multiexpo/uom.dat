@@ -20,7 +20,7 @@
 
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 is to be plotted. Any subset of \code{object["patterns"]}.\cr
-\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
+\code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame.
 One of \code{"original"}, \code{"new"}.
@@ -35,8 +35,7 @@ Otherwise, they are ordered on the chart in the order in which they are given.}
 
 \item{title}{Chart title.}
 
-\item{path}{Path of the directory in which to save the chart.
-By default, the chart is saved in the working directory.}
+\item{path}{Path of the directory in which to save the chart. Default is the working directory.}
 
 \item{name}{Name of the file in which to save the chart.}
 }
@@ -45,7 +44,8 @@ Data frame of the patterns and characteristics used, associated with the identif
  on the chart.
 }
 \description{
-Plot a spectrum chart and save it as a PDF file.
+Plot a spectrum chart and save it as a PDF file. Bar chart of the given patterns showing their
+ characteristics.
 }
 \details{
 The patterns are sorted according to their specificities (desc.), status (in order of

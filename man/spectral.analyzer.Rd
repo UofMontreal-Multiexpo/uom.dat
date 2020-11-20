@@ -23,19 +23,19 @@ Each observation is itself a list containing at least two elements named \code{"
 Values of \code{CODE} must not contain the character \code{"/"}.
 An observation can contain any additional information in its list.}
 
-\item{items}{Data frame associating a name (column \code{name}) and one or more categories
+\item{items}{Data frame associating a name (column \code{name}) and possibly one or more categories
 (additional columns) to each item (column \code{item}). Each category must be of type \code{factor}.
 The columns \code{item} and \code{name} must be of type \code{character}. The default value,
 \code{NULL}, specifies that no name or category is defined.}
 
-\item{target}{Type of patterns to enumerate. One of \code{"frequent itemsets"},
+\item{target}{Type of patterns to mine. One of \code{"frequent itemsets"},
 \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"} (see 'Details').}
 
-\item{count}{Minimum number of occurrences of a pattern to be considered as "frequent".}
+\item{count}{Minimum number of occurrences that a pattern must appear to be considered as "frequent".}
 
-\item{min_length}{Minimum number of items that a pattern must have to be kept when enumerating.}
+\item{min_length}{Minimum number of items that a pattern must have to be kept when mining patterns.}
 
-\item{max_length}{Maximum number of items that a pattern must have to be kept when enumerating.
+\item{max_length}{Maximum number of items that a pattern must have to be kept when mining patterns.
 The default \code{Inf} corresponds to a pattern search without maximum size limit.}
 
 \item{status_limit}{Time interval for which to characterize the status of the patterns in relation
@@ -77,6 +77,20 @@ The \strong{frequent itemsets} are an exhaustive list of frequent itemsets.
  
 For an explanation with illustrated examples about the different types of itemsets, read the
  vignette titled "\emph{Mining itemsets}".
+ 
+The steps for initializing a spectral analyzer are:
+\enumerate{
+  \item{Enumeration of the observations per year.}
+  \item{Enumeration of the nodes and calculation of the number of occurrences.}
+  \item{Counting links between nodes.}
+  \item{Elaboration of links between nodes.}
+  \item{Mining for itemsets.}
+  \item{Linking nodes to patterns.}
+  \item{Characterization of patterns per year.}
+  \item{Computation of pattern characteristics.}
+  \item{Counting links between patterns.}
+  \item{Elaboration of links between patterns.}
+}
 }
 \examples{
 ## Creating a SpectralAnalyzer from a list of observations
@@ -101,8 +115,9 @@ sa_object_2 <- spectral.analyzer(obs, items)
 
 }
 \seealso{
-\code{\link{SpectralAnalyzer}}, \code{\link{reset}}, \code{\link{init}},
-         \code{\link{is_init}}.
+The class: \code{\link{SpectralAnalyzer}}.
+
+Initialization: \code{\link{init}}, \code{\link{is_init}}, \code{\link{reset}}.
 }
 \author{
 Gauthier Magnin

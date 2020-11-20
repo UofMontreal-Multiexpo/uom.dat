@@ -31,7 +31,7 @@
 
 \item{items}{Items for which to count co-occurrences between pairs and to plot on the graph.
 Any subset of \code{object["items"]}.\cr
-\code{"items"} and \code{"i"} are specific values for \code{object["items"]}.}
+\code{"items"} and \code{"i"} are special values for \code{object["items"]}.}
 
 \item{category}{Name or number of the category to represent on the graph (numbering according to
 the order of the columns of \code{object["items_categories"]}).}

@@ -11,7 +11,7 @@
 \item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{nc}{Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of \code{object["nodes"]}.\cr
-\code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.}
+\code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.}
 
 \item{element}{Type of element on which to search.
 One of \code{"items"}, \code{"length"}, \code{"weight"} or the name or number of a category on which to search
@@ -54,8 +54,8 @@ than or equal to that sought.
 }
 
 If \code{element} is the name or the number of a category, the condition for a node to be extracted is
-the correspondence to the sought category \code{value}. The argument \code{condition} must be one of \code{"items"},
-\code{"links"}, \code{"vertices"}, \code{"edges"} (no default).
+the correspondence to the sought category value (argument \code{value}). The argument \code{condition} must
+be one of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"} (no default).
 \itemize{
 \item \code{"items"}, \code{"vertices"}: search for nodes containing an item associated with the sought category
 value.

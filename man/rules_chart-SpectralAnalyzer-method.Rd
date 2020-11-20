@@ -38,7 +38,7 @@ Only those of length 2 are considered. If \code{NULL}, rules of length 2 are ext
 \item{items}{Items to consider in the given or extracted rules. If \code{NULL}, only items from the given
 \code{rules} are considered.
 Any subset of \code{object["items"]}.\cr
-\code{"items"} and \code{"i"} are specific values for \code{object["items"]}.}
+\code{"items"} and \code{"i"} are special values for \code{object["items"]}.}
 
 \item{parameters}{List of mining parameters specifying minimum support and minimum confidence of
 association rules to extract. Ignored if \code{rules} is not \code{NULL}. See
@@ -109,8 +109,8 @@ If \code{1}, colors are in original order: from the lightest to the darkest.
 If \code{-1}, color order is reversed: from the darkest to the lightest.}
 }
 \value{
-\code{NULL} if no association rules meets the criteria defined by \code{items}, \code{parameters} and
-\code{threshold}. \cr
+\code{NULL} if no association rule meets the criteria defined by \code{items}, \code{parameters} and
+\code{threshold}.\cr
 Otherwise:
 \describe{
 \item{\code{graph}}{Graph created with the packages \code{ggraph} and \code{ggplot2}.}
@@ -125,7 +125,7 @@ an item and the consequent is another item.
 \details{
 \loadmathjax
 For an association rule \mjeqn{X \rightarrow Y}{X -> Y}, the reciprocal rule is the rule
-\mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support and lift but can have two
+\mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support and lift but may have two
 different confidence values.
 
 If \code{display} refers to the selection of rules of highest or lowest confidence and if an association

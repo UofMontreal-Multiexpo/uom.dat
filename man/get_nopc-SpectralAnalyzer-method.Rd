@@ -13,7 +13,7 @@
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their \strong{c}haracteristics or one of the
 following character values: \code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}.}
 
-\item{entities}{Type of the entities that the data frame can refer to (\code{NODES}, \code{PATTERNS} or
+\item{entities}{Type of the entities that the data frame may refer to (\code{NODES}, \code{PATTERNS} or
 \code{NODES_OR_PATTERNS}).}
 }
 \value{

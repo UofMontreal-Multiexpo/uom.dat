@@ -78,6 +78,9 @@ setClassUnion("listORarray", c("list", "array"))
 #' Spectral Analyzer
 #' 
 #' S4 object class allowing spectral analyzes.
+#'  It consists of mining frequent itemsets from data, compute characteristics of these itemsets
+#'  (specificity, dynamic status...) and plot them on charts (spectrum, spectrosome...).
+#'  Items from itemsets can be associated with categories used in charts and computations.
 #' 
 #' @details
 #' Default colors are assigned to the values of each category associated with the items.
@@ -89,27 +92,71 @@ setClassUnion("listORarray", c("list", "array"))
 #' See the attribute \code{categories_colors} to reassign colors to the category values.
 #' 
 #' @slot observations List of observations containing the items corresponding to each one.
+#'  It represents the dataset in which frequent itemsets are to be mined.
 #' @slot items Set of codes identifying the items found in the observations.
-#' @slot items_categories Categories associated with the items.
+#' @slot items_categories Categories associated with the items. Each item is associated with one value
+#'  for each category.
 #' @slot categories_colors Colors associated with the values of the categories associated with the items.
 #' @slot status_colors Colors associated with the values of the status the patterns can have.
 #' @slot parameters List of parameters for pattern search and characterization:
 #'  \describe{
-#'    \item{target}{Type of patterns to enumerate during the analysis.}
-#'    \item{count}{Minimum number of occurrences of a pattern to be kept when enumerating patterns.}
-#'    \item{min_length}{Minimum number of items that a pattern must have to be kept when enumerating patterns.}
-#'    \item{max_length}{Maximum number of items that a pattern must have to be kept when enumerating patterns.}
-#'    \item{status_limit}{Time interval for which to characterize the status of the patterns in relation to the total period of observations.}
+#'    \item{\code{target}}{Type of patterns to mine during the analysis.}
+#'    \item{\code{count}}{Minimum number of occurrences that a pattern must appear to be kept when
+#'                        mining patterns.}
+#'    \item{\code{min_length}}{Minimum number of items that a pattern must have to be kept when mining
+#'                             patterns.}
+#'    \item{\code{max_length}}{Maximum number of items that a pattern must have to be kept when mining
+#'                             patterns.}
+#'    \item{\code{status_limit}}{Time interval for which to characterize the status of the patterns in
+#'                               relation to the total period of observations (number of years).}
 #'  }
-#' @slot nodes Set of nodes: set of separate observations, and characteristics of these nodes.
-#' @slot nodes_per_year Number of occurrences of each node per year.
-#' @slot n_links Set of weights of the links between the nodes.
+#' @slot nodes Set of nodes (separate observations) and characteristics of these nodes.
+#'  Data frame of 3 variables:
+#'  \describe{
+#'    \item{\code{node}}{Set of items composing the node.}
+#'    \item{\code{length}}{Number of items composing the node.}
+#'    \item{\code{weight}}{Number of observations for which the set of items matches exactly.}
+#'  }
+#' @slot nodes_per_year Number of occurrences of each node, per year.
+#' @slot n_links Set of weights of the links between the nodes. Adjacency matrix containing the number
+#'  of items in common between each pair of nodes.
 #' @slot nodes_links Set of links between the nodes and characteristics of these links.
-#' @slot nodes_patterns Set of associations between patterns and nodes.
-#' @slot patterns Set of separate patterns and their characteristics.
-#' @slot patterns_per_year Number of occurrences of each pattern per year.
-#' @slot p_links Set of weights of the links between the patterns.
+#'  Isolated nodes (i.e. unrelated to any other node) appear at the bottom of the data structure.
+#'  Data frame of 4 variables:
+#'  \describe{
+#'    \item{\code{endpoint.1}, \code{endpoint.2}}{Identifiers of two nodes from the attribute
+#'                                                \code{nodes}.}
+#'    \item{\code{items}}{Items in common between the two nodes.}
+#'    \item{\code{weight}}{Number of items in common between the two nodes.}
+#'  }
+#' @slot nodes_patterns Set of associations between patterns and nodes determining whether a pattern
+#'  is included in a node.
+#' @slot patterns Set of mined patterns and characteristics of these patterns.
+#'  Data frame of 7 variables:
+#'  \describe{
+#'    \item{\code{pattern}}{Set of items composing the pattern.}
+#'    \item{\code{year}}{Year of appearance of the pattern among the observations.}
+#'    \item{\code{frequency}}{Number of nodes containing the set of items of the pattern.}
+#'    \item{\code{weight}}{Number of observations containing the set of items of the pattern.}
+#'    \item{\code{order}}{Number of items composing the pattern.}
+#'    \item{\code{specificity}}{Specificity of the information conveyed by the pattern. It corresponds
+#'      to the nature of a pattern of being specific of a particular combination or ubiquitous and
+#'      allowing the formation of numerous combinations (with regard to the observations).}
+#'    \item{\code{status}}{Dynamic status of the pattern: persistent, declining, emergent or latent.}
+#'  }
+#' @slot patterns_per_year Number of occurrences of each pattern, per year.
+#' @slot p_links Set of weights of the links between the patterns. Adjacency matrix containing the number
+#'  of items in common between each pair of patterns.
 #' @slot patterns_links Set of links between the patterns and characteristics of these links.
+#'  Isolated patterns (i.e. unrelated to any other pattern) appear at the bottom of the data structure.
+#'  Data frame of 5 variables:
+#'  \describe{
+#'    \item{\code{endpoint.1}, \code{endpoint.2}}{Identifiers of two patterns from the attribute
+#'                                                \code{patterns}.}
+#'    \item{\code{items}}{Items in common between the two patterns.}
+#'    \item{\code{weight}}{Number of items in common between the two patterns.}
+#'    \item{\code{year}}{Year of appearance of the link between the two patterns.}
+#'  }
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
@@ -121,7 +168,8 @@ setClassUnion("listORarray", c("list", "array"))
 #'             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
 #'             \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
-#' @seealso The \code{SpectralAnalyzer} constructor: \code{\link{spectral.analyzer}}.
+#' @seealso
+#' The \code{SpectralAnalyzer} constructor: \code{\link{spectral.analyzer}}.
 #' 
 #' An example object of class \code{SpectralAnalyzer}: \code{\link{SA_instance}}.
 #' @aliases SpectralAnalyzer
@@ -272,21 +320,35 @@ setMethod(f = "initialize",
 #'  
 #' For an explanation with illustrated examples about the different types of itemsets, read the
 #'  vignette titled "\emph{Mining itemsets}".
+#'  
+#' The steps for initializing a spectral analyzer are:
+#' \enumerate{
+#'   \item{Enumeration of the observations per year.}
+#'   \item{Enumeration of the nodes and calculation of the number of occurrences.}
+#'   \item{Counting links between nodes.}
+#'   \item{Elaboration of links between nodes.}
+#'   \item{Mining for itemsets.}
+#'   \item{Linking nodes to patterns.}
+#'   \item{Characterization of patterns per year.}
+#'   \item{Computation of pattern characteristics.}
+#'   \item{Counting links between patterns.}
+#'   \item{Elaboration of links between patterns.}
+#' }
 #' 
 #' @param observations List of observations containing the items corresponding to each observation.
 #'  Each observation is itself a list containing at least two elements named \code{"CODE"} and
 #'  \code{"YEAR"}. \code{"YEAR"} must be numeric and \code{"CODE"} must be character or numeric values.
 #'  Values of \code{CODE} must not contain the character \code{"/"}.
 #'  An observation can contain any additional information in its list.
-#' @param items Data frame associating a name (column \code{name}) and one or more categories
+#' @param items Data frame associating a name (column \code{name}) and possibly one or more categories
 #'  (additional columns) to each item (column \code{item}). Each category must be of type \code{factor}.
 #'  The columns \code{item} and \code{name} must be of type \code{character}. The default value,
 #'  \code{NULL}, specifies that no name or category is defined.
-#' @param target Type of patterns to enumerate. One of \code{"frequent itemsets"},
+#' @param target Type of patterns to mine. One of \code{"frequent itemsets"},
 #'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"} (see 'Details').
-#' @param count Minimum number of occurrences of a pattern to be considered as "frequent".
-#' @param min_length Minimum number of items that a pattern must have to be kept when enumerating.
-#' @param max_length Maximum number of items that a pattern must have to be kept when enumerating.
+#' @param count Minimum number of occurrences that a pattern must appear to be considered as "frequent".
+#' @param min_length Minimum number of items that a pattern must have to be kept when mining patterns.
+#' @param max_length Maximum number of items that a pattern must have to be kept when mining patterns.
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
 #' @param status_limit Time interval for which to characterize the status of the patterns in relation
 #'  to the total period of observations (number of years).
@@ -297,8 +359,10 @@ setMethod(f = "initialize",
 #' @return New object of class \code{SpectralAnalyzer}.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{SpectralAnalyzer}}, \code{\link{reset}}, \code{\link{init}},
-#'          \code{\link{is_init}}.
+#' @seealso
+#' The class: \code{\link{SpectralAnalyzer}}.
+#' 
+#' Initialization: \code{\link{init}}, \code{\link{is_init}}, \code{\link{reset}}.
 #' 
 #' @examples
 #' ## Creating a SpectralAnalyzer from a list of observations
@@ -644,10 +708,10 @@ setGeneric(name = "which_name", def = function(object, name){ standardGeneric("w
 
 #' Partial reset of a spectral analyzer
 #' 
-#' Redefine the attributes of a spectral analyzer from a specific step.
+#' Reset the attributes of a spectral analyzer from a specific step.
 #' 
 #' @details
-#' The steps of construction of a spectral analyzer are:
+#' The steps for initializing a spectral analyzer are:
 #' \enumerate{
 #'   \item{Enumeration of the observations per year.}
 #'   \item{Enumeration of the nodes and calculation of the number of occurrences.}
@@ -666,7 +730,8 @@ setGeneric(name = "which_name", def = function(object, name){ standardGeneric("w
 #' @param verbose Logical value indicating whether to report progress.
 #' 
 #' @author Gauthier Magnin
-#' @seealso The \code{\link{SpectralAnalyzer}} constructor: \code{\link{spectral.analyzer}}.
+#' @seealso
+#' The \code{\link{SpectralAnalyzer}} constructor: \code{\link{spectral.analyzer}}.
 #' 
 #' Initialization: \code{\link{init}}, \code{\link{is_init}}.
 #' 
@@ -746,17 +811,35 @@ setMethod(f = "reset",
 #'  patterns.
 #' 
 #' @details
-#' The initialization of the nodes consists of the initialization of the attributes `n_links` and
-#'  `nodes_links`.
+#' The initialization of the nodes consists of the initialization of the attributes  `nodes` and
+#'  `nodes_per_year`:
+#'  \enumerate{
+#'    \item{Enumeration of the observations per year.}
+#'    \item{Enumeration of the nodes and calculation of the number of occurrences.}
+#'  }
 #' 
 #' The initialization of the links between nodes consists of the initialization of the attributes
-#'  `nodes` and `nodes_per_year`.
+#'  `n_links` and `nodes_links`:
+#'  \enumerate{
+#'    \item{Counting links between nodes.}
+#'    \item{Elaboration of links between nodes.}
+#'  }
 #' 
 #' The initialization of the patterns consists of the initialization of the attributes `patterns`,
-#'  `patterns_per_year` and `nodes_patterns`.
+#'  `patterns_per_year` and `nodes_patterns`:
+#'  \enumerate{
+#'    \item{Mining for itemsets.}
+#'    \item{Linking nodes to patterns.}
+#'    \item{Characterization of patterns per year.}
+#'    \item{Computation of pattern characteristics.}
+#'  }
 #' 
 #' The initialization of the links between patterns consists of the initialization of the attributes
-#'  `p_links` and `patterns_links`.
+#'  `p_links` and `patterns_links`:
+#'  \enumerate{
+#'    \item{Counting links between patterns.}
+#'    \item{Elaboration of links between patterns.}
+#'  }
 #' 
 #' @param object `SpectralAnalyzer` class object.
 #' @param part `NULL` or character value corresponding to the attributes to initialize.
@@ -773,7 +856,7 @@ setMethod(f = "reset",
 #'  object of class [`itemsets`][arules::itemsets-class] (from the package `arules`).
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`is_init`], [`reset`], [`arules::itemsets`][arules::itemsets-class].
+#' @seealso [`is_init`], [`reset`], [`spectral.analyzer`], [`arules::itemsets`][arules::itemsets-class].
 #' 
 #' @examples
 #' ## Creating a SpectralAnalyzer and initialize some parts of it
@@ -788,8 +871,8 @@ setMethod(f = "reset",
 #' is_init(sa_object, "patterns")
 #' is_init(sa_object)
 #' 
-#' @md
 #' @aliases init
+#' @md
 #' @export
 setMethod(f = "init",
           signature = "SpectralAnalyzer",
@@ -995,10 +1078,10 @@ setMethod(f = "init_patterns_links",
 #'  }
 #' @return If `part` is not `NULL`, `TRUE` if the related attributes are initialized.
 #'  If `part` is `NULL`, 4 logical values corresponding to the initialization related to `nodes`,
-#'  `nodes_links`, `patterns`, `patterns_links` (in this order).
+#'  `nodes_links`, `patterns` and `patterns_links` (in this order).
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`init`].
+#' @seealso [`init`], [`reset`], [`spectral.analyzer`].
 #' 
 #' @examples
 #' ## Creating a SpectralAnalyzer and initialize some parts of it
@@ -1013,8 +1096,8 @@ setMethod(f = "init_patterns_links",
 #' is_init(sa_object, "patterns")
 #' is_init(sa_object)
 #' 
-#' @md
 #' @aliases is_init
+#' @md
 #' @export
 setMethod(f = "is_init",
           signature = "SpectralAnalyzer",
@@ -1106,7 +1189,7 @@ setMethod(f = "is_init_patterns_links",
 
 #' Initialization validation
 #' 
-#' Check that a part of a SpectralAnalyzer object is initialized.
+#' Check that a part of a `SpectralAnalyzer` object is initialized.
 #' Stop the execution and print an error message if not.
 #' 
 #' @inherit is_init,SpectralAnalyzer-method details
@@ -1135,6 +1218,8 @@ setMethod(f = "is_init_patterns_links",
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`is_init`], [`init`].
+#' 
+#' @aliases check_init
 #' @md
 #' @keywords internal
 setMethod(f = "check_init",
@@ -1459,9 +1544,9 @@ setMethod(f = "search_links",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param target Type of patterns to enumerate. One of \code{"frequent itemsets"},
 #'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
-#' @param count Minimum number of occurrences of a pattern to be considered as "frequent".
-#' @param min_length Minimum number of items that a pattern must have to be kept when enumerating.
-#' @param max_length Maximum number of items that a pattern must have to be kept when enumerating.
+#' @param count Minimum number of occurrences of a pattern to be considered as frequent.
+#' @param min_length Minimum number of items that a pattern must have to be kept when mining patterns.
+#' @param max_length Maximum number of items that a pattern must have to be kept when mining patterns.
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
 #' @param arules If \code{TRUE}, patterns are returned as object of class
 #'  \code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.
@@ -1554,11 +1639,11 @@ setMethod(f = "list_patterns_by_node",
 
 #' Enumeration of patterns per year
 #' 
-#' Count the number of occurrences of each pattern pear year.
+#' Count the number of occurrences of each pattern per year.
 #' The resulting matrix is assigned to the attribute \code{patterns_per_year} of \code{object}.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @return Invisible. Matrix of the weights of each pattern, pear year.
+#' @return Invisible. Matrix of the weights of each pattern, per year.
 #'  The lines correspond to the patterns. The column correspond to the years.
 #' 
 #' @author Gauthier Magnin
@@ -1649,8 +1734,9 @@ setMethod(f = "compute_patterns_characteristics",
 #' Specificity computation
 #' 
 #' Compute the specificity of the information conveyed by each pattern.
-#' The specitificity corresponds to the character of a pattern of being specific of a particular
-#'  combination or ubiquitous and allowing the formation of numerous aggregates.
+#' The specitificity corresponds to the nature of a pattern of being specific of a particular
+#'  combination or ubiquitous and allowing the formation of numerous combinations (with regard to the
+#'  observations).
 #'  
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param patterns Patterns whose specificity is to be computed.
@@ -1946,27 +2032,29 @@ setMethod(f = "compute_ri_threshold",
 #' 
 #' Define the dynamic status of each pattern.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object `SpectralAnalyzer` class object.
 #' @param patterns Patterns whose dynamic status are to be defined.
 #' @param status_limit Time interval over which to characterize the status of the patterns in relation
-#' to the period defined by the arguments \code{t} and \code{period}.
+#' to the period defined by the arguments `t` and `period`.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the pattern.
-#'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
+#'  `NULL` specifies that the characterization must be done in relation to the last year covered
 #'  by the observations.
 #' @param period Time interval over which to characterize the patterns (number of years).
-#'  For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
-#'  period [2014 - 2015].
-#'  \code{Inf} specifies that the period considered covers an interval starting on the date of the
-#'  oldest observation and ending in the year \code{t}.
-#' @return Data frame associating each pattern with its dynamic status.
+#'  For example, if `t = 2015` and `period = 2` then the computation is made over the
+#'  period \[2014 - 2015\].
+#'  `Inf` specifies that the period considered covers an interval starting on the date of the
+#'  oldest observation and ending in the year `t`.
+#' @return Data frame associating each pattern with its dynamic status (persistent, declining,
+#'  emergent or latent).
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
-#'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
-#'          \code{\link{compute_ksi_threshold}}, \code{\link{compute_ri_threshold}}.
+#'             The spectrosome of occupational health problems. *PLoS ONE* 13(1): e0190196.
+#'             <https://doi.org/10.1371/journal.pone.0190196>.
+#' @seealso [`compute_reporting_indexes`], [`compute_reporting_indexes_limits`],
+#'          [`compute_ksi_threshold`], [`compute_ri_threshold`].
 #' @aliases define_dynamic_status
+#' @md
 #' @keywords internal
 setMethod(f = "define_dynamic_status",
           signature = "SpectralAnalyzer",
@@ -2002,7 +2090,8 @@ setMethod(f = "define_dynamic_status",
 
 #' Pattern spectrum
 #' 
-#' Plot a spectrum chart and save it as a PDF file.
+#' Plot a spectrum chart and save it as a PDF file. Bar chart of the given patterns showing their
+#'  characteristics.
 #' 
 #' @details
 #' The patterns are sorted according to their specificities (desc.), status (in order of
@@ -2014,7 +2103,7 @@ setMethod(f = "define_dynamic_status",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 #'  is to be plotted. Any subset of \code{object["patterns"]}.\cr
-#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
+#'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame.
 #'  One of \code{"original"}, \code{"new"}.
 #'  \describe{
@@ -2025,8 +2114,7 @@ setMethod(f = "define_dynamic_status",
 #' @param sort If \code{TRUE}, the patterns are sorted on the chart as described in 'Details' section.
 #'  Otherwise, they are ordered on the chart in the order in which they are given.
 #' @param title Chart title.
-#' @param path Path of the directory in which to save the chart.
-#'  By default, the chart is saved in the working directory.
+#' @param path Path of the directory in which to save the chart. Default is the working directory.
 #' @param name Name of the file in which to save the chart.
 #' @return Data frame of the patterns and characteristics used, associated with the identifiers visible
 #'  on the chart.
@@ -2210,16 +2298,17 @@ setMethod(f = "plot_spectrum_chart",
 
 #' Distribution of patterns among nodes
 #' 
-#' Compute the distributions of the weights and lenghts of the nodes in which each pattern is included.
+#' For each pattern, compute the distributions of the weights and lengths of the nodes in which
+#'  it is included.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns Patterns whose distributions are to be calculated.
+#' @param patterns Patterns whose distributions are to be computed.
 #' @return
 #'  \describe{
 #'    \item{\code{weight_distribution}}{The distribution, for each pattern, of the weights of nodes in
-#'                                      which they are included.}
+#'                                      which it is included.}
 #'    \item{\code{length_distribution}}{The distribution, for each pattern, of the lengths of nodes in
-#'                                      which they are included.}
+#'                                      which it is included.}
 #'  }
 #'  
 #' @author Gauthier Magnin
@@ -2254,7 +2343,10 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 
 #' Spectrosome
 #' 
-#' Plot one or more spectrosome charts and save them in PNG format.
+#' Plot one or more spectrosome charts and save them in PNG format. Graph in which vertices are the
+#'  nodes or the patterns and edges are the items they have in common. Clusters corresponding to nodes
+#'  or patterns sharing one item are mentioned by displaying the name or code identifying the item
+#'  between these nodes or patterns.
 #' 
 #' @details
 #' If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
@@ -2287,7 +2379,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'  See the list of parameters: \code{\link[sna:gplot]{sna::gplot}}.
 #' Among them, the following parameters are already defined and cannot be modified: \code{dat},
 #'  \code{gmode}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
-#' The following parameters, which can be redefined, have the following values:
+#' The following parameters, which are among those that can be redefined, have the following values:
 #'  \itemize{
 #'    \item{\code{mode = "fruchtermanreingold"}}
 #'    \item{\code{displaylabels = TRUE}}
@@ -2300,7 +2392,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose spectrosome is to be plotted. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
-#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
 #'  return data frames. One of \code{"original"}, \code{"new"}.
@@ -2309,7 +2401,7 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'    \item{\code{"new"}}{Use of new identifiers ordered according to the subset corresponding to
 #'                        \code{nopc}.}
 #'  }
-#' @param nb_graphs Number of graphics to generate and save. The place of the vertices differs between
+#' @param nb_graphs Number of graphs to generate and save. The position of the vertices differs between
 #'  each copy.
 #' @param min_link_weight Minimum number of items in common between two entities to plot their link on
 #'  the chart.
@@ -2329,16 +2421,17 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #'    \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
 #'                                   nodes of patterns to plot.}
 #'  }
-#' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
-#'  Range of vertex size values (given as expansion factors).
+#' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"},
+#'  range of vertex size values (given as expansion factors). Ignored otherwise.
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
 #'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a single character value or vector
-#'  of length equal to the number of nodes or patterns to plot, corresponding to R predefined color
-#'  names or hexadecimal values.\cr
+#'  of length equal to the number of nodes or patterns to plot (characters corresponding to R
+#'  predefined color names or hexadecimal values).
+#'  
 #'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 #'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-#'  the entities represented. If is one specific color, all vertices are colored with this color.
-#'  If is a vector of size equal to the number of nodes or patterns to plot, the colors are directly
+#'  the entities represented. If one specific color, all vertices are colored with this color.
+#'  If a vector of size equal to the number of nodes or patterns to plot, the colors are directly
 #'  assigned to these entities. If \code{"none"}, the vertices are colored gray.
 #' @param clusters Maximum number of clusters to name on the graph.
 #'  If the actual number of clusters is greater, the names of the smaller clusters are not displayed.
@@ -2349,12 +2442,11 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
 #' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the names
 #'  of the represented items.
 #' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
-#' @param display_mixt If \code{TRUE}, display in the legend the category values included only in mixed
-#'  links (or in mixed vertices, if \code{vertex_col = "categories"}).
+#' @param display_mixt If \code{TRUE}, also display in the legend the category values included only in
+#'  mixed links (or in mixed vertices, if \code{vertex_col = "categories"}).
 #' @param title Chart title. Default title depends on the type of entities contained in \code{nopc}.
 #'  Example of default title: \code{"Spectrosome of nodes"} if \code{nopc} contains nodes.
-#' @param path Path of the directory in which to save the charts.
-#'  By default, the charts are saved in the working directory.
+#' @param path Path of the directory in which to save the charts. Default is the working directory.
 #' @param name Name of the file in which to save the chart. Default name depends on the type of entities
 #'  contained in \code{nopc}. Example of default name: \code{"spectrosome_of_nodes"} if \code{nopc}
 #'  contains nodes.
@@ -2942,7 +3034,8 @@ setMethod(f = "cluster_text",
 
 #' Cluster: subgraph of a spectrosome
 #' 
-#' Identify the cluster associated with one specific item and plot a spectrosome of this cluster.
+#' Identify the cluster corresponding to one specific item and plot a spectrosome of this cluster.
+#'  Only nodes or patterns sharing this item are ploted.
 #' 
 #' @details
 #' If categories are associated with the items, each category generates a spectrosome.
@@ -2970,23 +3063,17 @@ setMethod(f = "cluster_text",
 #'    \item{\code{displayisolates = TRUE}}
 #'  }
 #' 
+#' @inheritParams spectrosome_chart,SpectralAnalyzer-method
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns of which one of the clusters is to be plotted. Any subset
 #'  of \code{object["nodes"]} or \code{object["patterns"]}.\cr
-#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @param item Identification code of the item whose cluster is to be plotted.
-#' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
-#'  return data frames. One of \code{"original"}, \code{"new"}.
-#'  \describe{
-#'    \item{\code{"original"}}{Use of the original identifiers.}
-#'    \item{\code{"new"}}{Use of new identifiers ordered according to the subset corresponding to
-#'                        \code{nopc}.}
-#'  }
 #' @param use_name If \code{TRUE}, display the item name if it is defined. Display its identification
 #'  code otherwise.
-#' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the name
+#' @param n.cutoff If \code{use_name = TRUE}, limit number of characters to display concerning the name
 #'  of the item.
 #' @param vertex_size Way how the sizes of the vertices of the graph should be defined.
 #'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
@@ -3004,31 +3091,25 @@ setMethod(f = "cluster_text",
 #'    \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
 #'                                   entities contained in \code{nopc}.}
 #'  }
-#' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"}.
-#'  Range of vertex size values (given as expansion factors).
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
 #'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a single character value or vector
-#'  of length equal to the number of rows of \code{nopc}, corresponding to R predefined color names or
-#'  hexadecimal values.\cr
+#'  of length equal to the number of rows of \code{nopc} (characters corresponding to R predefined
+#'  color names or hexadecimal values).
+#'  
 #'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 #'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-#'  the entities represented. If is one specific color, all vertices are colored with this color.
-#'  If is a vector of size equal to the number of rows of \code{nopc}, the colors are directly
+#'  the entities represented. If one specific color, all vertices are colored with this color.
+#'  If a vector of size equal to the number of rows of \code{nopc}, the colors are directly
 #'  assigned to these entities. If \code{"none"}, the vertices are colored gray.
-#' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
-#' @param display_mixt If \code{TRUE}, display in the legend the category values included only in mixed
-#'  links (or in mixed vertices, if \code{vertex_col = "categories"}).
 #' @param title Chart title. Default title depends on the type of entities contained in \code{nopc} and
 #'  on the argument \code{item}. Example of default title: \code{"Node cluster of 25"} if \code{nopc}
 #'  contains nodes and \code{item = 25}.
-#' @param path Path of the directory in which to save the charts.
-#'  By default, the charts are saved in the working directory.
 #' @param name Name of the file in which to save the chart. Default name depends on the type of entities
 #'  contained in \code{nopc} and on the argument \code{item}. Example of default name:
 #'  \code{"node_cluster_of_25"} if \code{nopc} contains nodes and \code{item = 25}.
 #' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna} for plotting the graph. See Details section.
-#' @return \code{NULL} if none or only one node or pattern contains the sought item. \cr
+#' @return \code{NULL} if none or only one node or pattern contains the sought item.\cr
 #'  Otherwise:
 #'  \describe{
 #'    \item{\code{vertices}}{Data frame of the nodes or patterns and characteristics used,
@@ -3120,8 +3201,8 @@ setMethod(f = "cluster_chart",
 
 #' Network density
 #' 
-#' Compute the density of the graph as the ratio between the number of links identified and
-#'  the maximum number of possible links.
+#' Compute the density of a graph as the ratio between the number of links identified and the
+#'  maximum number of possible links (i.e. if all the vertices of the graph were connected to each other).
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param links Data frame of the links (or edges) of a spectrosome graph.
@@ -3155,7 +3236,7 @@ setMethod(f = "network_density",
 #' Compute the degree of a vertex in a graph, i.e. the number of vertices to which it is adjacent.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param ID Identifier of the vertex (node or pattern) whose degree is to be calculated.
+#' @param ID Identifier of the vertex (node or pattern) whose degree is to be computed.
 #' @param links Data frame of the links (or edges) of a spectrosome graph.
 #' @return Degree of the vertex.
 #' 
@@ -3200,7 +3281,7 @@ setMethod(f = "degree",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose chart
 #'  is to be plotted. Any subset of \code{object["patterns"]}.\cr
-#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
+#'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame.
 #'  One of \code{"original"}, \code{"new"}.
 #'  \describe{
@@ -3216,12 +3297,11 @@ setMethod(f = "degree",
 #' @param display_text Text to display on the chart next to the patterns.
 #'  Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"},
 #'  \code{"frequency"}, \code{"specificity"}, \code{"year"}).
-#'  The \code{NULL} value specifies that none of this information should be displayed.
+#'  \code{NULL} value specifies to display no information.
 #' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
 #' @param sort_by Sorting method of displayed items. One of \code{"category"}, \code{"item"}.
 #' @param title Chart title.
-#' @param path Path of the directory in which to save the chart.
-#'  By default, the chart is saved in the working directory.
+#' @param path Path of the directory in which to save the chart. Default is the working directory.
 #' @param name Name of the file in which to save the chart.
 #' @return Data frame of the patterns represented on the chart, associated with their characteristics
 #'  and identifiers (visible on the chart if \code{display_text = "ID"}).
@@ -3326,22 +3406,13 @@ setMethod(f = "pattern_chart",
 #'  value.
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
+#' @inheritParams pattern_chart,SpectralAnalyzer-method
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose chart
 #'  is to be plotted. Any subset of \code{object["patterns"]}.
 #' @param items_category Data frame of items and one associated category.
 #' @param category Name of the category to represent on the chart, used as the legend title.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
-#' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification
-#'  codes otherwise.
-#' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the names
-#'  of the represented items.
-#' @param display_status If \code{TRUE}, display pattern status.
-#' @param display_text Text to display on the chart next to the patterns.
-#'  Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"},
-#'  \code{"frequency"}, \code{"specificity"}, \code{"year"}).
-#'  The \code{NULL} value specifies that none of this information should be displayed.
-#' @param title Chart title.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
@@ -3561,7 +3632,7 @@ setMethod(f = "plot_pattern_chart",
 #'  the order of the columns of `object["items_categories"]`).
 #' @param items Items to represent on the tree.
 #'  Any subset of `object["items"]`.\cr
-#'  `"items"` and `"i"` are specific values for `object["items"]`.
+#'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param use_names  If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
@@ -3700,7 +3771,7 @@ setMethod(f = "category_tree_chart",
 #' @param object `SpectralAnalyzer` class object.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
 #'  Any subset of `object["items"]`.\cr
-#'  `"items"` and `"i"` are specific values for `object["items"]`.
+#'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param category Name or number of the category to represent on the graph (numbering according to
 #'  the order of the columns of `object["items_categories"]`).
 #' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
@@ -3904,7 +3975,7 @@ setMethod(f = "co_occurrence_chart",
 #' 
 #' If \code{from} is \code{"patterns"} or a list, additional arguments are \code{confidence} and
 #'  \code{control} of function \code{\link[arules:ruleInduction]{ruleInduction}} from the package
-#'  \code{arules}. These arguments allow to specify minmum confidence (default \code{0.8}) and some
+#'  \code{arules}. These arguments allow to specify minimum confidence (default \code{0.8}) and some
 #'  operating parameters of the rule extraction algorithm.
 #' 
 #' Defining minimum support \eqn{s} and confidence \eqn{c} means that the union of items in the
@@ -3917,13 +3988,13 @@ setMethod(f = "co_occurrence_chart",
 #'    \item{If \code{"observations"}, look for all rules within the observations saved in \code{object}
 #'          or for rules with specific items.}
 #'    \item{If \code{"patterns"}, look for rules whose union of the antecedent and the consequent form
-#'          an entire pattern among those contained in `object` (more precisely, in
+#'          an entire pattern among those contained in \code{object} (more precisely, in
 #'          \code{object["patterns"]$pattern}).}
 #'    \item{Otherwise, a list of itemsets defined the same way as \code{object["patterns"]$pattern}.
 #'          Look for rules whose union of the antecedent and the consequent form an entire itemset.}
 #'  }
-#' @param pruning If \code{TRUE}, remove redundant rules (see 'Details' to know how a redundant rule
-#'  is defined).
+#' @param pruning If \code{TRUE}, remove redundant rules (see 'Details' to know how redundant rules
+#'  are defined).
 #' @param arules If \code{TRUE}, rules are returned as object of class
 #'  \code{\link[arules:rules-class]{rules}} from the package \code{arules}.
 #' @param as_sets If \code{FALSE}, antecedents and consequents of the returned rules will be character
@@ -3934,8 +4005,8 @@ setMethod(f = "co_occurrence_chart",
 #'  containing the extracted rules and their characteristics.
 #'  
 #'  If \code{from} is not \code{"observations"}, the column \code{"itemset"} refers to the index of the
-#'  itemset from which the rule was generated, in the list of patterns (if \code{from = "patterns"})
-#'  or the given list (otherwise).
+#'  itemset from which the rule was generated in the list of patterns (if \code{from = "patterns"})
+#'  or in the given list (otherwise).
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{rules_chart}}, \code{\link[arules:rules-class]{arules::rules}}.
@@ -4040,7 +4111,7 @@ setMethod(f = "extract_rules",
 #' @details
 #' \loadmathjax
 #' For an association rule \mjeqn{X \rightarrow Y}{X -> Y}, the reciprocal rule is the rule
-#'  \mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support and lift but can have two
+#'  \mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support and lift but may have two
 #'  different confidence values.
 #' 
 #' If `display` refers to the selection of rules of highest or lowest confidence and if an association
@@ -4069,7 +4140,7 @@ setMethod(f = "extract_rules",
 #' @param items Items to consider in the given or extracted rules. If `NULL`, only items from the given
 #' `rules` are considered.
 #'  Any subset of `object["items"]`.\cr
-#'  `"items"` and `"i"` are specific values for `object["items"]`.
+#'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param parameters List of mining parameters specifying minimum support and minimum confidence of
 #'  association rules to extract. Ignored if `rules` is not `NULL`. See
 #'  [APparameter][arules::APparameter] for more.
@@ -4122,8 +4193,8 @@ setMethod(f = "extract_rules",
 #' @param palette_direction Direction in which to use the color palette.
 #'  If `1`, colors are in original order: from the lightest to the darkest.
 #'  If `-1`, color order is reversed: from the darkest to the lightest.
-#' @return `NULL` if no association rules meets the criteria defined by `items`, `parameters` and
-#'  `threshold`. \cr
+#' @return `NULL` if no association rule meets the criteria defined by `items`, `parameters` and
+#'  `threshold`.\cr
 #'  Otherwise:
 #'  \describe{
 #'    \item{`graph`}{Graph created with the packages `ggraph` and `ggplot2`.}
@@ -4484,15 +4555,15 @@ setMethod(f = "save_characteristics",
 #'    than or equal to that sought.
 #' 
 #' If `element` is the name or the number of a category, the condition for a node to be extracted is
-#'  the correspondence to the sought category `value`. The argument `condition` must be one of `"items"`,
-#'  `"links"`, `"vertices"`, `"edges"` (no default).
+#'  the correspondence to the sought category value (argument `value`). The argument `condition` must
+#'  be one of `"items"`, `"links"`, `"vertices"`, `"edges"` (no default).
 #'  * `"items"`, `"vertices"`: search for nodes containing an item associated with the sought category
 #'    value.
 #'  * `"links"`, `"edges"`: search for nodes generating links corresponding to the sought category value.
 #' 
 #' @param object `SpectralAnalyzer` class object.
 #' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.\cr
-#'  `"nodes"` and `"n"` are specific values for `object["nodes"]`.
+#'  `"nodes"` and `"n"` are special values for `object["nodes"]`.
 #' @param element Type of element on which to search.
 #'  One of `"items"`, `"length"`, `"weight"` or the name or number of a category on which to search
 #'  (numbering according to the order of the columns of `object["items_categories"]`).
@@ -4561,7 +4632,7 @@ setMethod(f = "get_nodes",
 #' 
 #' @param object `SpectralAnalyzer` class object.
 #' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.\cr
-#'  `"nodes"` and `"n"` are specific values for `object["nodes"]`.
+#'  `"nodes"` and `"n"` are special values for `object["nodes"]`.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a node to be extracted.
 #'  One of `"all"`, `"any"`, `"exact"`.
@@ -4614,7 +4685,7 @@ setMethod(f = "get_nodes_from_items",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
 #'  \code{object["nodes"]}.\cr
-#'  \code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.
+#'  \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"length"}, \code{"weight"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
@@ -4687,10 +4758,10 @@ setMethod(f = "get_nodes_from_characteristic",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
 #'  \code{object["nodes"]}.\cr
-#'  \code{"nodes"} and \code{"n"} are specific values for \code{object["nodes"]}.
+#'  \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
-#' @param value Sought value for the category specified by the parameter \code{category}.
+#' @param value Sought value for the category specified by the argument \code{category}.
 #' @param condition Category value search condition for a node to be extracted.
 #'  One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 #'  \describe{
@@ -4777,7 +4848,7 @@ setMethod(f = "get_nodes_from_category",
 #'  * `"GE"`, `">="`: **G**reater than or **E**qual. The value of the characteristic must be greater
 #'    than or equal to that sought.
 #' 
-#' If `element` refers to the specific characteristic `"status"`, one or more status can be sought.
+#' If `element` refers to the characteristic `"status"`, one or more status can be sought.
 #'  the condition for a pattern to be extracted is a comparison of the sought status (argument `value`)
 #'  according to one of the basic comparison operators (default is equality):
 #'  * `"EQ"`, `"=="`: **EQ**ual. The status of the pattern must be one of the sought values.
@@ -4785,8 +4856,8 @@ setMethod(f = "get_nodes_from_category",
 #'    values.
 #' 
 #' If `element` is the name or the number of a category, the condition for a pattern to be extracted is
-#'  the correspondence to the sought category `value`. The argument `condition` must be one of `"items"`,
-#'  `"links"`, `"vertices"`, `"edges"` (no default).
+#'  the correspondence to the sought category  value (argument `value`). The argument `condition` must
+#'  be one of `"items"`, `"links"`, `"vertices"`, `"edges"` (no default).
 #'  * `"items"`, `"vertices"`: search for patterns containing an item associated with the sought
 #'    category value.
 #'  * `"links"`, `"edges"`: search for patterns generating links corresponding to the sought category
@@ -4795,7 +4866,7 @@ setMethod(f = "get_nodes_from_category",
 #' @param object `SpectralAnalyzer` class object.
 #' @param pc Data frame of **p**atterns and their **c**haracteristics. Any subset of
 #'  `object["patterns"]`.\cr
-#'  `"patterns"` and `"p"` are specific values for `object["patterns"]`.
+#'  `"patterns"` and `"p"` are special values for `object["patterns"]`.
 #' @param element Type of element on which to search.
 #'  One of `"items"`, `"year"`, `"frequency"`, `"weight"`, `"order"`, `"specificity"`, `"status"`
 #'  or the name or number of a category on which to search (numbering according to the order of the
@@ -4882,7 +4953,7 @@ setMethod(f = "get_patterns",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.\cr
-#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
+#'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a pattern to be extracted.
 #'  One of \code{"all"}, \code{"any"}, \code{"exact"}.
@@ -4936,7 +5007,7 @@ setMethod(f = "get_patterns_from_items",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.\cr
-#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
+#'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}
 #'  See \code{\link{get_patterns_from_status}} to search by \code{"status"}.
@@ -5010,13 +5081,13 @@ setMethod(f = "get_patterns_from_characteristic",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.\cr
-#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
+#'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param value Status value sought (one or more).
 #' @param condition Search condition. One of \code{"EQ"}, \code{"NE"}, \code{"=="}, \code{"!="}.
 #'  \describe{
-#'    \item{\code{"EQ"}, \code{"=="}}{\strong{EQ}ual: the status of the pattern must be one of the
+#'    \item{\code{"EQ"}, \code{"=="}}{\strong{EQ}ual: the status of a pattern must be one of the
 #'                                    sought values.}
-#'    \item{\code{"NE"}, \code{"!="}}{\strong{N}ot \strong{E}qual: the status of the pattern must be
+#'    \item{\code{"NE"}, \code{"!="}}{\strong{N}ot \strong{E}qual: the status of a pattern must be
 #'                                    different from the sought values.}
 #'  }
 #' @return Subset of the data frame of patterns that match the search criteria.
@@ -5062,7 +5133,7 @@ setMethod(f = "get_patterns_from_status",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.\cr
-#'  \code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.
+#'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the argument \code{category}.
@@ -5128,7 +5199,8 @@ setMethod(f = "get_patterns_from_category",
 
 #' Get links between nodes or patterns
 #' 
-#' Extract from the links those corresponding to the desired nodes or patterns.
+#' Extract from the data frame of links between nodes or patterns those corresponding to the given
+#'  nodes or patterns.
 #' 
 #' @details
 #' If among the nodes or patterns for which the links are sought, some become isolated because the other
@@ -5140,7 +5212,7 @@ setMethod(f = "get_patterns_from_category",
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose links are be to sought. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
-#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @return Data frame associating the linked nodes or linked patterns.
 #' 
@@ -5215,13 +5287,14 @@ setMethod(f = "get_links",
 
 #' Search for isolated nodes or patterns
 #' 
-#' Extract from the given nodes or patterns those which are isolated.
+#' Extract from the given nodes or patterns those which are isolated (i.e. those which are not linked
+#'  to any other entity).
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose isolated are to be sought. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
-#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @return Subset of the data frame that corresponds to isolated entities.
 #' 
@@ -5246,13 +5319,14 @@ setMethod(f = "get_isolates",
 
 #' Search for non-isolated nodes or patterns
 #' 
-#' Extract from the given nodes or patterns those which are not isolated.
+#' Extract from the given nodes or patterns those which are not isolated (i.e. those which are linked
+#'  to any other entity).
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose non-isolated are to be sought. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
-#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @return Subset of the data frame that corresponds to non-isolated entities.
 #' 
@@ -5289,7 +5363,7 @@ setMethod(f = "get_non_isolates",
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose complexes are to be sought. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
-#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are specific values for
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
@@ -5299,7 +5373,7 @@ setMethod(f = "get_non_isolates",
 #'    \item{\code{"items"}, \code{"vertices"}}{Search for nodes or patterns associated (via their items)
 #'          with several values of the category \code{category}.}
 #'    \item{\code{"links"}, \code{"edges"}}{Search for nodes or patterns generating links corresponding
-#'          with several values of the category \code{category}.}
+#'          to several values of the category \code{category}.}
 #'  }
 #' @param min_nb_values Minimum number of different values of the category \code{category} a node, a
 #'  pattern or a link must have to extract the related entity.
@@ -5484,7 +5558,7 @@ setMethod(f = "get_items",
 #' @param object `SpectralAnalyzer` class object.
 #' @param nopc Data frame of **n**odes **o**r **p**atterns and their **c**haracteristics or one of the
 #'  following character values: `"nodes"`, `"n"`, `"patterns"`, `"p"`.
-#' @param entities Type of the entities that the data frame can refer to (`NODES`, `PATTERNS` or
+#' @param entities Type of the entities that the data frame may refer to (`NODES`, `PATTERNS` or
 #'  `NODES_OR_PATTERNS`).
 #' @return Data frame of nodes or patterns and their characteristics corresponding to the arguments.
 #' 
@@ -5531,7 +5605,7 @@ setMethod(f = "get_nopc",
 #' 
 #' @param object `SpectralAnalyzer` class object.
 #' @param npr Data frame of **n**odes, **p**atterns or association **r**ules and their characteristics.\cr
-#'  `"nodes"`, `"n"`, `"patterns"`, `"p"`, `"rules"` and `"r"` are specific values.
+#'  `"nodes"`, `"n"`, `"patterns"`, `"p"`, `"rules"` and `"r"` are special values.
 #' @param entities Define if the data frame is either a data frame of nodes or a data frame of patterns
 #'  (`NODES_OR_PATTERNS`), or if it can also be a data frame of rules (`NODES_PATTERNS_OR_RULES`).
 #' @return Character corresponding to `NODES`, `PATTERNS` or `RULES`.
@@ -5615,7 +5689,8 @@ setMethod(f = "which_associated_links",
 #' @param name Type of entities or links.
 #'  Character corresponding to `NODES`, `PATTERNS`, `RULES`, `NODES_LINKS`, `PATTERN_LINKS` or
 #'  their simplifications. One or more.
-#' @return Character corresponding to `NODES`, `PATTERNS`, `RULES`, `NODES_LINKS` or `PATTERN_LINKS`
+#' @return Vector of characters (of the same size as `name`) corresponding to `NODES`, `PATTERNS`,
+#'  `RULES`, `NODES_LINKS` or `PATTERN_LINKS`.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`which_entities`], [`which_associated_links`].

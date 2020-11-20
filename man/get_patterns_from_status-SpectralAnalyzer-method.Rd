@@ -12,15 +12,15 @@
 
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 \code{object["patterns"]}.\cr
-\code{"patterns"} and \code{"p"} are specific values for \code{object["patterns"]}.}
+\code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{value}{Status value sought (one or more).}
 
 \item{condition}{Search condition. One of \code{"EQ"}, \code{"NE"}, \code{"=="}, \code{"!="}.
 \describe{
-  \item{\code{"EQ"}, \code{"=="}}{\strong{EQ}ual: the status of the pattern must be one of the
+  \item{\code{"EQ"}, \code{"=="}}{\strong{EQ}ual: the status of a pattern must be one of the
                                   sought values.}
-  \item{\code{"NE"}, \code{"!="}}{\strong{N}ot \strong{E}qual: the status of the pattern must be
+  \item{\code{"NE"}, \code{"!="}}{\strong{N}ot \strong{E}qual: the status of a pattern must be
                                   different from the sought values.}
 }}
 }
