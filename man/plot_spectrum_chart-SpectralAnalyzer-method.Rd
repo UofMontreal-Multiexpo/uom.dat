@@ -5,12 +5,7 @@
 \alias{plot_spectrum_chart}
 \title{Pattern spectrum plotting}
 \usage{
-\S4method{plot_spectrum_chart}{SpectralAnalyzer}(
-  object,
-  pc,
-  weights_by_node_type,
-  title = "Spectrum of patterns"
-)
+\S4method{plot_spectrum_chart}{SpectralAnalyzer}(object, pc, weights, title = "Spectrum of patterns")
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
@@ -18,8 +13,8 @@
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 is to be plotted. Any subset of \code{object["patterns"]}.}
 
-\item{weights_by_node_type}{Data frame containing for each pattern, its wieght in complexe nodes
-and its weight in simple nodes.}
+\item{weights}{Two-column matrix containing, for each pattern, its weight related to complex nodes and
+its weight related to simple nodes.}
 
 \item{title}{Chart title.}
 }
@@ -32,7 +27,8 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{spectrum_chart}}, \code{\link{compute_pattern_distribution_in_nodes}}.
+\code{\link{spectrum_chart}}, \code{\link{weight_by_node_complexity}},
+         \code{\link{pattern_node_characteristics}}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin

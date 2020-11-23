@@ -57,7 +57,8 @@ get_complexes(SA_instance, SA_instance["patterns"][1:15, ],
 
 }
 \seealso{
-\code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}}.
+\code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}},
+         \code{\link{weight_by_node_complexity}}.
 }
 \author{
 Gauthier Magnin

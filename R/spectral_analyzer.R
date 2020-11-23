@@ -629,9 +629,11 @@ setGeneric(name = "define_dynamic_status", def = function(object, patterns, stat
 
 setGeneric(name = "spectrum_chart", def = function(object, pc, identifiers = "original", sort = TRUE, title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf"){ standardGeneric("spectrum_chart") })
 
-setGeneric(name = "plot_spectrum_chart", def = function(object, pc, weights_by_node_type, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
+setGeneric(name = "plot_spectrum_chart", def = function(object, pc, weights, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
 
-setGeneric(name = "compute_pattern_distribution_in_nodes", def = function(object, patterns){ standardGeneric("compute_pattern_distribution_in_nodes") })
+setGeneric(name = "pattern_node_characteristics", def = function(object, patterns){ standardGeneric("pattern_node_characteristics") })
+
+setGeneric(name = "weight_by_node_complexity", def = function(object, patterns){ standardGeneric("weight_by_node_complexity") })
 
 
 # Methods for creating spectrosome graphs and computing related indicators
@@ -2144,6 +2146,7 @@ setMethod(f = "define_dynamic_status",
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
+#' @seealso \code{\link{weight_by_node_complexity}}.
 #' 
 #' @examples
 #' spectrum_1 <- spectrum_chart(SA_instance, "patterns")
@@ -2164,10 +2167,8 @@ setMethod(f = "spectrum_chart",
             if (identifiers != "original" && identifiers != "new")
               stop("identifiers must be \"original\" or \"new\".")
             
-            # Ensembles des poids et longueurs des noeuds contenant les motifs
-            patterns_distributions = compute_pattern_distribution_in_nodes(object, pc$pattern)
-            weight_distribution = patterns_distributions[["weight_distribution"]]
-            length_distribution = patterns_distributions[["length_distribution"]]
+            # Décomposition des poids des motifs selon le type de noeuds (simple ou complexe)
+            weights = weight_by_node_complexity(object, pc$pattern)
             
             # Tri des motifs selon spécificité, statut, poids, longueur
             if (sort) {
@@ -2177,20 +2178,12 @@ setMethod(f = "spectrum_chart",
                                      pc$order)
               
               pc = pc[sorting_vector, ]
-              weight_distribution = weight_distribution[sorting_vector]
-              length_distribution = length_distribution[sorting_vector]
+              weights = weights[sorting_vector, ]
             }
             
             # Attribution d'identifiants aux motifs
             if (identifiers == "new") pc$ID = seq(nrow(pc))
             else pc$ID = as.numeric(rownames(pc))
-            
-            # Décomposition des poids des motifs selon le type de noeuds (simple ou complexe)
-            weights = data.frame(complex_nodes = sapply(seq(nrow(pc)), function(x) {
-              sum(weight_distribution[[x]][which(length_distribution[[x]] > 1)])
-            }))
-            weights$simple_node = pc$weight - weights$complex_nodes
-            
             
             # Traçage du graphique dans un fichier PDF
             grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
@@ -2210,21 +2203,22 @@ setMethod(f = "spectrum_chart",
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 #'  is to be plotted. Any subset of \code{object["patterns"]}.
-#' @param weights_by_node_type Data frame containing for each pattern, its wieght in complexe nodes
-#'  and its weight in simple nodes.
+#' @param weights Two-column matrix containing, for each pattern, its weight related to complex nodes and
+#'  its weight related to simple nodes.
 #' @param title Chart title.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{spectrum_chart}}, \code{\link{compute_pattern_distribution_in_nodes}}.
+#' @seealso \code{\link{spectrum_chart}}, \code{\link{weight_by_node_complexity}},
+#'          \code{\link{pattern_node_characteristics}}.
 #' 
 #' @aliases plot_spectrum_chart
 #' @keywords internal
 setMethod(f = "plot_spectrum_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, pc, weights_by_node_type, title = "Spectrum of patterns") {
+          definition = function(object, pc, weights, title = "Spectrum of patterns") {
             
             # Définition des couleurs des barres du barplot
             bars_colors = object@status_colors[pc$status]
@@ -2244,7 +2238,7 @@ setMethod(f = "plot_spectrum_chart",
             # Diagramme en barres selon le poids des motifs
             las = if (length(pc$pattern) < 50) 1 else 3
             y_lim_bar = max(pc$weight) * y_lim_line # Poids max aligné avec specificité de 1
-            bar_plot = graphics::barplot(t(weights_by_node_type), main = title,
+            bar_plot = graphics::barplot(t(weights), main = title,
                                          col = NA, space = 0, lwd = 2,
                                          xlim = c(-x_margin, nrow(pc) + x_margin), xaxs = "i",
                                          ylim = c(0, y_lim_bar), yaxt = "n",
@@ -2265,8 +2259,8 @@ setMethod(f = "plot_spectrum_chart",
                             at = max(pc$weight) / 2)
             
             # Coloration des barres
-            for (i in seq(nrow(weights_by_node_type))) {
-              y = c(0, cumsum(c(weights_by_node_type[i, ])))
+            for (i in seq(nrow(weights))) {
+              y = c(0, cumsum(c(weights[i, ])))
               graphics::rect(bar_plot[i] - bar_width_2, y[ - length(y)],
                              bar_plot[i] + bar_width_2, y[ - 1],
                              col = bars_colors[i], density = c(300, 15), border = "black")
@@ -2317,33 +2311,33 @@ setMethod(f = "plot_spectrum_chart",
           })
 
 
-#' Distribution of patterns among nodes
+#' Pattern node characteristics
 #' 
-#' For each pattern, compute the distributions of the weights and lengths of the nodes in which
-#'  it is included.
+#' For each pattern, extract the weights and lengths of the nodes in which it is included.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param patterns Patterns whose distributions are to be computed.
+#' @param patterns Patterns whose characteristics of the nodes that contain them are to be found.
+#'  Any subset of `object["patterns"]$pattern`.
 #' @return
 #'  \describe{
-#'    \item{\code{weight_distribution}}{The distribution, for each pattern, of the weights of nodes in
-#'                                      which it is included.}
-#'    \item{\code{length_distribution}}{The distribution, for each pattern, of the lengths of nodes in
-#'                                      which it is included.}
+#'    \item{\code{weights}}{For each pattern, the weights of the nodes in which it is included.}
+#'    \item{\code{lengths}}{For each pattern, the lengths of the nodes in which it is included.}
 #'  }
 #'  
 #' @author Gauthier Magnin
-#' @aliases compute_pattern_distribution_in_nodes
+#' @seealso \code{\link{weight_by_node_complexity}}.
+#' 
+#' @aliases pattern_node_characteristics
 #' @keywords internal
-setMethod(f = "compute_pattern_distribution_in_nodes",
+setMethod(f = "pattern_node_characteristics",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns) {
             
             check_init(object, SpectralAnalyzer.PATTERNS)
             
             # Ensembles des poids et longueurs des noeuds contenant les motifs
-            weight_distribution = list()
-            length_distribution = list()
+            weights = list()
+            lengths = list()
             
             # Pour chaque motif
             for (i in seq_along(patterns)) {
@@ -2351,12 +2345,52 @@ setMethod(f = "compute_pattern_distribution_in_nodes",
               pat = as.character(patterns[i])
               nodes = object@nodes[object@nodes_patterns[, pat], ]
               
-              weight_distribution[[i]] = nodes$weight
-              length_distribution[[i]] = nodes$length
+              weights[[i]] = nodes$weight
+              lengths[[i]] = nodes$length
             }
             
-            return(list(weight_distribution = weight_distribution, length_distribution = length_distribution))
+            return(list(weights = weights, lengths = lengths))
           })
+
+
+#' Pattern weight by node complexity
+#' 
+#' For each pattern, compute its weight related to complex nodes (i.e. nodes containing more than one
+#'  item and containing the pattern) and its weight related to simple node (i.e. nodes containing
+#'  only one item and containing the pattern).
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param patterns Patterns whose weights according to the complexity of the nodes containing them
+#'  are to be computed. Any subset of `object["patterns"]$pattern`.
+#' @return Two-column matrix containing, for each pattern, its weight related to complex nodes and
+#'  its weight related to simple nodes.
+#'  
+#' @author Gauthier Magnin
+#' @seealso [`get_complexes`]
+#' 
+#' @examples
+#' weight_by_node_complexity(SA_instance, SA_instance["patterns"]$pattern)
+#' weight_by_node_complexity(SA_instance, SA_instance["patterns"]$pattern[1:15])
+#' 
+#' @aliases weight_by_node_complexity
+#' @md
+#' @export
+setMethod(f = "weight_by_node_complexity",
+          signature = "SpectralAnalyzer",
+          definition = function(object, patterns) {
+  
+  pnc = pattern_node_characteristics(object, patterns)
+  
+  weights = t(sapply(seq_along(patterns), function(i) {
+    c(sum(pnc$weights[[i]][pnc$lengths[[i]] > 1]),
+      sum(pnc$weights[[i]][pnc$lengths[[i]] == 1]))
+  }))
+  
+  colnames(weights) = c("complex", "simple")
+  rownames(weights) = patterns
+  
+  return(weights)
+})
 
 
 
@@ -5401,7 +5435,8 @@ setMethod(f = "get_non_isolates",
 #' @return Subset of the data frame that corresponds to the complex entities sought.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}}.
+#' @seealso \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}},
+#'          \code{\link{weight_by_node_complexity}}.
 #' 
 #' @examples
 #' get_complexes(SA_instance, "patterns")
