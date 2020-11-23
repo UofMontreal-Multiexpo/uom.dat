@@ -35,7 +35,7 @@ If \code{nopc} is a character value equal to:
 The argument \code{entities} is only used to adapt a possible error message.
 }
 \seealso{
-\code{\link{which_entities}}, \code{\link{get_items}}.
+\code{\link{get_nop}}, \code{\link{which_entities}}, \code{\link{get_items}}.
 }
 \author{
 Gauthier Magnin

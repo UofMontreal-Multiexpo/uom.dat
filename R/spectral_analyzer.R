@@ -709,6 +709,8 @@ setGeneric(name = "get_items", def = function(object, items){ standardGeneric("g
 
 setGeneric(name = "get_nopc", def = function(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_nopc") })
 
+setGeneric(name = "get_nop", def = function(object, nop, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_nop") })
+
 setGeneric(name = "which_entities", def = function(object, npr, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("which_entities") })
 
 setGeneric(name = "which_associated_links", def = function(object, entities){ standardGeneric("which_associated_links") })
@@ -2361,7 +2363,8 @@ setMethod(f = "pattern_node_characteristics",
 #' 
 #' @param object `SpectralAnalyzer` class object.
 #' @param patterns Patterns whose weights according to the complexity of the nodes containing them
-#'  are to be computed. Any subset of `object["patterns"]$pattern`.
+#'  are to be computed. Any subset of `object["patterns"]$pattern`.\cr
+#'  `"patterns"` and `"p"` are special values for `object["patterns"]$pattern`.
 #' @return Two-column matrix containing, for each pattern, its weight related to complex nodes and
 #'  its weight related to simple nodes.
 #'  
@@ -2369,7 +2372,7 @@ setMethod(f = "pattern_node_characteristics",
 #' @seealso [`get_complexes`]
 #' 
 #' @examples
-#' weight_by_node_complexity(SA_instance, SA_instance["patterns"]$pattern)
+#' weight_by_node_complexity(SA_instance, "patterns")
 #' weight_by_node_complexity(SA_instance, SA_instance["patterns"]$pattern[1:15])
 #' 
 #' @aliases weight_by_node_complexity
@@ -2379,6 +2382,7 @@ setMethod(f = "weight_by_node_complexity",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns) {
   
+  patterns = get_nop(object, patterns, entities = SpectralAnalyzer.PATTERNS)
   pnc = pattern_node_characteristics(object, patterns)
   
   weights = t(sapply(seq_along(patterns), function(i) {
@@ -5619,7 +5623,7 @@ setMethod(f = "get_items",
 #' @return Data frame of nodes or patterns and their characteristics corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`which_entities`], [`get_items`].
+#' @seealso [`get_nop`], [`which_entities`], [`get_items`].
 #' 
 #' @aliases get_nopc
 #' @md
@@ -5629,9 +5633,9 @@ setMethod(f = "get_nopc",
           definition = function(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
             
             if (is.character(nopc)) {
-              if (nopc == SpectralAnalyzer.NODES || nopc == substr(SpectralAnalyzer.NODES, 1, 1))
+              if (nopc == SpectralAnalyzer.NODES || nopc == first_characters(SpectralAnalyzer.NODES))
                 return(object@nodes)
-              if (nopc == SpectralAnalyzer.PATTERNS || nopc == substr(SpectralAnalyzer.PATTERNS, 1, 1))
+              if (nopc == SpectralAnalyzer.PATTERNS || nopc == first_characters(SpectralAnalyzer.PATTERNS))
                 return(object@patterns)
               
               var_name = deparse(substitute(nopc))
@@ -5646,6 +5650,58 @@ setMethod(f = "get_nopc",
               stop(msg)
             }
             return(nopc)
+          })
+
+
+#' Get nodes or patterns
+#' 
+#' Find and return the list corresponding to the nodes or the patterns of the `SpectralAnalyzer`
+#'  object, or return the given list.
+#' 
+#' @details
+#' If `nop` is a list, it is returned.
+#' 
+#' If `nop` is a character value equal to:
+#'  * `"nodes"` or `"n"`: `object["nodes"]$node` is returned.
+#'  * `"patterns"` or `"p"`: `object["patterns"]$pattern` is returned.
+#' 
+#' The argument `entities` is only used to adapt a possible error message.
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param nop List of **n**odes **o**r **p**atterns or one of the following character values:
+#'  `"nodes"`, `"n"`, `"patterns"`, `"p"`.
+#' @param entities Type of the entities that the list may refer to (`NODES`, `PATTERNS` or
+#'  `NODES_OR_PATTERNS`).
+#' @return List of nodes or patterns corresponding to the arguments.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`get_nopc`], [`which_entities`], [`get_items`].
+#' 
+#' @aliases get_nop
+#' @md
+#' @keywords internal
+setMethod(f = "get_nop",
+          signature = "SpectralAnalyzer",
+          definition = function(object, nop, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
+            
+            if (is.character(nop)) {
+              if (nop == SpectralAnalyzer.NODES || nop == first_characters(SpectralAnalyzer.NODES))
+                return(object@nodes$node)
+              if (nop == SpectralAnalyzer.PATTERNS || nop == first_characters(SpectralAnalyzer.PATTERNS))
+                return(object@patterns$pattern)
+              
+              var_name = deparse(substitute(nop))
+              
+              if (entities == SpectralAnalyzer.NODES)
+                msg = paste(var_name, "must be \"nodes\" or a list of nodes.")
+              else if (entities == SpectralAnalyzer.PATTERNS)
+                msg = paste(var_name, "must be \"patterns\" or a list of patterns.")
+              else # SpectralAnalyzer.NODES_OR_PATTERNS
+                msg = paste(var_name, "must be \"nodes\", \"patterns\" or a list of nodes or patterns.")
+              
+              stop(msg)
+            }
+            return(nop)
           })
 
 

@@ -11,7 +11,8 @@
 \item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{patterns}{Patterns whose weights according to the complexity of the nodes containing them
-are to be computed. Any subset of \code{object["patterns"]$pattern}.}
+are to be computed. Any subset of \code{object["patterns"]$pattern}.\cr
+\code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]$pattern}.}
 }
 \value{
 Two-column matrix containing, for each pattern, its weight related to complex nodes and
@@ -23,7 +24,7 @@ item and containing the pattern) and its weight related to simple node (i.e. nod
 only one item and containing the pattern).
 }
 \examples{
-weight_by_node_complexity(SA_instance, SA_instance["patterns"]$pattern)
+weight_by_node_complexity(SA_instance, "patterns")
 weight_by_node_complexity(SA_instance, SA_instance["patterns"]$pattern[1:15])
 
 }
