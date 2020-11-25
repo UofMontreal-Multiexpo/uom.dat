@@ -3499,7 +3499,7 @@ setMethod(f = "plot_pattern_chart",
             graphics::plot.new()
             
             
-            ## Affichage des légendes, centrées, avant le graphique (avant modification de la "plot region")
+            ## Affichage des légendes avant le graphique
             
             title(main = title, line = 1.1, cex.main = 1.3)
             
@@ -3650,11 +3650,18 @@ setMethod(f = "plot_pattern_chart",
                              yaxt = "n", yaxs = "i", ylab = "")
             }
             
+            
+            ## Préparation de variables dépendante de la zone graphique
+            
             # Définition des abscisses des titres des tailles des motifs
             x_orders = c(x_lines[1] / 2,
                          (x_lines[seq(2, length(x_lines))] + x_lines[seq(length(x_lines)-1)]) / 2,
                          (area_width + x_lines[length(x_lines)]) / 2)
             names(x_orders) = names(order_tab)
+            
+            # Pour uniformiser l'espacement entre le motif et les informations affichées : taille d'un
+            # point statut = taille d'un caractère * rapport approximatif entre un caractère et un point pch 15 * cex
+            point_size = par("cxy")[2] * 0.41 * 0.5
             
             
             ## Traçage du graphique
@@ -3693,7 +3700,7 @@ setMethod(f = "plot_pattern_chart",
               # Affichage de l'identifiant ou de l'une des caractéristiques du motif
               if (!is.null(display_text)) {
                 graphics::text(x_patterns[m] + width / 2,
-                               y_patterns[[m]][1] - 0.25,
+                               y_patterns[[m]][1] - point_size,
                                pc[m, display_text],
                                col = "black", cex = 0.5, srt = 90, adj = 1)
               }
@@ -3701,9 +3708,11 @@ setMethod(f = "plot_pattern_chart",
               # Affichage du statut du motif
               if (display_status) {
                 graphics::points(x_patterns[m] + width / 2,
-                                 y_patterns[[m]][length(y_patterns[[m]])] + 0.25,
+                                 y_patterns[[m]][length(y_patterns[[m]])] + 1.5 * point_size,
                                  col = object@status_colors[pc$status[m]],
                                  cex = 0.5, pch = 15)
+                # Une coordonnée indépendante de la taille du point entraîne parfois un chevauchement avec le motif
+                # Concernant display_text une coordonnée indépendante peut être utilisée grâce à adj
               }
             }
             
