@@ -651,9 +651,9 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Methods for creating pattern itemsets graphs
 
-setGeneric(name = "pattern_chart", def = function(object, pc, identifiers = "original", use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf"){ standardGeneric("pattern_chart") })
+setGeneric(name = "pattern_chart", def = function(object, pc, identifiers = "original", use_names = TRUE, n.cutoff = NULL, length_one = FALSE, jitter = TRUE, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf"){ standardGeneric("pattern_chart") })
 
-setGeneric(name = "plot_pattern_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, display_status = TRUE, display_text = "ID", title = "Pattern itemsets"){ standardGeneric("plot_pattern_chart") })
+setGeneric(name = "plot_pattern_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, jitter = TRUE, display_status = TRUE, display_text = "ID", title = "Pattern itemsets"){ standardGeneric("plot_pattern_chart") })
 
 
 # Methods for creating category trees and co-occurrence graphs
@@ -3326,8 +3326,6 @@ setMethod(f = "degree",
 #' If categories are associated with items, each category generates a chart.
 #'  The category name is appended to the end of the file name.
 #' 
-#' Patterns of order 1 are not drawn. Only items included in higher-order patterns are.
-#' 
 #' The patterns are sorted according to their order values, then to their weights.
 #' 
 #' The colors associated with the values of the possible category represented are selected circularly
@@ -3352,6 +3350,11 @@ setMethod(f = "degree",
 #'  codes otherwise.
 #' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the names
 #'  of the represented items.
+#' @param length_one If \code{FALSE}, patterns of order \eqn{1} are not plotted. If \code{TRUE}, all
+#'  patterns are plotted.
+#' @param jitter If \code{FALSE} patterns of order \eqn{1} are aligned vertically.
+#'  If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
+#'  Ignored if \code{length_one} is \code{FALSE}.
 #' @param display_status If \code{TRUE}, display pattern status.
 #' @param display_text Text to display on the chart next to the patterns.
 #'  Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"},
@@ -3382,7 +3385,7 @@ setMethod(f = "degree",
 setMethod(f = "pattern_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, pc, identifiers = "original",
-                                use_names = TRUE, n.cutoff = NULL,
+                                use_names = TRUE, n.cutoff = NULL, length_one = FALSE, jitter = TRUE,
                                 display_status = TRUE, display_text = "ID",
                                 c.cutoff = NULL, sort_by = "category",
                                 title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf") {
@@ -3394,8 +3397,8 @@ setMethod(f = "pattern_chart",
             if (identifiers != "original" && identifiers != "new")
               stop("identifiers must be \"original\" or \"new\".")
             
-            # Motifs d'ordre > 1, triés par taille croissant, puis par poids décroissant
-            pat_charac = pc[pc$order != 1, ]
+            # Motifs d'ordre > 1, triés par taille croissant puis par poids décroissant
+            pat_charac = if (length_one) pc else pc[pc$order != 1, ]
             pat_charac = pat_charac[order(pat_charac$order,
                                           max(pat_charac$weight) - pat_charac$weight), ]
             
@@ -3443,7 +3446,7 @@ setMethod(f = "pattern_chart",
               # Traçage du graphique dans un fichier PDF
               grDevices::pdf(paste0(turn_into_path(path), file_name),
                              14, 10, paper = "a4r", pointsize = 11)
-              plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, display_status, display_text, title)
+              plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_status, display_text, title)
               grDevices::dev.off()
             }
             
@@ -3472,6 +3475,8 @@ setMethod(f = "pattern_chart",
 #' @param items_category Data frame of items and one associated category.
 #' @param category Name of the category to represent on the chart, used as the legend title.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
+#' @param jitter If \code{FALSE} patterns of order \eqn{1} are aligned vertically.
+#'  If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
@@ -3485,7 +3490,7 @@ setMethod(f = "plot_pattern_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, pc, items_category, category = NULL,
                                 c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL,
-                                display_status = TRUE, display_text = "ID",
+                                jitter = TRUE, display_status = TRUE, display_text = "ID",
                                 title = "Pattern itemsets") {
             
             # Définition des marges et initialisation de la zone graphique
@@ -3493,16 +3498,12 @@ setMethod(f = "plot_pattern_chart",
             else graphics::par(mar = c(0.5, 0.5, 1.9, 0.5))
             graphics::plot.new()
             
-            # Préparation de la position des items sur le graphique (x = 0 ; y = ordre décroissant)
-            items_category$x = 0
-            items_category$y = rev(seq(nrow(items_category)))
-            
             
             ## Affichage des légendes, centrées, avant le graphique (avant modification de la "plot region")
             
             title(main = title, line = 1.1, cex.main = 1.3)
             
-            # Couleurs de catégorie
+            # Couleurs et légende de la catégorie
             if (!is.null(category)) {
               item_colors = object@categories_colors[[category]][items_category$category]
               category_colors = unique(item_colors)[order(unique(items_category$category))]
@@ -3537,16 +3538,16 @@ setMethod(f = "plot_pattern_chart",
             
             ## Préparation de variables
             
-            # Marge entre un motif et la ligne séparatrice qui le suit
-            line_margin = 0.5
+            # Position des items sur la gauche du graphique (x = 0 ; y = ordre décroissant)
+            items_category$x = 0
+            items_category$y = rev(seq(nrow(items_category)))
             
-            # Table des tailles des motifs et effectifs cumulés
+            # Effectifs des tailles des motifs
             order_tab = table(pc$order)
-            order_cumfreq = cumsum(order_tab)
             
-            # Titre des taille des motifs et position en Y
-            order_text = "Order:"
-            order_y = nrow(items_category) + 1.25
+            # Titre des tailles des motifs et position en Y
+            text_order = "Order:"
+            y_orders = max(items_category$y) + 1.25
             
             # Labels des items (codes ou noms)
             if (use_names) {
@@ -3556,107 +3557,154 @@ setMethod(f = "plot_pattern_chart",
               text_labels = as.character(items_category$item)
             }
             
-            # Préparation des couleurs des lignes séparatrices
-            vcolor = c("white", rep("black", length(order_cumfreq)-1))
-            names(vcolor) = names(order_cumfreq)
+            # Marge entre un motif et la ligne séparatrice qui le suit ou entre deux motifs
+            margin = 0.5
+            # Largeur d'un motif
+            width = 0.5
             
-            # Largeur de la zone déjà tracée ; utilisé comme coordonnée X pour afficher le prochain élément
-            width = -1
+            # Ordonnées des items pour chaque motif
+            y_patterns = lapply(pc[, "pattern"], function(p) {
+              sort(items_category[match(p, items_category$item), "y"])
+            })
+            
+            # Abscisses des motifs
+            if ("1" %in% names(order_tab)) {
+              
+              # Pour les motifs d'ordre 1, alignement vertical
+              x_patterns = rep(0, order_tab[1])
+              
+              if (jitter) {
+                # Décalage de ceux côte-à-côte
+                one_order = order(unlist(y_patterns[1:order_tab[1]]))
+                
+                for (i in seq(2, length(y_patterns[one_order]))) {
+                  if (y_patterns[one_order][[i]] == y_patterns[one_order][[i-1]] + 1
+                      && x_patterns[i-1] == 0) {
+                    x_patterns[i] = width
+                  }
+                }
+              }
+              
+              # Positionnement des motifs les uns après les autres en considérant les lignes séparatrices
+              x_patterns = c(x_patterns[order(one_order)],
+                             (width + margin) * seq(nrow(pc) - length(x_patterns)) + max(x_patterns) + 
+                               margin * unname(unlist(lapply(order_tab[-1],
+                                                             function(nb) rep(parent.frame()$i[], nb)))))
+            } else {
+              # Positionnement de chaque motif les uns après les autres en considérant les lignes séparatrices
+              # Taille d'un motif et d'un espacement * nombre de motifs avant le motif
+              #  + un espacement * nombre de lignes séparatrices avant le motif
+              x_patterns = (width + margin) * seq(0, nrow(pc)-1) + 
+                             margin * unname(unlist(lapply(order_tab,
+                                                           function(nb) rep(parent.frame()$i[] - 1, nb))))
+            }
+            
+            # Abscisses des lignes séparatrices (milieux des motifs les plus espacés)
+            x_lines = x_patterns[-1][x_patterns[seq(2, length(x_patterns))] >= (x_patterns[seq(length(x_patterns)-1)] + width + margin * 2)] - margin
+            
+            # Largeur de la zone des motifs : position du dernier motif + largeur du motif + un espacement
+            area_width = max(x_patterns) + width + margin
             
             
             ## Préparation de la zone graphique
             
-            # Espace à droite : nombre de motifs - espace inexistant avant le premier motif
-            #                   + nombre de lignes verticales
-            data_area = nrow(pc) - line_margin + length(unique(pc$order) - 1) * line_margin
-            # Espace ajouté pour afficher la dernière taille de motif s'il y a trop peu de motifs associés
-            last_space = graphics::strwidth(utils::as.roman(names(order_tab[length(order_tab)]))) - (order_tab[length(order_tab)] + line_margin)
-            if (last_space > 0) data_area = data_area + last_space
-            
             # Placement de la "plot region" pour avoir la place d'afficher les labels des items
             # Espace à gauche : taille du plus grand label (ou du titre "Order") + taille de la marge
             #                   + taille d'un caractère * 0.5 (offset de placement des labels) ; en fraction de la "figure region"
-            graphics::par(plt = c(max(graphics::strwidth(text_labels, cex = 0.75, units = "figure"), graphics::strwidth(order_text, cex = 1.05, units = "figure")) +
+            graphics::par(plt = c(max(graphics::strwidth(text_labels, cex = 0.75, units = "figure"), graphics::strwidth(text_order, cex = 1.05, units = "figure")) +
                                     graphics::par("mai")[2] * graphics::strwidth(1, units = "figure") / graphics::strwidth(1, units = "inches") + # Conversion marge en figure units
                                     0.5 * graphics::strwidth("A", units = "figure"),
-                          graphics::par("plt")[2:4]))
+                                  graphics::par("plt")[2:4]))
             
-            # Option "new" pour que le graphique n'apparaîssent pas sur une seconde page
+            # Option "new" pour que le graphique n'apparaîsse pas sur une seconde page
             graphics::par(new = TRUE)
             
-            # Réinitialisation de la zone graphique en considérant la taille d'un caractère (strwidth, dépend du graphique)
+            # Initialisation de la zone graphique
             graphics::plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
                                  data.frame(x = rep(0, 2), y = seq(2) + nrow(items_category))), # + 2 pour placer du texte
-                           xlim = c(0, data_area),
+                           xlim = c(0, area_width),
                            ylim = c(-graphics::strwidth(1, cex = 0.5), # - taille d'un caractère pour affichage d'une caractéristique
                                     nrow(items_category) + 2), # + 2 pour affichage tailles des motifs
                            col = "white", pch = 20, bty = "n",
                            xaxt = "n", xaxs = "i", xlab = "",
                            yaxt = "n", yaxs = "i", ylab = "")
             
+            # Espace ajouté pour pouvoir afficher la dernière taille de motif s'il y a trop peu de motifs associés
+            last_space = graphics::strwidth(utils::as.roman(names(order_tab[length(order_tab)]))) - 
+              (order_tab[length(order_tab)] * (width + margin) + margin) # strwidth units="user" dépend du graphique
+            
+            if (last_space > 0) { 
+              area_width = area_width + last_space
+              
+              # Option "new" pour que le graphique n'apparaîsse pas sur une seconde page
+              graphics::par(new = TRUE)
+              
+              # Réinitialisation de la zone graphique en considérant la taille d'un caractère (strwidth units="user" dépend du graphique)
+              graphics::plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
+                                   data.frame(x = rep(0, 2), y = seq(2) + nrow(items_category))), # + 2 pour placer du texte
+                             xlim = c(0, area_width),
+                             ylim = c(-graphics::strwidth(1, cex = 0.5), # - taille d'un caractère pour affichage d'une caractéristique
+                                      nrow(items_category) + 2), # + 2 pour affichage tailles des motifs
+                             col = "white", pch = 20, bty = "n",
+                             xaxt = "n", xaxs = "i", xlab = "",
+                             yaxt = "n", yaxs = "i", ylab = "")
+            }
+            
+            # Définition des abscisses des titres des tailles des motifs
+            x_orders = c(x_lines[1] / 2,
+                         (x_lines[seq(2, length(x_lines))] + x_lines[seq(length(x_lines)-1)]) / 2,
+                         (area_width + x_lines[length(x_lines)]) / 2)
+            names(x_orders) = names(order_tab)
+            
             
             ## Traçage du graphique
             
-            # Traçage des lignes horizontales
+            # Traçage des lignes horizontales, repères pour les items
             for (y_i in items_category$y) {
-              graphics::segments(x0 = 0, x1 = data_area, y0 = y_i, lwd = 0.02, lty = 3, col = "gray85")
+              graphics::segments(x0 = 0, x1 = area_width, y0 = y_i, lwd = 0.02, lty = 3, col = "gray85")
             }
             
-            # Titre taille des motifs
-            graphics::text(0, order_y, order_text, col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
+            # Tailles des motifs (titre et valeurs)
+            graphics::text(0, y_orders, text_order, col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
+            for (i in seq_along(x_orders)) {
+              graphics::text(x = x_orders[i], y = y_orders, utils::as.roman(names(x_orders[i])),
+                             col = "black", cex = 1.05)
+            }
+            
+            # Traçage des lignes séparatrices
+            for (i in seq_along(x_lines)) {
+              graphics::abline(v = x_lines[i], col = "black", lwd = 0.5, lty = "dotted")
+            }
             
             # Pour chaque motif à dessiner
             for (m in 1:nrow(pc)) {
               
-              # Nouvelle taille de motifs
-              if (m %in% (1 + c(0, order_cumfreq))) {
-                order_nb = pc$order[m]
-                width = width + line_margin
-                
-                # Séparation verticale
-                graphics::abline(v = width, col = vcolor[as.character(order_nb)], lwd = 0.5, lty = "dotted")
-                
-                # Affichage de la taille des prochains motifs
-                if (m == 1) {
-                  order_x = order_cumfreq[as.character(order_nb)] / 2 
-                } else if (m == nrow(pc)) {
-                  order_x = width + (data_area - width) / 2
-                } else {
-                  # Positionnement en X : position de la ligne qui vient d'être tracée
-                  #                       + (nombre de motifs de la nouvelle taille
-                  #                          + 1 espace entre dernier motif et prochaine ligne) / 2
-                  order_x = width + (order_cumfreq[as.character(order_nb)] - m + 1 + line_margin) / 2
-                }
-                graphics::text(x = order_x, y = order_y, utils::as.roman(order_nb), col = "black", cex = 1.05)
-              }
-              
-              # Ordonnées (y) des items du motif (m)
-              y_m = sort(items_category[match(pc[m, "pattern"][[1]], items_category$item), "y"])
-              
               # Segment vertical entre les premier et dernier items du motif
-              graphics::lines(c(width + 1, width + 1),
-                              c(y_m[1], y_m[length(y_m)]),
+              graphics::lines(c(x_patterns[m] + width, x_patterns[m] + width),
+                              c(y_patterns[[m]][1], y_patterns[[m]][length(y_patterns[[m]])]),
                               lwd = 1.2, lty = 1, col = "black")
+              
               # Segments horizontaux pour les items du motif
-              for (y in y_m) {
-                graphics::lines(c(width + 0.5, width + 1), c(y, y),
+              for (y in y_patterns[[m]]) {
+                graphics::lines(c(x_patterns[m], x_patterns[m] + width), c(y, y),
                                 lwd = 1.2, lty = 1, col = "black", pch = 20, cex = 0.8)
               }
               
               # Affichage de l'identifiant ou de l'une des caractéristiques du motif
               if (!is.null(display_text)) {
-                graphics::text(0.75 + width, y_m[1] - 0.25,
+                graphics::text(x_patterns[m] + width / 2,
+                               y_patterns[[m]][1] - 0.25,
                                pc[m, display_text],
                                col = "black", cex = 0.5, srt = 90, adj = 1)
               }
+              
               # Affichage du statut du motif
               if (display_status) {
-                graphics::points(0.75 + width, y_m[length(y_m)] + 0.25,
-                                 cex = 0.5, pch = 15,
-                                 col = object@status_colors[pc$status[m]])
+                graphics::points(x_patterns[m] + width / 2,
+                                 y_patterns[[m]][length(y_patterns[[m]])] + 0.25,
+                                 col = object@status_colors[pc$status[m]],
+                                 cex = 0.5, pch = 15)
               }
-              
-              width = width + 1
             }
             
             # Pointage et affichage des items

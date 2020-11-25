@@ -13,6 +13,7 @@
   c.cutoff = NULL,
   use_names = TRUE,
   n.cutoff = NULL,
+  jitter = TRUE,
   display_status = TRUE,
   display_text = "ID",
   title = "Pattern itemsets"
@@ -35,6 +36,9 @@ codes otherwise.}
 
 \item{n.cutoff}{If \code{use_names = TRUE}, limit number of characters to display concerning the names
 of the represented items.}
+
+\item{jitter}{If \code{FALSE} patterns of order \eqn{1} are aligned vertically.
+If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.}
 
 \item{display_status}{If \code{TRUE}, display pattern status.}
 

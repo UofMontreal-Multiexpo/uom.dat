@@ -11,6 +11,8 @@
   identifiers = "original",
   use_names = TRUE,
   n.cutoff = NULL,
+  length_one = FALSE,
+  jitter = TRUE,
   display_status = TRUE,
   display_text = "ID",
   c.cutoff = NULL,
@@ -41,6 +43,13 @@ codes otherwise.}
 \item{n.cutoff}{If \code{use_names = TRUE}, limit number of characters to display concerning the names
 of the represented items.}
 
+\item{length_one}{If \code{FALSE}, patterns of order \eqn{1} are not plotted. If \code{TRUE}, all
+patterns are plotted.}
+
+\item{jitter}{If \code{FALSE} patterns of order \eqn{1} are aligned vertically.
+If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
+Ignored if \code{length_one} is \code{FALSE}.}
+
 \item{display_status}{If \code{TRUE}, display pattern status.}
 
 \item{display_text}{Text to display on the chart next to the patterns.
@@ -68,8 +77,6 @@ Plot a chart of the pattern itemsets and save it as a PDF file.
 \details{
 If categories are associated with items, each category generates a chart.
  The category name is appended to the end of the file name.
-
-Patterns of order 1 are not drawn. Only items included in higher-order patterns are.
 
 The patterns are sorted according to their order values, then to their weights.
 
