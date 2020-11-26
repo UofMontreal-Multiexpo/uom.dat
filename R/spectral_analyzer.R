@@ -3542,6 +3542,10 @@ setMethod(f = "plot_pattern_chart",
             items_category$x = 0
             items_category$y = rev(seq(nrow(items_category)))
             
+            # Dimensions du graphique
+            xmin = items_category$x[1]
+            ymax = nrow(items_category) + 2 # Nombre d'items + 2 pour afficher les tailles des motifs
+            
             # Effectifs des tailles des motifs
             order_tab = table(pc$order)
             
@@ -3608,23 +3612,31 @@ setMethod(f = "plot_pattern_chart",
             
             ## Préparation de la zone graphique
             
-            # Placement de la "plot region" pour avoir la place d'afficher les labels des items
+            # Placement de la "plot region" pour avoir la place d'afficher les labels des items en-dehors
             # Espace à gauche : taille du plus grand label (ou du titre "Order") + taille de la marge
             #                   + taille d'un caractère * 0.5 (offset de placement des labels) ; en fraction de la "figure region"
-            graphics::par(plt = c(max(graphics::strwidth(text_labels, cex = 0.75, units = "figure"), graphics::strwidth(text_order, cex = 1.05, units = "figure")) +
-                                    graphics::par("mai")[2] * graphics::strwidth(1, units = "figure") / graphics::strwidth(1, units = "inches") + # Conversion marge en figure units
+            graphics::par(plt = c(max(graphics::strwidth(text_labels, cex = 0.75, units = "figure"),
+                                      graphics::strwidth(text_order, cex = 1.05, units = "figure")) +
+                                    convert_gunits(graphics::par("mai")[2], "inches", to = "figure") +
                                     0.5 * graphics::strwidth("A", units = "figure"),
                                   graphics::par("plt")[2:4]))
             
             # Option "new" pour que le graphique n'apparaîsse pas sur une seconde page
             graphics::par(new = TRUE)
             
+            # Espace au bas du graphique : taille d'affichage de la caractéristique à afficher
+            ymin_1 = ymin_2 = min(items_category$y)
+            if (!is.null(display_text)) {
+              # Largeur du plus long texte + espace entre un motif et le texte
+              carac_width = max(graphics::strwidth(pc[, display_text], units = "inches", cex = 0.5)) + par("csi")[1] * 0.5
+              ymin_1 = ymin_1 - convert_gunits(carac_width, "inches", to = "user", rotation = TRUE)
+            }
+            
             # Initialisation de la zone graphique
             graphics::plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
-                                 data.frame(x = rep(0, 2), y = seq(2) + nrow(items_category))), # + 2 pour placer du texte
-                           xlim = c(0, area_width),
-                           ylim = c(-graphics::strwidth(1, cex = 0.5), # - taille d'un caractère pour affichage d'une caractéristique
-                                    nrow(items_category) + 2), # + 2 pour affichage tailles des motifs
+                                 data.frame(x = rep(0, 2), y = seq_len(2) + nrow(items_category))), # + 2 pour placer du texte
+                           xlim = c(xmin, area_width - xmin),
+                           ylim = c(ymin_1, ymax),
                            col = "white", pch = 20, bty = "n",
                            xaxt = "n", xaxs = "i", xlab = "",
                            yaxt = "n", yaxs = "i", ylab = "")
@@ -3632,19 +3644,22 @@ setMethod(f = "plot_pattern_chart",
             # Espace ajouté pour pouvoir afficher la dernière taille de motif s'il y a trop peu de motifs associés
             last_space = graphics::strwidth(utils::as.roman(names(order_tab[length(order_tab)]))) - 
               (order_tab[length(order_tab)] * (width + margin) + margin) # strwidth units="user" dépend du graphique
+            if (last_space > 0) area_width = area_width + last_space
             
-            if (last_space > 0) { 
-              area_width = area_width + last_space
+            if (!is.null(display_text)) {
+              ymin_2 = ymin_2 - convert_gunits(carac_width, "inches", to = "user", rotation = TRUE)
+            }
+            
+            if (last_space > 0 || ymin_2 != ymin_1) {
               
               # Option "new" pour que le graphique n'apparaîsse pas sur une seconde page
               graphics::par(new = TRUE)
               
               # Réinitialisation de la zone graphique en considérant la taille d'un caractère (strwidth units="user" dépend du graphique)
               graphics::plot(rbind(items_category[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
-                                   data.frame(x = rep(0, 2), y = seq(2) + nrow(items_category))), # + 2 pour placer du texte
-                             xlim = c(0, area_width),
-                             ylim = c(-graphics::strwidth(1, cex = 0.5), # - taille d'un caractère pour affichage d'une caractéristique
-                                      nrow(items_category) + 2), # + 2 pour affichage tailles des motifs
+                                   data.frame(x = rep(0, 2), y = seq_len(2) + nrow(items_category))), # + 2 pour placer du texte
+                             xlim = c(xmin, area_width - xmin),
+                             ylim = c(ymin_2, ymax),
                              col = "white", pch = 20, bty = "n",
                              xaxt = "n", xaxs = "i", xlab = "",
                              yaxt = "n", yaxs = "i", ylab = "")

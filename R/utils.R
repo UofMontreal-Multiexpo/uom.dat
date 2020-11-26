@@ -210,6 +210,46 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 }
 
 
+#' Graphical units converter
+#' 
+#' Convert measures between graphical units considering the active graphics device.
+#' 
+#' @details
+#' A measure in inches may not correspond to the same value in user coordinate unit along the X axis
+#'  as along the Y axis.
+#'  For example, a measure of \eqn{1} inch corresponding to the width of a text that will be rotated
+#'  \eqn{90} degrees may correspond to a width of \eqn{0.09} in user unit before the rotation but a
+#'  height of \eqn{0.05} in user unit after the rotation.
+#'  The argument `rotation` allows to take this into account.
+#' 
+#' The `"user"` unit is only available after [`graphics::plot.new`] has been called.
+#' 
+#' The results of the functions [`graphics::strwidth`] and [`graphics::strheight`] applied to the
+#'  character `"1"` and each different unit serve as reference values for conversions.
+#' 
+#' @param measures Values to convert.
+#' @param from Graphical unit in which the measures are. One of `"user"`, `"inches"`, `"figure"`.
+#' @param to Graphical unit in which to convert the measures. One of `"user"`, `"inches"`, `"figure"`.
+#' @param dim Dimension on which measures were made (`"width` or `"height`).
+#' @param rotation Logical indicating whether to consider a rotation of the measured elements.
+#' @return Converted measure values.
+#' 
+#' @author Gauthier Magnin
+#' @md
+#' @keywords internal
+convert_gunits = function(measures, from, to, dim = "width", rotation = FALSE) {
+  
+  check_param(from, values = c("user", "inches", "figure"))
+  check_param(to, values = c("user", "inches", "figure"))
+  check_param(dim, values = c("width", "height"))
+  
+  if (dim == "width" && !rotation || dim == "height" &&  rotation)
+    return(measures * graphics::strwidth(1, to) / graphics::strwidth(1, from))
+  ##  dim == "width" &&  rotation || dim == "height" && !rotation
+  return(measures * graphics::strheight(1, to) / graphics::strheight(1, from))
+}
+
+
 
 #### Utility functions for file management ####
 
