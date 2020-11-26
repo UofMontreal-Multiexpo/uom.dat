@@ -1,4 +1,4 @@
-#' @include observation_maker.R utils.R
+#' @include observation_maker.R utils.R list_manager.R
 NULL
 
 
@@ -3681,57 +3681,46 @@ setMethod(f = "plot_pattern_chart",
             
             ## Traçage du graphique
             
-            # Traçage des lignes horizontales, repères pour les items
-            for (y_i in items_category$y) {
-              graphics::segments(x0 = 0, x1 = area_width, y0 = y_i, lwd = 0.02, lty = 3, col = "gray85")
-            }
+            # Lignes horizontales repérant les items
+            graphics::segments(x0 = 0, x1 = area_width, y0 = items_category$y,
+                               lwd = 0.02, lty = 3, col = "gray85")
             
-            # Tailles des motifs (titre et valeurs)
+            # Tailles des motifs (titre et valeurs) et lignes séparatrices
             graphics::text(0, y_orders, text_order, col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
-            for (i in seq_along(x_orders)) {
-              graphics::text(x = x_orders[i], y = y_orders, utils::as.roman(names(x_orders[i])),
-                             col = "black", cex = 1.05)
+            graphics::text(x_orders, y = y_orders, labels = utils::as.roman(names(x_orders)),
+                           col = "black", cex = 1.05)
+            graphics::abline(v = x_lines, col = "black", lwd = 0.5, lty = "dotted")
+            
+            # Segments verticaux entre les premiers et derniers items des motifs
+            graphics::segments(x0 = x_patterns + width,
+                               y0 = nth_values(y_patterns, "first"), y1 = nth_values(y_patterns, "last"),
+                               lwd = 1.2, lty = 1, col = "black")
+            
+            # Segments horizontaux pour les items des motifs
+            graphics::segments(x0 = rep(x_patterns, sapply(y_patterns, length)),
+                               x1 = rep(x_patterns, sapply(y_patterns, length)) + width,
+                               y0 = unlist(y_patterns),
+                               lwd = 1.2, lty = 1, col = "black")
+            
+            # Affichage des identifiants ou de l'une des caractéristiques des motifs
+            if (!is.null(display_text)) {
+              graphics::text(x_patterns + width / 2,
+                             nth_values(y_patterns, "first") - point_size,
+                             labels = pc[, display_text],
+                             col = "black", cex = 0.5, srt = 90, adj = 1)
             }
             
-            # Traçage des lignes séparatrices
-            for (i in seq_along(x_lines)) {
-              graphics::abline(v = x_lines[i], col = "black", lwd = 0.5, lty = "dotted")
+            # Affichage des statuts des motifs
+            if (display_status) {
+              graphics::points(x_patterns + width / 2,
+                               nth_values(y_patterns, "last") + 1.5 * point_size,
+                               col = object@status_colors[pc$status],
+                               cex = 0.5, pch = 15)
+              # Une coordonnée indépendante de la taille du point entraîne parfois un chevauchement avec le motif
+              # Concernant display_text une coordonnée indépendante peut être utilisée grâce à adj
             }
             
-            # Pour chaque motif à dessiner
-            for (m in 1:nrow(pc)) {
-              
-              # Segment vertical entre les premier et dernier items du motif
-              graphics::lines(c(x_patterns[m] + width, x_patterns[m] + width),
-                              c(y_patterns[[m]][1], y_patterns[[m]][length(y_patterns[[m]])]),
-                              lwd = 1.2, lty = 1, col = "black")
-              
-              # Segments horizontaux pour les items du motif
-              for (y in y_patterns[[m]]) {
-                graphics::lines(c(x_patterns[m], x_patterns[m] + width), c(y, y),
-                                lwd = 1.2, lty = 1, col = "black", pch = 20, cex = 0.8)
-              }
-              
-              # Affichage de l'identifiant ou de l'une des caractéristiques du motif
-              if (!is.null(display_text)) {
-                graphics::text(x_patterns[m] + width / 2,
-                               y_patterns[[m]][1] - point_size,
-                               pc[m, display_text],
-                               col = "black", cex = 0.5, srt = 90, adj = 1)
-              }
-              
-              # Affichage du statut du motif
-              if (display_status) {
-                graphics::points(x_patterns[m] + width / 2,
-                                 y_patterns[[m]][length(y_patterns[[m]])] + 1.5 * point_size,
-                                 col = object@status_colors[pc$status[m]],
-                                 cex = 0.5, pch = 15)
-                # Une coordonnée indépendante de la taille du point entraîne parfois un chevauchement avec le motif
-                # Concernant display_text une coordonnée indépendante peut être utilisée grâce à adj
-              }
-            }
-            
-            # Pointage et affichage des items
+            # Pointage et affichage des noms des items
             graphics::points(items_category[, c("x", "y")], col = item_colors, pch = 20)
             graphics::text(items_category$x, items_category$y, text_labels,
                            cex = 0.75, pos = 2, col = item_colors, xpd = TRUE)
