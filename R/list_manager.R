@@ -2,6 +2,43 @@
 NULL
 
 
+#### Functions for search in lists ####
+
+#' Extraction of first, last or \out{n<sup>th</sup>} values from a list
+#' 
+#' Extract the first, last or \out{n<sup>th</sup>} values of the vectors of a list.
+#' 
+#' @param x List of vectors whose `n`\out{<sup>th</sup>} values are to be extracted.
+#' @param n Position of the elements to extract in each vector of `x`. Negative values start from the
+#'  end.\cr
+#'  `"first"` and `"last"` are special values for the first and last values of each vector.
+#' @return Vector of the values at positions `n`.
+#' 
+#' @author Gauthier Magnin
+#' 
+#' @examples
+#' l <- list(c(1), c(1,2), c(1,2,3))
+#' nth_values(l, "first")
+#' nth_values(l, "last")
+#' nth_values(l, 2)
+#' nth_values(l, -2)
+#' 
+#' @md
+#' @export
+nth_values = function(x, n) {
+  if (n == "last") n = -1
+  else if (n == "first") n = 1
+  
+  if (n > 0) return(sapply(x, function(v) v[n]))
+  return(sapply(x, function(v) {
+    index = length(v) + (n + 1)
+    if (index > 0) return(v[index])
+    return(NA)
+  }))
+}
+
+
+
 #### Functions of computation on lists ####
 
 #' Set operations on list

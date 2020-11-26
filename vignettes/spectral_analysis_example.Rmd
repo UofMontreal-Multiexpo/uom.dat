@@ -1214,6 +1214,10 @@ Transformation of lists and transformation into lists:
 * [coerce_list](../html/coerce_list.html)
 * [coerce_to_list](../html/coerce_to_list.html)
 
+Search in lists:
+
+* [nth_values](../html/nth_values.html)
+
 
 
 ---
