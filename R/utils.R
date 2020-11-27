@@ -237,15 +237,26 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' @author Gauthier Magnin
 #' @md
 #' @keywords internal
-convert_gunits = function(measures, from, to, dim = "width", rotation = FALSE) {
+convert_gunits = function(measures, from, to = from, dim = "width", rotation = FALSE) {
   
   check_param(from, values = c("user", "inches", "figure"))
   check_param(to, values = c("user", "inches", "figure"))
   check_param(dim, values = c("width", "height"))
   
-  if (dim == "width" && !rotation || dim == "height" &&  rotation)
+  if (rotation) {
+    # Ratio largeur/hauteur (taille de la zone en inches en largeur / taille de la zone en inches en hauteur)
+    wh_ratio = c(user = par("pin")[1] / par("pin")[2],
+                 inches = 1,
+                 figure = par("fin")[1] / par("fin")[2])
+    
+    # Application du ratio pour effectuer la transition d'unité (largeur -> hauteur ou inversement)
+    if (dim == "width") measures = measures * unname(wh_ratio[from])
+    else measures = measures / unname(wh_ratio[from])
+  }
+  
+  if (dim == "width" && !rotation || dim == "height" &&  rotation) 
     return(measures * graphics::strwidth(1, to) / graphics::strwidth(1, from))
-  ##  dim == "width" &&  rotation || dim == "height" && !rotation
+  ##  dim == "width" &&  rotation || dim == "height" && !rotation 
   return(measures * graphics::strheight(1, to) / graphics::strheight(1, from))
 }
 
