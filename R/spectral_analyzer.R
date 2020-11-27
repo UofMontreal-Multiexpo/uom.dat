@@ -3494,46 +3494,9 @@ setMethod(f = "plot_pattern_chart",
                                 title = "Pattern itemsets") {
             
             # Définition des marges et initialisation de la zone graphique
-            if (!is.null(category)) graphics::par(mar = c(3.0, 0.5, 1.9, 0.5))
-            else graphics::par(mar = c(0.5, 0.5, 1.9, 0.5))
+            if (!is.null(category)) graphics::par(mar = c(3.4, 0.5, 2.0, 0.5))
+            else graphics::par(mar = c(0.5, 0.5, 2.0, 0.5))
             graphics::plot.new()
-            
-            
-            ## Affichage des légendes avant le graphique
-            
-            title(main = title, line = 1.1, cex.main = 1.3)
-            
-            # Couleurs et légende de la catégorie
-            if (!is.null(category)) {
-              item_colors = object@categories_colors[[category]][items_category$category]
-              category_colors = unique(item_colors)[order(unique(items_category$category))]
-              
-              # Légende de catégorie
-              if (is.null(c.cutoff)) {
-                category_legend = sort(unique(items_category$category))
-              } else {
-                category_legend = substr(sort(unique(items_category$category)), 1, c.cutoff)
-              }
-              
-              graphics::legend("bottom", xpd = NA, bty = "n", inset = c(0, -0.09),
-                               title = cap(category), cex = 0.85,
-                               legend = category_legend,
-                               col = category_colors,
-                               pch = 20, ncol = ceiling(length(category_legend) / 2))
-            } else {
-              item_colors = "black"
-            }
-            
-            # Légende des statuts
-            if (display_status) {
-              # La différence de marges implique la nécessité une différence d'inset
-              status_inset = if (!is.null(category)) c(-0.02, -0.064) else c(-0.02, -0.060)
-              
-              graphics::legend("topright", bty = "n", horiz = TRUE, xpd = NA, inset = status_inset,
-                               pch = 15, cex = 0.85,
-                               col = object@status_colors,
-                               legend = names(object@status_colors))
-            }
             
             
             ## Préparation de variables
@@ -3555,10 +3518,24 @@ setMethod(f = "plot_pattern_chart",
             
             # Labels des items (codes ou noms)
             if (use_names) {
-              text_labels = names(object@items)[match(items_category$item, object@items)]
-              if (!is.null(n.cutoff)) text_labels = substr(text_labels, 1, n.cutoff)
+              text_items = names(object@items)[match(items_category$item, object@items)]
+              if (!is.null(n.cutoff)) text_items = substr(text_items, 1, n.cutoff)
             } else {
-              text_labels = as.character(items_category$item)
+              text_items = as.character(items_category$item)
+            }
+            
+            # Couleurs des items et couleurs et labels de la catégorie
+            if (!is.null(category)) {
+              item_colors = object@categories_colors[[category]][items_category$category]
+              category_colors = unique(item_colors)[order(unique(items_category$category))]
+              
+              if (is.null(c.cutoff)) {
+                text_category = sort(unique(items_category$category))
+              } else {
+                text_category = substr(sort(unique(items_category$category)), 1, c.cutoff)
+              }
+            } else {
+              item_colors = "black"
             }
             
             # Marge entre un motif et la ligne séparatrice qui le suit ou entre deux motifs
@@ -3615,7 +3592,7 @@ setMethod(f = "plot_pattern_chart",
             # Placement de la "plot region" pour avoir la place d'afficher les labels des items en-dehors
             # Espace à gauche : taille du plus grand label (ou du titre "Order") + taille de la marge
             #                   + taille d'un caractère * 0.5 (offset de placement des labels) ; en fraction de la "figure region"
-            graphics::par(plt = c(max(graphics::strwidth(text_labels, cex = 0.75, units = "figure"),
+            graphics::par(plt = c(max(graphics::strwidth(text_items, cex = 0.75, units = "figure"),
                                       graphics::strwidth(text_order, cex = 1.05, units = "figure")) +
                                     convert_gunits(graphics::par("mai")[2], "inches", to = "figure") +
                                     0.5 * graphics::strwidth("A", units = "figure"),
@@ -3666,7 +3643,7 @@ setMethod(f = "plot_pattern_chart",
             }
             
             
-            ## Préparation de variables dépendante de la zone graphique
+            ## Préparation de variables dépendant de la zone graphique
             
             # Définition des abscisses des titres des tailles des motifs
             x_orders = c(x_lines[1] / 2,
@@ -3678,6 +3655,27 @@ setMethod(f = "plot_pattern_chart",
             # point statut = taille d'un caractère * rapport approximatif entre un caractère et un point pch 15 * cex
             point_size = par("cxy")[2] * 0.41 * 0.5
             
+            # Marges entre la plot region et la figure region (wb = width and bottom, t = top)
+            wb_margin = convert_gunits(par("mai")[4], "inches", "user")
+            t_margin = convert_gunits(par("mai")[3], "inches", "user", "height")
+            
+            # Dimensions des légendes (statuts et catégorie)
+            if (display_status) {
+              status_legend = graphics::legend(x = 0, y = 0, plot = FALSE,
+                                               bty = "n", horiz = TRUE, xpd = TRUE,
+                                               pch = 15, cex = 0.85,
+                                               col = object@status_colors,
+                                               legend = names(object@status_colors))
+            }
+            if (!is.null(category)) {
+              xcl = par("usr")[1] - convert_gunits(par("plt")[1], "figure", "user") + wb_margin
+              ycl = par("usr")[3]
+              category_legend = graphics::legend(x = xcl, y = ycl, plot = FALSE,
+                                                 xpd = TRUE, bty = "n",
+                                                 title = cap(category), legend = text_category, cex = 0.85,
+                                                 col = category_colors, pch = 20, ncol = ceiling(length(text_category) / 2))
+            }
+            
             
             ## Traçage du graphique
             
@@ -3686,7 +3684,8 @@ setMethod(f = "plot_pattern_chart",
                                lwd = 0.02, lty = 3, col = "gray85")
             
             # Tailles des motifs (titre et valeurs) et lignes séparatrices
-            graphics::text(0, y_orders, text_order, col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
+            graphics::text(0, y_orders, text_order,
+                           col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
             graphics::text(x_orders, y = y_orders, labels = utils::as.roman(names(x_orders)),
                            col = "black", cex = 1.05)
             graphics::abline(v = x_lines, col = "black", lwd = 0.5, lty = "dotted")
@@ -3720,9 +3719,44 @@ setMethod(f = "plot_pattern_chart",
               # Concernant display_text une coordonnée indépendante peut être utilisée grâce à adj
             }
             
+            
+            ## Affichage du titre, des items et des légendes
+            
+            # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
+            graphics::text(x = par("usr")[1] - convert_gunits(par("plt")[1], "figure", "user") + wb_margin,
+                           y = par("usr")[4] + t_margin / 2,
+                           title, cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
+            
+            # Légende de la catégorie
+            if (!is.null(category)) {
+              # Bornage de la taille de la légende à celle de la figure region (moins les marges)
+              if (category_legend$rect$w > par("usr")[2] - xcl) {
+                xycl = xy.coords(x = c(xcl, par("usr")[2]),
+                                 y = c(ycl, par("usr")[3] - convert_gunits(par("plt")[3], "figure", "user", "height") + wb_margin))
+              } else {
+                # Centrage de la légende
+                xycl = xy.coords(x = (par("usr")[2] + xcl) / 2 - category_legend$rect$w / 2,
+                                 y = ycl)
+              }
+              graphics::legend(xycl, xpd = TRUE, bty = "n",
+                               title = cap(category), legend = text_category, cex = 0.85,
+                               col = category_colors, pch = 20, ncol = ceiling(length(text_category) / 2))
+            }
+            
+            # Légende des statuts
+            if (display_status) {
+              graphics::legend(x = par("usr")[2] - status_legend$rect$w +
+                                 (strwidth(SpectralAnalyzer.STATUS_PERSISTENT) - strwidth(SpectralAnalyzer.STATUS_LATENT)),
+                               y = par("usr")[4] + t_margin / 2 + status_legend$rect$h / 2,
+                               bty = "n", horiz = TRUE, xpd = TRUE,
+                               pch = 15, cex = 0.85,
+                               col = object@status_colors,
+                               legend = names(object@status_colors))
+            }
+            
             # Pointage et affichage des noms des items
             graphics::points(items_category[, c("x", "y")], col = item_colors, pch = 20)
-            graphics::text(items_category$x, items_category$y, text_labels,
+            graphics::text(items_category$x, items_category$y, text_items,
                            cex = 0.75, pos = 2, col = item_colors, xpd = TRUE)
           })
 
