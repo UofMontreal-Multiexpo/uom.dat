@@ -9,12 +9,13 @@
   object,
   pc,
   identifiers = "original",
-  use_names = TRUE,
-  n.cutoff = NULL,
   length_one = FALSE,
   jitter = TRUE,
   display_status = TRUE,
   display_text = "ID",
+  use_names = TRUE,
+  n.cutoff = NULL,
+  category = NULL,
   c.cutoff = NULL,
   sort_by = "category",
   title = "Pattern itemsets",
@@ -37,12 +38,6 @@ One of \code{"original"}, \code{"new"}.
                       more about the sort that is performed).}
 }}
 
-\item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
-codes otherwise.}
-
-\item{n.cutoff}{If \code{use_names = TRUE}, limit number of characters to display concerning the names
-of the represented items.}
-
 \item{length_one}{If \code{FALSE}, patterns of order \eqn{1} are not plotted. If \code{TRUE}, all
 patterns are plotted.}
 
@@ -57,7 +52,16 @@ Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"we
 \code{"frequency"}, \code{"specificity"}, \code{"year"}).
 \code{NULL} value specifies to display no information.}
 
-\item{c.cutoff}{Limit number of characters to display in the legend for the categories represented.}
+\item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
+codes otherwise.}
+
+\item{n.cutoff}{If \code{use_names = TRUE}, limit number of characters to display concerning the names
+of the represented items.}
+
+\item{category}{Name or number of the category to represent on the chart (numbering according to
+the order of the columns of `object["items_categories"]`).}
+
+\item{c.cutoff}{Limit number of characters to display in the legend for the category represented.}
 
 \item{sort_by}{Sorting method of displayed items. One of \code{"category"}, \code{"item"}.}
 
@@ -75,9 +79,6 @@ Data frame of the patterns represented on the chart, associated with their chara
 Plot a chart of the pattern itemsets and save it as a PDF file.
 }
 \details{
-If categories are associated with items, each category generates a chart.
- The category name is appended to the end of the file name.
-
 The patterns are sorted according to their order values, then to their weights.
 
 The colors associated with the values of the possible category represented are selected circularly

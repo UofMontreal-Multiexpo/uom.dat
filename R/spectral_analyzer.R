@@ -651,7 +651,7 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Methods for creating pattern itemsets graphs
 
-setGeneric(name = "pattern_chart", def = function(object, pc, identifiers = "original", use_names = TRUE, n.cutoff = NULL, length_one = FALSE, jitter = TRUE, display_status = TRUE, display_text = "ID", c.cutoff = NULL, sort_by = "category", title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf"){ standardGeneric("pattern_chart") })
+setGeneric(name = "pattern_chart", def = function(object, pc, identifiers = "original", length_one = FALSE, jitter = TRUE, display_status = TRUE, display_text = "ID", use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf"){ standardGeneric("pattern_chart") })
 
 setGeneric(name = "plot_pattern_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, jitter = TRUE, display_status = TRUE, display_text = "ID", title = "Pattern itemsets"){ standardGeneric("plot_pattern_chart") })
 
@@ -3323,9 +3323,6 @@ setMethod(f = "degree",
 #' Plot a chart of the pattern itemsets and save it as a PDF file.
 #' 
 #' @details
-#' If categories are associated with items, each category generates a chart.
-#'  The category name is appended to the end of the file name.
-#' 
 #' The patterns are sorted according to their order values, then to their weights.
 #' 
 #' The colors associated with the values of the possible category represented are selected circularly
@@ -3346,10 +3343,6 @@ setMethod(f = "degree",
 #'    \item{\code{"new"}}{Use of new identifiers based on pattern sorting (see 'Details' section to learn
 #'                        more about the sort that is performed).}
 #'  }
-#' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification
-#'  codes otherwise.
-#' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the names
-#'  of the represented items.
 #' @param length_one If \code{FALSE}, patterns of order \eqn{1} are not plotted. If \code{TRUE}, all
 #'  patterns are plotted.
 #' @param jitter If \code{FALSE} patterns of order \eqn{1} are aligned vertically.
@@ -3360,7 +3353,13 @@ setMethod(f = "degree",
 #'  Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"},
 #'  \code{"frequency"}, \code{"specificity"}, \code{"year"}).
 #'  \code{NULL} value specifies to display no information.
-#' @param c.cutoff Limit number of characters to display in the legend for the categories represented.
+#' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification
+#'  codes otherwise.
+#' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the names
+#'  of the represented items.
+#' @param category Name or number of the category to represent on the chart (numbering according to
+#'  the order of the columns of `object["items_categories"]`).
+#' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param sort_by Sorting method of displayed items. One of \code{"category"}, \code{"item"}.
 #' @param title Chart title.
 #' @param path Path of the directory in which to save the chart. Default is the working directory.
@@ -3385,17 +3384,21 @@ setMethod(f = "degree",
 setMethod(f = "pattern_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, pc, identifiers = "original",
-                                use_names = TRUE, n.cutoff = NULL, length_one = FALSE, jitter = TRUE,
+                                length_one = FALSE, jitter = TRUE,
                                 display_status = TRUE, display_text = "ID",
-                                c.cutoff = NULL, sort_by = "category",
+                                use_names = TRUE, n.cutoff = NULL,
+                                category = NULL, c.cutoff = NULL, sort_by = "category",
                                 title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf") {
             
             # Récupération des patterns
             check_init(object, SpectralAnalyzer.PATTERNS)
             pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
             
-            if (identifiers != "original" && identifiers != "new")
-              stop("identifiers must be \"original\" or \"new\".")
+            # Validation des paramètres
+            check_access_for_category(object, category, NA)
+            check_param(sort_by, values = c("category", "item"))
+            if (is.null(category) && sort_by == "category") sort_by = "item"
+            check_param(identifiers, values = c("original", "new"))
             
             # Motifs d'ordre > 1, triés par taille croissant puis par poids décroissant
             pat_charac = if (length_one) pc else pc[pc$order != 1, ]
@@ -3407,48 +3410,27 @@ setMethod(f = "pattern_chart",
             else pat_charac$ID = as.numeric(rownames(pat_charac))
             
             # Ensemble des items distincts parmi les motifs, associés d'une catégorie
-            items_cat = data.frame(item = unique(unlist(pat_charac$pattern)))
+            items_cat = data.frame(item = unique(unlist(pat_charac$pattern)), stringsAsFactors = FALSE)
+            if (length(object@items_categories) == 0) items_cat$category = NA
+            else items_cat$category = object@items_categories[items_cat$item, category]
             
-            # Une variante du graphique par catégorie
-            nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
-            name = check_extension(name, "pdf")
-            
-            for (c in seq(nb_categories)) {
-              
-              # Association des items à leur valeur de catégorie s'il y a des catégories
-              if (length(object@items_categories) == 0) {
-                sort_by = "item"
-                items_cat$category = NA
-                category = NULL
-              } else {
-                items_cat$category = object@items_categories[as.character(items_cat$item), c]
-                category = colnames(object@items_categories)[c]
-              }
-              
-              # Tri des items
-              if (use_names && sort_by == "item") {
-                # Par nom
-                items_cat = items_cat[order(names(object@items)[match(items_cat$item, object@items)]), ]
-              } else if (sort_by == "item") {
-                # Par code
-                items_cat = items_cat[order(match(items_cat$item, object@items)), ]
-              } else {
-                # Selon une catégorie
-                items_cat = items_cat[order(items_cat[[sort_by]]), ]
-              }
-              rownames(items_cat) = NULL
-              
-              # Nom du graphique en fonction de la catégorie
-              file_name = ifelse(nb_categories == 1,
-                                 name,
-                                 sub(".pdf", paste0("-", category, ".pdf"), name))
-              
-              # Traçage du graphique dans un fichier PDF
-              grDevices::pdf(paste0(turn_into_path(path), file_name),
-                             14, 10, paper = "a4r", pointsize = 11)
-              plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_status, display_text, title)
-              grDevices::dev.off()
+            # Tri des items
+            if (use_names && sort_by == "item") { # Par nom
+              items_cat = items_cat[order(names(object@items)[match(items_cat$item, object@items)]), ]
             }
+            else if (sort_by == "item") {         # Par code
+              items_cat = items_cat[order(match(items_cat$item, object@items)), ]
+            }
+            else {                                # Selon la catégorie
+              items_cat = items_cat[order(items_cat[[sort_by]]), ]
+            }
+            rownames(items_cat) = NULL
+            
+            # Traçage du graphique dans un fichier PDF
+            grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
+                           14, 10, paper = "a4r", pointsize = 11)
+            plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_status, display_text, title)
+            grDevices::dev.off()
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
             return(pat_charac[order(pat_charac$ID),
@@ -3521,7 +3503,7 @@ setMethod(f = "plot_pattern_chart",
               text_items = names(object@items)[match(items_category$item, object@items)]
               if (!is.null(n.cutoff)) text_items = substr(text_items, 1, n.cutoff)
             } else {
-              text_items = as.character(items_category$item)
+              text_items = items_category$item
             }
             
             # Couleurs des items et couleurs et labels de la catégorie
