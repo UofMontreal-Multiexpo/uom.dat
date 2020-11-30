@@ -3646,9 +3646,16 @@ setMethod(f = "plot_pattern_chart",
             ## Préparation de variables dépendant de la zone graphique
             
             # Définition des abscisses des titres des tailles des motifs
-            x_orders = c(x_lines[1] / 2,
-                         (x_lines[seq(2, length(x_lines))] + x_lines[seq(length(x_lines)-1)]) / 2,
-                         (area_width + x_lines[length(x_lines)]) / 2)
+            if (length(x_lines) == 0) x_orders = area_width / 2
+            else {
+              x_orders = numeric(length(order_tab))
+              x_orders[1] = x_lines[1] / 2
+              if (length(x_lines) > 1) {
+                x_orders[seq(2, length(x_lines))] = (x_lines[seq(2, length(x_lines))] + 
+                                                       x_lines[seq(length(x_lines)-1)]) / 2
+              }
+              x_orders[length(x_orders)] = (area_width + x_lines[length(x_lines)]) / 2
+            }
             names(x_orders) = names(order_tab)
             
             # Pour uniformiser l'espacement entre le motif et les informations affichées : taille d'un
