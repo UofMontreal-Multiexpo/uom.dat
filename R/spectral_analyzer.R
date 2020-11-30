@@ -651,7 +651,7 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Methods for creating pattern itemsets graphs
 
-setGeneric(name = "pattern_chart", def = function(object, pc, identifiers = "original", length_one = FALSE, jitter = TRUE, display_status = TRUE, display_text = "ID", use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf"){ standardGeneric("pattern_chart") })
+setGeneric(name = "pattern_chart", def = function(object, pc, identifiers = "original", length_one = FALSE, jitter = TRUE, display_status = TRUE, display_text = "ID", use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", title = "Pattern itemsets", path = NULL, name = NULL){ standardGeneric("pattern_chart") })
 
 setGeneric(name = "plot_pattern_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, jitter = TRUE, display_status = TRUE, display_text = "ID", title = "Pattern itemsets"){ standardGeneric("plot_pattern_chart") })
 
@@ -3320,10 +3320,13 @@ setMethod(f = "degree",
 
 #' Pattern chart
 #' 
-#' Plot a chart of the pattern itemsets and save it as a PDF file.
+#' Plot a chart of the pattern itemsets. It can be automatically saved as a PDF file.
 #' 
 #' @details
 #' The patterns are sorted according to their order values, then to their weights.
+#' 
+#' If the arguments \code{path} and \code{name} are not \code{NULL}, the chart is plotted in a PDF file
+#'  of A4 landscape paper size. If they are \code{NULL}, the chart is plotted in the active device.
 #' 
 #' The colors associated with the values of the possible category represented are selected circularly
 #'  among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
@@ -3362,8 +3365,10 @@ setMethod(f = "degree",
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param sort_by Sorting method of displayed items. One of \code{"category"}, \code{"item"}.
 #' @param title Chart title.
-#' @param path Path of the directory in which to save the chart. Default is the working directory.
-#' @param name Name of the file in which to save the chart.
+#' @param path Path of the directory in which to save the chart as a PDF file. To be ignored to plot
+#'  the chart in the active device.
+#' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
+#'  active device.
 #' @return Data frame of the patterns represented on the chart, associated with their characteristics
 #'  and identifiers (visible on the chart if \code{display_text = "ID"}).
 #' 
@@ -3374,10 +3379,13 @@ setMethod(f = "degree",
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
 #' 
 #' @examples
-#' patterns_1 <- pattern_chart(SA_instance, "patterns",
-#'                             n.cutoff = 20, c.cutoff = 17)
-#' patterns_2 <- pattern_chart(SA_instance, SA_instance["patterns"][1:15, ],
-#'                             c.cutoff = 17, name = "pattern_itemsets_1-15")
+#' patterns_1 <- pattern_chart(SA_instance, "patterns", category = "family",
+#'                             n.cutoff = 20, c.cutoff = 10)
+#' patterns_2 <- pattern_chart(SA_instance, SA_instance["patterns"][1:15, ])
+#' 
+#' patterns_1 <- pattern_chart(SA_instance, "patterns", category = "family",
+#'                             n.cutoff = 20, c.cutoff = 17,
+#'                             path = getwd(), name = "pattern_itemsets")
 #' 
 #' @aliases pattern_chart
 #' @export
@@ -3388,7 +3396,7 @@ setMethod(f = "pattern_chart",
                                 display_status = TRUE, display_text = "ID",
                                 use_names = TRUE, n.cutoff = NULL,
                                 category = NULL, c.cutoff = NULL, sort_by = "category",
-                                title = "Pattern itemsets", path = getwd(), name = "pattern_itemsets.pdf") {
+                                title = "Pattern itemsets", path = NULL, name = NULL) {
             
             # Récupération des patterns
             check_init(object, SpectralAnalyzer.PATTERNS)
@@ -3426,11 +3434,15 @@ setMethod(f = "pattern_chart",
             }
             rownames(items_cat) = NULL
             
-            # Traçage du graphique dans un fichier PDF
-            grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
-                           14, 10, paper = "a4r", pointsize = 11)
-            plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_status, display_text, title)
-            grDevices::dev.off()
+            # Traçage du graphique (dans le device actif ou dans un fichier PDF)
+            if (!is.null(path) && !is.null(name)) {
+              grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
+                             14, 10, paper = "a4r", pointsize = 11)
+              plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_status, display_text, title)
+              grDevices::dev.off()
+            } else {
+              plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_status, display_text, title)
+            }
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
             return(pat_charac[order(pat_charac$ID),

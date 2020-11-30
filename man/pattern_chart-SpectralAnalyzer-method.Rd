@@ -19,8 +19,8 @@
   c.cutoff = NULL,
   sort_by = "category",
   title = "Pattern itemsets",
-  path = getwd(),
-  name = "pattern_itemsets.pdf"
+  path = NULL,
+  name = NULL
 )
 }
 \arguments{
@@ -67,19 +67,24 @@ the order of the columns of `object["items_categories"]`).}
 
 \item{title}{Chart title.}
 
-\item{path}{Path of the directory in which to save the chart. Default is the working directory.}
+\item{path}{Path of the directory in which to save the chart as a PDF file. To be ignored to plot
+the chart in the active device.}
 
-\item{name}{Name of the file in which to save the chart.}
+\item{name}{Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
+active device.}
 }
 \value{
 Data frame of the patterns represented on the chart, associated with their characteristics
  and identifiers (visible on the chart if \code{display_text = "ID"}).
 }
 \description{
-Plot a chart of the pattern itemsets and save it as a PDF file.
+Plot a chart of the pattern itemsets. It can be automatically saved as a PDF file.
 }
 \details{
 The patterns are sorted according to their order values, then to their weights.
+
+If the arguments \code{path} and \code{name} are not \code{NULL}, the chart is plotted in a PDF file
+ of A4 landscape paper size. If they are \code{NULL}, the chart is plotted in the active device.
 
 The colors associated with the values of the possible category represented are selected circularly
  among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
@@ -89,10 +94,13 @@ Therefore, if the number of values exceeds \code{20}, some colors will be used m
 See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 }
 \examples{
-patterns_1 <- pattern_chart(SA_instance, "patterns",
-                            n.cutoff = 20, c.cutoff = 17)
-patterns_2 <- pattern_chart(SA_instance, SA_instance["patterns"][1:15, ],
-                            c.cutoff = 17, name = "pattern_itemsets_1-15")
+patterns_1 <- pattern_chart(SA_instance, "patterns", category = "family",
+                            n.cutoff = 20, c.cutoff = 10)
+patterns_2 <- pattern_chart(SA_instance, SA_instance["patterns"][1:15, ])
+
+patterns_1 <- pattern_chart(SA_instance, "patterns", category = "family",
+                            n.cutoff = 20, c.cutoff = 17,
+                            path = getwd(), name = "pattern_itemsets")
 
 }
 \references{
