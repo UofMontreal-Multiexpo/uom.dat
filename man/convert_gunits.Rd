@@ -4,7 +4,7 @@
 \alias{convert_gunits}
 \title{Graphical units converter}
 \usage{
-convert_gunits(measures, from, to, dim = "width", rotation = FALSE)
+convert_gunits(measures, from, to = from, dim = "width", rotation = FALSE)
 }
 \arguments{
 \item{measures}{Values to convert.}
