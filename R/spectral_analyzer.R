@@ -2125,8 +2125,8 @@ setMethod(f = "define_dynamic_status",
 #'  If two patterns have the same characteristics concerning these ones, they are ordered relative to
 #'  each other in the order they are given.
 #' 
-#' If the arguments \code{path} and \code{name} are not \code{NULL}, the chart is plotted in a PDF file
-#'  of A4 landscape paper size. If they are \code{NULL}, the chart is plotted in the active device.
+#' If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape
+#'  paper size. If it is \code{NULL}, the chart is plotted in the active device.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
@@ -2142,8 +2142,8 @@ setMethod(f = "define_dynamic_status",
 #' @param sort If \code{TRUE}, the patterns are sorted on the chart as described in 'Details' section.
 #'  Otherwise, they are ordered on the chart in the order in which they are given.
 #' @param title Chart title.
-#' @param path Path of the directory in which to save the chart as a PDF file. To be ignored to plot
-#'  the chart in the active device.
+#' @param path Path of the directory in which to save the chart as a PDF file. Default is the working
+#'  directory.
 #' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
 #'  active device.
 #' @return Data frame of the patterns and characteristics used, associated with the identifiers visible
@@ -2194,7 +2194,7 @@ setMethod(f = "spectrum_chart",
             else pc$ID = as.numeric(rownames(pc))
             
             # Traçage du graphique (dans le device actif ou dans un fichier PDF)
-            if (!is.null(path) && !is.null(name)) {
+            if (!is.null(name)) {
               grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
                              14, 10, paper = "a4r", pointsize = 11)
               plot_spectrum_chart(object, pc, weights, title)
@@ -3366,8 +3366,8 @@ setMethod(f = "degree",
 #' @details
 #' The patterns are sorted according to their order values, then to their weights.
 #' 
-#' If the arguments \code{path} and \code{name} are not \code{NULL}, the chart is plotted in a PDF file
-#'  of A4 landscape paper size. If they are \code{NULL}, the chart is plotted in the active device.
+#' If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape
+#'  paper size. If it is \code{NULL}, the chart is plotted in the active device.
 #' 
 #' The colors associated with the values of the possible category represented are selected circularly
 #'  among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
@@ -3406,8 +3406,8 @@ setMethod(f = "degree",
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param sort_by Sorting method of displayed items. One of \code{"category"}, \code{"item"}.
 #' @param title Chart title.
-#' @param path Path of the directory in which to save the chart as a PDF file. To be ignored to plot
-#'  the chart in the active device.
+#' @param path Path of the directory in which to save the chart as a PDF file. Default is the working
+#'  directory.
 #' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
 #'  active device.
 #' @return Data frame of the patterns represented on the chart, associated with their characteristics
@@ -3476,7 +3476,7 @@ setMethod(f = "pattern_chart",
             rownames(items_cat) = NULL
             
             # Traçage du graphique (dans le device actif ou dans un fichier PDF)
-            if (!is.null(path) && !is.null(name)) {
+            if (!is.null(name)) {
               grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
                              14, 10, paper = "a4r", pointsize = 11)
               plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_status, display_text, title)

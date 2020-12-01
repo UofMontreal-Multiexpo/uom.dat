@@ -35,8 +35,8 @@ Otherwise, they are ordered on the chart in the order in which they are given.}
 
 \item{title}{Chart title.}
 
-\item{path}{Path of the directory in which to save the chart as a PDF file. To be ignored to plot
-the chart in the active device.}
+\item{path}{Path of the directory in which to save the chart as a PDF file. Default is the working
+directory.}
 
 \item{name}{Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
 active device.}
@@ -56,8 +56,8 @@ The patterns are sorted according to their specificities (desc.), status (in ord
  If two patterns have the same characteristics concerning these ones, they are ordered relative to
  each other in the order they are given.
 
-If the arguments \code{path} and \code{name} are not \code{NULL}, the chart is plotted in a PDF file
- of A4 landscape paper size. If they are \code{NULL}, the chart is plotted in the active device.
+If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape
+ paper size. If it is \code{NULL}, the chart is plotted in the active device.
 }
 \examples{
 spectrum_1 <- spectrum_chart(SA_instance, "patterns")

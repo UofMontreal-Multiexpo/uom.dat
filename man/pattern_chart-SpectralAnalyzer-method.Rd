@@ -67,8 +67,8 @@ the order of the columns of `object["items_categories"]`).}
 
 \item{title}{Chart title.}
 
-\item{path}{Path of the directory in which to save the chart as a PDF file. To be ignored to plot
-the chart in the active device.}
+\item{path}{Path of the directory in which to save the chart as a PDF file. Default is the working
+directory.}
 
 \item{name}{Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
 active device.}
@@ -83,8 +83,8 @@ Plot a chart of the pattern itemsets. It can be automatically saved as a PDF fil
 \details{
 The patterns are sorted according to their order values, then to their weights.
 
-If the arguments \code{path} and \code{name} are not \code{NULL}, the chart is plotted in a PDF file
- of A4 landscape paper size. If they are \code{NULL}, the chart is plotted in the active device.
+If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape
+ paper size. If it is \code{NULL}, the chart is plotted in the active device.
 
 The colors associated with the values of the possible category represented are selected circularly
  among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
