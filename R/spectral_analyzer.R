@@ -2166,8 +2166,7 @@ setMethod(f = "spectrum_chart",
             check_init(object, SpectralAnalyzer.PATTERNS)
             pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
             
-            if (identifiers != "original" && identifiers != "new")
-              stop("identifiers must be \"original\" or \"new\".")
+            check_param(identifiers, values = c("original", "new"))
             
             # Décomposition des poids des motifs selon le type de noeuds (simple ou complexe)
             weights = weight_by_node_complexity(object, pc$pattern)
@@ -2189,7 +2188,7 @@ setMethod(f = "spectrum_chart",
             
             # Traçage du graphique dans un fichier PDF
             grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
-                           15, 8, pointsize = 10)
+                           14, 10, paper = "a4r", pointsize = 11)
             plot_spectrum_chart(object, pc, weights, title)
             grDevices::dev.off()
             
@@ -2222,31 +2221,30 @@ setMethod(f = "plot_spectrum_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, pc, weights, title = "Spectrum of patterns") {
             
+            graphics::par(mar = c(6.0, 5.0, 2.0+1.4, 5.0))
+            
+            cex_legend = 0.85
+            cex_order = 0.75
+            cex_axis = 1.05
+            cex_lab = 1.05
+            cex_id = 0.9
+            
+            ## Bar chart relatif au poids
+            
             # Définition des couleurs des barres du barplot
             bars_colors = object@status_colors[pc$status]
-            
-            # Limite maximale de l'ordonnée concernant la spécificité
-            # Écart à 1 ajouté pour que la ligne ne soit pas tronquée en haut du graphique
-            # et que les tailles des motifs ayant le poids max ne soient pas masquées par la marge
-            y_lim_line = 1.045
             
             # Marge entre les barres et les axes à gauche et à droite
             x_margin = 0.03 * nrow(pc)
             
-            ## Bar chart relatif au poids
-            graphics::par(mfrow = c(1, 1))
-            graphics::par(mar = c(7.1, 5.6, 4.1, 5.6) + 0.1)
-            
             # Diagramme en barres selon le poids des motifs
-            las = if (length(pc$pattern) < 50) 1 else 3
-            y_lim_bar = max(pc$weight) * y_lim_line # Poids max aligné avec specificité de 1
-            bar_plot = graphics::barplot(t(weights), main = title,
+            bar_plot = graphics::barplot(t(weights),
                                          col = NA, space = 0, lwd = 2,
                                          xlim = c(-x_margin, nrow(pc) + x_margin), xaxs = "i",
-                                         ylim = c(0, y_lim_bar), yaxt = "n",
-                                         xlab = "Patterns IDs", ylab = "",
-                                         names.arg = pc$ID, las = las, font.axis = 2,
-                                         cex.main = 1.3, cex.lab = 1.5, cex.axis = 1.5, cex.names = 0.9)
+                                         ylim = c(0, max(pc$weight)), yaxt = "n",
+                                         xlab = "Pattern IDs", ylab = "Weight",
+                                         names.arg = pc$ID, las = 3, font.axis = 2,
+                                         cex.lab = cex_lab, cex.names = cex_id)
             bar_width_2 = diff(bar_plot[1:2]) / 2
             
             # Axe à gauche : suppression des nombres à virgule, orientation en fonction du nombre
@@ -2255,17 +2253,15 @@ setMethod(f = "plot_spectrum_chart",
             if (max(ticks) < max(pc$weight)) {
                ticks = append(ticks, max(pc$weight))
             }
-            graphics::axis(2, lwd = 2, cex.axis = 1.5, font.axis = 2,
+            graphics::axis(2, lwd = 2, cex.axis = cex_axis,
                            at = ticks, las = if (any(ticks >= 10)) 3 else 1)
-            graphics::mtext("Weight", side = 2, line = 3.1, cex = 1.5,
-                            at = max(pc$weight) / 2)
             
             # Coloration des barres
             for (i in seq(nrow(weights))) {
               y = c(0, cumsum(c(weights[i, ])))
               graphics::rect(bar_plot[i] - bar_width_2, y[ - length(y)],
                              bar_plot[i] + bar_width_2, y[ - 1],
-                             col = bars_colors[i], density = c(300, 15), border = "black")
+                             col = bars_colors[i], density = c(-1, 15), border = "black")
             }
             
             
@@ -2275,41 +2271,75 @@ setMethod(f = "plot_spectrum_chart",
             # Ligne de la spécificité et seuil
             graphics::plot(x = seq(0.5, nrow(pc) - 0.5),
                            y = pc$specificity,
-                           lwd = 3, type = "b", col = "black", pch = 20,
+                           lwd = 3, type = "b", col = "black", pch = 20, xpd = TRUE,
                            bty = "n", xlab = "", ylab = "", main = "",
                            xlim = c(-x_margin, nrow(pc) + x_margin), xaxt = "n", xaxs = "i",
-                           ylim = c(0, y_lim_line), yaxt = "n", yaxs = "i")
+                           ylim = c(0, 1), yaxt = "n", yaxs = "i")
             graphics::segments(x0 = 0, y0 = 0.5,
                                x1 = nrow(pc) * (1 + x_margin),
                                lwd = 0.5, lty = "dotted")
             
-            # Axe et titre à droite
-            graphics::axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = 1.5, font.axis = 2)
-            graphics::mtext("Specificity", side = 4, line = 3.1, cex = 1.5, at = 0.5)
+            # Axe à droite
+            graphics::axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = cex_axis)
+            graphics::mtext("Specificity", side = 4, line = 3, cex = cex_lab, at = 0.5)
             
             
-            ## Texte relatif aux tailles des motifs
+            ## Texte relatif aux tailles des motifs (par-dessus la ligne)
             # Changement du système de coordonnées du au changement de graphique (bar -> line)
-            new_y = pc$weight * y_lim_line / y_lim_bar
+            new_y = pc$weight * 1 / max(pc$weight)
             shadowtext(bar_plot, new_y, utils::as.roman(pc$order),
-                       col = "black", bg = "white", cex = 0.8, pos = 3, offset = 1)
+                       col = "black", bg = "white", cex = cex_order, pos = 3, offset = cex_order, xpd = TRUE)
             
             
-            ## Légendes
-            graphics::legend("bottomleft", bty = "n", horiz = TRUE, xpd = NA, inset = c(0, -0.15),
-                             pch = 15, col = object@status_colors,
-                             legend = names(object@status_colors), cex = 1.1)
-            graphics::legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.135),
-                             pch = NA_integer_,
-                             legend = paste0(utils::as.roman(min(pc$order)), " ... ",
-                                             utils::as.roman(max(pc$order)), ":  Order"),
-                             cex = 1.1)
-            graphics::legend("bottomright", bty = "n", xpd = NA, adj = 0, inset = c(0.165, -0.165),
-                             pch = 20, lty = 1,
-                             legend = "Specificity", cex = 1.1)
-            graphics::legend("bottomright", bty = "n", xpd = NA, inset = c(0.005, -0.165),
-                             fill = "red", density = c(600, 15),
-                             legend = c("Weight in complex nodes", "Weight in simple nodes"), cex = 1.1)
+            ## Légendes et titre
+            
+            # Marges latérale, en bas et en haut (tt = zone du titre, tp = extra zone du plot (pour affichage taille))
+            w_margin = convert_gunits(par("mai")[4]/10, "inches", "user", "width")         # = 0.5 mar (line)
+            #TODO: b_margin = w_margin rotation
+            b_margin = convert_gunits(par("mai")[4]/10, "inches", "user", "width", TRUE)   # = 0.5 mar
+            tt_margin = convert_gunits(par("mai")[3]/1.7, "inches", "user", "height")      # = 2.0 mar
+            tp_margin = convert_gunits(par("mai")[3]/2.428571, "inches", "user", "height") # = 1.4 mar
+            
+            # Légende des statuts
+            status_legend = graphics::legend("top", plot = FALSE,
+                                             horiz = TRUE, pch = 15, cex = cex_legend,
+                                             col = object@status_colors, legend = names(object@status_colors))
+            
+            graphics::legend(x = par("usr")[2] + convert_gunits(1 - par("plt")[2], "figure", "user") -
+                               w_margin - status_legend$rect$w +
+                               (strwidth(SpectralAnalyzer.STATUS_PERSISTENT) - strwidth(SpectralAnalyzer.STATUS_LATENT)),
+                             y = par("usr")[4] + tp_margin + tt_margin / 2 + status_legend$rect$h / 2,
+                             bty = "n", horiz = TRUE, xpd = TRUE,
+                             pch = 15, cex = cex_legend,
+                             col = object@status_colors,
+                             legend = names(object@status_colors))
+            
+            # Légende des poids
+            weight_legend = graphics::legend("bottom", plot = FALSE,
+                                             cex = cex_legend, fill = "red", density = c(-1, 15),
+                                             legend = c("Weight in complex nodes", "Weight in simple nodes"))
+            
+            graphics::legend(x = par("usr")[1] - convert_gunits(par("plt")[1], "figure", "user") + w_margin,
+                             y = weight_legend$rect$h - convert_gunits(par("plt")[3], "figure", "user", "height") + par("usr")[3] + b_margin,
+                             bty = "n", xpd = TRUE,
+                             cex = cex_legend, fill = "red", density = c(-1, 15),
+                             legend = c("Weight in complex nodes", "Weight in simple nodes"))
+            
+            # Légende de la spécificité et de la taille
+            so_legend = graphics::legend("bottom", plot = FALSE,
+                                         pch = c(20, 86), lty = c("dotted", NA), cex = cex_legend,
+                                         legend = c("Specificity", "Order"))
+            
+            graphics::legend(x = par("usr")[2] + convert_gunits(1 - par("plt")[2], "figure", "user") - so_legend$rect$w - w_margin,
+                             y = so_legend$rect$h - convert_gunits(par("plt")[3], "figure", "user", "height") + par("usr")[3] + b_margin,
+                             bty = "n", xpd = TRUE,
+                             pch = c(19, 86), lty = c("dotted", NA), cex = cex_legend,
+                             legend = c("Specificity", "Order"))
+            
+            # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
+            graphics::text(x = par("usr")[1] - convert_gunits(par("plt")[1], "figure", "user") + w_margin,
+                           y = par("usr")[4] + tp_margin + tt_margin / 2,
+                           "Spectrum of patterns", cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
           })
 
 
