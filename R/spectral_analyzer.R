@@ -3780,6 +3780,7 @@ setMethod(f = "plot_pattern_chart",
                 xycl = grDevices::xy.coords(x = (graphics::par("usr")[2] + xcl) / 2 - category_legend$rect$w / 2,
                                             y = ycl)
               }
+              category = if (is.numeric(category)) colnames(object@items_categories)[category] else category
               graphics::legend(xycl, xpd = TRUE, bty = "n",
                                title = cap(category), legend = text_category, cex = 0.85,
                                col = category_colors, pch = 20, ncol = ceiling(length(text_category) / 2))
