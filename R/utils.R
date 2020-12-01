@@ -275,6 +275,7 @@ convert_gunits = function(measures, from, to = from, dim = "width", rotation = F
 #' @author Gauthier Magnin
 #' @keywords internal
 turn_into_path = function(path) {
+  if (is.null(path)) return("./")
   if (substring(path, nchar(path)) != "/") return(paste0(path, "/"))
   return(path)
 }
