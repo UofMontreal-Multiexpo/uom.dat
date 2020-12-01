@@ -2305,21 +2305,21 @@ setMethod(f = "plot_spectrum_chart",
             ## Légendes et titre
             
             # Marges latérale, en bas et en haut (tt = zone du titre, tp = extra zone du plot (pour affichage taille))
-            w_margin = convert_gunits(par("mai")[4]/10, "inches", "user", "width")         # = 0.5 mar (line)
-            #TODO: b_margin = w_margin rotation
-            b_margin = convert_gunits(par("mai")[4]/10, "inches", "user", "width", TRUE)   # = 0.5 mar
-            tt_margin = convert_gunits(par("mai")[3]/1.7, "inches", "user", "height")      # = 2.0 mar
-            tp_margin = convert_gunits(par("mai")[3]/2.428571, "inches", "user", "height") # = 1.4 mar
+            w_margin = convert_gunits(graphics::par("mai")[4]/10, "inches", "user", "width")         # = 0.5 mar (line)
+            b_margin = convert_gunits(graphics::par("mai")[4]/10, "inches", "user", "width", TRUE)   # = 0.5 mar
+            tt_margin = convert_gunits(graphics::par("mai")[3]/1.7, "inches", "user", "height")      # = 2.0 mar
+            tp_margin = convert_gunits(graphics::par("mai")[3]/2.428571, "inches", "user", "height") # = 1.4 mar
             
             # Légende des statuts
             status_legend = graphics::legend("top", plot = FALSE,
                                              horiz = TRUE, pch = 15, cex = cex_legend,
                                              col = object@status_colors, legend = names(object@status_colors))
             
-            graphics::legend(x = par("usr")[2] + convert_gunits(1 - par("plt")[2], "figure", "user") -
+            graphics::legend(x = graphics::par("usr")[2] + convert_gunits(1 - graphics::par("plt")[2], "figure", "user") -
                                w_margin - status_legend$rect$w +
-                               (strwidth(SpectralAnalyzer.STATUS_PERSISTENT) - strwidth(SpectralAnalyzer.STATUS_LATENT)),
-                             y = par("usr")[4] + tp_margin + tt_margin / 2 + status_legend$rect$h / 2,
+                               (graphics::strwidth(SpectralAnalyzer.STATUS_PERSISTENT) -
+                                  graphics::strwidth(SpectralAnalyzer.STATUS_LATENT)),
+                             y = graphics::par("usr")[4] + tp_margin + tt_margin / 2 + status_legend$rect$h / 2,
                              bty = "n", horiz = TRUE, xpd = TRUE,
                              pch = 15, cex = cex_legend,
                              col = object@status_colors,
@@ -2330,8 +2330,8 @@ setMethod(f = "plot_spectrum_chart",
                                              cex = cex_legend, fill = "red", density = c(-1, 15),
                                              legend = c("Weight in complex nodes", "Weight in simple nodes"))
             
-            graphics::legend(x = par("usr")[1] - convert_gunits(par("plt")[1], "figure", "user") + w_margin,
-                             y = weight_legend$rect$h - convert_gunits(par("plt")[3], "figure", "user", "height") + par("usr")[3] + b_margin,
+            graphics::legend(x = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user") + w_margin,
+                             y = weight_legend$rect$h - convert_gunits(graphics::par("plt")[3], "figure", "user", "height") + graphics::par("usr")[3] + b_margin,
                              bty = "n", xpd = TRUE,
                              cex = cex_legend, fill = "red", density = c(-1, 15),
                              legend = c("Weight in complex nodes", "Weight in simple nodes"))
@@ -2341,15 +2341,15 @@ setMethod(f = "plot_spectrum_chart",
                                          pch = c(20, 86), lty = c("dotted", NA), cex = cex_legend,
                                          legend = c("Specificity", "Order"))
             
-            graphics::legend(x = par("usr")[2] + convert_gunits(1 - par("plt")[2], "figure", "user") - so_legend$rect$w - w_margin,
-                             y = so_legend$rect$h - convert_gunits(par("plt")[3], "figure", "user", "height") + par("usr")[3] + b_margin,
+            graphics::legend(x = graphics::par("usr")[2] + convert_gunits(1 - graphics::par("plt")[2], "figure", "user") - so_legend$rect$w - w_margin,
+                             y = so_legend$rect$h - convert_gunits(graphics::par("plt")[3], "figure", "user", "height") + graphics::par("usr")[3] + b_margin,
                              bty = "n", xpd = TRUE,
                              pch = c(19, 86), lty = c("dotted", NA), cex = cex_legend,
                              legend = c("Specificity", "Order"))
             
             # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
-            graphics::text(x = par("usr")[1] - convert_gunits(par("plt")[1], "figure", "user") + w_margin,
-                           y = par("usr")[4] + tp_margin + tt_margin / 2,
+            graphics::text(x = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user") + w_margin,
+                           y = graphics::par("usr")[4] + tp_margin + tt_margin / 2,
                            "Spectrum of patterns", cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
           })
 
@@ -3640,7 +3640,7 @@ setMethod(f = "plot_pattern_chart",
             ymin_1 = ymin_2 = min(items_category$y)
             if (!is.null(display_text)) {
               # Largeur du plus long texte + espace entre un motif et le texte
-              carac_width = max(graphics::strwidth(pc[, display_text], units = "inches", cex = 0.5)) + par("csi")[1] * 0.5
+              carac_width = max(graphics::strwidth(pc[, display_text], units = "inches", cex = 0.5)) + graphics::par("csi")[1] * 0.5
               ymin_1 = ymin_1 - convert_gunits(carac_width, "inches", to = "user", rotation = TRUE)
             }
             
@@ -3695,11 +3695,11 @@ setMethod(f = "plot_pattern_chart",
             
             # Pour uniformiser l'espacement entre le motif et les informations affichées : taille d'un
             # point statut = taille d'un caractère * rapport approximatif entre un caractère et un point pch 15 * cex
-            point_size = par("cxy")[2] * 0.41 * 0.5
+            point_size = graphics::par("cxy")[2] * 0.41 * 0.5
             
             # Marges entre la plot region et la figure region (wb = width and bottom, t = top)
-            wb_margin = convert_gunits(par("mai")[4], "inches", "user")
-            t_margin = convert_gunits(par("mai")[3], "inches", "user", "height")
+            wb_margin = convert_gunits(graphics::par("mai")[4], "inches", "user")
+            t_margin = convert_gunits(graphics::par("mai")[3], "inches", "user", "height")
             
             # Dimensions des légendes (statuts et catégorie)
             if (display_status) {
@@ -3710,8 +3710,8 @@ setMethod(f = "plot_pattern_chart",
                                                legend = names(object@status_colors))
             }
             if (!is.null(category)) {
-              xcl = par("usr")[1] - convert_gunits(par("plt")[1], "figure", "user") + wb_margin
-              ycl = par("usr")[3]
+              xcl = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user") + wb_margin
+              ycl = graphics::par("usr")[3]
               category_legend = graphics::legend(x = xcl, y = ycl, plot = FALSE,
                                                  xpd = TRUE, bty = "n",
                                                  title = cap(category), legend = text_category, cex = 0.85,
@@ -3765,20 +3765,20 @@ setMethod(f = "plot_pattern_chart",
             ## Affichage du titre, des items et des légendes
             
             # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
-            graphics::text(x = par("usr")[1] - convert_gunits(par("plt")[1], "figure", "user") + wb_margin,
-                           y = par("usr")[4] + t_margin / 2,
+            graphics::text(x = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user") + wb_margin,
+                           y = graphics::par("usr")[4] + t_margin / 2,
                            title, cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
             
             # Légende de la catégorie
             if (!is.null(category)) {
               # Bornage de la taille de la légende à celle de la figure region (moins les marges)
-              if (category_legend$rect$w > par("usr")[2] - xcl) {
-                xycl = xy.coords(x = c(xcl, par("usr")[2]),
-                                 y = c(ycl, par("usr")[3] - convert_gunits(par("plt")[3], "figure", "user", "height") + wb_margin))
+              if (category_legend$rect$w > graphics::par("usr")[2] - xcl) {
+                xycl = grDevices::xy.coords(x = c(xcl, graphics::par("usr")[2]),
+                                            y = c(ycl, graphics::par("usr")[3] - convert_gunits(graphics::par("plt")[3], "figure", "user", "height") + wb_margin))
               } else {
                 # Centrage de la légende
-                xycl = xy.coords(x = (par("usr")[2] + xcl) / 2 - category_legend$rect$w / 2,
-                                 y = ycl)
+                xycl = grDevices::xy.coords(x = (graphics::par("usr")[2] + xcl) / 2 - category_legend$rect$w / 2,
+                                            y = ycl)
               }
               graphics::legend(xycl, xpd = TRUE, bty = "n",
                                title = cap(category), legend = text_category, cex = 0.85,
@@ -3787,9 +3787,10 @@ setMethod(f = "plot_pattern_chart",
             
             # Légende des statuts
             if (display_status) {
-              graphics::legend(x = par("usr")[2] - status_legend$rect$w +
-                                 (strwidth(SpectralAnalyzer.STATUS_PERSISTENT) - strwidth(SpectralAnalyzer.STATUS_LATENT)),
-                               y = par("usr")[4] + t_margin / 2 + status_legend$rect$h / 2,
+              graphics::legend(x = graphics::par("usr")[2] - status_legend$rect$w +
+                                 (graphics::strwidth(SpectralAnalyzer.STATUS_PERSISTENT) -
+                                    graphics::strwidth(SpectralAnalyzer.STATUS_LATENT)),
+                               y = graphics::par("usr")[4] + t_margin / 2 + status_legend$rect$h / 2,
                                bty = "n", horiz = TRUE, xpd = TRUE,
                                pch = 15, cex = 0.85,
                                col = object@status_colors,
