@@ -11,8 +11,8 @@
   identifiers = "original",
   sort = TRUE,
   title = "Spectrum of patterns",
-  path = getwd(),
-  name = "spectrum_of_patterns.pdf"
+  path = NULL,
+  name = NULL
 )
 }
 \arguments{
@@ -35,17 +35,19 @@ Otherwise, they are ordered on the chart in the order in which they are given.}
 
 \item{title}{Chart title.}
 
-\item{path}{Path of the directory in which to save the chart. Default is the working directory.}
+\item{path}{Path of the directory in which to save the chart as a PDF file. To be ignored to plot
+the chart in the active device.}
 
-\item{name}{Name of the file in which to save the chart.}
+\item{name}{Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
+active device.}
 }
 \value{
 Data frame of the patterns and characteristics used, associated with the identifiers visible
  on the chart.
 }
 \description{
-Plot a spectrum chart and save it as a PDF file. Bar chart of the given patterns showing their
- characteristics.
+Plot a spectrum chart: bar chart of the given patterns showing their characteristics.
+ It can be automatically saved as a PDF file.
 }
 \details{
 The patterns are sorted according to their specificities (desc.), status (in order of
@@ -53,11 +55,16 @@ The patterns are sorted according to their specificities (desc.), status (in ord
  \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
  If two patterns have the same characteristics concerning these ones, they are ordered relative to
  each other in the order they are given.
+
+If the arguments \code{path} and \code{name} are not \code{NULL}, the chart is plotted in a PDF file
+ of A4 landscape paper size. If they are \code{NULL}, the chart is plotted in the active device.
 }
 \examples{
 spectrum_1 <- spectrum_chart(SA_instance, "patterns")
-spectrum_2 <- spectrum_chart(SA_instance, SA_instance["patterns"][1:15, ],
-                             name = "spectrum_of_patterns_1-15")
+spectrum_2 <- spectrum_chart(SA_instance, SA_instance["patterns"][1:15, ])
+
+spectrum_1 <- spectrum_chart(SA_instance, "patterns",
+                             path = getwd(), name = "spectrum_of_patterns")
 
 }
 \references{

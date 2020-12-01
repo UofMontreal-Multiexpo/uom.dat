@@ -627,7 +627,7 @@ setGeneric(name = "define_dynamic_status", def = function(object, patterns, stat
 
 # Methods for creating spectrum graphs
 
-setGeneric(name = "spectrum_chart", def = function(object, pc, identifiers = "original", sort = TRUE, title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf"){ standardGeneric("spectrum_chart") })
+setGeneric(name = "spectrum_chart", def = function(object, pc, identifiers = "original", sort = TRUE, title = "Spectrum of patterns", path = NULL, name = NULL){ standardGeneric("spectrum_chart") })
 
 setGeneric(name = "plot_spectrum_chart", def = function(object, pc, weights, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
 
@@ -2115,8 +2115,8 @@ setMethod(f = "define_dynamic_status",
 
 #' Pattern spectrum
 #' 
-#' Plot a spectrum chart and save it as a PDF file. Bar chart of the given patterns showing their
-#'  characteristics.
+#' Plot a spectrum chart: bar chart of the given patterns showing their characteristics.
+#'  It can be automatically saved as a PDF file.
 #' 
 #' @details
 #' The patterns are sorted according to their specificities (desc.), status (in order of
@@ -2124,6 +2124,9 @@ setMethod(f = "define_dynamic_status",
 #'  \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
 #'  If two patterns have the same characteristics concerning these ones, they are ordered relative to
 #'  each other in the order they are given.
+#' 
+#' If the arguments \code{path} and \code{name} are not \code{NULL}, the chart is plotted in a PDF file
+#'  of A4 landscape paper size. If they are \code{NULL}, the chart is plotted in the active device.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
@@ -2139,8 +2142,10 @@ setMethod(f = "define_dynamic_status",
 #' @param sort If \code{TRUE}, the patterns are sorted on the chart as described in 'Details' section.
 #'  Otherwise, they are ordered on the chart in the order in which they are given.
 #' @param title Chart title.
-#' @param path Path of the directory in which to save the chart. Default is the working directory.
-#' @param name Name of the file in which to save the chart.
+#' @param path Path of the directory in which to save the chart as a PDF file. To be ignored to plot
+#'  the chart in the active device.
+#' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
+#'  active device.
 #' @return Data frame of the patterns and characteristics used, associated with the identifiers visible
 #'  on the chart.
 #' 
@@ -2152,15 +2157,17 @@ setMethod(f = "define_dynamic_status",
 #' 
 #' @examples
 #' spectrum_1 <- spectrum_chart(SA_instance, "patterns")
-#' spectrum_2 <- spectrum_chart(SA_instance, SA_instance["patterns"][1:15, ],
-#'                              name = "spectrum_of_patterns_1-15")
+#' spectrum_2 <- spectrum_chart(SA_instance, SA_instance["patterns"][1:15, ])
+#' 
+#' spectrum_1 <- spectrum_chart(SA_instance, "patterns",
+#'                              path = getwd(), name = "spectrum_of_patterns")
 #' 
 #' @aliases spectrum_chart
 #' @export
 setMethod(f = "spectrum_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, pc, identifiers = "original", sort = TRUE,
-                                title = "Spectrum of patterns", path = getwd(), name = "spectrum_of_patterns.pdf") {
+                                title = "Spectrum of patterns", path = NULL, name = NULL) {
             
             # Récupération des patterns
             check_init(object, SpectralAnalyzer.PATTERNS)
@@ -2186,11 +2193,15 @@ setMethod(f = "spectrum_chart",
             if (identifiers == "new") pc$ID = seq(nrow(pc))
             else pc$ID = as.numeric(rownames(pc))
             
-            # Traçage du graphique dans un fichier PDF
-            grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
-                           14, 10, paper = "a4r", pointsize = 11)
-            plot_spectrum_chart(object, pc, weights, title)
-            grDevices::dev.off()
+            # Traçage du graphique (dans le device actif ou dans un fichier PDF)
+            if (!is.null(path) && !is.null(name)) {
+              grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
+                             14, 10, paper = "a4r", pointsize = 11)
+              plot_spectrum_chart(object, pc, weights, title)
+              grDevices::dev.off()
+            } else {
+              plot_spectrum_chart(object, pc, weights, title)
+            }
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
             return(pc[order(pc$ID), c(ncol(pc), seq(ncol(pc)-1))])
