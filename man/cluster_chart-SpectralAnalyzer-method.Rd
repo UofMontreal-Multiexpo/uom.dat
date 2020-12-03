@@ -18,7 +18,7 @@
   c.cutoff = NULL,
   display_mixt = TRUE,
   title = NULL,
-  path = getwd(),
+  path = NULL,
   name = NULL,
   ...
 )
@@ -88,11 +88,11 @@ mixed links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 on the argument \code{item}. Example of default title: \code{"Node cluster of 25"} if \code{nopc}
 contains nodes and \code{item = 25}.}
 
-\item{path}{Path of the directory in which to save the charts. Default is the working directory.}
+\item{path}{Path of the directory in which to save the charts as PNG files. Default is the working
+directory.}
 
-\item{name}{Name of the file in which to save the chart. Default name depends on the type of entities
-contained in \code{nopc} and on the argument \code{item}. Example of default name:
-\code{"node_cluster_of_25"} if \code{nopc} contains nodes and \code{item = 25}.}
+\item{name}{Single name of the PNG files in which to save the charts. To be ignored to plot the charts
+in the active device.}
 
 \item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 \code{sna} for plotting the graph. See Details section.}
@@ -111,11 +111,15 @@ contained in \code{nopc} and on the argument \code{item}. Example of default nam
 }
 \description{
 Identify the cluster corresponding to one specific item and plot a spectrosome of this cluster.
- Only nodes or patterns sharing this item are ploted.
+ Only nodes or patterns sharing this item are plotted.
 }
 \details{
-If categories are associated with the items, each category generates a spectrosome.
- The category name is appended to the end of the file name.
+If the argument \code{name} is not \code{NULL}, charts are plotted in PNG files of size 950 x 700
+ pixels. If it is \code{NULL}, charts are plotted in the active device, one behind the other.
+
+If categories are associated with the items, each category generates a spectrosome. If there is more
+ than one category and \code{name} is not \code{NULL}, the category name is appended to the end of
+ the file name.
 
 If mixed links are relative to category values that are not represented by single links, these
  values are present in the legend below "Mixt", with no associated color.
@@ -142,6 +146,9 @@ The following parameters, which can be redefined, have the following values:
 \examples{
 cluster_1 <- cluster_chart(SA_instance, "nodes", item = 3146)
 cluster_2 <- cluster_chart(SA_instance, SA_instance["patterns"], item = 3146)
+
+cluster_2 <- cluster_chart(SA_instance, "patterns", item = 3146,
+                           path = getwd(), name = "pattern_cluster_of_3146")
 
 }
 \seealso{

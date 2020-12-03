@@ -638,11 +638,11 @@ setGeneric(name = "weight_by_node_complexity", def = function(object, patterns){
 
 # Methods for creating spectrosome graphs and computing related indicators
 
-setGeneric(name = "spectrosome_chart", def = function(object, nopc, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, title = NULL, path = getwd(), name = NULL, ...){ standardGeneric("spectrosome_chart") })
+setGeneric(name = "spectrosome_chart", def = function(object, nopc, identifiers = "original", nb_graphs = 1, min_link_weight = 1, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", clusters = Inf, highlight = 3, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE, title = NULL, path = NULL, name = NULL, ...){ standardGeneric("spectrosome_chart") })
 
 setGeneric(name = "cluster_text", def = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, nopc, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, title = NULL, path = getwd(), name = NULL, ...){ standardGeneric("cluster_chart") })
+setGeneric(name = "cluster_chart", def = function(object, nopc, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, title = NULL, path = NULL, name = NULL, ...){ standardGeneric("cluster_chart") })
 
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
@@ -2443,18 +2443,21 @@ setMethod(f = "weight_by_node_complexity",
 
 #' Spectrosome
 #' 
-#' Plot one or more spectrosome charts and save them in PNG format. Graph in which vertices are the
-#'  nodes or the patterns and edges are the items they have in common. Clusters corresponding to nodes
-#'  or patterns sharing one item are mentioned by displaying the name or code identifying the item
-#'  between these nodes or patterns.
+#' Plot one or more spectrosome charts: graph in which vertices are nodes or patterns and edges are the
+#'  items they have in common. Clusters corresponding to nodes or patterns sharing one item are
+#'  mentioned by displaying the name or code identifying the item between these nodes or patterns.
+#'  It can be automatically saved as a PNG file.
 #' 
 #' @details
-#' If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
-#'  file name.
+#' If the argument \code{name} is not \code{NULL}, charts are plotted in PNG files of size 950 x 700
+#'  pixels. If it is \code{NULL}, charts are plotted in the active device, one behind the other.
+#' 
+#' If \code{nb_graphs} is greater than \code{1} and \code{name} is not \code{NULL} a number is
+#'  automatically added to the end of the file names to distinguish the different files.
 #'  
-#' If categories are associated with the items, each category generates a spectrosome and
-#'  therefore a file. If there is more than one category, its name is appended to the end of the file
-#'  name (after the possible addition of the number of the graph).
+#' If categories are associated with the items, each category generates a spectrosome. If there is more
+#'  than one category and \code{name} is not \code{NULL}, the category name is appended to the end of
+#'  the file name (after the possible addition of the number of the graph).
 #' 
 #' If mixed links are relative to category values that are not represented by single links, these
 #'  values are present in the legend below "Mixt", with no associated color.
@@ -2501,8 +2504,7 @@ setMethod(f = "weight_by_node_complexity",
 #'    \item{\code{"new"}}{Use of new identifiers ordered according to the subset corresponding to
 #'                        \code{nopc}.}
 #'  }
-#' @param nb_graphs Number of graphs to generate and save. The position of the vertices differs between
-#'  each copy.
+#' @param nb_graphs Number of graphs to generate. The position of the vertices differs between each copy.
 #' @param min_link_weight Minimum number of items in common between two entities to plot their link on
 #'  the chart.
 #' @param vertex_size Way how the sizes of the vertices of the graph should be defined.
@@ -2546,10 +2548,10 @@ setMethod(f = "weight_by_node_complexity",
 #'  mixed links (or in mixed vertices, if \code{vertex_col = "categories"}).
 #' @param title Chart title. Default title depends on the type of entities contained in \code{nopc}.
 #'  Example of default title: \code{"Spectrosome of nodes"} if \code{nopc} contains nodes.
-#' @param path Path of the directory in which to save the charts. Default is the working directory.
-#' @param name Name of the file in which to save the chart. Default name depends on the type of entities
-#'  contained in \code{nopc}. Example of default name: \code{"spectrosome_of_nodes"} if \code{nopc}
-#'  contains nodes.
+#' @param path Path of the directory in which to save the charts as PNG files. Default is the working
+#'  directory.
+#' @param name Single name of the PNG files in which to save the charts. To be ignored to plot the charts
+#'  in the active device.
 #' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna} for plotting the graph. See Details section.
 #' @return
@@ -2575,6 +2577,10 @@ setMethod(f = "weight_by_node_complexity",
 #' spectrosome_3 <- spectrosome_chart(SA_instance, SA_instance["patterns"][1:15, ],
 #'                                    name = "spectrosome_of_patterns_1-15")
 #' 
+#' spectrosome_2 <- spectrosome_chart(SA_instance, "patterns",
+#'                                    path = getwd(),
+#'                                    name = "spectrosome_of_patterns")
+#' 
 #' @aliases spectrosome_chart
 #' @export
 setMethod(f = "spectrosome_chart",
@@ -2585,7 +2591,7 @@ setMethod(f = "spectrosome_chart",
                                 vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 clusters = Inf, highlight = 3,
                                 use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE,
-                                title = NULL, path = getwd(), name = NULL, ...) {
+                                title = NULL, path = NULL, name = NULL, ...) {
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
@@ -2904,10 +2910,9 @@ setMethod(f = "spectrosome_chart",
             # Nombre de variantes du graphique
             nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
             
-            # Définition de valeurs par défaut pour le titre et le nom du fichier, et vérifications
+            # Définition de la valeur par défaut du titre et vérifications du nom de fichier
             if (is.null(title)) title = paste0("Spectrosome of ", entities)
-            if (is.null(name)) name = paste0("spectrosome_of_", entities, ".png")
-            else name = check_extension(name, "png")
+            if (!is.null(name)) name = check_extension(name, "png")
             path = turn_into_path(path)
             
             # Réutilisation ou non de coordonnées
@@ -2926,14 +2931,18 @@ setMethod(f = "spectrosome_chart",
               
               for (j in seq(nb_categories)) {
                 
-                # Nom du graphique en fonction du nombre
-                file_name = ifelse(nb_graphs == 1, name, sub(".png", paste0("-", i, ".png"), name))
-                file_name = ifelse(nb_categories == 1,
-                                   file_name,
-                                   sub(".png", paste0("-", colnames(object@items_categories)[j], ".png"), file_name))
+                # Ouverture d'un fichier PNG si spécifié
+                if (!is.null(name)) {
+                  # Nom du graphique en fonction du nombre
+                  file_name = ifelse(nb_graphs == 1, name, sub(".png", paste0("-", i, ".png"), name))
+                  file_name = ifelse(nb_categories == 1,
+                                     file_name,
+                                     sub(".png", paste0("-", colnames(object@items_categories)[j], ".png"), file_name))
+                  
+                  # Traçage des graphiques dans des fichiers PNG
+                  grDevices::png(paste0(path, file_name), 950, 700)
+                }
                 
-                # Traçage des graphiques dans des fichiers PNG
-                grDevices::png(paste0(path, file_name), 950, 700)
                 graphics::par(mar = c(0.5, 0.5, 3.5, 0.5))
                 graphics::plot.new()
                 w_margin = convert_gunits(graphics::par("mai")[4], "inches", "user")
@@ -3021,8 +3030,10 @@ setMethod(f = "spectrosome_chart",
                 },
                 error = function(e) {
                   # Fermeture et suppression du fichier graphique avant affichage du message d'erreur
-                  grDevices::dev.off()
-                  file.remove(paste0(path, file_name))
+                  if (!is.null(name)) {
+                    grDevices::dev.off()
+                    file.remove(paste0(path, file_name))
+                  }
                   stop(e)
                   # Exemple d'erreur possible : vertex_col contient des noms de couleurs incorrects
                 })
@@ -3033,7 +3044,7 @@ setMethod(f = "spectrosome_chart",
                 }
                 
                 # Fermeture du fichier PNG
-                grDevices::dev.off()
+                if (!is.null(name)) grDevices::dev.off()
               }
               
               # Récupération des coordonnées des sommets du graphe
@@ -3144,11 +3155,15 @@ setMethod(f = "cluster_text",
 #' Cluster: subgraph of a spectrosome
 #' 
 #' Identify the cluster corresponding to one specific item and plot a spectrosome of this cluster.
-#'  Only nodes or patterns sharing this item are ploted.
+#'  Only nodes or patterns sharing this item are plotted.
 #' 
 #' @details
-#' If categories are associated with the items, each category generates a spectrosome.
-#'  The category name is appended to the end of the file name.
+#' If the argument \code{name} is not \code{NULL}, charts are plotted in PNG files of size 950 x 700
+#'  pixels. If it is \code{NULL}, charts are plotted in the active device, one behind the other.
+#' 
+#' If categories are associated with the items, each category generates a spectrosome. If there is more
+#'  than one category and \code{name} is not \code{NULL}, the category name is appended to the end of
+#'  the file name.
 #' 
 #' If mixed links are relative to category values that are not represented by single links, these
 #'  values are present in the legend below "Mixt", with no associated color.
@@ -3213,9 +3228,6 @@ setMethod(f = "cluster_text",
 #' @param title Chart title. Default title depends on the type of entities contained in \code{nopc} and
 #'  on the argument \code{item}. Example of default title: \code{"Node cluster of 25"} if \code{nopc}
 #'  contains nodes and \code{item = 25}.
-#' @param name Name of the file in which to save the chart. Default name depends on the type of entities
-#'  contained in \code{nopc} and on the argument \code{item}. Example of default name:
-#'  \code{"node_cluster_of_25"} if \code{nopc} contains nodes and \code{item = 25}.
 #' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna} for plotting the graph. See Details section.
 #' @return \code{NULL} if none or only one node or pattern contains the sought item.\cr
@@ -3236,6 +3248,9 @@ setMethod(f = "cluster_text",
 #' cluster_1 <- cluster_chart(SA_instance, "nodes", item = 3146)
 #' cluster_2 <- cluster_chart(SA_instance, SA_instance["patterns"], item = 3146)
 #' 
+#' cluster_2 <- cluster_chart(SA_instance, "patterns", item = 3146,
+#'                            path = getwd(), name = "pattern_cluster_of_3146")
+#' 
 #' @aliases cluster_chart
 #' @export
 setMethod(f = "cluster_chart",
@@ -3245,7 +3260,7 @@ setMethod(f = "cluster_chart",
                                 use_name = TRUE, n.cutoff = NULL,
                                 vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
                                 c.cutoff = NULL, display_mixt = TRUE,
-                                title = NULL, path = getwd(), name = NULL, ...) {
+                                title = NULL, path = NULL, name = NULL, ...) {
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
@@ -3264,9 +3279,8 @@ setMethod(f = "cluster_chart",
             
             # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
             if (nrow(nop) > 1) {
-              # Définition de valeurs par défaut pour le titre et le nom du fichier
+              # Définition de la valeur par défaut du titre
               if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)
-              if (is.null(name)) name = paste0(substr(entities, 1, nchar(entities) - 1), "_cluster_of_", item, ".png")
               
               # Vérification du paramètre de colorisation des sommets
               if (!(vertex_col %in% c("status", "categories", "none"))

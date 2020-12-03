@@ -21,7 +21,7 @@
   c.cutoff = NULL,
   display_mixt = TRUE,
   title = NULL,
-  path = getwd(),
+  path = NULL,
   name = NULL,
   ...
 )
@@ -43,8 +43,7 @@ return data frames. One of \code{"original"}, \code{"new"}.
                       \code{nopc}.}
 }}
 
-\item{nb_graphs}{Number of graphs to generate and save. The position of the vertices differs between
-each copy.}
+\item{nb_graphs}{Number of graphs to generate. The position of the vertices differs between each copy.}
 
 \item{min_link_weight}{Minimum number of items in common between two entities to plot their link on
 the chart.}
@@ -100,11 +99,11 @@ mixed links (or in mixed vertices, if \code{vertex_col = "categories"}).}
 \item{title}{Chart title. Default title depends on the type of entities contained in \code{nopc}.
 Example of default title: \code{"Spectrosome of nodes"} if \code{nopc} contains nodes.}
 
-\item{path}{Path of the directory in which to save the charts. Default is the working directory.}
+\item{path}{Path of the directory in which to save the charts as PNG files. Default is the working
+directory.}
 
-\item{name}{Name of the file in which to save the chart. Default name depends on the type of entities
-contained in \code{nopc}. Example of default name: \code{"spectrosome_of_nodes"} if \code{nopc}
-contains nodes.}
+\item{name}{Single name of the PNG files in which to save the charts. To be ignored to plot the charts
+in the active device.}
 
 \item{...}{Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
 \code{sna} for plotting the graph. See Details section.}
@@ -121,18 +120,21 @@ contains nodes.}
  }
 }
 \description{
-Plot one or more spectrosome charts and save them in PNG format. Graph in which vertices are the
- nodes or the patterns and edges are the items they have in common. Clusters corresponding to nodes
- or patterns sharing one item are mentioned by displaying the name or code identifying the item
- between these nodes or patterns.
+Plot one or more spectrosome charts: graph in which vertices are nodes or patterns and edges are the
+ items they have in common. Clusters corresponding to nodes or patterns sharing one item are
+ mentioned by displaying the name or code identifying the item between these nodes or patterns.
+ It can be automatically saved as a PNG file.
 }
 \details{
-If \code{nb_graphs} is greater than \code{1}, a number is automatically added to the end of the
- file name.
+If the argument \code{name} is not \code{NULL}, charts are plotted in PNG files of size 950 x 700
+ pixels. If it is \code{NULL}, charts are plotted in the active device, one behind the other.
+
+If \code{nb_graphs} is greater than \code{1} and \code{name} is not \code{NULL} a number is
+ automatically added to the end of the file names to distinguish the different files.
  
-If categories are associated with the items, each category generates a spectrosome and
- therefore a file. If there is more than one category, its name is appended to the end of the file
- name (after the possible addition of the number of the graph).
+If categories are associated with the items, each category generates a spectrosome. If there is more
+ than one category and \code{name} is not \code{NULL}, the category name is appended to the end of
+ the file name (after the possible addition of the number of the graph).
 
 If mixed links are relative to category values that are not represented by single links, these
  values are present in the legend below "Mixt", with no associated color.
@@ -171,6 +173,10 @@ spectrosome_1 <- spectrosome_chart(SA_instance, "nodes")
 spectrosome_2 <- spectrosome_chart(SA_instance, SA_instance["patterns"])
 spectrosome_3 <- spectrosome_chart(SA_instance, SA_instance["patterns"][1:15, ],
                                    name = "spectrosome_of_patterns_1-15")
+
+spectrosome_2 <- spectrosome_chart(SA_instance, "patterns",
+                                   path = getwd(),
+                                   name = "spectrosome_of_patterns")
 
 }
 \references{
