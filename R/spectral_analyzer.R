@@ -2934,27 +2934,31 @@ setMethod(f = "spectrosome_chart",
                 
                 # Traçage des graphiques dans des fichiers PNG
                 grDevices::png(paste0(path, file_name), 950, 700)
-                graphics::par(mar = c(0.5, 0.5, 4.5, 0.5))
+                graphics::par(mar = c(0.5, 0.5, 3.5, 0.5))
                 graphics::plot.new()
+                w_margin = convert_gunits(graphics::par("mai")[4], "inches", "user")
                 
                 # Titres du graphique
-                title(main = title, cex.main = 1.5, line = 2.5)
+                title(main = title, cex.main = 1.3, line = 2)
                 nb_isolates = length(sna::isolates(network_data))
                 title(main = paste0(sprintf(nop_subtitle_1, nrow(nopc), nb_isolates),
                                     if (nb_isolates < 2) "" else "s",
                                     sprintf(nop_subtitle_2, sum(nop_links$weight != 0))),
-                      font.main = 3, line = 1)
+                      font.main = 3, cex.main = 1.1, line = 0.7)
                 
                 # Préparation des formes de la légende du graphique
                 if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
-                  legend_pt.cex = c(rep(2, length(object@status_colors)), 1.7, 1.9, rep(2, length(categories_colors[[j]])))
-                  legend_pch = c(rep(15, length(object@status_colors)), 0, 2, 1, 0, rep(20, length(categories_colors[[j]])))
+                  legend_pt.cex = c(rep(2, length(object@status_colors)), 0, 1.6, 2, 0, rep(2, length(categories_colors[[j]])))
+                  legend_pch = c(rep(15, length(object@status_colors)), 0, 2, 1, 0, rep(NA_integer_, length(categories_colors[[j]])))
+                  legend_lwd = c(rep(-1, length(object@status_colors)), 0, -1, -1, 0, rep(3, length(categories_colors[[j]])))
                 } else if (vertex_col[1] != "categories" || length(object@items_categories) == 0) {
-                  legend_pt.cex = c(1.9, rep(2, length(categories_colors[[j]])))
-                  legend_pch = c(2, 1, 0, rep(20, length(categories_colors[[j]])))
+                  legend_pt.cex = c(1.6, 2, rep(2, length(categories_colors[[j]])))
+                  legend_pch = c(2, 1, 0, rep(NA_integer_, length(categories_colors[[j]])))
+                  legend_lwd = c(-1, -1, 0, rep(3, length(categories_colors[[j]])))
                 } else {
-                  legend_pt.cex = c(rep(2, length(v.categories_colors[[j]])), 1.7, 1.9, rep(2, length(categories_colors[[j]])))
-                  legend_pch = c(rep(15, length(v.categories_colors[[j]])), 0, 2, 1, 0, rep(20, length(categories_colors[[j]])))
+                  legend_pt.cex = c(rep(2, length(v.categories_colors[[j]])), 0, 1.6, 2, 0, rep(2, length(categories_colors[[j]])))
+                  legend_pch = c(rep(15, length(v.categories_colors[[j]])), 0, 2, 1, 0, rep(NA_integer_, length(categories_colors[[j]])))
+                  legend_lwd = c(rep(-1, length(v.categories_colors[[j]])), 0, -1, -1, 0, rep(3, length(categories_colors[[j]])))
                 }
                 
                 # Préparation de la légende des liens, à la suite des statuts et sommets
@@ -2980,24 +2984,29 @@ setMethod(f = "spectrosome_chart",
                                "white", categories_colors[[j]])
                 
                 # Affichage de la légende
-                graphics::legend("topleft", bty = "n", xpd = NA, pt.cex = legend_pt.cex, pch = legend_pch,
-                                 legend = legend_legend, col = legend_col)
-                # Taille de la légende (labels + pch + espace à droite)
-                legend_size = graphics::strwidth(legend_legend, units = "inches") + 
-                              graphics::strwidth("1", units = "inches") * 4.5
+                cex_legend = 1
+                output_legend1 = graphics::legend("topleft", bty = "n", pt.cex = legend_pt.cex,
+                                                  pch = legend_pch, lwd = legend_lwd, col = legend_col,
+                                                  legend = legend_legend, cex = cex_legend)
+                legend_size = output_legend1$rect$w
                 
                 # Légende supplémentaire concernant la distribution des statuts
                 if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
                   status_legend = paste0("(", count_status, ")")
-                  legend_size[1:4] = legend_size[1:4] + graphics::strwidth(status_legend, units = "inches") + 
-                                                        graphics::strwidth("1", units = "inches") * 2.5
                   
-                  graphics::legend("topleft", bty = "n", xpd = NA, inset = c(0.065, 0), legend = status_legend)
+                  output_legend2 = graphics::legend(x = output_legend1$text$x[1] + strwidth(paste0(SpectralAnalyzer.STATUS_PERSISTENT), cex = cex_legend),
+                                                    y = output_legend1$rect$top,
+                                                    bty = "n", legend = status_legend, cex = cex_legend)
+                  
+                  if (output_legend2$rect$w + output_legend2$rect$left > output_legend1$rect$w + output_legend1$rect$left) {
+                    legend_size = output_legend2$rect$left - output_legend1$rect$left + output_legend2$rect$w
+                  }
                 }
                 
                 
                 # Réinitialisation des marges de la zone graphique pour séparer légende et plot
-                graphics::par(new = TRUE, mai = graphics::par()$mai + c(0, max(legend_size), 0, 0))
+                graphics::par(new = TRUE, mai = graphics::par("mai") +
+                                c(0, convert_gunits(legend_size, "user", "inches") + graphics::par("mai")[2], 0, 0))
                 
                 tryCatch({
                   # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
