@@ -2306,7 +2306,7 @@ setMethod(f = "plot_spectrum_chart",
             
             # Marges latérale, en bas et en haut (tt = zone du titre, tp = extra zone du plot (pour affichage taille))
             w_margin = convert_gunits(graphics::par("mai")[4]/10, "inches", "user", "width")         # = 0.5 mar (line)
-            b_margin = convert_gunits(graphics::par("mai")[4]/10, "inches", "user", "width", TRUE)   # = 0.5 mar
+            b_margin = convert_gunits(w_margin, "user", rotation = TRUE)                             # = 0.5 mar
             tt_margin = convert_gunits(graphics::par("mai")[3]/1.7, "inches", "user", "height")      # = 2.0 mar
             tp_margin = convert_gunits(graphics::par("mai")[3]/2.428571, "inches", "user", "height") # = 1.4 mar
             
@@ -3529,7 +3529,7 @@ setMethod(f = "plot_pattern_chart",
                                 title = "Pattern itemsets") {
             
             # Définition des marges et initialisation de la zone graphique
-            if (!is.null(category)) graphics::par(mar = c(3.4, 0.5, 2.0, 0.5))
+            if (!is.null(category)) graphics::par(mar = c(3.9, 0.5, 2.0, 0.5))
             else graphics::par(mar = c(0.5, 0.5, 2.0, 0.5))
             graphics::plot.new()
             
@@ -3697,8 +3697,9 @@ setMethod(f = "plot_pattern_chart",
             # point statut = taille d'un caractère * rapport approximatif entre un caractère et un point pch 15 * cex
             point_size = graphics::par("cxy")[2] * 0.41 * 0.5
             
-            # Marges entre la plot region et la figure region (wb = width and bottom, t = top)
-            wb_margin = convert_gunits(graphics::par("mai")[4], "inches", "user")
+            # Marges entre la plot region et la figure region (w = width, b = bottom, t = top)
+            w_margin = convert_gunits(graphics::par("mai")[4], "inches", "user")
+            b_margin = convert_gunits(w_margin, "user", rotation = TRUE)
             t_margin = convert_gunits(graphics::par("mai")[3], "inches", "user", "height")
             
             # Dimensions des légendes (statuts et catégorie)
@@ -3710,7 +3711,7 @@ setMethod(f = "plot_pattern_chart",
                                                legend = names(object@status_colors))
             }
             if (!is.null(category)) {
-              xcl = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user") + wb_margin
+              xcl = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user") + w_margin
               ycl = graphics::par("usr")[3]
               category_legend = graphics::legend(x = xcl, y = ycl, plot = FALSE,
                                                  xpd = TRUE, bty = "n",
@@ -3723,7 +3724,7 @@ setMethod(f = "plot_pattern_chart",
             
             # Lignes horizontales repérant les items
             graphics::segments(x0 = 0, x1 = area_width, y0 = items_category$y,
-                               lwd = 0.02, lty = 3, col = "gray85")
+                               lwd = 0.02, lty = "dotted", col = "gray85")
             
             # Tailles des motifs (titre et valeurs) et lignes séparatrices
             graphics::text(0, y_orders, text_order,
@@ -3765,7 +3766,7 @@ setMethod(f = "plot_pattern_chart",
             ## Affichage du titre, des items et des légendes
             
             # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
-            graphics::text(x = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user") + wb_margin,
+            graphics::text(x = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user") + w_margin,
                            y = graphics::par("usr")[4] + t_margin / 2,
                            title, cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
             
@@ -3774,7 +3775,7 @@ setMethod(f = "plot_pattern_chart",
               # Bornage de la taille de la légende à celle de la figure region (moins les marges)
               if (category_legend$rect$w > graphics::par("usr")[2] - xcl) {
                 xycl = grDevices::xy.coords(x = c(xcl, graphics::par("usr")[2]),
-                                            y = c(ycl, graphics::par("usr")[3] - convert_gunits(graphics::par("plt")[3], "figure", "user", "height") + wb_margin))
+                                            y = c(ycl, graphics::par("usr")[3] - convert_gunits(graphics::par("plt")[3], "figure", "user", "height") + b_margin))
               } else {
                 # Centrage de la légende
                 xycl = grDevices::xy.coords(x = (graphics::par("usr")[2] + xcl) / 2 - category_legend$rect$w / 2,

@@ -244,8 +244,10 @@ convert_gunits = function(measures, from, to = from, dim = "width", rotation = F
   check_param(dim, values = c("width", "height"))
   
   if (rotation) {
-    # Ratio largeur/hauteur (taille de la zone en inches en largeur / taille de la zone en inches en hauteur)
-    wh_ratio = c(user = par("pin")[1] / par("pin")[2],
+    # Ratio largeur/hauteur = (étendue en Y / étendue en X selon le système de coordonnées actuelle) *
+    #                         (largeur de la zone en inches / hauteur de la zone en inches)
+    wh_ratio = c(user = ((par("usr")[4] - par("usr")[3]) / (par("usr")[2] - par("usr")[1])) *
+                   (par("pin")[1] / par("pin")[2]),
                  inches = 1,
                  figure = par("fin")[1] / par("fin")[2])
     
