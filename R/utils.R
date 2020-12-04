@@ -235,6 +235,7 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' @return Converted measure values.
 #' 
 #' @author Gauthier Magnin
+#' @seealso [`fig_in_usr_coords`].
 #' @md
 #' @keywords internal
 convert_gunits = function(measures, from, to = from, dim, rotation = FALSE) {
@@ -263,6 +264,29 @@ convert_gunits = function(measures, from, to = from, dim, rotation = FALSE) {
     return(measures * graphics::strwidth(1, to) / graphics::strwidth(1, from))
   ##  dim == "width" &&  rotation || dim == "height" && !rotation 
   return(measures * graphics::strheight(1, to) / graphics::strheight(1, from))
+}
+
+
+#' User coordinates of the figure region
+#' 
+#' Compute the coordinates of the figure region in user coordinate units.
+#' Only available after [`graphics::plot.new`] has been called.
+#' 
+#' @param n Numbers of the values to compute between `1` and `4`.
+#'  The same numbering as for `par("fig")`, `par("plt")` and `par("usr")`: `x0`, `x1`, `y0`, `y1`.
+#' @return User coordinates of the figure region.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`convert_gunits`].
+#' @md
+#' @keywords internal
+fig_in_usr_coords = function(n = 1:4) {
+  return(c(
+    graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user", "w"),
+    graphics::par("usr")[2] + convert_gunits(1 - graphics::par("plt")[2], "figure", "user", "w"),
+    graphics::par("usr")[3] - convert_gunits(graphics::par("plt")[3], "figure", "user", "h"),
+    graphics::par("usr")[4] + convert_gunits(1 - graphics::par("plt")[4], "figure", "user", "h")
+  )[n])
 }
 
 

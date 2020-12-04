@@ -36,6 +36,9 @@ The \code{"user"} unit is only available after \code{\link[graphics:frame]{graph
 The results of the functions \code{\link[graphics:strwidth]{graphics::strwidth}} and \code{\link[graphics:strwidth]{graphics::strheight}} applied to the
 character \code{"1"} and each different unit serve as reference values for conversions.
 }
+\seealso{
+\code{\link{fig_in_usr_coords}}.
+}
 \author{
 Gauthier Magnin
 }
