@@ -705,6 +705,8 @@ setGeneric(name = "get_complexes", def = function(object, nopc, category = NULL,
 
 setGeneric(name = "check_access_for_category", def = function(object, category, value, stop = TRUE){ standardGeneric("check_access_for_category") })
 
+setGeneric(name = "get_item_names", def = function(object, items){ standardGeneric("get_item_names") })
+
 setGeneric(name = "get_items", def = function(object, items){ standardGeneric("get_items") })
 
 setGeneric(name = "get_nopc", def = function(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_nopc") })
@@ -3141,7 +3143,7 @@ setMethod(f = "cluster_text",
             if (nrow(coords) > 0) {
               # Affichage des noms des "clusters" retenus
               if (use_names) {
-                clusters = names(object@items)[match(coords$LABEL, object@items)]
+                clusters = get_item_names(object, coords$LABEL)
                 if (!is.null(cutoff)) clusters = substr(clusters, 1, cutoff)
               }
               shadowtext(coords$MOY.X, coords$MOY.Y, clusters, r = 0.3,
@@ -3487,7 +3489,7 @@ setMethod(f = "pattern_chart",
             
             # Tri des items
             if (use_names && sort_by == "item") { # Par nom
-              items_cat = items_cat[order(names(object@items)[match(items_cat$item, object@items)]), ]
+              items_cat = items_cat[order(get_item_names(object, items_cat$item)), ]
             }
             else if (sort_by == "item") {         # Par code
               items_cat = items_cat[order(match(items_cat$item, object@items)), ]
@@ -3575,7 +3577,7 @@ setMethod(f = "plot_pattern_chart",
             
             # Labels des items (codes ou noms)
             if (use_names) {
-              text_items = names(object@items)[match(items_category$item, object@items)]
+              text_items = get_item_names(object, items_category$item)
               if (!is.null(n.cutoff)) text_items = substr(text_items, 1, n.cutoff)
             } else {
               text_items = items_category$item
@@ -5721,6 +5723,27 @@ setMethod(f = "check_access_for_category",
           })
 
 
+#' Get item names
+#' 
+#' Find the names associated with items given their identification codes.
+#' 
+#' @param object `SpectralAnalyzer` class object.
+#' @param items Vector of items: unnamed subset of `object["items"]`.
+#' @return Names of the `items` in `object["items"]`.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`get_items`].
+#' 
+#' @aliases get_item_names
+#' @md
+#' @keywords internal
+setMethod(f = "get_item_names",
+          signature = "SpectralAnalyzer",
+          definition = function(object, items) {
+            return(names(object@items)[match(items, object@items)])
+          })
+
+
 #' Get items
 #' 
 #' Find and return the vector or subset of the vector corresponding to the items of the
@@ -5739,7 +5762,7 @@ setMethod(f = "check_access_for_category",
 #' @return Named vector of items corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_nopc`], [`which_entities`].
+#' @seealso [`get_item_names`], [`get_nopc`], [`which_entities`].
 #' 
 #' @aliases get_items
 #' @md

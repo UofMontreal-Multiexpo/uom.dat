@@ -28,7 +28,7 @@ named subset of \code{object["items"]} is returned.
 If \code{items} is a character value equal to \code{"items"} or \code{"i"}, \code{object["items"]} is returned.
 }
 \seealso{
-\code{\link{get_nopc}}, \code{\link{which_entities}}.
+\code{\link{get_item_names}}, \code{\link{get_nopc}}, \code{\link{which_entities}}.
 }
 \author{
 Gauthier Magnin
