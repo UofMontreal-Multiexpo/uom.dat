@@ -2315,11 +2315,10 @@ setMethod(f = "plot_spectrum_chart",
                                              horiz = TRUE, pch = 15, cex = cex_legend,
                                              col = object@status_colors, legend = names(object@status_colors))
             
-            graphics::legend(x = graphics::par("usr")[2] + convert_gunits(1 - graphics::par("plt")[2], "figure", "user", "w") -
-                               w_margin - status_legend$rect$w +
+            graphics::legend(x = fig_in_usr_coords(2) - w_margin - status_legend$rect$w +
                                (graphics::strwidth(SpectralAnalyzer.STATUS_PERSISTENT) -
                                   graphics::strwidth(SpectralAnalyzer.STATUS_LATENT)),
-                             y = graphics::par("usr")[4] + tp_margin + tt_margin / 2 + status_legend$rect$h / 2,
+                             y = fig_in_usr_coords(4) - tt_margin / 2 + status_legend$rect$h / 2,
                              bty = "n", horiz = TRUE, xpd = TRUE,
                              pch = 15, cex = cex_legend,
                              col = object@status_colors,
@@ -2330,8 +2329,8 @@ setMethod(f = "plot_spectrum_chart",
                                              cex = cex_legend, fill = "red", density = c(-1, 15),
                                              legend = c("Weight in complex nodes", "Weight in simple nodes"))
             
-            graphics::legend(x = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user", "w") + w_margin,
-                             y = weight_legend$rect$h - convert_gunits(graphics::par("plt")[3], "figure", "user", "h") + graphics::par("usr")[3] + b_margin,
+            graphics::legend(x = fig_in_usr_coords(1) + w_margin,
+                             y = fig_in_usr_coords(3) + weight_legend$rect$h + b_margin,
                              bty = "n", xpd = TRUE,
                              cex = cex_legend, fill = "red", density = c(-1, 15),
                              legend = c("Weight in complex nodes", "Weight in simple nodes"))
@@ -2341,15 +2340,15 @@ setMethod(f = "plot_spectrum_chart",
                                          pch = c(20, 86), lty = c("dotted", NA), cex = cex_legend,
                                          legend = c("Specificity", "Order"))
             
-            graphics::legend(x = graphics::par("usr")[2] + convert_gunits(1 - graphics::par("plt")[2], "figure", "user", "w") - so_legend$rect$w - w_margin,
-                             y = so_legend$rect$h - convert_gunits(graphics::par("plt")[3], "figure", "user", "h") + graphics::par("usr")[3] + b_margin,
+            graphics::legend(x = fig_in_usr_coords(2) - so_legend$rect$w - w_margin,
+                             y = fig_in_usr_coords(3) + so_legend$rect$h + b_margin,
                              bty = "n", xpd = TRUE,
                              pch = c(19, 86), lty = c("dotted", NA), cex = cex_legend,
                              legend = c("Specificity", "Order"))
             
             # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
-            graphics::text(x = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user", "w") + w_margin,
-                           y = graphics::par("usr")[4] + tp_margin + tt_margin / 2,
+            graphics::text(x = fig_in_usr_coords(1) + w_margin,
+                           y = fig_in_usr_coords(4) - tt_margin / 2,
                            "Spectrum of patterns", cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
           })
 
@@ -3734,7 +3733,7 @@ setMethod(f = "plot_pattern_chart",
                                                legend = names(object@status_colors))
             }
             if (!is.null(category)) {
-              xcl = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user", "w") + w_margin
+              xcl = fig_in_usr_coords(1) + w_margin
               ycl = graphics::par("usr")[3]
               category_legend = graphics::legend(x = xcl, y = ycl, plot = FALSE,
                                                  xpd = TRUE, bty = "n",
@@ -3789,8 +3788,8 @@ setMethod(f = "plot_pattern_chart",
             ## Affichage du titre, des items et des légendes
             
             # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
-            graphics::text(x = graphics::par("usr")[1] - convert_gunits(graphics::par("plt")[1], "figure", "user", "w") + w_margin,
-                           y = graphics::par("usr")[4] + t_margin / 2,
+            graphics::text(x = fig_in_usr_coords(1) + w_margin,
+                           y = fig_in_usr_coords(4) - t_margin / 2,
                            title, cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
             
             # Légende de la catégorie
@@ -3798,7 +3797,7 @@ setMethod(f = "plot_pattern_chart",
               # Bornage de la taille de la légende à celle de la figure region (moins les marges)
               if (category_legend$rect$w > graphics::par("usr")[2] - xcl) {
                 xycl = grDevices::xy.coords(x = c(xcl, graphics::par("usr")[2]),
-                                            y = c(ycl, graphics::par("usr")[3] - convert_gunits(graphics::par("plt")[3], "figure", "user", "h") + b_margin))
+                                            y = c(ycl, fig_in_usr_coords(3) + b_margin))
               } else {
                 # Centrage de la légende
                 xycl = grDevices::xy.coords(x = (graphics::par("usr")[2] + xcl) / 2 - category_legend$rect$w / 2,
