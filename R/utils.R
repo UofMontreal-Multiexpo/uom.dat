@@ -230,18 +230,21 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' @param measures Values to convert.
 #' @param from Graphical unit in which the measures are. One of `"user"`, `"inches"`, `"figure"`.
 #' @param to Graphical unit in which to convert the measures. One of `"user"`, `"inches"`, `"figure"`.
-#' @param dim Dimension on which measures were made (`"width` or `"height`).
+#' @param dim Dimension on which measures were made (`"width"`, `"height"`, `"w"` or `"h"`).
 #' @param rotation Logical indicating whether to consider a rotation of the measured elements.
 #' @return Converted measure values.
 #' 
 #' @author Gauthier Magnin
 #' @md
 #' @keywords internal
-convert_gunits = function(measures, from, to = from, dim = "width", rotation = FALSE) {
+convert_gunits = function(measures, from, to = from, dim, rotation = FALSE) {
   
   check_param(from, values = c("user", "inches", "figure"))
   check_param(to, values = c("user", "inches", "figure"))
-  check_param(dim, values = c("width", "height"))
+  check_param(dim, values = c("width", "height", "w", "h"))
+  
+  if (dim == "w") dim = "width"
+  else if (dim == "h") dim = "height"
   
   if (rotation) {
     # Ratio largeur/hauteur = (étendue en Y / étendue en X selon le système de coordonnées actuelle) *

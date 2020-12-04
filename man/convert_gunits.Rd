@@ -4,7 +4,7 @@
 \alias{convert_gunits}
 \title{Graphical units converter}
 \usage{
-convert_gunits(measures, from, to = from, dim = "width", rotation = FALSE)
+convert_gunits(measures, from, to = from, dim, rotation = FALSE)
 }
 \arguments{
 \item{measures}{Values to convert.}
@@ -13,7 +13,7 @@ convert_gunits(measures, from, to = from, dim = "width", rotation = FALSE)
 
 \item{to}{Graphical unit in which to convert the measures. One of \code{"user"}, \code{"inches"}, \code{"figure"}.}
 
-\item{dim}{Dimension on which measures were made (\verb{"width} or \verb{"height}).}
+\item{dim}{Dimension on which measures were made (\code{"width"}, \code{"height"}, \code{"w"} or \code{"h"}).}
 
 \item{rotation}{Logical indicating whether to consider a rotation of the measured elements.}
 }
