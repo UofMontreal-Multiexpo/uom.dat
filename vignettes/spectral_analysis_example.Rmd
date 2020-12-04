@@ -1043,8 +1043,8 @@ init(alt_sa_object, "patterns")
 ```
 
 ```{r}
-# init(alt_sa_object, "nodes_links")
-init(alt_sa_object, "patterns_links")
+# init(alt_sa_object, "node_links")
+init(alt_sa_object, "pattern_links")
 ```
 
 ```{r}

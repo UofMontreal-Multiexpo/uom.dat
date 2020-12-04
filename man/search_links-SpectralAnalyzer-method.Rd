@@ -20,8 +20,8 @@ Invisible. Data frame detailing the links between pairs of nodes or patterns.
 }
 \description{
 Identify the links according to items in common between nodes or patterns.
-The resulting data frame is assigned respectively to the attribute \code{nodes_links} or
- \code{patterns_links} of \code{object}.
+The resulting data frame is assigned respectively to the attribute \code{node_links} or
+ \code{pattern_links} of \code{object}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin

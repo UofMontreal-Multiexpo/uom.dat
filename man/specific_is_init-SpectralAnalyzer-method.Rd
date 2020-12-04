@@ -4,21 +4,21 @@
 \alias{specific_is_init,SpectralAnalyzer-method}
 \alias{is_init_nodes,SpectralAnalyzer-method}
 \alias{is_init_nodes}
-\alias{is_init_nodes_links,SpectralAnalyzer-method}
-\alias{is_init_nodes_links}
+\alias{is_init_node_links,SpectralAnalyzer-method}
+\alias{is_init_node_links}
 \alias{is_init_patterns,SpectralAnalyzer-method}
 \alias{is_init_patterns}
-\alias{is_init_patterns_links,SpectralAnalyzer-method}
-\alias{is_init_patterns_links}
+\alias{is_init_pattern_links,SpectralAnalyzer-method}
+\alias{is_init_pattern_links}
 \title{Test of specific attribute initialization}
 \usage{
 \S4method{is_init_nodes}{SpectralAnalyzer}(object)
 
-\S4method{is_init_nodes_links}{SpectralAnalyzer}(object)
+\S4method{is_init_node_links}{SpectralAnalyzer}(object)
 
 \S4method{is_init_patterns}{SpectralAnalyzer}(object)
 
-\S4method{is_init_patterns_links}{SpectralAnalyzer}(object)
+\S4method{is_init_pattern_links}{SpectralAnalyzer}(object)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
@@ -32,7 +32,7 @@ are initialized.
 }
 \details{
 The initialization of the nodes consists of the initialization of the attributes \code{n_links} and
-\code{nodes_links}.
+\code{node_links}.
 
 The initialization of the links between nodes consists of the initialization of the attributes
 \code{nodes} and \code{nodes_per_year}.
@@ -41,7 +41,7 @@ The initialization of the patterns consists of the initialization of the attribu
 \code{patterns_per_year} and \code{nodes_patterns}.
 
 The initialization of the links between patterns consists of the initialization of the attributes
-\code{p_links} and \code{patterns_links}.
+\code{p_links} and \code{pattern_links}.
 }
 \seealso{
 \code{\link{is_init}}, \code{\link{init}}.

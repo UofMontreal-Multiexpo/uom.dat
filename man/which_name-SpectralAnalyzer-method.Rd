@@ -11,12 +11,12 @@
 \item{object}{\code{SpectralAnalyzer} class object.}
 
 \item{name}{Type of entities or links.
-Character corresponding to \code{NODES}, \code{PATTERNS}, \code{RULES}, \code{NODES_LINKS}, \code{PATTERN_LINKS} or
+Character corresponding to \code{NODES}, \code{PATTERNS}, \code{RULES}, \code{NODE_LINKS}, \code{PATTERN_LINKS} or
 their simplifications. One or more.}
 }
 \value{
 Vector of characters (of the same size as \code{name}) corresponding to \code{NODES}, \code{PATTERNS},
-\code{RULES}, \code{NODES_LINKS} or \code{PATTERN_LINKS}.
+\code{RULES}, \code{NODE_LINKS} or \code{PATTERN_LINKS}.
 }
 \description{
 Give the type of entities or links given a name referring to it.

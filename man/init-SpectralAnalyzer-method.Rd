@@ -14,9 +14,9 @@
 One of the following:
 \describe{
 \item{\code{"nodes"}, \code{"n"}}{Attributes related to nodes.}
-\item{\code{"nodes_links"}, \code{"nl"}}{Attributes related to links between nodes.}
+\item{\code{"node_links"}, \code{"nl"}}{Attributes related to links between nodes.}
 \item{\code{"patterns"}, \code{"p"}}{Attributes related to patterns.}
-\item{\code{"patterns_links"}, \code{"pl"}}{Attributes related to links between patterns.}
+\item{\code{"pattern_links"}, \code{"pl"}}{Attributes related to links between patterns.}
 \item{\code{NULL}}{All attributes.}
 }}
 
@@ -39,7 +39,7 @@ The initialization of the nodes consists of the initialization of the attributes
 }
 
 The initialization of the links between nodes consists of the initialization of the attributes
-\code{n_links} and \code{nodes_links}:
+\code{n_links} and \code{node_links}:
 \enumerate{
 \item{Counting links between nodes.}
 \item{Elaboration of links between nodes.}
@@ -55,7 +55,7 @@ The initialization of the patterns consists of the initialization of the attribu
 }
 
 The initialization of the links between patterns consists of the initialization of the attributes
-\code{p_links} and \code{patterns_links}:
+\code{p_links} and \code{pattern_links}:
 \enumerate{
 \item{Counting links between patterns.}
 \item{Elaboration of links between patterns.}
@@ -67,7 +67,7 @@ obs <- make_observations(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME", "YEAR"))
 sa_object <- spectral.analyzer(obs, init = FALSE)
 init(sa_object, "nodes")
-init(sa_object, "nodes_links")
+init(sa_object, "node_links")
 
 ## Testing of its initialization
 is_init(sa_object, "nodes")

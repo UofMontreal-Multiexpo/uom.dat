@@ -13,15 +13,15 @@
 \item{part}{\code{NULL} or character value corresponding to the attributes to test. One of the following:
 \describe{
 \item{\code{"nodes"}, \code{"n"}}{Attributes related to nodes.}
-\item{\code{"nodes_links"}, \code{"nl"}}{Attributes related to links between nodes.}
+\item{\code{"node_links"}, \code{"nl"}}{Attributes related to links between nodes.}
 \item{\code{"patterns"}, \code{"p"}}{Attributes related to patterns.}
-\item{\code{"patterns_links"}, \code{"pl"}}{Attributes related to links between patterns.}
+\item{\code{"pattern_links"}, \code{"pl"}}{Attributes related to links between patterns.}
 }}
 }
 \value{
 If \code{part} is not \code{NULL}, \code{TRUE} if the related attributes are initialized.
 If \code{part} is \code{NULL}, 4 logical values corresponding to the initialization related to \code{nodes},
-\code{nodes_links}, \code{patterns} and \code{patterns_links} (in this order).
+\code{node_links}, \code{patterns} and \code{pattern_links} (in this order).
 }
 \description{
 Test if the attributes related to nodes, links between nodes, patterns or links between patterns
@@ -29,7 +29,7 @@ are initialized.
 }
 \details{
 The initialization of the nodes consists of the initialization of the attributes \code{n_links} and
-\code{nodes_links}.
+\code{node_links}.
 
 The initialization of the links between nodes consists of the initialization of the attributes
 \code{nodes} and \code{nodes_per_year}.
@@ -38,7 +38,7 @@ The initialization of the patterns consists of the initialization of the attribu
 \code{patterns_per_year} and \code{nodes_patterns}.
 
 The initialization of the links between patterns consists of the initialization of the attributes
-\code{p_links} and \code{patterns_links}.
+\code{p_links} and \code{pattern_links}.
 }
 \examples{
 ## Creating a SpectralAnalyzer and initialize some parts of it
@@ -46,7 +46,7 @@ obs <- make_observations(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME", "YEAR"))
 sa_object <- spectral.analyzer(obs, init = FALSE)
 init(sa_object, "nodes")
-init(sa_object, "nodes_links")
+init(sa_object, "node_links")
 
 ## Testing of its initialization
 is_init(sa_object, "nodes")

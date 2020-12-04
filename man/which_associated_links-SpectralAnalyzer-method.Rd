@@ -14,7 +14,7 @@
 Character corresponding to \code{NODES}, \code{PATTERNS} or their simplifications.}
 }
 \value{
-Character corresponding to \code{NODES_LINKS} or \code{PATTERNS_LINKS}.
+Character corresponding to \code{NODE_LINKS} or \code{PATTERN_LINKS}.
 }
 \description{
 Give a type of links given a type of entities (nodes or patterns).

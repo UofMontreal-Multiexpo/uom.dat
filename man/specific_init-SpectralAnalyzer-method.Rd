@@ -4,21 +4,21 @@
 \alias{specific_init,SpectralAnalyzer-method}
 \alias{init_nodes,SpectralAnalyzer-method}
 \alias{init_nodes}
-\alias{init_nodes_links,SpectralAnalyzer-method}
-\alias{init_nodes_links}
+\alias{init_node_links,SpectralAnalyzer-method}
+\alias{init_node_links}
 \alias{init_patterns,SpectralAnalyzer-method}
 \alias{init_patterns}
-\alias{init_patterns_links,SpectralAnalyzer-method}
-\alias{init_patterns_links}
+\alias{init_pattern_links,SpectralAnalyzer-method}
+\alias{init_pattern_links}
 \title{Initialization of specific attributes}
 \usage{
 \S4method{init_nodes}{SpectralAnalyzer}(object, verbose = TRUE)
 
-\S4method{init_nodes_links}{SpectralAnalyzer}(object, verbose = TRUE)
+\S4method{init_node_links}{SpectralAnalyzer}(object, verbose = TRUE)
 
 \S4method{init_patterns}{SpectralAnalyzer}(object, verbose = TRUE)
 
-\S4method{init_patterns_links}{SpectralAnalyzer}(object, verbose = TRUE)
+\S4method{init_pattern_links}{SpectralAnalyzer}(object, verbose = TRUE)
 }
 \arguments{
 \item{object}{\code{SpectralAnalyzer} class object.}
@@ -42,7 +42,7 @@ The initialization of the nodes consists of the initialization of the attributes
 }
 
 The initialization of the links between nodes consists of the initialization of the attributes
-\code{n_links} and \code{nodes_links}:
+\code{n_links} and \code{node_links}:
 \enumerate{
 \item{Counting links between nodes.}
 \item{Elaboration of links between nodes.}
@@ -58,7 +58,7 @@ The initialization of the patterns consists of the initialization of the attribu
 }
 
 The initialization of the links between patterns consists of the initialization of the attributes
-\code{p_links} and \code{patterns_links}:
+\code{p_links} and \code{pattern_links}:
 \enumerate{
 \item{Counting links between patterns.}
 \item{Elaboration of links between patterns.}

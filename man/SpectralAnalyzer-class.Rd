@@ -61,7 +61,7 @@ Data frame of 3 variables:
 \item{\code{n_links}}{Set of weights of the links between the nodes. Adjacency matrix containing the number
 of items in common between each pair of nodes.}
 
-\item{\code{nodes_links}}{Set of links between the nodes and characteristics of these links.
+\item{\code{node_links}}{Set of links between the nodes and characteristics of these links.
 Isolated nodes (i.e. unrelated to any other node) appear at the bottom of the data structure.
 Data frame of 4 variables:
 \describe{
@@ -93,7 +93,7 @@ Data frame of 7 variables:
 \item{\code{p_links}}{Set of weights of the links between the patterns. Adjacency matrix containing the number
 of items in common between each pair of patterns.}
 
-\item{\code{patterns_links}}{Set of links between the patterns and characteristics of these links.
+\item{\code{pattern_links}}{Set of links between the patterns and characteristics of these links.
 Isolated patterns (i.e. unrelated to any other pattern) appear at the bottom of the data structure.
 Data frame of 5 variables:
 \describe{

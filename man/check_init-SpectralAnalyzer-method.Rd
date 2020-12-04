@@ -14,9 +14,9 @@
 One or more of the following:
 \describe{
 \item{\code{"nodes"}, \code{"n"}}{Attributes related to nodes.}
-\item{\code{"nodes_links"}, \code{"nl"}}{Attributes related to links between nodes.}
+\item{\code{"node_links"}, \code{"nl"}}{Attributes related to links between nodes.}
 \item{\code{"patterns"}, \code{"p"}}{Attributes related to patterns.}
-\item{\code{"patterns_links"}, \code{"pl"}}{Attributes related to links between patterns.}
+\item{\code{"pattern_links"}, \code{"pl"}}{Attributes related to links between patterns.}
 }}
 
 \item{stop}{If \code{TRUE}, stop the execution and print an error message if the attributes related to
@@ -34,7 +34,7 @@ If \code{part} is not \code{NULL}, as many values as there are in \code{part}:
 }
 
 If \code{part} is \code{NULL}, 4 logical values corresponding to the initialization related to \code{nodes},
-\code{nodes_links}, \code{patterns}, \code{patterns_links} (in this order).
+\code{node_links}, \code{patterns}, \code{pattern_links} (in this order).
 }
 \description{
 Check that a part of a \code{SpectralAnalyzer} object is initialized.
@@ -42,7 +42,7 @@ Stop the execution and print an error message if not.
 }
 \details{
 The initialization of the nodes consists of the initialization of the attributes \code{n_links} and
-\code{nodes_links}.
+\code{node_links}.
 
 The initialization of the links between nodes consists of the initialization of the attributes
 \code{nodes} and \code{nodes_per_year}.
@@ -51,7 +51,7 @@ The initialization of the patterns consists of the initialization of the attribu
 \code{patterns_per_year} and \code{nodes_patterns}.
 
 The initialization of the links between patterns consists of the initialization of the attributes
-\code{p_links} and \code{patterns_links}.
+\code{p_links} and \code{pattern_links}.
 }
 \seealso{
 \code{\link{is_init}}, \code{\link{init}}.
