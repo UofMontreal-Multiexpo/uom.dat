@@ -79,7 +79,7 @@ Making charts:
 * [spectrosome_chart](../html/spectrosome_chart-SpectralAnalyzer-method.html)
 * [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
 * [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
-* [pattern_chart](../html/pattern_chart-SpectralAnalyzer-method.html)
+* [itemset_chart](../html/itemset_chart-SpectralAnalyzer-method.html)
 * [category_tree_chart](../html/category_tree_chart-SpectralAnalyzer-method.html)
 * [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
 

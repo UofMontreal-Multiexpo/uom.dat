@@ -651,9 +651,9 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Methods for creating pattern itemsets graphs
 
-setGeneric(name = "pattern_chart", def = function(object, pc, identifiers = "original", length_one = FALSE, jitter = TRUE, display_status = TRUE, display_text = "ID", use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", title = "Pattern itemsets", path = NULL, name = NULL){ standardGeneric("pattern_chart") })
+setGeneric(name = "itemset_chart", def = function(object, nopc, identifiers = "original", length_one = FALSE, jitter = TRUE, display_text = "ID", display_status = TRUE, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", title = NULL, path = NULL, name = NULL){ standardGeneric("itemset_chart") })
 
-setGeneric(name = "plot_pattern_chart", def = function(object, pc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, jitter = TRUE, display_status = TRUE, display_text = "ID", title = "Pattern itemsets"){ standardGeneric("plot_pattern_chart") })
+setGeneric(name = "plot_itemset_chart", def = function(object, nopc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, jitter = TRUE, display_text = "ID", display_status = TRUE, title = "Itemsets"){ standardGeneric("plot_itemset_chart") })
 
 
 # Methods for creating category trees and co-occurrence graphs
@@ -3388,12 +3388,12 @@ setMethod(f = "degree",
 
 #### Methods for creating pattern itemsets graphs ####
 
-#' Pattern chart
+#' Itemset chart
 #' 
-#' Plot a chart of the pattern itemsets. It can be automatically saved as a PDF file.
+#' Plot a chart of the node or pattern itemsets. It can be automatically saved as a PDF file.
 #' 
 #' @details
-#' The patterns are sorted according to their order values, then to their weights.
+#' The nodes or patterns are sorted according to their lengths (or order values), then to their weights.
 #' 
 #' If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape
 #'  paper size. If it is \code{NULL}, the chart is plotted in the active device.
@@ -3406,41 +3406,44 @@ setMethod(f = "degree",
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose chart
-#'  is to be plotted. Any subset of \code{object["patterns"]}.\cr
-#'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
-#' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame.
-#'  One of \code{"original"}, \code{"new"}.
+#' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+#'  \strong{c}haracteristics. Nodes or patterns whose chart is to be plotted. Any subset of
+#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
+#'  \code{object["nodes"]} and \code{object["patterns"]}.
+#' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
+#'  return data frames. One of \code{"original"}, \code{"new"}.
 #'  \describe{
 #'    \item{\code{"original"}}{Use of the original identifiers.}
-#'    \item{\code{"new"}}{Use of new identifiers based on pattern sorting (see 'Details' section to learn
-#'                        more about the sort that is performed).}
+#'    \item{\code{"new"}}{Use of new identifiers based on sorting (see 'Details' section to learn more
+#'                        about the sort that is performed).}
 #'  }
-#' @param length_one If \code{FALSE}, patterns of order \eqn{1} are not plotted. If \code{TRUE}, all
-#'  patterns are plotted.
-#' @param jitter If \code{FALSE} patterns of order \eqn{1} are aligned vertically.
+#' @param length_one If \code{FALSE}, itemsets of length \eqn{1} are not plotted. If \code{TRUE}, all
+#'  itemsets are plotted.
+#' @param jitter If \code{FALSE}, itemsets of length \eqn{1} are aligned vertically.
 #'  If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
 #'  Ignored if \code{length_one} is \code{FALSE}.
-#' @param display_status If \code{TRUE}, display pattern status.
-#' @param display_text Text to display on the chart next to the patterns.
-#'  Pattern identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"},
-#'  \code{"frequency"}, \code{"specificity"}, \code{"year"}).
+#' @param display_status If \code{TRUE} and \code{nopc} refers to patterns, display pattern status.
+#' @param display_text Text to display on the chart next to the itemsets.
+#'  Identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"}, \code{"frequency"},
+#'  \code{"specificity"}, \code{"year"}).
 #'  \code{NULL} value specifies to display no information.
 #' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the names
 #'  of the represented items.
 #' @param category Name or number of the category to represent on the chart (numbering according to
-#'  the order of the columns of `object["items_categories"]`).
+#'  the order of the columns of \code{object["items_categories"]}).
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param sort_by Sorting method of displayed items. One of \code{"category"}, \code{"item"}.
-#' @param title Chart title.
+#' @param title Chart title. Default title depends on the type of entities contained in \code{nopc}.
+#'  Example of default title: \code{"Node itemsets"} if \code{nopc} contains nodes.
 #' @param path Path of the directory in which to save the chart as a PDF file. Default is the working
 #'  directory.
 #' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
 #'  active device.
-#' @return Data frame of the patterns represented on the chart, associated with their characteristics
-#'  and identifiers (visible on the chart if \code{display_text = "ID"}).
+#' @return Data frame of the nodes or patterns represented on the chart, associated with their
+#'  characteristics and identifiers (visible on the chart if \code{display_text = "ID"}).
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
@@ -3449,28 +3452,31 @@ setMethod(f = "degree",
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
 #' 
 #' @examples
-#' patterns_1 <- pattern_chart(SA_instance, "patterns", category = "family",
-#'                             n.cutoff = 20, c.cutoff = 10)
-#' patterns_2 <- pattern_chart(SA_instance, SA_instance["patterns"][1:15, ])
+#' nodes_1 <- itemset_chart(SA_instance, "nodes",
+#'                          category = "family", c.cutoff = 10, n.cutoff = 20)
+#' patterns_1 <- itemset_chart(SA_instance, "patterns",
+#'                             category = 1, c.cutoff = 10, n.cutoff = 20)
+#' patterns_2 <- itemset_chart(SA_instance, SA_instance["patterns"][1:15, ])
 #' 
-#' patterns_1 <- pattern_chart(SA_instance, "patterns", category = "family",
-#'                             n.cutoff = 20, c.cutoff = 17,
+#' patterns_1 <- itemset_chart(SA_instance, "patterns", category = "family",
+#'                             c.cutoff = 17, n.cutoff = 20,
 #'                             path = getwd(), name = "pattern_itemsets")
 #' 
-#' @aliases pattern_chart
+#' @aliases itemset_chart
 #' @export
-setMethod(f = "pattern_chart",
+setMethod(f = "itemset_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, pc, identifiers = "original",
+          definition = function(object, nopc, identifiers = "original",
                                 length_one = FALSE, jitter = TRUE,
-                                display_status = TRUE, display_text = "ID",
+                                display_text = "ID", display_status = TRUE,
                                 use_names = TRUE, n.cutoff = NULL,
                                 category = NULL, c.cutoff = NULL, sort_by = "category",
-                                title = "Pattern itemsets", path = NULL, name = NULL) {
+                                title = NULL, path = NULL, name = NULL) {
             
-            # Récupération des patterns
-            check_init(object, SpectralAnalyzer.PATTERNS)
-            pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
+            # Récupération des noeuds/patterns et recherche du type d'entités fourni
+            entities = which_entities(object, nopc)
+            check_init(object, entities)
+            nopc = get_nopc(object, nopc)
             
             # Validation des paramètres
             check_access_for_category(object, category, NA)
@@ -3478,17 +3484,24 @@ setMethod(f = "pattern_chart",
             if (is.null(category) && sort_by == "category") sort_by = "item"
             check_param(identifiers, values = c("original", "new"))
             
-            # Motifs d'ordre > 1, triés par taille croissant puis par poids décroissant
-            pat_charac = if (length_one) pc else pc[pc$order != 1, ]
-            pat_charac = pat_charac[order(pat_charac$order,
-                                          max(pat_charac$weight) - pat_charac$weight), ]
+            if (entities != SpectralAnalyzer.PATTERNS) display_status = FALSE
+            category = if (is.numeric(category)) colnames(object@items_categories)[category] else category
             
-            # Attribution d'identifiants aux motifs
-            if (identifiers == "new") pat_charac$ID = seq(nrow(pat_charac))
-            else pat_charac$ID = as.numeric(rownames(pat_charac))
+            # Renommage de colonnes pour simplification
+            colnames(nopc)[colnames(nopc) == "node" | colnames(nopc) == "pattern"] = "itemset"
+            colnames(nopc)[colnames(nopc) == "order"] = "length"
             
-            # Ensemble des items distincts parmi les motifs, associés d'une catégorie
-            items_cat = data.frame(item = unique(unlist(pat_charac$pattern)), stringsAsFactors = FALSE)
+            # Itemset de taille > 1, triés par taille croissant puis par poids décroissant
+            nop_charac = if (length_one) nopc else nopc[nopc$length != 1, ]
+            nop_charac = nop_charac[order(nop_charac$length,
+                                          max(nop_charac$weight) - nop_charac$weight), ]
+            
+            # Attribution d'identifiants aux itemsets
+            if (identifiers == "new") nop_charac$ID = seq(nrow(nop_charac))
+            else nop_charac$ID = as.numeric(rownames(nop_charac))
+            
+            # Ensemble des items distincts parmi les itemsets, associés d'une catégorie
+            items_cat = data.frame(item = unique(unlist(nop_charac$itemset)), stringsAsFactors = FALSE)
             if (length(object@items_categories) == 0) items_cat$category = NA
             else items_cat$category = object@items_categories[items_cat$item, category]
             
@@ -3504,25 +3517,36 @@ setMethod(f = "pattern_chart",
             }
             rownames(items_cat) = NULL
             
+            # Définition de la valeur par défaut du titre
+            if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "itemsets")
+            
             # Traçage du graphique (dans le device actif ou dans un fichier PDF)
             if (!is.null(name)) {
               grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
                              14, 10, paper = "a4r", pointsize = 11)
-              plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_status, display_text, title)
+              plot_itemset_chart(object, nop_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_text, display_status, title)
               grDevices::dev.off()
             } else {
-              plot_pattern_chart(object, pat_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_status, display_text, title)
+              plot_itemset_chart(object, nop_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_text, display_status, title)
+            }
+            
+            # Renommage initial des colonnes avant retour
+            if (entities == SpectralAnalyzer.PATTERNS) {
+              colnames(nop_charac)[colnames(nop_charac) == "itemset"] = "pattern"
+              colnames(nop_charac)[colnames(nop_charac) == "length"] = "order"
+            } else {
+              colnames(nop_charac)[colnames(nop_charac) == "itemset"] = "node"
             }
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
-            return(pat_charac[order(pat_charac$ID),
-                              c(ncol(pat_charac), seq(ncol(pat_charac)-1))])
+            return(nop_charac[order(nop_charac$ID),
+                              c(ncol(nop_charac), seq(ncol(nop_charac)-1))])
           })
 
 
-#' Pattern chart plotting
+#' Itemset chart plotting
 #' 
-#' Plot a chart of the pattern itemsets.
+#' Plot a chart of the node or pattern itemsets.
 #' 
 #' @details
 #' The colors associated with the values of the possible category represented are selected circularly
@@ -3532,14 +3556,15 @@ setMethod(f = "pattern_chart",
 #'  value.
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
-#' @inheritParams pattern_chart,SpectralAnalyzer-method
+#' @inheritParams itemset_chart,SpectralAnalyzer-method
 #' @param object \code{SpectralAnalyzer} class object.
-#' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose chart
-#'  is to be plotted. Any subset of \code{object["patterns"]}.
+#' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
+#'  \strong{c}haracteristics. Nodes or patterns whose chart is to be plotted. Any subset of
+#'  \code{object["nodes"]} or \code{object["patterns"]}.
 #' @param items_category Data frame of items and one associated category.
 #' @param category Name of the category to represent on the chart, used as the legend title.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
-#' @param jitter If \code{FALSE} patterns of order \eqn{1} are aligned vertically.
+#' @param jitter If \code{FALSE} itemsets of length \eqn{1} are aligned vertically.
 #'  If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
@@ -3547,15 +3572,15 @@ setMethod(f = "pattern_chart",
 #'             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
 #'             \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
 #'             \url{https://doi.org/10.1093/annweh/wxaa008}.
-#' @seealso \code{\link{pattern_chart}}.
-#' @aliases plot_pattern_chart
+#' @seealso \code{\link{itemset_chart}}.
+#' @aliases plot_itemset_chart
 #' @keywords internal
-setMethod(f = "plot_pattern_chart",
+setMethod(f = "plot_itemset_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, pc, items_category, category = NULL,
+          definition = function(object, nopc, items_category, category = NULL,
                                 c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL,
-                                jitter = TRUE, display_status = TRUE, display_text = "ID",
-                                title = "Pattern itemsets") {
+                                jitter = TRUE, display_text = "ID", display_status = TRUE,
+                                title = "Itemsets") {
             
             # Définition des marges et initialisation de la zone graphique
             if (!is.null(category)) graphics::par(mar = c(3.9, 0.5, 2.0, 0.5))
@@ -3571,14 +3596,14 @@ setMethod(f = "plot_pattern_chart",
             
             # Dimensions du graphique
             xmin = items_category$x[1]
-            ymax = nrow(items_category) + 2 # Nombre d'items + 2 pour afficher les tailles des motifs
+            ymax = nrow(items_category) + 2 # Nombre d'items + 2 pour afficher les tailles des itemsets
             
-            # Effectifs des tailles des motifs
-            order_tab = table(pc$order)
+            # Effectifs des tailles des itemsets
+            length_tab = table(nopc$length)
             
-            # Titre des tailles des motifs et position en Y
-            text_order = "Order:"
-            y_orders = max(items_category$y) + 1.25
+            # Titre des tailles des itemsets et position en Y
+            text_length = "Length:"
+            y_lengths = max(items_category$y) + 1.25
             
             # Labels des items (codes ou noms)
             if (use_names) {
@@ -3597,74 +3622,74 @@ setMethod(f = "plot_pattern_chart",
               item_colors = "black"
             }
             
-            # Marge entre un motif et la ligne séparatrice qui le suit ou entre deux motifs
+            # Marge entre un itemset et la ligne séparatrice qui le suit ou entre deux itemsets
             margin = 0.5
-            # Largeur d'un motif
+            # Largeur d'un itemset
             width = 0.5
             
-            # Ordonnées des items pour chaque motif
-            y_patterns = lapply(pc[, "pattern"], function(p) {
+            # Ordonnées des items pour chaque itemset
+            y_itemsets = lapply(nopc[, "itemset"], function(p) {
               sort(items_category[match(p, items_category$item), "y"])
             })
             
-            # Abscisses des motifs
-            if ("1" %in% names(order_tab)) {
+            # Abscisses des itemsets
+            if ("1" %in% names(length_tab)) {
               
-              # Pour les motifs d'ordre 1, alignement vertical
-              x_patterns = rep(0, order_tab[1])
+              # Pour les itemsets de taille 1, alignement vertical
+              x_itemsets = rep(0, length_tab[1])
               
               if (jitter) {
                 # Décalage de ceux côte-à-côte
-                one_order = order(unlist(y_patterns[1:order_tab[1]]))
+                one_order = order(unlist(y_itemsets[1:length_tab[1]]))
                 
-                for (i in seq(2, length(y_patterns[one_order]))) {
-                  if (y_patterns[one_order][[i]] == y_patterns[one_order][[i-1]] + 1
-                      && x_patterns[i-1] == 0) {
-                    x_patterns[i] = width
+                for (i in seq(2, length(y_itemsets[one_order]))) {
+                  if (y_itemsets[one_order][[i]] == y_itemsets[one_order][[i-1]] + 1
+                      && x_itemsets[i-1] == 0) {
+                    x_itemsets[i] = width
                   }
                 }
               }
               
-              # Positionnement des motifs les uns après les autres en considérant les lignes séparatrices
-              x_patterns = c(x_patterns[order(one_order)],
-                             (width + margin) * seq(nrow(pc) - length(x_patterns)) + max(x_patterns) + 
-                               margin * unname(unlist(lapply(order_tab[-1],
+              # Positionnement des itemsets les uns après les autres en considérant les lignes séparatrices
+              x_itemsets = c(x_itemsets[order(one_order)],
+                             (width + margin) * seq(nrow(nopc) - length(x_itemsets)) + max(x_itemsets) + 
+                               margin * unname(unlist(lapply(length_tab[-1],
                                                              function(nb) rep(parent.frame()$i[], nb)))))
             } else {
-              # Positionnement de chaque motif les uns après les autres en considérant les lignes séparatrices
-              # Taille d'un motif et d'un espacement * nombre de motifs avant le motif
-              #  + un espacement * nombre de lignes séparatrices avant le motif
-              x_patterns = (width + margin) * seq(0, nrow(pc)-1) + 
-                             margin * unname(unlist(lapply(order_tab,
+              # Positionnement de chaque itemset les uns après les autres en considérant les lignes séparatrices
+              # Taille d'un itemset et d'un espacement * nombre d'autres itemsets avant l'itemset
+              #  + un espacement * nombre de lignes séparatrices avant l'itemset
+              x_itemsets = (width + margin) * seq(0, nrow(nopc)-1) + 
+                             margin * unname(unlist(lapply(length_tab,
                                                            function(nb) rep(parent.frame()$i[] - 1, nb))))
             }
             
-            # Abscisses des lignes séparatrices (milieux des motifs les plus espacés)
-            x_lines = x_patterns[-1][x_patterns[seq(2, length(x_patterns))] >= (x_patterns[seq(length(x_patterns)-1)] + width + margin * 2)] - margin
+            # Abscisses des lignes séparatrices (milieux des itemsets les plus espacés)
+            x_lines = x_itemsets[-1][x_itemsets[seq(2, length(x_itemsets))] >= (x_itemsets[seq(length(x_itemsets)-1)] + width + margin * 2)] - margin
             
-            # Largeur de la zone des motifs : position du dernier motif + largeur du motif + un espacement
-            area_width = max(x_patterns) + width + margin
+            # Largeur de la zone des itemsets : position du dernier itemset + largeur de l'itemset + un espacement
+            area_width = max(x_itemsets) + width + margin
             
             
             ## Préparation de la zone graphique
             
             # Placement de la "plot region" pour avoir la place d'afficher les labels des items en-dehors
-            # Espace à gauche : taille du plus grand label (ou du titre "Order") + taille de la marge
+            # Espace à gauche : taille du plus grand label (ou du titre "Length") + taille de la marge
             #                   + taille d'un caractère * 0.5 (offset de placement des labels) ; en fraction de la "figure region"
             graphics::par(plt = c(max(graphics::strwidth(text_items, cex = 0.75, units = "figure"),
-                                      graphics::strwidth(text_order, cex = 1.05, units = "figure")) +
+                                      graphics::strwidth(text_length, cex = 1.05, units = "figure")) +
                                     convert_gunits(graphics::par("mai")[2], "inches", to = "figure", "w") +
                                     0.5 * graphics::strwidth("A", units = "figure"),
                                   graphics::par("plt")[2:4]))
             
-            # Option "new" pour que le graphique n'apparaîsse pas sur une seconde page
+            # Option "new" pour que le graphique apparaîsse par-dessus la zone précédemment définie
             graphics::par(new = TRUE)
             
             # Espace au bas du graphique : taille d'affichage de la caractéristique à afficher
             ymin_1 = ymin_2 = min(items_category$y)
             if (!is.null(display_text)) {
-              # Largeur du plus long texte + espace entre un motif et le texte
-              carac_width = max(graphics::strwidth(pc[, display_text], units = "inches", cex = 0.5)) + graphics::par("csi")[1] * 0.5
+              # Largeur du plus long texte + espace entre un itemset et le texte
+              carac_width = max(graphics::strwidth(nopc[, display_text], units = "inches", cex = 0.5)) + graphics::par("csi")[1] * 0.5
               ymin_1 = ymin_1 - convert_gunits(carac_width, "inches", to = "user", "w", rotation = TRUE)
             }
             
@@ -3677,9 +3702,9 @@ setMethod(f = "plot_pattern_chart",
                            xaxt = "n", xaxs = "i", xlab = "",
                            yaxt = "n", yaxs = "i", ylab = "")
             
-            # Espace ajouté pour pouvoir afficher la dernière taille de motif s'il y a trop peu de motifs associés
-            last_space = graphics::strwidth(utils::as.roman(names(order_tab[length(order_tab)]))) - 
-              (order_tab[length(order_tab)] * (width + margin) + margin) # strwidth units="user" dépend du graphique
+            # Espace ajouté pour pouvoir afficher la dernière taille d'itemset s'il y a trop peu d'itemsets associés
+            last_space = graphics::strwidth(utils::as.roman(names(length_tab[length(length_tab)]))) - 
+              (length_tab[length(length_tab)] * (width + margin) + margin) # strwidth units="user" dépend du graphique
             if (last_space > 0) area_width = area_width + last_space
             
             if (!is.null(display_text)) {
@@ -3688,7 +3713,7 @@ setMethod(f = "plot_pattern_chart",
             
             if (last_space > 0 || ymin_2 != ymin_1) {
               
-              # Option "new" pour que le graphique n'apparaîsse pas sur une seconde page
+              # Option "new" pour que le graphique apparaîsse par-dessus la zone précédemment définie
               graphics::par(new = TRUE)
               
               # Réinitialisation de la zone graphique en considérant la taille d'un caractère (strwidth units="user" dépend du graphique)
@@ -3704,20 +3729,20 @@ setMethod(f = "plot_pattern_chart",
             
             ## Préparation de variables dépendant de la zone graphique
             
-            # Définition des abscisses des titres des tailles des motifs
-            if (length(x_lines) == 0) x_orders = area_width / 2
+            # Définition des abscisses des titres des tailles des itemsets
+            if (length(x_lines) == 0) x_lengths = area_width / 2
             else {
-              x_orders = numeric(length(order_tab))
-              x_orders[1] = x_lines[1] / 2
+              x_lengths = numeric(length(length_tab))
+              x_lengths[1] = x_lines[1] / 2
               if (length(x_lines) > 1) {
-                x_orders[seq(2, length(x_lines))] = (x_lines[seq(2, length(x_lines))] + 
+                x_lengths[seq(2, length(x_lines))] = (x_lines[seq(2, length(x_lines))] + 
                                                        x_lines[seq(length(x_lines)-1)]) / 2
               }
-              x_orders[length(x_orders)] = (area_width + x_lines[length(x_lines)]) / 2
+              x_lengths[length(x_lengths)] = (area_width + x_lines[length(x_lines)]) / 2
             }
-            names(x_orders) = names(order_tab)
+            names(x_lengths) = names(length_tab)
             
-            # Pour uniformiser l'espacement entre le motif et les informations affichées : taille d'un
+            # Pour uniformiser l'espacement entre un itemset et les informations affichées : taille d'un
             # point statut = taille d'un caractère * rapport approximatif entre un caractère et un point pch 15 * cex
             point_size = graphics::par("cxy")[2] * 0.41 * 0.5
             
@@ -3750,39 +3775,39 @@ setMethod(f = "plot_pattern_chart",
             graphics::segments(x0 = 0, x1 = area_width, y0 = items_category$y,
                                lwd = 0.02, lty = "dotted", col = "gray85")
             
-            # Tailles des motifs (titre et valeurs) et lignes séparatrices
-            graphics::text(0, y_orders, text_order,
+            # Tailles des itemsets (titre et valeurs) et lignes séparatrices
+            graphics::text(0, y_lengths, text_length,
                            col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
-            graphics::text(x_orders, y = y_orders, labels = utils::as.roman(names(x_orders)),
+            graphics::text(x_lengths, y = y_lengths, labels = utils::as.roman(names(x_lengths)),
                            col = "black", cex = 1.05)
             graphics::abline(v = x_lines, col = "black", lwd = 0.5, lty = "dotted")
             
-            # Segments verticaux entre les premiers et derniers items des motifs
-            graphics::segments(x0 = x_patterns + width,
-                               y0 = nth_values(y_patterns, "first"), y1 = nth_values(y_patterns, "last"),
+            # Segments verticaux entre les premiers et derniers items de chaque itemset
+            graphics::segments(x0 = x_itemsets + width,
+                               y0 = nth_values(y_itemsets, "first"), y1 = nth_values(y_itemsets, "last"),
                                lwd = 1.2, lty = 1, col = "black")
             
-            # Segments horizontaux pour les items des motifs
-            graphics::segments(x0 = rep(x_patterns, sapply(y_patterns, length)),
-                               x1 = rep(x_patterns, sapply(y_patterns, length)) + width,
-                               y0 = unlist(y_patterns),
+            # Segments horizontaux pour les items de chaque itemset
+            graphics::segments(x0 = rep(x_itemsets, sapply(y_itemsets, length)),
+                               x1 = rep(x_itemsets, sapply(y_itemsets, length)) + width,
+                               y0 = unlist(y_itemsets),
                                lwd = 1.2, lty = 1, col = "black")
             
-            # Affichage des identifiants ou de l'une des caractéristiques des motifs
+            # Affichage des identifiants ou de l'une des caractéristiques des itemsets
             if (!is.null(display_text)) {
-              graphics::text(x_patterns + width / 2,
-                             nth_values(y_patterns, "first") - point_size,
-                             labels = pc[, display_text],
+              graphics::text(x_itemsets + width / 2,
+                             nth_values(y_itemsets, "first") - point_size,
+                             labels = nopc[, display_text],
                              col = "black", cex = 0.5, srt = 90, adj = 1)
             }
             
             # Affichage des statuts des motifs
             if (display_status) {
-              graphics::points(x_patterns + width / 2,
-                               nth_values(y_patterns, "last") + 1.5 * point_size,
-                               col = object@status_colors[pc$status],
+              graphics::points(x_itemsets + width / 2,
+                               nth_values(y_itemsets, "last") + 1.5 * point_size,
+                               col = object@status_colors[nopc$status],
                                cex = 0.5, pch = 15)
-              # Une coordonnée indépendante de la taille du point entraîne parfois un chevauchement avec le motif
+              # Une coordonnée indépendante de la taille du point entraîne parfois un chevauchement avec l'itemset
               # Concernant display_text une coordonnée indépendante peut être utilisée grâce à adj
             }
             
@@ -3805,7 +3830,6 @@ setMethod(f = "plot_pattern_chart",
                 xycl = grDevices::xy.coords(x = (graphics::par("usr")[2] + xcl) / 2 - category_legend$rect$w / 2,
                                             y = ycl)
               }
-              category = if (is.numeric(category)) colnames(object@items_categories)[category] else category
               graphics::legend(xycl, xpd = TRUE, bty = "n",
                                title = cap(category), legend = text_category, cex = 0.85,
                                col = category_colors, pch = 20, ncol = ceiling(length(text_category) / 2))
