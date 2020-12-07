@@ -60,7 +60,7 @@ display_time = function(expr) {
 #' @return The character string corresponding to the argument `x`, starting with a capital letter.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`first_characters`].
+#' @seealso [`first_characters`], [`substr2`].
 #' 
 #' @md
 #' @keywords internal
@@ -79,7 +79,7 @@ cap = function(x) {
 #'  of all words.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`cap`].
+#' @seealso [`cap`], [`substr2`].
 #' 
 #' @md
 #' @keywords internal
@@ -88,6 +88,31 @@ first_characters = function(x, sep = " _-") {
                 function(s) {
                   paste0(substr(s, start = 1, stop = 1), collapse = "")
                 }))
+}
+
+
+#' Substrings of a character vector
+#' 
+#' Extract substrings in a character vector. Wrapper of the [`substr`] function allowing to use
+#'  `NULL` value.
+#' 
+#' @param x A character vector.
+#' @param start Indice of the first character to extract from each element of `x`.
+#' @param stop Indice of the last character to extract from each element of `x`.
+#'  If `NULL`, all characters from `start` to the end of the element are extracted.
+#' @return A character vector of the same length as `x` containing the extracted parts.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`cap`], [`first_characters`].
+#' 
+#' @md
+#' @keywords internal
+substr2 = function(x, start = 1, stop = NULL) {
+  if (is.null(stop)) {
+    if (start == 1) return(x)
+    return(substr(x, start, nchar(x)))
+  } 
+  return(substr(x, start, stop))
 }
 
 

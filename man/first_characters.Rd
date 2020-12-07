@@ -19,7 +19,7 @@ of all words.
 Search for the first character of each word and concatenate them.
 }
 \seealso{
-\code{\link{cap}}.
+\code{\link{cap}}, \code{\link{substr2}}.
 }
 \author{
 Gauthier Magnin

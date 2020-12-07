@@ -16,7 +16,7 @@ The character string corresponding to the argument \code{x}, starting with a cap
 Change the first letter of a string to an uppercase.
 }
 \seealso{
-\code{\link{first_characters}}.
+\code{\link{first_characters}}, \code{\link{substr2}}.
 }
 \author{
 Gauthier Magnin
