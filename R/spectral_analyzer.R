@@ -2968,25 +2968,17 @@ setMethod(f = "spectrosome_chart",
                   vertex_legend_pch = c(rep(15, length(v.categories_colors[[j]])), 0, 2, 1)
                 }
                 
-                # Préparation des textes des légendes (sommets et liens)
-                if (is.null(c.cutoff)) {
-                  legend_legend = if (vertex_col[1] == "categories") vertex_legend_legend[[j]] else vertex_legend_legend
-                  edge_legend_legend = names(categories_colors[[j]])
+                # Préparation du texte et de la couleur de la légende des sommets
+                if (vertex_col[1] != "categories") {
+                  legend_legend = vertex_legend_legend
                 } else {
-                  if (vertex_col[1] == "categories") {
-                    if (length(object@items_categories) != 0) {
-                      # Application du cutoff sur la légende des couleurs des sommets également
-                      nb_vertices_leg = length(vertex_legend_legend[[j]])
-                      legend_legend = c(substr(vertex_legend_legend[[j]][1:(nb_vertices_leg-3)], 1, c.cutoff),
-                                        vertex_legend_legend[[j]][(nb_vertices_leg-2):nb_vertices_leg])
-                      edge_legend_legend = substr(names(categories_colors[[j]]), 1, c.cutoff)
-                    } else {
-                      legend_legend = vertex_legend_legend[[1]]
-                      edge_legend_legend = ""
-                    }
+                  if (length(object@items_categories) != 0) {
+                    # Application du cutoff sur la légende des couleurs des sommets si fonction de la catégorie
+                    nb_vertices_leg = length(vertex_legend_legend[[j]])
+                    legend_legend = c(substr2(vertex_legend_legend[[j]][1:(nb_vertices_leg-3)], stop = c.cutoff),
+                                      vertex_legend_legend[[j]][(nb_vertices_leg-2):nb_vertices_leg])
                   } else {
-                    legend_legend = vertex_legend_legend
-                    edge_legend_legend = substr(names(categories_colors[[j]]), 1, c.cutoff)
+                    legend_legend = vertex_legend_legend[[1]]
                   }
                 }
                 legend_col = if (vertex_col[1] == "categories") vertex_legend_col[[j]] else vertex_legend_col
@@ -2999,6 +2991,8 @@ setMethod(f = "spectrosome_chart",
                                                         lwd = -1, cex = cex_legend,
                                                         col = legend_col, legend = legend_legend)
                 if (length(object@items_categories) != 0) {
+                  edge_legend_legend = substr2(names(categories_colors[[j]]), stop = c.cutoff)
+                  
                   edge_legend_output = graphics::legend(x = vertex_legend_output$rect$left,
                                                         y = vertex_legend_output$rect$top - vertex_legend_output$rect$h,
                                                         bty = "n", title = "Links", title.adj = 0,
@@ -3009,7 +3003,6 @@ setMethod(f = "spectrosome_chart",
                 } else {
                   legend_width = vertex_legend_output$rect$w
                 }
-                
                 
                 # Légende supplémentaire concernant la distribution des statuts
                 if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
@@ -3589,8 +3582,7 @@ setMethod(f = "plot_pattern_chart",
             
             # Labels des items (codes ou noms)
             if (use_names) {
-              text_items = get_item_names(object, items_category$item)
-              if (!is.null(n.cutoff)) text_items = substr(text_items, 1, n.cutoff)
+              text_items = substr2(get_item_names(object, items_category$item), stop = n.cutoff)
             } else {
               text_items = items_category$item
             }
@@ -3600,11 +3592,7 @@ setMethod(f = "plot_pattern_chart",
               item_colors = object@categories_colors[[category]][items_category$category]
               category_colors = unique(item_colors)[order(unique(items_category$category))]
               
-              if (is.null(c.cutoff)) {
-                text_category = sort(unique(items_category$category))
-              } else {
-                text_category = substr(sort(unique(items_category$category)), 1, c.cutoff)
-              }
+              text_category = substr2(sort(unique(items_category$category)), stop = c.cutoff)
             } else {
               item_colors = "black"
             }
@@ -3929,8 +3917,7 @@ setMethod(f = "category_tree_chart",
   # Sommets du graphe
   vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
   if (use_names) {
-    vertices$label = names(items[match(vertices$name, items)])
-    if (!is.null(n.cutoff)) vertices$label = substr(vertices$label, 1, n.cutoff)
+    vertices$label = substr2(names(items[match(vertices$name, items)]), stop = n.cutoff)
   } else {
     vertices$label = items[match(vertices$name, items)]
   }
@@ -3948,10 +3935,9 @@ setMethod(f = "category_tree_chart",
     vertices$group[is.na(vertices$group)][-1] = vertices$name[is.na(vertices$group)][-1]
     category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA/root
     
-    if (!is.null(c.cutoff)) {
-      names(category_legend) = substr(names(category_legend), 1, c.cutoff)
-      vertices$group = substr(vertices$group, 1, c.cutoff)
-    }
+    names(category_legend) = substr2(names(category_legend), stop = c.cutoff)
+    vertices$group = substr2(vertices$group, stop = c.cutoff)
+    
     edge_col = ifelse(vertices$is.leaf[-1], category_legend[as.character(vertices$group[-1])], "black")
   }
   
@@ -4076,8 +4062,7 @@ setMethod(f = "co_occurrence_chart",
   # Sommets du graphe
   vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
   if (use_names) {
-    vertices$label = names(items[match(vertices$name, items)])
-    if (!is.null(n.cutoff)) vertices$label = substr(vertices$label, 1, n.cutoff)
+    vertices$label = substr2(names(items[match(vertices$name, items)]), stop = n.cutoff)
   } else {
     vertices$label = items[match(vertices$name, items)]
   }
@@ -4089,10 +4074,8 @@ setMethod(f = "co_occurrence_chart",
     vertices$group = object@items_categories[vertices$name, category]
     category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA
     
-    if (!is.null(c.cutoff)) {
-      names(category_legend) = substr(names(category_legend), 1, c.cutoff)
-      vertices$group = substr(vertices$group, 1, c.cutoff)
-    }
+    names(category_legend) = substr2(names(category_legend), stop = c.cutoff)
+    vertices$group = substr2(vertices$group, stop = c.cutoff)
   }
   
   # Liens à tracer entre les sommets (différent des arêtes de l'arbre)
@@ -4607,8 +4590,7 @@ setMethod(f = "rules_chart",
   # Sommets du graphe
   vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
   if (use_names) {
-    vertices$label = names(items[match(vertices$name, items)])
-    if (!is.null(n.cutoff)) vertices$label = substr(vertices$label, 1, n.cutoff)
+    vertices$label = substr2(names(items[match(vertices$name, items)]), stop = n.cutoff)
   } else {
     vertices$label = items[match(vertices$name, items)]
   }
@@ -4620,10 +4602,8 @@ setMethod(f = "rules_chart",
     vertices$group = object@items_categories[vertices$name, category]
     category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA
     
-    if (!is.null(c.cutoff)) {
-      names(category_legend) = substr(names(category_legend), 1, c.cutoff)
-      vertices$group = substr(vertices$group, 1, c.cutoff)
-    }
+    names(category_legend) = substr2(names(category_legend), stop = c.cutoff)
+    vertices$group = substr2(vertices$group, stop = c.cutoff)
   }
   
   # Recherche des numéros des sommets à lier
