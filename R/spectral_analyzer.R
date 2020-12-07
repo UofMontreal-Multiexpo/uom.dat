@@ -2772,21 +2772,21 @@ setMethod(f = "spectrosome_chart",
                                     function(status) sum(nopc$status == status))
               
               # Légende associée
-              legend_1 = c(names(object@status_colors), "", "Single items", "Multiple items")
-              col_1 = c(object@status_colors, "white", "black", "black")
+              vertex_legend_legend = c(names(object@status_colors), "", "Single items", "Multiple items")
+              vertex_legend_col = c(object@status_colors, "white", "black", "black")
               
             } else if (vertex_col[1] == "categories") {
               # Couleurs en fonction de la catégorie
               v.categories_colors = list()
               vertices_colors = list()
-              legend_1 = list()
-              col_1 = list()
+              vertex_legend_legend = list()
+              vertex_legend_col = list()
               
               if (length(object@items_categories) == 0) {
                 v.categories_colors[[1]] = character(0)
                 vertices_colors[[1]] = rep("grey", nrow(nopc))
-                legend_1[[1]] = c("Single items", "Multiple items")
-                col_1[[1]] = c("black", "black")
+                vertex_legend_legend[[1]] = c("Single items", "Multiple items")
+                vertex_legend_col[[1]] = c("black", "black")
                 
               } else {
                 # Pour chaque catégorie
@@ -2826,9 +2826,9 @@ setMethod(f = "spectrosome_chart",
                   }
                   
                   # Légende associée
-                  legend_1[[category]] = c(names(v.categories_colors[[category]]),
-                                           "", "Single items", "Multiple items")
-                  col_1[[category]] = c(v.categories_colors[[category]], "white", "black", "black")
+                  vertex_legend_legend[[category]] = c(names(v.categories_colors[[category]]),
+                                                       "", "Single items", "Multiple items")
+                  vertex_legend_col[[category]] = c(v.categories_colors[[category]], "white", "black", "black")
                 }
               }
             } else {
@@ -2842,8 +2842,8 @@ setMethod(f = "spectrosome_chart",
               }
               
               # Légende associée
-              legend_1 = c("Single items", "Multiple items")
-              col_1 = c("black", "black")
+              vertex_legend_legend = c("Single items", "Multiple items")
+              vertex_legend_col = c("black", "black")
             }
             
             # Sommets à plusieurs items en cercle ; triangle sinon
@@ -2956,67 +2956,79 @@ setMethod(f = "spectrosome_chart",
                                     sprintf(nop_subtitle_2, sum(nop_links$weight != 0))),
                       font.main = 3, cex.main = 1.1, line = 0.7)
                 
-                # Préparation des formes de la légende du graphique
+                # Préparation des formes de la légende des sommets
                 if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
-                  legend_pt.cex = c(rep(2, length(object@status_colors)), 0, 1.6, 2, 0, rep(2, length(categories_colors[[j]])))
-                  legend_pch = c(rep(15, length(object@status_colors)), 0, 2, 1, 0, rep(NA_integer_, length(categories_colors[[j]])))
-                  legend_lwd = c(rep(-1, length(object@status_colors)), 0, -1, -1, 0, rep(3, length(categories_colors[[j]])))
+                  vertex_legend_pt.cex = c(rep(2, length(object@status_colors)), 0, 1.6, 2)
+                  vertex_legend_pch = c(rep(15, length(object@status_colors)), 0, 2, 1)
                 } else if (vertex_col[1] != "categories" || length(object@items_categories) == 0) {
-                  legend_pt.cex = c(1.6, 2, rep(2, length(categories_colors[[j]])))
-                  legend_pch = c(2, 1, 0, rep(NA_integer_, length(categories_colors[[j]])))
-                  legend_lwd = c(-1, -1, 0, rep(3, length(categories_colors[[j]])))
+                  vertex_legend_pt.cex = c(1.6, 2)
+                  vertex_legend_pch = c(2, 1)
                 } else {
-                  legend_pt.cex = c(rep(2, length(v.categories_colors[[j]])), 0, 1.6, 2, 0, rep(2, length(categories_colors[[j]])))
-                  legend_pch = c(rep(15, length(v.categories_colors[[j]])), 0, 2, 1, 0, rep(NA_integer_, length(categories_colors[[j]])))
-                  legend_lwd = c(rep(-1, length(v.categories_colors[[j]])), 0, -1, -1, 0, rep(3, length(categories_colors[[j]])))
+                  vertex_legend_pt.cex = c(rep(2, length(v.categories_colors[[j]])), 0, 1.6, 2)
+                  vertex_legend_pch = c(rep(15, length(v.categories_colors[[j]])), 0, 2, 1)
                 }
                 
-                # Préparation de la légende des liens, à la suite des statuts et sommets
+                # Préparation des textes des légendes (sommets et liens)
                 if (is.null(c.cutoff)) {
-                  legend_legend = c(if (vertex_col[1] == "categories") legend_1[[j]] else legend_1,
-                                    "", names(categories_colors[[j]]))
+                  legend_legend = if (vertex_col[1] == "categories") vertex_legend_legend[[j]] else vertex_legend_legend
+                  edge_legend_legend = names(categories_colors[[j]])
                 } else {
                   if (vertex_col[1] == "categories") {
                     if (length(object@items_categories) != 0) {
                       # Application du cutoff sur la légende des couleurs des sommets également
-                      nb_vertices_leg = length(legend_1[[j]])
-                      legend_legend = c(substr(legend_1[[j]][1:(nb_vertices_leg-3)], 1, c.cutoff),
-                                        legend_1[[j]][(nb_vertices_leg-2):nb_vertices_leg],
-                                        "", substr(names(categories_colors[[j]]), 1, c.cutoff))
+                      nb_vertices_leg = length(vertex_legend_legend[[j]])
+                      legend_legend = c(substr(vertex_legend_legend[[j]][1:(nb_vertices_leg-3)], 1, c.cutoff),
+                                        vertex_legend_legend[[j]][(nb_vertices_leg-2):nb_vertices_leg])
+                      edge_legend_legend = substr(names(categories_colors[[j]]), 1, c.cutoff)
                     } else {
-                      legend_legend = legend_1[[1]]
+                      legend_legend = vertex_legend_legend[[1]]
+                      edge_legend_legend = ""
                     }
                   } else {
-                    legend_legend = c(legend_1, "", substr(names(categories_colors[[j]]), 1, c.cutoff))
+                    legend_legend = vertex_legend_legend
+                    edge_legend_legend = substr(names(categories_colors[[j]]), 1, c.cutoff)
                   }
                 }
-                legend_col = c(if (vertex_col[1] == "categories") col_1[[j]] else col_1,
-                               "white", categories_colors[[j]])
+                legend_col = if (vertex_col[1] == "categories") vertex_legend_col[[j]] else vertex_legend_col
                 
                 # Affichage de la légende
                 cex_legend = 1
-                output_legend1 = graphics::legend("topleft", bty = "n", pt.cex = legend_pt.cex,
-                                                  pch = legend_pch, lwd = legend_lwd, col = legend_col,
-                                                  legend = legend_legend, cex = cex_legend)
-                legend_size = output_legend1$rect$w
+                vertex_legend_output = graphics::legend("topleft", bty = "n",
+                                                        title = cap(entities), title.adj = 0,
+                                                        pt.cex = vertex_legend_pt.cex, pch = vertex_legend_pch,
+                                                        lwd = -1, cex = cex_legend,
+                                                        col = legend_col, legend = legend_legend)
+                if (length(object@items_categories) != 0) {
+                  edge_legend_output = graphics::legend(x = vertex_legend_output$rect$left,
+                                                        y = vertex_legend_output$rect$top - vertex_legend_output$rect$h,
+                                                        bty = "n", title = "Links", title.adj = 0,
+                                                        pch = NA_integer_, lwd = 3, cex = cex_legend,
+                                                        col = categories_colors[[j]], legend = edge_legend_legend)
+                  
+                  legend_width = max(vertex_legend_output$rect$w, edge_legend_output$rect$w)
+                } else {
+                  legend_width = vertex_legend_output$rect$w
+                }
+                
                 
                 # Légende supplémentaire concernant la distribution des statuts
                 if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
                   status_legend = paste0("(", count_status, ")")
                   
-                  output_legend2 = graphics::legend(x = output_legend1$text$x[1] + strwidth(paste0(SpectralAnalyzer.STATUS_PERSISTENT), cex = cex_legend),
-                                                    y = output_legend1$rect$top,
-                                                    bty = "n", legend = status_legend, cex = cex_legend)
+                  status_legend_output = graphics::legend(x = vertex_legend_output$text$x[1] + strwidth(paste0(SpectralAnalyzer.STATUS_PERSISTENT), cex = cex_legend),
+                                                          y = vertex_legend_output$rect$top,
+                                                          bty = "n", title = "",
+                                                          legend = status_legend, cex = cex_legend)
                   
-                  if (output_legend2$rect$w + output_legend2$rect$left > output_legend1$rect$w + output_legend1$rect$left) {
-                    legend_size = output_legend2$rect$left - output_legend1$rect$left + output_legend2$rect$w
+                  if (status_legend_output$rect$w + status_legend_output$rect$left > legend_width + vertex_legend_output$rect$left) {
+                    legend_width = status_legend_output$rect$left - vertex_legend_output$rect$left + status_legend_output$rect$w
                   }
                 }
                 
                 
                 # Réinitialisation des marges de la zone graphique pour séparer légende et plot
                 graphics::par(new = TRUE, mai = graphics::par("mai") +
-                                c(0, convert_gunits(legend_size, "user", "inches", "w") + graphics::par("mai")[2], 0, 0))
+                                c(0, convert_gunits(legend_width, "user", "inches", "w") + graphics::par("mai")[2], 0, 0))
                 
                 tryCatch({
                   # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
