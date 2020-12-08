@@ -14,8 +14,8 @@
   use_names = TRUE,
   n.cutoff = NULL,
   jitter = TRUE,
-  display_text = "ID",
-  display_status = TRUE,
+  under = "ID",
+  over = NULL,
   title = "Itemsets"
 )
 }
@@ -41,15 +41,14 @@ of the represented items.}
 \item{jitter}{If \code{FALSE} itemsets of length \eqn{1} are aligned vertically.
 If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.}
 
-\item{display_text}{Text to display on the chart next to the itemsets.
-Identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"}, \code{"frequency"},
-\code{"specificity"}, \code{"year"}).
-\code{NULL} value specifies to display no information.}
+\item{under, over}{Text to display on the chart under and over the itemsets.
+Identifiers (\code{"ID"}) or one of the characteristics (\code{"weight"}, \code{"frequency"},
+\code{"specificity"}, \code{"year"}, \code{"status"}).
 
-\item{display_status}{If \code{TRUE} and \code{nopc} refers to patterns, display pattern status.}
+\code{"status"} can only be used for the argument \code{"over"}.
+\code{NULL} value specifies to display no data.}
 
-\item{title}{Chart title. Default title depends on the type of entities contained in \code{nopc}.
-Example of default title: \code{"Node itemsets"} if \code{nopc} contains nodes.}
+\item{title}{Chart title.}
 }
 \description{
 Plot a chart of the node or pattern itemsets.

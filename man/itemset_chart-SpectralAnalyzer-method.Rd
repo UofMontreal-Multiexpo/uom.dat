@@ -11,8 +11,8 @@
   identifiers = "original",
   length_one = FALSE,
   jitter = TRUE,
-  display_text = "ID",
-  display_status = TRUE,
+  under = "ID",
+  over = "status",
   use_names = TRUE,
   n.cutoff = NULL,
   category = NULL,
@@ -47,12 +47,12 @@ itemsets are plotted.}
 If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
 Ignored if \code{length_one} is \code{FALSE}.}
 
-\item{display_text}{Text to display on the chart next to the itemsets.
-Identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"}, \code{"frequency"},
-\code{"specificity"}, \code{"year"}).
-\code{NULL} value specifies to display no information.}
+\item{under, over}{Text to display on the chart under and over the itemsets.
+Identifiers (\code{"ID"}) or one of the characteristics (\code{"weight"}, \code{"frequency"},
+\code{"specificity"}, \code{"year"}, \code{"status"}).
 
-\item{display_status}{If \code{TRUE} and \code{nopc} refers to patterns, display pattern status.}
+\code{"status"} can only be used for the argument \code{"over"}.
+\code{NULL} value specifies to display no data.}
 
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}
@@ -78,7 +78,7 @@ active device.}
 }
 \value{
 Data frame of the nodes or patterns represented on the chart, associated with their
- characteristics and identifiers (visible on the chart if \code{display_text = "ID"}).
+ characteristics and identifiers (visible on the chart if \code{under} or \code{over} is \code{"ID"}).
 }
 \description{
 Plot a chart of the node or pattern itemsets. It can be automatically saved as a PDF file.

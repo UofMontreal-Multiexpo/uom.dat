@@ -649,11 +649,11 @@ setGeneric(name = "network_density", def = function(object, links){ standardGene
 setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("degree") })
 
 
-# Methods for creating pattern itemsets graphs
+# Methods for creating itemsets graphs
 
-setGeneric(name = "itemset_chart", def = function(object, nopc, identifiers = "original", length_one = FALSE, jitter = TRUE, display_text = "ID", display_status = TRUE, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", title = NULL, path = NULL, name = NULL){ standardGeneric("itemset_chart") })
+setGeneric(name = "itemset_chart", def = function(object, nopc, identifiers = "original", length_one = FALSE, jitter = TRUE, under = "ID", over = "status", use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", title = NULL, path = NULL, name = NULL){ standardGeneric("itemset_chart") })
 
-setGeneric(name = "plot_itemset_chart", def = function(object, nopc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, jitter = TRUE, display_text = "ID", display_status = TRUE, title = "Itemsets"){ standardGeneric("plot_itemset_chart") })
+setGeneric(name = "plot_itemset_chart", def = function(object, nopc, items_category, category = NULL, c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL, jitter = TRUE, under = "ID", over = NULL, title = "Itemsets"){ standardGeneric("plot_itemset_chart") })
 
 
 # Methods for creating category trees and co-occurrence graphs
@@ -3386,7 +3386,7 @@ setMethod(f = "degree",
 
 
 
-#### Methods for creating pattern itemsets graphs ####
+#### Methods for creating itemsets graphs ####
 
 #' Itemset chart
 #' 
@@ -3423,11 +3423,12 @@ setMethod(f = "degree",
 #' @param jitter If \code{FALSE}, itemsets of length \eqn{1} are aligned vertically.
 #'  If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
 #'  Ignored if \code{length_one} is \code{FALSE}.
-#' @param display_status If \code{TRUE} and \code{nopc} refers to patterns, display pattern status.
-#' @param display_text Text to display on the chart next to the itemsets.
-#'  Identifiers (\code{"ID"}) or one of the other characteristics (\code{"weight"}, \code{"frequency"},
-#'  \code{"specificity"}, \code{"year"}).
-#'  \code{NULL} value specifies to display no information.
+#' @param under,over Text to display on the chart under and over the itemsets.
+#'  Identifiers (\code{"ID"}) or one of the characteristics (\code{"weight"}, \code{"frequency"},
+#'  \code{"specificity"}, \code{"year"}, \code{"status"}).
+#'  
+#'  \code{"status"} can only be used for the argument \code{"over"}.
+#'  \code{NULL} value specifies to display no data.
 #' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If \code{use_names = TRUE}, limit number of characters to display concerning the names
@@ -3443,7 +3444,7 @@ setMethod(f = "degree",
 #' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
 #'  active device.
 #' @return Data frame of the nodes or patterns represented on the chart, associated with their
-#'  characteristics and identifiers (visible on the chart if \code{display_text = "ID"}).
+#'  characteristics and identifiers (visible on the chart if \code{under} or \code{over} is \code{"ID"}).
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
@@ -3468,7 +3469,7 @@ setMethod(f = "itemset_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, nopc, identifiers = "original",
                                 length_one = FALSE, jitter = TRUE,
-                                display_text = "ID", display_status = TRUE,
+                                under = "ID", over = "status",
                                 use_names = TRUE, n.cutoff = NULL,
                                 category = NULL, c.cutoff = NULL, sort_by = "category",
                                 title = NULL, path = NULL, name = NULL) {
@@ -3484,12 +3485,15 @@ setMethod(f = "itemset_chart",
             if (is.null(category) && sort_by == "category") sort_by = "item"
             check_param(identifiers, values = c("original", "new"))
             
-            if (entities != SpectralAnalyzer.PATTERNS) display_status = FALSE
+            if (entities != SpectralAnalyzer.PATTERNS && !is.null(over) && over == "status") over = NULL
+            if (!is.null(under) && under == "status") under = NULL
             category = if (is.numeric(category)) colnames(object@items_categories)[category] else category
             
             # Renommage de colonnes pour simplification
             colnames(nopc)[colnames(nopc) == "node" | colnames(nopc) == "pattern"] = "itemset"
             colnames(nopc)[colnames(nopc) == "order"] = "length"
+            if (!is.null(over) && over == "order") over = "length"
+            if (!is.null(under) && under == "order") under = "length"
             
             # Itemset de taille > 1, triés par taille croissant puis par poids décroissant
             nop_charac = if (length_one) nopc else nopc[nopc$length != 1, ]
@@ -3524,10 +3528,10 @@ setMethod(f = "itemset_chart",
             if (!is.null(name)) {
               grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
                              14, 10, paper = "a4r", pointsize = 11)
-              plot_itemset_chart(object, nop_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_text, display_status, title)
+              plot_itemset_chart(object, nop_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, under, over, title)
               grDevices::dev.off()
             } else {
-              plot_itemset_chart(object, nop_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, display_text, display_status, title)
+              plot_itemset_chart(object, nop_charac, items_cat, category, c.cutoff, use_names, n.cutoff, jitter, under, over, title)
             }
             
             # Renommage initial des colonnes avant retour
@@ -3566,6 +3570,13 @@ setMethod(f = "itemset_chart",
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param jitter If \code{FALSE} itemsets of length \eqn{1} are aligned vertically.
 #'  If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
+#' @param under,over Text to display on the chart under and over the itemsets.
+#'  Identifiers (\code{"ID"}) or one of the characteristics (\code{"weight"}, \code{"frequency"},
+#'  \code{"specificity"}, \code{"year"}, \code{"status"}).
+#'  
+#'  \code{"status"} can only be used for the argument \code{"over"}.
+#'  \code{NULL} value specifies to display no data.
+#' @param title Chart title.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
@@ -3579,7 +3590,7 @@ setMethod(f = "plot_itemset_chart",
           signature = "SpectralAnalyzer",
           definition = function(object, nopc, items_category, category = NULL,
                                 c.cutoff = NULL, use_names = TRUE, n.cutoff = NULL,
-                                jitter = TRUE, display_text = "ID", display_status = TRUE,
+                                jitter = TRUE, under = "ID", over = NULL,
                                 title = "Itemsets") {
             
             # Définition des marges et initialisation de la zone graphique
@@ -3600,6 +3611,8 @@ setMethod(f = "plot_itemset_chart",
             
             # Effectifs des tailles des itemsets
             length_tab = table(nopc$length)
+            # Affichage ou non du statut
+            display_status = (!is.null(over) && over == "status")
             
             # Titre des tailles des itemsets et position en Y
             text_length = "Length:"
@@ -3687,9 +3700,9 @@ setMethod(f = "plot_itemset_chart",
             
             # Espace au bas du graphique : taille d'affichage de la caractéristique à afficher
             ymin_1 = ymin_2 = min(items_category$y)
-            if (!is.null(display_text)) {
+            if (!is.null(under)) {
               # Largeur du plus long texte + espace entre un itemset et le texte
-              carac_width = max(graphics::strwidth(nopc[, display_text], units = "inches", cex = 0.5)) + graphics::par("csi")[1] * 0.5
+              carac_width = max(graphics::strwidth(nopc[, under], units = "inches", cex = 0.5)) + graphics::par("csi")[1] * 0.5
               ymin_1 = ymin_1 - convert_gunits(carac_width, "inches", to = "user", "w", rotation = TRUE)
             }
             
@@ -3707,7 +3720,7 @@ setMethod(f = "plot_itemset_chart",
               (length_tab[length(length_tab)] * (width + margin) + margin) # strwidth units="user" dépend du graphique
             if (last_space > 0) area_width = area_width + last_space
             
-            if (!is.null(display_text)) {
+            if (!is.null(under)) {
               ymin_2 = ymin_2 - convert_gunits(carac_width, "inches", to = "user", "w", rotation = TRUE)
             }
             
@@ -3793,22 +3806,30 @@ setMethod(f = "plot_itemset_chart",
                                y0 = unlist(y_itemsets),
                                lwd = 1.2, lty = 1, col = "black")
             
-            # Affichage des identifiants ou de l'une des caractéristiques des itemsets
-            if (!is.null(display_text)) {
+            # Affichage des identifiants ou de l'une des caractéristiques au-dessous des itemsets
+            if (!is.null(under)) {
               graphics::text(x_itemsets + width / 2,
                              nth_values(y_itemsets, "first") - point_size,
-                             labels = nopc[, display_text],
+                             labels = nopc[, under],
                              col = "black", cex = 0.5, srt = 90, adj = 1)
             }
             
-            # Affichage des statuts des motifs
-            if (display_status) {
-              graphics::points(x_itemsets + width / 2,
-                               nth_values(y_itemsets, "last") + 1.5 * point_size,
-                               col = object@status_colors[nopc$status],
-                               cex = 0.5, pch = 15)
-              # Une coordonnée indépendante de la taille du point entraîne parfois un chevauchement avec l'itemset
-              # Concernant display_text une coordonnée indépendante peut être utilisée grâce à adj
+            # Affichage des identifiants ou de l'une des caractéristiques au-dessus des itemsets
+            if (!is.null(over)) {
+              # Affichage des statuts des motifs ou d'une autre caractéristique
+              if (display_status) {
+                graphics::points(x_itemsets + width / 2,
+                                 nth_values(y_itemsets, "last") + 1.5 * point_size,
+                                 col = object@status_colors[nopc$status],
+                                 cex = 0.5, pch = 15)
+                # Une coordonnée indépendante de la taille du point entraîne parfois un chevauchement avec l'itemset
+                # Concernant under une coordonnée indépendante peut être utilisée grâce à adj
+              } else {
+                graphics::text(x_itemsets + width / 2,
+                               nth_values(y_itemsets, "last") + point_size,
+                               labels = nopc[, over],
+                               col = "black", cex = 0.5, srt = 90, adj = 0)
+              }
             }
             
             
