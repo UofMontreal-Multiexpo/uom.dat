@@ -15,7 +15,7 @@ Invisible. Data frame in which a line is an association between a pattern and it
  characteristics.
 }
 \description{
-Compute the characteristics of the patterns (frequency, weight, order, specificity, dynamic status).
+Compute the characteristics of the patterns (frequency, weight, length, specificity, dynamic status).
 The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 }
 \references{

@@ -84,7 +84,7 @@ Data frame of the nodes or patterns represented on the chart, associated with th
 Plot a chart of the node or pattern itemsets. It can be automatically saved as a PDF file.
 }
 \details{
-The nodes or patterns are sorted according to their lengths (or order values), then to their weights.
+The nodes or patterns are sorted according to their lengths, then to their weights.
 
 If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape
  paper size. If it is \code{NULL}, the chart is plotted in the active device.

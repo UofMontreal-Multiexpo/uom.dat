@@ -81,7 +81,7 @@ Data frame of 7 variables:
   \item{\code{year}}{Year of appearance of the pattern among the observations.}
   \item{\code{frequency}}{Number of nodes containing the set of items of the pattern.}
   \item{\code{weight}}{Number of observations containing the set of items of the pattern.}
-  \item{\code{order}}{Number of items composing the pattern.}
+  \item{\code{length}}{Number of items composing the pattern.}
   \item{\code{specificity}}{Specificity of the information conveyed by the pattern. It corresponds
     to the nature of a pattern of being specific of a particular combination or ubiquitous and
     allowing the formation of numerous combinations (with regard to the observations).}

@@ -138,7 +138,7 @@ setClassUnion("listORarray", c("list", "array"))
 #'    \item{\code{year}}{Year of appearance of the pattern among the observations.}
 #'    \item{\code{frequency}}{Number of nodes containing the set of items of the pattern.}
 #'    \item{\code{weight}}{Number of observations containing the set of items of the pattern.}
-#'    \item{\code{order}}{Number of items composing the pattern.}
+#'    \item{\code{length}}{Number of items composing the pattern.}
 #'    \item{\code{specificity}}{Specificity of the information conveyed by the pattern. It corresponds
 #'      to the nature of a pattern of being specific of a particular combination or ubiquitous and
 #'      allowing the formation of numerous combinations (with regard to the observations).}
@@ -446,9 +446,9 @@ setMethod(f = "summary",
             colnames(main) = c("year", "frequency", "weight", "specificity")
             
             summaries[["patterns"]] = list(main = main)
-            summaries[["patterns"]][["order"]] = as.data.frame(table(object@patterns$order))
+            summaries[["patterns"]][["length"]] = as.data.frame(table(object@patterns$length))
             summaries[["patterns"]][["status"]] = as.data.frame(table(object@patterns$status))
-            colnames(summaries[["patterns"]][["order"]]) = c("order", "count")
+            colnames(summaries[["patterns"]][["length"]]) = c("length", "count")
             colnames(summaries[["patterns"]][["status"]]) = c("status", "count")
             
             # Tailles des attributs principaux
@@ -1710,7 +1710,7 @@ setMethod(f = "list_patterns_per_year",
 
 #' Computation of pattern characteristics
 #' 
-#' Compute the characteristics of the patterns (frequency, weight, order, specificity, dynamic status).
+#' Compute the characteristics of the patterns (frequency, weight, length, specificity, dynamic status).
 #' The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
@@ -1738,7 +1738,7 @@ setMethod(f = "compute_patterns_characteristics",
             
             # Association de nouvelles caractéristiques aux motifs
             object@patterns$frequency = frequencies
-            object@patterns$order = sapply(object@patterns$pattern, length)
+            object@patterns$length = sapply(object@patterns$pattern, length)
             object@patterns$year = apply(object@patterns_per_year, 1, function(x) {
                                                                         # Année d'apparition du motif
                                                                         as.numeric(names(x[x > 0])[1])
@@ -1750,7 +1750,7 @@ setMethod(f = "compute_patterns_characteristics",
             object@patterns$status = define_dynamic_status(object, object@patterns$pattern, object@parameters$status_limit)$status
             
             # Changement de l'ordre des colonnes
-            object@patterns = object@patterns[, c("pattern", "year", "frequency", "weight", "order", "specificity", "status")]
+            object@patterns = object@patterns[, c("pattern", "year", "frequency", "weight", "length", "specificity", "status")]
             
             # Définition de l'attribut et retour
             assign(object_name, object, envir = parent.frame())
@@ -2185,7 +2185,7 @@ setMethod(f = "spectrum_chart",
               sorting_vector = order(1 - pc$specificity,
                                      match(pc$status, names(object@status_colors)),
                                      max(pc$weight) - pc$weight,
-                                     pc$order)
+                                     pc$length)
               
               pc = pc[sorting_vector, ]
               weights = weights[sorting_vector, ]
@@ -2237,7 +2237,7 @@ setMethod(f = "plot_spectrum_chart",
             graphics::par(mar = c(6.0, 5.0, 2.0+1.4, 5.0))
             
             cex_legend = 0.85
-            cex_order = 0.75
+            cex_length = 0.75
             cex_axis = 1.05
             cex_lab = 1.05
             cex_id = 0.9
@@ -2300,8 +2300,8 @@ setMethod(f = "plot_spectrum_chart",
             ## Texte relatif aux tailles des motifs (par-dessus la ligne)
             # Changement du système de coordonnées du au changement de graphique (bar -> line)
             new_y = pc$weight * 1 / max(pc$weight)
-            shadowtext(bar_plot, new_y, utils::as.roman(pc$order),
-                       col = "black", bg = "white", cex = cex_order, pos = 3, offset = cex_order, xpd = TRUE)
+            shadowtext(bar_plot, new_y, utils::as.roman(pc$length),
+                       col = "black", bg = "white", cex = cex_length, pos = 3, offset = cex_length, xpd = TRUE)
             
             
             ## Légendes et titre
@@ -2340,13 +2340,13 @@ setMethod(f = "plot_spectrum_chart",
             # Légende de la spécificité et de la taille
             so_legend = graphics::legend("bottom", plot = FALSE,
                                          pch = c(20, 86), lty = c("dotted", NA), cex = cex_legend,
-                                         legend = c("Specificity", "Order"))
+                                         legend = c("Specificity", "Length"))
             
             graphics::legend(x = fig_in_usr_coords(2) - so_legend$rect$w - w_margin,
                              y = fig_in_usr_coords(3) + so_legend$rect$h + b_margin,
                              bty = "n", xpd = TRUE,
                              pch = c(19, 86), lty = c("dotted", NA), cex = cex_legend,
-                             legend = c("Specificity", "Order"))
+                             legend = c("Specificity", "Length"))
             
             # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
             graphics::text(x = fig_in_usr_coords(1) + w_margin,
@@ -2637,7 +2637,6 @@ setMethod(f = "spectrosome_chart",
               
               # Renommage de colonnes pour simplification ultérieure (cf. vertices_colors et vertices_shapes)
               colnames(nopc)[colnames(nopc) == "node"] = "pattern"
-              colnames(nopc)[colnames(nopc) == "length"] = "order"
               
             } else if (entities == SpectralAnalyzer.PATTERNS) {
               # Texte affiché sur le graphique
@@ -2848,7 +2847,7 @@ setMethod(f = "spectrosome_chart",
             
             # Sommets à plusieurs items en cercle ; triangle sinon
             vertices_shapes = rep(100 , nrow(nopc))
-            vertices_shapes[nopc$order == 1] = 3
+            vertices_shapes[nopc$length == 1] = 3
             
             # Définition des tailles des sommets
             if (is.numeric(vertex_size)) {
@@ -3062,7 +3061,6 @@ setMethod(f = "spectrosome_chart",
             # Renommage initial des colonnes avant retour
             if (entities == SpectralAnalyzer.NODES) {
               colnames(nopc)[colnames(nopc) == "pattern"] = "node"
-              colnames(nopc)[colnames(nopc) == "order"] = "length"
             }
             
             # Réattribution des ID d'origine (non compatibles avec sna::gplot)
@@ -3393,7 +3391,7 @@ setMethod(f = "degree",
 #' Plot a chart of the node or pattern itemsets. It can be automatically saved as a PDF file.
 #' 
 #' @details
-#' The nodes or patterns are sorted according to their lengths (or order values), then to their weights.
+#' The nodes or patterns are sorted according to their lengths, then to their weights.
 #' 
 #' If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape
 #'  paper size. If it is \code{NULL}, the chart is plotted in the active device.
@@ -3491,9 +3489,6 @@ setMethod(f = "itemset_chart",
             
             # Renommage de colonnes pour simplification
             colnames(nopc)[colnames(nopc) == "node" | colnames(nopc) == "pattern"] = "itemset"
-            colnames(nopc)[colnames(nopc) == "order"] = "length"
-            if (!is.null(over) && over == "order") over = "length"
-            if (!is.null(under) && under == "order") under = "length"
             
             # Itemset de taille > 1, triés par taille croissant puis par poids décroissant
             nop_charac = if (length_one) nopc else nopc[nopc$length != 1, ]
@@ -3537,7 +3532,6 @@ setMethod(f = "itemset_chart",
             # Renommage initial des colonnes avant retour
             if (entities == SpectralAnalyzer.PATTERNS) {
               colnames(nop_charac)[colnames(nop_charac) == "itemset"] = "pattern"
-              colnames(nop_charac)[colnames(nop_charac) == "length"] = "order"
             } else {
               colnames(nop_charac)[colnames(nop_charac) == "itemset"] = "node"
             }
@@ -5095,7 +5089,7 @@ setMethod(f = "get_nodes_from_category",
 #'  * `"exact"`: the item set contained in the pattern must be exactly the same as the sought item set.
 #' 
 #' If `element` refers to a characteristic other than status (i.e. is one of `"year"`, `"frequency"`,
-#'  `"weight"`, `"order"`, `"specificity"`), the condition for a pattern to be extracted is a comparaison
+#'  `"weight"`, `"length"`, `"specificity"`), the condition for a pattern to be extracted is a comparaison
 #'  of the `value` according to one of the comparison operators (default is equality):
 #'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
 #'  * `"NE"`, `"!="`: **N**ot **E**qual. The value of the characteristic must be different from that
@@ -5128,7 +5122,7 @@ setMethod(f = "get_nodes_from_category",
 #'  `object["patterns"]`.\cr
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]`.
 #' @param element Type of element on which to search.
-#'  One of `"items"`, `"year"`, `"frequency"`, `"weight"`, `"order"`, `"specificity"`, `"status"`
+#'  One of `"items"`, `"year"`, `"frequency"`, `"weight"`, `"length"`, `"specificity"`, `"status"`
 #'  or the name or number of a category on which to search (numbering according to the order of the
 #'  columns of `object["items_categories"]`).
 #' @param value Sought value(s) for the element specified by the argument `element`.
@@ -5155,7 +5149,7 @@ setMethod(f = "get_nodes_from_category",
 #' get_patterns(SA_instance, "patterns",
 #'              element = "weight", value = 3, condition = ">=")
 #' get_patterns(SA_instance, "patterns",
-#'              element = "order", value = 3, condition = "LT")
+#'              element = "length", value = 3, condition = "LT")
 #' 
 #' get_patterns(SA_instance, SA_instance["patterns"], element = "status",
 #'              value = "Persistent")
@@ -5177,10 +5171,10 @@ setMethod(f = "get_patterns",
                                 element, value, condition = "default") {
             
             # Vérification du choix de l'élément sur lequel effectuer la recherche
-            if (!(element %in% c("items", "year", "frequency", "weight", "order", "specificity", "status"))
+            if (!(element %in% c("items", "year", "frequency", "weight", "length", "specificity", "status"))
                 && !check_access_for_category(object, element, NA, stop = FALSE))
               stop(paste("element must be one of \"items\"",
-                         "\"year\", \"frequency\", \"weight\", \"order\", \"specificity\", \"status\"",
+                         "\"year\", \"frequency\", \"weight\", \"length\", \"specificity\", \"status\"",
                          "or a category name or number."))
             
             # Appel à la fonction spécifique
@@ -5190,7 +5184,7 @@ setMethod(f = "get_patterns",
               else
                 return(get_patterns_from_items(object, pc, value, condition))
             }
-            if (element %in% c("year", "frequency", "weight", "order", "specificity")) {
+            if (element %in% c("year", "frequency", "weight", "length", "specificity")) {
               if (condition == "default")
                 return(get_patterns_from_characteristic(object, pc, element, value))
               else
@@ -5269,7 +5263,7 @@ setMethod(f = "get_patterns_from_items",
 #'  \code{object["patterns"]}.\cr
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
-#'  One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}
+#'  One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"length"}, \code{"specificity"}
 #'  See \code{\link{get_patterns_from_status}} to search by \code{"status"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
 #' @param condition Search condition.
@@ -5303,7 +5297,7 @@ setMethod(f = "get_patterns_from_items",
 #'                                  characteristic = "weight",
 #'                                  value = 3, condition = ">=")
 #' get_patterns_from_characteristic(SA_instance, SA_instance["patterns"],
-#'                                  characteristic = "order",
+#'                                  characteristic = "length",
 #'                                  value = 3, condition = "LT")
 #' 
 #' @aliases get_patterns_from_characteristic
@@ -5316,8 +5310,8 @@ setMethod(f = "get_patterns_from_characteristic",
             check_init(object, SpectralAnalyzer.PATTERNS)
             pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
             
-            if (!(characteristic %in% c("year", "frequency", "weight", "order", "specificity")))
-              stop("characteristic must be one of \"year\", \"frequency\", \"weight\", \"order\", \"specificity\".")
+            if (!(characteristic %in% c("year", "frequency", "weight", "length", "specificity")))
+              stop("characteristic must be one of \"year\", \"frequency\", \"weight\", \"length\", \"specificity\".")
             
             operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
                           "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",
@@ -5664,8 +5658,7 @@ setMethod(f = "get_complexes",
               check_init(object, entities)
               
               # Entités possédant au moins min_nb_values items
-              column = if (entities == SpectralAnalyzer.NODES) "length" else "order"
-              return(nopc[nopc[, column] >= min_nb_values, ])
+              return(nopc[nopc[, "length"] >= min_nb_values, ])
               
             } else {
               # Validation du paramètre d'accès à la catégorie

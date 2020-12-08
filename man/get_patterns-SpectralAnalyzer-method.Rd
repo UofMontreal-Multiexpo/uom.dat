@@ -15,7 +15,7 @@
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{element}{Type of element on which to search.
-One of \code{"items"}, \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"order"}, \code{"specificity"}, \code{"status"}
+One of \code{"items"}, \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"length"}, \code{"specificity"}, \code{"status"}
 or the name or number of a category on which to search (numbering according to the order of the
 columns of \code{object["items_categories"]}).}
 
@@ -40,7 +40,7 @@ is the presence of the sought items (argument \code{value}). The argument \code{
 }
 
 If \code{element} refers to a characteristic other than status (i.e. is one of \code{"year"}, \code{"frequency"},
-\code{"weight"}, \code{"order"}, \code{"specificity"}), the condition for a pattern to be extracted is a comparaison
+\code{"weight"}, \code{"length"}, \code{"specificity"}), the condition for a pattern to be extracted is a comparaison
 of the \code{value} according to one of the comparison operators (default is equality):
 \itemize{
 \item \code{"EQ"}, \code{"=="}: \strong{EQ}ual. The value of the characteristic must be equal to that sought.
@@ -91,7 +91,7 @@ get_patterns(SA_instance, SA_instance["patterns"],
 get_patterns(SA_instance, "patterns",
              element = "weight", value = 3, condition = ">=")
 get_patterns(SA_instance, "patterns",
-             element = "order", value = 3, condition = "LT")
+             element = "length", value = 3, condition = "LT")
 
 get_patterns(SA_instance, SA_instance["patterns"], element = "status",
              value = "Persistent")

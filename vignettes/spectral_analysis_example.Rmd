@@ -361,7 +361,7 @@ p_chart <- itemset_chart(sa_object, sa_object["patterns"],
                          name = "pattern_itemsets.pdf",
                          title = "Pattern itemsets")
 ```
-![Fig. 4.a: Itemsets corresponding to the mined patterns (except those of order 1.](./spectral_analysis_example/pattern_itemsets.png)
+![Fig. 4.a: Itemsets corresponding to the mined patterns (except those of length 1.](./spectral_analysis_example/pattern_itemsets.png)
 
 **Note that too many values for the displayed category or too long names prevent the legend from being displayed entirely, hence the use of the *c.cutoff* parameter to reduce the size of these values. Likewise, the *n.cutoff* allow to shorten the names of long substances.**
 
@@ -375,7 +375,7 @@ p_chart
 ```
 ![](./spectral_analysis_example/pattern_itemsets_patterns.png)
 
-See that only patterns with an order value greater than 1 are plotted on this chart. The argument `length_one` allows to plot all patterns.
+See that only patterns with a length greater than 1 are plotted on this chart. The argument `length_one` allows to plot all patterns.
 ```{r}
 p_chart <- itemset_chart(sa_object, sa_object["patterns"],
                          n.cutoff = 20,
