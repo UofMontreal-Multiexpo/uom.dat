@@ -3646,11 +3646,10 @@ setMethod(f = "plot_itemset_chart",
               
               # Pour les itemsets de taille 1, alignement vertical
               x_itemsets = rep(0, length_tab[1])
+              one_order = order(unlist(y_itemsets[1:length_tab[1]]))
               
               if (jitter) {
                 # Décalage de ceux côte-à-côte
-                one_order = order(unlist(y_itemsets[1:length_tab[1]]))
-                
                 for (i in seq(2, length(y_itemsets[one_order]))) {
                   if (y_itemsets[one_order][[i]] == y_itemsets[one_order][[i-1]] + 1
                       && x_itemsets[i-1] == 0) {
