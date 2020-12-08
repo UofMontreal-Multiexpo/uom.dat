@@ -910,28 +910,30 @@ setMethod(f = "init",
   
   check_param(part, types = c("character", "NULL"))
   
-  if (is.null(part)) return(reset(object, from = 1, verbose = verbose))
-  
-  check_param(part, values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                               SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS,
-                               first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                                                  SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS))),
-              suffix = " or NULL")
-  
-  if (part == SpectralAnalyzer.NODES || part == first_characters(SpectralAnalyzer.NODES)) {
-    to_return = init_nodes(object, verbose)
-  }
-  else if (part == SpectralAnalyzer.NODE_LINKS || part == first_characters(SpectralAnalyzer.NODE_LINKS)) {
-    check_init(object, SpectralAnalyzer.NODES)
-    to_return = init_node_links(object, verbose)
-  }
-  else if (part == SpectralAnalyzer.PATTERNS || part == first_characters(SpectralAnalyzer.PATTERNS)) {
-    check_init(object, SpectralAnalyzer.NODES)
-    to_return = init_patterns(object, verbose)
-  }
-  else if (part == SpectralAnalyzer.PATTERN_LINKS || part == first_characters(SpectralAnalyzer.PATTERN_LINKS)) {
-    check_init(object, SpectralAnalyzer.PATTERNS)
-    to_return = init_pattern_links(object, verbose)
+  if (is.null(part)) {
+    to_return = reset(object, from = 1, verbose = verbose)
+  } else {
+    check_param(part, values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
+                                 SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS,
+                                 first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
+                                                    SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS))),
+                suffix = " or NULL")
+    
+    if (part == SpectralAnalyzer.NODES || part == first_characters(SpectralAnalyzer.NODES)) {
+      to_return = init_nodes(object, verbose)
+    }
+    else if (part == SpectralAnalyzer.NODE_LINKS || part == first_characters(SpectralAnalyzer.NODE_LINKS)) {
+      check_init(object, SpectralAnalyzer.NODES)
+      to_return = init_node_links(object, verbose)
+    }
+    else if (part == SpectralAnalyzer.PATTERNS || part == first_characters(SpectralAnalyzer.PATTERNS)) {
+      check_init(object, SpectralAnalyzer.NODES)
+      to_return = init_patterns(object, verbose)
+    }
+    else if (part == SpectralAnalyzer.PATTERN_LINKS || part == first_characters(SpectralAnalyzer.PATTERN_LINKS)) {
+      check_init(object, SpectralAnalyzer.PATTERNS)
+      to_return = init_pattern_links(object, verbose)
+    }
   }
   
   # Redéfinition de l'objet
