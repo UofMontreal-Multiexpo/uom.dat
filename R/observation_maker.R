@@ -75,17 +75,19 @@ make_observations = function(data, by, additional = NULL, unique_values = TRUE) 
   
   # Conversion en list de character les variables de type list de factor
   list_cols = names(which(sapply(obs, class) == "list"))
-  if (length(list_cols) == 1) {
-    factor_cols = list_cols
-  } else {
-    factor_cols = list_cols[which(sapply(obs[, list_cols], function(x) class(x[[1]])) == "factor")]
-  }
-  for (col in factor_cols) {
-    # obs$col <- lapply(obs[, col], as.character)
-    eval(parse(text = paste0("obs$", col, " <- lapply(obs[, col], as.character)")))
+  if (length(list_cols > 0)) {
+    if (length(list_cols) == 1) {
+      factor_cols = if (obs[, list_cols][[1]] == "factor") list_cols else NULL
+    } else {
+      factor_cols = list_cols[which(sapply(obs[, list_cols], function(x) typeof(x[[1]])) == "factor")]
+    }
+    for (col in factor_cols) {
+      # obs$col <- lapply(obs[, col], as.character)
+      eval(parse(text = paste0("obs$", col, " <- lapply(obs[, col], as.character)")))
+    }
   }
   
-  return(as.list(as.data.frame(t(obs))))
+  return(as.list(as.data.frame(t(obs), stringsAsFactors = FALSE)))
 }
 
 
