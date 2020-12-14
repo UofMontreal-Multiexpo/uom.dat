@@ -60,12 +60,31 @@ display_time = function(expr) {
 #' @return The character string corresponding to the argument `x`, starting with a capital letter.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`first_characters`], [`substr2`].
+#' @seealso [`pluralize`], [`first_characters`], [`substr2`].
 #' 
 #' @md
 #' @keywords internal
 cap = function(x) {
   return(paste0(toupper(substring(x, 1, 1)), substring(x, 2)))
+}
+
+
+#' Pluzalize a character string
+#' 
+#' Add an "s" at the end of the string if the given variable has a length greater than \eqn{1}.
+#' 
+#' @param x Character string to be pluralized.
+#' @param var Variable to consider whether to add an "s" to the string.
+#' @return The character string corresponding to the argument `x`, ending with an "s" if `length(var) > 1`.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`cap`], [`first_characters`], [`substr2`].
+#' 
+#' @md
+#' @keywords internal
+pluralize = function(x, var) {
+  if (length(var) > 1) return(paste0(x, "s"))
+  return(x)
 }
 
 
@@ -79,7 +98,7 @@ cap = function(x) {
 #'  of all words.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`cap`], [`substr2`].
+#' @seealso [`cap`], [`pluralize`], [`substr2`].
 #' 
 #' @md
 #' @keywords internal
@@ -103,7 +122,7 @@ first_characters = function(x, sep = " _-") {
 #' @return A character vector of the same length as `x` containing the extracted parts.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`cap`], [`first_characters`].
+#' @seealso [`cap`], [`pluralize`], [`first_characters`].
 #' 
 #' @md
 #' @keywords internal

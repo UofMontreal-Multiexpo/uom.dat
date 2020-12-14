@@ -22,7 +22,7 @@ Extract substrings in a character vector. Wrapper of the \code{\link{substr}} fu
 \code{NULL} value.
 }
 \seealso{
-\code{\link{cap}}, \code{\link{first_characters}}.
+\code{\link{cap}}, \code{\link{pluralize}}, \code{\link{first_characters}}.
 }
 \author{
 Gauthier Magnin
