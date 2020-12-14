@@ -6,53 +6,55 @@
 \usage{
 make_obs_from_unspecified_ws(
   measures,
+  keys,
   variable_names,
   additional = NULL,
   unique_values = TRUE
 )
 }
 \arguments{
-\item{measures}{Set of sampling measures. Data frame that must contain at least the following
-two variables:
-\describe{
-  \item{\code{YEAR}}{Year of inspection.}
-  \item{\code{CODE}}{Code identifying the substance being sampled.}
+\item{measures}{Set of sampling measures. Data frame that must contain at least two variables for:
+\itemize{
+\item A code identifying the substance being sampled.
+\item A year of inspection.
 }}
 
-\item{variable_names}{Names of variables to be taken into account to consider a work situation,
-ie. vector of names of variables contained in \code{measures} whose different combinations of
-values form the different work situations.}
+\item{keys}{Length-two character vector identifying the names of the two required variables
+in the following order: keys for accessing substance codes; key for accessing years.}
 
-\item{additional}{Names of information to keep when creating observations: vector included in
-\code{colnames(measures)}.}
+\item{variable_names}{Names of variables to be taken into account to consider a work situation,
+ie. vector of names of variables contained in \code{measures} whose different combinations of values
+form the different work situations.}
+
+\item{additional}{Names of information to keep when creating observations (in addition to those given
+by \code{keys}): vector included in \code{colnames(measures)}.}
 
 \item{unique_values}{logical or character.
 \itemize{
-  \item{If \code{TRUE}, simplification of the values associated with the variables defined in
-        \code{additional} in order to remove duplicates.}
-  \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
-        these variables for the same sample (as many values as there are samples).}
-  \item{Otherwise, vector of variable names included in \code{colnames(measures)} for which the
-        removal of duplicates must be performed.}
+\item If \code{TRUE}, simplification of the values associated with the variables defined in
+\code{additional} in order to remove duplicates.
+\item If \code{FALSE}, keep the duplicates and the correspondence between the values of these variables
+for the same sample (as many values as there are samples).
+\item Otherwise, vector of variable names included in \code{colnames(measures)} for which the removal of
+duplicates must be performed.
 }}
 }
 \value{
 List of observations identified. Each observation is a list containing:
-   \describe{
-     \item{\code{CODE}}{The codes identifying the substances grouped together.}
-     \item{\code{YEAR}}{The year of the inspection from which the samples are grouped.}
-     \item{\code{...}}{Data related to the samples grouped, concerning the variables defined in
-                       the argument \code{additional}.}
-   }
+\itemize{
+\item The codes identifying the substances grouped together.
+\item The year of the inspection from which the samples are grouped.
+\item Data related to the samples grouped, concerning the variables defined in the argument \code{additional}.
+}
 }
 \description{
 Group samples in the form of observations: make observations from unspecified work situations.
 An observation corresponds to a set of substances found in the same work situation.
 These situations are described by the possible combinations of values of the variables whose names
- are defined in arguments.
+are defined in arguments.
 }
 \seealso{
-\code{\link{make_observations}}, \code{\link{make_obs_from_ws}}.
+\code{\link{make_OE_observations}}, \code{\link{make_obs_from_ws}}.
 }
 \author{
 Gauthier Magnin

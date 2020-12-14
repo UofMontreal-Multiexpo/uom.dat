@@ -7,6 +7,10 @@ output:
     toc: yes
 ---
 
+<center><b style='color:red;font-size:x-large'>
+/!\\ NOT UP TO DATE ON THE NOTION OF OBSERVATIONS /!\\
+</b></center>
+
 The example of analysis proposed in this document assumes the reader is familiar with the spectral analysis methodology. If not, the reader should read at least the first of the following two papers:
 
 * Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018). The spectrosome of occupational health problems. *PLoS ONE* 13(1): e0190196. <https://doi.org/10.1371/journal.pone.0190196>
@@ -42,15 +46,15 @@ Here is the help page describing these data (accessible using `help(oedb_sample)
 
 Defining a set of work situations...
 ```{r}
-work_situations <- data.frame(WS_ID = c(1, 2, 2, 3, 3),
+work_situations <- data.frame(WS.ID = c(1, 2, 2, 3, 3),
                               JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
                               JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
                               stringsAsFactors = FALSE)
 work_situations
 ```
-These are work situations the user could identify beforehand. **The data frame must have a *WS_ID* column to identify the different work situations described.** The other columns correspond to the variables to use to describe a work situation and have the same names as the variables in the database used.
+These are work situations the user could identify beforehand. **The data frame must have a *WS.ID* column to identify the different work situations described.** The other columns correspond to the variables to use to describe a work situation and have the same names as the variables in the database used.
 
-For this fictitious example, the variables named `JOB.TITLE` and `JOB.TASK` are used and random combinations were picked. Several couples with the same `WS_ID` are considered to correspond to the same work situation. Three work situations are described. The first one has one combination of the two variables. The second has two combinations which are considered as works with similar conditions. The last one is formed in the same way as the second one.
+For this fictitious example, the variables named `JOB.TITLE` and `JOB.TASK` are used and random combinations were picked. Several couples with the same `WS.ID` are considered to correspond to the same work situation. Three work situations are described. The first one has one combination of the two variables. The second has two combinations which are considered as works with similar conditions. The last one is formed in the same way as the second one.
 
 
 Defining the set of variables used to search for situations that have not been described in the previous data frame...
@@ -1074,34 +1078,40 @@ Datasets used as examples:
 
 * [oedb_sample](../html/oedb_sample.html)
 * [substances_information](../html/substances_information.html)
+* [OS_instance](../html/OS_instance.html)
 * [SA_instance](../html/SA_instance.html)
 
 
 ## About observations
 
-Making observations:
+The class: [ObservationSet](../html/ObservationSet-class.html)
 
+Making *ObservationSet* objects:
+
+* [observation.set](../html/observation.set.html)
 * [make_observations](../html/make_observations.html)
-* [make_INRS_observations](../html/make_INRS_observations.html)
-
-Search for observations:
-
-* [get_complex_obs](../html/get_complex_obs.html)
-* [get_simple_obs](../html/get_simple_obs.html)
-* [get_obs_from_items](../html/get_obs_from_items.html)
-* [get_obs_from_info](../html/get_obs_from_info.html)
+* [make_OE_observations](../html/make_OE_observations.html)
+* [\[](../html/sub-ObservationSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-ObservationSet-ANY-ANY-ANY-method.html)
 
 Search in observations:
 
-* [get_all_items](../html/get_all_items.html)
-* [get_items_from_info](../html/get_items_from_info.html)
-* [get_info_from_items](../html/get_info_from_items.html)
+* [get_all_items](../html/get_all_items-ObservationSet-method.html)
+* [get_itemsets](../html/get_itemsets-ObservationSet-method.html)
+* [get_items_from_info](../html/get_items_from_info-ObservationSet-method.html)
+* [get_info_from_items](../html/get_info_from_items-ObservationSet-method.html)
+
+Search for observations:
+
+* [get_complex_obs](../html/get_complex_obs-ObservationSet-method.html)
+* [get_simple_obs](../html/get_simple_obs-ObservationSet-method.html)
+* [get_obs_from_items](../html/get_obs_from_items-ObservationSet-method.html)
+* [get_obs_from_info](../html/get_obs_from_info-ObservationSet-method.html)
 
 Computations on observations:
 
-* [complexity_ratio](../html/complexity_ratio.html)
-* [complexity_index](../html/complexity_index.html)
-* [co_occurrence_matrix](../html/co_occurrence_matrix.html)
+* [complexity_ratio](../html/complexity_ratio-ObservationSet-method.html)
+* [complexity_index](../html/complexity_index-ObservationSet-method.html)
+* [co_occurrence_matrix](../html/co_occurrence_matrix-ObservationSet-method.html)
 
 Making charts about observations:
 

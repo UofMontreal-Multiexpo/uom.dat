@@ -7,10 +7,11 @@ knitr::opts_chunk$set(fig.align = "center")
 library(oedb.analysis.tools)
 
 # Creation of specific observations
-observations <- make_INRS_observations(
+observations <- make_OE_observations(
   oedb_sample,
+  keys = c("ID", "CODE", "YEAR"),
   mode = 1,
-  work_situations = data.frame(WS_ID = c(1, 2, 2, 3, 3),
+  work_situations = data.frame(WS.ID = c(1, 2, 2, 3, 3),
                                JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
                                JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
                                stringsAsFactors = FALSE),
@@ -20,10 +21,10 @@ observations <- make_INRS_observations(
 )
 
 ## -----------------------------------------------------------------------------
-observations[[2]]
+observations[2]
 
 ## -----------------------------------------------------------------------------
-concentration_values <- lapply(observations,
+concentration_values <- lapply(observations["data"],
                                function(obs) setNames(obs$CONCENTRATION, obs$NAME))
 
 # Let's print the second element of the new list,
@@ -214,11 +215,11 @@ plot(x = mcr_s$HI,
 ## -----------------------------------------------------------------------------
 # Use of the year information associated with the concentration values
 # in the original observations
-cor(x = sapply(observations, "[[", "YEAR"),
+cor(x = unlist(observations["YEAR"]),
     y = mcr_s$HI)
 
 ## -----------------------------------------------------------------------------
-plot(x = sapply(observations, "[[", "YEAR"),
+plot(x = unlist(observations["YEAR"]),
      y = mcr_s$HI)
 
 ## -----------------------------------------------------------------------------

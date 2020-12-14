@@ -4,39 +4,50 @@
 \alias{make_observations}
 \title{Grouping data}
 \usage{
-make_observations(data, by, additional = NULL, unique_values = TRUE)
+make_observations(
+  data,
+  by,
+  additional = NULL,
+  unique_values = TRUE,
+  item_key = NA,
+  year_key = NA
+)
 }
 \arguments{
-\item{data}{Data frame containing a set of data to group together.}
+\item{data}{Data frame containing a set of data to be grouped.}
 
 \item{by}{Variable names included in \code{colnames(data)} used to group the data.
-Each combination of values of these different variables generates one observation.}
+Each combination of values of these variables generates one observation.}
 
 \item{additional}{Names of information to keep when creating observations: vector included in
 \code{colnames(data)}.}
 
 \item{unique_values}{logical or character.
 \itemize{
-  \item{If \code{TRUE}, simplification of the values associated with the variables defined in
-        \code{additional} in order to remove duplicates.}
-  \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
-        these variables for the same line in \code{data} (as many values as there are rows
-        grouped).}
-  \item{Otherwise, vector of variable names included in \code{colnames(data)} for which the
-        removal of duplicates must be performed.}
+\item If \code{TRUE}, simplification of the values associated with the variables defined in \code{additional}
+in order to remove duplicates.
+\item If \code{FALSE}, keep the duplicates and the correspondence between the values of these variables for
+the same line in \code{data} (as many values as there are rows grouped).
+\item Otherwise, vector of variable names included in \code{colnames(data)} for which the removal of
+duplicates must be performed.
 }}
+
+\item{item_key, year_key}{If the output have to be an \code{ObservationSet}, names of the variables of \code{data}
+containing the items of the observations and the year in which the observations were made.}
 }
 \value{
-List of observations identified. Each observation is named by the combination of values
- of the variables named in \code{by} that generated it. Each observation is a list whose elements
- correspond to the values of the variables named in \code{by} and \code{additional} which have
- been grouped together.
+List of observations identified or \code{ObservationSet} class object containing this list
+(depending on whether \code{item_key} is \code{NA} or not).
+
+Each observation is named by the combination of values of the variables named in \code{by} that generated
+it. Each observation is a list whose elements correspond to the values of the variables named in \code{by}
+and \code{additional} which have been grouped together.
 }
 \description{
-Grouping data in the form of observations.
+Grouping data into a list of lists called observations.
 }
 \details{
-Variables of type \code{factor} are cast to \code{character}.
+Variables of type \code{factor} are coerced to \code{character}.
 }
 \examples{
 to_keep <- c("CODE", "NAME", "ACTIVITY", "JOB.TITLE", "SAMPLE.ID")
@@ -50,11 +61,15 @@ obs_2 <- make_observations(oedb_sample, by = "ID", additional = to_keep,
 obs_3 <- make_observations(oedb_sample, by = "ID", additional = to_keep,
                            unique_values = to_keep[1:2])
 
+## Make observations as ObservationSet
+obs_object <- make_observations(oedb_sample, by = "ID",
+                                additional = c("CODE", "NAME", "YEAR"),
+                                item_key = "CODE", year_key = "YEAR")
+
 }
 \seealso{
-\code{\link{make_INRS_observations}} for the construction of well-targeted observations
- specific to the field of occupational exposure in relation to inspections and similar work
- situations.
+For the construction of well-targeted observations specific to the field of occupational
+exposure in relation to inspections and similar work situations: \code{\link{make_OE_observations}}.
 }
 \author{
 Gauthier Magnin

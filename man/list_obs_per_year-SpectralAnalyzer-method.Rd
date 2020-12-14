@@ -15,7 +15,8 @@ Invisible. Matrix of the number of occurrences of each separate observation, per
  The lines correspond to the observations. The columns correspond to the years.
 }
 \description{
-Identify the separate observations per year and count their number of occurrences for each one.
+Identify the separate observations per year (considering only their respective items) and count their
+ number of occurrences for each one.
 The resulting matrix is assigned to the attribute \code{nodes_per_year} of \code{object}.
 }
 \author{

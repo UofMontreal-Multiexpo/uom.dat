@@ -43,6 +43,7 @@ Collate:
     'utils.R'
     'list_manager.R'
     'mixer.R'
+    'observation_set.R'
     'observation_maker.R'
     'oedb.analysis.tools-package.R'
     'spectral_analyzer.R'

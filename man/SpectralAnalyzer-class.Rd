@@ -23,8 +23,8 @@ See the attribute \code{categories_colors} to reassign colors to the category va
 \section{Slots}{
 
 \describe{
-\item{\code{observations}}{List of observations containing the items corresponding to each one.
-It represents the dataset in which frequent itemsets are to be mined.}
+\item{\code{observations}}{\code{ObservationSet} class object: list of observations containing the items
+corresponding to each one. It represents the dataset in which frequent itemsets are to be mined.}
 
 \item{\code{items}}{Set of codes identifying the items found in the observations.}
 
@@ -48,8 +48,8 @@ for each category.}
                              relation to the total period of observations (number of years).}
 }}
 
-\item{\code{nodes}}{Set of nodes (separate observations) and characteristics of these nodes.
-Data frame of 3 variables:
+\item{\code{nodes}}{Set of nodes (separate observations considering only their items) and characteristics of
+these nodes. Data frame of 3 variables:
 \describe{
   \item{\code{node}}{Set of items composing the node.}
   \item{\code{length}}{Number of items composing the node.}

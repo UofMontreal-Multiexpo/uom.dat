@@ -1,4 +1,4 @@
-#' @include observation_maker.R utils.R list_manager.R
+#' @include observation_maker.R observation_set.R list_manager.R utils.R
 NULL
 
 
@@ -70,10 +70,7 @@ SpectralAnalyzer.PATTERN_LINKS = "pattern_links"
 
 
 
-#### Attributes and constructor ####
-
-# Creation of a class corresponding to 2 types
-setClassUnion("listORarray", c("list", "array"))
+#### Class definition and constructor ####
 
 #' Spectral Analyzer
 #' 
@@ -91,8 +88,8 @@ setClassUnion("listORarray", c("list", "array"))
 #'  value.
 #' See the attribute \code{categories_colors} to reassign colors to the category values.
 #' 
-#' @slot observations List of observations containing the items corresponding to each one.
-#'  It represents the dataset in which frequent itemsets are to be mined.
+#' @slot observations \code{ObservationSet} class object: list of observations containing the items
+#'  corresponding to each one. It represents the dataset in which frequent itemsets are to be mined.
 #' @slot items Set of codes identifying the items found in the observations.
 #' @slot items_categories Categories associated with the items. Each item is associated with one value
 #'  for each category.
@@ -110,8 +107,8 @@ setClassUnion("listORarray", c("list", "array"))
 #'    \item{\code{status_limit}}{Time interval for which to characterize the status of the patterns in
 #'                               relation to the total period of observations (number of years).}
 #'  }
-#' @slot nodes Set of nodes (separate observations) and characteristics of these nodes.
-#'  Data frame of 3 variables:
+#' @slot nodes Set of nodes (separate observations considering only their items) and characteristics of
+#'  these nodes. Data frame of 3 variables:
 #'  \describe{
 #'    \item{\code{node}}{Set of items composing the node.}
 #'    \item{\code{length}}{Number of items composing the node.}
@@ -175,9 +172,8 @@ setClassUnion("listORarray", c("list", "array"))
 #' @aliases SpectralAnalyzer
 #' @export
 setClass(Class = "SpectralAnalyzer",
-         representation = representation(
-           
-           observations = "listORarray",
+         slots = c(
+           observations = "ObservationSet",
            items = "vector",
            items_categories = "data.frame",
            
@@ -197,48 +193,54 @@ setClass(Class = "SpectralAnalyzer",
            patterns_per_year = "matrix",
            p_links = "matrix",
            pattern_links = "data.frame"
-         ),
-         validity = function(object) {
-           
-           # Validation du système de codage des items
-           if(any(grepl("/", object@items))) stop("Item codes must not contain the character \"/\".")
-           
-           # Vérification des paramètres d'initialisation
-           if (!all(c("target", "count", "min_length", "max_length", "status_limit") %in% names(object@parameters)))
-             stop("parameters must contain elements target, count, min_length, max_length and status_limit.")
-           
-           if (!is.character(object@parameters$target)) stop("target must be a character value.")
-           if (!is.numeric(object@parameters$count)) stop("count must be a numeric value.")
-           if (!is.numeric(object@parameters$min_length)) stop("min_length must be a numeric value.")
-           if (!is.numeric(object@parameters$max_length)) stop("max_length must be a numeric value.")
-           if (!is.numeric(object@parameters$status_limit)) stop("status_limit must be a numeric value.")
-           
-           if (!(object@parameters$target %in% c("frequent itemsets", "closed frequent itemsets", "maximally frequent itemsets")))
-             stop("target must be one of \"frequent itemsets\", \"closed frequent itemsets\", \"maximally frequent itemsets\".")
-           if (object@parameters$count < 1) stop("count must be greater than zero.")
-           if (object@parameters$min_length < 1) stop("min_length must be greater than zero.")
-           if (object@parameters$max_length < object@parameters$min_length)
-             stop("max_length must be greater than or equal to min_length.")
-           if (object@parameters$status_limit < 1) stop("status_limit must be greater than zero.")
-           
-           # Vérification du type des catégories associées aux items
-           if (!all(sapply(seq_len(ncol(object@items_categories)),
-                           function(c) is.factor(object@items_categories[, c])))) {
-             stop("The categories associated with the items must be factor type.")
-           }
-           
-           # Vérification de l'association statuts-couleurs
-           status = c(SpectralAnalyzer.STATUS_PERSISTENT, SpectralAnalyzer.STATUS_DECLINING,
-                      SpectralAnalyzer.STATUS_EMERGENT, SpectralAnalyzer.STATUS_LATENT)
-           if (!all(status %in% names(object@status_colors))) {
-             stop(paste0("Names of status_colors must contain \"",
-                         paste(status[1:3], collapse = "\", \""), "\" and \"", status[4], "\"."))
-           }
-           
-           return(TRUE)
-         })
+         ))
 
-# Initiator
+# Validity
+setValidity(Class = "SpectralAnalyzer",
+            method = function(object) {
+              
+              # Validation du système de codage des items
+              if (any(grepl("/", object@items))) return("Item codes must not contain the character \"/\".")
+              
+              # Validation du set d'observations
+              if (!has_temporal_data(object@observations)) return("Observations must contain temporal data.")
+              
+              # Vérification des paramètres d'initialisation
+              if (!all(c("target", "count", "min_length", "max_length", "status_limit") %in% names(object@parameters)))
+                return("parameters must contain elements target, count, min_length, max_length and status_limit.")
+              
+              if (!is.character(object@parameters$target)) return("target must be a character value.")
+              if (!is.numeric(object@parameters$count)) return("count must be a numeric value.")
+              if (!is.numeric(object@parameters$min_length)) return("min_length must be a numeric value.")
+              if (!is.numeric(object@parameters$max_length)) return("max_length must be a numeric value.")
+              if (!is.numeric(object@parameters$status_limit)) return("status_limit must be a numeric value.")
+              
+              if (!(object@parameters$target %in% c("frequent itemsets", "closed frequent itemsets", "maximally frequent itemsets")))
+                return("target must be one of \"frequent itemsets\", \"closed frequent itemsets\", \"maximally frequent itemsets\".")
+              if (object@parameters$count < 1) return("count must be greater than zero.")
+              if (object@parameters$min_length < 1) return("min_length must be greater than zero.")
+              if (object@parameters$max_length < object@parameters$min_length)
+                return("max_length must be greater than or equal to min_length.")
+              if (object@parameters$status_limit < 1) return("status_limit must be greater than zero.")
+              
+              # Vérification du type des catégories associées aux items
+              if (!all(sapply(seq_len(ncol(object@items_categories)),
+                              function(c) is.factor(object@items_categories[, c])))) {
+                return("The categories associated with the items must be factor type.")
+              }
+              
+              # Vérification de l'association statuts-couleurs
+              status = c(SpectralAnalyzer.STATUS_PERSISTENT, SpectralAnalyzer.STATUS_DECLINING,
+                         SpectralAnalyzer.STATUS_EMERGENT, SpectralAnalyzer.STATUS_LATENT)
+              if (!all(status %in% names(object@status_colors))) {
+                return(paste0("Names of status_colors must contain \"",
+                              paste(status[1:3], collapse = "\", \""), "\" and \"", status[4], "\"."))
+              }
+              
+              return(TRUE)
+            })
+
+# Initializer
 setMethod(f = "initialize",
           signature = "SpectralAnalyzer",
           definition = function(.Object, observations, items,
@@ -298,8 +300,7 @@ setMethod(f = "initialize",
 #' 
 #' @details
 #' If items are not specified using the argument \code{items}, they are automatically listed from
-#'  the values of \code{CODE} in the argument \code{observations} without any categorization or
-#'  specific denomination.
+#'  the \code{observations} without any categorization or specific denomination.
 #' 
 #' The type of patterns mined can be:
 #'  \itemize{
@@ -347,11 +348,14 @@ setMethod(f = "initialize",
 #'      resulting from the mining parameters and the amount of data).}
 #'  }
 #' 
-#' @param observations List of observations containing the items corresponding to each observation.
-#'  Each observation is itself a list containing at least two elements named \code{"CODE"} and
-#'  \code{"YEAR"}. \code{"YEAR"} must be numeric and \code{"CODE"} must be character or numeric values.
-#'  Values of \code{CODE} must not contain the character \code{"/"}.
-#'  An observation can contain any additional information in its list.
+#' @param observations \code{ObservationSet} class object: list of observations containing the items
+#'  corresponding to each one. Each observation is itself a list containing at least two elements
+#'  representing items and temporal data. It can contain any additional information but such data will
+#'  be ignored.
+#'  
+#'  Items must be character or numeric values and must not contain the character \code{"/"}.
+#'  Temporal data must correspond to the years in which the observations were made and must be numeric
+#'  values.
 #' @param items Data frame associating a name (column \code{name}) and possibly one or more categories
 #'  (additional columns) to each item (column \code{item}). Each category must be of type \code{factor}.
 #'  The columns \code{item} and \code{name} must be of type \code{character}. The default value
@@ -380,12 +384,13 @@ setMethod(f = "initialize",
 #' ## Creating a SpectralAnalyzer from a list of observations
 #' obs <- make_observations(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME", "YEAR"))
+#' obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
 #' 
-#' sa_object_1 <- spectral.analyzer(obs)
+#' sa_object_1 <- spectral.analyzer(obs_object)
 #' 
 #' ## Creating a SpectralAnalyzer after associating item identifiers with
 #' ## names and one category
-#' items_ids <- get_all_items(obs)
+#' items_ids <- get_all_items(obs_object)
 #' category_1 <- substances_information[match(items_ids,
 #'                                            substances_information$CODE),
 #'                                      "SUBFAMILY"]
@@ -395,7 +400,7 @@ setMethod(f = "initialize",
 #'                                 "NAME"]
 #' 
 #' items <- data.frame(item = items_ids, name = names, family = category_1)
-#' sa_object_2 <- spectral.analyzer(obs, items)
+#' sa_object_2 <- spectral.analyzer(obs_object, items)
 #' 
 #' @export
 spectral.analyzer = function(observations, items = NULL, target = "closed frequent itemsets",
@@ -426,7 +431,7 @@ setMethod(f = "show",
           signature = "SpectralAnalyzer",
           definition = function(object) {
             cat("SpectralAnalyzer\n")
-            print(methods::slotNames(object))
+            print(methods::slotNames("SpectralAnalyzer"))
           })
 
 # summary: object summary
@@ -463,13 +468,16 @@ setMethod(f = "summary",
 
 
 
-#### Selectors and mutators ####
+#### Selector and mutator ####
 
-#' Extract or replace parts of a \code{SpectralAnalyzer} object
+#' Extract or replace parts of a SpectralAnalyzer object
 #' 
 #' General selector and mutator to access the attributes of an object of class \code{SpectralAnalyzer}.
 #' Extraction and replacement can be done by using an attribute name or its numeric value in the order
 #'  of the attributes.
+#' 
+#' @details
+#' Elements of the attribute \code{parameters} can be accessed this way as well.
 #' 
 #' @inheritParams base::Extract
 #' 
@@ -889,7 +897,8 @@ setMethod(f = "reset",
 #' ## Creating a SpectralAnalyzer and initialize some parts of it
 #' obs <- make_observations(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME", "YEAR"))
-#' sa_object <- spectral.analyzer(obs, init = FALSE)
+#' obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
+#' sa_object <- spectral.analyzer(obs_object, init = FALSE)
 #' init(sa_object, "nodes")
 #' init(sa_object, "node_links")
 #' 
@@ -1116,7 +1125,8 @@ setMethod(f = "init_pattern_links",
 #' ## Creating a SpectralAnalyzer and initialize some parts of it
 #' obs <- make_observations(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME", "YEAR"))
-#' sa_object <- spectral.analyzer(obs, init = FALSE)
+#' obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
+#' sa_object <- spectral.analyzer(obs_object, init = FALSE)
 #' init(sa_object, "nodes")
 #' init(sa_object, "node_links")
 #' 
@@ -1308,7 +1318,8 @@ setMethod(f = "check_init",
 
 #' Enumeration of the observations per year
 #' 
-#' Identify the separate observations per year and count their number of occurrences for each one.
+#' Identify the separate observations per year (considering only their respective items) and count their
+#'  number of occurrences for each one.
 #' The resulting matrix is assigned to the attribute \code{nodes_per_year} of \code{object}.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
@@ -1327,8 +1338,8 @@ setMethod(f = "list_obs_per_year",
             
             
             # Conversion de la liste d'observations en une data.frame (et tri des items de chaque observation)
-            obs_df = data.frame(year = sapply(object@observations, "[[", "YEAR"))
-            obs_df$node = lapply(lapply(object@observations, "[[", "CODE"), sort)
+            obs_df = data.frame(year = sapply(object@observations@data, "[[", object@observations@year_key))
+            obs_df$node = lapply(object@observations[object@observations@item_key], sort)
             
             # Concaténation des identifiants des items (nécessaire pour la fonction "table" et un tri plus rapide)
             obs_df$node = sapply(obs_df$node, paste0, collapse = "/")
@@ -1357,7 +1368,8 @@ setMethod(f = "list_obs_per_year",
 
 #' Enumeration of nodes
 #' 
-#' Identify the separate observations and compute their size and number of occurrences.
+#' Identify the separate observations (considering only their respective items) and compute their size
+#'  and number of occurrences.
 #' The resulting data frame is assigned to the attribute \code{nodes} of \code{object}.
 #' 
 #' @param object \code{SpectralAnalyzer} class object.
@@ -1596,7 +1608,7 @@ setMethod(f = "list_separate_patterns",
             
             
             # Conversion des observations en transactions : une ligne par observation, une colonne par item
-            transact = turn_obs_into_transactions(object@observations, "CODE")
+            transact = as(object@observations, "transactions")
             
             # Énumération des motifs recherchés
             params = list(supp = count/dim(transact)[1], 
@@ -4119,7 +4131,7 @@ setMethod(f = "co_occurrence_chart",
   }
   
   # Liens à tracer entre les sommets (différent des arêtes de l'arbre)
-  co_occ = as.data.frame(as.table(co_occurrence_matrix(object@observations, items, key = "CODE")),
+  co_occ = as.data.frame(as.table(co_occurrence_matrix(object@observations, items)),
                          stringsAsFactors = FALSE)
   co_occ = co_occ[co_occ$Var1 != co_occ$Var2 & !duplicated(t(apply(co_occ[, c(1,2)], 1, sort))), ]
   connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
@@ -4304,7 +4316,7 @@ setMethod(f = "extract_rules",
               stop("from must be \"observations\", \"patterns\" or a list of item sets.")
             
             # Conversion des observations en transactions
-            transact = turn_obs_into_transactions(object@observations, "CODE")
+            transact = as(object@observations, "transactions")
             
             if (is.character(from) && from == "observations") {
               

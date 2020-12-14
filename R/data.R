@@ -35,25 +35,57 @@
 "substances_information"
 
 
+#' Example of an ObservationSet object
+#' 
+#' An example of an object of class \code{ObservationSet}.
+#' 
+#' @details
+#' Here is the way it was created using the dataset \code{\link{oedb_sample}}:
+#' \preformatted{
+#' ## Making a list of observations by grouping data
+#' obs <- make_observations(oedb.analysis.tools::oedb_sample,
+#'                          by = "ID",
+#'                          additional = c("CODE", "YEAR",
+#'                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
+#' 
+#' ## Creation of the ObservationSet
+#' OS_instance <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
+#' OS_instance["names"] <- OS_instance["names"][-1]
+#' }
+#' 
+#' @format An object of class \code{ObservationSet} containing 14 observations of 5 elements:
+#'  \describe{
+#'    \item{CODE}{Codes identifying the items corresponding to the observation.}
+#'    \item{YEAR}{Year in which the observation was made.}
+#'    \item{JOB.TITLE, JOB.TASK, SAMPLE.ID}{Additional data related to the observation.}
+#'  }
+#' 
+#' For more about the attributes, see \code{\link{ObservationSet}}.
+"OS_instance"
+
+
 #' Example of a SpectralAnalyzer object
 #' 
 #' An example of an object of class \code{SpectralAnalyzer}.
 #' 
+#' @details
 #' Here is the way it was created using the dataset \code{\link{oedb_sample}}:
 #' \preformatted{
 #' ## Making a list of observations
 #' to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
-#' ws <- data.frame(WS_ID = c(1, 2, 2, 3, 3),
+#' ws <- data.frame(WS.ID = c(1, 2, 2, 3, 3),
 #'                  JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
 #'                  JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
 #'                  stringsAsFactors = FALSE)
 #' ws_vars <- c("JOB.TITLE", "JOB.TASK")
 #' 
-#' obs <- make_INRS_observations(oedb_sample, mode = 1,
-#'                               work_situations = ws,
-#'                               variable_names = ws_vars,
-#'                               additional = to_keep,
-#'                               unique_values = TRUE)
+#' obs <- make_OE_observations(oedb_sample,
+#'                             keys = c("ID", "CODE", "YEAR"),
+#'                             mode = 1,
+#'                             work_situations = ws,
+#'                             variable_names = ws_vars,
+#'                             additional = to_keep,
+#'                             unique_values = TRUE)
 #' 
 #' ## Associating item identifiers with names and one category
 #' substances <- get_all_items(obs)

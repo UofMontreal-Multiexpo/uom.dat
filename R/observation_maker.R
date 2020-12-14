@@ -1,37 +1,40 @@
+#' @include observation_set.R
+NULL
+
 
 #### Generic functions for structuring observations ####
 
 #' Grouping data
 #' 
-#' Grouping data in the form of observations.
+#' Grouping data into a list of lists called observations.
 #' 
 #' @details
-#' Variables of type \code{factor} are cast to \code{character}.
+#' Variables of type `factor` are coerced to `character`.
 #' 
-#' @param data Data frame containing a set of data to group together.
-#' @param by Variable names included in \code{colnames(data)} used to group the data.
-#'  Each combination of values of these different variables generates one observation.
+#' @param data Data frame containing a set of data to be grouped.
+#' @param by Variable names included in `colnames(data)` used to group the data.
+#'  Each combination of values of these variables generates one observation.
 #' @param additional Names of information to keep when creating observations: vector included in
-#'  \code{colnames(data)}.
+#'  `colnames(data)`.
 #' @param unique_values logical or character.
-#'  \itemize{
-#'    \item{If \code{TRUE}, simplification of the values associated with the variables defined in
-#'          \code{additional} in order to remove duplicates.}
-#'    \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
-#'          these variables for the same line in \code{data} (as many values as there are rows
-#'          grouped).}
-#'    \item{Otherwise, vector of variable names included in \code{colnames(data)} for which the
-#'          removal of duplicates must be performed.}
-#'  }
-#' @return List of observations identified. Each observation is named by the combination of values
-#'  of the variables named in \code{by} that generated it. Each observation is a list whose elements
-#'  correspond to the values of the variables named in \code{by} and \code{additional} which have
-#'  been grouped together.
+#'  * If `TRUE`, simplification of the values associated with the variables defined in `additional`
+#'    in order to remove duplicates.
+#'  * If `FALSE`, keep the duplicates and the correspondence between the values of these variables for
+#'    the same line in `data` (as many values as there are rows grouped).
+#'  * Otherwise, vector of variable names included in `colnames(data)` for which the removal of
+#'    duplicates must be performed.
+#' @param item_key,year_key If the output have to be an `ObservationSet`, names of the variables of `data`
+#'  containing the items of the observations and the year in which the observations were made.
+#' @return List of observations identified or `ObservationSet` class object containing this list
+#'  (depending on whether `item_key` is `NA` or not).
+#'  
+#' Each observation is named by the combination of values of the variables named in `by` that generated
+#'  it. Each observation is a list whose elements correspond to the values of the variables named in `by`
+#'  and `additional` which have been grouped together.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{make_INRS_observations}} for the construction of well-targeted observations
-#'  specific to the field of occupational exposure in relation to inspections and similar work
-#'  situations.
+#' @seealso For the construction of well-targeted observations specific to the field of occupational
+#'  exposure in relation to inspections and similar work situations: [`make_OE_observations`].
 #' 
 #' @examples
 #' to_keep <- c("CODE", "NAME", "ACTIVITY", "JOB.TITLE", "SAMPLE.ID")
@@ -45,8 +48,15 @@
 #' obs_3 <- make_observations(oedb_sample, by = "ID", additional = to_keep,
 #'                            unique_values = to_keep[1:2])
 #' 
+#' ## Make observations as ObservationSet
+#' obs_object <- make_observations(oedb_sample, by = "ID",
+#'                                 additional = c("CODE", "NAME", "YEAR"),
+#'                                 item_key = "CODE", year_key = "YEAR")
+#' 
+#' @md
 #' @export
-make_observations = function(data, by, additional = NULL, unique_values = TRUE) {
+make_observations = function(data, by, additional = NULL, unique_values = TRUE,
+                             item_key = NA, year_key = NA) {
   
   # Regroupement des valeurs des variables "additional" selon les combinaisons possibles de celles de "by"
   # Si unique_values vaut TRUE, aggrégation par la fonction unique() ; c() sinon
@@ -87,72 +97,71 @@ make_observations = function(data, by, additional = NULL, unique_values = TRUE) 
     }
   }
   
-  return(as.list(as.data.frame(t(obs), stringsAsFactors = FALSE)))
+  return(if (is.na(item_key)) as.list(as.data.frame(t(obs), stringsAsFactors = FALSE))
+         else observation.set(as.list(as.data.frame(t(obs), stringsAsFactors = FALSE)),
+                              item_key = item_key, year_key = year_key))
 }
 
 
 
 #### Functions for structuring observations, specific to the Occupational Exposure domain ####
 
-#' Grouping samples
+#' Grouping samples about Occupational Exposure
 #' 
-#' Grouping samples in the form of observations.
+#' Grouping samples into a list of lists (called observations) specifically for the occupational
+#'  exposure domain.
 #' An observation corresponds to a set of substances found in the same work situation during the same
 #'  inspection.
-#' Specific situations are defined by the argument \code{work_situations}.
+#' Specific situations are defined by the argument `work_situations`.
 #' Non-specific situations are described by existing combinations of variables whose names are defnied
-#'  by the argument \code{variable_names}.
+#'  by the argument `variable_names`.
 #' 
-#' @param measures Set of sampling measures. Data frame that must contain at least the following three
-#'  variables:
+#' @param measures Set of sampling measures. Data frame that must contain at least three variables for:
+#'  * An inspection identifier. The measures resulting from the same inspection must have the same
+#'    inspection identifier.
+#'  * A code identifying the substance being sampled.
+#'  * A year of inspection.
+#' @param keys Length-three character vector identifying the names of the three required variables
+#'  in the following order: keys for accessing inspection identifiers; substance codes; years.
+#' @param mode Mode of creation of observations. One of `1`, `2`, `3`.
 #'  \describe{
-#'    \item{\code{ID}}{Inspection identifier. The measures resulting from the same inspection must
-#'          have the same inspection identifier.}
-#'    \item{\code{YEAR}}{Year of inspection.}
-#'    \item{\code{CODE}}{Code identifying the substance being sampled.}
-#'  }
-#' @param mode Mode of creation of observations. One of \code{1}, \code{2}, \code{3}.
-#'  \describe{
-#'    \item{\code{1}}{Construction of observations from the situations described by \code{work_situations}
-#'     and existing situations from combinations of values of variables defined by \code{variable_names}
-#'     that would not be described in \code{work_situations}.}
-#'    \item{\code{2}}{Construction of observations only from the situations described by
-#'     \code{work_situations}. Remaining samples are ignored.}
-#'    \item{\code{3}}{Construction of observations only from combinations of values of variables
-#'     defined by \code{variable_names}.}
+#'    \item{`1`}{Construction of observations from the situations described by `work_situations`
+#'     and existing situations from combinations of values of variables defined by `variable_names`
+#'     that would not be described in `work_situations`.}
+#'    \item{`2`}{Construction of observations only from the situations described by `work_situations`.
+#'     Remaining samples are ignored.}
+#'    \item{`3`}{Construction of observations only from combinations of values of variables defined
+#'     by `variable_names`.}
 #'  }
 #' @param work_situations Description of work situations. Data frame that must contain the values
-#'  associated with certain variables from \code{measures} forming one work situation.
-#'  A \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) column must make possible
-#'  to identify the different associations of values considered to be the same work situation.
+#'  associated with several variables from `measures` forming one work situation.
+#'  One column must make possible to identify the different associations of values considered to be the
+#'  same work situation. This column must be named `WS.ID` (for **W**ork **S**ituation **ID**entifier)
+#'  otherwise the first column is considered to contain such identifiers.
 #' @param variable_names Names of variables to be taken into account to consider a work situation,
-#'  ie. vector of names of variables contained in \code{measures} whose different combinations of
-#'  values form the different work situations not described in \code{work_situations}.
-#' @param additional Names of information to keep when creating observations: vector included in
-#'  \code{colnames(measures)}.
+#'  i.e. vector of names of variables contained in `measures` whose different combinations of
+#'  values form the different work situations not described in `work_situations`.
+#' @param additional Names of information to keep when creating observations (in addition to those given
+#'  by `keys`): vector included in `colnames(measures)`.
 #' @param unique_values logical or character.
-#'  \itemize{
-#'    \item{If \code{TRUE}, simplification of the values associated with the variables defined in
-#'          \code{additional} in order to remove duplicates.}
-#'    \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
-#'          these variables for the same sample (as many values as there are samples).}
-#'    \item{Otherwise, vector of variable names included in \code{colnames(measures)} for which the
-#'          removal of duplicates must be performed.}
-#'  }
-#' @return List of observations identified. Each observation is a list containing:
-#'  \describe{
-#'    \item{\code{CODE}}{The codes identifying the substances grouped together.}
-#'    \item{\code{YEAR}}{The year of the inspection from which the samples are grouped.}
-#'    \item{\code{...}}{Data related to the samples grouped, concerning the variables defined in
-#'                      the argument \code{additional}.}
-#'  }
+#'  * If `TRUE`, simplification of the values associated with the variables defined in
+#'    `additional` in order to remove duplicates.
+#'  * If `FALSE`, keep the duplicates and the correspondence between the values of these variables
+#'    for the same sample (as many values as there are samples).
+#'  * Otherwise, vector of variable names included in `colnames(measures)` for which the removal of
+#'    duplicates must be performed.
+#' @return `ObservationSet` class object containing the list of observations identified.
+#'  Each observation is a list containing:
+#'  * The codes identifying the substances grouped together.
+#'  * The year of the inspection from which the samples are grouped.
+#'  * Data related to the samples grouped, concerning the variables defined in the argument `additional`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{make_observations}}.
+#' @seealso For a more generic way to group data: [`make_observations`].
 #' 
 #' @examples
 #' to_keep <- c("CODE", "NAME", "ACTIVITY", "JOB.TITLE", "SAMPLE.ID")
-#' ws <- data.frame(WS_ID = c(1, 2, 2, 3, 3),
+#' ws <- data.frame(WS.ID = c(1, 2, 2, 3, 3),
 #'                  JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
 #'                  JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
 #'                  stringsAsFactors = FALSE)
@@ -160,46 +169,56 @@ make_observations = function(data, by, additional = NULL, unique_values = TRUE) 
 #' 
 #' ## Make observations from 3 specific work situations and as many other
 #' ## situations as JOB.TITLE, JOB.TASK pairs
-#' obs_1 <- make_INRS_observations(oedb_sample, mode = 1,
-#'                                 work_situations = ws,
-#'                                 variable_names = ws_vars,
-#'                                 additional = to_keep)
+#' obs_1 <- make_OE_observations(oedb_sample, keys = c("ID", "CODE", "YEAR"),
+#'                               mode = 1,
+#'                               work_situations = ws,
+#'                               variable_names = ws_vars,
+#'                               additional = to_keep)
 #' 
 #' ## Make observations from specific work situations only
-#' obs_2 <- make_INRS_observations(oedb_sample, mode = 2,
-#'                                 work_situations = ws,
-#'                                 additional = to_keep)
+#' obs_2 <- make_OE_observations(oedb_sample, keys = c("ID", "CODE", "YEAR"),
+#'                               mode = 2,
+#'                               work_situations = ws,
+#'                               additional = to_keep)
 #' 
 #' ## Make observations where each pair of JOB.TITLE, JOB.TASK is one situation
-#' obs_3 <- make_INRS_observations(oedb_sample, mode = 3,
-#'                                 variable_names = ws_vars,
-#'                                 additional = to_keep)
+#' obs_3 <- make_OE_observations(oedb_sample, keys = c("ID", "CODE", "YEAR"),
+#'                               mode = 3,
+#'                               variable_names = ws_vars,
+#'                               additional = to_keep)
 #' 
+#' @md
 #' @export
-make_INRS_observations = function(measures, mode, work_situations = NULL, variable_names = NULL, additional = NULL, unique_values = TRUE) {
+make_OE_observations = function(measures, keys, mode,
+                                work_situations = NULL, variable_names = NULL,
+                                additional = NULL, unique_values = TRUE) {
   
+  if (length(keys) != 3) stop("keys must be a length-three vector.")
   if (mode > 3 || mode < 1) stop("mode must be 1, 2 or 3.")
-  if ((mode == 1 || mode == 2) & is.null(work_situations)) stop("work_situations must be defined for this mode.")
-  if ((mode == 1 || mode == 3) & is.null(variable_names)) stop("variable_names must be defined for this mode.")
+  if ((mode == 1 || mode == 2) & is.null(work_situations))
+    stop("work_situations must be defined for this mode.")
+  if ((mode == 1 || mode == 3) & is.null(variable_names))
+    stop("variable_names must be defined for this mode.")
   
   # Liste qui contiendra les observations construites
   observations = list()
   # Identifiants des interventions associés aux prélèvements
-  id_interv = unique(measures$ID)
+  id_interv = unique(measures[, keys[1]])
   
   # Spécification d'ajout des identifiants dans les observations
-  additional = c("ID", additional)
-  if (is.logical(unique_values) && !unique_values) unique_values = "ID"
-  else if (!is.logical(unique_values)) unique_values = c("ID", unique_values)
+  additional = c(keys[1], additional)
+  if (is.logical(unique_values) && !unique_values) unique_values = keys[1]
+  else if (!is.logical(unique_values)) unique_values = c(keys[1], unique_values)
   
   # Pour chaque intervention
   for (id_i in id_interv) {
     # Extraction des prélèvements associés à l'intervention en cours de traitement
-    intervention = subset(measures, measures$ID == id_i)
+    intervention = subset(measures, measures[, keys[1]] == id_i)
     
     if (mode == 1 || mode == 2) {
       # Regroupement des prélèvements correspondant à des situations de travail décrites
-      result_mofws = make_obs_from_ws(intervention, work_situations, additional, unique_values)
+      result_mofws = make_obs_from_ws(intervention, keys[-1], work_situations,
+                                      additional, unique_values)
       observations = c(observations, result_mofws$observations)
     }
     
@@ -207,15 +226,19 @@ make_INRS_observations = function(measures, mode, work_situations = NULL, variab
       # Construction d'observations pour les prélèvements restants
       if (!all(result_mofws$processed)) {
         intervention = subset(intervention, !result_mofws$processed)
-        observations = c(observations, make_obs_from_unspecified_ws(intervention, variable_names, additional, unique_values))
+        observations = c(observations,
+                         make_obs_from_unspecified_ws(intervention, keys[-1], variable_names,
+                                                      additional, unique_values))
       }
     } else if (mode == 3) {
       # Regroupement des prélèvements pour chaque combinaisons des variables décrites
-      observations = c(observations, make_obs_from_unspecified_ws(intervention, variable_names, additional, unique_values))
+      observations = c(observations,
+                       make_obs_from_unspecified_ws(intervention, keys[-1], variable_names,
+                                                    additional, unique_values))
     }
   }
   
-  return(observations)
+  return(observation.set(data = observations, item_key = keys[2], year_key = keys[3]))
 }
 
 
@@ -224,52 +247,39 @@ make_INRS_observations = function(measures, mode, work_situations = NULL, variab
 #' Grouping samples in the form of observations: make observations from work situations.
 #' An observation corresponds to a set of substances found in the same work situation.
 #' 
-#' @param measures Set of sampling measures. Data frame that must contain at least the following two
-#'  variables:
-#'  \describe{
-#'    \item{\code{YEAR}}{Year of inspection.}
-#'    \item{\code{CODE}}{Code identifying the substance being sampled.}
-#'  }
-#' @param work_situations Description of work situations. Data frame that must contain the values
-#'  associated with certain variables from \code{measures} forming one work situation.
-#'  A \code{WS_ID} (\strong{W}ork \strong{S}ituation \strong{ID}entifier) column must make possible
-#'  to identify the different associations of values considered to be the same work situation.
-#' @param additional Names of information to keep when creating observations: vector included in
-#'  \code{colnames(measures)}.
-#' @param unique_values logical or character.
-#'  \itemize{
-#'    \item{If \code{TRUE}, simplification of the values associated with the variables defined in
-#'          \code{additional} in order to remove duplicates.}
-#'    \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
-#'          these variables for the same sample (as many values as there are samples).}
-#'    \item{Otherwise, vector of variable names included in \code{colnames(measures)} for which the
-#'          removal of duplicates must be performed.}
-#'  }
+#' @inheritParams make_OE_observations
+#' @param measures Set of sampling measures. Data frame that must contain at least two variables for:
+#'  * A code identifying the substance being sampled.
+#'  * A year of inspection.
+#' @param keys Length-two character vector identifying the names of the two required variables
+#'  in the following order: keys for accessing substance codes; key for accessing years.
 #' @return
 #'  \describe{
-#'    \item{\code{observations}}{List of observations identified.
-#'      Each observation is a list containing:
-#'      \describe{
-#'        \item{\code{CODE}}{The codes identifying the substances grouped together.}
-#'        \item{\code{YEAR}}{The year of the inspection from which the samples are grouped.}
-#'        \item{\code{...}}{Data related to the samples grouped, concerning the variables defined in
-#'                          the argument \code{additional}.}
+#'    \item{`observations`}{List of observations identified. Each observation is a list containing:
+#'      \itemize{
+#'        \item{The codes identifying the substances grouped together.}
+#'        \item{The year of the inspection from which the samples are grouped.}
+#'        \item{Data related to the samples grouped, concerning the variables defined in the argument
+#'              `additional`.}
 #'      }
 #'    }
-#'    \item{\code{processed}}{Vector specifying for each line of \code{measures} whether it has been
-#'                            included in an observation.}
+#'    \item{`processed`}{Vector specifying for each line of `measures` whether it has been included in
+#'                       an observation.}
 #'  }
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{make_observations}}, \code{\link{make_obs_from_unspecified_ws}}.
+#' @seealso [`make_OE_observations`], [`make_obs_from_unspecified_ws`].
+#' @md
 #' @keywords internal
-make_obs_from_ws = function(measures, work_situations, additional = NULL, unique_values = TRUE) {
+make_obs_from_ws = function(measures, keys, work_situations,
+                            additional = NULL, unique_values = TRUE) {
   
   # Vecteur spécifiant pour chaque prélèvement s'il a été traité ou non
   processed = rep_len(FALSE, nrow(measures))
   
   # Noms des varibles servant à la définition d'une situation de travail
-  ID_index = which(colnames(work_situations) == "WS_ID")
+  ID_index = which(colnames(work_situations) == "WS.ID")
+  if (length(ID_index) == 0) ID_index = 1
   variable_names = colnames(work_situations)[-ID_index]
   
   # Noms des variables à regrouper avec unique() et des variables à regrouper avec c()
@@ -285,11 +295,11 @@ make_obs_from_ws = function(measures, work_situations, additional = NULL, unique
   n_obs = 0
   
   # Pour chaque situation de travail
-  for (id_s in unique(work_situations$WS_ID)) {
-    situation = subset(work_situations, work_situations$WS_ID == id_s)
+  for (id_s in unique(work_situations[, ID_index])) {
+    situation = subset(work_situations, work_situations[, ID_index] == id_s)
     
-    CODE = c()
-    YEAR = c()
+    codes = c()
+    years = c()
     informations = rep(list(NULL), length(additional))
     names(informations) = additional
     
@@ -306,23 +316,23 @@ make_obs_from_ws = function(measures, work_situations, additional = NULL, unique
       
       if (nrow(sub) != 0) {
         # Combinaison des substances aux précédentes
-        CODE = unique(c(CODE, sub$CODE))
-        YEAR = unique(c(YEAR, sub$YEAR))
+        codes = unique(c(codes, sub[, keys[1]]))
+        years = unique(c(years, sub[, keys[2]]))
         
         # Gestion des données supplémentaires
         for (var in var_unique) informations[[var]] = unique(c(informations[[var]], sub[, var]))
         for (var in var_c) informations[[var]] = c(informations[[var]], sub[, var])
         
-        # Définition de ces prélèvements comme ayant une correspondance avec les situations de travail décrites
+        # Confirmation de correspondance entre ces prélèvements et les situations de travail décrites
         processed[to_select] = TRUE
       }
     }
     
-    if(length(CODE) != 0) {
+    if(length(codes) != 0) {
       # Une observation supplémentaire
       n_obs = n_obs + 1
-      observations[[n_obs]] = c(list(CODE = CODE, YEAR = YEAR),
-                                informations)
+      observations[[n_obs]] = c(list(codes, years), informations)
+      names(observations[[n_obs]])[c(1,2)] = keys
     }
   }
   
@@ -337,481 +347,35 @@ make_obs_from_ws = function(measures, work_situations, additional = NULL, unique
 #' These situations are described by the possible combinations of values of the variables whose names
 #'  are defined in arguments.
 #' 
-#' @param measures Set of sampling measures. Data frame that must contain at least the following
-#'  two variables:
-#'  \describe{
-#'    \item{\code{YEAR}}{Year of inspection.}
-#'    \item{\code{CODE}}{Code identifying the substance being sampled.}
-#'  }
+#' @inheritParams make_obs_from_ws
 #' @param variable_names Names of variables to be taken into account to consider a work situation,
-#'  ie. vector of names of variables contained in \code{measures} whose different combinations of
-#'  values form the different work situations.
-#' @param additional Names of information to keep when creating observations: vector included in
-#'  \code{colnames(measures)}.
-#' @param unique_values logical or character.
-#'  \itemize{
-#'    \item{If \code{TRUE}, simplification of the values associated with the variables defined in
-#'          \code{additional} in order to remove duplicates.}
-#'    \item{If \code{FALSE}, keep the duplicates and the correspondence between the values of
-#'          these variables for the same sample (as many values as there are samples).}
-#'    \item{Otherwise, vector of variable names included in \code{colnames(measures)} for which the
-#'          removal of duplicates must be performed.}
-#'  }
+#'  ie. vector of names of variables contained in `measures` whose different combinations of values
+#'  form the different work situations.
 #' @return List of observations identified. Each observation is a list containing:
-#'    \describe{
-#'      \item{\code{CODE}}{The codes identifying the substances grouped together.}
-#'      \item{\code{YEAR}}{The year of the inspection from which the samples are grouped.}
-#'      \item{\code{...}}{Data related to the samples grouped, concerning the variables defined in
-#'                        the argument \code{additional}.}
-#'    }
+#'  * The codes identifying the substances grouped together.
+#'  * The year of the inspection from which the samples are grouped.
+#'  * Data related to the samples grouped, concerning the variables defined in the argument `additional`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{make_observations}}, \code{\link{make_obs_from_ws}}.
+#' @seealso [`make_OE_observations`], [`make_obs_from_ws`].
+#' @md
 #' @keywords internal
-make_obs_from_unspecified_ws = function(measures, variable_names, additional = NULL, unique_values = TRUE) {
+make_obs_from_unspecified_ws = function(measures, keys, variable_names,
+                                        additional = NULL, unique_values = TRUE) {
   
   # Ensemble des situations de travail effectives
   situations = unique(measures[, variable_names])
+  
   # Ajout d'un identifiant quelconque à chacune
   if (length(variable_names) == 1) {
-    ws = data.frame(WS_ID = seq_along(situations))
+    ws = data.frame(WS.ID = seq_along(situations))
     ws[, variable_names] = situations
   } else {
-    ws = cbind(WS_ID = seq_len(nrow(situations)), situations)
+    ws = cbind(WS.ID = seq_len(nrow(situations)), situations)
   }
   
   # Observations associées aux situations de travail
-  return(make_obs_from_ws(measures, ws, additional, unique_values)$observations)
-}
-
-
-
-#### Functions for search in an observation structure ####
-
-#' Search all items
-#' 
-#' Extract all the items contained in the observations.
-#' 
-#' @param observations List of observations on which to do the search.
-#' @param key Access key to the items in an observation.
-#' @return Vector of all unique items.
-#' 
-#' @author Gauthier Magnin
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
-#' get_all_items(obs)
-#' 
-#' @export
-get_all_items = function(observations, key = "CODE") {
-  
-  if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
-  
-  return(sort(unique(unlist(sapply(observations, "[", key)))))
-}
-
-
-#' Search for complex observations
-#' 
-#' Extract the observations containing more than one item.
-#' 
-#' @param observations List of observations on which to do the search.
-#' @param key Access key to the items in an observation.
-#' @return Subset of the list of observations that contain more than one item.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{get_simple_obs}}, \code{\link{get_obs_from_items}}, \code{\link{get_obs_from_info}}.
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
-#' get_complex_obs(obs)
-#' 
-#' @export
-get_complex_obs = function(observations, key = "CODE") {
-  
-  if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
-  
-  index = which(sapply(lapply(observations, "[[", key), function (x) length(x) > 1))
-  extraction = observations[index]
-  
-  return(stats::setNames(extraction, index))
-}
-
-
-#' Search for simple observations
-#' 
-#' Extract the observations containing exactly one item.
-#' 
-#' @param observations List of observations on which to do the search.
-#' @param key Access key to the items in an observation.
-#' @return Subset of the list of observations that contain exactly one item.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{get_complex_obs}}, \code{\link{get_obs_from_items}}, \code{\link{get_obs_from_info}}.
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
-#' get_simple_obs(obs)
-#' 
-#' @export
-get_simple_obs = function(observations, key = "CODE") {
-  
-  if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
-  
-  index = which(sapply(lapply(observations, "[[", key), function (x) length(x) == 1))
-  extraction = observations[index]
-  
-  return(stats::setNames(extraction, index))
-}
-
-
-#' Search for observations by item
-#' 
-#' Extract the observations containing one or more sought items.
-#' 
-#' @param observations List of observations on which to do the search.
-#' @param items Sought items.
-#' @param presence Item presence condition for an observation to be extracted.
-#'  One of \code{"all"}, \code{"any"}, \code{"exact"}.
-#'  \describe{
-#'    \item{\code{"all"}}{All the sought items must be part of an observation for this
-#'                        observation to be extracted.}
-#'    \item{\code{"any"}}{At least one of the sought items must be part of an observation for
-#'                        this observation to be extracted.}
-#'    \item{\code{"exact"}}{The item set contained in an observation must be exactly the same as the
-#'                          sought item set for this observation to be extracted.}
-#'  }
-#' @param key Access key to the items in an observation.
-#' @return Subset of the list of observations that match the search criteria.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_info}}.
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
-#' get_obs_from_items(obs, items = c(25, 192), presence = "all")
-#' get_obs_from_items(obs, items = c(25, 192), presence = "any")
-#' get_obs_from_items(obs, items = c(25, 192), presence = "exact")
-#' 
-#' @export
-get_obs_from_items = function(observations, items, presence = "all", key = "CODE") {
-  
-  if (!(presence %in% c("all", "any", "exact"))) stop("presence must be \"all\", \"any\" or \"exact\".")
-  if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
-  
-  if (presence == "exact") {
-    index = which(sapply(lapply(observations, "[[", key), function(x) setequal(items, x)))
-    
-  } else {
-    func = if (presence == "all") all else any
-    index = which(sapply(lapply(observations, "[[", key), function(x) func(items %in% x)))
-  }
-  
-  return(stats::setNames(observations[index], index))
-}
-
-
-#' Search for observations by specific information
-#' 
-#' Extract the observations whose information matches to one or more sought information.
-#' 
-#' @param observations List of observations on which to do the search.
-#' @param info Named list of sought information. Element names must refer to the names of variables
-#'  contained in the observations and values must correspond to the sought values for these variables.
-#' @param presence Information presence condition for an observation to be extracted.
-#'  One of \code{"all"}, \code{"any"}.
-#'  \describe{
-#'   \item{\code{"all"}}{All the sought information must be part of an observation for this
-#'                       observation to be extracted.}
-#'   \item{\code{"any"}}{At least one of the sought information must be part of an observation
-#'                       for this observation to be extracted.}
-#'  }
-#' @return Subset of the list of observations that match the search criteria.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{get_complex_obs}}, \code{\link{get_simple_obs}}, \code{\link{get_obs_from_items}}.
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID",
-#'                          additional = c("CODE", "NAME", "JOB.TITLE", "JOB.TASK"))
-#' 
-#' get_obs_from_info(obs, info = list(JOB.TITLE = 44132001,
-#'                                    JOB.TASK = "A8310"))
-#' 
-#' @export
-get_obs_from_info = function(observations, info, presence = "all") {
-  
-  if (!(presence %in% c("all", "any"))) stop("presence must be \"all\" or \"any\".")
-  func = if (presence == "all") all else any
-  
-  if (length(info) == 0) return(observations)
-  
-  # Vérification de la correspondance de chaque argument dans chaque observation
-  correspondence = sapply(info,
-                          function(arg) {
-                            lapply(sapply(observations, "[[", names(info)[parent.frame()$i[]]),
-                                   function(o) arg %in% o)
-                          })
-  
-  # Indices des observations correspondant aux critères
-  if (length(info) == 1 && length(info[[1]]) == 1) {
-    index = unlist(correspondence)
-  } else {
-    # Unlist indépendant pour chaque argument, nécessaire car certaines observations regroupent
-    # plusieurs valeurs pour une même variable
-    index = apply(t(apply(correspondence, 1, unlist)), 1, func)
-  }
-  
-  return(stats::setNames(observations[index], which(index)))
-}
-
-
-#' Search for items by specific information
-#' 
-#' Retrieve the items associated with observations whose information matches to one or more sought
-#'  information.
-#' 
-#' @param observations List of observations on which to do the search.
-#' @param info Named list of sought information. Element names must refer to the names of variables
-#'  contained in the observations and values must correspond to the sought values for these variables.
-#' @param presence Information presence condition for an item to be extracted from an observation.
-#'  One of \code{"all"}, \code{"any"}.
-#'  \describe{
-#'   \item{\code{"all"}}{All the sought information must be part of an observation for its items to
-#'                       be extracted.}
-#'   \item{\code{"any"}}{At least one of the sought information must be part of an observation for
-#'                       its items to be extracted.}
-#'  }
-#' @param additional Names of additional information to extract during the search.
-#' @param key Access key to the items in an observation.
-#' @return Vector of the item codes corresponding to the search if \code{additional} is
-#'  equal to \code{NULL}. List of codes and information requested otherwise.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{get_all_items}}, \code{\link{get_info_from_items}}.
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID",
-#'                          additional = c("CODE", "NAME",
-#'                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
-#' 
-#' get_items_from_info(obs, info = list(JOB.TITLE = 44132017))
-#' get_items_from_info(obs, info = list(JOB.TITLE = 44132017),
-#'                     additional = "SAMPLE.ID")
-#' 
-#' @export
-get_items_from_info = function(observations, info, presence = "all", additional = NULL, key = "CODE") {
-  
-  if (!(key %in% names(observations[[1]]))) stop("key must be an existing key in each observation.")
-  
-  # Observations correspondant aux critères
-  obs = get_obs_from_info(observations, info, presence = presence)
-  
-  # Vecteur des items
-  if (is.null(additional)) {
-    items = unique(unlist(lapply(obs, "[", key)))
-    return(sort(items))
-  }
-  
-  # Liste des items et données demandées
-  items = c(list(CODE = sort(unique(unlist(lapply(obs, "[[", key))))),
-            lapply(additional, function(a) sort(unique(unlist(lapply(obs, "[[", a))))))
-  return(stats::setNames(items, c(key, additional)))
-}
-
-
-#' Search for information by item
-#' 
-#' Retrieve information associated with observations that contain a set of sought items.
-#' 
-#' @param observations List of observations on which to do the search.
-#' @param items Sought items.
-#' @param info_names Names of information to extract from observations.
-#' @param presence Item presence condition for information to be extracted from an observation.
-#' One of \code{"all"}, \code{"any"}, \code{"exact"}.
-#'  \describe{
-#'   \item{\code{"all"}}{All the sought items must be part of an observation for its information
-#'                       to be extracted.}
-#'   \item{\code{"any"}}{At least one of the sought items must be part of an observation for its
-#'                       information to be extracted.}
-#'    \item{\code{"exact"}}{The item set contained in an observation must be exactly the same as the
-#'                          sought item set for this observation to be extracted.}
-#'  }
-#' @param key Access key to the items in an observation.
-#' @return Vector or list of information corresponding to the search.
-#'  Vector if only one type of information is to be extracted. List otherwise.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{get_items_from_info}}, \code{\link{get_all_items}}.
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID",
-#'                          additional = c("CODE", "NAME", "JOB.TITLE", "JOB.TASK"))
-#' get_info_from_items(obs, items = 3146, info_names = c("JOB.TITLE", "JOB.TASK"))
-#' 
-#' @export
-get_info_from_items = function(observations, items, info_names, presence = "all", key = "CODE") {
-  
-  # Observations contenant le ou les items recherchés
-  obs = get_obs_from_items(observations, items, presence, key)
-  
-  # Vecteur de la variable demandée
-  if (length(info_names) == 1) return(sort(unique(unlist(sapply(obs, "[", info_names)))))
-  
-  # Liste des variables demandées
-  to_return = lapply(info_names, function(var) sort(unique(unlist(lapply(obs, "[[", var)))))
-  return(stats::setNames(to_return, info_names))
-}
-
-
-
-#### Functions for computations on observations ####
-
-#' Complexity Ratio, by item
-#' 
-#' For each item, compute the ratio between the number of complex observations containing the item and
-#'  the total number of observations containing the item. In other words, compute the complement of the
-#'  ratio between the number of times the item appears alone and the number of times the item appears.
-#' 
-#' @param observations List of observations.
-#' @param items Items for which to compute the complexity ratio. The default `NULL` means to compute
-#'  it for each existing item.
-#' @param key Access key to the items in an observation.
-#' @return Vector of complexity ratios: for each item, the proportion of complex observations containing
-#'  it among all observations containing it.
-#' 
-#' @author Gauthier Magnin
-#' @seealso [`complexity_index`], [`co_occurrence_matrix`],
-#'          [`get_all_items`], [`get_obs_from_items`], [`get_complex_obs`], [`get_simple_obs`].
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
-#' complexity_ratio(obs)
-#' complexity_ratio(obs, items = c(25, 148, 3146))
-#' 
-#' @md
-#' @export
-complexity_ratio = function(observations, items = NULL, key = "CODE") {
-  
-  if (is.null(items)) items = get_all_items(observations, key)
-  
-  # Pour chaque item, nombre d'observations complexes contenant l'item / nombre d'obs contenant l'item
-  return(sapply(items,
-                function(item) {
-                  obs_item = get_obs_from_items(observations, item, key = key)
-                  return(stats::setNames(length(get_complex_obs(obs_item, key)) / length(obs_item), item))
-                }))
-}
-
-
-#' Complexity Index, by item
-#' 
-#' For each item, count the number of complex observations containing the item.
-#' 
-#' @param observations List of observations.
-#' @param items Items for which to calculate the complexity index. The default `NULL` means to calculate
-#'  it for each existing item.
-#' @param key Access key to the items in an observation.
-#' @return Vector of complexity indexes: for each item, the number of complex observations containing it.
-#' 
-#' @author Gauthier Magnin
-#' @seealso [`complexity_ratio`], [`co_occurrence_matrix`],
-#'          [`get_all_items`], [`get_obs_from_items`], [`get_complex_obs`], [`get_simple_obs`].
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
-#' complexity_index(obs)
-#' complexity_index(obs, items = c(19, 25, 148))
-#' 
-#' @md
-#' @export
-complexity_index = function(observations, items = NULL, key = "CODE") {
-  
-  if (is.null(items)) items = get_all_items(observations, key)
-  
-  # Pour chaque item, nombre d'observations complexes parmi les observations contenant l'item
-  return(sapply(items,
-                function(item)
-                  stats::setNames(length(
-                    get_complex_obs(get_obs_from_items(observations, item, key = key), key)
-                  ), item)))
-}
-
-
-#' Co-occurrence matrix
-#' 
-#' Build the co-occurrence matrix: the matrix of the number of observations containing a specific pair of
-#'  items, for each possible pair. The diagonal is the number of observations containing each specific
-#'  item.
-#' 
-#' @param observations List of observations.
-#' @param items Items for which to count co-occurrences between pairs. The default `NULL` means to count
-#'  them considering each existing item.
-#' @param key Access key to the items in an observation.
-#' @return Co-occurrence matrix between each pair of items.
-#' 
-#' @author Gauthier Magnin
-#' @seealso [`complexity_ratio`], [`complexity_index`],
-#'          [`get_all_items`], [`get_obs_from_items`], [`get_complex_obs`], [`get_simple_obs`].
-#' 
-#' @examples
-#' obs <- make_observations(oedb_sample, by = "ID", additional = c("CODE", "NAME"))
-#' co_occurrence_matrix(obs)
-#' co_occurrence_matrix(obs, items = c(19, 25, 148, 3146))
-#' 
-#' @md
-#' @export
-co_occurrence_matrix = function(observations, items = NULL, key = "CODE") {
-  
-  if (is.null(items)) items = get_all_items(observations, key)
-  
-  # Pour chaque pair d'items, recherche du nombre d'observations dans lesquelles la paire apparaît
-  pairs = combn(items, 2)
-  co = apply(pairs, 2, function(pair) length(get_obs_from_items(observations, pair, key = key)))
-  
-  # Création d'une matrice qui correspondra à la table de contingence
-  co_table = matrix(nrow = length(items), ncol = length(items))
-  rownames(co_table) = colnames(co_table) = items
-  
-  # Conversion en caractère des identifiants des items pour accès à la matrice
-  pairs = apply(pairs, c(1,2), as.character)
-  
-  # Remplissage de la matrice
-  for (c in seq_len(ncol(pairs))) {
-    co_table[pairs[1, c], pairs[2, c]] = co[c]
-    co_table[pairs[2, c], pairs[1, c]] = co[c]
-  }
-  diag(co_table) = table_on_list(lapply(observations, "[[", key))[as.character(items)]
-  
-  return(co_table)
-}
-
-
-
-#### Observations coerce functions ####
-
-#' Turn observations into arules transactions
-#' 
-#' Turn a set of observations into a set of \code{\link[arules:transactions-class]{transactions}} from
-#'  the package \code{arules}.
-#' Only the items of the observations are considered. Other data are ignored.
-#' 
-#' @param observations List of observations to turn into \code{arules} transactions.
-#' @param key Access key to the items in an observation.
-#' @return Set of transactions: \code{\link[arules:transactions-class]{transactions}} class object from
-#'  the package \code{arules}.
-#' 
-#' @author Gauthier Magnin
-#' @keywords internal
-turn_obs_into_transactions = function(observations, key = "CODE") {
-  
-  # Liste des items retrouvés pour chaque observation et vecteurs des identifiants des items
-  data = sapply(sapply(observations, "[", key), as.character)
-  labels = as.character(get_all_items(observations, key))
-  
-  # Transformation en objet arules::itemMatrix puis en objet arules::transaction :
-  # une ligne par observation, une colonne par item
-  return(methods::as(arules::encode(data, labels), "transactions"))
+  return(make_obs_from_ws(measures, keys, ws, additional, unique_values)$observations)
 }
 
 

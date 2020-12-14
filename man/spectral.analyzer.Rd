@@ -17,11 +17,14 @@ spectral.analyzer(
 )
 }
 \arguments{
-\item{observations}{List of observations containing the items corresponding to each observation.
-Each observation is itself a list containing at least two elements named \code{"CODE"} and
-\code{"YEAR"}. \code{"YEAR"} must be numeric and \code{"CODE"} must be character or numeric values.
-Values of \code{CODE} must not contain the character \code{"/"}.
-An observation can contain any additional information in its list.}
+\item{observations}{\code{ObservationSet} class object: list of observations containing the items
+corresponding to each one. Each observation is itself a list containing at least two elements
+representing items and temporal data. It can contain any additional information but such data will
+be ignored.
+
+Items must be character or numeric values and must not contain the character \code{"/"}.
+Temporal data must correspond to the years in which the observations were made and must be numeric
+values.}
 
 \item{items}{Data frame associating a name (column \code{name}) and possibly one or more categories
 (additional columns) to each item (column \code{item}). Each category must be of type \code{factor}.
@@ -55,8 +58,7 @@ Create and initialize an object of class \code{SpectralAnalyzer}.
 }
 \details{
 If items are not specified using the argument \code{items}, they are automatically listed from
- the values of \code{CODE} in the argument \code{observations} without any categorization or
- specific denomination.
+ the \code{observations} without any categorization or specific denomination.
 
 The type of patterns mined can be:
  \itemize{
@@ -108,12 +110,13 @@ The following steps may be quite long (depending on the case):
 ## Creating a SpectralAnalyzer from a list of observations
 obs <- make_observations(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME", "YEAR"))
+obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
 
-sa_object_1 <- spectral.analyzer(obs)
+sa_object_1 <- spectral.analyzer(obs_object)
 
 ## Creating a SpectralAnalyzer after associating item identifiers with
 ## names and one category
-items_ids <- get_all_items(obs)
+items_ids <- get_all_items(obs_object)
 category_1 <- substances_information[match(items_ids,
                                            substances_information$CODE),
                                      "SUBFAMILY"]
@@ -123,7 +126,7 @@ names <- substances_information[match(items_ids,
                                 "NAME"]
 
 items <- data.frame(item = items_ids, name = names, family = category_1)
-sa_object_2 <- spectral.analyzer(obs, items)
+sa_object_2 <- spectral.analyzer(obs_object, items)
 
 }
 \seealso{

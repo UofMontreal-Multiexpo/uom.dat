@@ -27,35 +27,41 @@ Datasets used as examples:
 
 * [oedb_sample](../html/oedb_sample.html)
 * [substances_information](../html/substances_information.html)
+* [OS_instance](../html/OS_instance.html)
 * [SA_instance](../html/SA_instance.html)
 
 
 
 # About observations
 
-Making observations:
+The class: [ObservationSet](../html/ObservationSet-class.html)
 
+Making *ObservationSet* objects:
+
+* [observation.set](../html/observation.set.html)
 * [make_observations](../html/make_observations.html)
-* [make_INRS_observations](../html/make_INRS_observations.html)
-
-Search for observations:
-
-* [get_complex_obs](../html/get_complex_obs.html)
-* [get_simple_obs](../html/get_simple_obs.html)
-* [get_obs_from_items](../html/get_obs_from_items.html)
-* [get_obs_from_info](../html/get_obs_from_info.html)
+* [make_OE_observations](../html/make_OE_observations.html)
+* [\[](../html/sub-ObservationSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-ObservationSet-ANY-ANY-ANY-method.html)
 
 Search in observations:
 
-* [get_all_items](../html/get_all_items.html)
-* [get_items_from_info](../html/get_items_from_info.html)
-* [get_info_from_items](../html/get_info_from_items.html)
+* [get_all_items](../html/get_all_items-ObservationSet-method.html)
+* [get_itemsets](../html/get_itemsets-ObservationSet-method.html)
+* [get_items_from_info](../html/get_items_from_info-ObservationSet-method.html)
+* [get_info_from_items](../html/get_info_from_items-ObservationSet-method.html)
+
+Search for observations:
+
+* [get_complex_obs](../html/get_complex_obs-ObservationSet-method.html)
+* [get_simple_obs](../html/get_simple_obs-ObservationSet-method.html)
+* [get_obs_from_items](../html/get_obs_from_items-ObservationSet-method.html)
+* [get_obs_from_info](../html/get_obs_from_info-ObservationSet-method.html)
 
 Computations on observations:
 
-* [complexity_ratio](../html/complexity_ratio.html)
-* [complexity_index](../html/complexity_index.html)
-* [co_occurrence_matrix](../html/co_occurrence_matrix.html)
+* [complexity_ratio](../html/complexity_ratio-ObservationSet-method.html)
+* [complexity_index](../html/complexity_index-ObservationSet-method.html)
+* [co_occurrence_matrix](../html/co_occurrence_matrix-ObservationSet-method.html)
 
 Making charts about observations:
 

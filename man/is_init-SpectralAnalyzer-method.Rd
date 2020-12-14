@@ -44,7 +44,8 @@ The initialization of the links between patterns consists of the initialization 
 ## Creating a SpectralAnalyzer and initialize some parts of it
 obs <- make_observations(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME", "YEAR"))
-sa_object <- spectral.analyzer(obs, init = FALSE)
+obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
+sa_object <- spectral.analyzer(obs_object, init = FALSE)
 init(sa_object, "nodes")
 init(sa_object, "node_links")
 

@@ -46,10 +46,11 @@ Foremost, we will create a list of observations as presented in the document "Sp
 library(oedb.analysis.tools)
 
 # Creation of specific observations
-observations <- make_INRS_observations(
+observations <- make_OE_observations(
   oedb_sample,
+  keys = c("ID", "CODE", "YEAR"),
   mode = 1,
-  work_situations = data.frame(WS_ID = c(1, 2, 2, 3, 3),
+  work_situations = data.frame(WS.ID = c(1, 2, 2, 3, 3),
                                JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
                                JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
                                stringsAsFactors = FALSE),
@@ -61,14 +62,14 @@ observations <- make_INRS_observations(
 
 An observation contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession carried out for which the environment has been sampled. An observation looks like that:
 ```{r}
-observations[[2]]
+observations[2]
 ```
 Here we can see an observation composed by 3 samples having the `SAMPLE.ID`s 18, 1 and 21 corresponding to the substances having the `CODE`s 57 and 77. The concentration values for these samples are respectively 0.007, 0.004 and 0.05.
 
 
 Now we will separate the concentration values and name them with the substances they correspond to. We will have a list of named values which will have the same length as the list of observations:
 ```{r}
-concentration_values <- lapply(observations,
+concentration_values <- lapply(observations["data"],
                                function(obs) setNames(obs$CONCENTRATION, obs$NAME))
 
 # Let's print the second element of the new list,
@@ -436,12 +437,12 @@ Then, the temporal trend of one indicator, for instance the hazard index:
 ```{r}
 # Use of the year information associated with the concentration values
 # in the original observations
-cor(x = sapply(observations, "[[", "YEAR"),
+cor(x = unlist(observations["YEAR"]),
     y = mcr_s$HI)
 ```
 
 ```{r}
-plot(x = sapply(observations, "[[", "YEAR"),
+plot(x = unlist(observations["YEAR"]),
      y = mcr_s$HI)
 ```
 
@@ -822,34 +823,40 @@ Datasets used as examples:
 
 * [oedb_sample](../html/oedb_sample.html)
 * [substances_information](../html/substances_information.html)
+* [OS_instance](../html/OS_instance.html)
 * [SA_instance](../html/SA_instance.html)
 
 
 ## About observations
 
-Making observations:
+The class: [ObservationSet](../html/ObservationSet-class.html)
 
+Making *ObservationSet* objects:
+
+* [observation.set](../html/observation.set.html)
 * [make_observations](../html/make_observations.html)
-* [make_INRS_observations](../html/make_INRS_observations.html)
-
-Search for observations:
-
-* [get_complex_obs](../html/get_complex_obs.html)
-* [get_simple_obs](../html/get_simple_obs.html)
-* [get_obs_from_items](../html/get_obs_from_items.html)
-* [get_obs_from_info](../html/get_obs_from_info.html)
+* [make_OE_observations](../html/make_OE_observations.html)
+* [\[](../html/sub-ObservationSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-ObservationSet-ANY-ANY-ANY-method.html)
 
 Search in observations:
 
-* [get_all_items](../html/get_all_items.html)
-* [get_items_from_info](../html/get_items_from_info.html)
-* [get_info_from_items](../html/get_info_from_items.html)
+* [get_all_items](../html/get_all_items-ObservationSet-method.html)
+* [get_itemsets](../html/get_itemsets-ObservationSet-method.html)
+* [get_items_from_info](../html/get_items_from_info-ObservationSet-method.html)
+* [get_info_from_items](../html/get_info_from_items-ObservationSet-method.html)
+
+Search for observations:
+
+* [get_complex_obs](../html/get_complex_obs-ObservationSet-method.html)
+* [get_simple_obs](../html/get_simple_obs-ObservationSet-method.html)
+* [get_obs_from_items](../html/get_obs_from_items-ObservationSet-method.html)
+* [get_obs_from_info](../html/get_obs_from_info-ObservationSet-method.html)
 
 Computations on observations:
 
-* [complexity_ratio](../html/complexity_ratio.html)
-* [complexity_index](../html/complexity_index.html)
-* [co_occurrence_matrix](../html/co_occurrence_matrix.html)
+* [complexity_ratio](../html/complexity_ratio-ObservationSet-method.html)
+* [complexity_index](../html/complexity_index-ObservationSet-method.html)
+* [co_occurrence_matrix](../html/co_occurrence_matrix-ObservationSet-method.html)
 
 Making charts about observations:
 
