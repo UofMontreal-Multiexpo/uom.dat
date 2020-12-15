@@ -5,7 +5,7 @@
 \alias{[,ObservationSet-method}
 \alias{[<-,ObservationSet,ANY,ANY,ANY-method}
 \alias{[<-,ObservationSet-method}
-\title{Extract or replace parts of a ObservationSet object}
+\title{Extract or replace parts of an object of class ObservationSet}
 \usage{
 \S4method{[}{ObservationSet,ANY,ANY,ANY}(x, i, j, drop)
 

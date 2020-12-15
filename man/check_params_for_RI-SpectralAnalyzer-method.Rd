@@ -8,7 +8,7 @@
 \S4method{check_params_for_RI}{SpectralAnalyzer}(object, t, period)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{t}{Year of the end of the period, i.e. the date on which to characterize the patterns.
 \code{NULL} specifies that the characterization must be done in relation to the last year covered

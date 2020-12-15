@@ -21,7 +21,7 @@
 \S4method{is_init_pattern_links}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 }
 \value{
 \code{TRUE} if the related attributes are initialized. \code{FALSE} otherwise.

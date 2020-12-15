@@ -8,7 +8,7 @@
 \S4method{get_links}{SpectralAnalyzer}(object, nopc)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 \strong{c}haracteristics. Nodes or patterns whose links are be to sought. Any subset of

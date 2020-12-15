@@ -15,7 +15,7 @@
 )
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{target}{Type of patterns to enumerate. One of \code{"frequent itemsets"},
 \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.}
@@ -27,8 +27,8 @@
 \item{max_length}{Maximum number of items that a pattern must have to be kept when mining patterns.
 The default \code{Inf} corresponds to a pattern search without maximum size limit.}
 
-\item{arules}{If \code{TRUE}, patterns are returned as object of class
-\code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.}
+\item{arules}{If \code{TRUE}, patterns are returned as an object of class
+\code{\link{arules:itemsets-class}{itemsets}} from the package \code{arules}.}
 }
 \value{
 Invisible. Object of class \code{itemsets} or data frame in which a line is an association

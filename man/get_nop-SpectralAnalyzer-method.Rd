@@ -8,7 +8,7 @@
 \S4method{get_nop}{SpectralAnalyzer}(object, nop, entities = SpectralAnalyzer.NODES_OR_PATTERNS)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{nop}{List of \strong{n}odes \strong{o}r \strong{p}atterns or one of the following character values:
 \code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}.}
@@ -20,8 +20,8 @@
 List of nodes or patterns corresponding to the arguments.
 }
 \description{
-Find and return the list corresponding to the nodes or the patterns of the \code{SpectralAnalyzer}
-object, or return the given list.
+Find and return the list corresponding to the nodes or the patterns of the object of class
+\code{SpectralAnalyzer}, or return the given list.
 }
 \details{
 If \code{nop} is a list, it is returned.

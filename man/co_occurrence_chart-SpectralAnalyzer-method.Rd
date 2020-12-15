@@ -27,7 +27,7 @@
 )
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{items}{Items for which to count co-occurrences between pairs and to plot on the graph.
 Any subset of \code{object["items"]}.\cr

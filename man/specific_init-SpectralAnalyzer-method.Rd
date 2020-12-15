@@ -21,7 +21,7 @@
 \S4method{init_pattern_links}{SpectralAnalyzer}(object, verbose = TRUE)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{verbose}{Logical value indicating whether to report progress.}
 }

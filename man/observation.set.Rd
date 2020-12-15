@@ -21,7 +21,7 @@ the list corresponding to an observation).}
 New object of class \code{ObservationSet}.
 }
 \description{
-Create and initialize an object of class \code{ObservationSet}.
+Create and initialize an S4 object of class \code{ObservationSet}.
 }
 \details{
 Observations do not necessarily require temporal data since \code{year_key} is not required.

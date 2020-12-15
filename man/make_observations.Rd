@@ -36,7 +36,7 @@ duplicates must be performed.
 containing the items of the observations and the year in which the observations were made.}
 }
 \value{
-List of observations identified or \code{ObservationSet} class object containing this list
+List of observations identified or S4 object of class \code{ObservationSet} containing this list
 (depending on whether \code{item_key} is \code{NA} or not).
 
 Each observation is named by the combination of values of the variables named in \code{by} that generated

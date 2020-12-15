@@ -8,7 +8,7 @@
 \S4method{check_init}{SpectralAnalyzer}(object, part = NULL, stop = TRUE, prefix = "", suffix = "")
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{part}{\code{NULL} or character value corresponding to the part of the attributes to test.
 One or more of the following:
@@ -37,7 +37,7 @@ If \code{part} is \code{NULL}, 4 logical values corresponding to the initializat
 \code{node_links}, \code{patterns}, \code{pattern_links} (in this order).
 }
 \description{
-Check that a part of a \code{SpectralAnalyzer} object is initialized.
+Check that a part of an object of class \code{SpectralAnalyzer} is initialized.
 Stop the execution and print an error message if not.
 }
 \details{

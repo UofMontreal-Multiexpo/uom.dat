@@ -25,7 +25,7 @@ NULL
 #'    duplicates must be performed.
 #' @param item_key,year_key If the output have to be an `ObservationSet`, names of the variables of `data`
 #'  containing the items of the observations and the year in which the observations were made.
-#' @return List of observations identified or `ObservationSet` class object containing this list
+#' @return List of observations identified or S4 object of class `ObservationSet` containing this list
 #'  (depending on whether `item_key` is `NA` or not).
 #'  
 #' Each observation is named by the combination of values of the variables named in `by` that generated
@@ -150,7 +150,7 @@ make_observations = function(data, by, additional = NULL, unique_values = TRUE,
 #'    for the same sample (as many values as there are samples).
 #'  * Otherwise, vector of variable names included in `colnames(measures)` for which the removal of
 #'    duplicates must be performed.
-#' @return `ObservationSet` class object containing the list of observations identified.
+#' @return S4 object of class `ObservationSet` containing the list of observations identified.
 #'  Each observation is a list containing:
 #'  * The codes identifying the substances grouped together.
 #'  * The year of the inspection from which the samples are grouped.

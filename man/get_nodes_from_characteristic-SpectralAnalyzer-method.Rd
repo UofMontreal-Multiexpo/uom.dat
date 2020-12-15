@@ -14,7 +14,7 @@
 )
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{nc}{Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
 \code{object["nodes"]}.\cr

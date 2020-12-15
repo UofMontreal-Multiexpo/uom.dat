@@ -8,7 +8,7 @@
 \S4method{check_access_for_category}{SpectralAnalyzer}(object, category, value, stop = TRUE)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{category}{Name or number of the category to access (numbering according to the order of the
 columns of \code{object["items_categories"]}).}

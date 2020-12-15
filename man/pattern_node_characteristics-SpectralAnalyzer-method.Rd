@@ -8,10 +8,10 @@
 \S4method{pattern_node_characteristics}{SpectralAnalyzer}(object, patterns)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{patterns}{Patterns whose characteristics of the nodes that contain them are to be found.
-Any subset of `object["patterns"]$pattern`.}
+Any subset of \code{object["patterns"]$pattern}.}
 }
 \value{
 \describe{

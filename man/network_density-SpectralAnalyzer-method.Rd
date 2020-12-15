@@ -8,7 +8,7 @@
 \S4method{network_density}{SpectralAnalyzer}(object, links)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{links}{Data frame of the links (or edges) of a spectrosome graph.}
 }

@@ -8,7 +8,7 @@
 \S4method{is_init}{SpectralAnalyzer}(object, part = NULL)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{part}{\code{NULL} or character value corresponding to the attributes to test. One of the following:
 \describe{

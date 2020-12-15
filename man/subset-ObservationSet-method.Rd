@@ -8,7 +8,7 @@
 \S4method{subset}{ObservationSet}(x, indexes, keep_names = TRUE)
 }
 \arguments{
-\item{x}{Object to be subsetted.}
+\item{x}{Object of class \code{ObservationSet} to be subsetted.}
 
 \item{indexes}{Numeric vector indicating which observations from \code{x["data"]} to keep,
 or logical vector indicating for each observation whether to keep it.}
@@ -17,8 +17,8 @@ or logical vector indicating for each observation whether to keep it.}
 \code{x}. If \code{FALSE}, they are not named.}
 }
 \value{
-Object of class \code{ObservationSet} having a subset of observations from \code{x} (i.e. a subset of the
-attribute \code{data} from \code{x}).
+S4 object of class \code{ObservationSet} having a subset of observations from \code{x} (i.e. a subset of
+the attribute \code{data} from \code{x}).
 }
 \description{
 Return \code{ObservationSet} in which observations are a subset of the ones of another \code{ObservationSet}.

@@ -14,7 +14,7 @@
 )
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 \strong{c}haracteristics. Nodes or patterns whose complexes are to be sought. Any subset of

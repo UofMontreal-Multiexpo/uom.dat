@@ -8,7 +8,7 @@
 \S4method{weight_by_node_complexity}{SpectralAnalyzer}(object, patterns)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{patterns}{Patterns whose weights according to the complexity of the nodes containing them
 are to be computed. Any subset of \code{object["patterns"]$pattern}.\cr

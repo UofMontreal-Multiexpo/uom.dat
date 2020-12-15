@@ -8,7 +8,7 @@
 \S4method{get_all_items}{ObservationSet}(object)
 }
 \arguments{
-\item{object}{\code{ObservationSet} class object.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 }
 \value{
 Vector of all unique items.

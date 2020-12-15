@@ -8,7 +8,7 @@
 \S4method{get_obs_from_items}{ObservationSet}(object, items, presence = "all")
 }
 \arguments{
-\item{object}{\code{ObservationSet} class object.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 
 \item{items}{Sought items.}
 
@@ -24,7 +24,8 @@ item set for this observation to be extracted.}
 }}
 }
 \value{
-\code{ObservationSet} object containing the subset of observations that match the search criteria.
+S4 object of class \code{ObservationSet} containing the subset of observations that match the search
+criteria.
 }
 \description{
 Extract the observations containing one or more sought items.

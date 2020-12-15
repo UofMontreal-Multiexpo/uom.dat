@@ -8,7 +8,7 @@
 \S4method{co_occurrence_matrix}{ObservationSet}(object, items = NULL)
 }
 \arguments{
-\item{object}{\code{ObservationSet} class object.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 
 \item{items}{Items for which to count co-occurrences between pairs. The default \code{NULL} means to count
 them considering each existing item.}

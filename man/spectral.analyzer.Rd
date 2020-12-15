@@ -17,8 +17,8 @@ spectral.analyzer(
 )
 }
 \arguments{
-\item{observations}{\code{ObservationSet} class object: list of observations containing the items
-corresponding to each one. Each observation is itself a list containing at least two elements
+\item{observations}{S4 object of class \code{ObservationSet}: list of observations containing the
+items corresponding to each one. Each observation is itself a list containing at least two elements
 representing items and temporal data. It can contain any additional information but such data will
 be ignored.
 
@@ -54,7 +54,7 @@ If \code{FALSE}, only attributes relating to observations, items and categories 
 New object of class \code{SpectralAnalyzer}.
 }
 \description{
-Create and initialize an object of class \code{SpectralAnalyzer}.
+Create and initialize an S4 object of class \code{SpectralAnalyzer}.
 }
 \details{
 If items are not specified using the argument \code{items}, they are automatically listed from

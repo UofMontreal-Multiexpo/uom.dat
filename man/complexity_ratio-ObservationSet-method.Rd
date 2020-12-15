@@ -8,14 +8,14 @@
 \S4method{complexity_ratio}{ObservationSet}(object, items = NULL)
 }
 \arguments{
-\item{object}{\code{ObservationSet} class object.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 
 \item{items}{Items for which to compute the complexity ratio. The default \code{NULL} means to compute
 it for each existing item.}
 }
 \value{
-Vector of complexity ratios: for each item, the proportion of complex observations containing
-it among all observations containing it.
+Named vector of complexity ratios: for each item, the proportion of complex observations
+containing it among all observations containing it.
 }
 \description{
 For each item, compute the ratio between the number of complex observations containing the item and

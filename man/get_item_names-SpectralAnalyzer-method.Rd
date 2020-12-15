@@ -8,7 +8,7 @@
 \S4method{get_item_names}{SpectralAnalyzer}(object, items)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{items}{Vector of items: unnamed subset of \code{object["items"]}.}
 }

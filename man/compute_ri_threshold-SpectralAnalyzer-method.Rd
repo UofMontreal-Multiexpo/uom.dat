@@ -8,7 +8,7 @@
 \S4method{compute_ri_threshold}{SpectralAnalyzer}(object, reporting_indexes, ksi = NULL)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{reporting_indexes}{Reporting indexes associated with the patterns.}
 

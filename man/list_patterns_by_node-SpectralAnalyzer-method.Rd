@@ -8,7 +8,7 @@
 \S4method{list_patterns_by_node}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 }
 \value{
 Invisible. Logical matrix in which rows correspond to nodes and columns correspond to

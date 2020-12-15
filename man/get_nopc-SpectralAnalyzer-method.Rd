@@ -8,7 +8,7 @@
 \S4method{get_nopc}{SpectralAnalyzer}(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their \strong{c}haracteristics or one of the
 following character values: \code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}.}
@@ -20,8 +20,8 @@ following character values: \code{"nodes"}, \code{"n"}, \code{"patterns"}, \code
 Data frame of nodes or patterns and their characteristics corresponding to the arguments.
 }
 \description{
-Find and return the data frame corresponding to the nodes or the patterns of the \code{SpectralAnalyzer}
-object, or return the given data frame.
+Find and return the data frame corresponding to the nodes or the patterns of the object of class
+\code{SpectralAnalyzer}, or return the given data frame.
 }
 \details{
 If \code{nopc} is a data frame, it is returned.

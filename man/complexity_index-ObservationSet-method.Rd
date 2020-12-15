@@ -8,13 +8,14 @@
 \S4method{complexity_index}{ObservationSet}(object, items = NULL)
 }
 \arguments{
-\item{object}{\code{ObservationSet} class object.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 
 \item{items}{Items for which to calculate the complexity index. The default \code{NULL} means to calculate
 it for each existing item.}
 }
 \value{
-Vector of complexity indexes: for each item, the number of complex observations containing it.
+Named vector of complexity indexes: for each item, the number of complex observations
+containing it.
 }
 \description{
 For each item, count the number of complex observations containing the item.

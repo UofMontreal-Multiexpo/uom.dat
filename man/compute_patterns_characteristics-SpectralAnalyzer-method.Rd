@@ -8,7 +8,7 @@
 \S4method{compute_patterns_characteristics}{SpectralAnalyzer}(object)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 }
 \value{
 Invisible. Data frame in which a line is an association between a pattern and its

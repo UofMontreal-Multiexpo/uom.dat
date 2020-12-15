@@ -8,7 +8,7 @@
 \S4method{compute_specificity}{SpectralAnalyzer}(object, patterns, frequencies, weights)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{patterns}{Patterns whose specificity is to be computed.}
 

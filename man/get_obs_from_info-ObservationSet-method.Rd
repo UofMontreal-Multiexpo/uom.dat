@@ -8,7 +8,7 @@
 \S4method{get_obs_from_info}{ObservationSet}(object, info, presence = "all")
 }
 \arguments{
-\item{object}{\code{ObservationSet} class object.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 
 \item{info}{Named list of sought information. Element names must refer to the names of variables
 contained in the observations and values must correspond to the sought values for these variables.}

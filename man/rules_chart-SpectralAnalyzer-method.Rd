@@ -29,7 +29,7 @@
 )
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{rules}{Data frame of association rules to plot (given by the \code{\link{extract_rules}} function).
 Only those of length 2 are considered. If \code{NULL}, rules of length 2 are extracted from

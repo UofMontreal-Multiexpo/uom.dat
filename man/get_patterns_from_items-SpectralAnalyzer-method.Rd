@@ -8,7 +8,7 @@
 \S4method{get_patterns_from_items}{SpectralAnalyzer}(object, pc, items, condition = "all")
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 \code{object["patterns"]}.\cr

@@ -8,7 +8,7 @@
 \S4method{save_characteristics}{SpectralAnalyzer}(object, characteristics, ...)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{characteristics}{Data frame of the characteristics of nodes, patterns or rules.}
 

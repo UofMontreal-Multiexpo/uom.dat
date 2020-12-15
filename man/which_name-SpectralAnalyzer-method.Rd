@@ -8,7 +8,7 @@
 \S4method{which_name}{SpectralAnalyzer}(object, name)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{name}{Type of entities or links.
 Character corresponding to \code{NODES}, \code{PATTERNS}, \code{RULES}, \code{NODE_LINKS}, \code{PATTERN_LINKS} or

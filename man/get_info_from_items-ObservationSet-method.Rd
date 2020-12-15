@@ -8,7 +8,7 @@
 \S4method{get_info_from_items}{ObservationSet}(object, items, info_names, presence = "all")
 }
 \arguments{
-\item{object}{\code{ObservationSet} class object.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 
 \item{items}{Sought items.}
 

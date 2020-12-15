@@ -8,10 +8,11 @@
 \S4method{get_complex_obs}{ObservationSet}(object)
 }
 \arguments{
-\item{object}{\code{ObservationSet} class object.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 }
 \value{
-\code{ObservationSet} object containing the subset of observations that contain more than one item.
+S4 object of class \code{ObservationSet} containing the subset of observations that contain more
+than one item.
 }
 \description{
 Extract the observations containing more than one item.

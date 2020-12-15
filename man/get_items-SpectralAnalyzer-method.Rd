@@ -8,7 +8,7 @@
 \S4method{get_items}{SpectralAnalyzer}(object, items)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{items}{Vector of items or one of the following character value: \code{"items"}, \code{"i"}.}
 }
@@ -16,8 +16,8 @@
 Named vector of items corresponding to the arguments.
 }
 \description{
-Find and return the vector or subset of the vector corresponding to the items of the
-\code{SpectralAnalyzer} object, or return the given vector.
+Find and return the vector or subset of the vector corresponding to the items of the object of class
+\code{SpectralAnalyzer}, or return the given vector.
 }
 \details{
 If \code{items} is a named vector corresponding to a subset of \code{object["items"]}, it is returned.

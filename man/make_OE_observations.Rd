@@ -61,7 +61,7 @@ duplicates must be performed.
 }}
 }
 \value{
-\code{ObservationSet} class object containing the list of observations identified.
+S4 object of class \code{ObservationSet} containing the list of observations identified.
 Each observation is a list containing:
 \itemize{
 \item The codes identifying the substances grouped together.

@@ -88,7 +88,7 @@ SpectralAnalyzer.PATTERN_LINKS = "pattern_links"
 #'  value.
 #' See the attribute \code{categories_colors} to reassign colors to the category values.
 #' 
-#' @slot observations \code{ObservationSet} class object: list of observations containing the items
+#' @slot observations S4 object of class \code{ObservationSet}: list of observations containing the items
 #'  corresponding to each one. It represents the dataset in which frequent itemsets are to be mined.
 #' @slot items Set of codes identifying the items found in the observations.
 #' @slot items_categories Categories associated with the items. Each item is associated with one value
@@ -296,7 +296,7 @@ setMethod(f = "initialize",
 
 #' Spectral Analyzer constructor
 #' 
-#' Create and initialize an object of class \code{SpectralAnalyzer}.
+#' Create and initialize an S4 object of class \code{SpectralAnalyzer}.
 #' 
 #' @details
 #' If items are not specified using the argument \code{items}, they are automatically listed from
@@ -348,8 +348,8 @@ setMethod(f = "initialize",
 #'      resulting from the mining parameters and the amount of data).}
 #'  }
 #' 
-#' @param observations \code{ObservationSet} class object: list of observations containing the items
-#'  corresponding to each one. Each observation is itself a list containing at least two elements
+#' @param observations S4 object of class \code{ObservationSet}: list of observations containing the
+#'  items corresponding to each one. Each observation is itself a list containing at least two elements
 #'  representing items and temporal data. It can contain any additional information but such data will
 #'  be ignored.
 #'  
@@ -470,7 +470,7 @@ setMethod(f = "summary",
 
 #### Selector and mutator ####
 
-#' Extract or replace parts of a SpectralAnalyzer object
+#' Extract or replace parts of an object of class SpectralAnalyzer
 #' 
 #' General selector and mutator to access the attributes of an object of class \code{SpectralAnalyzer}.
 #' Extraction and replacement can be done by using an attribute name or its numeric value in the order
@@ -760,7 +760,7 @@ setGeneric(name = "which_name", def = function(object, name){ standardGeneric("w
 #'      resulting from the mining parameters and the amount of data).}
 #'  }
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param from Step from which to recompute the attributes.
 #' @param verbose Logical value indicating whether to report progress.
 #' 
@@ -876,7 +876,7 @@ setMethod(f = "reset",
 #'    \item{Elaboration of links between patterns.}
 #'  }
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param part `NULL` or character value corresponding to the attributes to initialize.
 #'  One of the following:
 #'  \describe{
@@ -956,7 +956,7 @@ setMethod(f = "init",
 #' @inherit init,SpectralAnalyzer-method description
 #' @inherit init,SpectralAnalyzer-method details
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param verbose Logical value indicating whether to report progress.
 #' @return Invisible. Object of class [`itemsets`][arules::itemsets-class] (from the package `arules`)
 #'  for the method `init_patterns`. `NULL` otherwise.
@@ -1106,7 +1106,7 @@ setMethod(f = "init_pattern_links",
 #' The initialization of the links between patterns consists of the initialization of the attributes
 #'  `p_links` and `pattern_links`.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param part `NULL` or character value corresponding to the attributes to test. One of the following:
 #'  \describe{
 #'    \item{`"nodes"`, `"n"`}{Attributes related to nodes.}
@@ -1171,7 +1171,7 @@ setMethod(f = "is_init",
 #' @inherit is_init,SpectralAnalyzer-method description
 #' @inherit is_init,SpectralAnalyzer-method details
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @return `TRUE` if the related attributes are initialized. `FALSE` otherwise.
 #' 
 #' @author Gauthier Magnin
@@ -1228,12 +1228,12 @@ setMethod(f = "is_init_pattern_links",
 
 #' Initialization validation
 #' 
-#' Check that a part of a `SpectralAnalyzer` object is initialized.
+#' Check that a part of an object of class `SpectralAnalyzer` is initialized.
 #' Stop the execution and print an error message if not.
 #' 
 #' @inherit is_init,SpectralAnalyzer-method details
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param part `NULL` or character value corresponding to the part of the attributes to test.
 #'  One or more of the following:
 #'  \describe{
@@ -1322,7 +1322,7 @@ setMethod(f = "check_init",
 #'  number of occurrences for each one.
 #' The resulting matrix is assigned to the attribute \code{nodes_per_year} of \code{object}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @return Invisible. Matrix of the number of occurrences of each separate observation, per year.
 #'  The lines correspond to the observations. The columns correspond to the years.
 #' 
@@ -1372,7 +1372,7 @@ setMethod(f = "list_obs_per_year",
 #'  and number of occurrences.
 #' The resulting data frame is assigned to the attribute \code{nodes} of \code{object}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @return Invisible. Data frame of the separate observations and their characteristics (length and
 #'  weight).
 #' 
@@ -1424,7 +1424,7 @@ setMethod(f = "list_separate_obs",
 #' The resulting matrix is assigned respectively to the attribute \code{n_links} or \code{p_links}
 #'  of \code{object}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param entities Type of entities for which to count links (nodes or patterns).
 #'  \code{SpectralAnalyzer.NODES} or \code{SpectralAnalyzer.PATTERNS}.
 #' @return Invisible. Adjacency matrix: matrix of the number of links between each pair of nodes
@@ -1470,7 +1470,7 @@ setMethod(f = "count_links",
 #' The resulting data frame is assigned respectively to the attribute \code{node_links} or
 #'  \code{pattern_links} of \code{object}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param entities Type of entities for which to elaborate links (nodes or patterns).
 #'  \code{SpectralAnalyzer.NODES} or \code{SpectralAnalyzer.PATTERNS}.
 #' @return Invisible. Data frame detailing the links between pairs of nodes or patterns.
@@ -1582,15 +1582,15 @@ setMethod(f = "search_links",
 #' Identify the patterns generated from the observations.
 #' The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param target Type of patterns to enumerate. One of \code{"frequent itemsets"},
 #'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
 #' @param count Minimum number of occurrences of a pattern to be considered as frequent.
 #' @param min_length Minimum number of items that a pattern must have to be kept when mining patterns.
 #' @param max_length Maximum number of items that a pattern must have to be kept when mining patterns.
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
-#' @param arules If \code{TRUE}, patterns are returned as object of class
-#'  \code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.
+#' @param arules If \code{TRUE}, patterns are returned as an object of class
+#'  \code{\link{arules:itemsets-class}{itemsets}} from the package \code{arules}.
 #' @return Invisible. Object of class \code{itemsets} or data frame in which a line is an association
 #'  between a pattern and its frequency in the set of observations (according to the argument
 #'  \code{arules}).
@@ -1643,7 +1643,7 @@ setMethod(f = "list_separate_patterns",
 #' Associate each separate observation (i.e. each node) with the patterns included in it.
 #' The resulting matrix is assigned to the attribute \code{nodes_patterns} of \code{object}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @return Invisible. Logical matrix in which rows correspond to nodes and columns correspond to
 #'  patterns. A value of \code{TRUE} means the pattern is included in the node.
 #' 
@@ -1683,7 +1683,7 @@ setMethod(f = "list_patterns_by_node",
 #' Count the number of occurrences of each pattern per year.
 #' The resulting matrix is assigned to the attribute \code{patterns_per_year} of \code{object}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @return Invisible. Matrix of the weights of each pattern, per year.
 #'  The lines correspond to the patterns. The column correspond to the years.
 #' 
@@ -1727,7 +1727,7 @@ setMethod(f = "list_patterns_per_year",
 #' Compute the characteristics of the patterns (frequency, weight, length, specificity, dynamic status).
 #' The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @return Invisible. Data frame in which a line is an association between a pattern and its
 #'  characteristics.
 #' 
@@ -1779,7 +1779,7 @@ setMethod(f = "compute_patterns_characteristics",
 #'  combination or ubiquitous and allowing the formation of numerous combinations (with regard to the
 #'  observations).
 #'  
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param patterns Patterns whose specificity is to be computed.
 #' @param frequencies Vector of frequencies associated with the patterns contained in \code{patterns}.
 #' @param weights Vector of weights associated with the patterns contained in \code{patterns}.
@@ -1832,7 +1832,7 @@ setMethod(f = "compute_specificity",
 #' This index provides information on the proportion and importance of the occurrences of a pattern,
 #'  taking into account the occurrences of the other patterns.
 #'  
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param patterns Patterns whose reporting indexes are to be computed.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
@@ -1910,7 +1910,7 @@ setMethod(f = "compute_reporting_indexes",
 #' Check the validity of the values of the parameters given for the computation of reporting indexes.
 #' Adapt their values if they do not fall within the correct range and print a warning message.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
 #'  by the observations.
@@ -1974,7 +1974,7 @@ setMethod(f = "check_params_for_RI",
 #' The second one corresponds to the reporting index computed over the period defined by the arguments
 #'  \code{t} and \code{period}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param patterns Patterns whose limits are to be computed.
 #' @param first_limit Time interval over which to compute the first limit (number of years).
 #' @param t Year of the end of the period, i.e. the date on which to characterize the pattern.
@@ -2014,7 +2014,7 @@ setMethod(f = "compute_reporting_indexes_limits",
 #' 
 #' Compute the number of patterns allowing to explain the main part of the reporting indexes.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
 #' @return Computed threshold.
 #' 
@@ -2040,7 +2040,7 @@ setMethod(f = "compute_ksi_threshold",
 #' The patterns are ordered in descending order of their reporting index value and separated by
 #'  the threshold \code{ksi}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
 #' @param ksi Number of patterns to consider before setting the RI threshold.
 #'  Is computed if \code{NULL}.
@@ -2073,7 +2073,7 @@ setMethod(f = "compute_ri_threshold",
 #' 
 #' Define the dynamic status of each pattern.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param patterns Patterns whose dynamic status are to be defined.
 #' @param status_limit Time interval over which to characterize the status of the patterns in relation
 #' to the period defined by the arguments `t` and `period`.
@@ -2144,7 +2144,7 @@ setMethod(f = "define_dynamic_status",
 #' If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape
 #'  paper size. If it is \code{NULL}, the chart is plotted in the active device.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 #'  is to be plotted. Any subset of \code{object["patterns"]}.\cr
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
@@ -2228,7 +2228,7 @@ setMethod(f = "spectrum_chart",
 #' 
 #' Plot a spectrum chart.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 #'  is to be plotted. Any subset of \code{object["patterns"]}.
 #' @param weights Two-column matrix containing, for each pattern, its weight related to complex nodes and
@@ -2373,9 +2373,9 @@ setMethod(f = "plot_spectrum_chart",
 #' 
 #' For each pattern, extract the weights and lengths of the nodes in which it is included.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param patterns Patterns whose characteristics of the nodes that contain them are to be found.
-#'  Any subset of `object["patterns"]$pattern`.
+#'  Any subset of \code{object["patterns"]$pattern}.
 #' @return
 #'  \describe{
 #'    \item{\code{weights}}{For each pattern, the weights of the nodes in which it is included.}
@@ -2417,7 +2417,7 @@ setMethod(f = "pattern_node_characteristics",
 #'  item and containing the pattern) and its weight related to simple node (i.e. nodes containing
 #'  only one item and containing the pattern).
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param patterns Patterns whose weights according to the complexity of the nodes containing them
 #'  are to be computed. Any subset of `object["patterns"]$pattern`.\cr
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]$pattern`.
@@ -2506,7 +2506,7 @@ setMethod(f = "weight_by_node_complexity",
 #'    \item{\code{displayisolates = TRUE}}
 #'  }
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose spectrosome is to be plotted. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
@@ -3098,7 +3098,7 @@ setMethod(f = "spectrosome_chart",
 #' The names of clusters confused because all of their links are mixed links, are not displayed.
 #' Texts are written on the active graphics device.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param graph Graph generated by the function \code{\link[sna:gplot]{gplot}} from the package
 #'  \code{sna}: "A two-column matrix containing the vertex positions as x,y coordinates".
 #' @param links Links of nodes or patterns used to generate \code{graph}.
@@ -3206,7 +3206,7 @@ setMethod(f = "cluster_text",
 #'  }
 #' 
 #' @inheritParams spectrosome_chart,SpectralAnalyzer-method
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns of which one of the clusters is to be plotted. Any subset
 #'  of \code{object["nodes"]} or \code{object["patterns"]}.\cr
@@ -3345,7 +3345,7 @@ setMethod(f = "cluster_chart",
 #' Compute the density of a graph as the ratio between the number of links identified and the
 #'  maximum number of possible links (i.e. if all the vertices of the graph were connected to each other).
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param links Data frame of the links (or edges) of a spectrosome graph.
 #' @return Density of the network.
 #' 
@@ -3376,7 +3376,7 @@ setMethod(f = "network_density",
 #' 
 #' Compute the degree of a vertex in a graph, i.e. the number of vertices to which it is adjacent.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param ID Identifier of the vertex (node or pattern) whose degree is to be computed.
 #' @param links Data frame of the links (or edges) of a spectrosome graph.
 #' @return Degree of the vertex.
@@ -3417,7 +3417,7 @@ setMethod(f = "degree",
 #'  value.
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose chart is to be plotted. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
@@ -3569,7 +3569,7 @@ setMethod(f = "itemset_chart",
 #' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 #' 
 #' @inheritParams itemset_chart,SpectralAnalyzer-method
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose chart is to be plotted. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.
@@ -3902,7 +3902,7 @@ setMethod(f = "plot_itemset_chart",
 #'  value.
 #' See the attribute `categories_colors` of `object` to reassign colors to the category values.
 #'
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param category Name or number of the category to represent on the tree (numbering according to
 #'  the order of the columns of `object["items_categories"]`).
 #' @param items Items to represent on the tree.
@@ -4041,7 +4041,7 @@ setMethod(f = "category_tree_chart",
 #'  value.
 #' See the attribute `categories_colors` of `object` to reassign colors to the category values.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
 #'  Any subset of `object["items"]`.\cr
 #'  `"items"` and `"i"` are special values for `object["items"]`.
@@ -4252,7 +4252,7 @@ setMethod(f = "co_occurrence_chart",
 #'  antecedent and consequent of rules must be present in a minimum of \eqn{s}\% of observations
 #'  and at least \eqn{c}\% of observations must satisfy the antecedent.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param from Character or list of itemsets for which to extract the association rules.
 #'  \itemize{
 #'    \item{If \code{"observations"}, look for all rules within the observations saved in \code{object}
@@ -4265,7 +4265,7 @@ setMethod(f = "co_occurrence_chart",
 #'  }
 #' @param pruning If \code{TRUE}, remove redundant rules (see 'Details' to know how redundant rules
 #'  are defined).
-#' @param arules If \code{TRUE}, rules are returned as object of class
+#' @param arules If \code{TRUE}, rules are returned as an object of class
 #'  \code{\link[arules:rules-class]{rules}} from the package \code{arules}.
 #' @param as_sets If \code{FALSE}, antecedents and consequents of the returned rules will be character
 #'  vectors. If \code{TRUE}, they will be factors written in mathematical notation (i.e. set notation).
@@ -4301,7 +4301,7 @@ setMethod(f = "co_occurrence_chart",
 #'                                           minlen = 2, maxlen = 2),
 #'                          appearance = list(lhs = "328", rhs = "3180"))
 #' 
-#' ## Getting rules as rules class object from the package arules
+#' ## Getting rules as an object of class rules from the package arules
 #' rules_7 <- extract_rules(SA_instance, from = "observations", arules = TRUE)
 #' arules::inspect(rules_7)
 #' 
@@ -4403,7 +4403,7 @@ setMethod(f = "extract_rules",
 #'  clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot. Moreover, such
 #'  plotting may take a while.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param rules Data frame of association rules to plot (given by the [`extract_rules`] function).
 #'  Only those of length 2 are considered. If `NULL`, rules of length 2 are extracted from
 #'  `object["observations"]` using the mining parameters `parameters`.
@@ -4749,7 +4749,7 @@ setMethod(f = "rules_chart",
 #' 
 #' Save in CSV format a set of nodes, patterns or association rules as well as their characteristics.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param characteristics Data frame of the characteristics of nodes, patterns or rules.
 #' @param ... Further arguments to the function \code{\link[utils:write.table]{utils::write.csv2}}.
 #' 
@@ -4828,7 +4828,7 @@ setMethod(f = "save_characteristics",
 #'    value.
 #'  * `"links"`, `"edges"`: search for nodes generating links corresponding to the sought category value.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.\cr
 #'  `"nodes"` and `"n"` are special values for `object["nodes"]`.
 #' @param element Type of element on which to search.
@@ -4897,7 +4897,7 @@ setMethod(f = "get_nodes",
 #' 
 #' Extract the nodes containing one or more sought items.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.\cr
 #'  `"nodes"` and `"n"` are special values for `object["nodes"]`.
 #' @param items Sought items (one or more).
@@ -4949,7 +4949,7 @@ setMethod(f = "get_nodes_from_items",
 #' 
 #' Extract the nodes satisfying a search criterion according to one characteristic.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
 #'  \code{object["nodes"]}.\cr
 #'  \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.
@@ -5022,7 +5022,7 @@ setMethod(f = "get_nodes_from_characteristic",
 #' 
 #' Extract the nodes corresponding to a sought category value.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
 #'  \code{object["nodes"]}.\cr
 #'  \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.
@@ -5130,7 +5130,7 @@ setMethod(f = "get_nodes_from_category",
 #'  * `"links"`, `"edges"`: search for patterns generating links corresponding to the sought category
 #'    value.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param pc Data frame of **p**atterns and their **c**haracteristics. Any subset of
 #'  `object["patterns"]`.\cr
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]`.
@@ -5217,7 +5217,7 @@ setMethod(f = "get_patterns",
 #' 
 #' Extract the patterns containing one or more sought items.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.\cr
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
@@ -5271,7 +5271,7 @@ setMethod(f = "get_patterns_from_items",
 #' 
 #' Extract the patterns satisfying a search criterion according to one characteristic.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.\cr
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
@@ -5345,7 +5345,7 @@ setMethod(f = "get_patterns_from_characteristic",
 #' 
 #' Extract the patterns whose status match one or more sought values.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.\cr
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
@@ -5397,7 +5397,7 @@ setMethod(f = "get_patterns_from_status",
 #' 
 #' Extract the patterns corresponding to a sought category value.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.\cr
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
@@ -5475,7 +5475,7 @@ setMethod(f = "get_patterns_from_category",
 #'  patterns are placed at the end of the return data frame.
 #' These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose links are be to sought. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
@@ -5557,7 +5557,7 @@ setMethod(f = "get_links",
 #' Extract from the given nodes or patterns those which are isolated (i.e. those which are not linked
 #'  to any other entity).
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose isolated are to be sought. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
@@ -5589,7 +5589,7 @@ setMethod(f = "get_isolates",
 #' Extract from the given nodes or patterns those which are not isolated (i.e. those which are linked
 #'  to any other entity).
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose non-isolated are to be sought. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
@@ -5626,7 +5626,7 @@ setMethod(f = "get_non_isolates",
 #' If \code{category} and \code{condition} are \code{NULL}, entities with more than \code{min_nb_values}
 #'  items are sought. Otherwise, the search is related to the \code{category} (see \code{condition}).
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose complexes are to be sought. Any subset of
 #'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
@@ -5721,7 +5721,7 @@ setMethod(f = "get_complexes",
 #' @details
 #' If \code{value = NA}, only the parameter \code{category} is checked.
 #' 
-#' @param object \code{SpectralAnalyzer} class object.
+#' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param category Name or number of the category to access (numbering according to the order of the
 #'  columns of \code{object["items_categories"]}).
 #' @param value Sought value for the category specified by the argument \code{category}, or NA.
@@ -5770,7 +5770,7 @@ setMethod(f = "check_access_for_category",
 #' 
 #' Find the names associated with items given their identification codes.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param items Vector of items: unnamed subset of `object["items"]`.
 #' @return Names of the `items` in `object["items"]`.
 #' 
@@ -5789,8 +5789,8 @@ setMethod(f = "get_item_names",
 
 #' Get items
 #' 
-#' Find and return the vector or subset of the vector corresponding to the items of the
-#'  `SpectralAnalyzer` object, or return the given vector.
+#' Find and return the vector or subset of the vector corresponding to the items of the object of class
+#'  `SpectralAnalyzer`, or return the given vector.
 #' 
 #' @details
 #' If `items` is a named vector corresponding to a subset of `object["items"]`, it is returned.
@@ -5800,7 +5800,7 @@ setMethod(f = "get_item_names",
 #' 
 #' If `items` is a character value equal to `"items"` or `"i"`, `object["items"]` is returned.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param items Vector of items or one of the following character value: `"items"`, `"i"`.
 #' @return Named vector of items corresponding to the arguments.
 #' 
@@ -5831,8 +5831,8 @@ setMethod(f = "get_items",
 
 #' Get nodes or patterns characteristics
 #' 
-#' Find and return the data frame corresponding to the nodes or the patterns of the `SpectralAnalyzer`
-#'  object, or return the given data frame.
+#' Find and return the data frame corresponding to the nodes or the patterns of the object of class
+#'  `SpectralAnalyzer`, or return the given data frame.
 #' 
 #' @details
 #' If `nopc` is a data frame, it is returned.
@@ -5843,7 +5843,7 @@ setMethod(f = "get_items",
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param nopc Data frame of **n**odes **o**r **p**atterns and their **c**haracteristics or one of the
 #'  following character values: `"nodes"`, `"n"`, `"patterns"`, `"p"`.
 #' @param entities Type of the entities that the data frame may refer to (`NODES`, `PATTERNS` or
@@ -5883,8 +5883,8 @@ setMethod(f = "get_nopc",
 
 #' Get nodes or patterns
 #' 
-#' Find and return the list corresponding to the nodes or the patterns of the `SpectralAnalyzer`
-#'  object, or return the given list.
+#' Find and return the list corresponding to the nodes or the patterns of the object of class
+#'  `SpectralAnalyzer`, or return the given list.
 #' 
 #' @details
 #' If `nop` is a list, it is returned.
@@ -5895,7 +5895,7 @@ setMethod(f = "get_nopc",
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param nop List of **n**odes **o**r **p**atterns or one of the following character values:
 #'  `"nodes"`, `"n"`, `"patterns"`, `"p"`.
 #' @param entities Type of the entities that the list may refer to (`NODES`, `PATTERNS` or
@@ -5943,7 +5943,7 @@ setMethod(f = "get_nop",
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param npr Data frame of **n**odes, **p**atterns or association **r**ules and their characteristics.\cr
 #'  `"nodes"`, `"n"`, `"patterns"`, `"p"`, `"rules"` and `"r"` are special values.
 #' @param entities Define if the data frame is either a data frame of nodes or a data frame of patterns
@@ -5997,7 +5997,7 @@ setMethod(f = "which_entities",
 #' 
 #' Give a type of links given a type of entities (nodes or patterns).
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param entities Type of entities for which to give the type of links.
 #'  Character corresponding to `NODES`, `PATTERNS` or their simplifications.
 #' @return Character corresponding to `NODE_LINKS` or `PATTERN_LINKS`.
@@ -6025,7 +6025,7 @@ setMethod(f = "which_associated_links",
 #' 
 #' Give the type of entities or links given a name referring to it.
 #' 
-#' @param object `SpectralAnalyzer` class object.
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param name Type of entities or links.
 #'  Character corresponding to `NODES`, `PATTERNS`, `RULES`, `NODE_LINKS`, `PATTERN_LINKS` or
 #'  their simplifications. One or more.

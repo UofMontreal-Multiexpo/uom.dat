@@ -8,7 +8,7 @@
 \S4method{degree}{SpectralAnalyzer}(object, ID, links)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{ID}{Identifier of the vertex (node or pattern) whose degree is to be computed.}
 

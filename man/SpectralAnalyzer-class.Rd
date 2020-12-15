@@ -23,7 +23,7 @@ See the attribute \code{categories_colors} to reassign colors to the category va
 \section{Slots}{
 
 \describe{
-\item{\code{observations}}{\code{ObservationSet} class object: list of observations containing the items
+\item{\code{observations}}{S4 object of class \code{ObservationSet}: list of observations containing the items
 corresponding to each one. It represents the dataset in which frequent itemsets are to be mined.}
 
 \item{\code{items}}{Set of codes identifying the items found in the observations.}

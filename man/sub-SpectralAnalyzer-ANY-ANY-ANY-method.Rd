@@ -5,7 +5,7 @@
 \alias{[,SpectralAnalyzer-method}
 \alias{[<-,SpectralAnalyzer,ANY,ANY,ANY-method}
 \alias{[<-,SpectralAnalyzer-method}
-\title{Extract or replace parts of a SpectralAnalyzer object}
+\title{Extract or replace parts of an object of class SpectralAnalyzer}
 \usage{
 \S4method{[}{SpectralAnalyzer,ANY,ANY,ANY}(x, i, j, drop)
 

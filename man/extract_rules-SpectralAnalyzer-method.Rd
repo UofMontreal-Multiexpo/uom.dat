@@ -15,7 +15,7 @@
 )
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{from}{Character or list of itemsets for which to extract the association rules.
 \itemize{
@@ -31,7 +31,7 @@
 \item{pruning}{If \code{TRUE}, remove redundant rules (see 'Details' to know how redundant rules
 are defined).}
 
-\item{arules}{If \code{TRUE}, rules are returned as object of class
+\item{arules}{If \code{TRUE}, rules are returned as an object of class
 \code{\link[arules:rules-class]{rules}} from the package \code{arules}.}
 
 \item{as_sets}{If \code{FALSE}, antecedents and consequents of the returned rules will be character
@@ -125,7 +125,7 @@ rules_6 <- extract_rules(SA_instance, from = "observations",
                                           minlen = 2, maxlen = 2),
                          appearance = list(lhs = "328", rhs = "3180"))
 
-## Getting rules as rules class object from the package arules
+## Getting rules as an object of class rules from the package arules
 rules_7 <- extract_rules(SA_instance, from = "observations", arules = TRUE)
 arules::inspect(rules_7)
 

@@ -8,7 +8,7 @@
 \S4method{has_temporal_data}{ObservationSet}(object)
 }
 \arguments{
-\item{object}{\code{ObservationSet} class object.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 }
 \value{
 \code{TRUE} or \code{FALSE} whether \code{object} contains temporal data.

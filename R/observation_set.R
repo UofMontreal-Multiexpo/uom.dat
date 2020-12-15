@@ -86,7 +86,7 @@ setMethod(f = "initialize",
 
 #' Observation Set constructor
 #' 
-#' Create and initialize an object of class `ObservationSet`.
+#' Create and initialize an S4 object of class `ObservationSet`.
 #' 
 #' @details
 #' Observations do not necessarily require temporal data since `year_key` is not required.
@@ -171,7 +171,7 @@ setMethod(f = "length",
 
 #### Selector, mutator and susbet ####
 
-#' Extract or replace parts of a ObservationSet object
+#' Extract or replace parts of an object of class ObservationSet
 #' 
 #' General selector and mutator to access the attributes of an object of class `ObservationSet`.
 #' Extraction and replacement can be done by using an attribute name.
@@ -287,13 +287,13 @@ setReplaceMethod(f = "[",
 #' If the observations from `x` are not named and `keep_names = TRUE`, the observations of the resulting
 #'  object are named according to the indexes of the initial observations.
 #' 
-#' @param x Object to be subsetted.
+#' @param x Object of class `ObservationSet` to be subsetted.
 #' @param indexes Numeric vector indicating which observations from `x["data"]` to keep,
 #'  or logical vector indicating for each observation whether to keep it.
 #' @param keep_names If `TRUE`, observations of the returned object keep the names from the initial object
 #'  `x`. If `FALSE`, they are not named.
-#' @return Object of class `ObservationSet` having a subset of observations from `x` (i.e. a subset of the
-#'  attribute `data` from `x`).
+#' @return S4 object of class `ObservationSet` having a subset of observations from `x` (i.e. a subset of
+#'  the attribute `data` from `x`).
 #' 
 #' @author Gauthier Magnin
 #' @examples
@@ -374,7 +374,7 @@ setGeneric(name = "has_temporal_data",   def = function(object){ standardGeneric
 #' 
 #' Extract all the items contained in the observations.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @return Vector of all unique items.
 #' 
 #' @author Gauthier Magnin
@@ -398,7 +398,7 @@ function(object) {
 #' 
 #' Extract the item sets corresponding to the observations.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @return List of the item sets of the observations.
 #' 
 #' @author Gauthier Magnin
@@ -423,7 +423,7 @@ function(object) {
 #' Retrieve the items associated with observations whose information matches to one or more sought
 #'  information.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @param info Named list of sought information. Element names must refer to the names of variables
 #'  contained in the observations and values must correspond to the sought values for these variables.
 #' @param presence Information presence condition for an item to be extracted from an observation.
@@ -474,7 +474,7 @@ function(object, info, presence = "all", additional = NULL) {
 #' 
 #' Retrieve information associated with observations that contain a set of sought items.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @param items Sought items.
 #' @param info_names Names of information to extract from observations.
 #' @param presence Item presence condition for information to be extracted from an observation.
@@ -524,8 +524,9 @@ function(object, items, info_names, presence = "all") {
 #' 
 #' Extract the observations containing more than one item.
 #' 
-#' @param object `ObservationSet` class object.
-#' @return `ObservationSet` object containing the subset of observations that contain more than one item.
+#' @param object S4 object of class `ObservationSet`.
+#' @return S4 object of class `ObservationSet` containing the subset of observations that contain more
+#'  than one item.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`get_simple_obs`], [`get_obs_from_items`], [`get_obs_from_info`].
@@ -550,8 +551,9 @@ function(object) {
 #' 
 #' Extract the observations containing exactly one item.
 #' 
-#' @param object `ObservationSet` class object.
-#' @return `ObservationSet` object containing the subset of observations that contain exactly one item.
+#' @param object S4 object of class `ObservationSet`.
+#' @return S4 object of class `ObservationSet` containing the subset of observations that contain exactly
+#'  one item.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`get_complex_obs`], [`get_obs_from_items`], [`get_obs_from_info`].
@@ -576,7 +578,7 @@ function(object) {
 #' 
 #' Extract the observations containing one or more sought items.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @param items Sought items.
 #' @param presence Item presence condition for an observation to be extracted.
 #'  One of `"all"`, `"any"`, `"exact"`.
@@ -588,7 +590,8 @@ function(object) {
 #'    \item{`"exact"`}{The item set contained in an observation must be exactly the same as the sought
 #'                     item set for this observation to be extracted.}
 #'  }
-#' @return `ObservationSet` object containing the subset of observations that match the search criteria.
+#' @return S4 object of class `ObservationSet` containing the subset of observations that match the search
+#'  criteria.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`get_complex_obs`], [`get_simple_obs`], [`get_obs_from_info`].
@@ -626,7 +629,7 @@ function(object, items, presence = "all") {
 #' 
 #' Extract the observations whose information matches to one or more sought information.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @param info Named list of sought information. Element names must refer to the names of variables
 #'  contained in the observations and values must correspond to the sought values for these variables.
 #' @param presence Information presence condition for an observation to be extracted.
@@ -688,11 +691,11 @@ function(object, info, presence = "all") {
 #'  the total number of observations containing the item. In other words, compute the complement of the
 #'  ratio between the number of times the item appears alone and the number of times the item appears.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @param items Items for which to compute the complexity ratio. The default `NULL` means to compute
 #'  it for each existing item.
-#' @return Vector of complexity ratios: for each item, the proportion of complex observations containing
-#'  it among all observations containing it.
+#' @return Named vector of complexity ratios: for each item, the proportion of complex observations
+#'  containing it among all observations containing it.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_index`], [`co_occurrence_matrix`],
@@ -725,10 +728,11 @@ function(object, items = NULL) {
 #' 
 #' For each item, count the number of complex observations containing the item.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @param items Items for which to calculate the complexity index. The default `NULL` means to calculate
 #'  it for each existing item.
-#' @return Vector of complexity indexes: for each item, the number of complex observations containing it.
+#' @return Named vector of complexity indexes: for each item, the number of complex observations
+#'  containing it.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_ratio`], [`co_occurrence_matrix`],
@@ -763,7 +767,7 @@ function(object, items = NULL) {
 #'  items, for each possible pair. The diagonal is the number of observations containing each specific
 #'  item.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @param items Items for which to count co-occurrences between pairs. The default `NULL` means to count
 #'  them considering each existing item.
 #' @return Co-occurrence matrix between each pair of items.
@@ -815,7 +819,7 @@ function(object, items = NULL) {
 #' 
 #' Equivalent to checking if the attribute `year_key` is not `NA`, but more explicit.
 #' 
-#' @param object `ObservationSet` class object.
+#' @param object S4 object of class `ObservationSet`.
 #' @return `TRUE` or `FALSE` whether `object` contains temporal data.
 #' 
 #' @author Gauthier Magnin

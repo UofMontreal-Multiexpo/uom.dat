@@ -8,7 +8,7 @@
 \S4method{which_entities}{SpectralAnalyzer}(object, npr, entities = SpectralAnalyzer.NODES_OR_PATTERNS)
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{npr}{Data frame of \strong{n}odes, \strong{p}atterns or association \strong{r}ules and their characteristics.\cr
 \code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}, \code{"rules"} and \code{"r"} are special values.}

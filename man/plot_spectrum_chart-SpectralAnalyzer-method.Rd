@@ -8,7 +8,7 @@
 \S4method{plot_spectrum_chart}{SpectralAnalyzer}(object, pc, weights, title = "Spectrum of patterns")
 }
 \arguments{
-\item{object}{\code{SpectralAnalyzer} class object.}
+\item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 is to be plotted. Any subset of \code{object["patterns"]}.}
