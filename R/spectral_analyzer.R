@@ -439,6 +439,15 @@ setMethod(f = "summary",
           signature = "SpectralAnalyzer",
           definition = function(object, ...) {
             
+            if (!is_init_patterns(object)) {
+              # Si les motifs n'ont pas été calculés ; seulement une partie du résumé
+              return(c(observations = length(object@observations),
+                       items = length(object@items),
+                       categories = ncol(object@items_categories),
+                       nodes = if (is_init_nodes(object)) nrow(object@nodes) else NA,
+                       patterns = NA))
+            }
+            
             summaries = list()
             
             # Résumé des caractéristiques des motifs
