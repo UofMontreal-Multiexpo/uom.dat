@@ -28,7 +28,7 @@
 The default \code{Inf} corresponds to a pattern search without maximum size limit.}
 
 \item{arules}{If \code{TRUE}, patterns are returned as an object of class
-\code{\link{arules:itemsets-class}{itemsets}} from the package \code{arules}.}
+\code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.}
 }
 \value{
 Invisible. Object of class \code{itemsets} or data frame in which a line is an association

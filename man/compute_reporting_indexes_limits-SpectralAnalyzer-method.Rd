@@ -31,7 +31,7 @@ period [2014 - 2015].
 oldest observation and ending in the year \code{t}.}
 }
 \value{
-Data frame associating each pattern to its two  limits.
+Data frame associating each pattern to its two reporting indexes.
 }
 \description{
 Compute the reporting indexes at the temporal limits used to characterize the patterns.
@@ -39,13 +39,26 @@ The first one corresponds to the reporting index computed over the \code{first_l
 The second one corresponds to the reporting index computed over the period defined by the arguments
  \code{t} and \code{period}.
 }
+\details{
+\loadmathjax
+The reporting indexes of the pattern \eqn{p} at the temporal limits are given by:
+ \mjdeqn{RI_{\infty,p} \; = lim_{t_0 \to -\infty} RI_p(t_1,t_0)}{RI_inf,p = lim of RI_p(t_1,t_0) as t approaches -inf}
+ \mjdeqn{RI_{l,p} = RI_p(t_1, t_1 - l + 1)}{RI_lp = RI_p(t_1, t_1 - l + 1)}
+where \eqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
+ is the reporting index of the pattern \eqn{p} given by:
+ \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
+where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
+ the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+ defining the period on which to compute the reporting index.
+}
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{compute_reporting_indexes}}.
+\code{\link{compute_reporting_indexes}}, \code{\link{compute_ksi_threshold}},
+         \code{\link{compute_ri_threshold}}.
 }
 \author{
 Gauthier Magnin

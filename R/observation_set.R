@@ -819,7 +819,7 @@ function(object, items = NULL) {
 
 #### Methods for plotting charts ####
 
-#' Co-occurrence chart
+#' Co-occurrence chart, for ObservationSet
 #' 
 #' Plot a graph in which vertices are items and edges are their co-occurences in observations (i.e. for
 #'  each pair of items, the number of observations containing it).
@@ -912,7 +912,6 @@ setMethod(f = "has_temporal_data",
 function(object) {
   return(!is.na(object@year_key))
 })
-
 
 
 #' Get items

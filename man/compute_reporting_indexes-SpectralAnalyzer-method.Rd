@@ -30,13 +30,22 @@ Compute the reporting index of each pattern for a given period.
 This index provides information on the proportion and importance of the occurrences of a pattern,
  taking into account the occurrences of the other patterns.
 }
+\details{
+\loadmathjax
+The reporting index of the pattern \eqn{p} given by:
+ \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
+where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
+ the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+ defining the period on which to compute the reporting index.
+}
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{compute_reporting_indexes_limits}}.
+\code{\link{compute_reporting_indexes_limits}}, \code{\link{compute_ksi_threshold}},
+         \code{\link{compute_ri_threshold}}.
 }
 \author{
 Gauthier Magnin

@@ -4,7 +4,7 @@
 \alias{co_occurrence_chart,ObservationSet-method}
 \alias{co_occurrence_chart}
 \alias{co_occurrence_chart,ObservationSet}
-\title{Co-occurrence chart}
+\title{Co-occurrence chart, for ObservationSet}
 \usage{
 \S4method{co_occurrence_chart}{ObservationSet}(
   object,

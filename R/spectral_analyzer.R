@@ -1599,7 +1599,7 @@ setMethod(f = "search_links",
 #' @param max_length Maximum number of items that a pattern must have to be kept when mining patterns.
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
 #' @param arules If \code{TRUE}, patterns are returned as an object of class
-#'  \code{\link{arules:itemsets-class}{itemsets}} from the package \code{arules}.
+#'  \code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.
 #' @return Invisible. Object of class \code{itemsets} or data frame in which a line is an association
 #'  between a pattern and its frequency in the set of observations (according to the argument
 #'  \code{arules}).
@@ -1734,17 +1734,37 @@ setMethod(f = "list_patterns_per_year",
 #' Computation of pattern characteristics
 #' 
 #' Compute the characteristics of the patterns (frequency, weight, length, specificity, dynamic status).
-#' The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
+#' The resulting data frame is assigned to the attribute `patterns` of `object`.
 #' 
-#' @param object S4 object of class \code{SpectralAnalyzer}.
+#' @details
+#' The frequency and the weight of a pattern is the number of nodes and the number of observations
+#'  containing it, respectively. The length of a pattern is the number of items composing it.
+#' 
+#' The specificity of a pattern is the information it conveys. It corresponds to the nature of the
+#'  pattern of being specific of a particular combination or ubiquitous and allowing the formation of
+#'  numerous combinations (with regard to the observations).
+#' 
+#' The dynamic status is one of persistent, declining, emergent or latent.
+#' 
+#' \loadmathjax
+#' 
+#' @details ## Specificity
+#' @template specificity_computation
+#' 
+#' @details ## Dynamic status
+#' @template dynamic_status_computation
+#' 
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @return Invisible. Data frame in which a line is an association between a pattern and its
 #'  characteristics.
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
-#'             \url{https://doi.org/10.1371/journal.pone.0190196}.
+#'             The spectrosome of occupational health problems. *PLoS ONE* 13(1): e0190196.
+#'             <https://doi.org/10.1371/journal.pone.0190196>.
+#' @seealso [`compute_specificity`], [`define_dynamic_status`],
 #' @aliases compute_patterns_characteristics
+#' @md
 #' @keywords internal
 setMethod(f = "compute_patterns_characteristics",
           signature = "SpectralAnalyzer",
@@ -1787,24 +1807,27 @@ setMethod(f = "compute_patterns_characteristics",
 #' The specitificity corresponds to the nature of a pattern of being specific of a particular
 #'  combination or ubiquitous and allowing the formation of numerous combinations (with regard to the
 #'  observations).
-#'  
-#' @param object S4 object of class \code{SpectralAnalyzer}.
+#' 
+#' \loadmathjax
+#' @template specificity_computation
+#' 
+#' @param object S4 object of class `SpectralAnalyzer`.
 #' @param patterns Patterns whose specificity is to be computed.
-#' @param frequencies Vector of frequencies associated with the patterns contained in \code{patterns}.
-#' @param weights Vector of weights associated with the patterns contained in \code{patterns}.
-#' @return Vector containing the specificity of each pattern contained in \code{patterns}.
+#' @param frequencies Vector of frequencies associated with the patterns contained in `patterns`.
+#' @param weights Vector of weights associated with the patterns contained in `patterns`.
+#' @return Vector containing the specificity of each pattern contained in `patterns`.
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
-#'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
-#'             \url{https://doi.org/10.1371/journal.pone.0190196}.
+#'             The spectrosome of occupational health problems. *PLoS ONE* 13(1): e0190196.
+#'             <https://doi.org/10.1371/journal.pone.0190196>.
 #' @aliases compute_specificity
+#' @md
 #' @keywords internal
 setMethod(f = "compute_specificity",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns, frequencies, weights) {
             
-            # Article d'où sont tirées la formule et la notation : cf. doi.org/10.1371/journal.pone.0190196
             u = frequencies
             w = weights
             h = numeric(length(patterns))
@@ -1841,6 +1864,14 @@ setMethod(f = "compute_specificity",
 #' This index provides information on the proportion and importance of the occurrences of a pattern,
 #'  taking into account the occurrences of the other patterns.
 #'  
+#' @details
+#' \loadmathjax
+#' The reporting index of the pattern \eqn{p} given by:
+#'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
+#' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
+#'  the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+#'  defining the period on which to compute the reporting index.
+#'  
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param patterns Patterns whose reporting indexes are to be computed.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
@@ -1857,7 +1888,8 @@ setMethod(f = "compute_specificity",
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{compute_reporting_indexes_limits}}.
+#' @seealso \code{\link{compute_reporting_indexes_limits}}, \code{\link{compute_ksi_threshold}},
+#'          \code{\link{compute_ri_threshold}}.
 #' @aliases compute_reporting_indexes
 #' @keywords internal
 setMethod(f = "compute_reporting_indexes",
@@ -1983,6 +2015,18 @@ setMethod(f = "check_params_for_RI",
 #' The second one corresponds to the reporting index computed over the period defined by the arguments
 #'  \code{t} and \code{period}.
 #' 
+#' @details
+#' \loadmathjax
+#' The reporting indexes of the pattern \eqn{p} at the temporal limits are given by:
+#'  \mjdeqn{RI_{\infty,p} \; = lim_{t_0 \to -\infty} RI_p(t_1,t_0)}{RI_inf,p = lim of RI_p(t_1,t_0) as t approaches -inf}
+#'  \mjdeqn{RI_{l,p} = RI_p(t_1, t_1 - l + 1)}{RI_lp = RI_p(t_1, t_1 - l + 1)}
+#' where \eqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
+#'  is the reporting index of the pattern \eqn{p} given by:
+#'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
+#' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
+#'  the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+#'  defining the period on which to compute the reporting index.
+#' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param patterns Patterns whose limits are to be computed.
 #' @param first_limit Time interval over which to compute the first limit (number of years).
@@ -1994,13 +2038,14 @@ setMethod(f = "check_params_for_RI",
 #'  period [2014 - 2015].
 #'  \code{Inf} specifies that the period considered covers an interval starting on the date of the
 #'  oldest observation and ending in the year \code{t}.
-#' @return Data frame associating each pattern to its two  limits.
+#' @return Data frame associating each pattern to its two reporting indexes.
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{compute_reporting_indexes}}.
+#' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_ksi_threshold}},
+#'          \code{\link{compute_ri_threshold}}.
 #' @aliases compute_reporting_indexes_limits
 #' @keywords internal
 setMethod(f = "compute_reporting_indexes_limits",
@@ -2022,6 +2067,16 @@ setMethod(f = "compute_reporting_indexes_limits",
 #' Computation of threshold ksi
 #' 
 #' Compute the number of patterns allowing to explain the main part of the reporting indexes.
+#' 
+#' @details
+#' \loadmathjax
+#' The threshold \mjseqn{\xi} is given by:
+#'  \mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{ksi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
+#' where \mjseqn{RI_p(t_1,t_0)} is the reporting index of the pattern \eqn{p} given by:
+#'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_qt for q in P and from t = t_0 to t_1}
+#' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
+#'  the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+#'  defining the period on which to compute the reporting index.
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
@@ -2045,9 +2100,12 @@ setMethod(f = "compute_ksi_threshold",
 
 #' RI threshold computation
 #' 
+#' \loadmathjax
 #' Compute the limit value separating two dynamic profiles with respect to the reporting indexes.
 #' The patterns are ordered in descending order of their reporting index value and separated by
-#'  the threshold \code{ksi}.
+#'  the threshold \mjseqn{\xi}.
+#'  
+#' @inherit compute_ksi_threshold,SpectralAnalyzer-method details
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
@@ -2080,7 +2138,10 @@ setMethod(f = "compute_ri_threshold",
 
 #' Dynamic status assignment
 #' 
-#' Define the dynamic status of each pattern.
+#' Define the dynamic status of each pattern: persistent, declining, emergent or latent.
+#' 
+#' \loadmathjax
+#' @template dynamic_status_computation
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param patterns Patterns whose dynamic status are to be defined.
@@ -2094,8 +2155,7 @@ setMethod(f = "compute_ri_threshold",
 #'  period \[2014 - 2015\].
 #'  `Inf` specifies that the period considered covers an interval starting on the date of the
 #'  oldest observation and ending in the year `t`.
-#' @return Data frame associating each pattern with its dynamic status (persistent, declining,
-#'  emergent or latent).
+#' @return Data frame associating each pattern with its dynamic status.
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
@@ -4034,7 +4094,7 @@ setMethod(f = "category_tree_chart",
 })
 
 
-#' Co-occurrence chart
+#' Co-occurrence chart, for SpectralAnalyzer
 #' 
 #' Plot a graph in which vertices are items and edges are their co-occurences in observations (i.e. for
 #'  each pair of items, the number of observations containing it).

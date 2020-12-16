@@ -4,7 +4,7 @@
 \alias{co_occurrence_chart,SpectralAnalyzer-method}
 \alias{co_occurrence_chart}
 \alias{co_occurrence_chart,SpectralAnalyzer}
-\title{Co-occurrence chart}
+\title{Co-occurrence chart, for SpectralAnalyzer}
 \usage{
 \S4method{co_occurrence_chart}{SpectralAnalyzer}(
   object,
