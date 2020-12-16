@@ -334,6 +334,120 @@ fig_in_usr_coords = function(n = 1:4) {
 }
 
 
+#' Hierarchical Edge Bundling chart
+#' 
+#' Plot a hierarchical edge bundling chart: graph in which vertices are arranged circularly.
+#' 
+#' @details
+#' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
+#'  afterwards using [`ggplot2::last_plot`] or the returned object.
+#' 
+#' @param hierarchy A two-column data frame representing the hierarchical network structure. A tree-like
+#'  representation of the vertices with a root and any internal nodes (only leaves are plotted).
+#' @param vertices Data frame containing the vertices to plot (i.e. the leaves of the tree
+#'  representation). Must contain the columns:
+#'  \describe{
+#'    \item{`"name"`}{Name of the vertices in the `hierarchy`.}
+#'    \item{`"label"`}{Labels to plot next to the vertices.}
+#'    \item{`"group"`}{Optional. Additional column used to color the vertices.}
+#'  }
+#' @param edges A three-column data frame representing the edges of the graph (i.e. the connections
+#'  between the leaves of the tree representation). Must contain two columns contaning the names of the
+#'  vertices to connect and a third one giving the intensities of the connections.
+#' @param limits The scale limits (related to the third column of `edges`).
+#' @param legend_name,legend_values Name and values of the additional legend related to the column
+#'  `group` of the data frame `vertices`.
+#'  
+#'  `NULL` if there is no group. Character for `legend_name` and named character vector for
+#'  `legend_values`: colors values named with the group values.
+#' @param vertex_size Size of the vertices.
+#' @param vertex_alpha Opacity of the vertices (from 0 to 1).
+#' @param vertex_margin Margin before the vertices (i.e. distance between the ends of the edges and the
+#'  centers of the vertices).
+#' @param label_size Size of the labels associated with the vertices.
+#' @param label_margin Margin before the labels (i.e. distance between the centers of the vertices and
+#'  the labels).
+#' @param edge_tension Looseness of the connecting lines (from 0 to 1).
+#'  The closer the value is to 0, the straighter the lines will be.
+#'  The closer the value is to 1, the more the lines will be curved.
+#' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
+#' @param palette Name (or number) of the sequential palette to use for coloring the edges.
+#'  One of `"Blues"`, `"BuGn"`, `"BuPu"`, `"GnBu"`, `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`,
+#'  `"PuBu"`, `"PuBuGn"`, `"PuRd"`, `"Purples"`, `"RdPu"`, `"Reds"`, `"YlGn"`, `"YlGnBu"`, `"YlOrBr"`,
+#'  `"YlOrRd"`.
+#' @param palette_direction Direction in which to use the color palette.
+#'  If `1`, colors are in original order: from the lightest to the darkest.
+#'  If `-1`, color order is reversed: from the darkest to the lightest.
+#' @return Graph created with the packages `ggraph` and `ggplot2`.
+#' 
+#' @author Gauthier Magnin
+#' @md
+#' @keywords internal
+heb_chart = function(hierarchy, vertices, edges, limits,
+                     legend_name = NULL, legend_values = NULL,
+                     vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
+                     label_size = 3, label_margin = 0.05,
+                     edge_tension = 0.8, edge_alpha = 1,
+                     palette = "Blues", palette_direction = 1) {
+  
+  # Décalages qui seront appliquées aux sommets et labels
+  vertices$vertex_coord_multiplier = 1 + vertex_margin
+  vertices$label_coord_multiplier = 1 + vertex_margin + label_margin
+  
+  # Recherche des numéros des sommets à lier
+  from = match(edges[, 2], vertices$name)
+  to = match(edges[, 1], vertices$name)
+  
+  # Tri des liens selon l'ordre des sommets pour que les couleurs soient appliquées correctement
+  the_order = order(from, to)
+  from = from[the_order]
+  to = to[the_order]
+  edges = edges[the_order, ]
+  
+  # Graphe
+  tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
+  
+  graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
+    
+    ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
+                                                    colors = edges[, 3]),
+                             ggplot2::aes(color = colors),
+                             tension = edge_tension, alpha = edge_alpha) +
+    ggraph::scale_edge_color_distiller("Co-occurrence", palette = palette, direction = palette_direction,
+                                       # Définition de l'échelle (pour n'avoir que des entiers)
+                                       limits = limits,
+                                       breaks = unique(floor(pretty(seq(limits[1], limits[2])))),
+                                       # Paramètre nécessaire si non-chargement de ggraph
+                                       guide = ggraph::guide_edge_colorbar(order = 1)) +
+    
+    ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
+                                         y = y * vertex_coord_multiplier,
+                                         filter = leaf,
+                                         color = if (!is.null(legend_name)) group),
+                            size = vertex_size, alpha = vertex_alpha) +
+    
+    ggraph::geom_node_text(ggplot2::aes(x = x * label_coord_multiplier,
+                                        y = y * label_coord_multiplier,
+                                        filter = leaf,
+                                        label = label,
+                                        angle = atan(y / x) * 180 / pi, # Angle en degré
+                                        hjust = ifelse(x < 0, 1, 0),
+                                        color = if (!is.null(legend_name)) group),
+                           size = label_size, show.legend = FALSE) +
+    ggplot2::theme_void() +
+    ggplot2::coord_fixed()
+  
+  if (!is.null(legend_name)) {
+    return(graph + ggplot2::scale_color_manual(legend_name,
+                                               values = legend_values,
+                                               guide = ggplot2::guide_legend(
+                                                 order = 2,
+                                                 override.aes = list(size = 1.5, alpha = 1))))
+  }
+  return(graph)
+}
+
+
 
 #### Utility functions for file management ####
 

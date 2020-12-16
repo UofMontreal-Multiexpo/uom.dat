@@ -677,7 +677,7 @@ setGeneric(name = "plot_itemset_chart", def = function(object, nopc, items_categ
 
 setGeneric(name = "category_tree_chart", def = function(object, category = NULL, items = object["items"], use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, vertex_size = 4, vertex_alpha = 1, leaf_size = 3, leaf_alpha = 1, leaf_margin = 0, label_size = 3, label_margin = 0.05){ standardGeneric("category_tree_chart") })
 
-setGeneric(name = "co_occurrence_chart", def = function(object, items, category = NULL, min_occ = 1, max_occ = Inf, use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_tension = 0.8, edge_alpha = 1, palette = "Blues", palette_direction = 1){ standardGeneric("co_occurrence_chart") })
+# setGeneric(name = "co_occurrence_chart", def = function(object, ...){ standardGeneric("co_occurrence_chart") })
 
 
 # Methods for association rule extraction and visualization
@@ -724,7 +724,7 @@ setGeneric(name = "check_access_for_category", def = function(object, category, 
 
 setGeneric(name = "get_item_names", def = function(object, items){ standardGeneric("get_item_names") })
 
-setGeneric(name = "get_items", def = function(object, items){ standardGeneric("get_items") })
+# setGeneric(name = "get_items", def = function(object, ...){ standardGeneric("get_items") })
 
 setGeneric(name = "get_nopc", def = function(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_nopc") })
 
@@ -4064,28 +4064,14 @@ setMethod(f = "category_tree_chart",
 #'  of the represented items.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param sort_by Sorting method of displayed items. One of `"category"`, `"item"`.
-#' @param vertex_size Size of the vertices.
-#' @param vertex_alpha Opacity of the vertices (from 0 to 1).
-#' @param vertex_margin Margin before the vertices (i.e. distance between the ends of the edges and the
-#'  centers of the vertices).
-#' @param label_size Size of the labels associated with the vertices.
-#' @param label_margin Margin before the labels (i.e. distance between the centers of the vertices and
-#'  the labels).
-#' @param edge_tension Looseness of the connecting lines (from 0 to 1).
-#'  The closer the value is to 0, the straighter the lines will be.
-#'  The closer the value is to 1, the more the lines will be curved.
-#' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
-#' @param palette Name (or number) of the sequential palette to use for coloring the edges.
-#'  One of `"Blues"`, `"BuGn"`, `"BuPu"`, `"GnBu"`, `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`,
-#'  `"PuBu"`, `"PuBuGn"`, `"PuRd"`, `"Purples"`, `"RdPu"`, `"Reds"`, `"YlGn"`, `"YlGnBu"`, `"YlOrBr"`,
-#'  `"YlOrRd"`.
-#' @param palette_direction Direction in which to use the color palette.
-#'  If `1`, colors are in original order: from the lightest to the darkest.
-#'  If `-1`, color order is reversed: from the darkest to the lightest.
+#' @inheritParams heb_chart
 #' @return Graph created with the packages `ggraph` and `ggplot2`.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`co_occurrence_matrix`], [`category_tree_chart`].
+#' 
+#' Method for signature `ObservationSet`:
+#' [`co_occurrence_chart,ObservationSet`][co_occurrence_chart,ObservationSet-method].
 #' 
 #' @examples
 #' co_occurrence_chart(SA_instance, SA_instance["items"], "family")
@@ -4095,7 +4081,7 @@ setMethod(f = "category_tree_chart",
 #'                     min_occ = 2, palette = "OrRd")
 #' co_occurrence_chart(SA_instance, SA_instance["items"][2:13], "family")
 #' 
-#' @aliases co_occurrence_chart
+#' @aliases co_occurrence_chart co_occurrence_chart,SpectralAnalyzer
 #' @md
 #' @export
 setMethod(f = "co_occurrence_chart",
@@ -4127,8 +4113,6 @@ setMethod(f = "co_occurrence_chart",
   } else {
     vertices$label = items[match(vertices$name, items)]
   }
-  vertices$vertex_coord_multiplier = 1 + vertex_margin
-  vertices$label_coord_multiplier = 1 + vertex_margin + label_margin
   
   # Gestion de la catégorie et de sa légende
   if (!is.null(category)) {
@@ -4145,58 +4129,22 @@ setMethod(f = "co_occurrence_chart",
   co_occ = co_occ[co_occ$Var1 != co_occ$Var2 & !duplicated(t(apply(co_occ[, c(1,2)], 1, sort))), ]
   connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
   
-  # Recherche des numéros des sommets à lier
-  from = match(connections[, 2], vertices$name)
-  to = match(connections[, 1], vertices$name)
   
-  # Tri des liens selon l'ordre des sommets pour que les couleurs soient appliquées correctement
-  the_order = order(from, to)
-  from = from[the_order]
-  to = to[the_order]
-  connections = connections[the_order, ]
-  
-  # Graphe
-  tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
-  
-  graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
-    
-    ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
-                                                    colors = connections$Freq),
-                             ggplot2::aes(color = colors),
-                             tension = edge_tension, alpha = edge_alpha) +
-    ggraph::scale_edge_color_distiller("Co-occurrence", palette = palette, direction = palette_direction,
-                                       # Définition de l'échelle (pour n'avoir que des entiers)
-                                       limits = c(1, max(co_occ$Freq)),
-                                       breaks = unique(floor(pretty(seq(1, max(co_occ$Freq))))),
-                                       # Paramètre nécessaire si non-chargement de ggraph
-                                       guide = ggraph::guide_edge_colorbar(order = 1)) +
-    
-    ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
-                                         y = y * vertex_coord_multiplier,
-                                         filter = leaf,
-                                         color = if (!is.null(category)) group),
-                            size = vertex_size, alpha = vertex_alpha) +
-    
-    ggraph::geom_node_text(ggplot2::aes(x = x * label_coord_multiplier,
-                                        y = y * label_coord_multiplier,
-                                        filter = leaf,
-                                        label = label,
-                                        angle = atan(y / x) * 180 / pi, # Angle en degré
-                                        hjust = ifelse(x < 0, 1, 0),
-                                        color = if (!is.null(category)) group), 
-                           size = label_size, show.legend = FALSE) +
-    ggplot2::theme_void() +
-    ggplot2::coord_fixed()
+  # Préparation de la liste d'argument et appel de la fonction de traçage
+  args = list(hierarchy = hierarchy, vertices = vertices, edges = connections,
+              limits = c(1, max(co_occ$Freq)),
+              vertex_size = vertex_size, vertex_alpha = vertex_alpha, vertex_margin = vertex_margin,
+              label_size = label_size, label_margin = label_margin,
+              edge_tension = edge_tension, edge_alpha = edge_alpha,
+              palette = palette, palette_direction = palette_direction)
   
   if (!is.null(category)) {
     category_name = if (is.numeric(category)) colnames(object@items_categories)[category] else category
-    return(graph + ggplot2::scale_color_manual(cap(category_name),
-                                               values = category_legend,
-                                               guide = ggplot2::guide_legend(
-                                                 order = 2,
-                                                 override.aes = list(size = 1.5, alpha = 1))))
+    args$legend_name = cap(category_name)
+    args$legend_values = category_legend
   }
-  return(graph)
+  
+  return(do.call(heb_chart, args))
 })
 
 
@@ -5816,7 +5764,9 @@ setMethod(f = "get_item_names",
 #' @author Gauthier Magnin
 #' @seealso [`get_item_names`], [`get_nopc`], [`which_entities`].
 #' 
-#' @aliases get_items
+#' Method for signature `ObservationSet`: [`get_items,ObservationSet`][get_items,ObservationSet-method].
+#' 
+#' @aliases get_items get_items,SpectralAnalyzer
 #' @md
 #' @keywords internal
 setMethod(f = "get_items",

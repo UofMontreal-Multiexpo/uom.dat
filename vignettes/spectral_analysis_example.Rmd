@@ -1115,7 +1115,7 @@ Computations on observations:
 
 Making charts about observations:
 
-* [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
+* [co_occurrence_chart](../html/co_occurrence_chart-ObservationSet-method.html)
 
 
 ## About spectral analysis

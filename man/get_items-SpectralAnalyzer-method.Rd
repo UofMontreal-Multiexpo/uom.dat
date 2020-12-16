@@ -3,6 +3,7 @@
 \name{get_items,SpectralAnalyzer-method}
 \alias{get_items,SpectralAnalyzer-method}
 \alias{get_items}
+\alias{get_items,SpectralAnalyzer}
 \title{Get items}
 \usage{
 \S4method{get_items}{SpectralAnalyzer}(object, items)
@@ -29,6 +30,8 @@ If \code{items} is a character value equal to \code{"items"} or \code{"i"}, \cod
 }
 \seealso{
 \code{\link{get_item_names}}, \code{\link{get_nopc}}, \code{\link{which_entities}}.
+
+Method for signature \code{ObservationSet}: \code{\link[=get_items,ObservationSet-method]{get_items,ObservationSet}}.
 }
 \author{
 Gauthier Magnin

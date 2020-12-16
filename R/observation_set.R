@@ -363,8 +363,12 @@ setGeneric(name = "complexity_ratio",     def = function(object, ...){ standardG
 setGeneric(name = "complexity_index",     def = function(object, ...){ standardGeneric("complexity_index") })
 setGeneric(name = "co_occurrence_matrix", def = function(object, ...){ standardGeneric("co_occurrence_matrix") })
 
+# Methods for plotting charts
+setGeneric(name = "co_occurrence_chart", def = function(object, ...){ standardGeneric("co_occurrence_chart") })
+
 # Other specific methods
 setGeneric(name = "has_temporal_data",   def = function(object){ standardGeneric("has_temporal_data") })
+setGeneric(name = "get_items",           def = function(object, ...){ standardGeneric("get_items") })
 
 
 
@@ -813,6 +817,75 @@ function(object, items = NULL) {
 
 
 
+#### Methods for plotting charts ####
+
+#' Co-occurrence chart
+#' 
+#' Plot a graph in which vertices are items and edges are their co-occurences in observations (i.e. for
+#'  each pair of items, the number of observations containing it).
+#' 
+#' @details
+#' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
+#'  afterwards using [`ggplot2::last_plot`] or the returned object.
+#' 
+#' @param object S4 object of class `ObservationSet`.
+#' @param items Items for which to count co-occurrences between pairs and to plot on the graph.\cr
+#'  `"items"` and `"i"` are special values specifying to use all existing items.
+#' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
+#' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
+#' @inheritParams heb_chart
+#' @return Graph created with the packages `ggraph` and `ggplot2`.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`co_occurrence_matrix`].
+#' 
+#' Method for signature `SpectralAnalyzer`: 
+#' [`co_occurrence_chart,SpectralAnalyzer`][co_occurrence_chart,SpectralAnalyzer-method].
+#' 
+#' @examples
+#' co_occurrence_chart(OS_instance, get_all_items(OS_instance))
+#' co_occurrence_chart(OS_instance, "items") +
+#'   ggplot2::expand_limits(x = c(-1.2, 1.2), y = c(-1.2, 1.2))
+#' co_occurrence_chart(OS_instance, "items",
+#'                     min_occ = 2, palette = "OrRd")
+#' co_occurrence_chart(OS_instance, items = c(25, 27, 49, 87, 148, 192, 252, 328))
+#' 
+#' @aliases co_occurrence_chart co_occurrence_chart,ObservationSet
+#' @md
+#' @export
+setMethod(f = "co_occurrence_chart",
+          signature = "ObservationSet",
+          definition =
+function(object, items, min_occ = 1, max_occ = Inf,
+         vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
+         label_size = 3, label_margin = 0.05,
+         edge_tension = 0.8, edge_alpha = 1,
+         palette = "Blues", palette_direction = 1) {
+  
+  # Validation des items fournis
+  items = get_items(object, items)
+  
+  # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
+  hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
+  
+  # Sommets du graphe
+  vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
+  vertices$label = items[match(vertices$name, items)]
+  
+  # Liens à tracer entre les sommets (différent des arêtes de l'arbre)
+  co_occ = as.data.frame(as.table(co_occurrence_matrix(object, items)), stringsAsFactors = FALSE)
+  co_occ = co_occ[co_occ$Var1 != co_occ$Var2 & !duplicated(t(apply(co_occ[, c(1,2)], 1, sort))), ]
+  connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
+  
+  return(heb_chart(hierarchy, vertices, connections, limits = c(1, max(co_occ$Freq)),
+                   vertex_size = vertex_size, vertex_alpha = vertex_alpha, vertex_margin = vertex_margin,
+                   label_size = label_size, label_margin = label_margin,
+                   edge_tension = edge_tension, edge_alpha = edge_alpha,
+                   palette = palette, palette_direction = palette_direction))
+})
+
+
+
 #### Other specific methods ####
 
 #' Check if an ObservationSet contains temporal data
@@ -838,6 +911,48 @@ setMethod(f = "has_temporal_data",
           definition =
 function(object) {
   return(!is.na(object@year_key))
+})
+
+
+
+#' Get items
+#' 
+#' Find and return the vector corresponding to the items of the object of class `ObservationSet`
+#'  or return the given vector.
+#' 
+#' @details
+#' If `items` is a vector corresponding to a subset of items contained in the observations,
+#'  it is returned.
+#' 
+#' If `items` is a character value equal to `"items"` or `"i"`, the vector of unique items contained
+#'  in `object` is returned.
+#' 
+#' @param object S4 object of class `ObservationSet`.
+#' @param items Vector of items or one of the following character value: `"items"`, `"i"`.
+#' @return Vector of items corresponding to the arguments.
+#' 
+#' @author Gauthier Magnin
+#' @seealso
+#' Method for signature `SpectralAnalyzer`: 
+#' [`get_items,SpectralAnalyzer`][get_items,SpectralAnalyzer-method].
+#' 
+#' @aliases get_items get_items,ObservationSet
+#' @md
+#' @keywords internal
+setMethod(f = "get_items",
+          signature = "ObservationSet",
+          definition =
+function(object, items) {
+  
+  # Valeur spécifique faisant référence à l'intégralité des items
+  if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
+    return(get_all_items(object))
+  
+  # Vecteur d'items (sous-ensemble de get_all_items(object))
+  if (all(items %in% get_all_items(object)))
+    return(items)
+  
+  stop("items must be \"items\" or a subset of items contained in object.")
 })
 
 
