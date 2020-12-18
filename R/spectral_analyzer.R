@@ -1826,14 +1826,15 @@ setMethod(f = "compute_specificity",
             w = weights
             h = numeric(length(patterns))
             
+            # indice des motifs dans la matrice les liant aux motifs
+            p_indexes = match(as.character(patterns), colnames(object@nodes_patterns))
+            
             # Pour chaque motif
             for (i in seq_along(patterns)) {
               # Recherche des poids des noeuds qui contiennent le motif
-              a = object@nodes$weight[object@nodes_patterns[, i]]
+              a = object@nodes$weight[object@nodes_patterns[, p_indexes[i]]]
               
-              # Calcul de h
-              h_m = -1 * sum((a / w[i] * log(a / w[i])))
-              h[i] = h_m
+              h[i] = -1 * sum(a / w[i] * log(a / w[i]))
             }
             
             # Calcul de la spécificité de chaque motif
