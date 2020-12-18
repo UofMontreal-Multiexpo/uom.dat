@@ -1889,46 +1889,18 @@ setMethod(f = "compute_reporting_indexes",
             
             # Valeurs ajustées des paramètres
             params = check_params_for_RI(object, t, period)
-            t = params$t
-            period = params$period
+            t1 = params$t
             
-            # Années maximale et minimale
-            max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
-            min_year = as.numeric(colnames(object@nodes_per_year)[1])
+            # Année de début de la période = année de fin - nombre d'années considérées + 1
+            t0 = t1 - params$period + 1
             
-            # Liste des motifs et ensembles des motifs par année
-            ppy = object@patterns_per_year
-            ri = numeric(length(patterns))
-            
-            # Si la période sur laquelle calculer RI correspond à celle couverte par l'ensemble des observations
-            if (t == max_year && (t - period + 1) == min_year) {
-              
-              ri_denominator = sum(ppy) # Somme des poids de tous les motifs sur toute la période
-              
-              for (i in seq_along(patterns)) {
-                ri_numerator = sum(ppy[i, ]) # Poids total du motif sur toute la période
-                ri[i] = ri_numerator / ri_denominator
-              }
-            } else {
-              
-              # Année de début = année de fin - nombre d'années considérées + 1
-              t0 = t - period + 1
-              
-              ri_denominator = 0 # Somme des poids de tous les motifs sur la période recherchée
-              ri_numerator = numeric(length(ri)) # Somme du poids total de chaque motif sur la période
-              
-              # Calcul du dénominateur (indépendant du motif) et des numérateurs (un par motif)
-              for (i in seq_along(patterns)) {
-                ri_numerator[i] = sum(ppy[i, (as.numeric(colnames(ppy)) <= t)
-                                             & (as.numeric(colnames(ppy)) >= t0)])
-                ri_denominator = ri_denominator + ri_numerator[i]
-              }
-              
-              # Calcul du Reporting Index de chaque motif
-              ri = ri_numerator / ri_denominator
-            }
-            
-            return(ri)
+            # Poids total du motif sur la période / somme des poids de tous les motifs sur la période
+            p_weights = unname(apply(as.data.frame( # as.data.frame nécessaire au cas où une seule colonne
+              object@patterns_per_year[match(as.character(patterns), rownames(object@patterns_per_year)),
+                                       (as.numeric(colnames(object@patterns_per_year)) <= t1)
+                                       & (as.numeric(colnames(object@patterns_per_year)) >= t0)]
+              ), 1, sum))
+            return(p_weights / sum(p_weights))
           })
 
 
