@@ -77,7 +77,7 @@ defining the period on which to compute the reporting index.
 For each set of reporting indexes:
 \itemize{
 \item One threshold \mjseqn{\xi} is computed as follows:
-\mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{ksi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
+\mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{xi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
 \item The patterns are ordered in descending order of their reporting index value and separated by
 this threshold.
 \item The reporting index of the \mjseqn{\xi}\out{<sup>th</sup>} pattern is the \eqn{RI} threshold used to

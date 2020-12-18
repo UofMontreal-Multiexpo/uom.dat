@@ -5,14 +5,14 @@
 \alias{compute_ri_threshold}
 \title{RI threshold computation}
 \usage{
-\S4method{compute_ri_threshold}{SpectralAnalyzer}(object, reporting_indexes, ksi = NULL)
+\S4method{compute_ri_threshold}{SpectralAnalyzer}(object, reporting_indexes, xi = NULL)
 }
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{reporting_indexes}{Reporting indexes associated with the patterns.}
 
-\item{ksi}{Number of patterns to consider before setting the RI threshold.
+\item{xi}{Number of patterns to consider before setting the RI threshold.
 Is computed if \code{NULL}.}
 }
 \value{
@@ -27,7 +27,7 @@ The patterns are ordered in descending order of their reporting index value and 
 \details{
 \loadmathjax
 The threshold \mjseqn{\xi} is given by:
- \mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{ksi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
+ \mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{xi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
 where \mjseqn{RI_p(t_1,t_0)} is the reporting index of the pattern \eqn{p} given by:
  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_qt for q in P and from t = t_0 to t_1}
 where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
@@ -41,7 +41,7 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 }
 \seealso{
 \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
-         \code{\link{compute_ksi_threshold}}.
+         \code{\link{compute_xi_threshold}}.
 }
 \author{
 Gauthier Magnin

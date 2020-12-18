@@ -635,9 +635,9 @@ setGeneric(name = "check_params_for_RI", def = function(object, t, period){ stan
 
 setGeneric(name = "compute_reporting_indexes_limits", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("compute_reporting_indexes_limits") })
 
-setGeneric(name = "compute_ksi_threshold", def = function(object, reporting_indexes){ standardGeneric("compute_ksi_threshold") })
+setGeneric(name = "compute_xi_threshold", def = function(object, reporting_indexes){ standardGeneric("compute_xi_threshold") })
 
-setGeneric(name = "compute_ri_threshold", def = function(object, reporting_indexes, ksi = NULL){ standardGeneric("compute_ri_threshold") })
+setGeneric(name = "compute_ri_threshold", def = function(object, reporting_indexes, xi = NULL){ standardGeneric("compute_ri_threshold") })
 
 setGeneric(name = "define_dynamic_status", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("define_dynamic_status") })
 
@@ -1879,7 +1879,7 @@ setMethod(f = "compute_specificity",
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{compute_reporting_indexes_limits}}, \code{\link{compute_ksi_threshold}},
+#' @seealso \code{\link{compute_reporting_indexes_limits}}, \code{\link{compute_xi_threshold}},
 #'          \code{\link{compute_ri_threshold}}.
 #' @aliases compute_reporting_indexes
 #' @keywords internal
@@ -2027,7 +2027,7 @@ setMethod(f = "check_params_for_RI",
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_ksi_threshold}},
+#' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_xi_threshold}},
 #'          \code{\link{compute_ri_threshold}}.
 #' @aliases compute_reporting_indexes_limits
 #' @keywords internal
@@ -2046,14 +2046,14 @@ setMethod(f = "compute_reporting_indexes_limits",
           })
 
 
-#' Computation of threshold ksi
+#' Computation of threshold xi
 #' 
 #' Compute the number of patterns allowing to explain the main part of the reporting indexes.
 #' 
 #' @details
 #' \loadmathjax
 #' The threshold \mjseqn{\xi} is given by:
-#'  \mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{ksi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
+#'  \mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{xi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
 #' where \mjseqn{RI_p(t_1,t_0)} is the reporting index of the pattern \eqn{p} given by:
 #'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_qt for q in P and from t = t_0 to t_1}
 #' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
@@ -2070,9 +2070,9 @@ setMethod(f = "compute_reporting_indexes_limits",
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
 #'          \code{\link{compute_ri_threshold}}.
-#' @aliases compute_ksi_threshold
+#' @aliases compute_xi_threshold
 #' @keywords internal
-setMethod(f = "compute_ksi_threshold",
+setMethod(f = "compute_xi_threshold",
           signature = "SpectralAnalyzer",
           definition = function(object, reporting_indexes) {
             
@@ -2087,11 +2087,11 @@ setMethod(f = "compute_ksi_threshold",
 #' The patterns are ordered in descending order of their reporting index value and separated by
 #'  the threshold \mjseqn{\xi}.
 #'  
-#' @inherit compute_ksi_threshold,SpectralAnalyzer-method details
+#' @inherit compute_xi_threshold,SpectralAnalyzer-method details
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
-#' @param ksi Number of patterns to consider before setting the RI threshold.
+#' @param xi Number of patterns to consider before setting the RI threshold.
 #'  Is computed if \code{NULL}.
 #' @return Computed threshold.
 #' 
@@ -2100,19 +2100,19 @@ setMethod(f = "compute_ksi_threshold",
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
 #' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}},
-#'          \code{\link{compute_ksi_threshold}}.
+#'          \code{\link{compute_xi_threshold}}.
 #' @aliases compute_ri_threshold
 #' @keywords internal
 setMethod(f = "compute_ri_threshold",
           signature = "SpectralAnalyzer",
-          definition = function(object, reporting_indexes, ksi = NULL) {
+          definition = function(object, reporting_indexes, xi = NULL) {
             
-            # Calcul du seuil ksi si non fourni en paramètre et arrondi à l'entier le plus proche
-            if (is.null(ksi)) ksi = compute_ksi_threshold(object, reporting_indexes)
-            ksi = round(ksi)
+            # Calcul du seuil xi si non fourni en paramètre et arrondi à l'entier le plus proche
+            if (is.null(xi)) xi = compute_xi_threshold(object, reporting_indexes)
+            xi = round(xi)
             
-            # Extraction de la valeur de RI du ksi_ème élément (ordonnés par RI)
-            return(sort(reporting_indexes, decreasing = TRUE)[ksi])
+            # Extraction de la valeur de RI du xi_ème élément (ordonnés par RI)
+            return(sort(reporting_indexes, decreasing = TRUE)[xi])
           })
 
 
@@ -2141,7 +2141,7 @@ setMethod(f = "compute_ri_threshold",
 #' @return \describe{
 #'  \item{res}{Data frame containing the dynamic status of each pattern contained in `patterns` and
 #'             the results of intermediate computations.}
-#'  \item{thresholds}{Matrix containing the ksi and RI thresholds used to classify the patterns.}
+#'  \item{thresholds}{Matrix containing the xi and RI thresholds used to classify the patterns.}
 #' }
 #' 
 #' @author Gauthier Magnin
@@ -2163,12 +2163,12 @@ setMethod(f = "define_dynamic_status",
             ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
             
             ri_names = colnames(ri_limits)
-            ksi = ri_thresholds = numeric(2)
+            xi = ri_thresholds = numeric(2)
             for (i in seq_along(ri_names)) {
-              ksi[i] = compute_ksi_threshold(object, ri_limits[, ri_names[i]])
-              ri_thresholds[i] = compute_ri_threshold(object, ri_limits[, ri_names[i]], ksi[i])
+              xi[i] = compute_xi_threshold(object, ri_limits[, ri_names[i]])
+              ri_thresholds[i] = compute_ri_threshold(object, ri_limits[, ri_names[i]], xi[i])
             }
-            names(ksi) = ri_names
+            names(xi) = ri_names
             names(ri_thresholds) = ri_names
             
             # Mise en évidence des RI ayant une valeur supérieure aux seuils
@@ -2188,9 +2188,9 @@ setMethod(f = "define_dynamic_status",
                                          is.above.threshold.2 = substantial_limit,
                                          status = status,
                                          stringsAsFactors = FALSE),
-                        thresholds = matrix(c(ksi, ri_thresholds),
+                        thresholds = matrix(c(xi, ri_thresholds),
                                             ncol = 2, nrow = 2, byrow = TRUE,
-                                            dimnames = list(c("ksi", "RI"), c("threshold.1", "threshold.2")))))
+                                            dimnames = list(c("xi", "RI"), c("threshold.1", "threshold.2")))))
           })
 
 

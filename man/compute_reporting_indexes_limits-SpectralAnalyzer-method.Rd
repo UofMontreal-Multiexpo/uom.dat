@@ -61,7 +61,7 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{compute_reporting_indexes}}, \code{\link{compute_ksi_threshold}},
+\code{\link{compute_reporting_indexes}}, \code{\link{compute_xi_threshold}},
          \code{\link{compute_ri_threshold}}.
 }
 \author{
