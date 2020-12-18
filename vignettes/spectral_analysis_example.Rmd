@@ -1158,6 +1158,7 @@ Computations on spectrosomes:
 Computations on nodes and patterns:
 
 * [weight_by_node_complexity](../html/weight_by_node_complexity-SpectralAnalyzer-method.html)
+* [define_dynamic_status](../html/define_dynamic_status-SpectralAnalyzer-method.html)
 
 Saving nodes or patterns:
 

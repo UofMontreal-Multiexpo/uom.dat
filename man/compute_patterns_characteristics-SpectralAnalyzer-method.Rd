@@ -55,7 +55,7 @@ A pattern is:
 \itemize{
 \item Persistent when it appears substantially during both the entire period of the
 observations (defined by the arguments \code{period} and \code{t}) and a shorter period defined by the
-arguments \code{status_limit} and \code{t}.
+arguments \code{short_limit} and \code{t}.
 \item Declining when it appears substantially during the entire period but much less during
 the shorter period.
 \item Emergent when it appears insignificantly during the entire period but much more during
@@ -63,7 +63,7 @@ the shorter period.
 \item Latent when it appears insignificantly during both the entire period and the shorter period.
 }
 
-The reporting indexes of the pattern \eqn{p} which are computed are those at the two temporal limits,
+The reporting indexes of the pattern \eqn{p} which are computed are those at the two temporal limits
 given by:
 \mjdeqn{RI_{\infty,p} \; = lim_{t_0 \to -\infty} RI_p(t_1,t_0)}{RI_inf,p = lim of RI_p(t_1,t_0) as t approaches -inf}
 \mjdeqn{RI_{l,p} = RI_p(t_1, t_1 - l + 1)}{RI_lp = RI_p(t_1, t_1 - l + 1)}
@@ -80,18 +80,20 @@ For each set of reporting indexes:
 \mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{ksi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
 \item The patterns are ordered in descending order of their reporting index value and separated by
 this threshold.
+\item The reporting index of the \mjseqn{\xi}\out{<sup>th</sup>} pattern is the \eqn{RI} threshold used to
+classify the patterns.
 }
 
 The patterns are then classified as follows:
 \itemize{
-\item Patterns for which \mjeqn{RI_{l,p}}{RI_lp} and \mjeqn{RI_{\infty,p}}{RI_inf,p} are before the
-thresholds are classed as "Persistent".
-\item Patterns for which \mjeqn{RI_{l,p}}{RI_lp} is after the related threshold and
-\mjeqn{RI_{\infty,p}}{RI_inf,p} is before the related threshold are classed as "Declining".
-\item Patterns for which \mjeqn{RI_{l,p}}{RI_lp} is before the related threshold and
-\mjeqn{RI_{\infty,p}}{RI_inf,p} is after the related threshold are classed as "Emergent".
-\item Patterns for which \mjeqn{RI_{l,p}}{RI_lp} and \mjeqn{RI_{\infty,p}}{RI_inf,p} are after the
-thresholds are classed as "Latent".
+\item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} and \mjeqn{RI_{l,p}}{RI_lp} are greater than or
+equal to the \eqn{RI} thresholds are classified as "Persistent".
+\item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} is greater than or equal to the related threshold
+and \mjeqn{RI_{l,p}}{RI_lp} is lower than the related threshold are classified as "Declining".
+\item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} is lower than the related threshold and
+\mjeqn{RI_{l,p}}{RI_lp} is greater than or equal to the related threshold are classified as "Emergent".
+\item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} and \mjeqn{RI_{l,p}}{RI_lp} are lower than the
+thresholds are classified as "Latent".
 }
 }
 \references{

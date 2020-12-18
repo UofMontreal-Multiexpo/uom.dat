@@ -1752,7 +1752,7 @@ setMethod(f = "list_patterns_per_year",
 #' @template specificity_computation
 #' 
 #' @details ## Dynamic status
-#' @template dynamic_status_computation
+#' @template dynamic_status_classification
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @return Invisible. Data frame in which a line is an association between a pattern and its
@@ -1784,7 +1784,7 @@ setMethod(f = "compute_patterns_characteristics",
             
             # Calcul de la spécificité et du statut dynamique de chaque motif
             object@patterns$specificity = compute_specificity(object, object@patterns$pattern, object@patterns$frequency, object@patterns$weight)
-            object@patterns$status = define_dynamic_status(object, object@patterns$pattern)
+            object@patterns$status = define_dynamic_status(object, object@patterns$pattern)$res$status
             
             # Changement de l'ordre des colonnes
             object@patterns = object@patterns[, c("pattern", "year", "frequency", "weight", "length", "specificity", "status")]
@@ -2116,12 +2116,12 @@ setMethod(f = "compute_ri_threshold",
           })
 
 
-#' Dynamic status assignment
+#' Dynamic status classification
 #' 
 #' Define the dynamic status of each pattern: persistent, declining, emergent or latent.
 #' 
 #' \loadmathjax
-#' @template dynamic_status_computation
+#' @template dynamic_status_classification
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param patterns Patterns whose dynamic status are to be defined.
@@ -2138,27 +2138,40 @@ setMethod(f = "compute_ri_threshold",
 #'  to the period defined by the arguments `t` and `period` (number of years).
 #'  For example, if `t = 2019` and `short_limit = 2` then the computation is made over the
 #'  period \[2018 - 2019\].
-#' @return Vector containing the dynamic status of each pattern contained in \code{patterns}.
+#' @return \describe{
+#'  \item{res}{Data frame containing the dynamic status of each pattern contained in `patterns` and
+#'             the results of intermediate computations.}
+#'  \item{thresholds}{Matrix containing the ksi and RI thresholds used to classify the patterns.}
+#' }
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. *PLoS ONE* 13(1): e0190196.
 #'             <https://doi.org/10.1371/journal.pone.0190196>.
-#' @seealso [`compute_reporting_indexes`], [`compute_reporting_indexes_limits`],
-#'          [`compute_ksi_threshold`], [`compute_ri_threshold`].
 #' @aliases define_dynamic_status
 #' @md
-#' @keywords internal
+#' @export
 setMethod(f = "define_dynamic_status",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns,
                                 t = NULL, period = Inf, short_limit = object["status_limit"]) {
             
-            # Calcul des limites et des 2 seuils associés
-            ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
-            ri_thresholds = apply(ri_limits, 2, function(column) compute_ri_threshold(object, column))
+            check_init(object, SpectralAnalyzer.PATTERNS)
+            patterns = get_nop(object, patterns, entities = SpectralAnalyzer.PATTERNS)
             
-            # Mise en évidence des RI ayant une valeur supérieur aux seuils
+            # Calcul des limites et des seuils associés
+            ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
+            
+            ri_names = colnames(ri_limits)
+            ksi = ri_thresholds = numeric(2)
+            for (i in seq_along(ri_names)) {
+              ksi[i] = compute_ksi_threshold(object, ri_limits[, ri_names[i]])
+              ri_thresholds[i] = compute_ri_threshold(object, ri_limits[, ri_names[i]], ksi[i])
+            }
+            names(ksi) = ri_names
+            names(ri_thresholds) = ri_names
+            
+            # Mise en évidence des RI ayant une valeur supérieure aux seuils
             substantial_period = ri_limits[, "RI.period"] >= ri_thresholds["RI.period"]
             substantial_limit = ri_limits[, "RI.limit"] >= ri_thresholds["RI.limit"]
             
@@ -2169,7 +2182,15 @@ setMethod(f = "define_dynamic_status",
             status[( substantial_period & !substantial_limit)] = SpectralAnalyzer.STATUS_EMERGENT
             status[(!substantial_period & !substantial_limit)] = SpectralAnalyzer.STATUS_LATENT
             
-            return(status)
+            return(list(res = data.frame(RI.period = ri_limits[, "RI.period"],
+                                         is.above.threshold.1 = substantial_period,
+                                         RI.limit = ri_limits[, "RI.limit"],
+                                         is.above.threshold.2 = substantial_limit,
+                                         status = status,
+                                         stringsAsFactors = FALSE),
+                        thresholds = matrix(c(ksi, ri_thresholds),
+                                            ncol = 2, nrow = 2, byrow = TRUE,
+                                            dimnames = list(c("ksi", "RI"), c("threshold.1", "threshold.2")))))
           })
 
 
