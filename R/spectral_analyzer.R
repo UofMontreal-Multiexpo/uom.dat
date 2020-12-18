@@ -2178,8 +2178,8 @@ setMethod(f = "define_dynamic_status",
             # Interprétation
             status = character(length(patterns))
             status[( substantial_period &  substantial_limit)] = SpectralAnalyzer.STATUS_PERSISTENT
-            status[(!substantial_period &  substantial_limit)] = SpectralAnalyzer.STATUS_DECLINING
-            status[( substantial_period & !substantial_limit)] = SpectralAnalyzer.STATUS_EMERGENT
+            status[( substantial_period & !substantial_limit)] = SpectralAnalyzer.STATUS_DECLINING
+            status[(!substantial_period &  substantial_limit)] = SpectralAnalyzer.STATUS_EMERGENT
             status[(!substantial_period & !substantial_limit)] = SpectralAnalyzer.STATUS_LATENT
             
             return(list(res = data.frame(RI.period = ri_limits[, "RI.period"],
