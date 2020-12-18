@@ -5,28 +5,37 @@
 \alias{define_dynamic_status}
 \title{Dynamic status assignment}
 \usage{
-\S4method{define_dynamic_status}{SpectralAnalyzer}(object, patterns, status_limit, t = NULL, period = Inf)
+\S4method{define_dynamic_status}{SpectralAnalyzer}(
+  object,
+  patterns,
+  t = NULL,
+  period = Inf,
+  short_limit = object["status_limit"]
+)
 }
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{patterns}{Patterns whose dynamic status are to be defined.}
 
-\item{status_limit}{Time interval over which to characterize the status of the patterns in relation
-to the period defined by the arguments \code{t} and \code{period}.}
-
-\item{t}{Year of the end of the period, i.e. the date on which to characterize the pattern.
+\item{t}{Year of the end of the period, i.e. the date on which to characterize the patterns.
 \code{NULL} specifies that the characterization must be done in relation to the last year covered
 by the observations.}
 
 \item{period}{Time interval over which to characterize the patterns (number of years).
-For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
-period [2014 - 2015].
+For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
+period [2011 - 2019].
+
 \code{Inf} specifies that the period considered covers an interval starting on the date of the
 oldest observation and ending in the year \code{t}.}
+
+\item{short_limit}{Time interval over which to characterize the status of the patterns in relation
+to the period defined by the arguments \code{t} and \code{period} (number of years).
+For example, if \code{t = 2019} and \code{short_limit = 2} then the computation is made over the
+period [2018 - 2019].}
 }
 \value{
-Data frame associating each pattern with its dynamic status.
+Vector containing the dynamic status of each pattern contained in \code{patterns}.
 }
 \description{
 Define the dynamic status of each pattern: persistent, declining, emergent or latent.

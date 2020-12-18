@@ -8,9 +8,9 @@
 \S4method{compute_reporting_indexes_limits}{SpectralAnalyzer}(
   object,
   patterns,
-  first_limit,
   t = NULL,
-  period = Inf
+  period = Inf,
+  short_limit = object["status_limit"]
 )
 }
 \arguments{
@@ -18,26 +18,30 @@
 
 \item{patterns}{Patterns whose limits are to be computed.}
 
-\item{first_limit}{Time interval over which to compute the first limit (number of years).}
-
 \item{t}{Year of the end of the period, i.e. the date on which to characterize the pattern.
 \code{NULL} specifies that the characterization must be done in relation to the last year covered
 by the observations.}
 
-\item{period}{Time interval over which to do the computation (number of years).
-For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
-period [2014 - 2015].
+\item{period}{Time interval over which to do the overall computation (number of years).
+For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
+period [2011 - 2019].
+
 \code{Inf} specifies that the period considered covers an interval starting on the date of the
 oldest observation and ending in the year \code{t}.}
+
+\item{short_limit}{Time interval over which to compute the shorter limit (number of years).
+For example, if \code{t = 2019} and \code{short_limit = 2} then the computation is made over the
+period [2018 - 2019].}
 }
 \value{
-Data frame associating each pattern to its two reporting indexes.
+Matrix containing the two reporting indexes of each pattern contained in \code{patterns}.
 }
 \description{
 Compute the reporting indexes at the temporal limits used to characterize the patterns.
-The first one corresponds to the reporting index computed over the \code{first_limit} years.
-The second one corresponds to the reporting index computed over the period defined by the arguments
+The first one corresponds to the reporting index computed over the period defined by the arguments
  \code{t} and \code{period}.
+The second one corresponds to the reporting index computed over the period defined by the arguments
+ \code{t} and \code{short_limit}.
 }
 \details{
 \loadmathjax

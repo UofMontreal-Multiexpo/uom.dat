@@ -633,13 +633,13 @@ setGeneric(name = "compute_reporting_indexes", def = function(object, patterns, 
 
 setGeneric(name = "check_params_for_RI", def = function(object, t, period){ standardGeneric("check_params_for_RI") })
 
-setGeneric(name = "compute_reporting_indexes_limits", def = function(object, patterns, first_limit, t = NULL, period = Inf){ standardGeneric("compute_reporting_indexes_limits") })
+setGeneric(name = "compute_reporting_indexes_limits", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("compute_reporting_indexes_limits") })
 
 setGeneric(name = "compute_ksi_threshold", def = function(object, reporting_indexes){ standardGeneric("compute_ksi_threshold") })
 
 setGeneric(name = "compute_ri_threshold", def = function(object, reporting_indexes, ksi = NULL){ standardGeneric("compute_ri_threshold") })
 
-setGeneric(name = "define_dynamic_status", def = function(object, patterns, status_limit, t = NULL, period = Inf){ standardGeneric("define_dynamic_status") })
+setGeneric(name = "define_dynamic_status", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("define_dynamic_status") })
 
 
 # Methods for creating spectrum graphs
@@ -1773,14 +1773,9 @@ setMethod(f = "compute_patterns_characteristics",
             # Nom de l'objet pour modification interne dans l'environnement parent
             object_name = deparse(substitute(object))
             
-            # Nombre de noeuds contenant le motif
-            frequencies = tapply(seq_along(object@patterns$pattern), seq_along(object@patterns$pattern),
-                                 function(p) {
-                                   sum(object@nodes_patterns[, p])
-                                 })
-            
             # Association de nouvelles caractéristiques aux motifs
-            object@patterns$frequency = frequencies
+            object@patterns$frequency = sapply(seq_along(object@patterns$pattern),
+                                               function(p) sum(object@nodes_patterns[, p]))
             object@patterns$length = sapply(object@patterns$pattern, length)
             object@patterns$year = apply(object@patterns_per_year, 1, function(x) {
                                                                         # Année d'apparition du motif
@@ -1788,9 +1783,8 @@ setMethod(f = "compute_patterns_characteristics",
                                                                       })
             
             # Calcul de la spécificité et du statut dynamique de chaque motif
-            specificity = compute_specificity(object, object@patterns$pattern, object@patterns$frequency, object@patterns$weight)
-            object@patterns$specificity = specificity
-            object@patterns$status = define_dynamic_status(object, object@patterns$pattern, object@parameters$status_limit)$status
+            object@patterns$specificity = compute_specificity(object, object@patterns$pattern, object@patterns$frequency, object@patterns$weight)
+            object@patterns$status = define_dynamic_status(object, object@patterns$pattern)
             
             # Changement de l'ordre des colonnes
             object@patterns = object@patterns[, c("pattern", "year", "frequency", "weight", "length", "specificity", "status")]
@@ -1848,11 +1842,7 @@ setMethod(f = "compute_specificity",
             specificity = (h_max - h) / (h_max - h_min)
             
             # Les spécificités calculées valent NaN si les motifs n'apparaîssent que dans un seul noeud
-            nan = is.nan(specificity)
-            if (any(nan)) {
-              # Rétablissement de la spécificité à 1
-              specificity[nan] = 1
-            }
+            specificity[is.nan(specificity)] = 1
             
             return(specificity)
           })
@@ -1878,11 +1868,12 @@ setMethod(f = "compute_specificity",
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
 #'  by the observations.
 #' @param period Time interval over which to compute the reporting indexes (number of years).
-#'  For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
-#'  period [2014 - 2015].
+#'  For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
+#'  period [2011 - 2019].
+#'  
 #'  \code{Inf} specifies that the period considered covers an interval starting on the date of the
 #'  oldest observation and ending in the year \code{t}.
-#' @return Data frame associating one reporting index with each pattern.
+#' @return Vector containing the reporting index of each pattern contained in \code{patterns}.
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
@@ -1937,11 +1928,6 @@ setMethod(f = "compute_reporting_indexes",
               ri = ri_numerator / ri_denominator
             }
             
-            # Retour
-            ri = data.frame(ri)
-            ri$pattern = patterns
-            ri = ri[c("pattern", "ri")]
-            
             return(ri)
           })
 
@@ -1951,15 +1937,8 @@ setMethod(f = "compute_reporting_indexes",
 #' Check the validity of the values of the parameters given for the computation of reporting indexes.
 #' Adapt their values if they do not fall within the correct range and print a warning message.
 #' 
+#' @inheritParams compute_reporting_indexes,SpectralAnalyzer-method
 #' @param object S4 object of class \code{SpectralAnalyzer}.
-#' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
-#'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
-#'  by the observations.
-#' @param period Time interval over which to compute the reporting indexes (number of years).
-#'  For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
-#'  period [2014 - 2015].
-#'  \code{Inf} specifies that the period considered covers an interval starting on the date of the
-#'  oldest observation and ending in the year \code{t}.
 #' @return List containing the final values of \code{t} and \code{period}.
 #' 
 #' @author Gauthier Magnin
@@ -2011,9 +1990,10 @@ setMethod(f = "check_params_for_RI",
 #' Computation of RI at temporal limits 
 #' 
 #' Compute the reporting indexes at the temporal limits used to characterize the patterns.
-#' The first one corresponds to the reporting index computed over the \code{first_limit} years.
-#' The second one corresponds to the reporting index computed over the period defined by the arguments
+#' The first one corresponds to the reporting index computed over the period defined by the arguments
 #'  \code{t} and \code{period}.
+#' The second one corresponds to the reporting index computed over the period defined by the arguments
+#'  \code{t} and \code{short_limit}.
 #' 
 #' @details
 #' \loadmathjax
@@ -2029,16 +2009,19 @@ setMethod(f = "check_params_for_RI",
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param patterns Patterns whose limits are to be computed.
-#' @param first_limit Time interval over which to compute the first limit (number of years).
 #' @param t Year of the end of the period, i.e. the date on which to characterize the pattern.
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
 #'  by the observations.
-#' @param period Time interval over which to do the computation (number of years).
-#'  For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
-#'  period [2014 - 2015].
+#' @param period Time interval over which to do the overall computation (number of years).
+#'  For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
+#'  period [2011 - 2019].
+#'  
 #'  \code{Inf} specifies that the period considered covers an interval starting on the date of the
 #'  oldest observation and ending in the year \code{t}.
-#' @return Data frame associating each pattern to its two reporting indexes.
+#' @param short_limit Time interval over which to compute the shorter limit (number of years).
+#'  For example, if \code{t = 2019} and \code{short_limit = 2} then the computation is made over the
+#'  period [2018 - 2019].
+#' @return Matrix containing the two reporting indexes of each pattern contained in \code{patterns}.
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
@@ -2050,17 +2033,16 @@ setMethod(f = "check_params_for_RI",
 #' @keywords internal
 setMethod(f = "compute_reporting_indexes_limits",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns, first_limit, t = NULL, period = Inf) {
+          definition = function(object, patterns,
+                                t = NULL, period = Inf, short_limit = object["status_limit"]) {
             
-            ri_2 = compute_reporting_indexes(object, patterns, t, first_limit)["ri"]
-            ri_period = compute_reporting_indexes(object, patterns, t, period)["ri"]
+            if (short_limit >= period) stop("short_limit must be lower than period.")
             
-            ri_limits = data.frame(ri_2, ri_period)
-            colnames(ri_limits) = c("ri_2", "ri_period")
-            ri_limits$pattern = patterns
-            ri_limits = ri_limits[c("pattern", "ri_2", "ri_period")]
+            ri_period = compute_reporting_indexes(object, patterns, t, period)
+            ri_limit = compute_reporting_indexes(object, patterns, t, short_limit)
             
-            return(ri_limits)
+            return(matrix(c(ri_period, ri_limit), ncol = 2, byrow = FALSE,
+                          dimnames = list(NULL, c("RI.period", "RI.limit"))))
           })
 
 
@@ -2126,9 +2108,7 @@ setMethod(f = "compute_ri_threshold",
           definition = function(object, reporting_indexes, ksi = NULL) {
             
             # Calcul du seuil ksi si non fourni en paramètre et arrondi à l'entier le plus proche
-            if (is.null(ksi)) {
-              ksi = compute_ksi_threshold(object, reporting_indexes)
-            }
+            if (is.null(ksi)) ksi = compute_ksi_threshold(object, reporting_indexes)
             ksi = round(ksi)
             
             # Extraction de la valeur de RI du ksi_ème élément (ordonnés par RI)
@@ -2145,17 +2125,20 @@ setMethod(f = "compute_ri_threshold",
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param patterns Patterns whose dynamic status are to be defined.
-#' @param status_limit Time interval over which to characterize the status of the patterns in relation
-#' to the period defined by the arguments `t` and `period`.
-#' @param t Year of the end of the period, i.e. the date on which to characterize the pattern.
+#' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
 #'  `NULL` specifies that the characterization must be done in relation to the last year covered
 #'  by the observations.
 #' @param period Time interval over which to characterize the patterns (number of years).
-#'  For example, if `t = 2015` and `period = 2` then the computation is made over the
-#'  period \[2014 - 2015\].
+#'  For example, if `t = 2019` and `period = 9` then the computation is made over the
+#'  period \[2011 - 2019\].
+#'  
 #'  `Inf` specifies that the period considered covers an interval starting on the date of the
 #'  oldest observation and ending in the year `t`.
-#' @return Data frame associating each pattern with its dynamic status.
+#' @param short_limit Time interval over which to characterize the status of the patterns in relation
+#'  to the period defined by the arguments `t` and `period` (number of years).
+#'  For example, if `t = 2019` and `short_limit = 2` then the computation is made over the
+#'  period \[2018 - 2019\].
+#' @return Vector containing the dynamic status of each pattern contained in \code{patterns}.
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
@@ -2168,28 +2151,23 @@ setMethod(f = "compute_ri_threshold",
 #' @keywords internal
 setMethod(f = "define_dynamic_status",
           signature = "SpectralAnalyzer",
-          definition = function(object, patterns, status_limit, t = NULL, period = Inf) {
+          definition = function(object, patterns,
+                                t = NULL, period = Inf, short_limit = object["status_limit"]) {
             
             # Calcul des limites et des 2 seuils associés
-            ri_limits = compute_reporting_indexes_limits(object, patterns, status_limit, t, period)
-            ri_thresholds = apply(ri_limits[, c("ri_2", "ri_period")], 2,
-                               function(column) { compute_ri_threshold(object, column) })
+            ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
+            ri_thresholds = apply(ri_limits, 2, function(column) compute_ri_threshold(object, column))
             
             # Mise en évidence des RI ayant une valeur supérieur aux seuils
-            substantially_recorded_2 = ri_limits$ri_2 >= ri_thresholds["ri_2"]
-            substantially_recorded_period = ri_limits$ri_period >= ri_thresholds["ri_period"]
+            substantial_period = ri_limits[, "RI.period"] >= ri_thresholds["RI.period"]
+            substantial_limit = ri_limits[, "RI.limit"] >= ri_thresholds["RI.limit"]
             
             # Interprétation
-            status = rep(NA, length(patterns))
-            status[( substantially_recorded_period &  substantially_recorded_2)] = SpectralAnalyzer.STATUS_PERSISTENT
-            status[(!substantially_recorded_period &  substantially_recorded_2)] = SpectralAnalyzer.STATUS_DECLINING
-            status[( substantially_recorded_period & !substantially_recorded_2)] = SpectralAnalyzer.STATUS_EMERGENT
-            status[(!substantially_recorded_period & !substantially_recorded_2)] = SpectralAnalyzer.STATUS_LATENT
-            
-            # Retour
-            status = data.frame(status, stringsAsFactors = FALSE)
-            status$pattern = patterns
-            status = status[c("pattern", "status")]
+            status = character(length(patterns))
+            status[( substantial_period &  substantial_limit)] = SpectralAnalyzer.STATUS_PERSISTENT
+            status[(!substantial_period &  substantial_limit)] = SpectralAnalyzer.STATUS_DECLINING
+            status[( substantial_period & !substantial_limit)] = SpectralAnalyzer.STATUS_EMERGENT
+            status[(!substantial_period & !substantial_limit)] = SpectralAnalyzer.STATUS_LATENT
             
             return(status)
           })

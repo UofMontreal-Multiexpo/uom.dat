@@ -15,8 +15,9 @@
 by the observations.}
 
 \item{period}{Time interval over which to compute the reporting indexes (number of years).
-For example, if \code{t = 2015} and \code{period = 2} then the computation is made over the
-period [2014 - 2015].
+For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
+period [2011 - 2019].
+
 \code{Inf} specifies that the period considered covers an interval starting on the date of the
 oldest observation and ending in the year \code{t}.}
 }
