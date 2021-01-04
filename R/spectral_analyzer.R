@@ -1826,7 +1826,7 @@ setMethod(f = "compute_specificity",
             w = weights
             h = numeric(length(patterns))
             
-            # indice des motifs dans la matrice les liant aux motifs
+            # Indices des motifs dans la matrice les liant aux noeuds
             p_indexes = match(as.character(patterns), colnames(object@nodes_patterns))
             
             # Pour chaque motif
@@ -1842,7 +1842,8 @@ setMethod(f = "compute_specificity",
             h_min = min(log(w / (w - u + 1)) + ((u - 1) / w * log(w - u + 1)))
             specificity = (h_max - h) / (h_max - h_min)
             
-            # Les spécificités calculées valent NaN si les motifs n'apparaîssent que dans un seul noeud
+            # Les valeurs calculées peuvent être NaN si les motifs n'apparaîssent que dans un seul noeud
+            # ou sont équirépartis
             specificity[is.nan(specificity)] = 1
             
             return(specificity)
@@ -2082,6 +2083,8 @@ setMethod(f = "compute_ri_threshold",
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param patterns Patterns whose dynamic status are to be defined.
+#'  Any subset of `object["patterns"]$pattern`.\cr
+#'  `"patterns"` and `"p"` are special values for `object["patterns"]$pattern`.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
 #'  `NULL` specifies that the characterization must be done in relation to the last year covered
 #'  by the observations.
@@ -2096,15 +2099,21 @@ setMethod(f = "compute_ri_threshold",
 #'  For example, if `t = 2019` and `short_limit = 2` then the computation is made over the
 #'  period \[2018 - 2019\].
 #' @return \describe{
-#'  \item{res}{Data frame containing the dynamic status of each pattern contained in `patterns` and
-#'             the results of intermediate computations.}
-#'  \item{thresholds}{Matrix containing the xi and RI thresholds used to classify the patterns.}
+#'  \item{`res`}{Data frame containing the dynamic status of each pattern contained in `patterns` and
+#'               the results of intermediate computations.}
+#'  \item{`thresholds`}{Matrix containing the \mjseqn{\xi} (xi) and RI thresholds used to classify the
+#'                      patterns.}
 #' }
 #' 
 #' @author Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. *PLoS ONE* 13(1): e0190196.
 #'             <https://doi.org/10.1371/journal.pone.0190196>.
+#' 
+#' @examples
+#' define_dynamic_status(SA_instance, "patterns")
+#' define_dynamic_status(SA_instance, SA_instance["patterns"]$pattern[1:15])
+#' 
 #' @aliases define_dynamic_status
 #' @md
 #' @export

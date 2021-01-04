@@ -16,7 +16,9 @@
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
-\item{patterns}{Patterns whose dynamic status are to be defined.}
+\item{patterns}{Patterns whose dynamic status are to be defined.
+Any subset of \code{object["patterns"]$pattern}.\cr
+\code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]$pattern}.}
 
 \item{t}{Year of the end of the period, i.e. the date on which to characterize the patterns.
 \code{NULL} specifies that the characterization must be done in relation to the last year covered
@@ -36,9 +38,10 @@ period [2018 - 2019].}
 }
 \value{
 \describe{
-\item{res}{Data frame containing the dynamic status of each pattern contained in \code{patterns} and
+\item{\code{res}}{Data frame containing the dynamic status of each pattern contained in \code{patterns} and
 the results of intermediate computations.}
-\item{thresholds}{Matrix containing the xi and RI thresholds used to classify the patterns.}
+\item{\code{thresholds}}{Matrix containing the \mjseqn{\xi} (xi) and RI thresholds used to classify the
+patterns.}
 }
 }
 \description{
@@ -94,6 +97,11 @@ and \mjeqn{RI_{l,p}}{RI_lp} is lower than the related threshold are classified a
 \item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} and \mjeqn{RI_{l,p}}{RI_lp} are lower than the
 thresholds are classified as "Latent".
 }
+}
+\examples{
+define_dynamic_status(SA_instance, "patterns")
+define_dynamic_status(SA_instance, SA_instance["patterns"]$pattern[1:15])
+
 }
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
