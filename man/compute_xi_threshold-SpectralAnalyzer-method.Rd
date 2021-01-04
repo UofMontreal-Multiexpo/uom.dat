@@ -21,7 +21,7 @@ Compute the number of patterns allowing to explain the main part of the reportin
 \details{
 \loadmathjax
 The threshold \mjseqn{\xi} is given by:
- \mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{xi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
+ \mjdeqn{\xi = \left\lceil \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil}{xi = ceiling(1 / sum(RI_p(t_1,t_0)^2) for p in P)}
 where \mjseqn{RI_p(t_1,t_0)} is the reporting index of the pattern \eqn{p} given by:
  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_qt for q in P and from t = t_0 to t_1}
 where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in

@@ -2026,7 +2026,7 @@ setMethod(f = "compute_reporting_indexes_limits",
 #' @details
 #' \loadmathjax
 #' The threshold \mjseqn{\xi} is given by:
-#'  \mjdeqn{\xi = \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2}}{xi = 1 / sum(RI_p(t_1,t_0)^2) for p in P}
+#'  \mjdeqn{\xi = \left\lceil \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil}{xi = ceiling(1 / sum(RI_p(t_1,t_0)^2) for p in P)}
 #' where \mjseqn{RI_p(t_1,t_0)} is the reporting index of the pattern \eqn{p} given by:
 #'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_qt for q in P and from t = t_0 to t_1}
 #' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
@@ -2049,7 +2049,7 @@ setMethod(f = "compute_xi_threshold",
           signature = "SpectralAnalyzer",
           definition = function(object, reporting_indexes) {
             
-            return(1 / sum(reporting_indexes ^ 2))
+            return(ceiling(1 / sum(reporting_indexes ^ 2)))
           })
 
 
@@ -2080,9 +2080,8 @@ setMethod(f = "compute_ri_threshold",
           signature = "SpectralAnalyzer",
           definition = function(object, reporting_indexes, xi = NULL) {
             
-            # Calcul du seuil xi si non fourni en paramètre et arrondi à l'entier le plus proche
+            # Calcul du seuil xi si non fourni en paramètre
             if (is.null(xi)) xi = compute_xi_threshold(object, reporting_indexes)
-            xi = round(xi)
             
             # Extraction de la valeur de RI du xi_ème élément (ordonnés par RI)
             return(sort(reporting_indexes, decreasing = TRUE)[xi])
