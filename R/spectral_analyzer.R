@@ -629,9 +629,9 @@ setGeneric(name = "compute_patterns_characteristics", def = function(object){ st
 
 setGeneric(name = "compute_specificity", def = function(object, patterns, frequencies, weights){ standardGeneric("compute_specificity") })
 
-setGeneric(name = "compute_reporting_indexes", def = function(object, patterns, t = NULL, period = Inf){ standardGeneric("compute_reporting_indexes") })
+setGeneric(name = "check_RI_params", def = function(object, t, period){ standardGeneric("check_RI_params") })
 
-setGeneric(name = "check_params_for_RI", def = function(object, t, period){ standardGeneric("check_params_for_RI") })
+setGeneric(name = "compute_reporting_indexes", def = function(object, patterns, t = NULL, period = Inf){ standardGeneric("compute_reporting_indexes") })
 
 setGeneric(name = "compute_reporting_indexes_limits", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("compute_reporting_indexes_limits") })
 
@@ -1849,6 +1849,46 @@ setMethod(f = "compute_specificity",
           })
 
 
+#' Validation of RI computation parameters
+#' 
+#' Check the validity of the values of the parameters given for the computation of reporting indexes.
+#' Stop the execution and print an error message if they are not usable.
+#' Adapt their values if they match the special values.
+#' 
+#' @inheritParams compute_reporting_indexes,SpectralAnalyzer-method
+#' @param object S4 object of class \code{SpectralAnalyzer}.
+#' @return List containing the final values of \code{t} and \code{period}.
+#' 
+#' @author Gauthier Magnin
+#' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}}.
+#' @aliases check_RI_params
+#' @keywords internal
+setMethod(f = "check_RI_params",
+          signature = "SpectralAnalyzer",
+          definition = function(object, t, period) {
+            
+            # Années maximale et minimale
+            max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
+            min_year = as.numeric(colnames(object@nodes_per_year)[1])
+            
+            # Validation du paramètre définissant la fin de la période sur laquelle effectuer les calculs
+            if (is.null(t)) t = max_year
+            else if (t > max_year || t < min_year) {
+              stop("t must not be less than the oldest year of observation (", min_year, ")",
+                   " nor greater than the most recent one (", max_year, ").")
+            }
+            
+            # Validation du paramètre définissant la longueur de la période de calcul
+            if (is.infinite(period)) period = t - min_year + 1
+            else if (period < 1 || period > t - min_year + 1) {
+              stop("period must be greater than 0",
+                   " and t - period + 1 must not be less than the oldest year of observation.")
+            }
+            
+            return(list(t = t, period = period))
+          })
+
+
 #' Computation of the Reporting Index (RI)
 #' 
 #' Compute the reporting index of each pattern for a given period.
@@ -1889,7 +1929,7 @@ setMethod(f = "compute_reporting_indexes",
           definition = function(object, patterns, t = NULL, period = Inf) {
             
             # Valeurs ajustées des paramètres
-            params = check_params_for_RI(object, t, period)
+            params = check_RI_params(object, t, period)
             t1 = params$t
             
             # Année de début de la période = année de fin - nombre d'années considérées + 1
@@ -1902,61 +1942,6 @@ setMethod(f = "compute_reporting_indexes",
                                        & (as.numeric(colnames(object@patterns_per_year)) >= t0)]
               ), 1, sum))
             return(p_weights / sum(p_weights))
-          })
-
-
-#' Validation of RI computation parameters
-#' 
-#' Check the validity of the values of the parameters given for the computation of reporting indexes.
-#' Adapt their values if they do not fall within the correct range and print a warning message.
-#' 
-#' @inheritParams compute_reporting_indexes,SpectralAnalyzer-method
-#' @param object S4 object of class \code{SpectralAnalyzer}.
-#' @return List containing the final values of \code{t} and \code{period}.
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}}.
-#' @aliases check_params_for_RI
-#' @keywords internal
-setMethod(f = "check_params_for_RI",
-          signature = "SpectralAnalyzer",
-          definition = function(object, t, period) {
-            
-            # Années maximale et minimale
-            max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
-            min_year = as.numeric(colnames(object@nodes_per_year)[1])
-            
-            # Validation du premier paramètre
-            if (is.null(t) || t > max_year) {
-              # La date de fin donnée est supérieure à celles considérées par les observations
-              if (!is.null(t)) {
-                warning("t must be less than or equal to the most recent year among data. Running with t = NULL. See documentation for more details.")
-              }
-              t = max_year
-            }
-            else if (t < min_year) {
-              # La date de fin donnée est inférieure à celles considérées par les observations
-              warning(paste0("t must be greater than or equal to the earliest year among data. Running with t equal to the earliest one (",
-                            min_year,
-                            "). See documentation for more details."))
-              t = min_year
-            }
-            
-            # Validation du second paramètre
-            if (period < 1) {
-              # L'indice de recrutement ne peut être calculé sur moins d'un an
-              warning("period must be greater than 0. Running with period = 1. See documentation for more details.")
-              period = 1
-            }
-            else if (is.infinite(period) || period > t - min_year + 1) {
-              # La période demandée excède celle couverte par les observations
-              if (!is.infinite(period)) {
-                warning("period must not exceed the earliest year among data. Running with period = Inf. See documentation for more details.")
-              }
-              period = t - min_year + 1
-            }
-            
-            return(list(t = t, period = period))
           })
 
 
