@@ -169,7 +169,7 @@ setMethod(f = "length",
 
 
 
-#### Selector, mutator and susbet ####
+#### Selector, mutator, susbet, reorder ####
 
 #' Extract or replace parts of an object of class ObservationSet
 #' 
@@ -320,6 +320,31 @@ setMethod(f = "subset",
             # if (!keep_names)
             return(observation.set(unname(x@data[indexes]),
                                    x@item_key, x@year_key, x@names))
+          })
+
+
+#' Reorder Observation Set
+#' 
+#' Return a copy of an `ObservationSet` in which the observations are in another order.
+#' 
+#' @param x Object of class `ObservationSet` whose observations are to be reordered.
+#' @param permutation Numeric or character vector. Permutation to use to rearrange the observations.
+#' @return S4 object of class `ObservationSet` containing the observations of `x` in the order defined
+#'  by `permutation`.
+#' 
+#' @author Gauthier Magnin
+#' @examples
+#' reorder(OS_instance, c(2, 1, 3:14))
+#' reorder(OS_instance, names(OS_instance["data"])[c(2, 1, 3:14)])
+#' reorder(OS_instance, 14:1)
+#' 
+#' @aliases reorder
+#' @md
+#' @export
+setMethod(f = "reorder",
+          signature = "ObservationSet",
+          definition = function(x, permutation) {
+            return(subset(x, permutation, keep_names = is_named(x@data)[1]))
           })
 
 
