@@ -42,6 +42,7 @@ Making *ObservationSet* objects:
 * [make_observations](../html/make_observations.html)
 * [make_OE_observations](../html/make_OE_observations.html)
 * [\[](../html/sub-ObservationSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-ObservationSet-ANY-ANY-ANY-method.html)
+* [subset](../html/subset-ObservationSet-method.html)
 
 Search in observations:
 

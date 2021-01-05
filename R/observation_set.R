@@ -281,7 +281,7 @@ setReplaceMethod(f = "[",
 
 #' Subsetting Observation Set
 #' 
-#' Return `ObservationSet` in which observations are a subset of the ones of another `ObservationSet`.
+#' Return an `ObservationSet` in which observations are a subset of the ones of another `ObservationSet`.
 #' 
 #' @details
 #' If the observations from `x` are not named and `keep_names = TRUE`, the observations of the resulting

@@ -21,7 +21,7 @@ S4 object of class \code{ObservationSet} having a subset of observations from \c
 the attribute \code{data} from \code{x}).
 }
 \description{
-Return \code{ObservationSet} in which observations are a subset of the ones of another \code{ObservationSet}.
+Return an \code{ObservationSet} in which observations are a subset of the ones of another \code{ObservationSet}.
 }
 \details{
 If the observations from \code{x} are not named and \code{keep_names = TRUE}, the observations of the resulting
