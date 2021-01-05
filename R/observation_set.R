@@ -351,6 +351,25 @@ setMethod(f = "reorder",
 
 #### Type conversions ####
 
+# Turn an ObservationSet into a data.frame.
+# Parameter `stringAsFactors` is FALSE.
+setAs(from = "ObservationSet",
+      to = "data.frame",
+      def = function(from) {
+        
+        # Définition d'une colonne temporaire pour pouvoir définir le nombre de lignes
+        df = data.frame(tmp_col = numeric(length(from)), stringsAsFactors = FALSE)
+        if (!is.null(names(from@data))) rownames(df) = names(from@data)
+        df$tmp_col = NULL
+        
+        for (var_name in from@names) {
+          # L'attribution d'une liste à une variable d'une data frame ne fonctionne que via $
+          eval(parse(text = paste0("df$", var_name, " <- unname(sapply(from[var_name], c))")))
+        }
+        return(df)
+      })
+
+
 # Turn an ObservationSet into a set of [`transactions`][arules::transactions-class] from the
 # package [`arules`].
 # Only the items of the observations are considered. Other data are ignored.
