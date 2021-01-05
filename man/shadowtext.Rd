@@ -34,7 +34,7 @@ The outline is created by first drawing the text with the second color serveral 
  and with slight offsets.
 }
 \references{
-Greg Snow. Stack Overflow topic :
+Greg Snow. Stack Overflow topic:
  \href{https://stackoverflow.com/questions/25631216/r-plots-is-there-any-way-to-draw-border-shadow-or-buffer-around-text-labels}{Any way to draw border, shadow or buffer around text labels}.
 }
 \keyword{internal}

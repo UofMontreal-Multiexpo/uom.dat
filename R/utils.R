@@ -235,7 +235,7 @@ set_notation = function(sets, type = "character") {
 #' @param theta Angles to be used to create the outline.
 #' @param r Outline size.
 #' 
-#' @references Greg Snow. Stack Overflow topic :
+#' @references Greg Snow. Stack Overflow topic:
 #'  \href{https://stackoverflow.com/questions/25631216/r-plots-is-there-any-way-to-draw-border-shadow-or-buffer-around-text-labels}{Any way to draw border, shadow or buffer around text labels}.
 #' @keywords internal
 shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
@@ -251,6 +251,27 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
   }
   # Draw actual text in exact xy position in foreground colour
   graphics::text(xy$x, xy$y, labels, col = col, ...)
+}
+
+
+#' Check color representation
+#' 
+#' Check if a character value is a valid color representation.
+#' The three kinds of R color specifications are considered as valid representations (color name,
+#'  hexadecimal string and positive integer).
+#' 
+#' @param x Character vector.
+#' @return Logical vector giving for each value of `x` whether it is a valid color representation.
+#' 
+#' @references Josh O'Brien. Stack Overflow topic:
+#'  [Check if character string is a valid color representation](https://stackoverflow.com/questions/13289009/check-if-character-string-is-a-valid-color-representation).
+#' @seealso Color names: [`colors`], hexadecimal values: [`rgb`], graphics palette: [`palette`].
+#' 
+#' Color to RGB conversion: [`col2rgb`].
+#' @md
+#' @keywords internal
+is_color = function(x) {
+  return(sapply(x, function(col) tryCatch(is.matrix(col2rgb(col)), error = function(e) FALSE)))
 }
 
 
