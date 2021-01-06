@@ -4,10 +4,12 @@
 \alias{is_color}
 \title{Check color representation}
 \usage{
-is_color(x)
+is_color(x, int = TRUE)
 }
 \arguments{
 \item{x}{Character vector.}
+
+\item{int}{Logical indicating whether to consider integer values as valid representations.}
 }
 \value{
 Logical vector giving for each value of \code{x} whether it is a valid color representation.

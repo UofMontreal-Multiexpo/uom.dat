@@ -261,6 +261,7 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #'  hexadecimal string and positive integer).
 #' 
 #' @param x Character vector.
+#' @param int Logical indicating whether to consider integer values as valid representations.
 #' @return Logical vector giving for each value of `x` whether it is a valid color representation.
 #' 
 #' @references Josh O'Brien. Stack Overflow topic:
@@ -270,8 +271,14 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' Color to RGB conversion: [`col2rgb`].
 #' @md
 #' @keywords internal
-is_color = function(x) {
-  return(sapply(x, function(col) tryCatch(is.matrix(col2rgb(col)), error = function(e) FALSE)))
+is_color = function(x, int = TRUE) {
+  is_valid_R_color = sapply(x, function(col) tryCatch(is.matrix(col2rgb(col)), error = function(e) FALSE))
+  
+  if (!int) {
+    is_not_int = suppressWarnings(is.na(sapply(x, as.numeric)))
+    return(is_not_int & is_valid_R_color)
+  }
+  return(is_valid_R_color)
 }
 
 
