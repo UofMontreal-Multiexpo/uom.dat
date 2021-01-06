@@ -985,7 +985,7 @@ function(object, identifiers = "original",
 #'  `"items"` and `"i"` are special values specifying to use all existing items.
 #' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
 #' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
-#' @inheritParams heb_chart
+#' @inheritParams plot_heb_chart
 #' @return Graph created with the packages `ggraph` and `ggplot2`.
 #' 
 #' @author Gauthier Magnin
@@ -1029,11 +1029,11 @@ function(object, items, min_occ = 1, max_occ = Inf,
   co_occ = co_occ[co_occ$Var1 != co_occ$Var2 & !duplicated(t(apply(co_occ[, c(1,2)], 1, sort))), ]
   connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
   
-  return(heb_chart(hierarchy, vertices, connections, limits = c(1, max(co_occ$Freq)),
-                   vertex_size = vertex_size, vertex_alpha = vertex_alpha, vertex_margin = vertex_margin,
-                   label_size = label_size, label_margin = label_margin,
-                   edge_tension = edge_tension, edge_alpha = edge_alpha,
-                   palette = palette, palette_direction = palette_direction))
+  return(plot_heb_chart(hierarchy, vertices, connections, limits = c(1, max(co_occ$Freq)),
+                        vertex_size = vertex_size, vertex_alpha = vertex_alpha, vertex_margin = vertex_margin,
+                        label_size = label_size, label_margin = label_margin,
+                        edge_tension = edge_tension, edge_alpha = edge_alpha,
+                        palette = palette, palette_direction = palette_direction))
 })
 
 

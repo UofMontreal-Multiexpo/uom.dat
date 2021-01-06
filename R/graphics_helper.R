@@ -191,12 +191,12 @@ fig_in_usr_coords = function(n = 1:4) {
 #' @author Gauthier Magnin
 #' @md
 #' @keywords internal
-heb_chart = function(hierarchy, vertices, edges, limits,
-                     legend_name = NULL, legend_values = NULL,
-                     vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
-                     label_size = 3, label_margin = 0.05,
-                     edge_tension = 0.8, edge_alpha = 1,
-                     palette = "Blues", palette_direction = 1) {
+plot_heb_chart = function(hierarchy, vertices, edges, limits,
+                          legend_name = NULL, legend_values = NULL,
+                          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
+                          label_size = 3, label_margin = 0.05,
+                          edge_tension = 0.8, edge_alpha = 1,
+                          palette = "Blues", palette_direction = 1) {
   
   # Décalages qui seront appliquées aux sommets et labels
   vertices$vertex_coord_multiplier = 1 + vertex_margin

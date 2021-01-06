@@ -3782,7 +3782,7 @@ setMethod(f = "category_tree_chart",
 #'  of the represented items.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param sort_by Sorting method of displayed items. One of `"category"`, `"item"`.
-#' @inheritParams heb_chart
+#' @inheritParams plot_heb_chart
 #' @return Graph created with the packages `ggraph` and `ggplot2`.
 #' 
 #' @author Gauthier Magnin
@@ -3862,7 +3862,7 @@ setMethod(f = "co_occurrence_chart",
     args$legend_values = category_legend
   }
   
-  return(do.call(heb_chart, args))
+  return(do.call(plot_heb_chart, args))
 })
 
 
