@@ -1,4 +1,4 @@
-#' @include observation_maker.R observation_set.R list_manager.R utils.R
+#' @include graphics_helper.R list_manager.R observation_maker.R observation_set.R utils.R
 NULL
 
 

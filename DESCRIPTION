@@ -41,6 +41,7 @@ RoxygenNote: 7.1.1
 Collate: 
     'data.R'
     'utils.R'
+    'graphics_helper.R'
     'list_manager.R'
     'mixer.R'
     'observation_set.R'
