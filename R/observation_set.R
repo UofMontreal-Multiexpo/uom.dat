@@ -408,6 +408,7 @@ setGeneric(name = "complexity_index",     def = function(object, ...){ standardG
 setGeneric(name = "co_occurrence_matrix", def = function(object, ...){ standardGeneric("co_occurrence_matrix") })
 
 # Methods for plotting charts
+setGeneric(name = "itemset_chart",       def = function(object, ...){ standardGeneric("itemset_chart") })
 setGeneric(name = "co_occurrence_chart", def = function(object, ...){ standardGeneric("co_occurrence_chart") })
 
 # Other specific methods
@@ -862,6 +863,104 @@ function(object, items = NULL) {
 
 
 #### Methods for plotting charts ####
+
+#' Itemset chart, for ObservationSet
+#' 
+#' Plot a chart of the observation itemsets. It can be automatically saved as a PDF file.
+#' 
+#' @details
+#' The itemsets are sorted according to their lengths then (for the same length) are taken according to
+#'  the initial order in `object`.
+#' 
+#' If the argument `name` is not `NULL`, the chart is plotted in a PDF file of A4 landscape paper size.
+#'  If it is `NULL`, the chart is plotted in the active device.
+#' 
+#' @param object S4 object of class `ObservationSet`.
+#' @param identifiers Which IDs to use to identify the observations on the chart and in the
+#'  return object. One of `"original"`, `"new"`.
+#'  \describe{
+#'    \item{`"original"`}{Use of the original identifiers.}
+#'    \item{`"new"`}{Use of new identifiers based on sorting (see 'Details' section to learn more
+#'                   about the sort that is performed).}
+#'  }
+#' @param length_one If `FALSE`, itemsets of length \eqn{1} are not plotted. If `TRUE`, all itemsets
+#'  are plotted.
+#' @param jitter If `FALSE`, non-equivalent itemsets of length \eqn{1} are aligned vertically.
+#'  If `TRUE`, they are spread over several vertical lines to avoid overplotting.
+#'  Ignored if `length_one` is `FALSE`.
+#' @param under,over Text to display on the chart under and over the itemsets.
+#'  Identifiers (`"ID"`) or one of the elements of the observations (i.e. one of the values of
+#'  `object["names"]`).
+#' @param title Chart title.
+#' @param path Path of the directory in which to save the chart as a PDF file. Default is the working
+#'  directory.
+#' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
+#'  active device.
+#' @return S4 object of class `ObservationSet` containing the observations represented on the chart.
+#' 
+#' @author Delphine Bosson-Rieutort, Gauthier Magnin
+#' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
+#'             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
+#'             *Annals of Work Exposures and Health*, Volume 64, Issue 4, May 2020, Pages 402–415.
+#'             <https://doi.org/10.1093/annweh/wxaa008>.
+#' @seealso [`get_itemsets`], [`get_all_items`].
+#' 
+#' Method for signature `SpectralAnalyzer`:
+#' [`itemset_chart,SpectralAnalyzer`][itemset_chart,SpectralAnalyzer-method].
+#' 
+#' @examples
+#' itemset_chart(OS_instance)
+#' itemset_chart(OS_instance, identifiers = "new", under = "YEAR", over = "ID")
+#' 
+#' itemset_chart(OS_instance, path = getwd(), name = "obs_itemsets")
+#' 
+#' @aliases itemset_chart itemset_chart,ObservationSet
+#' @md
+#' @export
+setMethod(f = "itemset_chart",
+          signature = "ObservationSet",
+          definition =
+function(object, identifiers = "original",
+         length_one = TRUE, jitter = TRUE,
+         under = "ID", over = NULL,
+         title = "Observation itemsets", path = NULL, name = NULL) {
+  
+  # Validation des paramètres
+  check_param(identifiers, values = c("original", "new"))
+  
+  # Itemset de taille > 1
+  to_plot = if (length_one) object else get_complex_obs(object)
+  
+  # Si pas de nom et affichage des identifiants d'origine : attribution de noms correspondant aux index 
+  # (nécessaire avant le tri)
+  if (identifiers == "original" && !is_named(to_plot@data)) names(to_plot@data) = seq_along(to_plot@data)
+  to_plot = reorder(to_plot, order(sapply(get_itemsets(to_plot), length)))
+  if (identifiers == "new") names(to_plot@data) = seq_along(to_plot@data)
+  
+  # Conversion en data frame
+  obsc = as(to_plot, "data.frame")
+  obsc$ID = rownames(obsc)
+  
+  # Texte à afficher
+  under_text = if (is.null(under)) NULL else obsc[, under]
+  over_text = if (is.null(over)) NULL else obsc[, over]
+  if (is.list(under_text)) under_text = turn_list_into_char(under_text)
+  if (is.list(over_text)) over_text = turn_list_into_char(over_text)
+  
+  
+  # Traçage du graphique (dans le device actif ou dans un fichier PDF)
+  if (!is.null(name)) grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
+                                     14, 10, paper = "a4r", pointsize = 11)
+  plot_itemset_chart(obsc[, object@item_key],
+                     items = data.frame(item = get_all_items(to_plot),
+                                        label = get_all_items(to_plot)),
+                     category = NULL, jitter, under_text, over_text, over_legend = NULL, title)
+  if (!is.null(name)) grDevices::dev.off()
+  
+  # Observations tracées
+  return(to_plot)
+})
+
 
 #' Co-occurrence chart, for ObservationSet
 #' 

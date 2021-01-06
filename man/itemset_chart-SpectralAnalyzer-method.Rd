@@ -3,7 +3,8 @@
 \name{itemset_chart,SpectralAnalyzer-method}
 \alias{itemset_chart,SpectralAnalyzer-method}
 \alias{itemset_chart}
-\title{Itemset chart}
+\alias{itemset_chart,SpectralAnalyzer}
+\title{Itemset chart, for SpectralAnalyzer}
 \usage{
 \S4method{itemset_chart}{SpectralAnalyzer}(
   object,
@@ -26,31 +27,29 @@
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
-\item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
-\strong{c}haracteristics. Nodes or patterns whose chart is to be plotted. Any subset of
-\code{object["nodes"]} or \code{object["patterns"]}.\cr
-\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
-\code{object["nodes"]} and \code{object["patterns"]}.}
+\item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their \strong{c}haracteristics. Nodes or
+patterns whose chart is to be plotted. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.\cr
+\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for \code{object["nodes"]} and
+\code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the nodes or patterns on the chart and in the
 return data frames. One of \code{"original"}, \code{"new"}.
 \describe{
-  \item{\code{"original"}}{Use of the original identifiers.}
-  \item{\code{"new"}}{Use of new identifiers based on sorting (see 'Details' section to learn more
-                      about the sort that is performed).}
+\item{\code{"original"}}{Use of the original identifiers.}
+\item{\code{"new"}}{Use of new identifiers based on sorting (see 'Details' section to learn more
+about the sort that is performed).}
 }}
 
-\item{length_one}{If \code{FALSE}, itemsets of length \eqn{1} are not plotted. If \code{TRUE}, all
-itemsets are plotted.}
+\item{length_one}{If \code{FALSE}, itemsets of length \eqn{1} are not plotted. If \code{TRUE}, all itemsets
+are plotted.}
 
 \item{jitter}{If \code{FALSE}, itemsets of length \eqn{1} are aligned vertically.
 If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
 Ignored if \code{length_one} is \code{FALSE}.}
 
 \item{under, over}{Text to display on the chart under and over the itemsets.
-Identifiers (\code{"ID"}) or one of the characteristics (\code{"weight"}, \code{"frequency"},
-\code{"specificity"}, \code{"year"}, \code{"status"}).
-
+Identifiers (\code{"ID"}) or one of the characteristics (\code{"weight"}, \code{"frequency"}, \code{"specificity"},
+\code{"year"}, \code{"status"}).
 \code{"status"} can only be used for the argument \code{"over"}.
 \code{NULL} value specifies to display no data.}
 
@@ -78,7 +77,7 @@ active device.}
 }
 \value{
 Data frame of the nodes or patterns represented on the chart, associated with their
- characteristics and identifiers (visible on the chart if \code{under} or \code{over} is \code{"ID"}).
+characteristics and identifiers (visible on the chart if \code{under} or \code{over} is \code{"ID"}).
 }
 \description{
 Plot a chart of the node or pattern itemsets. It can be automatically saved as a PDF file.
@@ -86,14 +85,14 @@ Plot a chart of the node or pattern itemsets. It can be automatically saved as a
 \details{
 The nodes or patterns are sorted according to their lengths, then to their weights.
 
-If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape
- paper size. If it is \code{NULL}, the chart is plotted in the active device.
+If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape paper size.
+If it is \code{NULL}, the chart is plotted in the active device.
 
 The colors associated with the values of the possible category represented are selected circularly
- among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
+among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
 Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
- For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
- value.
+For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
+value.
 See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 }
 \examples{
@@ -110,9 +109,13 @@ patterns_1 <- itemset_chart(SA_instance, "patterns", category = "family",
 }
 \references{
 Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
-            Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
-            \emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
-            \url{https://doi.org/10.1093/annweh/wxaa008}.
+Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
+\emph{Annals of Work Exposures and Health}, Volume 64, Issue 4, May 2020, Pages 402–415.
+\url{https://doi.org/10.1093/annweh/wxaa008}.
+}
+\seealso{
+Method for signature \code{ObservationSet}:
+\code{\link[=itemset_chart,ObservationSet-method]{itemset_chart,ObservationSet}}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin

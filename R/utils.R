@@ -476,6 +476,313 @@ heb_chart = function(hierarchy, vertices, edges, limits,
 }
 
 
+#' Itemset chart
+#' 
+#' Plot a chart of itemsets. A color scale can be associated to the items and additional data
+#'  can be plotted under and over each itemset.
+#' 
+#' @param itemsets List of character vectors. Itemsets to plot.
+#' @param items Data frame associating each item of `itemsets` (column `"item"`) with a label
+#'  (column `"label"`) and possibly with a category (column named by the name of the category).
+#' @param category Data frame associating each value of the category associated with the items (column
+#'  `"value"`) with a color (column `"col"`) and with a label (column `"label"`).
+#'  If not `NULL`, the items are colored according to the category values and a legend is displayed.
+#' @param jitter If `FALSE`, non-equivalent itemsets of length \eqn{1} are aligned vertically.
+#'  If `TRUE`, they are spread over several vertical lines to avoid overplotting.
+#' @param under Character vector. Text to display on the chart under the itemsets.
+#' @param over Character vector. Text to display on the chart over the itemsets.
+#'  Color values (color names or hexadecimal values) can be specified to plot colored squared instead of
+#'  text.
+#' @param over_legend If color values are given in the argument `over`, named character vector in which
+#'  values are the colored used and names are associated labels to plot a specific legend.
+#' @param title Chart title.
+#' 
+#' @author Delphine Bosson-Rieutort, Gauthier Magnin
+#' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
+#'             Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.
+#'             *Annals of Work Exposures and Health*, Volume 64, Issue 4, May 2020, Pages 402–415.
+#'             <https://doi.org/10.1093/annweh/wxaa008>.
+#' @md
+#' @keywords internal
+plot_itemset_chart = function(itemsets, items, category = NULL,
+                              jitter = TRUE, under = NULL, over = NULL, over_legend = NULL,
+                              title = "Itemsets") {
+  
+  # Définition des marges et initialisation de la zone graphique
+  if (!is.null(category)) graphics::par(mar = c(3.9, 0.5, 2.0, 0.5))
+  else graphics::par(mar = c(0.5, 0.5, 2.0, 0.5))
+  graphics::plot.new()
+  
+  
+  ## Préparation de variables
+  
+  # Position des items sur la gauche du graphique (x = 0 ; y = ordre décroissant)
+  items$x = 0
+  items$y = rev(seq(nrow(items)))
+  
+  # Dimensions du graphique
+  xmin = items$x[1]
+  ymax = nrow(items) + 2 # Nombre d'items + 2 pour afficher les tailles des itemsets
+  
+  # Effectifs des tailles des itemsets
+  length_tab = table(sapply(itemsets, length))
+  # Affichage ou non de carrés colorés (cs = colored squares)
+  display_cs = (!is.null(over_legend) && !is.null(over) && all(is_color(over, int = FALSE)))
+  
+  # Titre des tailles des itemsets et position en Y
+  text_length = "Length:"
+  y_lengths = max(items$y) + 1.25
+  
+  # Couleurs des items et nom de l'éventuelle catégorie
+  if (!is.null(category)) {
+    category_name = colnames(items)[!is.element(colnames(items), c("item", "label", "x", "y"))]
+    item_colors = category$col[match(items[, category_name], category$value)]
+  } else {
+    item_colors = "black"
+  }
+  
+  # Marge entre un itemset et la ligne séparatrice qui le suit ou entre deux itemsets
+  margin = 0.5
+  # Largeur d'un itemset
+  width = 0.5
+  
+  # Ordonnées des items pour chaque itemset
+  y_itemsets = lapply(itemsets, function(itemset) {
+    sort(items[match(itemset, items$item), "y"])
+  })
+  
+  # Abscisses des itemsets
+  if ("1" %in% names(length_tab)) {
+    
+    # Pour les itemsets de taille 1, alignement vertical
+    x_itemsets = rep(0, length_tab[1])
+    one_order = order(unlist(y_itemsets[1:length_tab[1]]))
+    
+    for (i in seq(2, length(y_itemsets[one_order]))) {
+      # Décalage de ceux équivalents
+      if (y_itemsets[one_order][[i]] == y_itemsets[one_order][[i-1]]) {
+        x_itemsets[i] = x_itemsets[i-1] + width
+      }
+      # Décalage de ceux l'un au-dessus de l'autre
+      else if (jitter
+               && y_itemsets[one_order][[i]] == y_itemsets[one_order][[i-1]] + 1
+               && x_itemsets[i-1] == 0) {
+        x_itemsets[i] = width
+      }
+    }
+    
+    # Positionnement des itemsets les uns après les autres en considérant les lignes séparatrices
+    x_itemsets = c(x_itemsets[order(one_order)],
+                   (width + margin) * seq(length(itemsets) - length(x_itemsets)) + max(x_itemsets) + 
+                     margin * unname(unlist(lapply(length_tab[-1],
+                                                   function(nb) rep(parent.frame()$i[], nb)))))
+  } else {
+    # Positionnement des itemsets les uns après les autres en considérant les lignes séparatrices
+    # Taille d'un itemset et d'un espacement * nombre d'autres itemsets avant l'itemset
+    #  + un espacement * nombre de lignes séparatrices avant l'itemset
+    x_itemsets = (width + margin) * seq(0, length(itemsets)-1) + 
+                   margin * unname(unlist(lapply(length_tab,
+                                                 function(nb) rep(parent.frame()$i[] - 1, nb))))
+  }
+  
+  # Abscisses des lignes séparatrices (milieux des itemsets les plus espacés)
+  x_lines = x_itemsets[-1][x_itemsets[seq(2, length(x_itemsets))] >= (x_itemsets[seq(length(x_itemsets)-1)] + width + margin * 2)] - margin
+  
+  # Largeur de la zone des itemsets : position du dernier itemset + largeur de l'itemset + un espacement
+  area_width = max(x_itemsets) + width + margin
+  
+  
+  ## Préparation de la zone graphique
+  
+  # Placement de la "plot region" pour avoir la place d'afficher les labels des items en-dehors
+  # Espace à gauche : taille du plus grand label (ou du titre "Length") + taille de la marge
+  #                   + taille d'un caractère * 0.5 (offset de placement des labels) ; en fraction de la "figure region"
+  graphics::par(plt = c(max(graphics::strwidth(items$label, cex = 0.75, units = "figure"),
+                            graphics::strwidth(text_length, cex = 1.05, units = "figure")) +
+                          convert_gunits(graphics::par("mai")[2], "inches", to = "figure", "w") +
+                          0.5 * graphics::strwidth("A", units = "figure"),
+                        graphics::par("plt")[2:4]))
+  
+  # Option "new" pour que le graphique apparaisse par-dessus la zone précédemment définie
+  graphics::par(new = TRUE)
+  
+  # Espace au bas du graphique : taille d'affichage du texte under
+  ymin_1 = ymin_2 = min(items$y)
+  if (!is.null(under)) {
+    # Largeur du plus long texte + espace entre un itemset et le texte
+    carac_width = max(graphics::strwidth(under, units = "inches", cex = 0.5)) + graphics::par("csi")[1] * 0.5
+    ymin_1 = ymin_1 - convert_gunits(carac_width, "inches", to = "user", "w", rotation = TRUE)
+  }
+  
+  # Initialisation de la zone graphique
+  graphics::plot(rbind(items[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
+                       data.frame(x = rep(0, 2), y = seq_len(2) + nrow(items))), # + 2 pour placer du texte
+                 xlim = c(xmin, area_width - xmin),
+                 ylim = c(ymin_1, ymax),
+                 col = "white", pch = 20, bty = "n",
+                 xaxt = "n", xaxs = "i", xlab = "",
+                 yaxt = "n", yaxs = "i", ylab = "")
+  
+  # Espace ajouté pour pouvoir afficher la dernière taille d'itemset s'il y a trop peu d'itemsets associés
+  last_space = graphics::strwidth(utils::as.roman(names(length_tab[length(length_tab)]))) - 
+    (length_tab[length(length_tab)] * (width + margin) + margin) # strwidth units="user" dépend du graphique
+  if (last_space > 0) area_width = area_width + last_space
+  
+  if (!is.null(under)) {
+    ymin_2 = ymin_2 - convert_gunits(carac_width, "inches", to = "user", "w", rotation = TRUE)
+  }
+  
+  if (last_space > 0 || ymin_2 != ymin_1) {
+    
+    # Option "new" pour que le graphique apparaisse par-dessus la zone précédemment définie
+    graphics::par(new = TRUE)
+    
+    # Réinitialisation de la zone graphique en considérant la taille d'un caractère (strwidth units="user" dépend du graphique)
+    graphics::plot(rbind(items[, c("x", "y")], # Autant de lignes (ordonnée max) que d'items distincts
+                         data.frame(x = rep(0, 2), y = seq_len(2) + nrow(items))), # + 2 pour placer du texte
+                   xlim = c(xmin, area_width - xmin),
+                   ylim = c(ymin_2, ymax),
+                   col = "white", pch = 20, bty = "n",
+                   xaxt = "n", xaxs = "i", xlab = "",
+                   yaxt = "n", yaxs = "i", ylab = "")
+  }
+  
+  
+  ## Préparation de variables dépendant de la zone graphique
+  
+  # Définition des abscisses des titres des tailles des itemsets
+  if (length(x_lines) == 0) x_lengths = area_width / 2
+  else {
+    x_lengths = numeric(length(length_tab))
+    x_lengths[1] = x_lines[1] / 2
+    if (length(x_lines) > 1) {
+      x_lengths[seq(2, length(x_lines))] = (x_lines[seq(2, length(x_lines))] + 
+                                             x_lines[seq(length(x_lines)-1)]) / 2
+    }
+    x_lengths[length(x_lengths)] = (area_width + x_lines[length(x_lines)]) / 2
+  }
+  names(x_lengths) = names(length_tab)
+  
+  # Pour uniformiser l'espacement entre un itemset et les informations affichées : taille d'un
+  # point carré = taille d'un caractère * rapport approximatif entre un caractère et un point pch 15 * cex
+  point_size = graphics::par("cxy")[2] * 0.41 * 0.5
+  
+  # Marges entre la plot region et la figure region (w = width, b = bottom, t = top)
+  w_margin = convert_gunits(graphics::par("mai")[4], "inches", "user", "w")
+  b_margin = convert_gunits(w_margin, "user", dim = "w", rotation = TRUE)
+  t_margin = convert_gunits(graphics::par("mai")[3], "inches", "user", "h")
+  
+  # Dimensions des légendes (carrés colorés et catégorie)
+  if (display_cs) {
+    cs_legend = graphics::legend(x = 0, y = 0, plot = FALSE,
+                                 bty = "n", horiz = TRUE, xpd = TRUE,
+                                 pch = 15, cex = 0.85,
+                                 col = over_legend,
+                                 legend = names(over_legend))
+  }
+  if (!is.null(category)) {
+    xcl = fig_in_usr_coords(1) + w_margin
+    ycl = graphics::par("usr")[3]
+    category_legend = graphics::legend(x = xcl, y = ycl, plot = FALSE,
+                                       xpd = TRUE, bty = "n",
+                                       title = cap(category_name), legend = category$label, cex = 0.85,
+                                       col = category$col, pch = 20, ncol = ceiling(length(category$label) / 2))
+  }
+  
+  
+  ## Traçage du graphique
+  
+  # Lignes horizontales repérant les items
+  graphics::segments(x0 = 0, x1 = area_width, y0 = items$y,
+                     lwd = 0.02, lty = "dotted", col = "gray85")
+  
+  # Tailles des itemsets (titre et valeurs) et lignes séparatrices
+  graphics::text(0, y_lengths, text_length,
+                 col = "black", cex = 1.05, adj = c(1, 0.5), xpd = TRUE)
+  graphics::text(x_lengths, y = y_lengths, labels = utils::as.roman(names(x_lengths)),
+                 col = "black", cex = 1.05)
+  graphics::abline(v = x_lines, col = "black", lwd = 0.5, lty = "dotted")
+  
+  # Segments verticaux entre les premiers et derniers items de chaque itemset
+  graphics::segments(x0 = x_itemsets + width,
+                     y0 = nth_values(y_itemsets, "first"), y1 = nth_values(y_itemsets, "last"),
+                     lwd = 1.2, lty = 1, col = "black")
+  
+  # Segments horizontaux pour les items de chaque itemset
+  graphics::segments(x0 = rep(x_itemsets, sapply(y_itemsets, length)),
+                     x1 = rep(x_itemsets, sapply(y_itemsets, length)) + width,
+                     y0 = unlist(y_itemsets),
+                     lwd = 1.2, lty = 1, col = "black")
+  
+  # Affichage du texte contenu dans under au-dessous des itemsets
+  if (!is.null(under)) {
+    graphics::text(x_itemsets + width / 2,
+                   nth_values(y_itemsets, "first") - point_size,
+                   labels = under,
+                   col = "black", cex = 0.5, srt = 90, adj = 1)
+  }
+  
+  # Affichage du contenu de over au-dessus des itemsets
+  if (!is.null(over)) {
+    # Affichage de carrés colorés ou de texte
+    if (display_cs) {
+      graphics::points(x_itemsets + width / 2,
+                       nth_values(y_itemsets, "last") + 1.5 * point_size,
+                       col = over,
+                       cex = 0.5, pch = 15)
+      # Une coordonnée indépendante de la taille du point entraîne parfois un chevauchement avec l'itemset
+      # Concernant under une coordonnée indépendante peut être utilisée grâce à adj
+    } else {
+      graphics::text(x_itemsets + width / 2,
+                     nth_values(y_itemsets, "last") + point_size,
+                     labels = over,
+                     col = "black", cex = 0.5, srt = 90, adj = 0)
+    }
+  }
+  
+  
+  ## Affichage du titre, des items et des légendes
+  
+  # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
+  graphics::text(x = fig_in_usr_coords(1) + w_margin,
+                 y = fig_in_usr_coords(4) - t_margin / 2,
+                 title, cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
+  
+  # Légende de la catégorie
+  if (!is.null(category)) {
+    # Bornage de la taille de la légende à celle de la figure region (moins les marges)
+    if (category_legend$rect$w > graphics::par("usr")[2] - xcl) {
+      xycl = grDevices::xy.coords(x = c(xcl, graphics::par("usr")[2]),
+                                  y = c(ycl, fig_in_usr_coords(3) + b_margin))
+    } else {
+      # Centrage de la légende
+      xycl = grDevices::xy.coords(x = (graphics::par("usr")[2] + xcl) / 2 - category_legend$rect$w / 2,
+                                  y = ycl)
+    }
+    graphics::legend(xycl, xpd = TRUE, bty = "n",
+                     title = cap(category_name), legend = category$label, cex = 0.85,
+                     col = category$col, pch = 20, ncol = ceiling(length(category$label) / 2))
+  }
+  
+  # Légende des carrés colorés
+  if (display_cs) {
+    graphics::legend(x = graphics::par("usr")[2] - cs_legend$rect$w +
+                       (max(graphics::strwidth(names(over_legend))) -
+                          graphics::strwidth(names(over_legend)[length(over_legend)])),
+                     y = graphics::par("usr")[4] + t_margin / 2 + cs_legend$rect$h / 2,
+                     bty = "n", horiz = TRUE, xpd = TRUE,
+                     pch = 15, cex = 0.85,
+                     col = over_legend,
+                     legend = names(over_legend))
+  }
+  
+  # Pointage et affichage des noms des items
+  graphics::points(items[, c("x", "y")], col = item_colors, pch = 20)
+  graphics::text(items$x, items$y, items$label,
+                 cex = 0.75, pos = 2, col = item_colors, xpd = TRUE)
+}
+
+
 
 #### Utility functions for file management ####
 
