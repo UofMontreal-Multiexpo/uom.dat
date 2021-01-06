@@ -668,7 +668,7 @@ setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("
 
 # Methods for creating itemset graphs
 
-# setGeneric(name = "itemset_chart", def = function(object, nopc, identifiers = "original", length_one = FALSE, jitter = TRUE, under = "ID", over = "status", use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", title = NULL, path = NULL, name = NULL){ standardGeneric("itemset_chart") })
+# setGeneric(name = "itemset_chart", def = function(object, ...){ standardGeneric("itemset_chart") })
 
 
 # Methods for creating category trees and co-occurrence graphs

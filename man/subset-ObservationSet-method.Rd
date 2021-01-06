@@ -13,12 +13,12 @@
 \item{indexes}{Numeric vector indicating which observations from \code{x["data"]} to keep,
 or logical vector indicating for each observation whether to keep it.}
 
-\item{keep_names}{If \code{TRUE}, observations of the returned object keep the names from the initial object
-\code{x}. If \code{FALSE}, they are not named.}
+\item{keep_names}{If \code{TRUE}, observations of the returned object keep the names from the initial
+object \code{x}. If \code{FALSE}, they are not named.}
 }
 \value{
-S4 object of class \code{ObservationSet} having a subset of observations from \code{x} (i.e. a subset of
-the attribute \code{data} from \code{x}).
+S4 object of class \code{ObservationSet} having a subset of observations from \code{x} (i.e. a subset
+of the attribute \code{data} from \code{x}).
 }
 \description{
 Return an \code{ObservationSet} in which observations are a subset of the ones of another \code{ObservationSet}.

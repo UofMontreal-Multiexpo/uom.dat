@@ -169,7 +169,7 @@ setMethod(f = "length",
 
 
 
-#### Selector, mutator, susbet, reorder ####
+#### Selector, mutator ####
 
 #' Extract or replace parts of an object of class ObservationSet
 #' 
@@ -279,75 +279,6 @@ setReplaceMethod(f = "[",
                  })
 
 
-#' Subsetting Observation Set
-#' 
-#' Return an `ObservationSet` in which observations are a subset of the ones of another `ObservationSet`.
-#' 
-#' @details
-#' If the observations from `x` are not named and `keep_names = TRUE`, the observations of the resulting
-#'  object are named according to the indexes of the initial observations.
-#' 
-#' @param x Object of class `ObservationSet` to be subsetted.
-#' @param indexes Numeric vector indicating which observations from `x["data"]` to keep,
-#'  or logical vector indicating for each observation whether to keep it.
-#' @param keep_names If `TRUE`, observations of the returned object keep the names from the initial object
-#'  `x`. If `FALSE`, they are not named.
-#' @return S4 object of class `ObservationSet` having a subset of observations from `x` (i.e. a subset of
-#'  the attribute `data` from `x`).
-#' 
-#' @author Gauthier Magnin
-#' @examples
-#' subset(OS_instance, c(1, 7, 8, 9))
-#' subset(OS_instance, c(TRUE, rep(FALSE, 12), TRUE))
-#' 
-#' @aliases subset
-#' @md
-#' @export
-setMethod(f = "subset",
-          signature = "ObservationSet",
-          definition = function(x, indexes, keep_names = TRUE) {
-            
-            if (is.logical(indexes)) indexes = which(indexes)
-            
-            if (keep_names) {
-              if (!is.null(names(x@data))) {
-                return(observation.set(x@data[indexes],
-                                       x@item_key, x@year_key, x@names))
-              }
-              return(observation.set(stats::setNames(x@data[indexes], indexes),
-                                     x@item_key, x@year_key, x@names))
-            }
-            # if (!keep_names)
-            return(observation.set(unname(x@data[indexes]),
-                                   x@item_key, x@year_key, x@names))
-          })
-
-
-#' Reorder Observation Set
-#' 
-#' Return a copy of an `ObservationSet` in which the observations are in another order.
-#' 
-#' @param x Object of class `ObservationSet` whose observations are to be reordered.
-#' @param permutation Numeric or character vector. Permutation to use to rearrange the observations.
-#' @return S4 object of class `ObservationSet` containing the observations of `x` in the order defined
-#'  by `permutation`.
-#' 
-#' @author Gauthier Magnin
-#' @examples
-#' reorder(OS_instance, c(2, 1, 3:14))
-#' reorder(OS_instance, names(OS_instance["data"])[c(2, 1, 3:14)])
-#' reorder(OS_instance, 14:1)
-#' 
-#' @aliases reorder
-#' @md
-#' @export
-setMethod(f = "reorder",
-          signature = "ObservationSet",
-          definition = function(x, permutation) {
-            return(subset(x, permutation, keep_names = is_named(x@data)[1]))
-          })
-
-
 
 #### Type conversions ####
 
@@ -390,6 +321,10 @@ setAs(from = "ObservationSet",
 
 #### Declaration of the methods ####
 
+# Methods for processing on observations
+# setGeneric(name = "subset", def = function(x, ...){ standardGeneric("subset") })
+setGeneric(name = "reorder", def = function(object, ...){ standardGeneric("reorder") })
+
 # Methods for search in observations
 setGeneric(name = "get_all_items",       def = function(object){ standardGeneric("get_all_items") })
 setGeneric(name = "get_itemsets",        def = function(object){ standardGeneric("get_itemsets") })
@@ -414,6 +349,80 @@ setGeneric(name = "co_occurrence_chart", def = function(object, ...){ standardGe
 # Other specific methods
 setGeneric(name = "has_temporal_data",   def = function(object){ standardGeneric("has_temporal_data") })
 setGeneric(name = "get_items",           def = function(object, ...){ standardGeneric("get_items") })
+
+
+
+#### Methods for processing on observations ####
+
+#' Subsetting Observation Set
+#' 
+#' Return an `ObservationSet` in which observations are a subset of the ones of another `ObservationSet`.
+#' 
+#' @details
+#' If the observations from `x` are not named and `keep_names = TRUE`, the observations of the resulting
+#'  object are named according to the indexes of the initial observations.
+#' 
+#' @param x Object of class `ObservationSet` to be subsetted.
+#' @param indexes Numeric vector indicating which observations from `x["data"]` to keep,
+#'  or logical vector indicating for each observation whether to keep it.
+#' @param keep_names If `TRUE`, observations of the returned object keep the names from the initial
+#'  object `x`. If `FALSE`, they are not named.
+#' @return S4 object of class `ObservationSet` having a subset of observations from `x` (i.e. a subset
+#'  of the attribute `data` from `x`).
+#' 
+#' @author Gauthier Magnin
+#' @examples
+#' subset(OS_instance, c(1, 7, 8, 9))
+#' subset(OS_instance, c(TRUE, rep(FALSE, 12), TRUE))
+#' 
+#' @aliases subset
+#' @md
+#' @export
+setMethod(f = "subset",
+          signature = "ObservationSet",
+          definition =
+function(x, indexes, keep_names = TRUE) {
+  
+  if (is.logical(indexes)) indexes = which(indexes)
+  
+  if (keep_names) {
+    if (!is.null(names(x@data))) {
+      return(observation.set(x@data[indexes],
+                             x@item_key, x@year_key, x@names))
+    }
+    return(observation.set(stats::setNames(x@data[indexes], indexes),
+                           x@item_key, x@year_key, x@names))
+  }
+  # if (!keep_names)
+  return(observation.set(unname(x@data[indexes]),
+                         x@item_key, x@year_key, x@names))
+})
+
+
+#' Reorder Observation Set
+#' 
+#' Return a copy of an `ObservationSet` in which the observations are in another order.
+#' 
+#' @param object S4 object of class `ObservationSet`.
+#' @param permutation Numeric or character vector. Permutation to use to rearrange the observations.
+#' @return S4 object of class `ObservationSet` containing the observations of `object` in the order
+#'  defined by `permutation`.
+#' 
+#' @author Gauthier Magnin
+#' @examples
+#' reorder(OS_instance, c(2, 1, 3:14))
+#' reorder(OS_instance, names(OS_instance["data"])[c(2, 1, 3:14)])
+#' reorder(OS_instance, 14:1)
+#' 
+#' @aliases reorder
+#' @md
+#' @export
+setMethod(f = "reorder",
+          signature = "ObservationSet",
+          definition =
+function(object, permutation) {
+  return(subset(object, permutation, keep_names = is_named(object@data)[1]))
+})
 
 
 

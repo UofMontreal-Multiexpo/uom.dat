@@ -5,16 +5,16 @@
 \alias{reorder}
 \title{Reorder Observation Set}
 \usage{
-\S4method{reorder}{ObservationSet}(x, permutation)
+\S4method{reorder}{ObservationSet}(object, permutation)
 }
 \arguments{
-\item{x}{Object of class \code{ObservationSet} whose observations are to be reordered.}
+\item{object}{S4 object of class \code{ObservationSet}.}
 
 \item{permutation}{Numeric or character vector. Permutation to use to rearrange the observations.}
 }
 \value{
-S4 object of class \code{ObservationSet} containing the observations of \code{x} in the order defined
-by \code{permutation}.
+S4 object of class \code{ObservationSet} containing the observations of \code{object} in the order
+defined by \code{permutation}.
 }
 \description{
 Return a copy of an \code{ObservationSet} in which the observations are in another order.
