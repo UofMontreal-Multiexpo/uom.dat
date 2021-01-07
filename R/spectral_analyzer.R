@@ -1820,29 +1820,35 @@ setMethod(f = "compute_specificity",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns, frequencies, weights) {
             
+            # Renommage des variables pour mapper la formule
             u = frequencies
             w = weights
             h = numeric(length(patterns))
+            specificity = rep(NA, length(patterns))
             
-            # Indices des motifs dans la matrice les liant aux noeuds
+            # Indices des motifs dans la matrice liant les motifs aux noeuds
             p_indexes = match(as.character(patterns), colnames(object@nodes_patterns))
             
+            
+            # Présence du motif dans un seul noeud -> spécificité de 1
+            specificity[u == 1] = 1
+            
             # Pour chaque motif
-            for (i in seq_along(patterns)) {
-              # Recherche des poids des noeuds qui contiennent le motif
-              a = object@nodes$weight[object@nodes_patterns[, p_indexes[i]]]
+            for (p in seq_along(patterns)[u != 1]) {
               
-              h[i] = -1 * sum(a / w[i] * log(a / w[i]))
+              # Recherche des poids des noeuds qui contiennent le motif
+              a = object@nodes$weight[object@nodes_patterns[, p_indexes[p]]]
+              
+              # Spécificité de 0 si tous les noeuds ont le même poids ; sinon calcul selon la formule
+              if (length(unique(a)) == 1) specificity[p] = 0
+              else h[p] = -1 * sum(a / w[p] * log(a / w[p]))
             }
             
-            # Calcul de la spécificité de chaque motif
-            h_max = max(log(u))
-            h_min = min(log(w / (w - u + 1)) + ((u - 1) / w * log(w - u + 1)))
-            specificity = (h_max - h) / (h_max - h_min)
-            
-            # Les valeurs calculées peuvent être NaN si les motifs n'apparaîssent que dans un seul noeud
-            # ou sont équirépartis
-            specificity[is.nan(specificity)] = 1
+            # Calcul de la spécificité des motifs pour lesquels elle n'a pas encore été calculée
+            to_compute = is.na(specificity)
+            h_max = log(u[to_compute])
+            h_min = log(w / (w - u + 1)) + (u - 1) / w * log(w - u + 1)
+            specificity[is.na(specificity)] = (h_max - h[to_compute]) / (h_max - h_min[to_compute])
             
             return(specificity)
           })
