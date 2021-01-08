@@ -576,6 +576,9 @@ setReplaceMethod(f = "[",
 
 #### Declaration of the methods ####
 
+# Instructions in comment correspond to generics already defined in observation_set.R
+# because some methods are defined for both signatures SpectralAnalyzer and ObservationSet.
+
 # Initialization methods
 
 setGeneric(name = "reset", def = function(object, from = 1, verbose = TRUE){ standardGeneric("reset") })

@@ -321,9 +321,12 @@ setAs(from = "ObservationSet",
 
 #### Declaration of the methods ####
 
+# Calls to setGeneric without the "def" argument correpond to generics already existing
+# in R base packages (base, stats, etc.).
+
 # Methods for processing on observations
-# setGeneric(name = "subset", def = function(x, ...){ standardGeneric("subset") })
-setGeneric(name = "reorder", def = function(object, ...){ standardGeneric("reorder") })
+setGeneric(name = "subset")
+setGeneric(name = "reorder")
 
 # Methods for search in observations
 setGeneric(name = "get_all_items",       def = function(object){ standardGeneric("get_all_items") })
@@ -403,9 +406,9 @@ function(x, indexes, keep_names = TRUE) {
 #' 
 #' Return a copy of an `ObservationSet` in which the observations are in another order.
 #' 
-#' @param object S4 object of class `ObservationSet`.
+#' @param x S4 object of class `ObservationSet`.
 #' @param permutation Numeric or character vector. Permutation to use to rearrange the observations.
-#' @return S4 object of class `ObservationSet` containing the observations of `object` in the order
+#' @return S4 object of class `ObservationSet` containing the observations of `x` in the order
 #'  defined by `permutation`.
 #' 
 #' @author Gauthier Magnin
@@ -420,8 +423,8 @@ function(x, indexes, keep_names = TRUE) {
 setMethod(f = "reorder",
           signature = "ObservationSet",
           definition =
-function(object, permutation) {
-  return(subset(object, permutation, keep_names = is_named(object@data)[1]))
+function(x, permutation) {
+  return(subset(x, permutation, keep_names = is_named(x@data)[1]))
 })
 
 
