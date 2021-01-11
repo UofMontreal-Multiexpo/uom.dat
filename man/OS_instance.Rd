@@ -24,7 +24,7 @@ An example of an object of class \code{ObservationSet}.
 Here is the way it was created using the dataset \code{\link{oedb_sample}}:
 \preformatted{
 ## Making a list of observations by grouping data
-obs <- make_observations(oedb.analysis.tools::oedb_sample,
+obs <- make_observations(oedb_sample,
                          by = "ID",
                          additional = c("CODE", "YEAR",
                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))

@@ -18,7 +18,8 @@ SA_instance
 An example of an object of class \code{SpectralAnalyzer}.
 }
 \details{
-Here is the way it was created using the dataset \code{\link{oedb_sample}}:
+Here is the way it was created using the datasets \code{\link{oedb_sample}} and
+ \code{\link{substances_information}}:
 \preformatted{
 ## Making a list of observations
 to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")

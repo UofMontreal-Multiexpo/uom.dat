@@ -43,7 +43,7 @@
 #' Here is the way it was created using the dataset \code{\link{oedb_sample}}:
 #' \preformatted{
 #' ## Making a list of observations by grouping data
-#' obs <- make_observations(oedb.analysis.tools::oedb_sample,
+#' obs <- make_observations(oedb_sample,
 #'                          by = "ID",
 #'                          additional = c("CODE", "YEAR",
 #'                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
@@ -69,7 +69,8 @@
 #' An example of an object of class \code{SpectralAnalyzer}.
 #' 
 #' @details
-#' Here is the way it was created using the dataset \code{\link{oedb_sample}}:
+#' Here is the way it was created using the datasets \code{\link{oedb_sample}} and
+#'  \code{\link{substances_information}}:
 #' \preformatted{
 #' ## Making a list of observations
 #' to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
