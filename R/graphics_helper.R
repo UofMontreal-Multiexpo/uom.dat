@@ -334,39 +334,74 @@ plot_itemset_chart = function(itemsets, items, category = NULL,
   # Abscisses des itemsets
   if ("1" %in% names(length_tab)) {
     
-    # Pour les itemsets de taille 1, alignement vertical
-    x_itemsets = rep(0, length_tab[1])
+    # Ordre des itemsets de taille 1 selon leur ordonnée
     one_order = order(unlist(y_itemsets[1:length_tab[1]]))
     
-    for (i in seq(2, length(y_itemsets[one_order]))) {
-      # Décalage de ceux équivalents
-      if (y_itemsets[one_order][[i]] == y_itemsets[one_order][[i-1]]) {
-        x_itemsets[i] = x_itemsets[i-1] + width
+    # Placement des itemsets de taille 1
+    x_itemsets = rep(0, length_tab[1])
+    
+    if (jitter) {
+      # Nombres d'itemsets pour chaque valeur de y pour lesquelles il y a au moins un itemset à dessiner
+      y_tab = table(unlist(y_itemsets[seq_len(length_tab[1])]))
+      
+      # Placement des premiers itemsets (les plus bas)
+      x_itemsets[seq_len(y_tab[1])] = seq_len(y_tab[1]) - 1
+      
+      # Pour chaque autre valeur de y
+      for (i in seq_along(y_tab)[-1]) {
+        y = names(y_tab)[i]
+        
+        # Si les itemsets ne se situent pas seulement une ligne au-dessus des précédents ou qu'il y a
+        # la place pour tous les dessiner entre le bord gauche et la position en X des précédents
+        if (as.numeric(y) != as.numeric(names(y_tab)[i-1]) + 1
+            || x_itemsets[sum(y_tab[seq_len(i - 2)]) + 1] >= y_tab[y]) {
+          # Placement à partir de X = 0
+          positions = seq_len(y_tab[y]) - 1
+        }
+        else {
+          # Placement après la dernière position en X
+          positions = x_itemsets[sum(y_tab[seq_len(i - 1)])] + seq_len(y_tab[y])
+        }
+        x_itemsets[sum(y_tab[seq_len(i - 1)]) + seq_len(sum(y_tab[y]))] = positions
       }
-      # Décalage de ceux l'un au-dessus de l'autre
-      else if (jitter
-               && y_itemsets[one_order][[i]] == y_itemsets[one_order][[i-1]] + 1
-               && x_itemsets[i-1] == 0) {
-        x_itemsets[i] = width
+      x_itemsets = x_itemsets * width
+    }
+    else {
+      # Alignement vertical et décalage en X de ceux à la même hauteur
+      for (i in seq(2, length(y_itemsets[one_order]))) {
+        if (y_itemsets[one_order][[i]] == y_itemsets[one_order][[i-1]]) {
+          x_itemsets[i] = x_itemsets[i-1] + width
+        }
       }
     }
     
-    # Positionnement des itemsets les uns après les autres en considérant les lignes séparatrices
+    # Position de la première ligne séparatrice d'itemsets
+    x_lines = max(x_itemsets) + margin * 2
+    
+    # Itemsets de taille > 1 : les uns après les autres en considérant les lignes séparatrices
     x_itemsets = c(x_itemsets[order(one_order)],
                    (width + margin) * seq(length(itemsets) - length(x_itemsets)) + max(x_itemsets) + 
-                     margin * unname(unlist(lapply(length_tab[-1],
-                                                   function(nb) rep(parent.frame()$i[], nb)))))
+                     margin * rep(seq_along(length_tab[-1]), length_tab[-1]))
+    
+    # Si plus de 2 tailles d'itemsets différentes
+    if (length(length_tab) > 2) {
+      other_itemsets = seq(length_tab[1] + 1, length(x_itemsets))
+      
+      # Abscisses des autres lignes séparatrices (milieux des itemsets les plus espacés)
+      x_lines = c(x_lines,
+                  x_itemsets[other_itemsets[-1]][x_itemsets[other_itemsets[-1]] >= 
+                                                   (x_itemsets[other_itemsets[-length(other_itemsets)]] + width + margin * 2)] - margin)
+    }
   } else {
     # Positionnement des itemsets les uns après les autres en considérant les lignes séparatrices
     # Taille d'un itemset et d'un espacement * nombre d'autres itemsets avant l'itemset
     #  + un espacement * nombre de lignes séparatrices avant l'itemset
     x_itemsets = (width + margin) * seq(0, length(itemsets)-1) + 
-      margin * unname(unlist(lapply(length_tab,
-                                    function(nb) rep(parent.frame()$i[] - 1, nb))))
+                   margin * rep(seq(0, length(length_tab)-1), length_tab)
+    
+    # Abscisses des lignes séparatrices (milieux des itemsets les plus espacés)
+    x_lines = x_itemsets[-1][x_itemsets[-1] >= (x_itemsets[-length(x_itemsets)] + width + margin * 2)] - margin
   }
-  
-  # Abscisses des lignes séparatrices (milieux des itemsets les plus espacés)
-  x_lines = x_itemsets[-1][x_itemsets[seq(2, length(x_itemsets))] >= (x_itemsets[seq(length(x_itemsets)-1)] + width + margin * 2)] - margin
   
   # Largeur de la zone des itemsets : position du dernier itemset + largeur de l'itemset + un espacement
   area_width = max(x_itemsets) + width + margin
