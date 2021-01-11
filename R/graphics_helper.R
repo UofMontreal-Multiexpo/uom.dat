@@ -442,7 +442,9 @@ plot_itemset_chart = function(itemsets, items, category = NULL,
                    convert_gunits(under_margin, "inches", to = "user", "h") - 
                    convert_gunits(under_width, "inches", to = "user", "w", rotation = TRUE))
   } else {
-    ymin_1 = ymin_2 = min(items$y)
+    # Position de l'item le plus bas - moitié de la taille d'un texte associé (nécessaire pour que le
+    # point et les lignes qui correspondent à cet item ne soient pas tronqués)
+    ymin_1 = min(items$y) - strheight("A", units = "user", cex = 0.75) / 2
   }
   
   # Initialisation de la zone graphique
@@ -502,6 +504,10 @@ plot_itemset_chart = function(itemsets, items, category = NULL,
       
       if (index == old_index) break
     }
+  } else {
+    # Position de l'item le plus bas - moitié de la taille d'un texte associé (nécessaire pour que le
+    # point et les lignes qui correspondent à cet item ne soient pas tronqués)
+    ymin_2 = min(items$y) - strheight("A", units = "user", cex = 0.75) / 2
   }
   
   # Réinitialisation de la zone graphique en considérant les espacements à droite et en bas
