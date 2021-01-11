@@ -44,7 +44,8 @@ about the sort that is performed).}
 are plotted.}
 
 \item{jitter}{If \code{FALSE}, itemsets of length \eqn{1} are aligned vertically.
-If \code{TRUE}, they are spread over two vertical lines to avoid overplotting.
+If \code{TRUE}, they are spread over several vertical lines to avoid overplotting while taking as little
+space as possible. If \code{NA}, they are plotted one after the other.
 Ignored if \code{length_one} is \code{FALSE}.}
 
 \item{under, over}{Text to display on the chart under and over the itemsets.

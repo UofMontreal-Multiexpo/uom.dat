@@ -268,7 +268,8 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
 #'  `"value"`) with a color (column `"col"`) and with a label (column `"label"`).
 #'  If not `NULL`, the items are colored according to the category values and a legend is displayed.
 #' @param jitter If `FALSE`, non-equivalent itemsets of length \eqn{1} are aligned vertically.
-#'  If `TRUE`, they are spread over several vertical lines to avoid overplotting.
+#'  If `TRUE`, they are spread over several vertical lines to avoid overplotting while taking as little
+#'  space as possible. If `NA`, they are plotted one after the other.
 #' @param under Character vector. Text to display on the chart under the itemsets.
 #' @param over Character vector. Text to display on the chart over the itemsets.
 #'  Color values (color names or hexadecimal values) can be specified to plot colored squared instead of
@@ -334,52 +335,59 @@ plot_itemset_chart = function(itemsets, items, category = NULL,
   # Abscisses des itemsets
   if ("1" %in% names(length_tab)) {
     
-    # Ordre des itemsets de taille 1 selon leur ordonnée
-    one_order = order(unlist(y_itemsets[1:length_tab[1]]))
-    
     # Placement des itemsets de taille 1
-    x_itemsets = rep(0, length_tab[1])
-    
-    if (jitter) {
-      # Nombres d'itemsets pour chaque valeur de y pour lesquelles il y a au moins un itemset à dessiner
-      y_tab = table(unlist(y_itemsets[seq_len(length_tab[1])]))
-      
-      # Placement des premiers itemsets (les plus bas)
-      x_itemsets[seq_len(y_tab[1])] = seq_len(y_tab[1]) - 1
-      
-      # Pour chaque autre valeur de y
-      for (i in seq_along(y_tab)[-1]) {
-        y = names(y_tab)[i]
-        
-        # Si les itemsets ne se situent pas seulement une ligne au-dessus des précédents ou qu'il y a
-        # la place pour tous les dessiner entre le bord gauche et la position en X des précédents
-        if (as.numeric(y) != as.numeric(names(y_tab)[i-1]) + 1
-            || x_itemsets[sum(y_tab[seq_len(i - 2)]) + 1] >= y_tab[y]) {
-          # Placement à partir de X = 0
-          positions = seq_len(y_tab[y]) - 1
-        }
-        else {
-          # Placement après la dernière position en X
-          positions = x_itemsets[sum(y_tab[seq_len(i - 1)])] + seq_len(y_tab[y])
-        }
-        x_itemsets[sum(y_tab[seq_len(i - 1)]) + seq_len(sum(y_tab[y]))] = positions
-      }
-      x_itemsets = x_itemsets * width
+    if (is.na(jitter)) {
+      x_itemsets = seq(0, length_tab[1] - 1) * width
     }
     else {
-      # Alignement vertical et décalage en X de ceux à la même hauteur
-      for (i in seq(2, length(y_itemsets[one_order]))) {
-        if (y_itemsets[one_order][[i]] == y_itemsets[one_order][[i-1]]) {
-          x_itemsets[i] = x_itemsets[i-1] + width
+      x_itemsets = rep(0, length_tab[1])
+      
+      # Ordre des itemsets de taille 1 selon leur ordonnée
+      one_order = order(unlist(y_itemsets[1:length_tab[1]]))
+      
+      if (jitter) {
+        # Nombres d'itemsets pour chaque valeur de y pour lesquelles il y a au moins un itemset à dessiner
+        y_tab = table(unlist(y_itemsets[seq_len(length_tab[1])]))
+        
+        # Placement des premiers itemsets (les plus bas)
+        x_itemsets[seq_len(y_tab[1])] = seq_len(y_tab[1]) - 1
+        
+        # Pour chaque autre valeur de y
+        for (i in seq_along(y_tab)[-1]) {
+          y = names(y_tab)[i]
+          
+          # Si les itemsets ne se situent pas seulement une ligne au-dessus des précédents ou qu'il y a
+          # la place pour tous les dessiner entre le bord gauche et la position en X des précédents
+          if (as.numeric(y) != as.numeric(names(y_tab)[i-1]) + 1
+              || x_itemsets[sum(y_tab[seq_len(i - 2)]) + 1] >= y_tab[y]) {
+            # Placement à partir de X = 0
+            positions = seq_len(y_tab[y]) - 1
+          }
+          else {
+            # Placement après la dernière position en X
+            positions = x_itemsets[sum(y_tab[seq_len(i - 1)])] + seq_len(y_tab[y])
+          }
+          x_itemsets[sum(y_tab[seq_len(i - 1)]) + seq_len(sum(y_tab[y]))] = positions
+        }
+        x_itemsets = x_itemsets * width
+      }
+      else {
+        # Alignement vertical et décalage en X de ceux à la même hauteur
+        for (i in seq(2, length(y_itemsets[one_order]))) {
+          if (y_itemsets[one_order][[i]] == y_itemsets[one_order][[i-1]]) {
+            x_itemsets[i] = x_itemsets[i-1] + width
+          }
         }
       }
+      
+      x_itemsets = x_itemsets[order(one_order)]
     }
     
     # Position de la première ligne séparatrice d'itemsets
     x_lines = max(x_itemsets) + margin * 2
     
     # Itemsets de taille > 1 : les uns après les autres en considérant les lignes séparatrices
-    x_itemsets = c(x_itemsets[order(one_order)],
+    x_itemsets = c(x_itemsets,
                    (width + margin) * seq(length(itemsets) - length(x_itemsets)) + max(x_itemsets) + 
                      margin * rep(seq_along(length_tab[-1]), length_tab[-1]))
     

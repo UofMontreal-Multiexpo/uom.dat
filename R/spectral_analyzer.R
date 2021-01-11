@@ -3473,7 +3473,8 @@ setMethod(f = "degree",
 #' @param length_one If `FALSE`, itemsets of length \eqn{1} are not plotted. If `TRUE`, all itemsets
 #'  are plotted.
 #' @param jitter If `FALSE`, itemsets of length \eqn{1} are aligned vertically.
-#'  If `TRUE`, they are spread over two vertical lines to avoid overplotting.
+#'  If `TRUE`, they are spread over several vertical lines to avoid overplotting while taking as little
+#'  space as possible. If `NA`, they are plotted one after the other.
 #'  Ignored if `length_one` is `FALSE`.
 #' @param under,over Text to display on the chart under and over the itemsets.
 #'  Identifiers (`"ID"`) or one of the characteristics (`"weight"`, `"frequency"`, `"specificity"`,

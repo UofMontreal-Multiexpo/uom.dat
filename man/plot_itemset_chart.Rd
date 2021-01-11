@@ -26,7 +26,8 @@ plot_itemset_chart(
 If not \code{NULL}, the items are colored according to the category values and a legend is displayed.}
 
 \item{jitter}{If \code{FALSE}, non-equivalent itemsets of length \eqn{1} are aligned vertically.
-If \code{TRUE}, they are spread over several vertical lines to avoid overplotting.}
+If \code{TRUE}, they are spread over several vertical lines to avoid overplotting while taking as little
+space as possible. If \code{NA}, they are plotted one after the other.}
 
 \item{under}{Character vector. Text to display on the chart under the itemsets.}
 
