@@ -294,8 +294,11 @@ setAs(from = "ObservationSet",
         df$tmp_col = NULL
         
         for (var_name in from@names) {
-          # L'attribution d'une liste à une variable d'une data frame ne fonctionne que via $
-          eval(parse(text = paste0("df$", var_name, " <- unname(sapply(from[var_name], c))")))
+          # Vecteur si une seule valeur par observation ; liste sinon
+          if (all(sapply(from[var_name], length) == 1))
+            df[[var_name]] = unname(unlist(from[var_name]))
+          else
+            df[[var_name]] = unname(lapply(from[var_name], c))
         }
         return(df)
       })
