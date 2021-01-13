@@ -19,7 +19,7 @@ Check if the \code{SpectralAnalyzer} has item names, i.e. if the current names a
 are different from their identification codes.
 }
 \seealso{
-\code{\link{get_item_names}}, \code{\link[=get_items,SpectralAnalyzer]{get_items}}.
+\code{\link{get_item_names}}, \code{\link[=get_items,SpectralAnalyzer-method]{get_items}}.
 }
 \author{
 Gauthier Magnin

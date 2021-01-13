@@ -38,7 +38,7 @@ If \code{onp} is a character value equal to:
 The argument \code{entities} is only used to adapt a possible error message.
 }
 \seealso{
-\code{\link{get_onp_itemsets}}, \code{\link{which_entities}}, \code{\link[=get_items,SpectralAnalyzer]{get_items}}.
+\code{\link{get_onp_itemsets}}, \code{\link{which_entities}}, \code{\link[=get_items,SpectralAnalyzer-method]{get_items}}.
 }
 \author{
 Gauthier Magnin

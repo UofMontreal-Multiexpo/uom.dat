@@ -19,7 +19,7 @@ Names of the \code{items} in \code{object["items"]}.
 Find the names associated with items given their identification codes.
 }
 \seealso{
-\code{\link[=get_items,SpectralAnalyzer]{get_items}}, \code{\link{has_item_names}}.
+\code{\link[=get_items,SpectralAnalyzer-method]{get_items}}, \code{\link{has_item_names}}.
 }
 \author{
 Gauthier Magnin

@@ -5506,7 +5506,7 @@ setMethod(f = "check_access_for_category",
 #'  `FALSE` if all names of `object["items"]` are equal to the values of `object["items"]`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_item_names`], [`get_items`][get_items,SpectralAnalyzer].
+#' @seealso [`get_item_names`], [`get_items`][get_items,SpectralAnalyzer-method].
 #' 
 #' @aliases has_item_names
 #' @md
@@ -5529,7 +5529,7 @@ setMethod(f = "has_item_names",
 #' @return Names of the `items` in `object["items"]`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_items`][get_items,SpectralAnalyzer], [`has_item_names`].
+#' @seealso [`get_items`][get_items,SpectralAnalyzer-method], [`has_item_names`].
 #' 
 #' @aliases get_item_names
 #' @md
@@ -5610,7 +5610,7 @@ setMethod(f = "get_items",
 #'  corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_onp_itemsets`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer].
+#' @seealso [`get_onp_itemsets`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer-method].
 #' 
 #' @aliases get_onp
 #' @md
@@ -5669,7 +5669,7 @@ setMethod(f = "get_onp",
 #' @return List of observation, node or pattern itemsets corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_onp`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer].
+#' @seealso [`get_onp`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer-method].
 #' 
 #' @aliases get_onp_itemsets
 #' @md
