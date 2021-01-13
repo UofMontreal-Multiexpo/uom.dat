@@ -32,6 +32,11 @@ SpectralAnalyzer.STATUS_EMERGENT = "Emergent"
 #' @keywords internal
 SpectralAnalyzer.STATUS_LATENT = "Latent"
 
+#' OBSERVATIONS
+#' @description Reference value for naming entities: observations.
+#' @aliases OBSERVATIONS
+#' @keywords internal
+SpectralAnalyzer.OBSERVATIONS = "observations"
 #' NODES
 #' @description Reference value for naming entities: nodes.
 #' @aliases NODES
@@ -47,16 +52,23 @@ SpectralAnalyzer.PATTERNS = "patterns"
 #' @aliases RULES
 #' @keywords internal
 SpectralAnalyzer.RULES = "rules"
+
 #' NODES_OR_PATTERNS
 #' @description Reference value for defining possible entities: nodes or patterns.
 #' @aliases NODES_OR_PATTERNS
 #' @keywords internal
-SpectralAnalyzer.NODES_OR_PATTERNS = "nop"
+SpectralAnalyzer.NODES_OR_PATTERNS = "np"
 #' NODES_PATTERNS_OR_RULES
 #' @description Reference value for defining possible entities: nodes, patterns or rules.
 #' @aliases NODES_PATTERNS_OR_RULES
 #' @keywords internal
 SpectralAnalyzer.NODES_PATTERNS_OR_RULES = "npr"
+#' NODES_PATTERNS_OR_OBSERVATIONS
+#' @description Reference value for defining possible entities: nodes, patterns or observations.
+#' @aliases NODES_PATTERNS_OR_OBSERVATIONS
+#' @keywords internal
+SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS = "npo"
+
 #' NODE_LINKS
 #' @description Reference value for naming links between entities: links between nodes.
 #' @aliases NODE_LINKS
@@ -727,11 +739,11 @@ setGeneric(name = "get_item_names", def = function(object, items){ standardGener
 
 # setGeneric(name = "get_items", def = function(object, ...){ standardGeneric("get_items") })
 
-setGeneric(name = "get_nopc", def = function(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_nopc") })
+setGeneric(name = "get_onp", def = function(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_onp") })
 
-setGeneric(name = "get_nop", def = function(object, nop, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_nop") })
+setGeneric(name = "get_onp_itemsets", def = function(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_onp_itemsets") })
 
-setGeneric(name = "which_entities", def = function(object, npr, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("which_entities") })
+setGeneric(name = "which_entities", def = function(object, onpr, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("which_entities") })
 
 setGeneric(name = "which_associated_links", def = function(object, entities){ standardGeneric("which_associated_links") })
 
@@ -2130,7 +2142,7 @@ setMethod(f = "define_dynamic_status",
                                 t = NULL, period = Inf, short_limit = object["status_limit"]) {
             
             check_init(object, SpectralAnalyzer.PATTERNS)
-            patterns = get_nop(object, patterns, entities = SpectralAnalyzer.PATTERNS)
+            patterns = get_onp_itemsets(object, patterns, entities = SpectralAnalyzer.PATTERNS)
             
             # Calcul des limites et des seuils associés
             ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
@@ -2228,7 +2240,7 @@ setMethod(f = "spectrum_chart",
             
             # Récupération des patterns
             check_init(object, SpectralAnalyzer.PATTERNS)
-            pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
+            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
             
             check_param(identifiers, values = c("original", "new"))
             
@@ -2479,7 +2491,7 @@ setMethod(f = "weight_by_node_complexity",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns) {
   
-  patterns = get_nop(object, patterns, entities = SpectralAnalyzer.PATTERNS)
+  patterns = get_onp_itemsets(object, patterns, entities = SpectralAnalyzer.PATTERNS)
   pnc = pattern_node_characteristics(object, patterns)
   
   weights = t(sapply(seq_along(patterns), function(i) {
@@ -2651,7 +2663,7 @@ setMethod(f = "spectrosome_chart",
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
-            nopc = get_nopc(object, nopc)
+            nopc = get_onp(object, nopc)
             check_init(object, c(entities, which_associated_links(object, entities)))
             
             # Validation des paramètres
@@ -3323,7 +3335,7 @@ setMethod(f = "cluster_chart",
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
-            nopc = get_nopc(object, nopc)
+            nopc = get_onp(object, nopc)
             check_init(object, c(entities, which_associated_links(object, entities)))
             
             # Vérifie qu'un seul item est mentionné
@@ -4618,7 +4630,7 @@ setMethod(f = "get_nodes_from_items",
             
             # Récupération des noeuds
             check_init(object, SpectralAnalyzer.NODES)
-            nc = get_nopc(object, nc, SpectralAnalyzer.NODES)
+            nc = get_onp(object, nc, SpectralAnalyzer.NODES)
             
             if (!(condition %in% c("all", "any", "exact")))
               stop("condition must be \"all\", \"any\" or \"exact\".")
@@ -4683,7 +4695,7 @@ setMethod(f = "get_nodes_from_characteristic",
             
             # Récupération des noeuds
             check_init(object, SpectralAnalyzer.NODES)
-            nc = get_nopc(object, nc, SpectralAnalyzer.NODES)
+            nc = get_onp(object, nc, SpectralAnalyzer.NODES)
             
             if (!(characteristic %in% c("length", "weight")))
               stop("characteristic must be one of \"length\", \"weight\".")
@@ -4744,7 +4756,7 @@ setMethod(f = "get_nodes_from_category",
           definition = function(object, nc, category, value, condition) {
             
             # Récupération des noeuds
-            nc = get_nopc(object, nc, SpectralAnalyzer.NODES)
+            nc = get_onp(object, nc, SpectralAnalyzer.NODES)
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
@@ -4940,7 +4952,7 @@ setMethod(f = "get_patterns_from_items",
             
             # Récupération des patterns
             check_init(object, SpectralAnalyzer.PATTERNS)
-            pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
+            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
             
             if (!(condition %in% c("all", "any", "exact")))
               stop("condition must be \"all\", \"any\" or \"exact\".")
@@ -5006,7 +5018,7 @@ setMethod(f = "get_patterns_from_characteristic",
             
             # Récupération des patterns
             check_init(object, SpectralAnalyzer.PATTERNS)
-            pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
+            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
             
             if (!(characteristic %in% c("year", "frequency", "weight", "length", "specificity")))
               stop("characteristic must be one of \"year\", \"frequency\", \"weight\", \"length\", \"specificity\".")
@@ -5065,7 +5077,7 @@ setMethod(f = "get_patterns_from_status",
             
             # Récupération des patterns
             check_init(object, SpectralAnalyzer.PATTERNS)
-            pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
+            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
             
             switch(EXPR = condition,
                    "EQ" = { return(pc[pc$status %in% value, ]) },
@@ -5119,7 +5131,7 @@ setMethod(f = "get_patterns_from_category",
           definition = function(object, pc, category, value, condition) {
             
             # Récupération des patterns
-            pc = get_nopc(object, pc, SpectralAnalyzer.PATTERNS)
+            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
@@ -5183,7 +5195,7 @@ setMethod(f = "get_links",
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
-            nopc = get_nopc(object, nopc)
+            nopc = get_onp(object, nopc)
             check_init(object, c(entities, which_associated_links(object, entities)))
             
             # Si les liens recherchés correspondent à l'intégralité des liens
@@ -5265,7 +5277,7 @@ setMethod(f = "get_isolates",
             
             links = get_links(object, nopc)
             row_id = as.character(links$endpoint.1[links$weight == 0])
-            return(get_nopc(object, nopc)[row_id, ])
+            return(get_onp(object, nopc)[row_id, ])
           })
 
 
@@ -5298,7 +5310,7 @@ setMethod(f = "get_non_isolates",
             links = get_links(object, nopc)
             row_id = as.character(sort(unique(unlist(links[links$weight != 0,
                                                            c("endpoint.1", "endpoint.2")]))))
-            return(get_nopc(object, nopc)[row_id, ])
+            return(get_onp(object, nopc)[row_id, ])
           })
 
 
@@ -5350,7 +5362,7 @@ setMethod(f = "get_complexes",
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
-            nopc = get_nopc(object, nopc)
+            nopc = get_onp(object, nopc)
             
             if (is.null(category)) {
               check_init(object, entities)
@@ -5516,167 +5528,199 @@ setMethod(f = "get_items",
           })
 
 
-#' Get nodes or patterns characteristics
+#' Get observations or nodes or patterns and their characteristics
 #' 
-#' Find and return the data frame corresponding to the nodes or the patterns of the object of class
-#'  `SpectralAnalyzer`, or return the given data frame.
+#' Find and return the `ObservationSet` corresponding to the observations or the data frame corresponding
+#'  to the nodes or the patterns of the object of class `SpectralAnalyzer`, or return the given value.
 #' 
 #' @details
-#' If `nopc` is a data frame, it is returned.
+#' If `onp` is an object of class `ObservationSet` or a data frame, it is returned.
 #' 
-#' If `nopc` is a character value equal to:
+#' If `onp` is a character value equal to:
+#'  * `"observations"` or `"o"`: `object["observations"]` is returned.
 #'  * `"nodes"` or `"n"`: `object["nodes"]` is returned.
 #'  * `"patterns"` or `"p"`: `object["patterns"]` is returned.
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
-#' @param nopc Data frame of **n**odes **o**r **p**atterns and their **c**haracteristics or one of the
-#'  following character values: `"nodes"`, `"n"`, `"patterns"`, `"p"`.
-#' @param entities Type of the entities that the data frame may refer to (`NODES`, `PATTERNS` or
-#'  `NODES_OR_PATTERNS`).
-#' @return Data frame of nodes or patterns and their characteristics corresponding to the arguments.
+#' @param onp Object of class `ObservationSet` (**o**) or data frame of **n**odes or **p**atterns and
+#'  their characteristics or one of the following character values: `"observations"`, `"o"`, `"nodes"`,
+#'  `"n"`, `"patterns"`, `"p"`.
+#' @param entities Type of the entities that `onp` may refer to (`OBSERVATIONS`, `NODES`, `PATTERNS`,
+#'  `NODES_OR_PATTERNS` or `NODES_PATTERNS_OR_OBSERVATIONS`).
+#' @return Object of class `ObservationSet` or data frame of nodes or patterns and their characteristics,
+#'  corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_nop`], [`which_entities`], [`get_items`].
+#' @seealso [`get_onp_itemsets`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer].
 #' 
-#' @aliases get_nopc
+#' @aliases get_onp
 #' @md
 #' @keywords internal
-setMethod(f = "get_nopc",
+setMethod(f = "get_onp",
           signature = "SpectralAnalyzer",
-          definition = function(object, nopc, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
+          definition = function(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
             
-            if (is.character(nopc)) {
-              if (nopc == SpectralAnalyzer.NODES || nopc == first_characters(SpectralAnalyzer.NODES))
+            if (is.character(onp)) {
+              if (onp == SpectralAnalyzer.OBSERVATIONS || onp == first_characters(SpectralAnalyzer.OBSERVATIONS))
+                return(object@observations)
+              if (onp == SpectralAnalyzer.NODES || onp == first_characters(SpectralAnalyzer.NODES))
                 return(object@nodes)
-              if (nopc == SpectralAnalyzer.PATTERNS || nopc == first_characters(SpectralAnalyzer.PATTERNS))
+              if (onp == SpectralAnalyzer.PATTERNS || onp == first_characters(SpectralAnalyzer.PATTERNS))
                 return(object@patterns)
               
-              var_name = deparse(substitute(nopc))
+              var_name = deparse(substitute(onp))
               
-              if (entities == SpectralAnalyzer.NODES)
+              if (entities == SpectralAnalyzer.OBSERVATIONS)
+                msg = paste(var_name, "must be \"observations\" or an object of class ObservationSet.")
+              else if (entities == SpectralAnalyzer.NODES)
                 msg = paste(var_name, "must be \"nodes\" or a data frame of nodes and their characteristics.")
               else if (entities == SpectralAnalyzer.PATTERNS)
                 msg = paste(var_name, "must be \"patterns\" or a data frame of patterns and their characteristics.")
-              else # SpectralAnalyzer.NODES_OR_PATTERNS
+              else if (entities == SpectralAnalyzer.NODES_OR_PATTERNS)
                 msg = paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics.")
+              else # SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS
+                msg = paste(var_name, "must be \"observaionts\", \"nodes\", \"patterns\", an object of class ObservationSet or a data frame of nodes or patterns and their characteristics.")
               
               stop(msg)
             }
-            return(nopc)
+            return(onp)
           })
 
 
-#' Get nodes or patterns
+#' Get observation, node or pattern itemsets
 #' 
-#' Find and return the list corresponding to the nodes or the patterns of the object of class
-#'  `SpectralAnalyzer`, or return the given list.
+#' Find and return the list corresponding to the observations, the nodes or the patterns of the object of
+#'  class `SpectralAnalyzer`, or return the given list.
 #' 
 #' @details
-#' If `nop` is a list, it is returned.
+#' If `onp` is a list, it is returned.
 #' 
-#' If `nop` is a character value equal to:
+#' If `onp` is a character value equal to:
+#'  * `"observations"` or `"o"`: `object["observations"][object["observations"]["item_key"]]` is returned.
 #'  * `"nodes"` or `"n"`: `object["nodes"]$node` is returned.
 #'  * `"patterns"` or `"p"`: `object["patterns"]$pattern` is returned.
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
-#' @param nop List of **n**odes **o**r **p**atterns or one of the following character values:
-#'  `"nodes"`, `"n"`, `"patterns"`, `"p"`.
-#' @param entities Type of the entities that the list may refer to (`NODES`, `PATTERNS` or
-#'  `NODES_OR_PATTERNS`).
-#' @return List of nodes or patterns corresponding to the arguments.
+#' @param onp List of **o**bservation, **n**ode or **p**attern itemsets or one of the following character
+#'  values: `"observations"`, `"o"`, `"nodes"`, `"n"`, `"patterns"`, `"p"`.
+#' @param entities Type of the entities that the list may refer to (`OBSERVATIONS`, `NODES`, `PATTERNS`,
+#'  `NODES_OR_PATTERNS` or `NODES_PATTERNS_OR_OBSERVATIONS`).
+#' @return List of observation, node or pattern itemsets corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_nopc`], [`which_entities`], [`get_items`].
+#' @seealso [`get_onp`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer].
 #' 
-#' @aliases get_nop
+#' @aliases get_onp_itemsets
 #' @md
 #' @keywords internal
-setMethod(f = "get_nop",
+setMethod(f = "get_onp_itemsets",
           signature = "SpectralAnalyzer",
-          definition = function(object, nop, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
+          definition = function(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
             
-            if (is.character(nop)) {
-              if (nop == SpectralAnalyzer.NODES || nop == first_characters(SpectralAnalyzer.NODES))
+            if (is.character(onp)) {
+              if (nopc == SpectralAnalyzer.OBSERVATIONS || nopc == first_characters(SpectralAnalyzer.OBSERVATIONS))
+                return(object@observations[object@observations@item_key])
+              if (onp == SpectralAnalyzer.NODES || onp == first_characters(SpectralAnalyzer.NODES))
                 return(object@nodes$node)
-              if (nop == SpectralAnalyzer.PATTERNS || nop == first_characters(SpectralAnalyzer.PATTERNS))
+              if (onp == SpectralAnalyzer.PATTERNS || onp == first_characters(SpectralAnalyzer.PATTERNS))
                 return(object@patterns$pattern)
               
-              var_name = deparse(substitute(nop))
+              var_name = deparse(substitute(onp))
               
-              if (entities == SpectralAnalyzer.NODES)
+              if (entities == SpectralAnalyzer.OBSERVATIONS)
+                msg = paste(var_name, "must be \"observations\" or a list of observations.")
+              else if (entities == SpectralAnalyzer.NODES)
                 msg = paste(var_name, "must be \"nodes\" or a list of nodes.")
               else if (entities == SpectralAnalyzer.PATTERNS)
                 msg = paste(var_name, "must be \"patterns\" or a list of patterns.")
-              else # SpectralAnalyzer.NODES_OR_PATTERNS
+              else if (entities == SpectralAnalyzer.NODES_OR_PATTERNS)
                 msg = paste(var_name, "must be \"nodes\", \"patterns\" or a list of nodes or patterns.")
+              else # SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS
+                msg = paste(var_name, "must be \"observations\", \"nodes\", \"patterns\" or a list of observations, nodes or patterns.")
               
               stop(msg)
             }
-            return(nop)
+            return(onp)
           })
 
 
 #' Detect the type of entities
 #' 
-#' Detect the type of entities contained in a data frame among nodes, patterns and association rules.
+#' Detect the type of entities contained in a data frame or an object among observations, nodes,
+#'  patterns and association rules.
 #' 
 #' @details
-#' The detection uses the column names of the data frame and search for `"node"`, `"pattern"` or
-#'  `"antecedent"` for a data frame of nodes, patterns or rules, respectively.
+#' The detection uses the class of the argument `onpr` or the column names of the given data frame.
+#' If the class is `ObservationSet`, entities are observations. If it is a data frame, it searches for
+#'  column names `"node"`, `"pattern"` or `"antecedent"` for nodes, patterns or rules, respectively.
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
-#' @param npr Data frame of **n**odes, **p**atterns or association **r**ules and their characteristics.\cr
-#'  `"nodes"`, `"n"`, `"patterns"`, `"p"`, `"rules"` and `"r"` are special values.
-#' @param entities Define if the data frame is either a data frame of nodes or a data frame of patterns
-#'  (`NODES_OR_PATTERNS`), or if it can also be a data frame of rules (`NODES_PATTERNS_OR_RULES`).
-#' @return Character corresponding to `NODES`, `PATTERNS` or `RULES`.
+#' @param onpr Object of class `ObservationSet` (**o**) or data frame of **n**odes, **p**atterns or
+#'  association **r**ules and their characteristics.
+#'  
+#'  `"observations"`, `"o"`, `"nodes"`, `"n"`, `"patterns"`, `"p"`, `"rules"` and `"r"` are special
+#'  values.
+#' @param entities Define if `onpr` is either a data frame of nodes or a data frame of patterns
+#'  (`NODES_OR_PATTERNS`), or if it can also be a data frame of rules (`NODES_PATTERNS_OR_RULES`) or
+#'  a set of observations (`NODES_PATTERNS_OR_OBSERVATIONS`).
+#' @return Character corresponding to `OBSERVATIONS`, `NODES`, `PATTERNS` or `RULES`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_nopc`], [`which_associated_links`], [`which_name`].
+#' @seealso [`get_onp`], [`which_associated_links`], [`which_name`].
 #' 
 #' @aliases which_entities
 #' @md
 #' @keywords internal
 setMethod(f = "which_entities",
           signature = "SpectralAnalyzer",
-          definition = function(object, npr, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
+          definition = function(object, onpr, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
             
-            if (is.character(npr)) {
-              if (npr == SpectralAnalyzer.NODES || npr == first_characters(SpectralAnalyzer.NODES))
+            if (is.character(onpr)) {
+              if (onpr == SpectralAnalyzer.OBSERVATIONS || onpr == first_characters(SpectralAnalyzer.OBSERVATIONS))
+                return(SpectralAnalyzer.OBSERVATIONS)
+              if (onpr == SpectralAnalyzer.NODES || onpr == first_characters(SpectralAnalyzer.NODES))
                 return(SpectralAnalyzer.NODES)
-              if (npr == SpectralAnalyzer.PATTERNS || npr == first_characters(SpectralAnalyzer.PATTERNS))
+              if (onpr == SpectralAnalyzer.PATTERNS || onpr == first_characters(SpectralAnalyzer.PATTERNS))
                 return(SpectralAnalyzer.PATTERNS)
-              if (npr == SpectralAnalyzer.RULES || npr == first_characters(SpectralAnalyzer.RULES))
+              if (onpr == SpectralAnalyzer.RULES || onpr == first_characters(SpectralAnalyzer.RULES))
                 return(SpectralAnalyzer.RULES)
               
-              var_name = deparse(substitute(npr))
+              var_name = deparse(substitute(onpr))
               
               if (entities == SpectralAnalyzer.NODES_OR_PATTERNS)
                 msg = paste("If", var_name, "is character, it must be \"nodes\" or \"patterns\".")
-              else # SpectralAnalyzer.NODES_PATTERNS_OR_RULES
+              else if (entities == SpectralAnalyzer.NODES_PATTERNS_OR_RULES)
                 msg = paste("If", var_name, "is character, it must be \"nodes\", \"patterns\" or \"rules\".")
+              else # SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS
+                msg = paste("If", var_name, "is character, it must be \"observations\", \"nodes\" or \"patterns\".")
               
               stop(msg)
             }
             
-            if ("node" %in% colnames(npr)) return(SpectralAnalyzer.NODES)
-            if ("pattern" %in% colnames(npr)) return(SpectralAnalyzer.PATTERNS)
-            if ("antecedent" %in% colnames(npr)) return(SpectralAnalyzer.RULES)
+            if (class(onpr) == "ObservationSet") return(SpectralAnalyzer.OBSERVATIONS)
+            if ("node" %in% colnames(onpr)) return(SpectralAnalyzer.NODES)
+            if ("pattern" %in% colnames(onpr)) return(SpectralAnalyzer.PATTERNS)
+            if ("antecedent" %in% colnames(onpr)) return(SpectralAnalyzer.RULES)
             
-            var_name = deparse(substitute(npr))
+            var_name = deparse(substitute(onpr))
             
-            if (entities == SpectralAnalyzer.NODES_OR_PATTERNS)
+            if (entities == SpectralAnalyzer.NODES_OR_PATTERNS) {
               stop(paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics."))
-            
-            # entities = NODES_PATTERNS_OR_RULES
-            stop(paste(var_name, "must be a data frame of nodes or patterns and their",
-                       "characteristics, or a data frame of association rules."))
+            }
+            else if (entities == NODES_PATTERNS_OR_RULES) {
+              stop(paste(var_name, "must be a data frame of nodes or patterns and their",
+                         "characteristics, or a data frame of association rules."))
+            }
+            # entities = NODES_PATTERNS_OR_OBSERVATIONS
+            stop(paste(var_name, "must be \"observations\", \"nodes\", \"patterns\", an",
+                       "object of class ObservationSet or a data frame of nodes or patterns and",
+                       "their characteristics."))
           })
 
 
@@ -5714,10 +5758,10 @@ setMethod(f = "which_associated_links",
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param name Type of entities or links.
-#'  Character corresponding to `NODES`, `PATTERNS`, `RULES`, `NODE_LINKS`, `PATTERN_LINKS` or
-#'  their simplifications. One or more.
-#' @return Vector of characters (of the same size as `name`) corresponding to `NODES`, `PATTERNS`,
-#'  `RULES`, `NODE_LINKS` or `PATTERN_LINKS`.
+#'  Character corresponding to `OBSERVATIONS`, `NODES`, `PATTERNS`, `RULES`, `NODE_LINKS`, `PATTERN_LINKS`
+#'   or their simplifications (see [`first_characters`]). One or more.
+#' @return Vector of characters corresponding to `OBSERVATIONS`, `NODES`, `PATTERNS`, `RULES`,
+#'  `NODE_LINKS` or `PATTERN_LINKS`. Same size as the argument `name`.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`which_entities`], [`which_associated_links`].
@@ -5731,6 +5775,8 @@ setMethod(f = "which_name",
             
             if (length(name) > 1) return(sapply(name, which_name, object = object))
             
+            if (name == SpectralAnalyzer.OBSERVATIONS || name == first_characters(SpectralAnalyzer.OBSERVATIONS))
+              return(SpectralAnalyzer.OBSERVATIONS)
             if (name == SpectralAnalyzer.NODES || name == first_characters(SpectralAnalyzer.NODES))
               return(SpectralAnalyzer.NODES)
             if (name == SpectralAnalyzer.PATTERNS || name == first_characters(SpectralAnalyzer.PATTERNS))
