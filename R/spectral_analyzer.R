@@ -3457,10 +3457,13 @@ setMethod(f = "degree",
 
 #' Itemset chart, for SpectralAnalyzer
 #' 
-#' Plot a chart of the node or pattern itemsets. It can be automatically saved as a PDF file.
+#' Plot a chart of the observation, node or pattern itemsets. It can be automatically saved as a PDF file.
 #' 
 #' @details
-#' The nodes or patterns are sorted according to their lengths, then to their weights.
+#' If they are from nodes or patterns, the itemsets are sorted according to their lengths then to their
+#'  weights. If they are from observations, they are sorted according to their lengths only. When there
+#'  is equality of these characteristics, itemsets are then taken according to the initial order in
+#'  `onpc`.
 #' 
 #' If the argument `name` is not `NULL`, the chart is plotted in a PDF file of A4 landscape paper size.
 #'  If it is `NULL`, the chart is plotted in the active device.
@@ -3473,28 +3476,35 @@ setMethod(f = "degree",
 #' See the attribute `categories_colors` of `object` to reassign colors to the category values.
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
-#' @param nopc Data frame of **n**odes **o**r **p**atterns and their **c**haracteristics. Nodes or
-#'  patterns whose chart is to be plotted. Any subset of `object["nodes"]` or `object["patterns"]`.\cr
-#'  `"nodes"`, `"n"`, `"patterns"` and `"p"` are special values for `object["nodes"]` and
-#'  `object["patterns"]`.
-#' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
-#'  return data frames. One of `"original"`, `"new"`.
+#' @param onpc Object of class `ObservationSet` (**o**) or data frame of **n**odes or **p**atterns and
+#'  their **c**haracteristics. Itemsets whose chart is to be plotted. Any subset of
+#'  `object["observations"]`, `object["nodes"]` or `object["patterns"]`.
+#'  
+#'  `"observations"`, `"o"`, `"nodes"`, `"n"`, `"patterns"` and `"p"` are special values for
+#'  `"object["observations"]`, `object["nodes"]` and `object["patterns"]`.
+#' @param identifiers Which IDs to use to identify the itemsets on the chart and in the
+#'  return. One of `"original"`, `"new"`.
 #'  \describe{
-#'    \item{`"original"`}{Use of the original identifiers.}
+#'    \item{`"original"`}{Use of the original identifiers from `onpc`.}
 #'    \item{`"new"`}{Use of new identifiers based on sorting (see 'Details' section to learn more
 #'                   about the sort that is performed).}
 #'  }
 #' @param length_one If `FALSE`, itemsets of length \eqn{1} are not plotted. If `TRUE`, all itemsets
 #'  are plotted.
-#' @param jitter If `FALSE`, itemsets of length \eqn{1} are aligned vertically.
+#' @param jitter If `FALSE`, non-equivalent itemsets of length \eqn{1} are aligned vertically.
 #'  If `TRUE`, they are spread over several vertical lines to avoid overplotting while taking as little
 #'  space as possible. If `NA`, they are plotted one after the other.
 #'  Ignored if `length_one` is `FALSE`.
 #' @param under,over Text to display on the chart under and over the itemsets.
-#'  Identifiers (`"ID"`) or one of the characteristics (`"weight"`, `"frequency"`, `"specificity"`,
-#'  `"year"`, `"status"`).
+#'  Can be:
+#'  * Identifiers: `"ID"`.
+#'  * One of the elements of the observations (i.e. one of the values of `onpc["names"]`), if `onpc` is
+#'    an `ObservationSet`.
+#'  * One of the characteristics of the nodes or the patterns (`"weight"`, `"frequency"`, `"specificity"`,
+#'    `"year"`, `"status"`), if `onpc` is a data frame of nodes or patterns and their characteristics.
+#'  
 #'  `"status"` can only be used for the argument `"over"`.
-#'  `NULL` value specifies to display no data.
+#'  `NULL` value specifies to display no text.
 #' @param use_names If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
@@ -3503,14 +3513,15 @@ setMethod(f = "degree",
 #'  the order of the columns of `object["items_categories"]`).
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param sort_by Sorting method of displayed items. One of `"category"`, `"item"`.
-#' @param title Chart title. Default title depends on the type of entities contained in `nopc`.
-#'  Example of default title: `"Node itemsets"` if `nopc` contains nodes.
+#' @param title Chart title. Default title depends on the type of entities contained in `onpc`.
+#'  Example of default title: `"Node itemsets"` if `onpc` contains nodes.
 #' @param path Path of the directory in which to save the chart as a PDF file. Default is the working
 #'  directory.
 #' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
 #'  active device.
-#' @return Data frame of the nodes or patterns represented on the chart, associated with their
-#'  characteristics and identifiers (visible on the chart if `under` or `over` is `"ID"`).
+#' @return Object of class `ObservationSet` or data frame of the characteristics of the nodes or patterns
+#'  represented on the chart, associated with their identifiers (visible on the chart if one of `under`
+#'  or `over` is `"ID"`).
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
@@ -3522,12 +3533,15 @@ setMethod(f = "degree",
 #' [`itemset_chart,ObservationSet`][itemset_chart,ObservationSet-method].
 #' 
 #' @examples
-#' nodes_1 <- itemset_chart(SA_instance, "nodes",
-#'                          category = "family", c.cutoff = 10, n.cutoff = 20)
+#' obs <- itemset_chart(SA_instance, "observations", length_one = TRUE,
+#'                      category = "family", c.cutoff = 7, n.cutoff = 20)
+#' nodes <- itemset_chart(SA_instance, "nodes",
+#'                        category = "family", c.cutoff = 10, n.cutoff = 20)
 #' patterns_1 <- itemset_chart(SA_instance, "patterns",
 #'                             category = 1, c.cutoff = 10, n.cutoff = 20)
 #' patterns_2 <- itemset_chart(SA_instance, SA_instance["patterns"][1:15, ])
 #' 
+#' ## Plotting in a PDF file
 #' patterns_1 <- itemset_chart(SA_instance, "patterns", category = "family",
 #'                             c.cutoff = 17, n.cutoff = 20,
 #'                             path = getwd(), name = "pattern_itemsets")
@@ -3537,7 +3551,7 @@ setMethod(f = "degree",
 #' @export
 setMethod(f = "itemset_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, nopc, identifiers = "original",
+          definition = function(object, onpc, identifiers = "original",
                                 length_one = FALSE, jitter = TRUE,
                                 under = "ID", over = "status",
                                 use_names = TRUE, n.cutoff = NULL,
@@ -3545,9 +3559,9 @@ setMethod(f = "itemset_chart",
                                 title = NULL, path = NULL, name = NULL) {
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
-            entities = which_entities(object, nopc)
-            check_init(object, entities)
-            nopc = get_nopc(object, nopc)
+            entities = which_entities(object, onpc, SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS)
+            if (entities != SpectralAnalyzer.OBSERVATIONS) check_init(object, entities)
+            onpc = get_onp(object, onpc, SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS)
             
             # Validation des paramètres
             check_access_for_category(object, category, NA)
@@ -3559,19 +3573,46 @@ setMethod(f = "itemset_chart",
             if (!is.null(under) && under == "status") under = NULL
             category = if (is.numeric(category)) colnames(object@items_categories)[category] else category
             
-            # Renommage de colonnes pour simplification
-            colnames(nopc)[colnames(nopc) == "node" | colnames(nopc) == "pattern"] = "itemset"
             
-            # Itemset de taille > 1, triés par taille croissant puis par poids décroissant
-            nopc = if (length_one) nopc else nopc[nopc$length != 1, ]
-            nopc = nopc[order(nopc$length,
-                              max(nopc$weight) - nopc$weight), ]
+            # Préparation des variables pour la fonction de traçage graphique
+            if (entities == SpectralAnalyzer.OBSERVATIONS) {
+              vars = prepare_itemset_chart(object@observations, identifiers, length_one, under, over)
+              
+              itemsets = vars$itemsets
+              items = data.frame(item = as.character(vars$items$item), stringsAsFactors = FALSE)
+              under_text = vars$under
+              over_text = vars$over
+              over_legend = NULL
+            }
+            else{
+              # Renommage de colonnes pour simplification
+              colnames(onpc)[colnames(onpc) == "node" | colnames(onpc) == "pattern"] = "itemset"
+              
+              # Itemset de taille > 1, triés par taille croissant puis par poids décroissant
+              onpc = if (length_one) onpc else onpc[onpc$length != 1, ]
+              onpc = onpc[order(onpc$length,
+                                max(onpc$weight) - onpc$weight), ]
+              
+              # Attribution d'identifiants aux itemsets
+              onpc$ID = if (identifiers == "new") seq(nrow(onpc)) else as.numeric(rownames(onpc))
+              
+              # Itemsets et items distincts parmi les itemsets
+              itemsets = onpc$itemset
+              items = data.frame(item = unique(unlist(onpc$itemset)), stringsAsFactors = FALSE)
+              
+              # Texte à afficher
+              under_text = if (is.null(under)) NULL else onpc[, under]
+              if (is.null(over)) over_text = over_legend = NULL
+              else if (over == "status") {
+                over_text = object@status_colors[onpc[, over]]
+                over_legend = object@status_colors
+              } else {
+                over_text = onpc[, over]
+                over_legend = NULL
+              }
+            }
             
-            # Attribution d'identifiants aux itemsets
-            nopc$ID = if (identifiers == "new") seq(nrow(nopc)) else as.numeric(rownames(nopc))
-            
-            # Items distincts parmi les itemsets, labels et valeurs d'une catégorie associée
-            items = data.frame(item = unique(unlist(nopc$itemset)), stringsAsFactors = FALSE)
+            # Labels et valeurs d'une catégorie associés aux items
             if (!is.null(category)) items[, category] = object@items_categories[items$item, category]
             if (use_names) items$label = substr2(get_item_names(object, items$item), stop = n.cutoff)
             else items$label = items$item
@@ -3583,8 +3624,10 @@ setMethod(f = "itemset_chart",
             else if (sort_by == "item") {         # Par code
               items = items[order(match(items$item, object@items)), ]
             }
-            else {                                # Selon la catégorie
-              items = items[order(items[[category]]), ]
+            else {                                # Selon la catégorie (puis nom ou code)
+              items = items[order(items[[category]],
+                                  if (has_item_names(object) && use_names) get_item_names(object, items$item)
+                                  else match(items$item, object@items)), ]
             }
             rownames(items) = NULL
             
@@ -3598,17 +3641,6 @@ setMethod(f = "itemset_chart",
               category = category[order(category$value), ]
             }
             
-            # Texte à afficher
-            under_text = if (is.null(under)) NULL else nopc[, under]
-            if (is.null(over)) over_text = over_legend = NULL
-            else if (over == "status") {
-              over_text = object@status_colors[nopc[, over]]
-              over_legend = object@status_colors
-            } else {
-              over_text = nopc[, over]
-              over_legend = NULL
-            }
-            
             
             # Définition de la valeur par défaut du titre
             if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "itemsets")
@@ -3616,20 +3648,19 @@ setMethod(f = "itemset_chart",
             # Traçage du graphique (dans le device actif ou dans un fichier PDF)
             if (!is.null(name)) grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
                                                14, 10, paper = "a4r", pointsize = 11)
-            plot_itemset_chart(nopc$itemset, items, category,
+            plot_itemset_chart(itemsets, items, category,
                                jitter, under_text, over_text, over_legend, title)
             if (!is.null(name)) grDevices::dev.off()
             
-            # Renommage initial des colonnes avant retour
-            if (entities == SpectralAnalyzer.PATTERNS) {
-              colnames(nopc)[colnames(nopc) == "itemset"] = "pattern"
-            } else {
-              colnames(nopc)[colnames(nopc) == "itemset"] = "node"
-            }
             
-            # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
-            return(nopc[order(nopc$ID),
-                        c(ncol(nopc), seq(ncol(nopc)-1))])
+            # Retour (si observations)
+            if (entities == SpectralAnalyzer.OBSERVATIONS) return(vars$observations)
+            
+            # Renommage initial des colonnes avant retour (si noeuds ou patterns)
+            colnames(onpc)[colnames(onpc) == "itemset"] = substr(entities, 1, nchar(entities)-1)
+            # Noeuds/motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
+            return(onpc[order(onpc$ID),
+                        c(ncol(onpc), seq(ncol(onpc)-1))])
           })
 
 

@@ -349,8 +349,9 @@ setGeneric(name = "complexity_index",     def = function(object, ...){ standardG
 setGeneric(name = "co_occurrence_matrix", def = function(object, ...){ standardGeneric("co_occurrence_matrix") })
 
 # Methods for plotting charts
-setGeneric(name = "itemset_chart",       def = function(object, ...){ standardGeneric("itemset_chart") })
-setGeneric(name = "co_occurrence_chart", def = function(object, ...){ standardGeneric("co_occurrence_chart") })
+setGeneric(name = "itemset_chart",         def = function(object, ...){ standardGeneric("itemset_chart") })
+setGeneric(name = "prepare_itemset_chart", def = function(object, ...){ standardGeneric("prepare_itemset_chart") })
+setGeneric(name = "co_occurrence_chart",   def = function(object, ...){ standardGeneric("co_occurrence_chart") })
 
 # Other specific methods
 setGeneric(name = "has_temporal_data",   def = function(object){ standardGeneric("has_temporal_data") })
@@ -890,16 +891,7 @@ function(object, items = NULL) {
 #' If the argument `name` is not `NULL`, the chart is plotted in a PDF file of A4 landscape paper size.
 #'  If it is `NULL`, the chart is plotted in the active device.
 #' 
-#' @param object S4 object of class `ObservationSet`.
-#' @param identifiers Which IDs to use to identify the observations on the chart and in the
-#'  return object. One of `"original"`, `"new"`.
-#'  \describe{
-#'    \item{`"original"`}{Use of the original identifiers.}
-#'    \item{`"new"`}{Use of new identifiers based on sorting (see 'Details' section to learn more
-#'                   about the sort that is performed).}
-#'  }
-#' @param length_one If `FALSE`, itemsets of length \eqn{1} are not plotted. If `TRUE`, all itemsets
-#'  are plotted.
+#' @inheritParams prepare_itemset_chart,ObservationSet-method
 #' @param jitter If `FALSE`, non-equivalent itemsets of length \eqn{1} are aligned vertically.
 #'  If `TRUE`, they are spread over several vertical lines to avoid overplotting while taking as little
 #'  space as possible. If `NA`, they are plotted one after the other.
@@ -944,11 +936,64 @@ function(object, identifiers = "original",
   # Validation des paramètres
   check_param(identifiers, values = c("original", "new"))
   
-  # Itemset de taille > 1
+  # Préparation des variables pour la fonction de traçage du graphique
+  vars = prepare_itemset_chart(object, identifiers, length_one, under, over)
+  
+  # Traçage du graphique (dans le device actif ou dans un fichier PDF)
+  if (!is.null(name)) grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
+                                     14, 10, paper = "a4r", pointsize = 11)
+  plot_itemset_chart(vars$itemsets, vars$items, category = NULL,
+                     jitter, vars$under, vars$over, over_legend = NULL, title)
+  if (!is.null(name)) grDevices::dev.off()
+  
+  # Observations tracées
+  return(vars$observations)
+})
+
+
+#' Prepare data for plotting itemset chart
+#' 
+#' Prepare observations, itemsets, items and text for itemset chart.
+#' 
+#' @param object S4 object of class `ObservationSet`.
+#' @param identifiers Which IDs to use to identify the observations on the chart and in the
+#'  return object. One of `"original"`, `"new"`.
+#'  \describe{
+#'    \item{`"original"`}{Use of the original identifiers.}
+#'    \item{`"new"`}{Use of new identifiers based on sorting (see 'Details' section to learn more
+#'                   about the sort that is performed).}
+#'  }
+#' @param length_one If `FALSE`, itemsets of length \eqn{1} are not plotted. If `TRUE`, all itemsets
+#'  are plotted.
+#' @param under,over Text to display on the chart under and over the itemsets.
+#'  Identifiers (`"ID"`) or one of the elements of the observations (i.e. one of the values of
+#'  `object["names"]`).
+#' @return 
+#'  \describe{
+#'    \item{`observations`}{Subset of `object` to plot.}
+#'    \item{`itemsets`}{List of itemsets to plot.}
+#'    \item{`items`}{Data frame containing the items contained in the itemsets to plot, duplicated in two
+#'                   colonnes: item and label.}
+#'    \item{`under`}{Text to display under the itemsets.}
+#'    \item{`over`}{Text to display over the itemsets.}
+#'  }
+#' 
+#' @seealso [`itemset_chart,ObservationSet`][itemset_chart,ObservationSet-method].
+#' @author Gauthier Magnin
+#' 
+#' @aliases prepare_itemset_chart
+#' @md
+#' @keywords internal
+setMethod(f = "prepare_itemset_chart",
+          signature = "ObservationSet",
+          definition =
+function(object, identifiers, length_one, under, over) {
+  
+  # Itemsets de taille > 1 inclus ou exclus
   to_plot = if (length_one) object else get_complex_obs(object)
   
   # Si pas de nom et affichage des identifiants d'origine : attribution de noms correspondant aux index 
-  # (nécessaire avant le tri)
+  # (nécessaire avant le tri par taille)
   if (identifiers == "original" && !is_named(to_plot@data)) names(to_plot@data) = seq_along(to_plot@data)
   to_plot = reorder(to_plot, order(sapply(get_itemsets(to_plot), length)))
   if (identifiers == "new") names(to_plot@data) = seq_along(to_plot@data)
@@ -963,18 +1008,12 @@ function(object, identifiers = "original",
   if (is.list(under_text)) under_text = turn_list_into_char(under_text)
   if (is.list(over_text)) over_text = turn_list_into_char(over_text)
   
-  
-  # Traçage du graphique (dans le device actif ou dans un fichier PDF)
-  if (!is.null(name)) grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
-                                     14, 10, paper = "a4r", pointsize = 11)
-  plot_itemset_chart(obsc[, object@item_key],
-                     items = data.frame(item = get_all_items(to_plot),
-                                        label = get_all_items(to_plot)),
-                     category = NULL, jitter, under_text, over_text, over_legend = NULL, title)
-  if (!is.null(name)) grDevices::dev.off()
-  
-  # Observations tracées
-  return(to_plot)
+  return(list(observations = to_plot,
+              itemsets = obsc[, object@item_key],
+              items = data.frame(item = get_all_items(to_plot),
+                                 label = get_all_items(to_plot)),
+              under = under_text,
+              over = over_text))
 })
 
 

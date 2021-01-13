@@ -8,7 +8,7 @@
 \usage{
 \S4method{itemset_chart}{SpectralAnalyzer}(
   object,
-  nopc,
+  onpc,
   identifiers = "original",
   length_one = FALSE,
   jitter = TRUE,
@@ -27,15 +27,17 @@
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
-\item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their \strong{c}haracteristics. Nodes or
-patterns whose chart is to be plotted. Any subset of \code{object["nodes"]} or \code{object["patterns"]}.\cr
-\code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for \code{object["nodes"]} and
-\code{object["patterns"]}.}
+\item{onpc}{Object of class \code{ObservationSet} (\strong{o}) or data frame of \strong{n}odes or \strong{p}atterns and
+their \strong{c}haracteristics. Itemsets whose chart is to be plotted. Any subset of
+\code{object["observations"]}, \code{object["nodes"]} or \code{object["patterns"]}.
 
-\item{identifiers}{Which IDs to use to identify the nodes or patterns on the chart and in the
-return data frames. One of \code{"original"}, \code{"new"}.
+\code{"observations"}, \code{"o"}, \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
+\verb{"object["observations"]}, \code{object["nodes"]} and \code{object["patterns"]}.}
+
+\item{identifiers}{Which IDs to use to identify the itemsets on the chart and in the
+return. One of \code{"original"}, \code{"new"}.
 \describe{
-\item{\code{"original"}}{Use of the original identifiers.}
+\item{\code{"original"}}{Use of the original identifiers from \code{onpc}.}
 \item{\code{"new"}}{Use of new identifiers based on sorting (see 'Details' section to learn more
 about the sort that is performed).}
 }}
@@ -43,16 +45,23 @@ about the sort that is performed).}
 \item{length_one}{If \code{FALSE}, itemsets of length \eqn{1} are not plotted. If \code{TRUE}, all itemsets
 are plotted.}
 
-\item{jitter}{If \code{FALSE}, itemsets of length \eqn{1} are aligned vertically.
+\item{jitter}{If \code{FALSE}, non-equivalent itemsets of length \eqn{1} are aligned vertically.
 If \code{TRUE}, they are spread over several vertical lines to avoid overplotting while taking as little
 space as possible. If \code{NA}, they are plotted one after the other.
 Ignored if \code{length_one} is \code{FALSE}.}
 
 \item{under, over}{Text to display on the chart under and over the itemsets.
-Identifiers (\code{"ID"}) or one of the characteristics (\code{"weight"}, \code{"frequency"}, \code{"specificity"},
-\code{"year"}, \code{"status"}).
+Can be:
+\itemize{
+\item Identifiers: \code{"ID"}.
+\item One of the elements of the observations (i.e. one of the values of \code{onpc["names"]}), if \code{onpc} is
+an \code{ObservationSet}.
+\item One of the characteristics of the nodes or the patterns (\code{"weight"}, \code{"frequency"}, \code{"specificity"},
+\code{"year"}, \code{"status"}), if \code{onpc} is a data frame of nodes or patterns and their characteristics.
+}
+
 \code{"status"} can only be used for the argument \code{"over"}.
-\code{NULL} value specifies to display no data.}
+\code{NULL} value specifies to display no text.}
 
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}
@@ -67,8 +76,8 @@ the order of the columns of \code{object["items_categories"]}).}
 
 \item{sort_by}{Sorting method of displayed items. One of \code{"category"}, \code{"item"}.}
 
-\item{title}{Chart title. Default title depends on the type of entities contained in \code{nopc}.
-Example of default title: \code{"Node itemsets"} if \code{nopc} contains nodes.}
+\item{title}{Chart title. Default title depends on the type of entities contained in \code{onpc}.
+Example of default title: \code{"Node itemsets"} if \code{onpc} contains nodes.}
 
 \item{path}{Path of the directory in which to save the chart as a PDF file. Default is the working
 directory.}
@@ -77,14 +86,18 @@ directory.}
 active device.}
 }
 \value{
-Data frame of the nodes or patterns represented on the chart, associated with their
-characteristics and identifiers (visible on the chart if \code{under} or \code{over} is \code{"ID"}).
+Object of class \code{ObservationSet} or data frame of the characteristics of the nodes or patterns
+represented on the chart, associated with their identifiers (visible on the chart if one of \code{under}
+or \code{over} is \code{"ID"}).
 }
 \description{
-Plot a chart of the node or pattern itemsets. It can be automatically saved as a PDF file.
+Plot a chart of the observation, node or pattern itemsets. It can be automatically saved as a PDF file.
 }
 \details{
-The nodes or patterns are sorted according to their lengths, then to their weights.
+If they are from nodes or patterns, the itemsets are sorted according to their lengths then to their
+weights. If they are from observations, they are sorted according to their lengths only. When there
+is equality of these characteristics, itemsets are then taken according to the initial order in
+\code{onpc}.
 
 If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape paper size.
 If it is \code{NULL}, the chart is plotted in the active device.
@@ -97,12 +110,15 @@ value.
 See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
 }
 \examples{
-nodes_1 <- itemset_chart(SA_instance, "nodes",
-                         category = "family", c.cutoff = 10, n.cutoff = 20)
+obs <- itemset_chart(SA_instance, "observations", length_one = TRUE,
+                     category = "family", c.cutoff = 7, n.cutoff = 20)
+nodes <- itemset_chart(SA_instance, "nodes",
+                       category = "family", c.cutoff = 10, n.cutoff = 20)
 patterns_1 <- itemset_chart(SA_instance, "patterns",
                             category = 1, c.cutoff = 10, n.cutoff = 20)
 patterns_2 <- itemset_chart(SA_instance, SA_instance["patterns"][1:15, ])
 
+## Plotting in a PDF file
 patterns_1 <- itemset_chart(SA_instance, "patterns", category = "family",
                             c.cutoff = 17, n.cutoff = 20,
                             path = getwd(), name = "pattern_itemsets")
