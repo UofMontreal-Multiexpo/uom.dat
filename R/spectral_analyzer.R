@@ -1271,10 +1271,13 @@ setMethod(f = "check_init",
                                 stop = TRUE, prefix = "", suffix = "") {
   
   check_param(part, types = c("character", "NULL"))
+  
   if (is.null(part) || length(part) == 1) {
-    check_param(part, values = c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS,
-                                 first_characters(c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS))),
-                suffix = " or NULL")
+    if (!is.null(part)) {
+      check_param(part, values = c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS,
+                                   first_characters(c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS))),
+                  suffix = " or NULL")
+    }
     
     condition = is_init(object, part)
     if (!stop || all(condition)) return(condition)
@@ -1282,17 +1285,13 @@ setMethod(f = "check_init",
     beginning = if (prefix == "") "Attributes " else "attributes "
     
     if (is.null(part)) stop(prefix, beginning, "are not all initialized", suffix, ".")
-    
-    if (part == first_characters(NODES)) part = NODES
-    else if (part == first_characters(NODE_LINKS)) part = NODE_LINKS
-    else if (part == first_characters(PATTERNS)) part = PATTERNS
-    else if (part == first_characters(PATTERN_LINKS)) part = PATTERN_LINKS
-    stop(prefix, beginning, "relating to ", part, " must first be initialized", suffix, ".")
+    stop(prefix, beginning, "relating to ", which_name(part), " must first be initialized", suffix, ".")
   }
   else {
-    for (i in seq_along(part))
+    for (i in seq_along(part)) {
       check_param(part[i], values = c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS,
                                       first_characters(c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS))))
+    }
     
     conditions = sapply(part, is_init, object = object)
     if (!stop || all(conditions)) return(conditions)
