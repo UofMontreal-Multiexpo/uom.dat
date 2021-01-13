@@ -5649,7 +5649,7 @@ setMethod(f = "get_onp_itemsets",
           definition = function(object, onp, entities = NODES_OR_PATTERNS) {
             
             if (is.character(onp)) {
-              if (nopc == OBSERVATIONS || nopc == first_characters(OBSERVATIONS)) {
+              if (onp == OBSERVATIONS || onp == first_characters(OBSERVATIONS)) {
                 return(object@observations[object@observations@item_key])
               }
               if (onp == NODES    || onp == first_characters(NODES))    return(object@nodes$node)
