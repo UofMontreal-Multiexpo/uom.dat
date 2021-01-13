@@ -13,72 +13,59 @@ UP_TO_STEP = Inf
 
 #' STATUS_PERSISTENT
 #' @description Reference value for pattern dynamic status: persistent.
-#' @aliases STATUS_PERSISTENT
 #' @keywords internal
-SpectralAnalyzer.STATUS_PERSISTENT = "Persistent"
+STATUS_PERSISTENT = "Persistent"
 #' STATUS_DECLINING
 #' @description Reference value for pattern dynamic status: declining.
-#' @aliases STATUS_DECLINING
 #' @keywords internal
-SpectralAnalyzer.STATUS_DECLINING = "Declining"
+STATUS_DECLINING = "Declining"
 #' STATUS_EMERGENT
 #' @description Reference value for pattern dynamic status: emergent.
-#' @aliases STATUS_EMERGENT
 #' @keywords internal
-SpectralAnalyzer.STATUS_EMERGENT = "Emergent"
+STATUS_EMERGENT = "Emergent"
 #' STATUS_LATENT
 #' @description Reference value for pattern dynamic status: latent.
-#' @aliases STATUS_LATENT
 #' @keywords internal
-SpectralAnalyzer.STATUS_LATENT = "Latent"
+STATUS_LATENT = "Latent"
 
 #' OBSERVATIONS
 #' @description Reference value for naming entities: observations.
-#' @aliases OBSERVATIONS
 #' @keywords internal
-SpectralAnalyzer.OBSERVATIONS = "observations"
+OBSERVATIONS = "observations"
 #' NODES
 #' @description Reference value for naming entities: nodes.
-#' @aliases NODES
 #' @keywords internal
-SpectralAnalyzer.NODES = "nodes"
+NODES = "nodes"
 #' PATTERNS
 #' @description Reference value for naming entities: patterns.
-#' @aliases PATTERNS
 #' @keywords internal
-SpectralAnalyzer.PATTERNS = "patterns"
+PATTERNS = "patterns"
 #' RULES
 #' @description Reference value for naming entities: rules.
-#' @aliases RULES
 #' @keywords internal
-SpectralAnalyzer.RULES = "rules"
+RULES = "rules"
 
 #' NODES_OR_PATTERNS
 #' @description Reference value for defining possible entities: nodes or patterns.
-#' @aliases NODES_OR_PATTERNS
 #' @keywords internal
-SpectralAnalyzer.NODES_OR_PATTERNS = "np"
+NODES_OR_PATTERNS = "np"
 #' NODES_PATTERNS_OR_RULES
 #' @description Reference value for defining possible entities: nodes, patterns or rules.
-#' @aliases NODES_PATTERNS_OR_RULES
 #' @keywords internal
-SpectralAnalyzer.NODES_PATTERNS_OR_RULES = "npr"
+NODES_PATTERNS_OR_RULES = "npr"
 #' NODES_PATTERNS_OR_OBSERVATIONS
 #' @description Reference value for defining possible entities: nodes, patterns or observations.
-#' @aliases NODES_PATTERNS_OR_OBSERVATIONS
 #' @keywords internal
-SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS = "npo"
+NODES_PATTERNS_OR_OBSERVATIONS = "npo"
 
 #' NODE_LINKS
 #' @description Reference value for naming links between entities: links between nodes.
-#' @aliases NODE_LINKS
 #' @keywords internal
-SpectralAnalyzer.NODE_LINKS = "node_links"
+NODE_LINKS = "node_links"
 #' PATTERN_LINKS
 #' @description Reference value for naming links between entities: links between patterns.
-#' @aliases PATTERN_LINKS
 #' @keywords internal
-SpectralAnalyzer.PATTERN_LINKS = "pattern_links"
+PATTERN_LINKS = "pattern_links"
 
 
 
@@ -242,8 +229,7 @@ setValidity(Class = "SpectralAnalyzer",
               }
               
               # Vérification de l'association statuts-couleurs
-              status = c(SpectralAnalyzer.STATUS_PERSISTENT, SpectralAnalyzer.STATUS_DECLINING,
-                         SpectralAnalyzer.STATUS_EMERGENT, SpectralAnalyzer.STATUS_LATENT)
+              status = c(STATUS_PERSISTENT, STATUS_DECLINING, STATUS_EMERGENT, STATUS_LATENT)
               if (!all(status %in% names(object@status_colors))) {
                 return(paste0("Names of status_colors must contain \"",
                               paste(status[1:3], collapse = "\", \""), "\" and \"", status[4], "\"."))
@@ -283,10 +269,8 @@ setMethod(f = "initialize",
             
             # Association de couleurs aux statuts dynamiques
             .Object@status_colors = c("red", "royalblue", "orange", "gray")
-            names(.Object@status_colors) = c(SpectralAnalyzer.STATUS_PERSISTENT,
-                                             SpectralAnalyzer.STATUS_DECLINING,
-                                             SpectralAnalyzer.STATUS_EMERGENT,
-                                             SpectralAnalyzer.STATUS_LATENT)
+            names(.Object@status_colors) = c(STATUS_PERSISTENT, STATUS_DECLINING,
+                                             STATUS_EMERGENT, STATUS_LATENT)
             
             # Descripteurs de la recherche de motifs
             .Object@parameters = list(target = target,
@@ -741,11 +725,11 @@ setGeneric(name = "get_item_names", def = function(object, items){ standardGener
 
 # setGeneric(name = "get_items", def = function(object, ...){ standardGeneric("get_items") })
 
-setGeneric(name = "get_onp", def = function(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_onp") })
+setGeneric(name = "get_onp", def = function(object, onp, entities = NODES_OR_PATTERNS){ standardGeneric("get_onp") })
 
-setGeneric(name = "get_onp_itemsets", def = function(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("get_onp_itemsets") })
+setGeneric(name = "get_onp_itemsets", def = function(object, onp, entities = NODES_OR_PATTERNS){ standardGeneric("get_onp_itemsets") })
 
-setGeneric(name = "which_entities", def = function(object, onpr, entities = SpectralAnalyzer.NODES_OR_PATTERNS){ standardGeneric("which_entities") })
+setGeneric(name = "which_entities", def = function(object, onpr, entities = NODES_OR_PATTERNS){ standardGeneric("which_entities") })
 
 setGeneric(name = "which_associated_links", def = function(object, entities){ standardGeneric("which_associated_links") })
 
@@ -818,9 +802,9 @@ setMethod(f = "reset",
               "\n*** Step 02/10: Enumeration of the nodes and calculation of the number of occurrences... ",
               expression(  list_separate_obs(object)  ),
               "\n*** Step 03/10: Counting links between nodes... ",
-              expression(  count_links(object, SpectralAnalyzer.NODES)  ),
+              expression(  count_links(object, NODES)  ),
               "\n*** Step 04/10: Elaboration of links between nodes... ",
-              expression(  search_links(object, SpectralAnalyzer.NODES)  ),
+              expression(  search_links(object, NODES)  ),
               
               # Initialisation des attributs utiles à la construction d'un spectre
               "\n*** Step 05/10: Mining for itemsets... ",
@@ -837,9 +821,9 @@ setMethod(f = "reset",
               
               # Initialisation des attributs utiles à la construction d'un spectrosome des motifs
               "\n*** Step 09/10: Counting links between patterns... ",
-              expression(  count_links(object, SpectralAnalyzer.PATTERNS)  ),
+              expression(  count_links(object, PATTERNS)  ),
               "\n*** Step 10/10: Elaboration of links between patterns... ",
-              expression(  search_links(object, SpectralAnalyzer.PATTERNS)  )
+              expression(  search_links(object, PATTERNS)  )
               
             ), ncol = 2, nrow = 10, byrow = TRUE)
             
@@ -946,25 +930,23 @@ setMethod(f = "init",
   if (is.null(part)) {
     to_return = reset(object, from = 1, verbose = verbose)
   } else {
-    check_param(part, values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                                 SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS,
-                                 first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                                                    SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS))),
+    check_param(part, values = c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS,
+                                 first_characters(c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS))),
                 suffix = " or NULL")
     
-    if (part == SpectralAnalyzer.NODES || part == first_characters(SpectralAnalyzer.NODES)) {
+    if (part == NODES || part == first_characters(NODES)) {
       to_return = init_nodes(object, verbose)
     }
-    else if (part == SpectralAnalyzer.NODE_LINKS || part == first_characters(SpectralAnalyzer.NODE_LINKS)) {
-      check_init(object, SpectralAnalyzer.NODES)
+    else if (part == NODE_LINKS || part == first_characters(NODE_LINKS)) {
+      check_init(object, NODES)
       to_return = init_node_links(object, verbose)
     }
-    else if (part == SpectralAnalyzer.PATTERNS || part == first_characters(SpectralAnalyzer.PATTERNS)) {
-      check_init(object, SpectralAnalyzer.NODES)
+    else if (part == PATTERNS || part == first_characters(PATTERNS)) {
+      check_init(object, NODES)
       to_return = init_patterns(object, verbose)
     }
-    else if (part == SpectralAnalyzer.PATTERN_LINKS || part == first_characters(SpectralAnalyzer.PATTERN_LINKS)) {
-      check_init(object, SpectralAnalyzer.PATTERNS)
+    else if (part == PATTERN_LINKS || part == first_characters(PATTERN_LINKS)) {
+      check_init(object, PATTERNS)
       to_return = init_pattern_links(object, verbose)
     }
   }
@@ -1029,13 +1011,13 @@ setMethod(f = "init_node_links",
             
             if (verbose) {
               cat("*** Step NL.1/2: Counting links between nodes... ")
-              display_time(count_links(object, SpectralAnalyzer.NODES))
+              display_time(count_links(object, NODES))
               
               cat("\n*** Step NL.2/2: Elaboration of links between nodes... ")
-              display_time(search_links(object, SpectralAnalyzer.NODES))
+              display_time(search_links(object, NODES))
             } else {
-              count_links(object, SpectralAnalyzer.NODES)
-              search_links(object, SpectralAnalyzer.NODES)
+              count_links(object, NODES)
+              search_links(object, NODES)
             }
             
             # Redéfinition de l'objet
@@ -1097,13 +1079,13 @@ setMethod(f = "init_pattern_links",
             
             if (verbose) {
               cat("*** Step PL.1/2: Counting links between patterns... ")
-              display_time(count_links(object, SpectralAnalyzer.PATTERNS))
+              display_time(count_links(object, PATTERNS))
               
               cat("\n*** Step PL.2/2: Elaboration of links between patterns... ")
-              display_time(search_links(object, SpectralAnalyzer.PATTERNS))
+              display_time(search_links(object, PATTERNS))
             } else {
-              count_links(object, SpectralAnalyzer.PATTERNS)
-              search_links(object, SpectralAnalyzer.PATTERNS)
+              count_links(object, PATTERNS)
+              search_links(object, PATTERNS)
             }
             
             # Redéfinition de l'objet
@@ -1173,19 +1155,17 @@ setMethod(f = "is_init",
              "p" = is_init_patterns(object), "pl" = is_init_pattern_links(object)))
   }
   
-  check_param(part, values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                               SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS,
-                               first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                                                  SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS))),
+  check_param(part, values = c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS,
+                               first_characters(c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS))),
               suffix = " or NULL")
   
-  if (part == SpectralAnalyzer.NODES || part == first_characters(SpectralAnalyzer.NODES))
+  if (part == NODES || part == first_characters(NODES))
     return(is_init_nodes(object))
-  if (part == SpectralAnalyzer.NODE_LINKS || part == first_characters(SpectralAnalyzer.NODE_LINKS))
+  if (part == NODE_LINKS || part == first_characters(NODE_LINKS))
     return(is_init_node_links(object))
-  if (part == SpectralAnalyzer.PATTERNS || part == first_characters(SpectralAnalyzer.PATTERNS))
+  if (part == PATTERNS || part == first_characters(PATTERNS))
     return(is_init_patterns(object))
-  if (part == SpectralAnalyzer.PATTERN_LINKS || part == first_characters(SpectralAnalyzer.PATTERN_LINKS))
+  if (part == PATTERN_LINKS || part == first_characters(PATTERN_LINKS))
     return(is_init_pattern_links(object))
 })
 
@@ -1292,10 +1272,8 @@ setMethod(f = "check_init",
   
   check_param(part, types = c("character", "NULL"))
   if (is.null(part) || length(part) == 1) {
-    check_param(part, values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                                 SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS,
-                                 first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                                                    SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS))),
+    check_param(part, values = c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS,
+                                 first_characters(c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS))),
                 suffix = " or NULL")
     
     condition = is_init(object, part)
@@ -1305,18 +1283,16 @@ setMethod(f = "check_init",
     
     if (is.null(part)) stop(prefix, beginning, "are not all initialized", suffix, ".")
     
-    if (part == first_characters(SpectralAnalyzer.NODES)) part = SpectralAnalyzer.NODES
-    else if (part == first_characters(SpectralAnalyzer.NODE_LINKS)) part = SpectralAnalyzer.NODE_LINKS
-    else if (part == first_characters(SpectralAnalyzer.PATTERNS)) part = SpectralAnalyzer.PATTERNS
-    else if (part == first_characters(SpectralAnalyzer.PATTERN_LINKS)) part = SpectralAnalyzer.PATTERN_LINKS
+    if (part == first_characters(NODES)) part = NODES
+    else if (part == first_characters(NODE_LINKS)) part = NODE_LINKS
+    else if (part == first_characters(PATTERNS)) part = PATTERNS
+    else if (part == first_characters(PATTERN_LINKS)) part = PATTERN_LINKS
     stop(prefix, beginning, "relating to ", part, " must first be initialized", suffix, ".")
   }
   else {
     for (i in seq_along(part))
-      check_param(part[i], values = c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                                      SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS,
-                                      first_characters(c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS,
-                                                         SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS))))
+      check_param(part[i], values = c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS,
+                                      first_characters(c(NODES, NODE_LINKS, PATTERNS, PATTERN_LINKS))))
     
     conditions = sapply(part, is_init, object = object)
     if (!stop || all(conditions)) return(conditions)
@@ -1450,7 +1426,7 @@ setMethod(f = "list_separate_obs",
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param entities Type of entities for which to count links (nodes or patterns).
-#'  \code{SpectralAnalyzer.NODES} or \code{SpectralAnalyzer.PATTERNS}.
+#'  \code{NODES} or \code{PATTERNS}.
 #' @return Invisible. Adjacency matrix: matrix of the number of links between each pair of nodes
 #'  or patterns.
 #' 
@@ -1465,9 +1441,9 @@ setMethod(f = "count_links",
             object_name = deparse(substitute(object))
             
             # Ensemble des noeuds ou motifs
-            if (entities == SpectralAnalyzer.NODES) to_link = object@nodes$node
-            else if (entities == SpectralAnalyzer.PATTERNS) to_link = object@patterns$pattern
-            else stop("entities must be SpectralAnalyzer.NODES or SpectralAnalyzer.PATTERNS.")
+            if (entities == NODES) to_link = object@nodes$node
+            else if (entities == PATTERNS) to_link = object@patterns$pattern
+            else stop("entities must be NODES or PATTERNS.")
             
             # Compte le nombre d'items en commun pour chaque paire d'éléments à lier
             names(to_link) = sapply(to_link, paste0, collapse = "/")
@@ -1481,8 +1457,8 @@ setMethod(f = "count_links",
             class(n_intersections) = "integer"
             
             # Définition de l'attribut et retour
-            if (entities == SpectralAnalyzer.NODES) object@n_links = n_intersections
-            else if (entities == SpectralAnalyzer.PATTERNS) object@p_links = n_intersections
+            if (entities == NODES) object@n_links = n_intersections
+            else if (entities == PATTERNS) object@p_links = n_intersections
             assign(object_name, object, envir = parent.frame())
             return(invisible(n_intersections))
           })
@@ -1496,7 +1472,7 @@ setMethod(f = "count_links",
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param entities Type of entities for which to elaborate links (nodes or patterns).
-#'  \code{SpectralAnalyzer.NODES} or \code{SpectralAnalyzer.PATTERNS}.
+#'  \code{NODES} or \code{PATTERNS}.
 #' @return Invisible. Data frame detailing the links between pairs of nodes or patterns.
 #'  Isolated nodes or patterns (i.e. unrelated to any other entity) appear at the bottom of the data
 #'  frame.
@@ -1512,13 +1488,13 @@ setMethod(f = "search_links",
             object_name = deparse(substitute(object))
             
             # Ensemble des noeuds ou motifs
-            if (entities == SpectralAnalyzer.NODES) {
+            if (entities == NODES) {
               to_link = object@nodes$node
               entities_links = object@n_links
-            } else if (entities == SpectralAnalyzer.PATTERNS) {
+            } else if (entities == PATTERNS) {
               to_link = object@patterns$pattern
               entities_links = object@p_links
-            } else stop("entities must be SpectralAnalyzer.NODES or SpectralAnalyzer.PATTERNS.")
+            } else stop("entities must be NODES or PATTERNS.")
             
             
             # Recherche des indices des éléments liés
@@ -1528,7 +1504,7 @@ setMethod(f = "search_links",
             
             # Utilisation de la propriété de symétrie de la matrice pour compter le nombre de liens
             nb_links = (sum(entities_links != 0) - nrow(entities_links)) / 2
-            links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == SpectralAnalyzer.PATTERNS, 5, 4))
+            links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == PATTERNS, 5, 4))
             
             link_counter = 0
             loop_index = 0
@@ -1544,7 +1520,7 @@ setMethod(f = "search_links",
                   intersection = to_link[[j]][to_link[[j]] %in% to_link[[i]]]
                   
                   # Élément i, élément j, items en communs, nb items en communs (, année d'apparition du lien)
-                  if (entities == SpectralAnalyzer.PATTERNS) {
+                  if (entities == PATTERNS) {
                     links[link_counter, ] = c(i, j,
                                               paste(intersection, collapse = "/"), entities_links[i, j],
                                               max(object@patterns[i, "year"], object@patterns[j, "year"]))
@@ -1565,14 +1541,14 @@ setMethod(f = "search_links",
             if (length(isolated_indexes) != 0) {
               no_links = t(sapply(isolated_indexes, entity = entities,
                                   function(x, entity) {
-                                    if (entity == SpectralAnalyzer.PATTERNS) {
+                                    if (entity == PATTERNS) {
                                       return(c(x, x, "", 0, object@patterns[parent.frame()$i[], "year"]))
                                     }
                                     return(c(x, x, "", 0))
                                   }))
             } else {
               # Matrice vide pour la fusion qui suit (sans avoir à tester aucune des deux)
-              no_links = matrix(NA, nrow = 0, ncol = ifelse(entities == SpectralAnalyzer.PATTERNS, 5, 4))
+              no_links = matrix(NA, nrow = 0, ncol = ifelse(entities == PATTERNS, 5, 4))
             }
             
             
@@ -1580,7 +1556,7 @@ setMethod(f = "search_links",
             merged = as.data.frame(rbind(links, no_links), stringsAsFactors = FALSE)
             
             # Affectation de noms de colonnes et rétablissement des types
-            if (entities == SpectralAnalyzer.PATTERNS) {
+            if (entities == PATTERNS) {
               colnames(merged) = c("endpoint.1", "endpoint.2", "items", "weight", "year")
               class(merged$year) = "integer"
             } else {
@@ -1591,8 +1567,8 @@ setMethod(f = "search_links",
             
             
             # Définition de l'attribut et retour
-            if (entities == SpectralAnalyzer.NODES) object@node_links = merged
-            else if (entities == SpectralAnalyzer.PATTERNS) object@pattern_links = merged
+            if (entities == NODES) object@node_links = merged
+            else if (entities == PATTERNS) object@pattern_links = merged
             assign(object_name, object, envir = parent.frame())
             return(invisible(object@node_links))
           })
@@ -2143,8 +2119,8 @@ setMethod(f = "define_dynamic_status",
           definition = function(object, patterns,
                                 t = NULL, period = Inf, short_limit = object["status_limit"]) {
             
-            check_init(object, SpectralAnalyzer.PATTERNS)
-            patterns = get_onp_itemsets(object, patterns, entities = SpectralAnalyzer.PATTERNS)
+            check_init(object, PATTERNS)
+            patterns = get_onp_itemsets(object, patterns, entities = PATTERNS)
             
             # Calcul des limites et des seuils associés
             ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
@@ -2164,10 +2140,10 @@ setMethod(f = "define_dynamic_status",
             
             # Interprétation
             status = character(length(patterns))
-            status[( substantial_period &  substantial_limit)] = SpectralAnalyzer.STATUS_PERSISTENT
-            status[( substantial_period & !substantial_limit)] = SpectralAnalyzer.STATUS_DECLINING
-            status[(!substantial_period &  substantial_limit)] = SpectralAnalyzer.STATUS_EMERGENT
-            status[(!substantial_period & !substantial_limit)] = SpectralAnalyzer.STATUS_LATENT
+            status[( substantial_period &  substantial_limit)] = STATUS_PERSISTENT
+            status[( substantial_period & !substantial_limit)] = STATUS_DECLINING
+            status[(!substantial_period &  substantial_limit)] = STATUS_EMERGENT
+            status[(!substantial_period & !substantial_limit)] = STATUS_LATENT
             
             return(list(res = data.frame(RI.period = ri_limits[, "RI.period"],
                                          is.above.threshold.1 = substantial_period,
@@ -2241,8 +2217,8 @@ setMethod(f = "spectrum_chart",
                                 title = "Spectrum of patterns", path = NULL, name = NULL) {
             
             # Récupération des patterns
-            check_init(object, SpectralAnalyzer.PATTERNS)
-            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
+            check_init(object, PATTERNS)
+            pc = get_onp(object, pc, PATTERNS)
             
             check_param(identifiers, values = c("original", "new"))
             
@@ -2387,8 +2363,7 @@ setMethod(f = "plot_spectrum_chart",
                                              col = object@status_colors, legend = names(object@status_colors))
             
             graphics::legend(x = fig_in_usr_coords(2) - w_margin - status_legend$rect$w +
-                               (graphics::strwidth(SpectralAnalyzer.STATUS_PERSISTENT) -
-                                  graphics::strwidth(SpectralAnalyzer.STATUS_LATENT)),
+                               (graphics::strwidth(STATUS_PERSISTENT) - graphics::strwidth(STATUS_LATENT)),
                              y = fig_in_usr_coords(4) - tt_margin / 2 + status_legend$rect$h / 2,
                              bty = "n", horiz = TRUE, xpd = TRUE,
                              pch = 15, cex = cex_legend,
@@ -2446,7 +2421,7 @@ setMethod(f = "pattern_node_characteristics",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns) {
             
-            check_init(object, SpectralAnalyzer.PATTERNS)
+            check_init(object, PATTERNS)
             
             # Ensembles des poids et longueurs des noeuds contenant les motifs
             weights = list()
@@ -2493,7 +2468,7 @@ setMethod(f = "weight_by_node_complexity",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns) {
   
-  patterns = get_onp_itemsets(object, patterns, entities = SpectralAnalyzer.PATTERNS)
+  patterns = get_onp_itemsets(object, patterns, entities = PATTERNS)
   pnc = pattern_node_characteristics(object, patterns)
   
   weights = t(sapply(seq_along(patterns), function(i) {
@@ -2697,7 +2672,7 @@ setMethod(f = "spectrosome_chart",
               return(NULL)
             }
             
-            if (entities == SpectralAnalyzer.NODES) {
+            if (entities == NODES) {
               # Texte affiché sur le graphique
               nop_subtitle_1 = "Nodes: %d (%d isolate"
               nop_subtitle_2 = "); Links: %d"
@@ -2707,7 +2682,7 @@ setMethod(f = "spectrosome_chart",
               # Renommage de colonnes pour simplification ultérieure (cf. vertices_colors et vertices_shapes)
               colnames(nopc)[colnames(nopc) == "node"] = "pattern"
               
-            } else if (entities == SpectralAnalyzer.PATTERNS) {
+            } else if (entities == PATTERNS) {
               # Texte affiché sur le graphique
               nop_subtitle_1 = "Patterns: %d (%d isolate"
               nop_subtitle_2 = "); Links: %d"
@@ -2734,7 +2709,7 @@ setMethod(f = "spectrosome_chart",
               missing_vertices = as.data.frame(t(
                 sapply(setdiff(all_vertices, unique(unlist(nop_links[, 1:2]))),
                        function(x){
-                         if (entities == SpectralAnalyzer.NODES) return(c(x, x, "", 0))
+                         if (entities == NODES) return(c(x, x, "", 0))
                          return(c(x, x, "", 0, object@patterns[x, "year"]))
                        })), stringsAsFactors = FALSE)
               
@@ -2742,7 +2717,7 @@ setMethod(f = "spectrosome_chart",
               colnames(missing_vertices) = colnames(nop_links)
               for (c_name in colnames(missing_vertices)) class(missing_vertices[c_name]) = class(nop_links[c_name])
               class(missing_vertices$endpoint.1) = class(missing_vertices$endpoint.2) = class(missing_vertices$weight) = "integer"
-              if(entities == SpectralAnalyzer.PATTERNS) class(missing_vertices$year) = "integer"
+              if(entities == PATTERNS) class(missing_vertices$year) = "integer"
               nop_links = rbind(nop_links, missing_vertices)
               
               # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
@@ -2751,7 +2726,7 @@ setMethod(f = "spectrosome_chart",
             }
             # Attribution d'identifiants aux liens
             nop_links$ID = seq_len(nrow(nop_links))
-            if (entities == SpectralAnalyzer.NODES) nop_links = nop_links[, c("ID", "endpoint.1", "endpoint.2", "items", "weight")]
+            if (entities == NODES) nop_links = nop_links[, c("ID", "endpoint.1", "endpoint.2", "items", "weight")]
             else nop_links = nop_links[, c("ID", "endpoint.1", "endpoint.2", "items", "weight", "year")]
             
             
@@ -2834,7 +2809,7 @@ setMethod(f = "spectrosome_chart",
             
             
             # Définition des couleurs des sommets en fonction du statut et nombre pour chaque statut
-            if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
+            if (entities == PATTERNS && vertex_col[1] == "status") {
               vertices_colors = object@status_colors[nopc$status]
               count_status = sapply(names(object@status_colors),
                                     function(status) sum(nopc$status == status))
@@ -3025,7 +3000,7 @@ setMethod(f = "spectrosome_chart",
                       font.main = 3, cex.main = 1.1, line = 0.7)
                 
                 # Préparation des formes de la légende des sommets
-                if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
+                if (entities == PATTERNS && vertex_col[1] == "status") {
                   vertex_legend_pt.cex = c(rep(2, length(object@status_colors)), 0, 1.6, 2)
                   vertex_legend_pch = c(rep(15, length(object@status_colors)), 0, 2, 1)
                 } else if (vertex_col[1] != "categories" || length(object@items_categories) == 0) {
@@ -3073,10 +3048,10 @@ setMethod(f = "spectrosome_chart",
                 }
                 
                 # Légende supplémentaire concernant la distribution des statuts
-                if (entities == SpectralAnalyzer.PATTERNS && vertex_col[1] == "status") {
+                if (entities == PATTERNS && vertex_col[1] == "status") {
                   status_legend = paste0("(", count_status, ")")
                   
-                  status_legend_output = graphics::legend(x = vertex_legend_output$text$x[1] + strwidth(paste0(SpectralAnalyzer.STATUS_PERSISTENT), cex = cex_legend),
+                  status_legend_output = graphics::legend(x = vertex_legend_output$text$x[1] + strwidth(paste0(STATUS_PERSISTENT), cex = cex_legend),
                                                           y = vertex_legend_output$rect$top,
                                                           bty = "n", title = "",
                                                           legend = status_legend, cex = cex_legend)
@@ -3128,7 +3103,7 @@ setMethod(f = "spectrosome_chart",
             # Calcul du degré de chaque sommet dans le graphe
             degrees = sapply(vertices_id, function(ID) degree(object, ID, nop_links))
             # Renommage initial des colonnes avant retour
-            if (entities == SpectralAnalyzer.NODES) {
+            if (entities == NODES) {
               colnames(nopc)[colnames(nopc) == "pattern"] = "node"
             }
             
@@ -3341,14 +3316,14 @@ setMethod(f = "cluster_chart",
             check_init(object, c(entities, which_associated_links(object, entities)))
             
             # Vérifie qu'un seul item est mentionné
-            if (length(item) != 1 && entities == SpectralAnalyzer.NODES)
+            if (length(item) != 1 && entities == NODES)
               stop("item must refer to only one item. For more, check out the functions get_nodes and spectrosome_chart.")
-            if (length(item) != 1 && entities == SpectralAnalyzer.PATTERNS)
+            if (length(item) != 1 && entities == PATTERNS)
               stop("item must refer to only one item. For more, check out the functions get_patterns and spectrosome_chart.")
             
             # Extraction des noeuds ou motifs contenant l'item recherché ("nop" = "nodes or patterns")
-            if (entities == SpectralAnalyzer.NODES) nop = get_nodes_from_items(object, nopc, item)
-            else if (entities == SpectralAnalyzer.PATTERNS) nop = get_patterns_from_items(object, nopc, item)
+            if (entities == NODES) nop = get_nodes_from_items(object, nopc, item)
+            else if (entities == PATTERNS) nop = get_patterns_from_items(object, nopc, item)
             
             # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
             if (nrow(nop) > 1) {
@@ -3559,9 +3534,9 @@ setMethod(f = "itemset_chart",
                                 title = NULL, path = NULL, name = NULL) {
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
-            entities = which_entities(object, onpc, SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS)
-            if (entities != SpectralAnalyzer.OBSERVATIONS) check_init(object, entities)
-            onpc = get_onp(object, onpc, SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS)
+            entities = which_entities(object, onpc, NODES_PATTERNS_OR_OBSERVATIONS)
+            if (entities != OBSERVATIONS) check_init(object, entities)
+            onpc = get_onp(object, onpc, NODES_PATTERNS_OR_OBSERVATIONS)
             
             # Validation des paramètres
             check_access_for_category(object, category, NA)
@@ -3569,13 +3544,13 @@ setMethod(f = "itemset_chart",
             if (is.null(category) && sort_by == "category") sort_by = "item"
             check_param(identifiers, values = c("original", "new"))
             
-            if (entities != SpectralAnalyzer.PATTERNS && !is.null(over) && over == "status") over = NULL
+            if (entities != PATTERNS && !is.null(over) && over == "status") over = NULL
             if (!is.null(under) && under == "status") under = NULL
             category = if (is.numeric(category)) colnames(object@items_categories)[category] else category
             
             
             # Préparation des variables pour la fonction de traçage graphique
-            if (entities == SpectralAnalyzer.OBSERVATIONS) {
+            if (entities == OBSERVATIONS) {
               vars = prepare_itemset_chart(object@observations, identifiers, length_one, under, over)
               
               itemsets = vars$itemsets
@@ -3654,7 +3629,7 @@ setMethod(f = "itemset_chart",
             
             
             # Retour (si observations)
-            if (entities == SpectralAnalyzer.OBSERVATIONS) return(vars$observations)
+            if (entities == OBSERVATIONS) return(vars$observations)
             
             # Renommage initial des colonnes avant retour (si noeuds ou patterns)
             colnames(onpc)[colnames(onpc) == "itemset"] = substr(entities, 1, nchar(entities)-1)
@@ -4065,7 +4040,7 @@ setMethod(f = "extract_rules",
               
             } else {
               if (is.character(from)) {
-                check_init(object, SpectralAnalyzer.PATTERNS, prefix = "If from = \"patterns\", ")
+                check_init(object, PATTERNS, prefix = "If from = \"patterns\", ")
                 from = object@patterns$pattern
               }
               
@@ -4507,12 +4482,12 @@ setMethod(f = "save_characteristics",
           definition = function(object, characteristics, ...) {
             
             # Recherche du type d'entités fourni
-            entities = which_entities(object, characteristics, SpectralAnalyzer.NODES_PATTERNS_OR_RULES)
+            entities = which_entities(object, characteristics, NODES_PATTERNS_OR_RULES)
             
             # Nom des colonnes dans lesquelles chercher les vecteurs à convertir
-            if (entities == SpectralAnalyzer.NODES || entities == SpectralAnalyzer.PATTERNS) {
+            if (entities == NODES || entities == PATTERNS) {
               columns = substr(entities, 1, nchar(entities) - 1)
-            } else if (entities == SpectralAnalyzer.RULES) {
+            } else if (entities == RULES) {
               columns = c("antecedent", "consequent")
             }
             
@@ -4662,8 +4637,8 @@ setMethod(f = "get_nodes_from_items",
           definition = function(object, nc, items, condition = "all") {
             
             # Récupération des noeuds
-            check_init(object, SpectralAnalyzer.NODES)
-            nc = get_onp(object, nc, SpectralAnalyzer.NODES)
+            check_init(object, NODES)
+            nc = get_onp(object, nc, NODES)
             
             if (!(condition %in% c("all", "any", "exact")))
               stop("condition must be \"all\", \"any\" or \"exact\".")
@@ -4727,8 +4702,8 @@ setMethod(f = "get_nodes_from_characteristic",
           definition = function(object, nc, characteristic, value, condition = "EQ") {
             
             # Récupération des noeuds
-            check_init(object, SpectralAnalyzer.NODES)
-            nc = get_onp(object, nc, SpectralAnalyzer.NODES)
+            check_init(object, NODES)
+            nc = get_onp(object, nc, NODES)
             
             if (!(characteristic %in% c("length", "weight")))
               stop("characteristic must be one of \"length\", \"weight\".")
@@ -4789,13 +4764,13 @@ setMethod(f = "get_nodes_from_category",
           definition = function(object, nc, category, value, condition) {
             
             # Récupération des noeuds
-            nc = get_onp(object, nc, SpectralAnalyzer.NODES)
+            nc = get_onp(object, nc, NODES)
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
             
             if (condition == "items" || condition == "vertices") {
-              check_init(object, SpectralAnalyzer.NODES)
+              check_init(object, NODES)
               
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
@@ -4803,7 +4778,7 @@ setMethod(f = "get_nodes_from_category",
               return(get_nodes_from_items(object, nc, items, condition = "any"))
               
             } else if (condition == "links" || condition == "edges") {
-              check_init(object, c(SpectralAnalyzer.NODES, SpectralAnalyzer.NODE_LINKS))
+              check_init(object, c(NODES, NODE_LINKS))
               
               # Recherche de l'ensemble de liens correspondant aux motifs
               links = get_links(object, nc)
@@ -4984,8 +4959,8 @@ setMethod(f = "get_patterns_from_items",
           definition = function(object, pc, items, condition = "all") {
             
             # Récupération des patterns
-            check_init(object, SpectralAnalyzer.PATTERNS)
-            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
+            check_init(object, PATTERNS)
+            pc = get_onp(object, pc, PATTERNS)
             
             if (!(condition %in% c("all", "any", "exact")))
               stop("condition must be \"all\", \"any\" or \"exact\".")
@@ -5050,8 +5025,8 @@ setMethod(f = "get_patterns_from_characteristic",
           definition = function(object, pc, characteristic, value, condition = "EQ") {
             
             # Récupération des patterns
-            check_init(object, SpectralAnalyzer.PATTERNS)
-            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
+            check_init(object, PATTERNS)
+            pc = get_onp(object, pc, PATTERNS)
             
             if (!(characteristic %in% c("year", "frequency", "weight", "length", "specificity")))
               stop("characteristic must be one of \"year\", \"frequency\", \"weight\", \"length\", \"specificity\".")
@@ -5109,8 +5084,8 @@ setMethod(f = "get_patterns_from_status",
           definition = function(object, pc, value, condition = "EQ") {
             
             # Récupération des patterns
-            check_init(object, SpectralAnalyzer.PATTERNS)
-            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
+            check_init(object, PATTERNS)
+            pc = get_onp(object, pc, PATTERNS)
             
             switch(EXPR = condition,
                    "EQ" = { return(pc[pc$status %in% value, ]) },
@@ -5164,13 +5139,13 @@ setMethod(f = "get_patterns_from_category",
           definition = function(object, pc, category, value, condition) {
             
             # Récupération des patterns
-            pc = get_onp(object, pc, SpectralAnalyzer.PATTERNS)
+            pc = get_onp(object, pc, PATTERNS)
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
             
             if (condition == "items" || condition == "vertices") {
-              check_init(object, SpectralAnalyzer.PATTERNS)
+              check_init(object, PATTERNS)
               
               # Recherche des items correspondant à la catégorie recherchée
               items = rownames(subset(object@items_categories, object@items_categories[category] == value))
@@ -5178,7 +5153,7 @@ setMethod(f = "get_patterns_from_category",
               return(get_patterns_from_items(object, pc, items, condition = "any"))
               
             } else if (condition == "links" || condition == "edges") {
-              check_init(object, c(SpectralAnalyzer.PATTERNS, SpectralAnalyzer.PATTERN_LINKS))
+              check_init(object, c(PATTERNS, PATTERN_LINKS))
               
               # Recherche de l'ensemble de liens correspondant aux motifs
               links = get_links(object, pc)
@@ -5232,15 +5207,15 @@ setMethod(f = "get_links",
             check_init(object, c(entities, which_associated_links(object, entities)))
             
             # Si les liens recherchés correspondent à l'intégralité des liens
-            if (entities == SpectralAnalyzer.NODES && identical(object@nodes, nopc)) {
+            if (entities == NODES && identical(object@nodes, nopc)) {
               return(object@node_links)
             }
-            if (entities == SpectralAnalyzer.PATTERNS && identical(object@patterns, nopc)) {
+            if (entities == PATTERNS && identical(object@patterns, nopc)) {
               return(object@pattern_links)
             }
             
             # Sinon...
-            search_nodes = (entities == SpectralAnalyzer.NODES)
+            search_nodes = (entities == NODES)
             all_links = if(search_nodes) object@node_links else object@pattern_links
             
             # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
@@ -5442,7 +5417,6 @@ setMethod(f = "get_complexes",
 
 #### Other specific methods ####
 
-
 #' Validation of parameters for search by category
 #' 
 #' Check that the parameters provided match an existing category.
@@ -5617,27 +5591,24 @@ setMethod(f = "get_items",
 #' @keywords internal
 setMethod(f = "get_onp",
           signature = "SpectralAnalyzer",
-          definition = function(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
+          definition = function(object, onp, entities = NODES_OR_PATTERNS) {
             
             if (is.character(onp)) {
-              if (onp == SpectralAnalyzer.OBSERVATIONS || onp == first_characters(SpectralAnalyzer.OBSERVATIONS))
-                return(object@observations)
-              if (onp == SpectralAnalyzer.NODES || onp == first_characters(SpectralAnalyzer.NODES))
-                return(object@nodes)
-              if (onp == SpectralAnalyzer.PATTERNS || onp == first_characters(SpectralAnalyzer.PATTERNS))
-                return(object@patterns)
+              if (onp == OBSERVATIONS || onp == first_characters(OBSERVATIONS)) return(object@observations)
+              if (onp == NODES        || onp == first_characters(NODES))        return(object@nodes)
+              if (onp == PATTERNS     || onp == first_characters(PATTERNS))     return(object@patterns)
               
               var_name = deparse(substitute(onp))
               
-              if (entities == SpectralAnalyzer.OBSERVATIONS)
+              if (entities == OBSERVATIONS)
                 msg = paste(var_name, "must be \"observations\" or an object of class ObservationSet.")
-              else if (entities == SpectralAnalyzer.NODES)
+              else if (entities == NODES)
                 msg = paste(var_name, "must be \"nodes\" or a data frame of nodes and their characteristics.")
-              else if (entities == SpectralAnalyzer.PATTERNS)
+              else if (entities == PATTERNS)
                 msg = paste(var_name, "must be \"patterns\" or a data frame of patterns and their characteristics.")
-              else if (entities == SpectralAnalyzer.NODES_OR_PATTERNS)
+              else if (entities == NODES_OR_PATTERNS)
                 msg = paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics.")
-              else # SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS
+              else # NODES_PATTERNS_OR_OBSERVATIONS
                 msg = paste(var_name, "must be \"observaionts\", \"nodes\", \"patterns\", an object of class ObservationSet or a data frame of nodes or patterns and their characteristics.")
               
               stop(msg)
@@ -5676,27 +5647,26 @@ setMethod(f = "get_onp",
 #' @keywords internal
 setMethod(f = "get_onp_itemsets",
           signature = "SpectralAnalyzer",
-          definition = function(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
+          definition = function(object, onp, entities = NODES_OR_PATTERNS) {
             
             if (is.character(onp)) {
-              if (nopc == SpectralAnalyzer.OBSERVATIONS || nopc == first_characters(SpectralAnalyzer.OBSERVATIONS))
+              if (nopc == OBSERVATIONS || nopc == first_characters(OBSERVATIONS)) {
                 return(object@observations[object@observations@item_key])
-              if (onp == SpectralAnalyzer.NODES || onp == first_characters(SpectralAnalyzer.NODES))
-                return(object@nodes$node)
-              if (onp == SpectralAnalyzer.PATTERNS || onp == first_characters(SpectralAnalyzer.PATTERNS))
-                return(object@patterns$pattern)
+              }
+              if (onp == NODES    || onp == first_characters(NODES))    return(object@nodes$node)
+              if (onp == PATTERNS || onp == first_characters(PATTERNS)) return(object@patterns$pattern)
               
               var_name = deparse(substitute(onp))
               
-              if (entities == SpectralAnalyzer.OBSERVATIONS)
+              if (entities == OBSERVATIONS)
                 msg = paste(var_name, "must be \"observations\" or a list of observations.")
-              else if (entities == SpectralAnalyzer.NODES)
+              else if (entities == NODES)
                 msg = paste(var_name, "must be \"nodes\" or a list of nodes.")
-              else if (entities == SpectralAnalyzer.PATTERNS)
+              else if (entities == PATTERNS)
                 msg = paste(var_name, "must be \"patterns\" or a list of patterns.")
-              else if (entities == SpectralAnalyzer.NODES_OR_PATTERNS)
+              else if (entities == NODES_OR_PATTERNS)
                 msg = paste(var_name, "must be \"nodes\", \"patterns\" or a list of nodes or patterns.")
-              else # SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS
+              else # NODES_PATTERNS_OR_OBSERVATIONS
                 msg = paste(var_name, "must be \"observations\", \"nodes\", \"patterns\" or a list of observations, nodes or patterns.")
               
               stop(msg)
@@ -5736,38 +5706,34 @@ setMethod(f = "get_onp_itemsets",
 #' @keywords internal
 setMethod(f = "which_entities",
           signature = "SpectralAnalyzer",
-          definition = function(object, onpr, entities = SpectralAnalyzer.NODES_OR_PATTERNS) {
+          definition = function(object, onpr, entities = NODES_OR_PATTERNS) {
             
             if (is.character(onpr)) {
-              if (onpr == SpectralAnalyzer.OBSERVATIONS || onpr == first_characters(SpectralAnalyzer.OBSERVATIONS))
-                return(SpectralAnalyzer.OBSERVATIONS)
-              if (onpr == SpectralAnalyzer.NODES || onpr == first_characters(SpectralAnalyzer.NODES))
-                return(SpectralAnalyzer.NODES)
-              if (onpr == SpectralAnalyzer.PATTERNS || onpr == first_characters(SpectralAnalyzer.PATTERNS))
-                return(SpectralAnalyzer.PATTERNS)
-              if (onpr == SpectralAnalyzer.RULES || onpr == first_characters(SpectralAnalyzer.RULES))
-                return(SpectralAnalyzer.RULES)
+              if (onpr == OBSERVATIONS || onpr == first_characters(OBSERVATIONS)) return(OBSERVATIONS)
+              if (onpr == NODES        || onpr == first_characters(NODES))        return(NODES)
+              if (onpr == PATTERNS     || onpr == first_characters(PATTERNS))     return(PATTERNS)
+              if (onpr == RULES        || onpr == first_characters(RULES))        return(RULES)
               
               var_name = deparse(substitute(onpr))
               
-              if (entities == SpectralAnalyzer.NODES_OR_PATTERNS)
+              if (entities == NODES_OR_PATTERNS)
                 msg = paste("If", var_name, "is character, it must be \"nodes\" or \"patterns\".")
-              else if (entities == SpectralAnalyzer.NODES_PATTERNS_OR_RULES)
+              else if (entities == NODES_PATTERNS_OR_RULES)
                 msg = paste("If", var_name, "is character, it must be \"nodes\", \"patterns\" or \"rules\".")
-              else # SpectralAnalyzer.NODES_PATTERNS_OR_OBSERVATIONS
+              else # NODES_PATTERNS_OR_OBSERVATIONS
                 msg = paste("If", var_name, "is character, it must be \"observations\", \"nodes\" or \"patterns\".")
               
               stop(msg)
             }
             
-            if (class(onpr) == "ObservationSet") return(SpectralAnalyzer.OBSERVATIONS)
-            if ("node" %in% colnames(onpr)) return(SpectralAnalyzer.NODES)
-            if ("pattern" %in% colnames(onpr)) return(SpectralAnalyzer.PATTERNS)
-            if ("antecedent" %in% colnames(onpr)) return(SpectralAnalyzer.RULES)
+            if (class(onpr) == "ObservationSet") return(OBSERVATIONS)
+            if ("node" %in% colnames(onpr)) return(NODES)
+            if ("pattern" %in% colnames(onpr)) return(PATTERNS)
+            if ("antecedent" %in% colnames(onpr)) return(RULES)
             
             var_name = deparse(substitute(onpr))
             
-            if (entities == SpectralAnalyzer.NODES_OR_PATTERNS) {
+            if (entities == NODES_OR_PATTERNS) {
               stop(paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics."))
             }
             else if (entities == NODES_PATTERNS_OR_RULES) {
@@ -5787,7 +5753,7 @@ setMethod(f = "which_entities",
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param entities Type of entities for which to give the type of links.
-#'  Character corresponding to `NODES`, `PATTERNS` or their simplifications.
+#'  Character corresponding to `NODES`, `PATTERNS` or their simplifications (see [`first_characters`]).
 #' @return Character corresponding to `NODE_LINKS` or `PATTERN_LINKS`.
 #' 
 #' @author Gauthier Magnin
@@ -5800,10 +5766,8 @@ setMethod(f = "which_associated_links",
           signature = "SpectralAnalyzer",
           definition = function(object, entities) {
             
-            if (entities == SpectralAnalyzer.NODES || entities == first_characters(SpectralAnalyzer.NODES))
-              return(SpectralAnalyzer.NODE_LINKS)
-            if (entities == SpectralAnalyzer.PATTERNS || entities == first_characters(SpectralAnalyzer.PATTERNS))
-              return(SpectralAnalyzer.PATTERN_LINKS)
+            if (entities == NODES    || entities == first_characters(NODES))    return(NODE_LINKS)
+            if (entities == PATTERNS || entities == first_characters(PATTERNS)) return(PATTERN_LINKS)
             
             stop("entities must refer to nodes or patterns.")
           })
@@ -5832,18 +5796,12 @@ setMethod(f = "which_name",
             
             if (length(name) > 1) return(sapply(name, which_name, object = object))
             
-            if (name == SpectralAnalyzer.OBSERVATIONS || name == first_characters(SpectralAnalyzer.OBSERVATIONS))
-              return(SpectralAnalyzer.OBSERVATIONS)
-            if (name == SpectralAnalyzer.NODES || name == first_characters(SpectralAnalyzer.NODES))
-              return(SpectralAnalyzer.NODES)
-            if (name == SpectralAnalyzer.PATTERNS || name == first_characters(SpectralAnalyzer.PATTERNS))
-              return(SpectralAnalyzer.PATTERNS)
-            if (name == SpectralAnalyzer.RULES || name == first_characters(SpectralAnalyzer.RULES))
-              return(SpectralAnalyzer.RULES)
-            if (name == SpectralAnalyzer.NODE_LINKS || name == first_characters(SpectralAnalyzer.NODE_LINKS))
-              return(SpectralAnalyzer.NODE_LINKS)
-            if (name == SpectralAnalyzer.PATTERN_LINKS || name == first_characters(SpectralAnalyzer.PATTERN_LINKS))
-              return(SpectralAnalyzer.PATTERN_LINKS)
+            if (name == OBSERVATIONS  || name == first_characters(OBSERVATIONS))  return(OBSERVATIONS)
+            if (name == NODES         || name == first_characters(NODES))         return(NODES)
+            if (name == PATTERNS      || name == first_characters(PATTERNS))      return(PATTERNS)
+            if (name == RULES         || name == first_characters(RULES))         return(RULES)
+            if (name == NODE_LINKS    || name == first_characters(NODE_LINKS))    return(NODE_LINKS)
+            if (name == PATTERN_LINKS || name == first_characters(PATTERN_LINKS)) return(PATTERN_LINKS)
           })
 
 

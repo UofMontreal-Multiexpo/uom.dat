@@ -5,7 +5,7 @@
 \alias{get_onp}
 \title{Get observations or nodes or patterns and their characteristics}
 \usage{
-\S4method{get_onp}{SpectralAnalyzer}(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS)
+\S4method{get_onp}{SpectralAnalyzer}(object, onp, entities = NODES_OR_PATTERNS)
 }
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}

@@ -11,7 +11,7 @@
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{entities}{Type of entities for which to give the type of links.
-Character corresponding to \code{NODES}, \code{PATTERNS} or their simplifications.}
+Character corresponding to \code{NODES}, \code{PATTERNS} or their simplifications (see \code{\link{first_characters}}).}
 }
 \value{
 Character corresponding to \code{NODE_LINKS} or \code{PATTERN_LINKS}.

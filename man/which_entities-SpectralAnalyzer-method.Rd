@@ -5,7 +5,7 @@
 \alias{which_entities}
 \title{Detect the type of entities}
 \usage{
-\S4method{which_entities}{SpectralAnalyzer}(object, onpr, entities = SpectralAnalyzer.NODES_OR_PATTERNS)
+\S4method{which_entities}{SpectralAnalyzer}(object, onpr, entities = NODES_OR_PATTERNS)
 }
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}

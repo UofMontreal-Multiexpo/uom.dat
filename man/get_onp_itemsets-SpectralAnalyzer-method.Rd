@@ -5,7 +5,7 @@
 \alias{get_onp_itemsets}
 \title{Get observation, node or pattern itemsets}
 \usage{
-\S4method{get_onp_itemsets}{SpectralAnalyzer}(object, onp, entities = SpectralAnalyzer.NODES_OR_PATTERNS)
+\S4method{get_onp_itemsets}{SpectralAnalyzer}(object, onp, entities = NODES_OR_PATTERNS)
 }
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}

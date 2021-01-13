@@ -11,7 +11,7 @@
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
 \item{entities}{Type of entities for which to elaborate links (nodes or patterns).
-\code{SpectralAnalyzer.NODES} or \code{SpectralAnalyzer.PATTERNS}.}
+\code{NODES} or \code{PATTERNS}.}
 }
 \value{
 Invisible. Data frame detailing the links between pairs of nodes or patterns.
