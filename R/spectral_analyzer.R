@@ -735,6 +735,8 @@ setGeneric(name = "get_complexes", def = function(object, nopc, category = NULL,
 
 setGeneric(name = "check_access_for_category", def = function(object, category, value, stop = TRUE){ standardGeneric("check_access_for_category") })
 
+setGeneric(name = "has_item_names", def = function(object){ standardGeneric("has_item_names") })
+
 setGeneric(name = "get_item_names", def = function(object, items){ standardGeneric("get_item_names") })
 
 # setGeneric(name = "get_items", def = function(object, ...){ standardGeneric("get_items") })
@@ -5463,6 +5465,30 @@ setMethod(f = "check_access_for_category",
           })
 
 
+#' Check if the items have names
+#' 
+#' Check if the `SpectralAnalyzer` has item names, i.e. if the current names associated with the items
+#'  are different from their identification codes.
+#' 
+#' @param object S4 object of class `SpectralAnalyzer`.
+#' @return `TRUE` if at least one of the names of `object["items"]` is different from the related item.
+#'  `FALSE` if all names of `object["items"]` are equal to the values of `object["items"]`.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`get_item_names`], [`get_items`][get_items,SpectralAnalyzer].
+#' 
+#' @aliases has_item_names
+#' @md
+#' @keywords internal
+setMethod(f = "has_item_names",
+          signature = "SpectralAnalyzer",
+          definition = function(object) {
+            
+            if (all(names(object@items) == object@items)) return(FALSE)
+            return(TRUE)
+          })
+
+
 #' Get item names
 #' 
 #' Find the names associated with items given their identification codes.
@@ -5472,7 +5498,7 @@ setMethod(f = "check_access_for_category",
 #' @return Names of the `items` in `object["items"]`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_items`].
+#' @seealso [`get_items`][get_items,SpectralAnalyzer], [`has_item_names`].
 #' 
 #' @aliases get_item_names
 #' @md
@@ -5502,7 +5528,7 @@ setMethod(f = "get_item_names",
 #' @return Named vector of items corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_item_names`], [`get_nopc`], [`which_entities`].
+#' @seealso [`get_item_names`], [`has_item_names`], [`get_onp`], [`which_entities`].
 #' 
 #' Method for signature `ObservationSet`: [`get_items,ObservationSet`][get_items,ObservationSet-method].
 #' 
