@@ -885,8 +885,8 @@ function(object, items = NULL) {
 #' Plot a chart of the observation itemsets. It can be automatically saved as a PDF file.
 #' 
 #' @details
-#' The itemsets are sorted according to their lengths then (for the same length) are taken according to
-#'  the initial order in `object`.
+#' Itemsets are sorted according to their lengths then (for the same length) are taken according to
+#'  the initial order in `object`. Items are sorted alphanumerically.
 #' 
 #' If the argument `name` is not `NULL`, the chart is plotted in a PDF file of A4 landscape paper size.
 #'  If it is `NULL`, the chart is plotted in the active device.
@@ -1025,6 +1025,9 @@ function(object, identifiers, length_one, under, over) {
 #' @details
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
+#' 
+#' Items are ordered according to the order they are given. If one of the special values is given,
+#'  they are ordered alphanumerically.
 #' 
 #' @param object S4 object of class `ObservationSet`.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.\cr

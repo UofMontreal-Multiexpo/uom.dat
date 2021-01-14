@@ -69,6 +69,9 @@ each pair of items, the number of observations containing it).
 \details{
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
+
+Items are ordered according to the order they are given. If one of the special values is given,
+they are ordered alphanumerically.
 }
 \examples{
 co_occurrence_chart(OS_instance, get_all_items(OS_instance))

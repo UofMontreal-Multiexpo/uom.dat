@@ -146,12 +146,12 @@ If \code{min_link_weight} is greater than 1 or the chart is to be plotted from a
 These new isolated vertices are moved to the end of the return data frame \code{edges}.
 The \code{n} related lines are numbered \code{"A1"..."An"}.
 
-The colors associated with the values of each category represented are selected circularly
- among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
+Default colors associated with the values of each category represented are selected circularly
+among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
 Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
- For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
- value.
-See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
+For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>} one.
+See attribute \code{categories_colors} of the \code{SpectralAnalyzer} object to reassign colors to the
+category values.
 
 The names of clusters confused because all of their links are mixed links, are not displayed.
 

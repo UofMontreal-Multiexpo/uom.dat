@@ -134,12 +134,12 @@ rule and its reciprocal have the same confidence, both rules are represented.
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 
-The colors associated with the values of the possible category represented are selected circularly
+Default colors associated with the values of each category represented are selected circularly
 among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
-Therefore, if the number of values exceeds \eqn{20}, some colors will be used more than once.
-For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
-value.
-See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
+Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
+For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>} one.
+See attribute \code{categories_colors} of the \code{SpectralAnalyzer} object to reassign colors to the
+category values.
 }
 \note{
 If the argument \code{display} refers to the characteristic confidence, edges may not be displayed in

@@ -56,8 +56,8 @@ S4 object of class \code{ObservationSet} containing the observations represented
 Plot a chart of the observation itemsets. It can be automatically saved as a PDF file.
 }
 \details{
-The itemsets are sorted according to their lengths then (for the same length) are taken according to
-the initial order in \code{object}.
+Itemsets are sorted according to their lengths then (for the same length) are taken according to
+the initial order in \code{object}. Items are sorted alphanumerically.
 
 If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape paper size.
 If it is \code{NULL}, the chart is plotted in the active device.

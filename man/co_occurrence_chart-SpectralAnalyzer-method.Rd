@@ -89,12 +89,15 @@ each pair of items, the number of observations containing it).
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 
-The colors associated with the values of the possible category represented are selected circularly
+If \code{category} is \code{NULL}, items are sorted alphanumerically. If it is not, items are sorted according
+to the values of the category then alphanumerically.
+
+Default colors associated with the values of each category represented are selected circularly
 among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
-Therefore, if the number of values exceeds \eqn{20}, some colors will be used more than once.
-For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
-value.
-See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
+Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
+For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>} one.
+See attribute \code{categories_colors} of the \code{SpectralAnalyzer} object to reassign colors to the
+category values.
 }
 \examples{
 co_occurrence_chart(SA_instance, SA_instance["items"], "family")

@@ -94,20 +94,23 @@ or \code{over} is \code{"ID"}).
 Plot a chart of the observation, node or pattern itemsets. It can be automatically saved as a PDF file.
 }
 \details{
-If they are from nodes or patterns, the itemsets are sorted according to their lengths then to their
+If they are from nodes or patterns, itemsets are sorted according to their lengths then to their
 weights. If they are from observations, they are sorted according to their lengths only. When there
 is equality of these characteristics, itemsets are then taken according to the initial order in
 \code{onpc}.
 
+If \code{category} is \code{NULL}, items are sorted alphanumerically. If it is not, items are sorted according
+to the values of the category then alphanumerically.
+
 If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape paper size.
 If it is \code{NULL}, the chart is plotted in the active device.
 
-The colors associated with the values of the possible category represented are selected circularly
+Default colors associated with the values of each category represented are selected circularly
 among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
 Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
-For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
-value.
-See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
+For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>} one.
+See attribute \code{categories_colors} of the \code{SpectralAnalyzer} object to reassign colors to the
+category values.
 }
 \examples{
 obs <- itemset_chart(SA_instance, "observations", length_one = TRUE,

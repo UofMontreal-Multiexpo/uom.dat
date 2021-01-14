@@ -2513,13 +2513,9 @@ setMethod(f = "weight_by_node_complexity",
 #' These new isolated vertices are moved to the end of the return data frame \code{edges}.
 #' The \code{n} related lines are numbered \code{"A1"..."An"}.
 #' 
-#' The colors associated with the values of each category represented are selected circularly
-#'  among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
-#' Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
-#'  For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
-#'  value.
-#' See the attribute \code{categories_colors} of \code{object} to reassign colors to the category values.
+#' @template default_category_values_colors
 #' 
+#' @details
 #' The names of clusters confused because all of their links are mixed links, are not displayed.
 #' 
 #' Additional arguments can be supplied to the function in charge of plotting the graph.
@@ -3434,20 +3430,18 @@ setMethod(f = "degree",
 #' Plot a chart of the observation, node or pattern itemsets. It can be automatically saved as a PDF file.
 #' 
 #' @details
-#' If they are from nodes or patterns, the itemsets are sorted according to their lengths then to their
+#' If they are from nodes or patterns, itemsets are sorted according to their lengths then to their
 #'  weights. If they are from observations, they are sorted according to their lengths only. When there
 #'  is equality of these characteristics, itemsets are then taken according to the initial order in
 #'  `onpc`.
 #' 
+#' If `category` is `NULL`, items are sorted alphanumerically. If it is not, items are sorted according
+#'  to the values of the category then alphanumerically.
+#' 
 #' If the argument `name` is not `NULL`, the chart is plotted in a PDF file of A4 landscape paper size.
 #'  If it is `NULL`, the chart is plotted in the active device.
 #' 
-#' The colors associated with the values of the possible category represented are selected circularly
-#'  among the 20 colors of the palette `category20` from D3 (see `ggsci::pal_d3("category20")`).
-#' Therefore, if the number of values exceeds `20`, some colors will be used more than once.
-#'  For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
-#'  value.
-#' See the attribute `categories_colors` of `object` to reassign colors to the category values.
+#' @template default_category_values_colors
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param onpc Object of class `ObservationSet` (**o**) or data frame of **n**odes or **p**atterns and
@@ -3651,12 +3645,7 @@ setMethod(f = "itemset_chart",
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
-#' The colors associated with the values of the possible category represented are selected circularly
-#'  among the 20 colors of the palette `category20` from D3 (see `ggsci::pal_d3("category20")`).
-#' Therefore, if the number of values exceeds \eqn{20}, some colors will be used more than once.
-#'  For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
-#'  value.
-#' See the attribute `categories_colors` of `object` to reassign colors to the category values.
+#' @template default_category_values_colors
 #'
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param category Name or number of the category to represent on the tree (numbering according to
@@ -3790,12 +3779,10 @@ setMethod(f = "category_tree_chart",
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
-#' The colors associated with the values of the possible category represented are selected circularly
-#'  among the 20 colors of the palette `category20` from D3 (see `ggsci::pal_d3("category20")`).
-#' Therefore, if the number of values exceeds \eqn{20}, some colors will be used more than once.
-#'  For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
-#'  value.
-#' See the attribute `categories_colors` of `object` to reassign colors to the category values.
+#' If `category` is `NULL`, items are sorted alphanumerically. If it is not, items are sorted according
+#'  to the values of the category then alphanumerically.
+#' 
+#' @template default_category_values_colors
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
@@ -4095,12 +4082,7 @@ setMethod(f = "extract_rules",
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
-#' The colors associated with the values of the possible category represented are selected circularly
-#'  among the 20 colors of the palette `category20` from D3 (see `ggsci::pal_d3("category20")`).
-#' Therefore, if the number of values exceeds \eqn{20}, some colors will be used more than once.
-#'  For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<sup>nd</sup>}
-#'  value.
-#' See the attribute `categories_colors` of `object` to reassign colors to the category values.
+#' @template default_category_values_colors
 #' 
 #' @note
 #' If the argument `display` refers to the characteristic confidence, edges may not be displayed in
