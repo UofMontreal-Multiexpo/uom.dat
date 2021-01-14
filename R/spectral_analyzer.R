@@ -3848,10 +3848,11 @@ setMethod(f = "co_occurrence_chart",
   # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
   
-  # Tri par nom, par identifiant ou selon les valeurs de la catégorie
+  # Tri par nom, par identifiant ou selon les valeurs de la catégorie (puis nom ou code)
   if (use_names && sort_by == "item") hierarchy = hierarchy[order(names(items)), ]
   else if (sort_by == "item") hierarchy = hierarchy[order(items), ]
-  else hierarchy = hierarchy[order(object@items_categories[as.character(items), category]), ]
+  else hierarchy = hierarchy[order(object@items_categories[as.character(items), category],
+                                   if (has_item_names(object) && use_names) names(items) else items), ]
   
   # Sommets du graphe
   vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
