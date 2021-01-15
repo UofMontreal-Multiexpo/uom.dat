@@ -3544,7 +3544,7 @@ setMethod(f = "itemset_chart",
             
             # Préparation des variables pour la fonction de traçage graphique
             if (entities == OBSERVATIONS) {
-              vars = prepare_itemset_chart(object@observations, identifiers, length_one, under, over)
+              vars = prepare_itemset_chart(onpc, identifiers, length_one, under, over)
               
               itemsets = vars$itemsets
               items = data.frame(item = as.character(vars$items$item), stringsAsFactors = FALSE)
