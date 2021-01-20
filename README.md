@@ -1,20 +1,20 @@
-# Occupational Exposure Databases analysis tools - Multiexposure
+# University of Montreal Data Analysis Tools
 
 
 ## Purpose
 
-This project is about developing **R processing, analysis and visualization tools** for occupational exposure databases, especially for multiexposure.
-
 The development of these tools is part of a research study led by **Jérôme Lavoué** (Professor at [**University of Montreal**](https://recherche.umontreal.ca/english/home/), department of environmental health and occupational health) whose title is "Portrait of multiexposure situations in the workplace in Quebec from occupational exposure databases".
 
-Main analytical approaches are *Frequent Itemset Mining*, *Association Rules*, *Clustering*, *Maximum Cumulative Ratio* and *Spectrosome*.
+This package is about **R processing, analysis and visualization tools** initially designed for processing data from occupational exposure databases, especially for the concept of multiexposure.
+
+Main analytical approaches are **Frequent Itemset Mining**, **Spectrosome**, **Association Rules**, **Clustering** and **Maximum Cumulative Ratio**.
 
 
 ## Installation
 
-There are two ways to install the package **oedb.analysis.tools**.
+There are two ways to install the package **uom.dat**.
 
-### Installing it with the devtools package
+### A. Installing with the devtools package
 
 The function `install_github` from the `devtools` package can be used to install the present one. However, as this repository is private, you need a personal access token for this function to work.
 
@@ -33,7 +33,7 @@ devtools::install_github("UofMontreal-Multiexpo/oedb-analysis-tools",
                          auth_token = "my_personal_access_token")
 ```
 
-### Getting all files then installing
+### B. Getting all files then installing
 
 1. Clone the repository or download a ZIP copy.
 2. In RStudio, open the project file `oedb-analysis-tools.Rproj`.
@@ -45,7 +45,7 @@ devtools::install_github("UofMontreal-Multiexpo/oedb-analysis-tools",
    ```
 4. In the "Build" menu, click on the "Install and Restart" menu item.
 
-You can now close the project **oedb.analysis.tools** and work on your own one using our package.
+You can now close the project **uom.dat** and work on your own one using our package.
 
 
 ## Documentation
@@ -60,11 +60,11 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * An explanation with illustrated examples about the different types of itemsets, in the file `frequent_itemsets.html`.
 
-* The detail of the data structures used by the **SpectralAnalyzer** class (attributes, function parameters and function returns) in the file `types_of_attributes_and_methods_SA.pdf`.
+* The detail of the data structures used by the **SpectralAnalyzer** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
 
-* The detail of the data structures used by the **ObservationSet** class (attributes, function parameters and function returns) in the file `types_of_attributes_and_methods_OS.pdf`. 
+* The detail of the data structures used by the **ObservationSet** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_OS.pdf`. 
 
-These files can be accessed using `help(package = "oedb.analysis.tools")` then clicking on "User guides, package vignettes and other documentation".
+These files can be accessed using `help(package = "uom.dat")` then clicking on "User guides, package vignettes and other documentation".
 
 
 ## Authors

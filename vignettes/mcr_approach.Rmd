@@ -43,7 +43,7 @@ Nevertheless, as the indicators of the Maximum Cumulative Ratio approach are bas
 Foremost, we will create a list of observations as presented in the document "Spectral analysis and observation processing example". For short, these observations will simply group data from the dataset `oedb_sample`. The values we will use will be taken from these observations.
 ```{r message=FALSE}
 # Loading the package
-library(oedb.analysis.tools)
+library(uom.dat)
 
 # Creation of specific observations
 observations <- make_OE_observations(
@@ -815,7 +815,7 @@ Application of the maximum cumulative ratio (MCR) as a screening tool for the ev
 
 # List of datasets, functions, classes and methods
 
-The package help page: [oedb.analysis.tools](../html/oedb.analysis.tools-package.html)
+The package help page: [uom.dat](../html/uom.dat-package.html)
 
 ## Datasets
 

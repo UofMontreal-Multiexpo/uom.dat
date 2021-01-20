@@ -4,7 +4,7 @@ knitr::opts_chunk$set(fig.align = "center")
 
 ## ----message=FALSE------------------------------------------------------------
 # Loading the package
-library(oedb.analysis.tools)
+library(uom.dat)
 
 # Creation of specific observations
 observations <- make_OE_observations(
