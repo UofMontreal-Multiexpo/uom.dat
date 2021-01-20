@@ -19,7 +19,7 @@
 
 \item{from}{Character or list of itemsets for which to extract the association rules.
 \itemize{
-  \item{If \code{"observations"}, look for all rules within the observations saved in \code{object}
+  \item{If \code{"transactions"}, look for all rules within the transactions saved in \code{object}
         or for rules with specific items.}
   \item{If \code{"patterns"}, look for rules whose union of the antecedent and the consequent form
         an entire pattern among those contained in \code{object} (more precisely, in
@@ -44,12 +44,12 @@ Ignored if \code{arules} is \code{TRUE}.}
 Data frame or object of class \code{rules} (according to the argument \code{arules})
  containing the extracted rules and their characteristics.
  
- If \code{from} is not \code{"observations"}, the column \code{"itemset"} refers to the index of the
+ If \code{from} is not \code{"transactions"}, the column \code{"itemset"} refers to the index of the
  itemset from which the rule was generated in the list of patterns (if \code{from = "patterns"})
  or in the given list (otherwise).
 }
 \description{
-Extract association rules from the observations (i.e. presence implication between two disjoint
+Extract association rules from the transactions (i.e. presence implication between two disjoint
  itemsets). Can be used to find all rules, rules relating to patterns (or other specific itemsets)
  or relating to specific items.
 }
@@ -67,10 +67,10 @@ Only creates rules with one item in the consequent. The reason is detailed on
 The characteristics of an association rule of the form \mjeqn{X \rightarrow Y}{X -> Y} are:
  \itemize{
    \item{The \strong{support}: support of the itemset \mjeqn{X \cup Y}{X union Y}, i.e. the
-         proportion of observations containing \mjeqn{X \cup Y}{X union Y} among all observations.}
+         proportion of transactions containing \mjeqn{X \cup Y}{X union Y} among all transactions.}
    \item{The \strong{confidence}: quotient of the support of \mjeqn{X \cup Y}{X union Y} and the
-         support of \eqn{X}, i.e. the proportion of observations in which the rule is correct
-         relative to the number of observations containing the antecedent \eqn{X}.}
+         support of \eqn{X}, i.e. the proportion of transactions in which the rule is correct
+         relative to the number of transactions containing the antecedent \eqn{X}.}
    \item{The \strong{lift}: quotient of the confidence of \mjeqn{X \rightarrow Y}{X -> Y} and the
          support of \eqn{Y}.}
  }
@@ -90,7 +90,7 @@ A rule is redundant if a more general rule with the same or higher confidence ex
  words, having inferred a dependency \mjeqn{X \rightarrow Y}{X -> Y}, any other dependency of the
  form \mjeqn{X \cup A \rightarrow Y}{X union A -> Y} is considered redundant.
 
-If \code{from = "observations"}, additional arguments are \code{parameter}, \code{appearance} and
+If \code{from = "transactions"}, additional arguments are \code{parameter}, \code{appearance} and
  \code{control} of function \code{\link[arules:apriori]{apriori}} from the package \code{arules}.
  These arguments allow to specify minimum support (default \code{0.1}), minimum confidence (default
  \code{0.8}), minimum length (default \code{1}), maximum length (default \code{10}), specific items
@@ -102,31 +102,31 @@ If \code{from} is \code{"patterns"} or a list, additional arguments are \code{co
  operating parameters of the rule extraction algorithm.
 
 Defining minimum support \eqn{s} and confidence \eqn{c} means that the union of items in the
- antecedent and consequent of rules must be present in a minimum of \eqn{s}\% of observations
- and at least \eqn{c}\% of observations must satisfy the antecedent.
+ antecedent and consequent of rules must be present in a minimum of \eqn{s}\% of transactions
+ and at least \eqn{c}\% of transactions must satisfy the antecedent.
 }
 \examples{
 ## Basic rule extraction
-rules_1 <- extract_rules(SA_instance, from = "observations")
+rules_1 <- extract_rules(SA_instance, from = "transactions")
 rules_2 <- extract_rules(SA_instance, from = "patterns")
 rules_3 <- extract_rules(SA_instance, from = list(c("931", "3180"),
                                                   c("25", "192", "328")))
 
 ## Rule extraction with conditions on the antecedent and the consequent
 params <- list(supp = 0.001, conf = 0.5, maxlen = 2)
-rules_4 <- extract_rules(SA_instance, from = "observations",
+rules_4 <- extract_rules(SA_instance, from = "transactions",
                          parameter = params,
                          appearance = list(rhs = "328"))
-rules_5 <- extract_rules(SA_instance, from = "observations",
+rules_5 <- extract_rules(SA_instance, from = "transactions",
                          parameter = params,
                          appearance = list(lhs = "497"))
-rules_6 <- extract_rules(SA_instance, from = "observations",
+rules_6 <- extract_rules(SA_instance, from = "transactions",
                          parameter = list(supp = 0.001, conf = 0,
                                           minlen = 2, maxlen = 2),
                          appearance = list(lhs = "328", rhs = "3180"))
 
 ## Getting rules as an object of class rules from the package arules
-rules_7 <- extract_rules(SA_instance, from = "observations", arules = TRUE)
+rules_7 <- extract_rules(SA_instance, from = "transactions", arules = TRUE)
 arules::inspect(rules_7)
 
 }

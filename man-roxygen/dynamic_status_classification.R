@@ -6,7 +6,7 @@
 #' 
 #' A pattern is:
 #' * Persistent when it appears substantially during both the entire period of the
-#'   observations (defined by the arguments `period` and `t`) and a shorter period defined by the
+#'   transactions (defined by the arguments `period` and `t`) and a shorter period defined by the
 #'   arguments `short_limit` and `t`.
 #' * Declining when it appears substantially during the entire period but much less during
 #'   the shorter period.
@@ -22,7 +22,7 @@
 #'  is the reporting index of the pattern \eqn{p} given by:
 #'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
 #' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-#'  the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+#'  the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
 #'  defining the period on which to compute the reporting index.
 #' 
 #' For each set of reporting indexes:

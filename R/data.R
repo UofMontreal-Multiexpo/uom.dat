@@ -35,33 +35,33 @@
 "substances_information"
 
 
-#' Example of an ObservationSet object
+#' Example of a TransactionSet object
 #' 
-#' An example of an object of class \code{ObservationSet}.
+#' An example of an object of class \code{TransactionSet}.
 #' 
 #' @details
 #' Here is the way it was created using the dataset \code{\link{oedb_sample}}:
 #' \preformatted{
-#' ## Making a list of observations by grouping data
-#' obs <- make_observations(oedb_sample,
+#' ## Making a list of transactions by grouping data
+#' trx <- make_transactions(oedb_sample,
 #'                          by = "ID",
 #'                          additional = c("CODE", "YEAR",
 #'                                         "JOB.TITLE", "JOB.TASK", "SAMPLE.ID"))
 #' 
-#' ## Creation of the ObservationSet
-#' OS_instance <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
-#' OS_instance["names"] <- OS_instance["names"][-1]
+#' ## Creation of the TransactionSet
+#' TS_instance <- transaction.set(data = trx, item_key = "CODE", year_key = "YEAR")
+#' TS_instance["names"] <- TS_instance["names"][-1]
 #' }
 #' 
-#' @format An object of class \code{ObservationSet} containing 14 observations of 5 elements:
+#' @format An object of class \code{TransactionSet} containing 14 transactions of 5 elements:
 #'  \describe{
-#'    \item{CODE}{Codes identifying the items corresponding to the observation.}
-#'    \item{YEAR}{Year in which the observation was made.}
-#'    \item{JOB.TITLE, JOB.TASK, SAMPLE.ID}{Additional data related to the observation.}
+#'    \item{CODE}{Codes identifying the items corresponding to the transaction.}
+#'    \item{YEAR}{Year in which the transaction was made.}
+#'    \item{JOB.TITLE, JOB.TASK, SAMPLE.ID}{Additional data related to the transaction.}
 #'  }
 #' 
-#' For more about the attributes, see \code{\link{ObservationSet}}.
-"OS_instance"
+#' For more about the attributes, see \code{\link{TransactionSet}}.
+"TS_instance"
 
 
 #' Example of a SpectralAnalyzer object
@@ -72,7 +72,7 @@
 #' Here is the way it was created using the datasets \code{\link{oedb_sample}} and
 #'  \code{\link{substances_information}}:
 #' \preformatted{
-#' ## Making a list of observations
+#' ## Making a list of transactions
 #' to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
 #' ws <- data.frame(WS.ID = c(1, 2, 2, 3, 3),
 #'                  JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
@@ -80,7 +80,7 @@
 #'                  stringsAsFactors = FALSE)
 #' ws_vars <- c("JOB.TITLE", "JOB.TASK")
 #' 
-#' obs <- make_OE_observations(oedb_sample,
+#' trx <- make_OE_transactions(oedb_sample,
 #'                             keys = c("ID", "CODE", "YEAR"),
 #'                             mode = 1,
 #'                             work_situations = ws,
@@ -89,7 +89,7 @@
 #'                             unique_values = TRUE)
 #' 
 #' ## Associating item identifiers with names and one category
-#' substances <- get_all_items(obs)
+#' substances <- get_all_items(trx)
 #' families <- substances_information[match(substances,
 #'                                          substances_information$CODE),
 #'                                    "SUBFAMILY"]
@@ -101,10 +101,10 @@
 #' items <- data.frame(item = substances, name = names, family = families)
 #' 
 #' ## Creation of the SpectralAnalyzer
-#' SA_instance <- spectral.analyzer(obs, items)
+#' SA_instance <- spectral.analyzer(trx, items)
 #' }
 #' 
-#' @format An object of class \code{SpectralAnalyzer} created from 14 observations, 25 items, 1 category
+#' @format An object of class \code{SpectralAnalyzer} created from 14 transactions, 25 items, 1 category
 #'  associated to the items, and generating 12 nodes and 20 patterns by enumeration of the closed
 #'  frequent itemsets.
 #' 

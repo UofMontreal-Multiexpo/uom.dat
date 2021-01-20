@@ -23,7 +23,7 @@ Vector containing the specificity of each pattern contained in \code{patterns}.
 Compute the specificity of the information conveyed by each pattern.
 The specitificity corresponds to the nature of a pattern of being specific of a particular
 combination or ubiquitous and allowing the formation of numerous combinations (with regard to the
-observations).
+transactions).
 }
 \details{
 \loadmathjax

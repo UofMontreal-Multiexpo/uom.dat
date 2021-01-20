@@ -15,7 +15,7 @@ Invisible. Logical matrix in which rows correspond to nodes and columns correspo
  patterns. A value of \code{TRUE} means the pattern is included in the node.
 }
 \description{
-Associate each separate observation (i.e. each node) with the patterns included in it.
+Associate each separate transaction (i.e. each node) with the patterns included in it.
 The resulting matrix is assigned to the attribute \code{nodes_patterns} of \code{object}.
 }
 \author{

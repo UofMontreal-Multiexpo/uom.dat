@@ -19,12 +19,12 @@ Compute the characteristics of the patterns (frequency, weight, length, specific
 The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 }
 \details{
-The frequency and the weight of a pattern is the number of nodes and the number of observations
+The frequency and the weight of a pattern is the number of nodes and the number of transactions
 containing it, respectively. The length of a pattern is the number of items composing it.
 
 The specificity of a pattern is the information it conveys. It corresponds to the nature of the
 pattern of being specific of a particular combination or ubiquitous and allowing the formation of
-numerous combinations (with regard to the observations).
+numerous combinations (with regard to the transactions).
 
 The dynamic status is one of persistent, declining, emergent or latent.
 
@@ -53,7 +53,7 @@ to define its status.
 A pattern is:
 \itemize{
 \item Persistent when it appears substantially during both the entire period of the
-observations (defined by the arguments \code{period} and \code{t}) and a shorter period defined by the
+transactions (defined by the arguments \code{period} and \code{t}) and a shorter period defined by the
 arguments \code{short_limit} and \code{t}.
 \item Declining when it appears substantially during the entire period but much less during
 the shorter period.
@@ -70,7 +70,7 @@ where \eqn{l} is the shorter period on which to compute a reporting index and \m
 is the reporting index of the pattern \eqn{p} given by:
 \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
 where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
 defining the period on which to compute the reporting index.
 
 For each set of reporting indexes:

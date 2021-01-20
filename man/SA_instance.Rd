@@ -5,7 +5,7 @@
 \alias{SA_instance}
 \title{Example of a SpectralAnalyzer object}
 \format{
-An object of class \code{SpectralAnalyzer} created from 14 observations, 25 items, 1 category
+An object of class \code{SpectralAnalyzer} created from 14 transactions, 25 items, 1 category
  associated to the items, and generating 12 nodes and 20 patterns by enumeration of the closed
  frequent itemsets.
 
@@ -21,7 +21,7 @@ An example of an object of class \code{SpectralAnalyzer}.
 Here is the way it was created using the datasets \code{\link{oedb_sample}} and
  \code{\link{substances_information}}:
 \preformatted{
-## Making a list of observations
+## Making a list of transactions
 to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
 ws <- data.frame(WS.ID = c(1, 2, 2, 3, 3),
                  JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
@@ -29,7 +29,7 @@ ws <- data.frame(WS.ID = c(1, 2, 2, 3, 3),
                  stringsAsFactors = FALSE)
 ws_vars <- c("JOB.TITLE", "JOB.TASK")
 
-obs <- make_OE_observations(oedb_sample,
+trx <- make_OE_transactions(oedb_sample,
                             keys = c("ID", "CODE", "YEAR"),
                             mode = 1,
                             work_situations = ws,
@@ -38,7 +38,7 @@ obs <- make_OE_observations(oedb_sample,
                             unique_values = TRUE)
 
 ## Associating item identifiers with names and one category
-substances <- get_all_items(obs)
+substances <- get_all_items(trx)
 families <- substances_information[match(substances,
                                          substances_information$CODE),
                                    "SUBFAMILY"]
@@ -50,7 +50,7 @@ names <- substances_information[match(substances,
 items <- data.frame(item = substances, name = names, family = families)
 
 ## Creation of the SpectralAnalyzer
-SA_instance <- spectral.analyzer(obs, items)
+SA_instance <- spectral.analyzer(trx, items)
 }
 }
 \keyword{datasets}

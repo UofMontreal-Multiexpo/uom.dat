@@ -25,7 +25,7 @@ The threshold \mjseqn{\xi} is given by:
 where \mjseqn{RI_p(t_1,t_0)} is the reporting index of the pattern \eqn{p} given by:
  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_qt for q in P and from t = t_0 to t_1}
 where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
- the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+ the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
  defining the period on which to compute the reporting index.
 }
 \references{

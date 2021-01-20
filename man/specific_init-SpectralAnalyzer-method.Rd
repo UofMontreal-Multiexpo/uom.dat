@@ -37,7 +37,7 @@ patterns.
 The initialization of the nodes consists of the initialization of the attributes  \code{nodes} and
 \code{nodes_per_year}:
 \enumerate{
-\item{Enumeration of the observations per year.}
+\item{Enumeration of the transactions per year.}
 \item{Enumeration of the nodes and calculation of the number of occurrences.}
 }
 

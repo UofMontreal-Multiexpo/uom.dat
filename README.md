@@ -62,7 +62,7 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * The detail of the data structures used by the **SpectralAnalyzer** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
 
-* The detail of the data structures used by the **ObservationSet** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_OS.pdf`. 
+* The detail of the data structures used by the **TransactionSet** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_TS.pdf`. 
 
 These files can be accessed using `help(package = "uom.dat")` then clicking on "User guides, package vignettes and other documentation".
 

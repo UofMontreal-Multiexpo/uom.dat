@@ -27,7 +27,7 @@ spectrosome <- spectrosome_chart(SA_instance, "patterns")
 save_characteristics(SA_instance, spectrosome[["vertices"]],
                      file = "spectrosome_vertices.csv", row.names = FALSE)
 
-rules <- extract_rules(SA_instance, from = "observations")
+rules <- extract_rules(SA_instance, from = "transactions")
 save_characteristics(SA_instance, rules,
                      file = "rules.csv", row.names = FALSE)
 

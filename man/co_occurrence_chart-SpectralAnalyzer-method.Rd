@@ -82,8 +82,8 @@ If \code{-1}, color order is reversed: from the darkest to the lightest.}
 Graph created with the packages \code{ggraph} and \code{ggplot2}.
 }
 \description{
-Plot a graph in which vertices are items and edges are their co-occurences in observations (i.e. for
-each pair of items, the number of observations containing it).
+Plot a graph in which vertices are items and edges are their co-occurences in transactions (i.e. for
+each pair of items, the number of transactions containing it).
 }
 \details{
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
@@ -111,8 +111,8 @@ co_occurrence_chart(SA_instance, SA_instance["items"][2:13], "family")
 \seealso{
 \code{\link{co_occurrence_matrix}}, \code{\link{category_tree_chart}}.
 
-Method for signature \code{ObservationSet}:
-\code{\link[=co_occurrence_chart,ObservationSet-method]{co_occurrence_chart,ObservationSet}}.
+Method for signature \code{TransactionSet}:
+\code{\link[=co_occurrence_chart,TransactionSet-method]{co_occurrence_chart,TransactionSet}}.
 }
 \author{
 Gauthier Magnin

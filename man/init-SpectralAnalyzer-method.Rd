@@ -34,7 +34,7 @@ patterns.
 The initialization of the nodes consists of the initialization of the attributes  \code{nodes} and
 \code{nodes_per_year}:
 \enumerate{
-\item{Enumeration of the observations per year.}
+\item{Enumeration of the transactions per year.}
 \item{Enumeration of the nodes and calculation of the number of occurrences.}
 }
 
@@ -63,10 +63,10 @@ The initialization of the links between patterns consists of the initialization 
 }
 \examples{
 ## Creating a SpectralAnalyzer and initialize some parts of it
-obs <- make_observations(oedb_sample, by = "ID",
+trx <- make_transactions(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME", "YEAR"))
-obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
-sa_object <- spectral.analyzer(obs_object, init = FALSE)
+trx_object <- transaction.set(data = trx, item_key = "CODE", year_key = "YEAR")
+sa_object <- spectral.analyzer(trx_object, init = FALSE)
 init(sa_object, "nodes")
 init(sa_object, "node_links")
 

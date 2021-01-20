@@ -20,14 +20,14 @@
 
 \item{t}{Year of the end of the period, i.e. the date on which to characterize the pattern.
 \code{NULL} specifies that the characterization must be done in relation to the last year covered
-by the observations.}
+by the transactions.}
 
 \item{period}{Time interval over which to do the overall computation (number of years).
 For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
 period [2011 - 2019].
 
 \code{Inf} specifies that the period considered covers an interval starting on the date of the
-oldest observation and ending in the year \code{t}.}
+oldest transaction and ending in the year \code{t}.}
 
 \item{short_limit}{Time interval over which to compute the shorter limit (number of years).
 For example, if \code{t = 2019} and \code{short_limit = 2} then the computation is made over the
@@ -52,7 +52,7 @@ where \eqn{l} is the shorter period on which to compute a reporting index and \m
  is the reporting index of the pattern \eqn{p} given by:
  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
 where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
- the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+ the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
  defining the period on which to compute the reporting index.
 }
 \references{

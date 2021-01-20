@@ -5,7 +5,7 @@
 \title{Spectral Analyzer constructor}
 \usage{
 spectral.analyzer(
-  observations,
+  transactions,
   items = NULL,
   target = "closed frequent itemsets",
   count = 1,
@@ -17,13 +17,13 @@ spectral.analyzer(
 )
 }
 \arguments{
-\item{observations}{S4 object of class \code{ObservationSet}: list of observations containing the
-items corresponding to each one. Each observation is itself a list containing at least two elements
+\item{transactions}{S4 object of class \code{TransactionSet}: list of transactions containing the
+items corresponding to each one. Each transaction is itself a list containing at least two elements
 representing items and temporal data. It can contain any additional information but such data will
 be ignored.
 
 Items must be character or numeric values and must not contain the character \code{"/"}.
-Temporal data must correspond to the years in which the observations were made and must be numeric
+Temporal data must correspond to the years in which the transactions were made and must be numeric
 values.}
 
 \item{items}{Data frame associating a name (column \code{name}) and possibly one or more categories
@@ -42,11 +42,11 @@ The columns \code{item} and \code{name} must be of type \code{character}. The de
 The default \code{Inf} corresponds to a pattern search without maximum size limit.}
 
 \item{status_limit}{Time interval for which to characterize the status of the patterns in relation
-to the total period of observations (number of years).}
+to the total period of transactions (number of years).}
 
 \item{init}{If \code{TRUE}, attributes relating to nodes, links between nodes, patterns and links
 between patterns are initialized.
-If \code{FALSE}, only attributes relating to observations, items and categories are initialized.}
+If \code{FALSE}, only attributes relating to transactions, items and categories are initialized.}
 
 \item{verbose}{Logical value indicating whether to report progress.}
 }
@@ -58,14 +58,14 @@ Create and initialize an S4 object of class \code{SpectralAnalyzer}.
 }
 \details{
 If items are not specified using the argument \code{items}, they are automatically listed from
- the \code{observations} without any categorization or specific denomination.
+ the \code{transactions} without any categorization or specific denomination.
 
 The type of patterns mined can be:
  \itemize{
-   \item{\code{"frequent itemsets"}: itemsets appearing in the observations according to an
+   \item{\code{"frequent itemsets"}: itemsets appearing in the transactions according to an
          occurrence threshold defined by the parameter \code{count}.}
    \item{\code{"closed frequent itemsets"}: maximal itemsets of equivalence classes. An equivalence
-         class is defined as the set of itemsets appearing in the same observations.}
+         class is defined as the set of itemsets appearing in the same transactions.}
    \item{\code{"maximally frequent itemsets"}: frequent itemsets which do not have any frequent
          superset. Also named as the maximals by inclusion of the frequent itemsets
          or the positive boundary of the frequent itemsets.}
@@ -82,7 +82,7 @@ For an explanation with illustrated examples about the different types of itemse
  
 The steps for initializing a spectral analyzer are:
  \enumerate{
-   \item{Enumeration of the observations per year.}
+   \item{Enumeration of the transactions per year.}
    \item{Enumeration of the nodes and calculation of the number of occurrences.}
    \item{Counting links between nodes.}
    \item{Elaboration of links between nodes.}
@@ -107,16 +107,16 @@ The following steps may be quite long (depending on the case):
  }
 }
 \examples{
-## Creating a SpectralAnalyzer from a list of observations
-obs <- make_observations(oedb_sample, by = "ID",
+## Creating a SpectralAnalyzer from a list of transactions
+trx <- make_transactions(oedb_sample, by = "ID",
                          additional = c("CODE", "NAME", "YEAR"))
-obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
+trx_object <- transaction.set(data = trx, item_key = "CODE", year_key = "YEAR")
 
-sa_object_1 <- spectral.analyzer(obs_object)
+sa_object_1 <- spectral.analyzer(trx_object)
 
 ## Creating a SpectralAnalyzer after associating item identifiers with
 ## names and one category
-items_ids <- get_all_items(obs_object)
+items_ids <- get_all_items(trx_object)
 category_1 <- substances_information[match(items_ids,
                                            substances_information$CODE),
                                      "SUBFAMILY"]
@@ -126,7 +126,7 @@ names <- substances_information[match(items_ids,
                                 "NAME"]
 
 items <- data.frame(item = items_ids, name = names, family = category_1)
-sa_object_2 <- spectral.analyzer(obs_object, items)
+sa_object_2 <- spectral.analyzer(trx_object, items)
 
 }
 \seealso{

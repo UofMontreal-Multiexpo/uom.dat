@@ -32,11 +32,11 @@ The default \code{Inf} corresponds to a pattern search without maximum size limi
 }
 \value{
 Invisible. Object of class \code{itemsets} or data frame in which a line is an association
- between a pattern and its frequency in the set of observations (according to the argument
+ between a pattern and its frequency in the set of transactions (according to the argument
  \code{arules}).
 }
 \description{
-Identify the patterns generated from the observations.
+Identify the patterns generated from the transactions.
 The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 }
 \author{

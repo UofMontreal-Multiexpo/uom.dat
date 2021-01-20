@@ -6,8 +6,8 @@ knitr::opts_chunk$set(fig.align = "center")
 # Loading the package
 library(uom.dat)
 
-# Creation of specific observations
-observations <- make_OE_observations(
+# Creation of specific transactions
+transactions <- make_OE_transactions(
   oedb_sample,
   keys = c("ID", "CODE", "YEAR"),
   mode = 1,
@@ -21,14 +21,14 @@ observations <- make_OE_observations(
 )
 
 ## -----------------------------------------------------------------------------
-observations[2]
+transactions[2]
 
 ## -----------------------------------------------------------------------------
-concentration_values <- lapply(observations["data"],
-                               function(obs) setNames(obs$CONCENTRATION, obs$NAME))
+concentration_values <- lapply(transactions["data"],
+                               function(trx) setNames(trx$CONCENTRATION, trx$NAME))
 
 # Let's print the second element of the new list,
-# corresponding to the second element of the previous list of observations
+# corresponding to the second element of the previous list of transactions
 concentration_values[[2]]
 
 ## -----------------------------------------------------------------------------
@@ -83,10 +83,10 @@ mcr_summary(values = concentration_values,
             references = reference_values)
 
 ## ----results="hold"-----------------------------------------------------------
-# Extraction of the names related to the concentrations of the second observation
+# Extraction of the names related to the second set of concentrations
 substance_names_2 <- unlist(names(concentration_values[[2]]))
 
-# Compute each of the indicators one by one, for the values of the second observation
+# Compute each of the indicators one by one, for the values of the second set of concentrations
 
 cat("Hazard quotients:\n")
 hazard_quotient(values = concentration_values[[2]],
@@ -214,12 +214,12 @@ plot(x = mcr_s$HI,
 
 ## -----------------------------------------------------------------------------
 # Use of the year information associated with the concentration values
-# in the original observations
-cor(x = unlist(observations["YEAR"]),
+# in the original transactions
+cor(x = unlist(transactions["YEAR"]),
     y = mcr_s$HI)
 
 ## -----------------------------------------------------------------------------
-plot(x = unlist(observations["YEAR"]),
+plot(x = unlist(transactions["YEAR"]),
      y = mcr_s$HI)
 
 ## -----------------------------------------------------------------------------
@@ -252,7 +252,7 @@ cat("Number of summaries:", length(summaries))
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  # Just look at few examples:
-#  # summaries of the concentration values of the observations 4 to 6
+#  # summaries of the sets of concentration values 4 to 6
 #  summaries[4:6]
 
 ## ----echo=FALSE, results="hold"-----------------------------------------------
@@ -424,8 +424,8 @@ classification_3
 coerce_to_list(classification_3)
 
 ## -----------------------------------------------------------------------------
-# Naming the observations of which concentration values are from: O1 to O14
-names(concentration_values) <- paste0("O", 1:14)
+# Naming the sets of concentration values: T1 to T14
+names(concentration_values) <- paste0("T", 1:14)
 
 ## -----------------------------------------------------------------------------
 # Just look at some columns
@@ -441,18 +441,18 @@ subsets <- subset_from_class(values = concentration_values,
                              class_name = class_names[9])
 
 ## ----results="hold"-----------------------------------------------------------
-cat("Number of values of each observation:\n")
+cat("Number of values of each set of concentration values:\n")
 sapply(concentration_values, length)
 
 cat("\nNumber of values related to the ninth class :\n")
 sapply(subsets[["values"]], length)
 
 ## ----results="hold"-----------------------------------------------------------
-cat("Values of the sixth observation:\n")
-concentration_values$O6
+cat("Values of the sixth set of concentration values:\n")
+concentration_values$T6
 
-cat("\nValues of the sixth observation related to the ninth class:\n")
-subsets[["values"]]$O6
+cat("\nValues of the sixth set of concentration values related to the ninth class:\n")
+subsets[["values"]]$T6
 
 ## -----------------------------------------------------------------------------
 subsets[["references"]]

@@ -33,7 +33,7 @@
 
 \item{rules}{Data frame of association rules to plot (given by the \code{\link{extract_rules}} function).
 Only those of length 2 are considered. If \code{NULL}, rules of length 2 are extracted from
-\code{object["observations"]} using the mining parameters \code{parameters}.}
+\code{object["transactions"]} using the mining parameters \code{parameters}.}
 
 \item{items}{Items to consider in the given or extracted rules. If \code{NULL}, only items from the given
 \code{rules} are considered.

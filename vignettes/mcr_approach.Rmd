@@ -27,7 +27,7 @@ knitr::opts_chunk$set(fig.align = "center")
 
 Proposed as a tool for the assessment of occupational exposure to chemical agents, the **Maximum Cumulative Ratio approach** helps determine wheter a cumulative risk assessment is necessary.
 
-This approach proposes a set of indicators, the main one (the maximum cumulative ratio) is defined as the ratio of the cumulative toxicity received by an individual from exposure to multiple chemical stressors to the largest toxicity from a single chemical stressor. The maximum cumulative ratio is a quantitiative measure of the difference in an individual's toxicity estimated using a chemical-by-chemical approach and using an additive model of toxicity. As such, it provides a conservative estimate of the degree to which individuals’ toxicities could be underestimated by not performing a cumulative risk assessment.
+This approach proposes a set of indicators. The main one (the maximum cumulative ratio) is defined as the ratio of the cumulative toxicity received by an individual from exposure to multiple chemical stressors to the largest toxicity from a single chemical stressor. The maximum cumulative ratio is a quantitiative measure of the difference in an individual's toxicity estimated using a chemical-by-chemical approach and using an additive model of toxicity. As such, it provides a conservative estimate of the degree to which individuals’ toxicities could be underestimated by not performing a cumulative risk assessment.
 
 Nevertheless, as the indicators of the Maximum Cumulative Ratio approach are based only on **effective values** and **reference values**, they can be applied to other fields and situations in which we would like to know the importance of the **cumulative aspect** compared to the **individual aspect**.
 
@@ -38,15 +38,15 @@ Nevertheless, as the indicators of the Maximum Cumulative Ratio approach are bas
 
 # 1. Data preparation
 
-## 1.1. Observations and values
+## 1.1. Transactions and values
 
-Foremost, we will create a list of observations as presented in the document "Spectral analysis and observation processing example". For short, these observations will simply group data from the dataset `oedb_sample`. The values we will use will be taken from these observations.
+Foremost, we will create for our example a list of transactions as presented in the document "Spectral analysis and observation processing example". For short, these transactions will simply group data from a dataset. The values we will use will be taken from these transactions.
 ```{r message=FALSE}
 # Loading the package
 library(uom.dat)
 
-# Creation of specific observations
-observations <- make_OE_observations(
+# Creation of specific transactions
+transactions <- make_OE_transactions(
   oedb_sample,
   keys = c("ID", "CODE", "YEAR"),
   mode = 1,
@@ -60,20 +60,20 @@ observations <- make_OE_observations(
 )
 ```
 
-An observation contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession carried out for which the environment has been sampled. An observation looks like that:
+A transaction contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession carried out for which the environment has been sampled. A transaction looks like that:
 ```{r}
-observations[2]
+transactions[2]
 ```
-Here we can see an observation composed by 3 samples having the `SAMPLE.ID`s 18, 1 and 21 corresponding to the substances having the `CODE`s 57 and 77. The concentration values for these samples are respectively 0.007, 0.004 and 0.05.
+Here we can see a transaction composed by 3 samples having the `SAMPLE.ID`s 18, 1 and 21 corresponding to the substances having the `CODE`s 57 and 77. The concentration values for these samples are respectively 0.007, 0.004 and 0.05.
 
 
-Now we will separate the concentration values and name them with the substances they correspond to. We will have a list of named values which will have the same length as the list of observations:
+Now we will separate the concentration values and name them with the substances they correspond to. We will have a list of named values which will have the same length as the list of transactions:
 ```{r}
-concentration_values <- lapply(observations["data"],
-                               function(obs) setNames(obs$CONCENTRATION, obs$NAME))
+concentration_values <- lapply(transactions["data"],
+                               function(trx) setNames(trx$CONCENTRATION, trx$NAME))
 
 # Let's print the second element of the new list,
-# corresponding to the second element of the previous list of observations
+# corresponding to the second element of the previous list of transactions
 concentration_values[[2]]
 ```
 
@@ -226,10 +226,10 @@ All indicators of the MCR approach can be computed independantly by a specific f
 * `classify_mixture`: classify in the MIAT groups.
 
 ```{r results="hold"}
-# Extraction of the names related to the concentrations of the second observation
+# Extraction of the names related to the second set of concentrations
 substance_names_2 <- unlist(names(concentration_values[[2]]))
 
-# Compute each of the indicators one by one, for the values of the second observation
+# Compute each of the indicators one by one, for the values of the second set of concentrations
 
 cat("Hazard quotients:\n")
 hazard_quotient(values = concentration_values[[2]],
@@ -436,13 +436,13 @@ plot(x = mcr_s$HI,
 Then, the temporal trend of one indicator, for instance the hazard index:
 ```{r}
 # Use of the year information associated with the concentration values
-# in the original observations
-cor(x = unlist(observations["YEAR"]),
+# in the original transactions
+cor(x = unlist(transactions["YEAR"]),
     y = mcr_s$HI)
 ```
 
 ```{r}
-plot(x = unlist(observations["YEAR"]),
+plot(x = unlist(transactions["YEAR"]),
      y = mcr_s$HI)
 ```
 
@@ -495,7 +495,7 @@ As we have 14 sets of values, the output list has a length of 14.
 
 ```{r eval=FALSE}
 # Just look at few examples:
-# summaries of the concentration values of the observations 4 to 6
+# summaries of the sets of concentration values 4 to 6
 summaries[4:6]
 ```
 ```{r echo=FALSE, results="hold"}
@@ -734,16 +734,16 @@ coerce_to_list(classification_3)
 
 ## 4.2. Value management
 
-Before starting this section, we will name the observations of which concentration values are from, to better identify them:
+Before starting this section, we will name the sets of concentration values to better identify them:
 ```{r}
-# Naming the observations of which concentration values are from: O1 to O14
-names(concentration_values) <- paste0("O", 1:14)
+# Naming the sets of concentration values: T1 to T14
+names(concentration_values) <- paste0("T", 1:14)
 ```
 
 
 ### 4.2.1. Components of values
 
-Having our list of values which are concentration values for specific substances, we can call `coerce_list` to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one observation (i.e. one set of values) and each column refers to one name found in the values of the list.
+Having our list of values which are concentration values for specific substances, we can call `coerce_list` to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one set of values and each column refers to one name found in the values of the list.
 ```{r}
 # Just look at some columns
 coerce_list(concentration_values,
@@ -768,21 +768,21 @@ The output of this function is a list containing two subsets: `values`, the subs
 
 Before looking at the subsets, we can compare the length of the all set of values and the subset related to the chosen class.
 ```{r results="hold"}
-cat("Number of values of each observation:\n")
+cat("Number of values of each set of concentration values:\n")
 sapply(concentration_values, length)
 
 cat("\nNumber of values related to the ninth class :\n")
 sapply(subsets[["values"]], length)
 ```
-We can see that only 7 observations contain substances related to the class of interest.
+We can see that only 8 sets of concentration values contain substances related to the class of interest.
 
-Let's take a look at the values from the 6th observation in which only two of the three values were kept:
+Let's take a look at the values from the 6th set, in which only two of the three values were kept:
 ```{r results="hold"}
-cat("Values of the sixth observation:\n")
-concentration_values$O6
+cat("Values of the sixth set of concentration values:\n")
+concentration_values$T6
 
-cat("\nValues of the sixth observation related to the ninth class:\n")
-subsets[["values"]]$O6
+cat("\nValues of the sixth set of concentration values related to the ninth class:\n")
+subsets[["values"]]$T6
 ```
 
 To finish, we can look at the subset of references, which will also give the set of substances related to the class:
@@ -823,47 +823,47 @@ Datasets used as examples:
 
 * [oedb_sample](../html/oedb_sample.html)
 * [substances_information](../html/substances_information.html)
-* [OS_instance](../html/OS_instance.html)
+* [TS_instance](../html/TS_instance.html)
 * [SA_instance](../html/SA_instance.html)
 
 
-## About observations
+## About transactions
 
-The class: [ObservationSet](../html/ObservationSet-class.html)
+The class: [TransactionSet](../html/TransactionSet-class.html)
 
-Making *ObservationSet* objects:
+Making *TransactionSet* objects:
 
-* [observation.set](../html/observation.set.html)
-* [make_observations](../html/make_observations.html)
-* [make_OE_observations](../html/make_OE_observations.html)
-* [\[](../html/sub-ObservationSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-ObservationSet-ANY-ANY-ANY-method.html)
-* [subset](../html/subset-ObservationSet-method.html)
-* [reorder](../html/reorder-ObservationSet-method.html)
+* [transaction.set](../html/transaction.set.html)
+* [make_transactions](../html/make_transactions.html)
+* [make_OE_transactions](../html/make_OE_transactions.html)
+* [\[](../html/sub-TransactionSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-TransactionSet-ANY-ANY-ANY-method.html)
+* [subset](../html/subset-TransactionSet-method.html)
+* [reorder](../html/reorder-TransactionSet-method.html)
 
-Search in observations:
+Search in transactions:
 
-* [get_all_items](../html/get_all_items-ObservationSet-method.html)
-* [get_itemsets](../html/get_itemsets-ObservationSet-method.html)
-* [get_items_from_info](../html/get_items_from_info-ObservationSet-method.html)
-* [get_info_from_items](../html/get_info_from_items-ObservationSet-method.html)
+* [get_all_items](../html/get_all_items-TransactionSet-method.html)
+* [get_itemsets](../html/get_itemsets-TransactionSet-method.html)
+* [get_items_from_info](../html/get_items_from_info-TransactionSet-method.html)
+* [get_info_from_items](../html/get_info_from_items-TransactionSet-method.html)
 
-Search for observations:
+Search for transactions:
 
-* [get_complex_obs](../html/get_complex_obs-ObservationSet-method.html)
-* [get_simple_obs](../html/get_simple_obs-ObservationSet-method.html)
-* [get_obs_from_items](../html/get_obs_from_items-ObservationSet-method.html)
-* [get_obs_from_info](../html/get_obs_from_info-ObservationSet-method.html)
+* [get_complex_trx](../html/get_complex_trx-TransactionSet-method.html)
+* [get_simple_trx](../html/get_simple_trx-TransactionSet-method.html)
+* [get_trx_from_items](../html/get_trx_from_items-TransactionSet-method.html)
+* [get_trx_from_info](../html/get_trx_from_info-TransactionSet-method.html)
 
-Computations on observations:
+Computations on transactions:
 
-* [complexity_ratio](../html/complexity_ratio-ObservationSet-method.html)
-* [complexity_index](../html/complexity_index-ObservationSet-method.html)
-* [co_occurrence_matrix](../html/co_occurrence_matrix-ObservationSet-method.html)
+* [complexity_ratio](../html/complexity_ratio-TransactionSet-method.html)
+* [complexity_index](../html/complexity_index-TransactionSet-method.html)
+* [co_occurrence_matrix](../html/co_occurrence_matrix-TransactionSet-method.html)
 
-Making charts about observations:
+Making charts about transactions:
 
-* [itemset_chart](../html/itemset_chart-ObservationSet-method.html)
-* [co_occurrence_chart](../html/co_occurrence_chart-ObservationSet-method.html)
+* [itemset_chart](../html/itemset_chart-TransactionSet-method.html)
+* [co_occurrence_chart](../html/co_occurrence_chart-TransactionSet-method.html)
 
 
 ## About spectral analysis

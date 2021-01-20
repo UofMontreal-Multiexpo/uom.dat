@@ -8,7 +8,7 @@
 \usage{
 \S4method{itemset_chart}{SpectralAnalyzer}(
   object,
-  onpc,
+  tnpc,
   identifiers = "original",
   length_one = FALSE,
   jitter = TRUE,
@@ -27,17 +27,17 @@
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
-\item{onpc}{Object of class \code{ObservationSet} (\strong{o}) or data frame of \strong{n}odes or \strong{p}atterns and
+\item{tnpc}{Object of class \code{TransactionSet} (\strong{t}) or data frame of \strong{n}odes or \strong{p}atterns and
 their \strong{c}haracteristics. Itemsets whose chart is to be plotted. Any subset of
-\code{object["observations"]}, \code{object["nodes"]} or \code{object["patterns"]}.
+\code{object["transactions"]}, \code{object["nodes"]} or \code{object["patterns"]}.
 
-\code{"observations"}, \code{"o"}, \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
-\verb{"object["observations"]}, \code{object["nodes"]} and \code{object["patterns"]}.}
+\code{"transactions"}, \code{"t"}, \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
+\verb{"object["transactions"]}, \code{object["nodes"]} and \code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the itemsets on the chart and in the
 return. One of \code{"original"}, \code{"new"}.
 \describe{
-\item{\code{"original"}}{Use of the original identifiers from \code{onpc}.}
+\item{\code{"original"}}{Use of the original identifiers from \code{tnpc}.}
 \item{\code{"new"}}{Use of new identifiers based on sorting (see 'Details' section to learn more
 about the sort that is performed).}
 }}
@@ -54,10 +54,10 @@ Ignored if \code{length_one} is \code{FALSE}.}
 Can be:
 \itemize{
 \item Identifiers: \code{"ID"}.
-\item One of the elements of the observations (i.e. one of the values of \code{onpc["names"]}), if \code{onpc} is
-an \code{ObservationSet}.
+\item One of the elements of the transactions (i.e. one of the values of \code{tnpc["names"]}), if \code{tnpc} is
+an \code{TransactionSet}.
 \item One of the characteristics of the nodes or the patterns (\code{"weight"}, \code{"frequency"}, \code{"specificity"},
-\code{"year"}, \code{"status"}), if \code{onpc} is a data frame of nodes or patterns and their characteristics.
+\code{"year"}, \code{"status"}), if \code{tnpc} is a data frame of nodes or patterns and their characteristics.
 }
 
 \code{"status"} can only be used for the argument \code{"over"}.
@@ -76,8 +76,8 @@ the order of the columns of \code{object["items_categories"]}).}
 
 \item{sort_by}{Sorting method of displayed items. One of \code{"category"}, \code{"item"}.}
 
-\item{title}{Chart title. Default title depends on the type of entities contained in \code{onpc}.
-Example of default title: \code{"Node itemsets"} if \code{onpc} contains nodes.}
+\item{title}{Chart title. Default title depends on the type of entities contained in \code{tnpc}.
+Example of default title: \code{"Node itemsets"} if \code{tnpc} contains nodes.}
 
 \item{path}{Path of the directory in which to save the chart as a PDF file. Default is the working
 directory.}
@@ -86,18 +86,18 @@ directory.}
 active device.}
 }
 \value{
-Object of class \code{ObservationSet} or data frame of the characteristics of the nodes or patterns
+Object of class \code{TransactionSet} or data frame of the characteristics of the nodes or patterns
 represented on the chart, associated with their identifiers (visible on the chart if one of \code{under}
 or \code{over} is \code{"ID"}).
 }
 \description{
-Plot a chart of the observation, node or pattern itemsets. It can be automatically saved as a PDF file.
+Plot a chart of the transaction, node or pattern itemsets. It can be automatically saved as a PDF file.
 }
 \details{
 If they are from nodes or patterns, itemsets are sorted according to their lengths then to their
-weights. If they are from observations, they are sorted according to their lengths only. When there
+weights. If they are from transactions, they are sorted according to their lengths only. When there
 is equality of these characteristics, itemsets are then taken according to the initial order in
-\code{onpc}.
+\code{tnpc}.
 
 If \code{category} is \code{NULL}, items are sorted alphanumerically. If it is not, items are sorted according
 to the values of the category then alphanumerically.
@@ -113,7 +113,7 @@ See attribute \code{categories_colors} of the \code{SpectralAnalyzer} object to 
 category values.
 }
 \examples{
-obs <- itemset_chart(SA_instance, "observations", length_one = TRUE,
+trx <- itemset_chart(SA_instance, "transactions", length_one = TRUE,
                      category = "family", c.cutoff = 7, n.cutoff = 20)
 nodes <- itemset_chart(SA_instance, "nodes",
                        category = "family", c.cutoff = 10, n.cutoff = 20)
@@ -134,8 +134,8 @@ Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurement
 \url{https://doi.org/10.1093/annweh/wxaa008}.
 }
 \seealso{
-Method for signature \code{ObservationSet}:
-\code{\link[=itemset_chart,ObservationSet-method]{itemset_chart,ObservationSet}}.
+Method for signature \code{TransactionSet}:
+\code{\link[=itemset_chart,TransactionSet-method]{itemset_chart,TransactionSet}}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin

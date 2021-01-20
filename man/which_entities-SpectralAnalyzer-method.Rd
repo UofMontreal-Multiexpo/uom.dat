@@ -5,37 +5,37 @@
 \alias{which_entities}
 \title{Detect the type of entities}
 \usage{
-\S4method{which_entities}{SpectralAnalyzer}(object, onpr, entities = NODES_OR_PATTERNS)
+\S4method{which_entities}{SpectralAnalyzer}(object, tnpr, entities = NODES_OR_PATTERNS)
 }
 \arguments{
 \item{object}{S4 object of class \code{SpectralAnalyzer}.}
 
-\item{onpr}{Object of class \code{ObservationSet} (\strong{o}) or data frame of \strong{n}odes, \strong{p}atterns or
+\item{tnpr}{Object of class \code{TransactionSet} (\strong{t}) or data frame of \strong{n}odes, \strong{p}atterns or
 association \strong{r}ules and their characteristics.
 
-\code{"observations"}, \code{"o"}, \code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}, \code{"rules"} and \code{"r"} are special
+\code{"transactions"}, \code{"t"}, \code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}, \code{"rules"} and \code{"r"} are special
 values.}
 
-\item{entities}{Define if \code{onpr} is either a data frame of nodes or a data frame of patterns
+\item{entities}{Define if \code{tnpr} is either a data frame of nodes or a data frame of patterns
 (\code{NODES_OR_PATTERNS}), or if it can also be a data frame of rules (\code{NODES_PATTERNS_OR_RULES}) or
-a set of observations (\code{NODES_PATTERNS_OR_OBSERVATIONS}).}
+a set of transactions (\code{NODES_PATTERNS_OR_TRANSACTIONS}).}
 }
 \value{
-Character corresponding to \code{OBSERVATIONS}, \code{NODES}, \code{PATTERNS} or \code{RULES}.
+Character corresponding to \code{TRANSACTIONS}, \code{NODES}, \code{PATTERNS} or \code{RULES}.
 }
 \description{
-Detect the type of entities contained in a data frame or an object among observations, nodes,
+Detect the type of entities contained in a data frame or an object among transactions, nodes,
 patterns and association rules.
 }
 \details{
-The detection uses the class of the argument \code{onpr} or the column names of the given data frame.
-If the class is \code{ObservationSet}, entities are observations. If it is a data frame, it searches for
+The detection uses the class of the argument \code{tnpr} or the column names of the given data frame.
+If the class is \code{TransactionSet}, entities are transactions. If it is a data frame, it searches for
 column names \code{"node"}, \code{"pattern"} or \code{"antecedent"} for nodes, patterns or rules, respectively.
 
 The argument \code{entities} is only used to adapt a possible error message.
 }
 \seealso{
-\code{\link{get_onp}}, \code{\link{which_associated_links}}, \code{\link{which_name}}.
+\code{\link{get_tnp}}, \code{\link{which_associated_links}}, \code{\link{which_name}}.
 }
 \author{
 Gauthier Magnin

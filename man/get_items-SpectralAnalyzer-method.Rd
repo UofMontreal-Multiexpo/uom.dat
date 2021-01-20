@@ -29,9 +29,9 @@ named subset of \code{object["items"]} is returned.
 If \code{items} is a character value equal to \code{"items"} or \code{"i"}, \code{object["items"]} is returned.
 }
 \seealso{
-\code{\link{get_item_names}}, \code{\link{has_item_names}}, \code{\link{get_onp}}, \code{\link{which_entities}}.
+\code{\link{get_item_names}}, \code{\link{has_item_names}}, \code{\link{get_tnp}}, \code{\link{which_entities}}.
 
-Method for signature \code{ObservationSet}: \code{\link[=get_items,ObservationSet-method]{get_items,ObservationSet}}.
+Method for signature \code{TransactionSet}: \code{\link[=get_items,TransactionSet-method]{get_items,TransactionSet}}.
 }
 \author{
 Gauthier Magnin

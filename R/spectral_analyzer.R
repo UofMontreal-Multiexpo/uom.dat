@@ -1,4 +1,4 @@
-#' @include graphics_helper.R list_manager.R observation_maker.R observation_set.R utils.R
+#' @include graphics_helper.R list_manager.R transaction_maker.R transaction_set.R utils.R
 NULL
 
 
@@ -28,10 +28,10 @@ STATUS_EMERGENT = "Emergent"
 #' @keywords internal
 STATUS_LATENT = "Latent"
 
-#' OBSERVATIONS
-#' @description Reference value for naming entities: observations.
+#' TRANSACTIONS
+#' @description Reference value for naming entities: transactions.
 #' @keywords internal
-OBSERVATIONS = "observations"
+TRANSACTIONS = "transactions"
 #' NODES
 #' @description Reference value for naming entities: nodes.
 #' @keywords internal
@@ -53,10 +53,10 @@ NODES_OR_PATTERNS = "np"
 #' @description Reference value for defining possible entities: nodes, patterns or rules.
 #' @keywords internal
 NODES_PATTERNS_OR_RULES = "npr"
-#' NODES_PATTERNS_OR_OBSERVATIONS
-#' @description Reference value for defining possible entities: nodes, patterns or observations.
+#' NODES_PATTERNS_OR_TRANSACTIONS
+#' @description Reference value for defining possible entities: nodes, patterns or transactions.
 #' @keywords internal
-NODES_PATTERNS_OR_OBSERVATIONS = "npo"
+NODES_PATTERNS_OR_TRANSACTIONS = "npt"
 
 #' NODE_LINKS
 #' @description Reference value for naming links between entities: links between nodes.
@@ -87,9 +87,9 @@ PATTERN_LINKS = "pattern_links"
 #'  value.
 #' See the attribute \code{categories_colors} to reassign colors to the category values.
 #' 
-#' @slot observations S4 object of class \code{ObservationSet}: list of observations containing the items
+#' @slot transactions S4 object of class \code{TransactionSet}: list of transactions containing the items
 #'  corresponding to each one. It represents the dataset in which frequent itemsets are to be mined.
-#' @slot items Set of codes identifying the items found in the observations.
+#' @slot items Set of codes identifying the items found in the transactions.
 #' @slot items_categories Categories associated with the items. Each item is associated with one value
 #'  for each category.
 #' @slot categories_colors Colors associated with the values of the categories associated with the items.
@@ -104,14 +104,14 @@ PATTERN_LINKS = "pattern_links"
 #'    \item{\code{max_length}}{Maximum number of items that a pattern must have to be kept when mining
 #'                             patterns.}
 #'    \item{\code{status_limit}}{Time interval for which to characterize the status of the patterns in
-#'                               relation to the total period of observations (number of years).}
+#'                               relation to the total period of transactions (number of years).}
 #'  }
-#' @slot nodes Set of nodes (separate observations considering only their items) and characteristics of
+#' @slot nodes Set of nodes (separate transactions considering only their items) and characteristics of
 #'  these nodes. Data frame of 3 variables:
 #'  \describe{
 #'    \item{\code{node}}{Set of items composing the node.}
 #'    \item{\code{length}}{Number of items composing the node.}
-#'    \item{\code{weight}}{Number of observations for which the set of items matches exactly.}
+#'    \item{\code{weight}}{Number of transactions for which the set of items matches exactly.}
 #'  }
 #' @slot nodes_per_year Number of occurrences of each node, per year.
 #' @slot n_links Set of weights of the links between the nodes. Adjacency matrix containing the number
@@ -131,13 +131,13 @@ PATTERN_LINKS = "pattern_links"
 #'  Data frame of 7 variables:
 #'  \describe{
 #'    \item{\code{pattern}}{Set of items composing the pattern.}
-#'    \item{\code{year}}{Year of appearance of the pattern among the observations.}
+#'    \item{\code{year}}{Year of appearance of the pattern among the transactions.}
 #'    \item{\code{frequency}}{Number of nodes containing the set of items of the pattern.}
-#'    \item{\code{weight}}{Number of observations containing the set of items of the pattern.}
+#'    \item{\code{weight}}{Number of transactions containing the set of items of the pattern.}
 #'    \item{\code{length}}{Number of items composing the pattern.}
 #'    \item{\code{specificity}}{Specificity of the information conveyed by the pattern. It corresponds
 #'      to the nature of a pattern of being specific of a particular combination or ubiquitous and
-#'      allowing the formation of numerous combinations (with regard to the observations).}
+#'      allowing the formation of numerous combinations (with regard to the transactions).}
 #'    \item{\code{status}}{Dynamic status of the pattern: persistent, declining, emergent or latent.}
 #'  }
 #' @slot patterns_per_year Number of occurrences of each pattern, per year.
@@ -172,7 +172,7 @@ PATTERN_LINKS = "pattern_links"
 #' @export
 setClass(Class = "SpectralAnalyzer",
          slots = c(
-           observations = "ObservationSet",
+           transactions = "TransactionSet",
            items = "vector",
            items_categories = "data.frame",
            
@@ -201,8 +201,8 @@ setValidity(Class = "SpectralAnalyzer",
               # Validation du système de codage des items
               if (any(grepl("/", object@items))) return("Item codes must not contain the character \"/\".")
               
-              # Validation du set d'observations
-              if (!has_temporal_data(object@observations)) return("Observations must contain temporal data.")
+              # Validation du set de transactions
+              if (!has_temporal_data(object@transactions)) return("Transactions must contain temporal data.")
               
               # Vérification des paramètres d'initialisation
               if (!all(c("target", "count", "min_length", "max_length", "status_limit") %in% names(object@parameters)))
@@ -241,15 +241,15 @@ setValidity(Class = "SpectralAnalyzer",
 # Initializer
 setMethod(f = "initialize",
           signature = "SpectralAnalyzer",
-          definition = function(.Object, observations, items,
+          definition = function(.Object, transactions, items,
                                 target, count, min_length, max_length, status_limit,
                                 init, verbose) {
             
-            .Object@observations = observations
+            .Object@transactions = transactions
             
             # Ensemble des éléments observés et catégories associées
             if (missing(items) || is.null(items)) {
-              .Object@items = get_all_items(observations)
+              .Object@items = get_all_items(transactions)
               names(.Object@items) = .Object@items
             } else {
               .Object@items = items$item
@@ -296,14 +296,14 @@ setMethod(f = "initialize",
 #' 
 #' @details
 #' If items are not specified using the argument \code{items}, they are automatically listed from
-#'  the \code{observations} without any categorization or specific denomination.
+#'  the \code{transactions} without any categorization or specific denomination.
 #' 
 #' The type of patterns mined can be:
 #'  \itemize{
-#'    \item{\code{"frequent itemsets"}: itemsets appearing in the observations according to an
+#'    \item{\code{"frequent itemsets"}: itemsets appearing in the transactions according to an
 #'          occurrence threshold defined by the parameter \code{count}.}
 #'    \item{\code{"closed frequent itemsets"}: maximal itemsets of equivalence classes. An equivalence
-#'          class is defined as the set of itemsets appearing in the same observations.}
+#'          class is defined as the set of itemsets appearing in the same transactions.}
 #'    \item{\code{"maximally frequent itemsets"}: frequent itemsets which do not have any frequent
 #'          superset. Also named as the maximals by inclusion of the frequent itemsets
 #'          or the positive boundary of the frequent itemsets.}
@@ -320,7 +320,7 @@ setMethod(f = "initialize",
 #'  
 #' The steps for initializing a spectral analyzer are:
 #'  \enumerate{
-#'    \item{Enumeration of the observations per year.}
+#'    \item{Enumeration of the transactions per year.}
 #'    \item{Enumeration of the nodes and calculation of the number of occurrences.}
 #'    \item{Counting links between nodes.}
 #'    \item{Elaboration of links between nodes.}
@@ -344,13 +344,13 @@ setMethod(f = "initialize",
 #'      resulting from the mining parameters and the amount of data).}
 #'  }
 #' 
-#' @param observations S4 object of class \code{ObservationSet}: list of observations containing the
-#'  items corresponding to each one. Each observation is itself a list containing at least two elements
+#' @param transactions S4 object of class \code{TransactionSet}: list of transactions containing the
+#'  items corresponding to each one. Each transaction is itself a list containing at least two elements
 #'  representing items and temporal data. It can contain any additional information but such data will
 #'  be ignored.
 #'  
 #'  Items must be character or numeric values and must not contain the character \code{"/"}.
-#'  Temporal data must correspond to the years in which the observations were made and must be numeric
+#'  Temporal data must correspond to the years in which the transactions were made and must be numeric
 #'  values.
 #' @param items Data frame associating a name (column \code{name}) and possibly one or more categories
 #'  (additional columns) to each item (column \code{item}). Each category must be of type \code{factor}.
@@ -363,10 +363,10 @@ setMethod(f = "initialize",
 #' @param max_length Maximum number of items that a pattern must have to be kept when mining patterns.
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
 #' @param status_limit Time interval for which to characterize the status of the patterns in relation
-#'  to the total period of observations (number of years).
+#'  to the total period of transactions (number of years).
 #' @param init If \code{TRUE}, attributes relating to nodes, links between nodes, patterns and links
 #'  between patterns are initialized.
-#'  If \code{FALSE}, only attributes relating to observations, items and categories are initialized.
+#'  If \code{FALSE}, only attributes relating to transactions, items and categories are initialized.
 #' @param verbose Logical value indicating whether to report progress.
 #' @return New object of class \code{SpectralAnalyzer}.
 #' 
@@ -377,16 +377,16 @@ setMethod(f = "initialize",
 #' Initialization: \code{\link{init}}, \code{\link{is_init}}, \code{\link{reset}}.
 #' 
 #' @examples
-#' ## Creating a SpectralAnalyzer from a list of observations
-#' obs <- make_observations(oedb_sample, by = "ID",
+#' ## Creating a SpectralAnalyzer from a list of transactions
+#' trx <- make_transactions(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME", "YEAR"))
-#' obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
+#' trx_object <- transaction.set(data = trx, item_key = "CODE", year_key = "YEAR")
 #' 
-#' sa_object_1 <- spectral.analyzer(obs_object)
+#' sa_object_1 <- spectral.analyzer(trx_object)
 #' 
 #' ## Creating a SpectralAnalyzer after associating item identifiers with
 #' ## names and one category
-#' items_ids <- get_all_items(obs_object)
+#' items_ids <- get_all_items(trx_object)
 #' category_1 <- substances_information[match(items_ids,
 #'                                            substances_information$CODE),
 #'                                      "SUBFAMILY"]
@@ -396,15 +396,15 @@ setMethod(f = "initialize",
 #'                                 "NAME"]
 #' 
 #' items <- data.frame(item = items_ids, name = names, family = category_1)
-#' sa_object_2 <- spectral.analyzer(obs_object, items)
+#' sa_object_2 <- spectral.analyzer(trx_object, items)
 #' 
 #' @export
-spectral.analyzer = function(observations, items = NULL, target = "closed frequent itemsets",
+spectral.analyzer = function(transactions, items = NULL, target = "closed frequent itemsets",
                              count = 1, min_length = 1, max_length = Inf, status_limit = 2,
                              init = TRUE, verbose = TRUE) {
   
   return(methods::new(Class = "SpectralAnalyzer",
-                      observations = observations, items = items,
+                      transactions = transactions, items = items,
                       target = target, count = count, min_length = min_length, max_length = max_length,
                       status_limit = status_limit,
                       init = init, verbose = verbose))
@@ -437,7 +437,7 @@ setMethod(f = "summary",
             
             if (!is_init_patterns(object)) {
               # Si les motifs n'ont pas été calculés ; seulement une partie du résumé
-              return(c(observations = length(object@observations),
+              return(c(transactions = length(object@transactions),
                        items = length(object@items),
                        categories = ncol(object@items_categories),
                        nodes = if (is_init_nodes(object)) nrow(object@nodes) else NA,
@@ -462,7 +462,7 @@ setMethod(f = "summary",
             colnames(summaries[["patterns"]][["status"]]) = c("status", "count")
             
             # Tailles des attributs principaux
-            summaries[["count"]] = c(observations = length(object@observations),
+            summaries[["count"]] = c(transactions = length(object@transactions),
                                      items = length(object@items),
                                      categories = ncol(object@items_categories),
                                      nodes = nrow(object@nodes),
@@ -500,7 +500,7 @@ setMethod(f = "[",
           signature = "SpectralAnalyzer",
           definition = function(x, i, j, drop) {
             switch(EXPR = i,
-                   "observations"      = { return(x@observations) },
+                   "transactions"      = { return(x@transactions) },
                    "items"             = { return(x@items) },
                    "items_categories"  = { return(x@items_categories) },
                    "categories_colors" = { return(x@categories_colors) },
@@ -539,7 +539,7 @@ setReplaceMethod(f = "[",
                  signature = "SpectralAnalyzer",
                  definition = function(x, i, j, value) {
                    switch(EXPR = i,
-                          "observations"      = { x@observations = value },
+                          "transactions"      = { x@transactions = value },
                           "items"             = { x@items = value },
                           "items_categories"  = { x@items_categories = value },
                           "categories_colors" = { x@categories_colors = value },
@@ -572,8 +572,8 @@ setReplaceMethod(f = "[",
 
 #### Declaration of the methods ####
 
-# Instructions in comment correspond to generics already defined in observation_set.R
-# because some methods are defined for both signatures SpectralAnalyzer and ObservationSet.
+# Instructions in comment correspond to generics already defined in transaction_set.R
+# because some methods are defined for both signatures SpectralAnalyzer and TransactionSet.
 
 # Initialization methods
 
@@ -604,9 +604,9 @@ setGeneric(name = "check_init", def = function(object, part = NULL, stop = TRUE,
 
 # Computation methods used for the construction of the nodes
 
-setGeneric(name = "list_obs_per_year", def = function(object){ standardGeneric("list_obs_per_year") })
+setGeneric(name = "list_trx_per_year", def = function(object){ standardGeneric("list_trx_per_year") })
 
-setGeneric(name = "list_separate_obs", def = function(object){ standardGeneric("list_separate_obs") })
+setGeneric(name = "list_separate_trx", def = function(object){ standardGeneric("list_separate_trx") })
 
 
 # Computation methods used for the construction of spectrosomes
@@ -725,11 +725,11 @@ setGeneric(name = "get_item_names", def = function(object, items){ standardGener
 
 # setGeneric(name = "get_items", def = function(object, ...){ standardGeneric("get_items") })
 
-setGeneric(name = "get_onp", def = function(object, onp, entities = NODES_OR_PATTERNS){ standardGeneric("get_onp") })
+setGeneric(name = "get_tnp", def = function(object, tnp, entities = NODES_OR_PATTERNS){ standardGeneric("get_tnp") })
 
-setGeneric(name = "get_onp_itemsets", def = function(object, onp, entities = NODES_OR_PATTERNS){ standardGeneric("get_onp_itemsets") })
+setGeneric(name = "get_tnp_itemsets", def = function(object, tnp, entities = NODES_OR_PATTERNS){ standardGeneric("get_tnp_itemsets") })
 
-setGeneric(name = "which_entities", def = function(object, onpr, entities = NODES_OR_PATTERNS){ standardGeneric("which_entities") })
+setGeneric(name = "which_entities", def = function(object, tnpr, entities = NODES_OR_PATTERNS){ standardGeneric("which_entities") })
 
 setGeneric(name = "which_associated_links", def = function(object, entities){ standardGeneric("which_associated_links") })
 
@@ -746,7 +746,7 @@ setGeneric(name = "which_name", def = function(object, name){ standardGeneric("w
 #' @details
 #' The steps for initializing a spectral analyzer are:
 #' \enumerate{
-#'   \item{Enumeration of the observations per year.}
+#'   \item{Enumeration of the transactions per year.}
 #'   \item{Enumeration of the nodes and calculation of the number of occurrences.}
 #'   \item{Counting links between nodes.}
 #'   \item{Elaboration of links between nodes.}
@@ -797,10 +797,10 @@ setMethod(f = "reset",
             steps = matrix(c(
               
               # Initialisation des attributs utiles à la construction d'un spectrosome des noeuds
-              "*** Step 01/10: Enumeration of the observations per year... ",
-              expression(  list_obs_per_year(object)  ),
+              "*** Step 01/10: Enumeration of the transactions per year... ",
+              expression(  list_trx_per_year(object)  ),
               "\n*** Step 02/10: Enumeration of the nodes and calculation of the number of occurrences... ",
-              expression(  list_separate_obs(object)  ),
+              expression(  list_separate_trx(object)  ),
               "\n*** Step 03/10: Counting links between nodes... ",
               expression(  count_links(object, NODES)  ),
               "\n*** Step 04/10: Elaboration of links between nodes... ",
@@ -857,7 +857,7 @@ setMethod(f = "reset",
 #' The initialization of the nodes consists of the initialization of the attributes  `nodes` and
 #'  `nodes_per_year`:
 #'  \enumerate{
-#'    \item{Enumeration of the observations per year.}
+#'    \item{Enumeration of the transactions per year.}
 #'    \item{Enumeration of the nodes and calculation of the number of occurrences.}
 #'  }
 #' 
@@ -903,10 +903,10 @@ setMethod(f = "reset",
 #' 
 #' @examples
 #' ## Creating a SpectralAnalyzer and initialize some parts of it
-#' obs <- make_observations(oedb_sample, by = "ID",
+#' trx <- make_transactions(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME", "YEAR"))
-#' obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
-#' sa_object <- spectral.analyzer(obs_object, init = FALSE)
+#' trx_object <- transaction.set(data = trx, item_key = "CODE", year_key = "YEAR")
+#' sa_object <- spectral.analyzer(trx_object, init = FALSE)
 #' init(sa_object, "nodes")
 #' init(sa_object, "node_links")
 #' 
@@ -984,14 +984,14 @@ setMethod(f = "init_nodes",
             object_name = deparse(substitute(object))
             
             if (verbose) {
-              cat("*** Step N.1/2: Enumeration of the observations per year... ")
-              display_time(list_obs_per_year(object))
+              cat("*** Step N.1/2: Enumeration of the transactions per year... ")
+              display_time(list_trx_per_year(object))
               
               cat("\n*** Step N.2/2: Enumeration of the nodes and calculation of the number of occurrences... ")
-              display_time(list_separate_obs(object))
+              display_time(list_separate_trx(object))
             } else {
-              list_obs_per_year(object)
-              list_separate_obs(object)
+              list_trx_per_year(object)
+              list_separate_trx(object)
             }
             
             # Redéfinition de l'objet
@@ -1129,10 +1129,10 @@ setMethod(f = "init_pattern_links",
 #' 
 #' @examples
 #' ## Creating a SpectralAnalyzer and initialize some parts of it
-#' obs <- make_observations(oedb_sample, by = "ID",
+#' trx <- make_transactions(oedb_sample, by = "ID",
 #'                          additional = c("CODE", "NAME", "YEAR"))
-#' obs_object <- observation.set(data = obs, item_key = "CODE", year_key = "YEAR")
-#' sa_object <- spectral.analyzer(obs_object, init = FALSE)
+#' trx_object <- transaction.set(data = trx, item_key = "CODE", year_key = "YEAR")
+#' sa_object <- spectral.analyzer(trx_object, init = FALSE)
 #' init(sa_object, "nodes")
 #' init(sa_object, "node_links")
 #' 
@@ -1315,20 +1315,20 @@ setMethod(f = "check_init",
 
 #### Computation methods used for the construction of the nodes ####
 
-#' Enumeration of the observations per year
+#' Enumeration of the transactions per year
 #' 
-#' Identify the separate observations per year (considering only their respective items) and count their
+#' Identify the separate transactions per year (considering only their respective items) and count their
 #'  number of occurrences for each one.
 #' The resulting matrix is assigned to the attribute \code{nodes_per_year} of \code{object}.
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
-#' @return Invisible. Matrix of the number of occurrences of each separate observation, per year.
-#'  The lines correspond to the observations. The columns correspond to the years.
+#' @return Invisible. Matrix of the number of occurrences of each separate transaction, per year.
+#'  The lines correspond to the transactions. The columns correspond to the years.
 #' 
 #' @author Gauthier Magnin
-#' @aliases list_obs_per_year
+#' @aliases list_trx_per_year
 #' @keywords internal
-setMethod(f = "list_obs_per_year",
+setMethod(f = "list_trx_per_year",
           signature = "SpectralAnalyzer",
           definition = function(object){
             
@@ -1336,15 +1336,15 @@ setMethod(f = "list_obs_per_year",
             object_name = deparse(substitute(object))
             
             
-            # Conversion de la liste d'observations en une data.frame (et tri des items de chaque observation)
-            obs_df = data.frame(year = sapply(object@observations@data, "[[", object@observations@year_key))
-            obs_df$node = lapply(object@observations[object@observations@item_key], sort)
+            # Conversion de la liste de transactions en une data.frame (et tri des items de chaque transaction)
+            trx_df = data.frame(year = sapply(object@transactions@data, "[[", object@transactions@year_key))
+            trx_df$node = lapply(object@transactions[object@transactions@item_key], sort)
             
             # Concaténation des identifiants des items (nécessaire pour la fonction "table" et un tri plus rapide)
-            obs_df$node = sapply(obs_df$node, paste0, collapse = "/")
+            trx_df$node = sapply(trx_df$node, paste0, collapse = "/")
             
             # Calcul de la distribution des ensembles distincts d'items par année et conversion en matrice
-            nodes_df = as.data.frame(table(obs_df), stringsAsFactors = FALSE)
+            nodes_df = as.data.frame(table(trx_df), stringsAsFactors = FALSE)
             nodes_mat = with(nodes_df, tapply(Freq, list(node, year), sum))
             
             # Redécomposition des items composant chaque noeud pour pouvoir calculer leur longueur
@@ -1367,18 +1367,18 @@ setMethod(f = "list_obs_per_year",
 
 #' Enumeration of nodes
 #' 
-#' Identify the separate observations (considering only their respective items) and compute their size
+#' Identify the separate transactions (considering only their respective items) and compute their size
 #'  and number of occurrences.
 #' The resulting data frame is assigned to the attribute \code{nodes} of \code{object}.
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
-#' @return Invisible. Data frame of the separate observations and their characteristics (length and
+#' @return Invisible. Data frame of the separate transactions and their characteristics (length and
 #'  weight).
 #' 
 #' @author Gauthier Magnin
-#' @aliases list_separate_obs
+#' @aliases list_separate_trx
 #' @keywords internal
-setMethod(f = "list_separate_obs",
+setMethod(f = "list_separate_trx",
           signature = "SpectralAnalyzer",
           definition = function(object){
             
@@ -1388,7 +1388,7 @@ setMethod(f = "list_separate_obs",
             # Poids des noeuds par année
             nodes_per_year = object@nodes_per_year
             
-            # Calcul du poids total pour chaque noeud (= chaque observation distincte)
+            # Calcul du poids total pour chaque noeud (= chaque transaction distincte)
             nodes_df = data.frame("weight" = unname(rowSums(nodes_per_year)))
             nodes_df$node = lapply(strsplit(rownames(nodes_per_year), 'c\\("|", "|")'),
                                    function(node) {
@@ -1578,7 +1578,7 @@ setMethod(f = "search_links",
 
 #' Enumeration of patterns
 #' 
-#' Identify the patterns generated from the observations.
+#' Identify the patterns generated from the transactions.
 #' The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
@@ -1591,7 +1591,7 @@ setMethod(f = "search_links",
 #' @param arules If \code{TRUE}, patterns are returned as an object of class
 #'  \code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.
 #' @return Invisible. Object of class \code{itemsets} or data frame in which a line is an association
-#'  between a pattern and its frequency in the set of observations (according to the argument
+#'  between a pattern and its frequency in the set of transactions (according to the argument
 #'  \code{arules}).
 #' 
 #' @author Gauthier Magnin
@@ -1606,8 +1606,8 @@ setMethod(f = "list_separate_patterns",
             object_name = deparse(substitute(object))
             
             
-            # Conversion des observations en transactions : une ligne par observation, une colonne par item
-            transact = as(object@observations, "transactions")
+            # Conversion des transactions en transactions : une ligne par transaction, une colonne par item
+            transact = as(object@transactions, "transactions")
             
             # Énumération des motifs recherchés
             params = list(supp = count/dim(transact)[1], 
@@ -1639,7 +1639,7 @@ setMethod(f = "list_separate_patterns",
 
 #' Linking nodes to patterns
 #' 
-#' Associate each separate observation (i.e. each node) with the patterns included in it.
+#' Associate each separate transaction (i.e. each node) with the patterns included in it.
 #' The resulting matrix is assigned to the attribute \code{nodes_patterns} of \code{object}.
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
@@ -1727,12 +1727,12 @@ setMethod(f = "list_patterns_per_year",
 #' The resulting data frame is assigned to the attribute `patterns` of `object`.
 #' 
 #' @details
-#' The frequency and the weight of a pattern is the number of nodes and the number of observations
+#' The frequency and the weight of a pattern is the number of nodes and the number of transactions
 #'  containing it, respectively. The length of a pattern is the number of items composing it.
 #' 
 #' The specificity of a pattern is the information it conveys. It corresponds to the nature of the
 #'  pattern of being specific of a particular combination or ubiquitous and allowing the formation of
-#'  numerous combinations (with regard to the observations).
+#'  numerous combinations (with regard to the transactions).
 #' 
 #' The dynamic status is one of persistent, declining, emergent or latent.
 #' 
@@ -1790,7 +1790,7 @@ setMethod(f = "compute_patterns_characteristics",
 #' Compute the specificity of the information conveyed by each pattern.
 #' The specitificity corresponds to the nature of a pattern of being specific of a particular
 #'  combination or ubiquitous and allowing the formation of numerous combinations (with regard to the
-#'  observations).
+#'  transactions).
 #' 
 #' \loadmathjax
 #' @template specificity_computation
@@ -1871,15 +1871,15 @@ setMethod(f = "check_RI_params",
             # Validation du paramètre définissant la fin de la période sur laquelle effectuer les calculs
             if (is.null(t)) t = max_year
             else if (t > max_year || t < min_year) {
-              stop("t must not be less than the oldest year of observation (", min_year, ")",
-                   " nor greater than the most recent one (", max_year, ").")
+              stop("t must not be less than the year of the oldest transaction (", min_year, ")",
+                   " nor greater than the year of the most recent one (", max_year, ").")
             }
             
             # Validation du paramètre définissant la longueur de la période de calcul
             if (is.infinite(period)) period = t - min_year + 1
             else if (period < 1 || period > t - min_year + 1) {
               stop("period must be greater than 0",
-                   " and t - period + 1 must not be less than the oldest year of observation.")
+                   " and t - period + 1 must not be less than the year of the oldest transaction.")
             }
             
             return(list(t = t, period = period))
@@ -1897,20 +1897,20 @@ setMethod(f = "check_RI_params",
 #' The reporting index of the pattern \eqn{p} given by:
 #'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
 #' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-#'  the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+#'  the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
 #'  defining the period on which to compute the reporting index.
 #'  
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param patterns Patterns whose reporting indexes are to be computed.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
-#'  by the observations.
+#'  by the transactions.
 #' @param period Time interval over which to compute the reporting indexes (number of years).
 #'  For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
 #'  period [2011 - 2019].
 #'  
 #'  \code{Inf} specifies that the period considered covers an interval starting on the date of the
-#'  oldest observation and ending in the year \code{t}.
+#'  oldest transaction and ending in the year \code{t}.
 #' @return Vector containing the reporting index of each pattern contained in \code{patterns}.
 #' 
 #' @author Gauthier Magnin
@@ -1959,20 +1959,20 @@ setMethod(f = "compute_reporting_indexes",
 #'  is the reporting index of the pattern \eqn{p} given by:
 #'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
 #' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-#'  the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+#'  the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
 #'  defining the period on which to compute the reporting index.
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param patterns Patterns whose limits are to be computed.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the pattern.
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
-#'  by the observations.
+#'  by the transactions.
 #' @param period Time interval over which to do the overall computation (number of years).
 #'  For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
 #'  period [2011 - 2019].
 #'  
 #'  \code{Inf} specifies that the period considered covers an interval starting on the date of the
-#'  oldest observation and ending in the year \code{t}.
+#'  oldest transaction and ending in the year \code{t}.
 #' @param short_limit Time interval over which to compute the shorter limit (number of years).
 #'  For example, if \code{t = 2019} and \code{short_limit = 2} then the computation is made over the
 #'  period [2018 - 2019].
@@ -2012,7 +2012,7 @@ setMethod(f = "compute_reporting_indexes_limits",
 #' where \mjseqn{RI_p(t_1,t_0)} is the reporting index of the pattern \eqn{p} given by:
 #'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_qt for q in P and from t = t_0 to t_1}
 #' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-#'  the observations of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+#'  the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
 #'  defining the period on which to compute the reporting index.
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
@@ -2083,13 +2083,13 @@ setMethod(f = "compute_ri_threshold",
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]$pattern`.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
 #'  `NULL` specifies that the characterization must be done in relation to the last year covered
-#'  by the observations.
+#'  by the transactions.
 #' @param period Time interval over which to characterize the patterns (number of years).
 #'  For example, if `t = 2019` and `period = 9` then the computation is made over the
 #'  period \[2011 - 2019\].
 #'  
 #'  `Inf` specifies that the period considered covers an interval starting on the date of the
-#'  oldest observation and ending in the year `t`.
+#'  oldest transaction and ending in the year `t`.
 #' @param short_limit Time interval over which to characterize the status of the patterns in relation
 #'  to the period defined by the arguments `t` and `period` (number of years).
 #'  For example, if `t = 2019` and `short_limit = 2` then the computation is made over the
@@ -2119,7 +2119,7 @@ setMethod(f = "define_dynamic_status",
                                 t = NULL, period = Inf, short_limit = object["status_limit"]) {
             
             check_init(object, PATTERNS)
-            patterns = get_onp_itemsets(object, patterns, entities = PATTERNS)
+            patterns = get_tnp_itemsets(object, patterns, entities = PATTERNS)
             
             # Calcul des limites et des seuils associés
             ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
@@ -2217,7 +2217,7 @@ setMethod(f = "spectrum_chart",
             
             # Récupération des patterns
             check_init(object, PATTERNS)
-            pc = get_onp(object, pc, PATTERNS)
+            pc = get_tnp(object, pc, PATTERNS)
             
             check_param(identifiers, values = c("original", "new"))
             
@@ -2467,7 +2467,7 @@ setMethod(f = "weight_by_node_complexity",
           signature = "SpectralAnalyzer",
           definition = function(object, patterns) {
   
-  patterns = get_onp_itemsets(object, patterns, entities = PATTERNS)
+  patterns = get_tnp_itemsets(object, patterns, entities = PATTERNS)
   pnc = pattern_node_characteristics(object, patterns)
   
   weights = t(sapply(seq_along(patterns), function(i) {
@@ -2635,7 +2635,7 @@ setMethod(f = "spectrosome_chart",
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
-            nopc = get_onp(object, nopc)
+            nopc = get_tnp(object, nopc)
             check_init(object, c(entities, which_associated_links(object, entities)))
             
             # Validation des paramètres
@@ -3307,7 +3307,7 @@ setMethod(f = "cluster_chart",
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
-            nopc = get_onp(object, nopc)
+            nopc = get_tnp(object, nopc)
             check_init(object, c(entities, which_associated_links(object, entities)))
             
             # Vérifie qu'un seul item est mentionné
@@ -3427,13 +3427,13 @@ setMethod(f = "degree",
 
 #' Itemset chart, for SpectralAnalyzer
 #' 
-#' Plot a chart of the observation, node or pattern itemsets. It can be automatically saved as a PDF file.
+#' Plot a chart of the transaction, node or pattern itemsets. It can be automatically saved as a PDF file.
 #' 
 #' @details
 #' If they are from nodes or patterns, itemsets are sorted according to their lengths then to their
-#'  weights. If they are from observations, they are sorted according to their lengths only. When there
+#'  weights. If they are from transactions, they are sorted according to their lengths only. When there
 #'  is equality of these characteristics, itemsets are then taken according to the initial order in
-#'  `onpc`.
+#'  `tnpc`.
 #' 
 #' If `category` is `NULL`, items are sorted alphanumerically. If it is not, items are sorted according
 #'  to the values of the category then alphanumerically.
@@ -3444,16 +3444,16 @@ setMethod(f = "degree",
 #' @template default_category_values_colors
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
-#' @param onpc Object of class `ObservationSet` (**o**) or data frame of **n**odes or **p**atterns and
+#' @param tnpc Object of class `TransactionSet` (**t**) or data frame of **n**odes or **p**atterns and
 #'  their **c**haracteristics. Itemsets whose chart is to be plotted. Any subset of
-#'  `object["observations"]`, `object["nodes"]` or `object["patterns"]`.
+#'  `object["transactions"]`, `object["nodes"]` or `object["patterns"]`.
 #'  
-#'  `"observations"`, `"o"`, `"nodes"`, `"n"`, `"patterns"` and `"p"` are special values for
-#'  `"object["observations"]`, `object["nodes"]` and `object["patterns"]`.
+#'  `"transactions"`, `"t"`, `"nodes"`, `"n"`, `"patterns"` and `"p"` are special values for
+#'  `"object["transactions"]`, `object["nodes"]` and `object["patterns"]`.
 #' @param identifiers Which IDs to use to identify the itemsets on the chart and in the
 #'  return. One of `"original"`, `"new"`.
 #'  \describe{
-#'    \item{`"original"`}{Use of the original identifiers from `onpc`.}
+#'    \item{`"original"`}{Use of the original identifiers from `tnpc`.}
 #'    \item{`"new"`}{Use of new identifiers based on sorting (see 'Details' section to learn more
 #'                   about the sort that is performed).}
 #'  }
@@ -3466,10 +3466,10 @@ setMethod(f = "degree",
 #' @param under,over Text to display on the chart under and over the itemsets.
 #'  Can be:
 #'  * Identifiers: `"ID"`.
-#'  * One of the elements of the observations (i.e. one of the values of `onpc["names"]`), if `onpc` is
-#'    an `ObservationSet`.
+#'  * One of the elements of the transactions (i.e. one of the values of `tnpc["names"]`), if `tnpc` is
+#'    an `TransactionSet`.
 #'  * One of the characteristics of the nodes or the patterns (`"weight"`, `"frequency"`, `"specificity"`,
-#'    `"year"`, `"status"`), if `onpc` is a data frame of nodes or patterns and their characteristics.
+#'    `"year"`, `"status"`), if `tnpc` is a data frame of nodes or patterns and their characteristics.
 #'  
 #'  `"status"` can only be used for the argument `"over"`.
 #'  `NULL` value specifies to display no text.
@@ -3481,13 +3481,13 @@ setMethod(f = "degree",
 #'  the order of the columns of `object["items_categories"]`).
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
 #' @param sort_by Sorting method of displayed items. One of `"category"`, `"item"`.
-#' @param title Chart title. Default title depends on the type of entities contained in `onpc`.
-#'  Example of default title: `"Node itemsets"` if `onpc` contains nodes.
+#' @param title Chart title. Default title depends on the type of entities contained in `tnpc`.
+#'  Example of default title: `"Node itemsets"` if `tnpc` contains nodes.
 #' @param path Path of the directory in which to save the chart as a PDF file. Default is the working
 #'  directory.
 #' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
 #'  active device.
-#' @return Object of class `ObservationSet` or data frame of the characteristics of the nodes or patterns
+#' @return Object of class `TransactionSet` or data frame of the characteristics of the nodes or patterns
 #'  represented on the chart, associated with their identifiers (visible on the chart if one of `under`
 #'  or `over` is `"ID"`).
 #' 
@@ -3497,11 +3497,11 @@ setMethod(f = "degree",
 #'             *Annals of Work Exposures and Health*, Volume 64, Issue 4, May 2020, Pages 402–415.
 #'             <https://doi.org/10.1093/annweh/wxaa008>.
 #' @seealso
-#' Method for signature `ObservationSet`:
-#' [`itemset_chart,ObservationSet`][itemset_chart,ObservationSet-method].
+#' Method for signature `TransactionSet`:
+#' [`itemset_chart,TransactionSet`][itemset_chart,TransactionSet-method].
 #' 
 #' @examples
-#' obs <- itemset_chart(SA_instance, "observations", length_one = TRUE,
+#' trx <- itemset_chart(SA_instance, "transactions", length_one = TRUE,
 #'                      category = "family", c.cutoff = 7, n.cutoff = 20)
 #' nodes <- itemset_chart(SA_instance, "nodes",
 #'                        category = "family", c.cutoff = 10, n.cutoff = 20)
@@ -3519,7 +3519,7 @@ setMethod(f = "degree",
 #' @export
 setMethod(f = "itemset_chart",
           signature = "SpectralAnalyzer",
-          definition = function(object, onpc, identifiers = "original",
+          definition = function(object, tnpc, identifiers = "original",
                                 length_one = FALSE, jitter = TRUE,
                                 under = "ID", over = "status",
                                 use_names = TRUE, n.cutoff = NULL,
@@ -3527,9 +3527,9 @@ setMethod(f = "itemset_chart",
                                 title = NULL, path = NULL, name = NULL) {
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
-            entities = which_entities(object, onpc, NODES_PATTERNS_OR_OBSERVATIONS)
-            if (entities != OBSERVATIONS) check_init(object, entities)
-            onpc = get_onp(object, onpc, NODES_PATTERNS_OR_OBSERVATIONS)
+            entities = which_entities(object, tnpc, NODES_PATTERNS_OR_TRANSACTIONS)
+            if (entities != TRANSACTIONS) check_init(object, entities)
+            tnpc = get_tnp(object, tnpc, NODES_PATTERNS_OR_TRANSACTIONS)
             
             # Validation des paramètres
             check_access_for_category(object, category, NA)
@@ -3543,8 +3543,8 @@ setMethod(f = "itemset_chart",
             
             
             # Préparation des variables pour la fonction de traçage graphique
-            if (entities == OBSERVATIONS) {
-              vars = prepare_itemset_chart(onpc, identifiers, length_one, under, over)
+            if (entities == TRANSACTIONS) {
+              vars = prepare_itemset_chart(tnpc, identifiers, length_one, under, over)
               
               itemsets = vars$itemsets
               items = data.frame(item = as.character(vars$items$item), stringsAsFactors = FALSE)
@@ -3554,28 +3554,28 @@ setMethod(f = "itemset_chart",
             }
             else{
               # Renommage de colonnes pour simplification
-              colnames(onpc)[colnames(onpc) == "node" | colnames(onpc) == "pattern"] = "itemset"
+              colnames(tnpc)[colnames(tnpc) == "node" | colnames(tnpc) == "pattern"] = "itemset"
               
               # Itemset de taille > 1, triés par taille croissant puis par poids décroissant
-              onpc = if (length_one) onpc else onpc[onpc$length != 1, ]
-              onpc = onpc[order(onpc$length,
-                                max(onpc$weight) - onpc$weight), ]
+              tnpc = if (length_one) tnpc else tnpc[tnpc$length != 1, ]
+              tnpc = tnpc[order(tnpc$length,
+                                max(tnpc$weight) - tnpc$weight), ]
               
               # Attribution d'identifiants aux itemsets
-              onpc$ID = if (identifiers == "new") seq(nrow(onpc)) else as.numeric(rownames(onpc))
+              tnpc$ID = if (identifiers == "new") seq(nrow(tnpc)) else as.numeric(rownames(tnpc))
               
               # Itemsets et items distincts parmi les itemsets
-              itemsets = onpc$itemset
-              items = data.frame(item = unique(unlist(onpc$itemset)), stringsAsFactors = FALSE)
+              itemsets = tnpc$itemset
+              items = data.frame(item = unique(unlist(tnpc$itemset)), stringsAsFactors = FALSE)
               
               # Texte à afficher
-              under_text = if (is.null(under)) NULL else onpc[, under]
+              under_text = if (is.null(under)) NULL else tnpc[, under]
               if (is.null(over)) over_text = over_legend = NULL
               else if (over == "status") {
-                over_text = object@status_colors[onpc[, over]]
+                over_text = object@status_colors[tnpc[, over]]
                 over_legend = object@status_colors
               } else {
-                over_text = onpc[, over]
+                over_text = tnpc[, over]
                 over_legend = NULL
               }
             }
@@ -3621,14 +3621,14 @@ setMethod(f = "itemset_chart",
             if (!is.null(name)) grDevices::dev.off()
             
             
-            # Retour (si observations)
-            if (entities == OBSERVATIONS) return(vars$observations)
+            # Retour (si transactions)
+            if (entities == TRANSACTIONS) return(vars$transactions)
             
             # Renommage initial des colonnes avant retour (si noeuds ou patterns)
-            colnames(onpc)[colnames(onpc) == "itemset"] = substr(entities, 1, nchar(entities)-1)
+            colnames(tnpc)[colnames(tnpc) == "itemset"] = substr(entities, 1, nchar(entities)-1)
             # Noeuds/motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
-            return(onpc[order(onpc$ID),
-                        c(ncol(onpc), seq(ncol(onpc)-1))])
+            return(tnpc[order(tnpc$ID),
+                        c(ncol(tnpc), seq(ncol(tnpc)-1))])
           })
 
 
@@ -3772,8 +3772,8 @@ setMethod(f = "category_tree_chart",
 
 #' Co-occurrence chart, for SpectralAnalyzer
 #' 
-#' Plot a graph in which vertices are items and edges are their co-occurences in observations (i.e. for
-#'  each pair of items, the number of observations containing it).
+#' Plot a graph in which vertices are items and edges are their co-occurences in transactions (i.e. for
+#'  each pair of items, the number of transactions containing it).
 #' 
 #' @details
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
@@ -3804,8 +3804,8 @@ setMethod(f = "category_tree_chart",
 #' @author Gauthier Magnin
 #' @seealso [`co_occurrence_matrix`], [`category_tree_chart`].
 #' 
-#' Method for signature `ObservationSet`:
-#' [`co_occurrence_chart,ObservationSet`][co_occurrence_chart,ObservationSet-method].
+#' Method for signature `TransactionSet`:
+#' [`co_occurrence_chart,TransactionSet`][co_occurrence_chart,TransactionSet-method].
 #' 
 #' @examples
 #' co_occurrence_chart(SA_instance, SA_instance["items"], "family")
@@ -3859,7 +3859,7 @@ setMethod(f = "co_occurrence_chart",
   }
   
   # Liens à tracer entre les sommets (différent des arêtes de l'arbre)
-  co_occ = as.data.frame(as.table(co_occurrence_matrix(object@observations, items)),
+  co_occ = as.data.frame(as.table(co_occurrence_matrix(object@transactions, items)),
                          stringsAsFactors = FALSE)
   co_occ = co_occ[co_occ$Var1 != co_occ$Var2 & !duplicated(t(apply(co_occ[, c(1,2)], 1, sort))), ]
   connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
@@ -3888,7 +3888,7 @@ setMethod(f = "co_occurrence_chart",
 
 #' Rules extraction
 #' 
-#' Extract association rules from the observations (i.e. presence implication between two disjoint
+#' Extract association rules from the transactions (i.e. presence implication between two disjoint
 #'  itemsets). Can be used to find all rules, rules relating to patterns (or other specific itemsets)
 #'  or relating to specific items.
 #' 
@@ -3906,10 +3906,10 @@ setMethod(f = "co_occurrence_chart",
 #' The characteristics of an association rule of the form \mjeqn{X \rightarrow Y}{X -> Y} are:
 #'  \itemize{
 #'    \item{The \strong{support}: support of the itemset \mjeqn{X \cup Y}{X union Y}, i.e. the
-#'          proportion of observations containing \mjeqn{X \cup Y}{X union Y} among all observations.}
+#'          proportion of transactions containing \mjeqn{X \cup Y}{X union Y} among all transactions.}
 #'    \item{The \strong{confidence}: quotient of the support of \mjeqn{X \cup Y}{X union Y} and the
-#'          support of \eqn{X}, i.e. the proportion of observations in which the rule is correct
-#'          relative to the number of observations containing the antecedent \eqn{X}.}
+#'          support of \eqn{X}, i.e. the proportion of transactions in which the rule is correct
+#'          relative to the number of transactions containing the antecedent \eqn{X}.}
 #'    \item{The \strong{lift}: quotient of the confidence of \mjeqn{X \rightarrow Y}{X -> Y} and the
 #'          support of \eqn{Y}.}
 #'  }
@@ -3929,7 +3929,7 @@ setMethod(f = "co_occurrence_chart",
 #'  words, having inferred a dependency \mjeqn{X \rightarrow Y}{X -> Y}, any other dependency of the
 #'  form \mjeqn{X \cup A \rightarrow Y}{X union A -> Y} is considered redundant.
 #' 
-#' If \code{from = "observations"}, additional arguments are \code{parameter}, \code{appearance} and
+#' If \code{from = "transactions"}, additional arguments are \code{parameter}, \code{appearance} and
 #'  \code{control} of function \code{\link[arules:apriori]{apriori}} from the package \code{arules}.
 #'  These arguments allow to specify minimum support (default \code{0.1}), minimum confidence (default
 #'  \code{0.8}), minimum length (default \code{1}), maximum length (default \code{10}), specific items
@@ -3941,13 +3941,13 @@ setMethod(f = "co_occurrence_chart",
 #'  operating parameters of the rule extraction algorithm.
 #' 
 #' Defining minimum support \eqn{s} and confidence \eqn{c} means that the union of items in the
-#'  antecedent and consequent of rules must be present in a minimum of \eqn{s}\% of observations
-#'  and at least \eqn{c}\% of observations must satisfy the antecedent.
+#'  antecedent and consequent of rules must be present in a minimum of \eqn{s}\% of transactions
+#'  and at least \eqn{c}\% of transactions must satisfy the antecedent.
 #' 
 #' @param object S4 object of class \code{SpectralAnalyzer}.
 #' @param from Character or list of itemsets for which to extract the association rules.
 #'  \itemize{
-#'    \item{If \code{"observations"}, look for all rules within the observations saved in \code{object}
+#'    \item{If \code{"transactions"}, look for all rules within the transactions saved in \code{object}
 #'          or for rules with specific items.}
 #'    \item{If \code{"patterns"}, look for rules whose union of the antecedent and the consequent form
 #'          an entire pattern among those contained in \code{object} (more precisely, in
@@ -3966,7 +3966,7 @@ setMethod(f = "co_occurrence_chart",
 #' @return Data frame or object of class \code{rules} (according to the argument \code{arules})
 #'  containing the extracted rules and their characteristics.
 #'  
-#'  If \code{from} is not \code{"observations"}, the column \code{"itemset"} refers to the index of the
+#'  If \code{from} is not \code{"transactions"}, the column \code{"itemset"} refers to the index of the
 #'  itemset from which the rule was generated in the list of patterns (if \code{from = "patterns"})
 #'  or in the given list (otherwise).
 #' 
@@ -3975,26 +3975,26 @@ setMethod(f = "co_occurrence_chart",
 #' 
 #' @examples
 #' ## Basic rule extraction
-#' rules_1 <- extract_rules(SA_instance, from = "observations")
+#' rules_1 <- extract_rules(SA_instance, from = "transactions")
 #' rules_2 <- extract_rules(SA_instance, from = "patterns")
 #' rules_3 <- extract_rules(SA_instance, from = list(c("931", "3180"),
 #'                                                   c("25", "192", "328")))
 #' 
 #' ## Rule extraction with conditions on the antecedent and the consequent
 #' params <- list(supp = 0.001, conf = 0.5, maxlen = 2)
-#' rules_4 <- extract_rules(SA_instance, from = "observations",
+#' rules_4 <- extract_rules(SA_instance, from = "transactions",
 #'                          parameter = params,
 #'                          appearance = list(rhs = "328"))
-#' rules_5 <- extract_rules(SA_instance, from = "observations",
+#' rules_5 <- extract_rules(SA_instance, from = "transactions",
 #'                          parameter = params,
 #'                          appearance = list(lhs = "497"))
-#' rules_6 <- extract_rules(SA_instance, from = "observations",
+#' rules_6 <- extract_rules(SA_instance, from = "transactions",
 #'                          parameter = list(supp = 0.001, conf = 0,
 #'                                           minlen = 2, maxlen = 2),
 #'                          appearance = list(lhs = "328", rhs = "3180"))
 #' 
 #' ## Getting rules as an object of class rules from the package arules
-#' rules_7 <- extract_rules(SA_instance, from = "observations", arules = TRUE)
+#' rules_7 <- extract_rules(SA_instance, from = "transactions", arules = TRUE)
 #' arules::inspect(rules_7)
 #' 
 #' @aliases extract_rules
@@ -4004,13 +4004,13 @@ setMethod(f = "extract_rules",
           definition = function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...) {
             
             # Validation du paramètre de choix des itemsets desquels extraire les règles
-            if (is.character(from) && from != "observations" && from != "patterns")
-              stop("from must be \"observations\", \"patterns\" or a list of item sets.")
+            if (is.character(from) && from != "transactions" && from != "patterns")
+              stop("from must be \"transactions\", \"patterns\" or a list of item sets.")
             
-            # Conversion des observations en transactions
-            transact = as(object@observations, "transactions")
+            # Conversion des transactions en transactions
+            transact = as(object@transactions, "transactions")
             
-            if (is.character(from) && from == "observations") {
+            if (is.character(from) && from == "transactions") {
               
               # Vérification du bon choix du paramètre demandant l'extraction de règles
               args = list(...)
@@ -4093,7 +4093,7 @@ setMethod(f = "extract_rules",
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param rules Data frame of association rules to plot (given by the [`extract_rules`] function).
 #'  Only those of length 2 are considered. If `NULL`, rules of length 2 are extracted from
-#'  `object["observations"]` using the mining parameters `parameters`.
+#'  `object["transactions"]` using the mining parameters `parameters`.
 #' @param items Items to consider in the given or extracted rules. If `NULL`, only items from the given
 #' `rules` are considered.
 #'  Any subset of `object["items"]`.\cr
@@ -4268,9 +4268,9 @@ setMethod(f = "rules_chart",
   if (is.null(rules)) {
     # Calcul des règles sans ou avec spécification des items
     if (is.null(items) || identical(items, object@items)) {
-      rules = extract_rules(object, "observations", parameter = parameters)
+      rules = extract_rules(object, "transactions", parameter = parameters)
     } else {
-      rules = extract_rules(object, "observations", parameter = parameters,
+      rules = extract_rules(object, "transactions", parameter = parameters,
                             appearance = list(both = items))
     }
     
@@ -4453,7 +4453,7 @@ setMethod(f = "rules_chart",
 #' save_characteristics(SA_instance, spectrosome[["vertices"]],
 #'                      file = "spectrosome_vertices.csv", row.names = FALSE)
 #' 
-#' rules <- extract_rules(SA_instance, from = "observations")
+#' rules <- extract_rules(SA_instance, from = "transactions")
 #' save_characteristics(SA_instance, rules,
 #'                      file = "rules.csv", row.names = FALSE)
 #' 
@@ -4620,7 +4620,7 @@ setMethod(f = "get_nodes_from_items",
             
             # Récupération des noeuds
             check_init(object, NODES)
-            nc = get_onp(object, nc, NODES)
+            nc = get_tnp(object, nc, NODES)
             
             if (!(condition %in% c("all", "any", "exact")))
               stop("condition must be \"all\", \"any\" or \"exact\".")
@@ -4685,7 +4685,7 @@ setMethod(f = "get_nodes_from_characteristic",
             
             # Récupération des noeuds
             check_init(object, NODES)
-            nc = get_onp(object, nc, NODES)
+            nc = get_tnp(object, nc, NODES)
             
             if (!(characteristic %in% c("length", "weight")))
               stop("characteristic must be one of \"length\", \"weight\".")
@@ -4746,7 +4746,7 @@ setMethod(f = "get_nodes_from_category",
           definition = function(object, nc, category, value, condition) {
             
             # Récupération des noeuds
-            nc = get_onp(object, nc, NODES)
+            nc = get_tnp(object, nc, NODES)
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
@@ -4942,7 +4942,7 @@ setMethod(f = "get_patterns_from_items",
             
             # Récupération des patterns
             check_init(object, PATTERNS)
-            pc = get_onp(object, pc, PATTERNS)
+            pc = get_tnp(object, pc, PATTERNS)
             
             if (!(condition %in% c("all", "any", "exact")))
               stop("condition must be \"all\", \"any\" or \"exact\".")
@@ -5008,7 +5008,7 @@ setMethod(f = "get_patterns_from_characteristic",
             
             # Récupération des patterns
             check_init(object, PATTERNS)
-            pc = get_onp(object, pc, PATTERNS)
+            pc = get_tnp(object, pc, PATTERNS)
             
             if (!(characteristic %in% c("year", "frequency", "weight", "length", "specificity")))
               stop("characteristic must be one of \"year\", \"frequency\", \"weight\", \"length\", \"specificity\".")
@@ -5067,7 +5067,7 @@ setMethod(f = "get_patterns_from_status",
             
             # Récupération des patterns
             check_init(object, PATTERNS)
-            pc = get_onp(object, pc, PATTERNS)
+            pc = get_tnp(object, pc, PATTERNS)
             
             switch(EXPR = condition,
                    "EQ" = { return(pc[pc$status %in% value, ]) },
@@ -5121,7 +5121,7 @@ setMethod(f = "get_patterns_from_category",
           definition = function(object, pc, category, value, condition) {
             
             # Récupération des patterns
-            pc = get_onp(object, pc, PATTERNS)
+            pc = get_tnp(object, pc, PATTERNS)
             
             # Validation des paramètres liés à une valeur de catégorie
             check_access_for_category(object, category, value)
@@ -5185,7 +5185,7 @@ setMethod(f = "get_links",
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
-            nopc = get_onp(object, nopc)
+            nopc = get_tnp(object, nopc)
             check_init(object, c(entities, which_associated_links(object, entities)))
             
             # Si les liens recherchés correspondent à l'intégralité des liens
@@ -5267,7 +5267,7 @@ setMethod(f = "get_isolates",
             
             links = get_links(object, nopc)
             row_id = as.character(links$endpoint.1[links$weight == 0])
-            return(get_onp(object, nopc)[row_id, ])
+            return(get_tnp(object, nopc)[row_id, ])
           })
 
 
@@ -5300,7 +5300,7 @@ setMethod(f = "get_non_isolates",
             links = get_links(object, nopc)
             row_id = as.character(sort(unique(unlist(links[links$weight != 0,
                                                            c("endpoint.1", "endpoint.2")]))))
-            return(get_onp(object, nopc)[row_id, ])
+            return(get_tnp(object, nopc)[row_id, ])
           })
 
 
@@ -5352,7 +5352,7 @@ setMethod(f = "get_complexes",
             
             # Récupération des noeuds/patterns et recherche du type d'entités fourni
             entities = which_entities(object, nopc)
-            nopc = get_onp(object, nopc)
+            nopc = get_tnp(object, nopc)
             
             if (is.null(category)) {
               check_init(object, entities)
@@ -5515,9 +5515,9 @@ setMethod(f = "get_item_names",
 #' @return Named vector of items corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_item_names`], [`has_item_names`], [`get_onp`], [`which_entities`].
+#' @seealso [`get_item_names`], [`has_item_names`], [`get_tnp`], [`which_entities`].
 #' 
-#' Method for signature `ObservationSet`: [`get_items,ObservationSet`][get_items,ObservationSet-method].
+#' Method for signature `TransactionSet`: [`get_items,TransactionSet`][get_items,TransactionSet-method].
 #' 
 #' @aliases get_items get_items,SpectralAnalyzer
 #' @md
@@ -5541,179 +5541,179 @@ setMethod(f = "get_items",
           })
 
 
-#' Get observations or nodes or patterns and their characteristics
+#' Get transactions or nodes or patterns and their characteristics
 #' 
-#' Find and return the `ObservationSet` corresponding to the observations or the data frame corresponding
+#' Find and return the `TransactionSet` corresponding to the transactions or the data frame corresponding
 #'  to the nodes or the patterns of the object of class `SpectralAnalyzer`, or return the given value.
 #' 
 #' @details
-#' If `onp` is an object of class `ObservationSet` or a data frame, it is returned.
+#' If `tnp` is an object of class `TransactionSet` or a data frame, it is returned.
 #' 
-#' If `onp` is a character value equal to:
-#'  * `"observations"` or `"o"`: `object["observations"]` is returned.
+#' If `tnp` is a character value equal to:
+#'  * `"transactions"` or `"t"`: `object["transactions"]` is returned.
 #'  * `"nodes"` or `"n"`: `object["nodes"]` is returned.
 #'  * `"patterns"` or `"p"`: `object["patterns"]` is returned.
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
-#' @param onp Object of class `ObservationSet` (**o**) or data frame of **n**odes or **p**atterns and
-#'  their characteristics or one of the following character values: `"observations"`, `"o"`, `"nodes"`,
+#' @param tnp Object of class `TransactionSet` (**t**) or data frame of **n**odes or **p**atterns and
+#'  their characteristics or one of the following character values: `"transactions"`, `"t"`, `"nodes"`,
 #'  `"n"`, `"patterns"`, `"p"`.
-#' @param entities Type of the entities that `onp` may refer to (`OBSERVATIONS`, `NODES`, `PATTERNS`,
-#'  `NODES_OR_PATTERNS` or `NODES_PATTERNS_OR_OBSERVATIONS`).
-#' @return Object of class `ObservationSet` or data frame of nodes or patterns and their characteristics,
+#' @param entities Type of the entities that `tnp` may refer to (`TRANSACTIONS`, `NODES`, `PATTERNS`,
+#'  `NODES_OR_PATTERNS` or `NODES_PATTERNS_OR_TRANSACTIONS`).
+#' @return Object of class `TransactionSet` or data frame of nodes or patterns and their characteristics,
 #'  corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_onp_itemsets`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer-method].
+#' @seealso [`get_tnp_itemsets`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer-method].
 #' 
-#' @aliases get_onp
+#' @aliases get_tnp
 #' @md
 #' @keywords internal
-setMethod(f = "get_onp",
+setMethod(f = "get_tnp",
           signature = "SpectralAnalyzer",
-          definition = function(object, onp, entities = NODES_OR_PATTERNS) {
+          definition = function(object, tnp, entities = NODES_OR_PATTERNS) {
             
-            if (is.character(onp)) {
-              if (onp == OBSERVATIONS || onp == first_characters(OBSERVATIONS)) return(object@observations)
-              if (onp == NODES        || onp == first_characters(NODES))        return(object@nodes)
-              if (onp == PATTERNS     || onp == first_characters(PATTERNS))     return(object@patterns)
+            if (is.character(tnp)) {
+              if (tnp == TRANSACTIONS || tnp == first_characters(TRANSACTIONS)) return(object@transactions)
+              if (tnp == NODES        || tnp == first_characters(NODES))        return(object@nodes)
+              if (tnp == PATTERNS     || tnp == first_characters(PATTERNS))     return(object@patterns)
               
-              var_name = deparse(substitute(onp))
+              var_name = deparse(substitute(tnp))
               
-              if (entities == OBSERVATIONS)
-                msg = paste(var_name, "must be \"observations\" or an object of class ObservationSet.")
+              if (entities == TRANSACTIONS)
+                msg = paste(var_name, "must be \"transactions\" or an object of class TransactionSet.")
               else if (entities == NODES)
                 msg = paste(var_name, "must be \"nodes\" or a data frame of nodes and their characteristics.")
               else if (entities == PATTERNS)
                 msg = paste(var_name, "must be \"patterns\" or a data frame of patterns and their characteristics.")
               else if (entities == NODES_OR_PATTERNS)
                 msg = paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics.")
-              else # NODES_PATTERNS_OR_OBSERVATIONS
-                msg = paste(var_name, "must be \"observaionts\", \"nodes\", \"patterns\", an object of class ObservationSet or a data frame of nodes or patterns and their characteristics.")
+              else # NODES_PATTERNS_OR_TRANSACTIONS
+                msg = paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\", an object of class TransactionSet or a data frame of nodes or patterns and their characteristics.")
               
               stop(msg)
             }
-            return(onp)
+            return(tnp)
           })
 
 
-#' Get observation, node or pattern itemsets
+#' Get transaction, node or pattern itemsets
 #' 
-#' Find and return the list corresponding to the observations, the nodes or the patterns of the object of
+#' Find and return the list corresponding to the transactions, the nodes or the patterns of the object of
 #'  class `SpectralAnalyzer`, or return the given list.
 #' 
 #' @details
-#' If `onp` is a list, it is returned.
+#' If `tnp` is a list, it is returned.
 #' 
-#' If `onp` is a character value equal to:
-#'  * `"observations"` or `"o"`: `object["observations"][object["observations"]["item_key"]]` is returned.
+#' If `tnp` is a character value equal to:
+#'  * `"transactions"` or `"t"`: `object["transactions"][object["transactions"]["item_key"]]` is returned.
 #'  * `"nodes"` or `"n"`: `object["nodes"]$node` is returned.
 #'  * `"patterns"` or `"p"`: `object["patterns"]$pattern` is returned.
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
-#' @param onp List of **o**bservation, **n**ode or **p**attern itemsets or one of the following character
-#'  values: `"observations"`, `"o"`, `"nodes"`, `"n"`, `"patterns"`, `"p"`.
-#' @param entities Type of the entities that the list may refer to (`OBSERVATIONS`, `NODES`, `PATTERNS`,
-#'  `NODES_OR_PATTERNS` or `NODES_PATTERNS_OR_OBSERVATIONS`).
-#' @return List of observation, node or pattern itemsets corresponding to the arguments.
+#' @param tnp List of **t**ransaction, **n**ode or **p**attern itemsets or one of the following character
+#'  values: `"transactions"`, `"t"`, `"nodes"`, `"n"`, `"patterns"`, `"p"`.
+#' @param entities Type of the entities that the list may refer to (`TRANSACTIONS`, `NODES`, `PATTERNS`,
+#'  `NODES_OR_PATTERNS` or `NODES_PATTERNS_OR_TRANSACTIONS`).
+#' @return List of transaction, node or pattern itemsets corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_onp`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer-method].
+#' @seealso [`get_tnp`], [`which_entities`], [`get_items`][get_items,SpectralAnalyzer-method].
 #' 
-#' @aliases get_onp_itemsets
+#' @aliases get_tnp_itemsets
 #' @md
 #' @keywords internal
-setMethod(f = "get_onp_itemsets",
+setMethod(f = "get_tnp_itemsets",
           signature = "SpectralAnalyzer",
-          definition = function(object, onp, entities = NODES_OR_PATTERNS) {
+          definition = function(object, tnp, entities = NODES_OR_PATTERNS) {
             
-            if (is.character(onp)) {
-              if (onp == OBSERVATIONS || onp == first_characters(OBSERVATIONS)) {
-                return(object@observations[object@observations@item_key])
+            if (is.character(tnp)) {
+              if (tnp == TRANSACTIONS || tnp == first_characters(TRANSACTIONS)) {
+                return(object@transactions[object@transactions@item_key])
               }
-              if (onp == NODES    || onp == first_characters(NODES))    return(object@nodes$node)
-              if (onp == PATTERNS || onp == first_characters(PATTERNS)) return(object@patterns$pattern)
+              if (tnp == NODES    || tnp == first_characters(NODES))    return(object@nodes$node)
+              if (tnp == PATTERNS || tnp == first_characters(PATTERNS)) return(object@patterns$pattern)
               
-              var_name = deparse(substitute(onp))
+              var_name = deparse(substitute(tnp))
               
-              if (entities == OBSERVATIONS)
-                msg = paste(var_name, "must be \"observations\" or a list of observations.")
+              if (entities == TRANSACTIONS)
+                msg = paste(var_name, "must be \"transactions\" or a list of transactions.")
               else if (entities == NODES)
                 msg = paste(var_name, "must be \"nodes\" or a list of nodes.")
               else if (entities == PATTERNS)
                 msg = paste(var_name, "must be \"patterns\" or a list of patterns.")
               else if (entities == NODES_OR_PATTERNS)
                 msg = paste(var_name, "must be \"nodes\", \"patterns\" or a list of nodes or patterns.")
-              else # NODES_PATTERNS_OR_OBSERVATIONS
-                msg = paste(var_name, "must be \"observations\", \"nodes\", \"patterns\" or a list of observations, nodes or patterns.")
+              else # NODES_PATTERNS_OR_TRANSACTIONS
+                msg = paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\" or a list of transactions, nodes or patterns.")
               
               stop(msg)
             }
-            return(onp)
+            return(tnp)
           })
 
 
 #' Detect the type of entities
 #' 
-#' Detect the type of entities contained in a data frame or an object among observations, nodes,
+#' Detect the type of entities contained in a data frame or an object among transactions, nodes,
 #'  patterns and association rules.
 #' 
 #' @details
-#' The detection uses the class of the argument `onpr` or the column names of the given data frame.
-#' If the class is `ObservationSet`, entities are observations. If it is a data frame, it searches for
+#' The detection uses the class of the argument `tnpr` or the column names of the given data frame.
+#' If the class is `TransactionSet`, entities are transactions. If it is a data frame, it searches for
 #'  column names `"node"`, `"pattern"` or `"antecedent"` for nodes, patterns or rules, respectively.
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
-#' @param onpr Object of class `ObservationSet` (**o**) or data frame of **n**odes, **p**atterns or
+#' @param tnpr Object of class `TransactionSet` (**t**) or data frame of **n**odes, **p**atterns or
 #'  association **r**ules and their characteristics.
 #'  
-#'  `"observations"`, `"o"`, `"nodes"`, `"n"`, `"patterns"`, `"p"`, `"rules"` and `"r"` are special
+#'  `"transactions"`, `"t"`, `"nodes"`, `"n"`, `"patterns"`, `"p"`, `"rules"` and `"r"` are special
 #'  values.
-#' @param entities Define if `onpr` is either a data frame of nodes or a data frame of patterns
+#' @param entities Define if `tnpr` is either a data frame of nodes or a data frame of patterns
 #'  (`NODES_OR_PATTERNS`), or if it can also be a data frame of rules (`NODES_PATTERNS_OR_RULES`) or
-#'  a set of observations (`NODES_PATTERNS_OR_OBSERVATIONS`).
-#' @return Character corresponding to `OBSERVATIONS`, `NODES`, `PATTERNS` or `RULES`.
+#'  a set of transactions (`NODES_PATTERNS_OR_TRANSACTIONS`).
+#' @return Character corresponding to `TRANSACTIONS`, `NODES`, `PATTERNS` or `RULES`.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_onp`], [`which_associated_links`], [`which_name`].
+#' @seealso [`get_tnp`], [`which_associated_links`], [`which_name`].
 #' 
 #' @aliases which_entities
 #' @md
 #' @keywords internal
 setMethod(f = "which_entities",
           signature = "SpectralAnalyzer",
-          definition = function(object, onpr, entities = NODES_OR_PATTERNS) {
+          definition = function(object, tnpr, entities = NODES_OR_PATTERNS) {
             
-            if (is.character(onpr)) {
-              if (onpr == OBSERVATIONS || onpr == first_characters(OBSERVATIONS)) return(OBSERVATIONS)
-              if (onpr == NODES        || onpr == first_characters(NODES))        return(NODES)
-              if (onpr == PATTERNS     || onpr == first_characters(PATTERNS))     return(PATTERNS)
-              if (onpr == RULES        || onpr == first_characters(RULES))        return(RULES)
+            if (is.character(tnpr)) {
+              if (tnpr == TRANSACTIONS || tnpr == first_characters(TRANSACTIONS)) return(TRANSACTIONS)
+              if (tnpr == NODES        || tnpr == first_characters(NODES))        return(NODES)
+              if (tnpr == PATTERNS     || tnpr == first_characters(PATTERNS))     return(PATTERNS)
+              if (tnpr == RULES        || tnpr == first_characters(RULES))        return(RULES)
               
-              var_name = deparse(substitute(onpr))
+              var_name = deparse(substitute(tnpr))
               
               if (entities == NODES_OR_PATTERNS)
                 msg = paste("If", var_name, "is character, it must be \"nodes\" or \"patterns\".")
               else if (entities == NODES_PATTERNS_OR_RULES)
                 msg = paste("If", var_name, "is character, it must be \"nodes\", \"patterns\" or \"rules\".")
-              else # NODES_PATTERNS_OR_OBSERVATIONS
-                msg = paste("If", var_name, "is character, it must be \"observations\", \"nodes\" or \"patterns\".")
+              else # NODES_PATTERNS_OR_TRANSACTIONS
+                msg = paste("If", var_name, "is character, it must be \"transactions\", \"nodes\" or \"patterns\".")
               
               stop(msg)
             }
             
-            if (class(onpr) == "ObservationSet") return(OBSERVATIONS)
-            if ("node" %in% colnames(onpr)) return(NODES)
-            if ("pattern" %in% colnames(onpr)) return(PATTERNS)
-            if ("antecedent" %in% colnames(onpr)) return(RULES)
+            if (class(tnpr) == "TransactionSet") return(TRANSACTIONS)
+            if ("node" %in% colnames(tnpr)) return(NODES)
+            if ("pattern" %in% colnames(tnpr)) return(PATTERNS)
+            if ("antecedent" %in% colnames(tnpr)) return(RULES)
             
-            var_name = deparse(substitute(onpr))
+            var_name = deparse(substitute(tnpr))
             
             if (entities == NODES_OR_PATTERNS) {
               stop(paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics."))
@@ -5722,9 +5722,9 @@ setMethod(f = "which_entities",
               stop(paste(var_name, "must be a data frame of nodes or patterns and their",
                          "characteristics, or a data frame of association rules."))
             }
-            # entities = NODES_PATTERNS_OR_OBSERVATIONS
-            stop(paste(var_name, "must be \"observations\", \"nodes\", \"patterns\", an",
-                       "object of class ObservationSet or a data frame of nodes or patterns and",
+            # entities = NODES_PATTERNS_OR_TRANSACTIONS
+            stop(paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\", an",
+                       "object of class TransactionSet or a data frame of nodes or patterns and",
                        "their characteristics."))
           })
 
@@ -5761,9 +5761,9 @@ setMethod(f = "which_associated_links",
 #' 
 #' @param object S4 object of class `SpectralAnalyzer`.
 #' @param name Type of entities or links.
-#'  Character corresponding to `OBSERVATIONS`, `NODES`, `PATTERNS`, `RULES`, `NODE_LINKS`, `PATTERN_LINKS`
+#'  Character corresponding to `TRANSACTIONS`, `NODES`, `PATTERNS`, `RULES`, `NODE_LINKS`, `PATTERN_LINKS`
 #'   or their simplifications (see [`first_characters`]). One or more.
-#' @return Vector of characters corresponding to `OBSERVATIONS`, `NODES`, `PATTERNS`, `RULES`,
+#' @return Vector of characters corresponding to `TRANSACTIONS`, `NODES`, `PATTERNS`, `RULES`,
 #'  `NODE_LINKS` or `PATTERN_LINKS`. Same size as the argument `name`.
 #' 
 #' @author Gauthier Magnin
@@ -5778,7 +5778,7 @@ setMethod(f = "which_name",
             
             if (length(name) > 1) return(sapply(name, which_name, object = object))
             
-            if (name == OBSERVATIONS  || name == first_characters(OBSERVATIONS))  return(OBSERVATIONS)
+            if (name == TRANSACTIONS  || name == first_characters(TRANSACTIONS))  return(TRANSACTIONS)
             if (name == NODES         || name == first_characters(NODES))         return(NODES)
             if (name == PATTERNS      || name == first_characters(PATTERNS))      return(PATTERNS)
             if (name == RULES         || name == first_characters(RULES))         return(RULES)

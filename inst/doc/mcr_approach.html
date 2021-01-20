@@ -140,7 +140,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><a href="#data-preparation">1. Data preparation</a>
 <ul>
-<li><a href="#observations-and-values">1.1. Observations and values</a></li>
+<li><a href="#transactions-and-values">1.1. Transactions and values</a></li>
 <li><a href="#classification">1.2. Classification</a></li>
 <li><a href="#reference-values">1.3. Reference values</a></li>
 </ul></li>
@@ -183,7 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#list-of-datasets-functions-classes-and-methods">List of datasets, functions, classes and methods</a>
 <ul>
 <li><a href="#datasets">Datasets</a></li>
-<li><a href="#about-observations">About observations</a></li>
+<li><a href="#about-transactions">About transactions</a></li>
 <li><a href="#about-spectral-analysis">About spectral analysis</a></li>
 <li><a href="#about-association-rules-and-sets">About association rules and sets</a></li>
 <li><a href="#about-the-maximum-cumulative-ratio-approach">About the maximum cumulative ratio approach</a></li>
@@ -193,21 +193,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 
 <p>Proposed as a tool for the assessment of occupational exposure to chemical agents, the <strong>Maximum Cumulative Ratio approach</strong> helps determine wheter a cumulative risk assessment is necessary.</p>
-<p>This approach proposes a set of indicators, the main one (the maximum cumulative ratio) is defined as the ratio of the cumulative toxicity received by an individual from exposure to multiple chemical stressors to the largest toxicity from a single chemical stressor. The maximum cumulative ratio is a quantitiative measure of the difference in an individual’s toxicity estimated using a chemical-by-chemical approach and using an additive model of toxicity. As such, it provides a conservative estimate of the degree to which individuals’ toxicities could be underestimated by not performing a cumulative risk assessment.</p>
+<p>This approach proposes a set of indicators. The main one (the maximum cumulative ratio) is defined as the ratio of the cumulative toxicity received by an individual from exposure to multiple chemical stressors to the largest toxicity from a single chemical stressor. The maximum cumulative ratio is a quantitiative measure of the difference in an individual’s toxicity estimated using a chemical-by-chemical approach and using an additive model of toxicity. As such, it provides a conservative estimate of the degree to which individuals’ toxicities could be underestimated by not performing a cumulative risk assessment.</p>
 <p>Nevertheless, as the indicators of the Maximum Cumulative Ratio approach are based only on <strong>effective values</strong> and <strong>reference values</strong>, they can be applied to other fields and situations in which we would like to know the importance of the <strong>cumulative aspect</strong> compared to the <strong>individual aspect</strong>.</p>
 <p id="plan_announcement">
 This document describes the Maximum Cumulative Ratio approach providing an example of application to occupational co-exposure data. The first section prepares the data that are used in other sections. The second one applies the approach to these data, computing indicators and plotting graphs. The third section proposes to apply this approach by considering a classification of the substances the data are from. Finally, the last one presents some computations and formatting of a classification system in general, and additional transformations on the structure containing the values being analyzed.
 </p>
 <div id="data-preparation" class="section level1">
 <h1>1. Data preparation</h1>
-<div id="observations-and-values" class="section level2">
-<h2>1.1. Observations and values</h2>
-<p>Foremost, we will create a list of observations as presented in the document “Spectral analysis and observation processing example”. For short, these observations will simply group data from the dataset <code>oedb_sample</code>. The values we will use will be taken from these observations.</p>
+<div id="transactions-and-values" class="section level2">
+<h2>1.1. Transactions and values</h2>
+<p>Foremost, we will create for our example a list of transactions as presented in the document “Spectral analysis and observation processing example”. For short, these transactions will simply group data from a dataset. The values we will use will be taken from these transactions.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the package</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(uom.dat)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Creation of specific observations</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>observations <span class="ot">&lt;-</span> <span class="fu">make_OE_observations</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Creation of specific transactions</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>transactions <span class="ot">&lt;-</span> <span class="fu">make_OE_transactions</span>(</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  oedb_sample,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">keys =</span> <span class="fu">c</span>(<span class="st">&quot;ID&quot;</span>, <span class="st">&quot;CODE&quot;</span>, <span class="st">&quot;YEAR&quot;</span>),</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="dv">1</span>,</span>
@@ -219,8 +219,8 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">additional =</span> <span class="fu">c</span>(<span class="st">&quot;NAME&quot;</span>, <span class="st">&quot;CONCENTRATION&quot;</span>, <span class="st">&quot;SAMPLE.ID&quot;</span>, <span class="st">&quot;JOB.TITLE&quot;</span>, <span class="st">&quot;JOB.TASK&quot;</span>),</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">unique_values =</span> <span class="fu">c</span>(<span class="st">&quot;JOB.TITLE&quot;</span>, <span class="st">&quot;JOB.TASK&quot;</span>)</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p>An observation contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession carried out for which the environment has been sampled. An observation looks like that:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>observations[<span class="dv">2</span>]</span></code></pre></div>
+<p>A transaction contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession carried out for which the environment has been sampled. A transaction looks like that:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>transactions[<span class="dv">2</span>]</span></code></pre></div>
 <pre><code>## $CODE
 ## [1] 57 77
 ## 
@@ -244,13 +244,13 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 ## 
 ## $JOB.TASK
 ## [1] &quot;A5310&quot;</code></pre>
-<p>Here we can see an observation composed by 3 samples having the <code>SAMPLE.ID</code>s 18, 1 and 21 corresponding to the substances having the <code>CODE</code>s 57 and 77. The concentration values for these samples are respectively 0.007, 0.004 and 0.05.</p>
-<p>Now we will separate the concentration values and name them with the substances they correspond to. We will have a list of named values which will have the same length as the list of observations:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>concentration_values <span class="ot">&lt;-</span> <span class="fu">lapply</span>(observations[<span class="st">&quot;data&quot;</span>],</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                               <span class="cf">function</span>(obs) <span class="fu">setNames</span>(obs<span class="sc">$</span>CONCENTRATION, obs<span class="sc">$</span>NAME))</span>
+<p>Here we can see a transaction composed by 3 samples having the <code>SAMPLE.ID</code>s 18, 1 and 21 corresponding to the substances having the <code>CODE</code>s 57 and 77. The concentration values for these samples are respectively 0.007, 0.004 and 0.05.</p>
+<p>Now we will separate the concentration values and name them with the substances they correspond to. We will have a list of named values which will have the same length as the list of transactions:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>concentration_values <span class="ot">&lt;-</span> <span class="fu">lapply</span>(transactions[<span class="st">&quot;data&quot;</span>],</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                               <span class="cf">function</span>(trx) <span class="fu">setNames</span>(trx<span class="sc">$</span>CONCENTRATION, trx<span class="sc">$</span>NAME))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s print the second element of the new list,</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># corresponding to the second element of the previous list of observations</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># corresponding to the second element of the previous list of transactions</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>concentration_values[[<span class="dv">2</span>]]</span></code></pre></div>
 <pre><code>## Formaldéhyde Formaldéhyde      Benzène 
 ##        0.007        0.004        0.050</code></pre>
@@ -587,10 +587,10 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <li><code>top_hazard_quotient</code>: compute and identify highest hazard quotients.</li>
 <li><code>classify_mixture</code>: classify in the MIAT groups.</li>
 </ul>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction of the names related to the concentrations of the second observation</span></span>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction of the names related to the second set of concentrations</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>substance_names_2 <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">names</span>(concentration_values[[<span class="dv">2</span>]]))</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute each of the indicators one by one, for the values of the second observation</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute each of the indicators one by one, for the values of the second set of concentrations</span></span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Hazard quotients:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">hazard_quotient</span>(<span class="at">values =</span> concentration_values[[<span class="dv">2</span>]],</span>
@@ -920,13 +920,13 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAGwCAMAAABB3CfxAAAAbFBMVEUAAAAAADoAAGYAOjoAOpAAZrY6AAA6ADo6AGY6Ojo6OpA6ZmY6kNtmAABmADpmOpBmtrZmtv+QOgCQOjqQkGaQ2/+2ZgC2/7a2///bkDrbkJDb25Db2//b/7bb////tmb/25D//7b//9v///8dk8bPAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAM7UlEQVR4nO3dDXubyBlGYexaSreVumu3pqHtGn38//9YGEAWkkAzzDvSEzj3dW02mzhA8FlgkDRkR0BY9uwNAMYQKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQRKKQZB5oBXp4VqO3iMFcECmkECmlJAt1v374MF4cFSxTo39cbu8VhwRIFujkW2cpqcViwZIEej2V23ei9uwcBtxWwCAkDPbpGX38GLC4LXBFmL22ggYvLgteEuSNQSJO6D0qguCQVKNeguKQVKKN4XBALFOgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEgjUEhLFGj++vO4W2fZy6fJ4rBYaQJ1ff74rKcRezdYHJYr3ex2uZu9thiYrZ5A4SVRoO/Hw4ebgrHsT2Ab/nwmLFuiU3x19Cw4giJemkD329ef7hBaDo2SCBReUt1mKpsT+eCTPggUXrgPCmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmnp5gd10zP1J1+cuDgsWLpA3cSLzLCMOMkCbdNkflBESRbobu0CZYZlRAkMdL/9Tmzw+pIjKMyEHkEPH8NdnjQZr47dcClmvVi24FP84WNw1uRzVaMvn9VAfqBPAoWf8GvQMhsYmKdZL5aNG/WQRqCQRqCQRqCQRqCQRqCQNi3Q9kmxj1gvlo1AIY1AIY1AIY1AIY1RPKQRKKQRKKQRKKRFBPqf+2+tD1svn1TCleBAi/bDSF6f/QhabxayOViI0EDLl89j/vZVz8oQdafper1Z2PZgGQIDdZ9I2m/fi/oTR7brJVDcEPyx401d6W+Z1yfngtZLoLghOND6E3N53Ol9YL1cg+LatEAHZmOIXC+jeFyZFmjsCZ5DJTwRKKQRKKQlmTzMcr1YNl6Lh7SkgbZzhFotDgs0cXa73XrsTqjHhQCBwktooPttcw+0+/dt7bSLHEERKzTQ0z36walp29+tv+46UKYAR5jgN4ucshya3LuVv3xyBEW0SfdBnfLObaYi2xAoYk15N1OjuHcfdLf+C4EiUvA16OlFpPvvGDl8DM8WTqDwEhro6aw9cvo2XS+WLfg+aHsHqYh8SyiBwkv4K0nVibt9CNJD1otl47V4SCNQSAu+Uc/b7fBI4a/FR37eOHS9WLZJg6Toz3QSKDxNugbN407vQevFsk0cJBVZ5CNlCRReJo/id2sGSUhv6hz1kYN4AoWfKYGWWewJnkDhKTzQPP51zpD1YtlCAy3iB/Bh68Wy8UoSpPFaPKQRKKQFB+o+6VFEj+MJFF6CB0n1e0XK8Y8Um64Xyxb8qc5VN/tN3DTLBAovgYHm2bmIdzURKLxM+Vx86d4SyhEUDxD8ufjXn80ZvrR+kBdwQ/goPsuacTwfO8YDcB8U0lIGWmbDD0wkUHiZEGg9UCqaE/2g6kJgs/vb1/lseBPXi2WbEGg1fN+tV6PPoqlH+Lk7eg7NIkqg8BIeaH1QLLP3sflB3XFz96MO9OKrmGEZYaYFmlfZjcwP2swievjfkSMoIk05xa/qGejdi55DTvEOzmRPoPAyaZBUDc6bu/WDimb4Xg6+54lA4YX7oJAWFejhn5PnaSJQeCFQSCNQSCNQSCNQSCNQSCNQSCNQSCNQSJsyR73BFPUECj/T3s30wPViMW6+CXPCKf7eg+IDFwc42fFWFlOOoEy/CHvZ2Y9Xv+z9580QKPoIFNIMA60/Ehc5sQiB4pLVNWg7KdPoRz5CFgc0jEbx3W2muME8gcLL9Bv1I5/qtFwvlm3CKb5wn4TbrZndDulNGSTt1tnIrEvG68WycZsJ0ghUDdMC9UybuIGXOpO5fTdwuaaM4qMmpw9d78IMvJ6yXLzdTguBXkj0huXTo+iG7pbyLbiNQC9MuAZtJv4cVc8d1rwWSqCBuAbtmxLo+t4gqTnIuotVAg3FKL5nyin+7rtEusvU/O2rYIZlxEgySDpdpuYrjqCIkmaQ1GW53w5dCBAovKQZJLVvKKlrJlDE4ENzkMZr8ZBGoJBGoJBGoJBGoJBGoJBGoJAmGigv1qOhGSjvOUNLMlDetYsOgUIagUKaZKBcg6KjGSijeLREAwUaBAppBAppBAppBAppBAppSoFybwlXhALl7jyu6QTK65u4gUAh7ZcLlAvVZdEJ1O8alAvVhREK1OfgyHXA0igF6v3HCHQ5kgR6ml9seIoxAoWXNEfQ4VkXY2dY5hp0YRKd4u/OEz45Mkbxy5LqGrTMxicKpzJ4+cUGSVgaAoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoW02QbKa/bzMNdAedfTTMw0UN43OhcECmkECmkzDZRr0LmYa6CM4mdCK1CqwgWpQHvnZWLFUSvQ3siGi0jUVANlGA6HQCFNKdDz0zqBwpEK9HxgxDUoalqB9r6CUTyUA4Wnef+frB/ovPd/vJlfC8kHOvP9H23uo8lEgR4+RmcHHRrFtwfLi7HSnPd/tLnvoDSBFtmm+UnZ/cRncdnFP99fN9/9H23uOyhJoIePU5bF25fv4rpdffWK55z3f7yZXwMlCXS/PU0OWvZP8mMzLN8MdO7738C8R5HqR9C573/ckeoatD2ERl+DYuESjeK753wMHD/9R/FYOPn7oFg2AoU0AoU0AoU0AoU0AoW0pwUKeHlSoOlXYbo0Nk1gaU9fl/DOYdMElvb0dQnvHDZNYGlPX5fwzmHTBJb29HUJ7xw2TWBpT1+X8M5h0wSW9vR1Ce8cNk1gaU9fl/DOYdMElvb0dQnvHDZNYGk66wKCESikESikESikESikESikESikESikESikESikESikESikESikpQ60zLKXT6uFNZPrrUyWtfurm4LXaPuapVlsn3sMwMZq005Ls9l1RbdJpt/WUYkDLau/Rmn2V9n9MGzdzRFttH3t0gy27/BRbU1Rl2Sxad9LM9l1RfW3dJtk+20dlTbQZk7m3OaYdzXxeMySmieVGG1fuzSL7dut6zmCqxJMNu20NJNdt99u6l22sv62jkob6PcOMlGYlZ5t3HfMZvu6pRlu38un4a6rj3Vmm1YHavxtHZU4UHdiMTvw5b9112fxmkCttq9ZhNn25a8/DXddtTS7TSuq2o2/raPSBtpcp1hdrey39dTjuU2hbveabZ9bmtn21Y8AsNt19dKsNq10ldt+W8f9SoG2y7T5HzdBoFc/nbqwboxks2nfY3eLXXf4ePuaT6ApzgXNBVC0FKd4J3r7mkeoWG3a+QNZTHZdfX08m1N8iqtpo3tNhoOkYz/QyO1rnzdptGnF+YWnya6rNmw+gyTb+xHNfrE8xZtt31nukdvXPYvKZtO6pZls2mkh87nNZHxH1+0Sy0GS2fa1o/j47dutuz9usWnfSzPZdXk10nJxzuZG/dmLYybyLMtMrkBPRxOj7WuXFr99RTP/cL1NBpt2tjSTXXdaiO23dQxvFoE0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0An2w/e9fz96EXwqBPlbezMRdz/Tu/rObDRYDCPSh8td///7f9TuBeiPQR9qt36tTfFUlgfoi0Gi79R/b6ry9WzdTExbuiW77f/wrO5sutv7N6nebQI+c4v0RaLTd2j3OrcqxnhS7fkzLfrtpHqvx/SXv9Wzx79Wv/kmgQQg0mpvGuP3h3T2N7dg+le3kNPd2fSSt03TP0KwR6B0EGs0dHrsfugdp7Lfn0xm3z/JsfloP4zmC+iLQaP1A2wdp9ANtjpjuV+pBUv0YAgL1Q6DRPI6gTu5KrAKtIiZQXwQarRfo9zXoVaDVL1UxVoFWPxKoLwKN1gvUjeKr/PqBdg9Zd6P4P7crrkG9EWi0fqDdfdD+EbRsHwbjrkVX3GbyR6APxptFwhAopBFoOu71ze5Jb5iGQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCHt/zYAb0d/6Hh5AAAAAElFTkSuQmCC" style="display: block; margin: auto;" /></p>
 <p>Then, the temporal trend of one indicator, for instance the hazard index:</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use of the year information associated with the concentration values</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># in the original observations</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(<span class="at">x =</span> <span class="fu">unlist</span>(observations[<span class="st">&quot;YEAR&quot;</span>]),</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># in the original transactions</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(<span class="at">x =</span> <span class="fu">unlist</span>(transactions[<span class="st">&quot;YEAR&quot;</span>]),</span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> mcr_s<span class="sc">$</span>HI)</span></code></pre></div>
 <pre><code>## [1] 0.1845357</code></pre>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">unlist</span>(observations[<span class="st">&quot;YEAR&quot;</span>]),</span>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">unlist</span>(transactions[<span class="st">&quot;YEAR&quot;</span>]),</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">y =</span> mcr_s<span class="sc">$</span>HI)</span></code></pre></div>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAGwCAMAAABB3CfxAAAAflBMVEUAAAAAADoAAGYAOpAAZrY6AAA6ADo6AGY6Ojo6OpA6kNtmAABmADpmAGZmZjpmZmZmkJBmtrZmtv+QOgCQOjqQZgCQkGaQtpCQ27aQ29uQ2/+2ZgC225C2/7a2/9u2///bkDrb25Db2//b/7bb////tmb/25D//7b//9v////tOYysAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAPIElEQVR4nO3di3biugFGYefCtA2nPT1Jr3GnQ9sY8Pu/YC3JAsNEjmVJ8IP3t7rSnIQIw+z4FpCrFhBWXXsBgDEECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmkECmmZA62ASa4VaN7hcK8IFNIIFNIIFNIIFNIIFNIIdKEiTuBcFYEuU9XeyL8BgS5SNfiojUAXiUAvPBziEOiFh0Mk9kEvOxxicRR/0eFwrwgU0ggU0ggU0ggU0ggU0ggU0ggU0ggU0goFun9z7xl9/JFlOCxWmUA31Yv7pPGfJA2H5SoS6P7tkOXm6SN5OCxYkUB361f/aRPYyBMoJmENCmml9kH7VSj7oEhT6Ch+t3ZH8YH1J4FiIs6DQtqFA42fVQ/LVjLQpqoe3vMNhyUqFGhdVS/bP3wMTzilDIfFKhNo3R0c1XbtyWkmJCl3on77zQTKiXokKRSoOfu5/2/LGhSJCp2o9+tNl2rqcFiuQgdJG3f43lSBYyQCxTScqIc0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoW0gm87bpijHsnKBWrfEc/UN0hTLNA+TSZuQJJigW5XNlCmvkES1qCQVihQM0Xtc8vUN0hV6jRT1+jDe/gaCgSKaTgPCmnM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" style="display: block; margin: auto;" /></p>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
 <p>Finally, summaries of indicators according to the groups:</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sets of groups and of indicators</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;I&quot;</span>, <span class="st">&quot;II&quot;</span>, <span class="st">&quot;IIIA&quot;</span>, <span class="st">&quot;IIIB&quot;</span>)</span>
@@ -1019,7 +1019,7 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <pre><code>## Number of summaries: 14</code></pre>
 <p>As we have 14 sets of values, the output list has a length of 14.</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just look at few examples:</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summaries of the concentration values of the observations 4 to 6</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summaries of the sets of concentration values 4 to 6</span></span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>summaries[<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>]</span></code></pre></div>
 <pre><code>## [[4]]
 ## NULL
@@ -1592,31 +1592,31 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 </div>
 <div id="value-management" class="section level2">
 <h2>4.2. Value management</h2>
-<p>Before starting this section, we will name the observations of which concentration values are from, to better identify them:</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Naming the observations of which concentration values are from: O1 to O14</span></span>
-<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(concentration_values) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;O&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>)</span></code></pre></div>
+<p>Before starting this section, we will name the sets of concentration values to better identify them:</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Naming the sets of concentration values: T1 to T14</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(concentration_values) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;T&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>)</span></code></pre></div>
 <div id="components-of-values" class="section level3">
 <h3>4.2.1. Components of values</h3>
-<p>Having our list of values which are concentration values for specific substances, we can call <code>coerce_list</code> to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one observation (i.e. one set of values) and each column refers to one name found in the values of the list.</p>
+<p>Having our list of values which are concentration values for specific substances, we can call <code>coerce_list</code> to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one set of values and each column refers to one name found in the values of the list.</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just look at some columns</span></span>
 <span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coerce_list</span>(concentration_values,</span>
 <span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">to =</span> <span class="st">&quot;logical matrix&quot;</span>,</span>
 <span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">by_name =</span> <span class="cn">TRUE</span>)[, <span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">12</span><span class="sc">:</span><span class="dv">14</span>,<span class="dv">23</span><span class="sc">:</span><span class="dv">25</span>)]</span></code></pre></div>
 <pre><code>##     Acétone Aluminium Butanone Cuivre Ethanol   Fer Styrène Toluène  Zinc
-## O1    FALSE     FALSE    FALSE  FALSE    TRUE FALSE   FALSE   FALSE FALSE
-## O2    FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
-## O3     TRUE     FALSE    FALSE  FALSE   FALSE FALSE    TRUE   FALSE FALSE
-## O4    FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
-## O5    FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
-## O6     TRUE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE    TRUE FALSE
-## O7    FALSE      TRUE    FALSE  FALSE   FALSE  TRUE   FALSE   FALSE  TRUE
-## O8    FALSE     FALSE     TRUE   TRUE   FALSE FALSE   FALSE   FALSE  TRUE
-## O9     TRUE     FALSE    FALSE  FALSE   FALSE FALSE    TRUE   FALSE FALSE
-## O10   FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
-## O11   FALSE     FALSE    FALSE  FALSE   FALSE  TRUE   FALSE   FALSE FALSE
-## O12   FALSE     FALSE    FALSE  FALSE   FALSE  TRUE   FALSE   FALSE FALSE
-## O13   FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
-## O14   FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE</code></pre>
+## T1    FALSE     FALSE    FALSE  FALSE    TRUE FALSE   FALSE   FALSE FALSE
+## T2    FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
+## T3     TRUE     FALSE    FALSE  FALSE   FALSE FALSE    TRUE   FALSE FALSE
+## T4    FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
+## T5    FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
+## T6     TRUE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE    TRUE FALSE
+## T7    FALSE      TRUE    FALSE  FALSE   FALSE  TRUE   FALSE   FALSE  TRUE
+## T8    FALSE     FALSE     TRUE   TRUE   FALSE FALSE   FALSE   FALSE  TRUE
+## T9     TRUE     FALSE    FALSE  FALSE   FALSE FALSE    TRUE   FALSE FALSE
+## T10   FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
+## T11   FALSE     FALSE    FALSE  FALSE   FALSE  TRUE   FALSE   FALSE FALSE
+## T12   FALSE     FALSE    FALSE  FALSE   FALSE  TRUE   FALSE   FALSE FALSE
+## T13   FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
+## T14   FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE</code></pre>
 <p>The argument <code>by_name</code> allows to construct the matrix on the names of the values instead of the values themselves.</p>
 </div>
 <div id="subset-corresponding-to-a-specific-class" class="section level3">
@@ -1629,26 +1629,26 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">class_name =</span> class_names[<span class="dv">9</span>])</span></code></pre></div>
 <p>The output of this function is a list containing two subsets: <code>values</code>, the subset of <code>concentration_values</code> corresponding to the class <code>class_name</code>; <code>references</code>, the subset of <code>reference_values</code> corresponding to this same class.</p>
 <p>Before looking at the subsets, we can compare the length of the all set of values and the subset related to the chosen class.</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of values of each observation:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of values of each set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(concentration_values, length)</span>
 <span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Number of values related to the ninth class :</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(subsets[[<span class="st">&quot;values&quot;</span>]], length)</span></code></pre></div>
-<pre><code>## Number of values of each observation:
-##  O1  O2  O3  O4  O5  O6  O7  O8  O9 O10 O11 O12 O13 O14 
+<pre><code>## Number of values of each set of concentration values:
+##  T1  T2  T3  T4  T5  T6  T7  T8  T9 T10 T11 T12 T13 T14 
 ##  24   3  21   4   1   3  10  15  30   6   6   5   2   1 
 ## 
 ## Number of values related to the ninth class :
-##  O1  O3  O6  O7  O8  O9 O11 O12 
+##  T1  T3  T6  T7  T8  T9 T11 T12 
 ##   8  21   2   2   1  30   1   1</code></pre>
-<p>We can see that only 7 observations contain substances related to the class of interest.</p>
-<p>Let’s take a look at the values from the 6th observation in which only two of the three values were kept:</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Values of the sixth observation:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>concentration_values<span class="sc">$</span>O6</span>
+<p>We can see that only 8 sets of concentration values contain substances related to the class of interest.</p>
+<p>Let’s take a look at the values from the 6th set, in which only two of the three values were kept:</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Values of the sixth set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>concentration_values<span class="sc">$</span>T6</span>
 <span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Values of the sixth observation related to the ninth class:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;values&quot;</span>]]<span class="sc">$</span>O6</span></code></pre></div>
-<pre><code>## Values of the sixth observation:
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Values of the sixth set of concentration values related to the ninth class:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;values&quot;</span>]]<span class="sc">$</span>T6</span></code></pre></div>
+<pre><code>## Values of the sixth set of concentration values:
 ##                                    Acétone 
 ##                                         44 
 ##                                    Toluène 
@@ -1656,7 +1656,7 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 ## Hydrocarbures aliphatiques et alicycliques 
 ##                                         48 
 ## 
-## Values of the sixth observation related to the ninth class:
+## Values of the sixth set of concentration values related to the ninth class:
 ## Acétone Toluène 
 ##      44       4</code></pre>
 <p>To finish, we can look at the subset of references, which will also give the set of substances related to the class:</p>
@@ -1686,46 +1686,46 @@ This document describes the Maximum Cumulative Ratio approach providing an examp
 <ul>
 <li><a href="../html/oedb_sample.html">oedb_sample</a></li>
 <li><a href="../html/substances_information.html">substances_information</a></li>
-<li><a href="../html/OS_instance.html">OS_instance</a></li>
+<li><a href="../html/TS_instance.html">TS_instance</a></li>
 <li><a href="../html/SA_instance.html">SA_instance</a></li>
 </ul>
 </div>
-<div id="about-observations" class="section level2">
-<h2>About observations</h2>
-<p>The class: <a href="../html/ObservationSet-class.html">ObservationSet</a></p>
-<p>Making <em>ObservationSet</em> objects:</p>
+<div id="about-transactions" class="section level2">
+<h2>About transactions</h2>
+<p>The class: <a href="../html/TransactionSet-class.html">TransactionSet</a></p>
+<p>Making <em>TransactionSet</em> objects:</p>
 <ul>
-<li><a href="../html/observation.set.html">observation.set</a></li>
-<li><a href="../html/make_observations.html">make_observations</a></li>
-<li><a href="../html/make_OE_observations.html">make_OE_observations</a></li>
-<li><a href="../html/sub-ObservationSet-ANY-ANY-ANY-method.html">[</a> and <a href="../html/sub-ObservationSet-ANY-ANY-ANY-method.html">[&lt;-</a></li>
-<li><a href="../html/subset-ObservationSet-method.html">subset</a></li>
-<li><a href="../html/reorder-ObservationSet-method.html">reorder</a></li>
+<li><a href="../html/transaction.set.html">transaction.set</a></li>
+<li><a href="../html/make_transactions.html">make_transactions</a></li>
+<li><a href="../html/make_OE_transactions.html">make_OE_transactions</a></li>
+<li><a href="../html/sub-TransactionSet-ANY-ANY-ANY-method.html">[</a> and <a href="../html/sub-TransactionSet-ANY-ANY-ANY-method.html">[&lt;-</a></li>
+<li><a href="../html/subset-TransactionSet-method.html">subset</a></li>
+<li><a href="../html/reorder-TransactionSet-method.html">reorder</a></li>
 </ul>
-<p>Search in observations:</p>
+<p>Search in transactions:</p>
 <ul>
-<li><a href="../html/get_all_items-ObservationSet-method.html">get_all_items</a></li>
-<li><a href="../html/get_itemsets-ObservationSet-method.html">get_itemsets</a></li>
-<li><a href="../html/get_items_from_info-ObservationSet-method.html">get_items_from_info</a></li>
-<li><a href="../html/get_info_from_items-ObservationSet-method.html">get_info_from_items</a></li>
+<li><a href="../html/get_all_items-TransactionSet-method.html">get_all_items</a></li>
+<li><a href="../html/get_itemsets-TransactionSet-method.html">get_itemsets</a></li>
+<li><a href="../html/get_items_from_info-TransactionSet-method.html">get_items_from_info</a></li>
+<li><a href="../html/get_info_from_items-TransactionSet-method.html">get_info_from_items</a></li>
 </ul>
-<p>Search for observations:</p>
+<p>Search for transactions:</p>
 <ul>
-<li><a href="../html/get_complex_obs-ObservationSet-method.html">get_complex_obs</a></li>
-<li><a href="../html/get_simple_obs-ObservationSet-method.html">get_simple_obs</a></li>
-<li><a href="../html/get_obs_from_items-ObservationSet-method.html">get_obs_from_items</a></li>
-<li><a href="../html/get_obs_from_info-ObservationSet-method.html">get_obs_from_info</a></li>
+<li><a href="../html/get_complex_trx-TransactionSet-method.html">get_complex_trx</a></li>
+<li><a href="../html/get_simple_trx-TransactionSet-method.html">get_simple_trx</a></li>
+<li><a href="../html/get_trx_from_items-TransactionSet-method.html">get_trx_from_items</a></li>
+<li><a href="../html/get_trx_from_info-TransactionSet-method.html">get_trx_from_info</a></li>
 </ul>
-<p>Computations on observations:</p>
+<p>Computations on transactions:</p>
 <ul>
-<li><a href="../html/complexity_ratio-ObservationSet-method.html">complexity_ratio</a></li>
-<li><a href="../html/complexity_index-ObservationSet-method.html">complexity_index</a></li>
-<li><a href="../html/co_occurrence_matrix-ObservationSet-method.html">co_occurrence_matrix</a></li>
+<li><a href="../html/complexity_ratio-TransactionSet-method.html">complexity_ratio</a></li>
+<li><a href="../html/complexity_index-TransactionSet-method.html">complexity_index</a></li>
+<li><a href="../html/co_occurrence_matrix-TransactionSet-method.html">co_occurrence_matrix</a></li>
 </ul>
-<p>Making charts about observations:</p>
+<p>Making charts about transactions:</p>
 <ul>
-<li><a href="../html/itemset_chart-ObservationSet-method.html">itemset_chart</a></li>
-<li><a href="../html/co_occurrence_chart-ObservationSet-method.html">co_occurrence_chart</a></li>
+<li><a href="../html/itemset_chart-TransactionSet-method.html">itemset_chart</a></li>
+<li><a href="../html/co_occurrence_chart-TransactionSet-method.html">co_occurrence_chart</a></li>
 </ul>
 </div>
 <div id="about-spectral-analysis" class="section level2">

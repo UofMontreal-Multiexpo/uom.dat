@@ -12,14 +12,14 @@
 
 \item{t}{Year of the end of the period, i.e. the date on which to characterize the patterns.
 \code{NULL} specifies that the characterization must be done in relation to the last year covered
-by the observations.}
+by the transactions.}
 
 \item{period}{Time interval over which to compute the reporting indexes (number of years).
 For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
 period [2011 - 2019].
 
 \code{Inf} specifies that the period considered covers an interval starting on the date of the
-oldest observation and ending in the year \code{t}.}
+oldest transaction and ending in the year \code{t}.}
 }
 \value{
 List containing the final values of \code{t} and \code{period}.
