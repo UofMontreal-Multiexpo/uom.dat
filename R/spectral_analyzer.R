@@ -442,9 +442,9 @@ setMethod(f = "summary",
             
             if (!is_init_patterns(object)) {
               # Si les motifs n'ont pas été calculés ; seulement une partie du résumé
-              return(c(transactions = length(object@transactions),
-                       items = length(object@items),
+              return(c(items = length(object@items),
                        categories = ncol(object@items_categories),
+                       transactions = length(object@transactions),
                        nodes = if (is_init_nodes(object)) nrow(object@nodes) else NA,
                        patterns = NA))
             }
@@ -467,9 +467,9 @@ setMethod(f = "summary",
             colnames(summaries[["patterns"]][["status"]]) = c("status", "count")
             
             # Tailles des attributs principaux
-            summaries[["count"]] = c(transactions = length(object@transactions),
-                                     items = length(object@items),
+            summaries[["count"]] = c(items = length(object@items),
                                      categories = ncol(object@items_categories),
+                                     transactions = length(object@transactions),
                                      nodes = nrow(object@nodes),
                                      patterns = nrow(object@patterns))
             
