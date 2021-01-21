@@ -29,14 +29,14 @@ A personal access token provides access to the GitHub API. To have one if you do
 
 Then you must run the following instruction using your token as the `auth_token` argument:
 ```r
-devtools::install_github("UofMontreal-Multiexpo/oedb-analysis-tools",
+devtools::install_github("UofMontreal-Multiexpo/uom.dat",
                          auth_token = "my_personal_access_token")
 ```
 
 ### B. Getting all files then installing
 
 1. Clone the repository or download a ZIP copy.
-2. In RStudio, open the project file `oedb-analysis-tools.Rproj`.
+2. In RStudio, open the project file `uom.dat.Rproj`.
 3. Install the required packages by running:
    ```r
    install.packages(c("arules", "ggplot2", "ggraph", "ggsci", "graphics",
