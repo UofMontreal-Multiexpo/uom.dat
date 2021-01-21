@@ -414,7 +414,11 @@ spectral.analyzer = function(transactions, items = NULL, target = "closed freque
 
 #### Methods print, show, plot, summary, length ####
 
+# Methods print and summary need to be exported explicitly.
+# Methods show and length do not need.
+
 # print: display in console
+#' @export
 setMethod(f = "print",
           signature = "SpectralAnalyzer",
           definition = function(x, ...) {
@@ -431,6 +435,7 @@ setMethod(f = "show",
           })
 
 # summary: object summary
+#' @export
 setMethod(f = "summary",
           signature = "SpectralAnalyzer",
           definition = function(object, ...) {

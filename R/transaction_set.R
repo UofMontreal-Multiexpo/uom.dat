@@ -139,7 +139,11 @@ transaction.set = function(data, item_key, year_key = NA, names = NULL) {
 
 #### Methods print, show, plot, summary, length ####
 
+# Methods print and summary need to be exported explicitly.
+# Methods show and length do not need.
+
 # print: display in console
+#' @export
 setMethod(f = "print",
           signature = "TransactionSet",
           definition = function(x, ...) {
@@ -169,7 +173,7 @@ setMethod(f = "length",
 
 
 
-#### Selector, mutator ####
+#### Selector and mutator ####
 
 #' Extract or replace parts of an object of class TransactionSet
 #' 
