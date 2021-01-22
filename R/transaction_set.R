@@ -917,8 +917,8 @@ function(object, items = NULL) {
 #'             <https://doi.org/10.1093/annweh/wxaa008>.
 #' @seealso [`get_itemsets`], [`get_all_items`].
 #' 
-#' Method for signature `SpectralAnalyzer`:
-#' [`itemset_chart,SpectralAnalyzer`][itemset_chart,SpectralAnalyzer-method].
+#' Method for signature `TransactionAnalyzer`:
+#' [`itemset_chart,TransactionAnalyzer`][itemset_chart,TransactionAnalyzer-method].
 #' 
 #' @examples
 #' itemset_chart(TS_instance)
@@ -1044,8 +1044,8 @@ function(object, identifiers, length_one, under, over) {
 #' @author Gauthier Magnin
 #' @seealso [`co_occurrence_matrix`].
 #' 
-#' Method for signature `SpectralAnalyzer`: 
-#' [`co_occurrence_chart,SpectralAnalyzer`][co_occurrence_chart,SpectralAnalyzer-method].
+#' Method for signature `TransactionAnalyzer`: 
+#' [`co_occurrence_chart,TransactionAnalyzer`][co_occurrence_chart,TransactionAnalyzer-method].
 #' 
 #' @examples
 #' co_occurrence_chart(TS_instance, get_all_items(TS_instance))
@@ -1137,8 +1137,8 @@ function(object) {
 #' 
 #' @author Gauthier Magnin
 #' @seealso
-#' Method for signature `SpectralAnalyzer`: 
-#' [`get_items,SpectralAnalyzer`][get_items,SpectralAnalyzer-method].
+#' Method for signature `TransactionAnalyzer`: 
+#' [`get_items,TransactionAnalyzer`][get_items,TransactionAnalyzer-method].
 #' 
 #' @aliases get_items get_items,TransactionSet
 #' @md

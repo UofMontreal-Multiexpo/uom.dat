@@ -47,5 +47,5 @@ Collate:
     'mixer.R'
     'transaction_set.R'
     'transaction_maker.R'
-    'spectral_analyzer.R'
+    'transaction_analyzer.R'
     'uom.dat-package.R'

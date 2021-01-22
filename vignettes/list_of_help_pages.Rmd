@@ -28,11 +28,11 @@ Datasets used as examples:
 * [oedb_sample](../html/oedb_sample.html)
 * [substances_information](../html/substances_information.html)
 * [TS_instance](../html/TS_instance.html)
-* [SA_instance](../html/SA_instance.html)
+* [TA_instance](../html/TA_instance.html)
 
 
 
-# About transactions
+# About transaction set
 
 The class: [TransactionSet](../html/TransactionSet-class.html)
 
@@ -72,61 +72,61 @@ Making charts about transactions:
 
 
 
-# About spectral analysis
+# About transaction analysis
 
-The class: [SpectralAnalyzer](../html/SpectralAnalyzer-class.html)
+The class: [TransactionAnalyzer](../html/TransactionAnalyzer-class.html)
 
-Making *SpectralAnalyzer* objects:
+Making *TransactionAnalyzer* objects:
 
-* [spectral.analyzer](../html/spectral.analyzer.html)
-* [init](../html/init-SpectralAnalyzer-method.html) and [is_init](../html/is_init-SpectralAnalyzer-method.html)
-* [reset](../html/reset-SpectralAnalyzer-method.html)
-* [\[](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-SpectralAnalyzer-ANY-ANY-ANY-method.html)
+* [transaction.analyzer](../html/transaction.analyzer.html)
+* [init](../html/init-TransactionAnalyzer-method.html) and [is_init](../html/is_init-TransactionAnalyzer-method.html)
+* [reset](../html/reset-TransactionAnalyzer-method.html)
+* [\[](../html/sub-TransactionAnalyzer-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-TransactionAnalyzer-ANY-ANY-ANY-method.html)
 
 Making charts:
 
-* [spectrosome_chart](../html/spectrosome_chart-SpectralAnalyzer-method.html)
-* [cluster_chart](../html/cluster_chart-SpectralAnalyzer-method.html)
-* [spectrum_chart](../html/spectrum_chart-SpectralAnalyzer-method.html)
-* [itemset_chart](../html/itemset_chart-SpectralAnalyzer-method.html)
-* [category_tree_chart](../html/category_tree_chart-SpectralAnalyzer-method.html)
-* [co_occurrence_chart](../html/co_occurrence_chart-SpectralAnalyzer-method.html)
+* [spectrosome_chart](../html/spectrosome_chart-TransactionAnalyzer-method.html)
+* [cluster_chart](../html/cluster_chart-TransactionAnalyzer-method.html)
+* [spectrum_chart](../html/spectrum_chart-TransactionAnalyzer-method.html)
+* [itemset_chart](../html/itemset_chart-TransactionAnalyzer-method.html)
+* [category_tree_chart](../html/category_tree_chart-TransactionAnalyzer-method.html)
+* [co_occurrence_chart](../html/co_occurrence_chart-TransactionAnalyzer-method.html)
 
 Search for nodes or patterns:
 
-* [get_nodes](../html/get_nodes-SpectralAnalyzer-method.html)
-* [get_patterns](../html/get_patterns-SpectralAnalyzer-method.html)
-* [get_complexes](../html/get_complexes-SpectralAnalyzer-method.html)
-* [get_isolates](../html/get_isolates-SpectralAnalyzer-method.html)
-* [get_non_isolates](../html/get_non_isolates-SpectralAnalyzer-method.html)
+* [get_nodes](../html/get_nodes-TransactionAnalyzer-method.html)
+* [get_patterns](../html/get_patterns-TransactionAnalyzer-method.html)
+* [get_complexes](../html/get_complexes-TransactionAnalyzer-method.html)
+* [get_isolates](../html/get_isolates-TransactionAnalyzer-method.html)
+* [get_non_isolates](../html/get_non_isolates-TransactionAnalyzer-method.html)
 
 Search for links between nodes or between patterns:
 
-* [get_links](../html/get_links-SpectralAnalyzer-method.html)
+* [get_links](../html/get_links-TransactionAnalyzer-method.html)
 
 Computations on spectrosomes:
 
-* [degree](../html/degree-SpectralAnalyzer-method.html)
-* [network_density](../html/network_density-SpectralAnalyzer-method.html)
+* [degree](../html/degree-TransactionAnalyzer-method.html)
+* [network_density](../html/network_density-TransactionAnalyzer-method.html)
 
 Computations on nodes and patterns:
 
-* [weight_by_node_complexity](../html/weight_by_node_complexity-SpectralAnalyzer-method.html)
-* [define_dynamic_status](../html/define_dynamic_status-SpectralAnalyzer-method.html)
+* [weight_by_node_complexity](../html/weight_by_node_complexity-TransactionAnalyzer-method.html)
+* [define_dynamic_status](../html/define_dynamic_status-TransactionAnalyzer-method.html)
 
 Saving nodes or patterns:
 
-* [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
+* [save_characteristics](../html/save_characteristics-TransactionAnalyzer-method.html)
 
 
 
 # About association rules and sets
 
-Extracting, visualizing and saving rules:
+Extracting, visualizing and saving association rules:
 
-* [extract_rules](../html/extract_rules-SpectralAnalyzer-method.html)
-* [rules_chart](../html/rules_chart-SpectralAnalyzer-method.html)
-* [save_characteristics](../html/save_characteristics-SpectralAnalyzer-method.html)
+* [extract_rules](../html/extract_rules-TransactionAnalyzer-method.html)
+* [rules_chart](../html/rules_chart-TransactionAnalyzer-method.html)
+* [save_characteristics](../html/save_characteristics-TransactionAnalyzer-method.html)
 
 Switching between mathematical notation and vector notation for sets:
 

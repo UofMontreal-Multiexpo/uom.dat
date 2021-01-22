@@ -78,8 +78,8 @@ Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurement
 \seealso{
 \code{\link{get_itemsets}}, \code{\link{get_all_items}}.
 
-Method for signature \code{SpectralAnalyzer}:
-\code{\link[=itemset_chart,SpectralAnalyzer-method]{itemset_chart,SpectralAnalyzer}}.
+Method for signature \code{TransactionAnalyzer}:
+\code{\link[=itemset_chart,TransactionAnalyzer-method]{itemset_chart,TransactionAnalyzer}}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin

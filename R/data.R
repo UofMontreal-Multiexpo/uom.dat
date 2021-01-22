@@ -64,9 +64,9 @@
 "TS_instance"
 
 
-#' Example of a SpectralAnalyzer object
+#' Example of a TransactionAnalyzer object
 #' 
-#' An example of an object of class \code{SpectralAnalyzer}.
+#' An example of an object of class \code{TransactionAnalyzer}.
 #' 
 #' @details
 #' Here is the way it was created using the datasets \code{\link{oedb_sample}} and
@@ -100,15 +100,15 @@
 #' 
 #' items <- data.frame(item = substances, name = names, family = families)
 #' 
-#' ## Creation of the SpectralAnalyzer
-#' SA_instance <- spectral.analyzer(trx, items)
+#' ## Creation of the TransactionAnalyzer
+#' TA_instance <- transaction.analyzer(trx, items)
 #' }
 #' 
-#' @format An object of class \code{SpectralAnalyzer} created from 14 transactions, 25 items, 1 category
-#'  associated to the items, and generating 12 nodes and 20 patterns by enumeration of the closed
-#'  frequent itemsets.
+#' @format An object of class \code{TransactionAnalyzer} created from 14 transactions, 25 items,
+#'  1 category associated to the items, and generating 12 nodes and 20 patterns by enumeration of the
+#'  closed frequent itemsets.
 #' 
-#' For more about the attributes, see \code{\link{SpectralAnalyzer}}.
-"SA_instance"
+#' For more about the attributes, see \code{\link{TransactionAnalyzer}}.
+"TA_instance"
 
 

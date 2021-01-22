@@ -54,13 +54,13 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * An organized list of the datasets, functions, classes and methods, in the file `list_of_help_pages.html`.
 
-* An example of spectral analysis, presented in the file `spectral_analysis_example.nb.html`.
+* An example of transaction analysis, presented in the file `spectral_analysis_example.nb.html`.
 
 * A description of the Maximum Cumulative Ratio approach providing an example of application, in the file `mcr_approach.html`. This one also presents the use of functions for classification data management.
 
 * An explanation with illustrated examples about the different types of itemsets, in the file `frequent_itemsets.html`.
 
-* The detail of the data structures used by the **SpectralAnalyzer** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
+* The detail of the data structures used by the **TransactionAnalyzer** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
 
 * The detail of the data structures used by the **TransactionSet** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_TS.pdf`. 
 

@@ -85,8 +85,8 @@ co_occurrence_chart(TS_instance, items = c(25, 27, 49, 87, 148, 192, 252, 328))
 \seealso{
 \code{\link{co_occurrence_matrix}}.
 
-Method for signature \code{SpectralAnalyzer}:
-\code{\link[=co_occurrence_chart,SpectralAnalyzer-method]{co_occurrence_chart,SpectralAnalyzer}}.
+Method for signature \code{TransactionAnalyzer}:
+\code{\link[=co_occurrence_chart,TransactionAnalyzer-method]{co_occurrence_chart,TransactionAnalyzer}}.
 }
 \author{
 Gauthier Magnin

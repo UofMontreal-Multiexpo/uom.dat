@@ -28,8 +28,8 @@ If \code{items} is a character value equal to \code{"items"} or \code{"i"}, the 
 in \code{object} is returned.
 }
 \seealso{
-Method for signature \code{SpectralAnalyzer}:
-\code{\link[=get_items,SpectralAnalyzer-method]{get_items,SpectralAnalyzer}}.
+Method for signature \code{TransactionAnalyzer}:
+\code{\link[=get_items,TransactionAnalyzer-method]{get_items,TransactionAnalyzer}}.
 }
 \author{
 Gauthier Magnin
