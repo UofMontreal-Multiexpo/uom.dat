@@ -3,9 +3,9 @@ NULL
 
 
 # Debug mode activation status
-DEBUG_MODE = FALSE
+DEBUG_MODE_ = FALSE
 # Defines the step up to which to perform the analysis before stopping the process
-UP_TO_STEP = Inf
+UP_TO_STEP_ = Inf
 
 
 
@@ -834,7 +834,7 @@ setMethod(f = "reset",
             ), ncol = 2, nrow = 10, byrow = TRUE)
             
             # Étapes à réaliser effectivement
-            steps_todo = (from <= seq(nrow(steps))) & (!DEBUG_MODE | seq(nrow(steps)) <= UP_TO_STEP)
+            steps_todo = (from <= seq(nrow(steps))) & (!DEBUG_MODE_ | seq(nrow(steps)) <= UP_TO_STEP_)
             
             # Réalisation
             for (i in seq(nrow(steps))) {
@@ -4432,7 +4432,7 @@ setMethod(f = "rules_chart",
   if (c_factor) rules$consequent = set_notation(rules$consequent)
   
   # Si mode debug, retour supplémentaire de la sélection de règles réellement tracées
-  if (DEBUG_MODE) return(list(graph = graph, rules = rules, plotted_rules = rules_to_plot))
+  if (DEBUG_MODE_) return(list(graph = graph, rules = rules, plotted_rules = rules_to_plot))
   return(list(graph = graph, rules = rules))
 })
 
