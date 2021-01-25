@@ -11,16 +11,16 @@
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 }
 \value{
-Invisible. Data frame in which a line is an association between a pattern and its
+Invisible. Data frame in which each row is an association between a pattern and its
 characteristics.
 }
 \description{
-Compute the characteristics of the patterns (frequency, weight, length, specificity, dynamic status).
+Compute the characteristics of the patterns (length, frequency, weight, specificity, dynamic status).
 The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 }
 \details{
-The frequency and the weight of a pattern is the number of nodes and the number of transactions
-containing it, respectively. The length of a pattern is the number of items composing it.
+The length of a pattern is the number of items composing it. The frequency and the weight of a pattern
+is the number of transactions and the number of nodes containing it, respectively.
 
 The specificity of a pattern is the information it conveys. It corresponds to the nature of the
 pattern of being specific of a particular combination or ubiquitous and allowing the formation of
@@ -33,15 +33,15 @@ The dynamic status is one of persistent, declining, emergent or latent.
 \subsection{Specificity}{
 }
 
-The specificy of the pattern \eqn{p} is given by:
- \mjdeqn{S_p = \begin{cases} 1 & \mbox{if } U_p = 1 \cr 0 & \mbox{if } A_{p,1} = A_{p,2} = \ldots = A_{p,U_p} \cr \frac{H_{max,p} - H_p}{H_{max,p} - H_{min,p}} & \mbox{otherwise} \end{cases}}{S_p = 1 if U_p = 1, 0 if A_p1 = A_p2 = ... = A_{p,U_p}, (H_max,p - H_p) / (H_max,p - H_min,p) otherwise}
-where \mjseqn{U} is the set of frequencies of the patterns, \mjseqn{A_p} is the
-set of weights of the nodes containing the pattern \eqn{p} and:
+The specificy of the pattern \mjseqn{p} is given by:
+ \mjdeqn{S_p = \begin{cases} 1 & \mbox{if } W_p = 1 \cr 0 & \mbox{if } A_{p,1} = A_{p,2} = \ldots = A_{p,W_p} \cr \frac{H_{max,p} - H_p}{H_{max,p} - H_{min,p}} & \mbox{otherwise.} \end{cases}}{S_p = 1 if W_p = 1, 0 if A_p1 = A_p2 = ... = A_{p,F_p}, (H_max,p - H_p) / (H_max,p - H_min,p) otherwise.}
+where \mjseqn{W_p} is the weight of the pattern \mjseqn{p}, \mjseqn{A_p} is the
+set of frequencies of the nodes containing the pattern \mjseqn{p} and:
 \describe{
- \item{}{\mjeqn{H_p = - \sum_{i = 1}^{U_p} \frac{A_{p,i}}{W_p} \times ln \left( \frac{A_{p,i}}{W_p} \right)}{H_p = - sum(A_pi / W_p * ln(A_pi / W_p)) from i = 1 to U_p}}
- \item{}{\mjeqn{H_{max,p} = ln(U_p)}{H_max,p = ln(U_p)}}
- \item{}{\mjeqn{H_{min,p} = ln \left( \frac{W_p}{W_p - U_p + 1} \right) + \left( \frac{U_p - 1}{W_p} \times ln(W_p - U_p + 1) \right)}{H_min,p = ln(W_p / (W_p - U_p + 1)) + (U_p - 1) / W_p * ln(W_p - U_p + 1)}}
- \item{}{where \mjseqn{W} is the set of weights of the patterns.}
+ \item{}{\mjeqn{H_p = - \sum_{i = 1}^{W_p} \frac{A_{p,i}}{F_p} \times ln \left( \frac{A_{p,i}}{F_p} \right)}{H_p = - sum(A_pi / F_p * ln(A_pi / F_p)) from i = 1 to W_p}}
+ \item{}{\mjeqn{H_{max,p} = ln(F_p)}{H_max,p = ln(F_p)}}
+ \item{}{\mjeqn{H_{min,p} = ln \left( \frac{F_p}{F_p - W_p + 1} \right) + \left( \frac{W_p - 1}{F_p} \times ln(F_p - W_p + 1) \right)}{H_min,p = ln(F_p / (F_p - W_p + 1)) + (W_p - 1) / F_p * ln(F_p - W_p + 1)}}
+ \item{}{where \mjseqn{F_p} is the frequency of the pattern \mjseqn{p}.}
 }
 
 \subsection{Dynamic status}{
@@ -62,15 +62,15 @@ the shorter period.
 \item Latent when it appears insignificantly during both the entire period and the shorter period.
 }
 
-The reporting indexes of the pattern \eqn{p} which are computed are those at the two temporal limits
+The reporting indexes of the pattern \mjseqn{p} which are computed are those at the two temporal limits
 given by:
 \mjdeqn{RI_{\infty,p} \; = lim_{t_0 \to -\infty} RI_p(t_1,t_0)}{RI_inf,p = lim of RI_p(t_1,t_0) as t approaches -inf}
 \mjdeqn{RI_{l,p} = RI_p(t_1, t_1 - l + 1)}{RI_lp = RI_p(t_1, t_1 - l + 1)}
-where \eqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
-is the reporting index of the pattern \eqn{p} given by:
-\mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
-where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+where \mjseqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
+is the reporting index of the pattern \mjseqn{p} given by:
+\mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}}{RI_p(t_1,t_0) = sum F_pt from t = t_0 to t_1 / sum F_qt for q in P and from t = t_0 to t_1}
+where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency of the pattern \mjseqn{p}
+in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
 defining the period on which to compute the reporting index.
 
 For each set of reporting indexes:
@@ -79,14 +79,14 @@ For each set of reporting indexes:
 \mjdeqn{\xi = \left\lceil \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil}{xi = ceiling(1 / sum(RI_p(t_1,t_0)^2) for p in P)}
 \item The patterns are ordered in descending order of their reporting index value and separated by
 this threshold.
-\item The reporting index of the \mjseqn{\xi}\out{<sup>th</sup>} pattern is the \eqn{RI} threshold used to
+\item The reporting index of the \mjseqn{\xi}\out{<sup>th</sup>} pattern is the \mjseqn{RI} threshold used to
 classify the patterns.
 }
 
 The patterns are then classified as follows:
 \itemize{
 \item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} and \mjeqn{RI_{l,p}}{RI_lp} are greater than or
-equal to the \eqn{RI} thresholds are classified as "Persistent".
+equal to the \mjseqn{RI} thresholds are classified as "Persistent".
 \item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} is greater than or equal to the related threshold
 and \mjeqn{RI_{l,p}}{RI_lp} is lower than the related threshold are classified as "Declining".
 \item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} is lower than the related threshold and

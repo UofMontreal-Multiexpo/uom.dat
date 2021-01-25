@@ -54,10 +54,10 @@ these nodes. Data frame of 3 variables:
 \describe{
   \item{\code{node}}{Set of items composing the node.}
   \item{\code{length}}{Number of items composing the node.}
-  \item{\code{weight}}{Number of transactions for which the set of items matches exactly.}
+  \item{\code{frequency}}{Number of transactions for which the set of items matches exactly.}
 }}
 
-\item{\code{nodes_per_year}}{Number of occurrences of each node, per year.}
+\item{\code{nodes_per_year}}{Number of occurrences of each node in the transactions, per year.}
 
 \item{\code{n_links}}{Set of weights of the links between the nodes. Adjacency matrix containing the number
 of items in common between each pair of nodes.}
@@ -80,16 +80,16 @@ Data frame of 7 variables:
 \describe{
   \item{\code{pattern}}{Set of items composing the pattern.}
   \item{\code{year}}{Year of appearance of the pattern among the transactions.}
-  \item{\code{frequency}}{Number of nodes containing the set of items of the pattern.}
-  \item{\code{weight}}{Number of transactions containing the set of items of the pattern.}
   \item{\code{length}}{Number of items composing the pattern.}
+  \item{\code{frequency}}{Number of transactions containing the set of items of the pattern.}
+  \item{\code{weight}}{Number of nodes containing the set of items of the pattern.}
   \item{\code{specificity}}{Specificity of the information conveyed by the pattern. It corresponds
     to the nature of a pattern of being specific of a particular combination or ubiquitous and
     allowing the formation of numerous combinations (with regard to the transactions).}
   \item{\code{status}}{Dynamic status of the pattern: persistent, declining, emergent or latent.}
 }}
 
-\item{\code{patterns_per_year}}{Number of occurrences of each pattern, per year.}
+\item{\code{patterns_per_year}}{Number of occurrences of each pattern in the transactions, per year.}
 
 \item{\code{p_links}}{Set of weights of the links between the patterns. Adjacency matrix containing the number
 of items in common between each pair of patterns.}

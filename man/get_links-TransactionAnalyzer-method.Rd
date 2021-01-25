@@ -27,7 +27,7 @@ Extract from the data frame of links between nodes or patterns those correspondi
 If among the nodes or patterns for which the links are sought, some become isolated because the other
  entities to which they are normally linked are not part of the subset \code{nopc}, these nodes or
  patterns are placed at the end of the return data frame.
-These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
+These possible \code{n} additional rows are numbered \code{"A1"..."An"}.
 }
 \examples{
 get_links(TA_instance, "patterns")

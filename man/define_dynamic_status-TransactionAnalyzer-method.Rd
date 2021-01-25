@@ -65,15 +65,15 @@ the shorter period.
 \item Latent when it appears insignificantly during both the entire period and the shorter period.
 }
 
-The reporting indexes of the pattern \eqn{p} which are computed are those at the two temporal limits
+The reporting indexes of the pattern \mjseqn{p} which are computed are those at the two temporal limits
 given by:
 \mjdeqn{RI_{\infty,p} \; = lim_{t_0 \to -\infty} RI_p(t_1,t_0)}{RI_inf,p = lim of RI_p(t_1,t_0) as t approaches -inf}
 \mjdeqn{RI_{l,p} = RI_p(t_1, t_1 - l + 1)}{RI_lp = RI_p(t_1, t_1 - l + 1)}
-where \eqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
-is the reporting index of the pattern \eqn{p} given by:
-\mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
-where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
+where \mjseqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
+is the reporting index of the pattern \mjseqn{p} given by:
+\mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}}{RI_p(t_1,t_0) = sum F_pt from t = t_0 to t_1 / sum F_qt for q in P and from t = t_0 to t_1}
+where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency of the pattern \mjseqn{p}
+in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
 defining the period on which to compute the reporting index.
 
 For each set of reporting indexes:
@@ -82,14 +82,14 @@ For each set of reporting indexes:
 \mjdeqn{\xi = \left\lceil \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil}{xi = ceiling(1 / sum(RI_p(t_1,t_0)^2) for p in P)}
 \item The patterns are ordered in descending order of their reporting index value and separated by
 this threshold.
-\item The reporting index of the \mjseqn{\xi}\out{<sup>th</sup>} pattern is the \eqn{RI} threshold used to
+\item The reporting index of the \mjseqn{\xi}\out{<sup>th</sup>} pattern is the \mjseqn{RI} threshold used to
 classify the patterns.
 }
 
 The patterns are then classified as follows:
 \itemize{
 \item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} and \mjeqn{RI_{l,p}}{RI_lp} are greater than or
-equal to the \eqn{RI} thresholds are classified as "Persistent".
+equal to the \mjseqn{RI} thresholds are classified as "Persistent".
 \item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} is greater than or equal to the related threshold
 and \mjeqn{RI_{l,p}}{RI_lp} is lower than the related threshold are classified as "Declining".
 \item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} is lower than the related threshold and

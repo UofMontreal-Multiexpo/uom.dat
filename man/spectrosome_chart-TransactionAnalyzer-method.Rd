@@ -52,12 +52,12 @@ the chart.}
 One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
 or vector of length equal to the number of nodes or patterns to plot.
 \describe{
-  \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
+  \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the frequencies of the
                            entities in \code{size_range}.}
-  \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals
+  \item{\code{"grouped"}}{The frequencies of the entities are grouped according to 5 intervals
                           defined by quantiles. The 5 corresponding size values are taken in a
                           regular sequence bounded by \code{size_range}.}
-  \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
+  \item{\code{"absolute"}}{The size of a vertex is defined directly according to the frequency of
                            the entity.}
   \item{\code{"equal"}}{The vertices are all the same size of 1.}
   \item{A single numeric value}{The vertices are all the size defined by this value.}
@@ -144,7 +144,7 @@ If \code{min_link_weight} is greater than 1 or the chart is to be plotted from a
  all nodes or patterns, some of them may become isolated because their links to the other
  entities may no longer be considered.
 These new isolated vertices are moved to the end of the return data frame \code{edges}.
-The \code{n} related lines are numbered \code{"A1"..."An"}.
+The \code{n} related rows are numbered \code{"A1"..."An"}.
 
 Default colors associated with the values of each category represented are selected circularly
 among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
@@ -171,8 +171,7 @@ The following parameters, which are among those that can be redefined, have the 
 \examples{
 spectrosome_1 <- spectrosome_chart(TA_instance, "nodes")
 spectrosome_2 <- spectrosome_chart(TA_instance, TA_instance["patterns"])
-spectrosome_3 <- spectrosome_chart(TA_instance, TA_instance["patterns"][1:15, ],
-                                   name = "spectrosome_of_patterns_1-15")
+spectrosome_3 <- spectrosome_chart(TA_instance, TA_instance["patterns"][1:15, ])
 
 spectrosome_2 <- spectrosome_chart(TA_instance, "patterns",
                                    path = getwd(),

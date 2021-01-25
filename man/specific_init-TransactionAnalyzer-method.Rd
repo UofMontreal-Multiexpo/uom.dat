@@ -34,7 +34,7 @@ Initialize the attributes related to nodes, links between nodes, patterns and/or
 patterns.
 }
 \details{
-The initialization of the nodes consists of the initialization of the attributes  \code{nodes} and
+The initialization of the nodes consists of the initialization of the attributes \code{nodes} and
 \code{nodes_per_year}:
 \enumerate{
 \item{Enumeration of the transactions per year.}

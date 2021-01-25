@@ -56,7 +56,7 @@ Can be:
 \item Identifiers: \code{"ID"}.
 \item One of the elements of the transactions (i.e. one of the values of \code{tnpc["names"]}), if \code{tnpc} is
 an \code{TransactionSet}.
-\item One of the characteristics of the nodes or the patterns (\code{"weight"}, \code{"frequency"}, \code{"specificity"},
+\item One of the characteristics of the nodes or the patterns (\code{"frequency"}, \code{"weight"}, \code{"specificity"},
 \code{"year"}, \code{"status"}), if \code{tnpc} is a data frame of nodes or patterns and their characteristics.
 }
 
@@ -95,9 +95,9 @@ Plot a chart of the transaction, node or pattern itemsets. It can be automatical
 }
 \details{
 If they are from nodes or patterns, itemsets are sorted according to their lengths then to their
-weights. If they are from transactions, they are sorted according to their lengths only. When there
-is equality of these characteristics, itemsets are then taken according to the initial order in
-\code{tnpc}.
+frequencies. If they are from transactions, they are sorted according to their lengths only.
+When there is equality of these characteristics, itemsets are then taken according to the initial
+order in \code{tnpc}.
 
 If \code{category} is \code{NULL}, items are sorted alphanumerically. If it is not, items are sorted according
 to the values of the category then alphanumerically.

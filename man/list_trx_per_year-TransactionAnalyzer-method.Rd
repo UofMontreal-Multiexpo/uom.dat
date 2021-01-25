@@ -12,7 +12,7 @@
 }
 \value{
 Invisible. Matrix of the number of occurrences of each separate transaction, per year.
- The lines correspond to the transactions. The columns correspond to the years.
+ The rows correspond to the transactions. The columns correspond to the years.
 }
 \description{
 Identify the separate transactions per year (considering only their respective items) and count their

@@ -15,8 +15,8 @@ Invisible. Data frame of the separate transactions and their characteristics (le
  weight).
 }
 \description{
-Identify the separate transactions (considering only their respective items) and compute their size
- and number of occurrences.
+Identify the separate transactions (considering only their respective items) and compute their number
+ of items and number of occurrences.
 The resulting data frame is assigned to the attribute \code{nodes} of \code{object}.
 }
 \author{

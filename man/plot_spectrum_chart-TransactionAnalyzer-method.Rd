@@ -5,7 +5,7 @@
 \alias{plot_spectrum_chart}
 \title{Pattern spectrum plotting}
 \usage{
-\S4method{plot_spectrum_chart}{TransactionAnalyzer}(object, pc, weights, title = "Spectrum of patterns")
+\S4method{plot_spectrum_chart}{TransactionAnalyzer}(object, pc, frequencies, title = "Spectrum of patterns")
 }
 \arguments{
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
@@ -13,8 +13,8 @@
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 is to be plotted. Any subset of \code{object["patterns"]}.}
 
-\item{weights}{Two-column matrix containing, for each pattern, its weight related to complex nodes and
-its weight related to simple nodes.}
+\item{frequencies}{Two-column matrix containing, for each pattern, its frequency related to complex
+nodes and its frequency related to simple nodes.}
 
 \item{title}{Chart title.}
 }
@@ -27,7 +27,7 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{spectrum_chart}}, \code{\link{weight_by_node_complexity}},
+\code{\link{spectrum_chart}}, \code{\link{frequency_by_node_complexity}},
          \code{\link{pattern_node_characteristics}}.
 }
 \author{

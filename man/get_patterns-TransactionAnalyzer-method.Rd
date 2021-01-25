@@ -15,7 +15,7 @@
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{element}{Type of element on which to search.
-One of \code{"items"}, \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"length"}, \code{"specificity"}, \code{"status"}
+One of \code{"items"}, \code{"year"}, \code{"length"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"}, \code{"status"}
 or the name or number of a category on which to search (numbering according to the order of the
 columns of \code{object["items_categories"]}).}
 
@@ -39,9 +39,9 @@ is the presence of the sought items (argument \code{value}). The argument \code{
 \item \code{"exact"}: the item set contained in the pattern must be exactly the same as the sought item set.
 }
 
-If \code{element} refers to a characteristic other than status (i.e. is one of \code{"year"}, \code{"frequency"},
-\code{"weight"}, \code{"length"}, \code{"specificity"}), the condition for a pattern to be extracted is a comparaison
-of the \code{value} according to one of the comparison operators (default is equality):
+If \code{element} refers to a characteristic other than status (i.e. is one of \code{"year"}, \code{"length"},
+\code{"frequency"}, \code{"weight"}, \code{"specificity"}), the condition for a pattern to be extracted is a
+comparaison of the \code{value} according to one of the comparison operators (default is equality):
 \itemize{
 \item \code{"EQ"}, \code{"=="}: \strong{EQ}ual. The value of the characteristic must be equal to that sought.
 \item \code{"NE"}, \code{"!="}: \strong{N}ot \strong{E}qual. The value of the characteristic must be different from that
@@ -87,9 +87,9 @@ get_patterns(TA_instance, "patterns",
 
 ## Search on characteristics
 get_patterns(TA_instance, TA_instance["patterns"],
-             element = "weight", value = 3)
+             element = "frequency", value = 3)
 get_patterns(TA_instance, "patterns",
-             element = "weight", value = 3, condition = ">=")
+             element = "frequency", value = 3, condition = ">=")
 get_patterns(TA_instance, "patterns",
              element = "length", value = 3, condition = "LT")
 

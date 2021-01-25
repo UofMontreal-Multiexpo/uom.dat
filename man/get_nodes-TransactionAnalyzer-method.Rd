@@ -14,7 +14,7 @@
 \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.}
 
 \item{element}{Type of element on which to search.
-One of \code{"items"}, \code{"length"}, \code{"weight"} or the name or number of a category on which to search
+One of \code{"items"}, \code{"length"}, \code{"frequency"} or the name or number of a category on which to search
 (numbering according to the order of the columns of \code{object["items_categories"]}).}
 
 \item{value}{Sought value(s) for the element specified by the argument \code{element}.}
@@ -37,9 +37,9 @@ is the presence of the sought items (argument \code{value}). The argument \code{
 \item \code{"exact"}: the item set contained in the node must be exactly the same as the sought item set.
 }
 
-If \code{element} refers to a characteristic (i.e. is \code{"length"} or \code{"weight"}), the condition for a node
-to be extracted is a comparison of the \code{value} according to one of the comparison operators (default
-is equality):
+If \code{element} refers to a characteristic (i.e. is \code{"length"} or \code{"frequency"}), the condition for a
+node to be extracted is a comparison of the \code{value} according to one of the comparison operators
+(default is equality):
 \itemize{
 \item \code{"EQ"}, \code{"=="}: \strong{EQ}ual. The value of the characteristic must be equal to that sought.
 \item \code{"NE"}, \code{"!="}: \strong{N}ot \strong{E}qual. The value of the characteristic must be different from that
@@ -73,9 +73,9 @@ get_nodes(TA_instance, "nodes",
           element = "items", value = c(3146, 3180), condition = "exact")
 
 ## Search on characteristics
-get_nodes(TA_instance, TA_instance["nodes"], element = "weight", value = 2)
+get_nodes(TA_instance, TA_instance["nodes"], element = "frequency", value = 2)
 get_nodes(TA_instance, "nodes",
-          element = "weight", value = 2, condition = ">=")
+          element = "frequency", value = 2, condition = ">=")
 get_nodes(TA_instance, "nodes",
           element = "length", value = 5, condition = "LT")
 

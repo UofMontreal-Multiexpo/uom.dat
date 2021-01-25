@@ -52,7 +52,7 @@ Plot a spectrum chart: bar chart of the given patterns showing their characteris
 \details{
 The patterns are sorted according to their specificities (desc.), status (in order of
  \code{object["status_colors"]}, default is  \code{"Persistent"}, \code{"Declining"},
- \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
+ \code{"Emergent"}, \code{"Latent"}), frequencies (desc.) and sizes (asc.).
  If two patterns have the same characteristics concerning these ones, they are ordered relative to
  each other in the order they are given.
 

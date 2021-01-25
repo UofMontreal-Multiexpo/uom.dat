@@ -21,7 +21,7 @@
 \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.}
 
 \item{characteristic}{Name of the characteristic on which to do the search.
-One of \code{"length"}, \code{"weight"}.}
+One of \code{"length"}, \code{"frequency"}.}
 
 \item{value}{Sought value for the characteristic specified by the parameter \code{characteristic}.}
 
@@ -51,7 +51,7 @@ Extract the nodes satisfying a search criterion according to one characteristic.
 }
 \examples{
 get_nodes_from_characteristic(TA_instance, TA_instance["nodes"],
-                              characteristic = "weight",
+                              characteristic = "frequency",
                               value = 2)
 get_nodes_from_characteristic(TA_instance, TA_instance["nodes"],
                               characteristic = "length",

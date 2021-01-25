@@ -17,7 +17,8 @@ Density of the network.
 }
 \description{
 Compute the density of a graph as the ratio between the number of links identified and the
- maximum number of possible links (i.e. if all the vertices of the graph were connected to each other).
+ number of links there would be if it was a complete graph (i.e. if all the vertices of the graph
+ were connected to each other).
 }
 \examples{
 spectrosome <- spectrosome_chart(TA_instance, TA_instance["patterns"][1:15, ])

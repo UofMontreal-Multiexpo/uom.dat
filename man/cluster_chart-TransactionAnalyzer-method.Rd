@@ -52,12 +52,12 @@ of the item.}
 One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
 or vector of length equal to the number of rows of \code{nopc}.
 \describe{
-  \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
+  \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the frequencies of the
                            entities in \code{size_range}.}
-  \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals
+  \item{\code{"grouped"}}{The frequencies of the entities are grouped according to 5 intervals
                           defined by quantiles. The 5 corresponding size values are taken in a
                           regular sequence bounded by \code{size_range}.}
-  \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
+  \item{\code{"absolute"}}{The size of a vertex is defined directly according to the frequency of
                            the entity.}
   \item{\code{"equal"}}{The vertices are all the same size of 1.}
   \item{A single numeric value}{The vertices are all the size defined by this value.}
@@ -128,7 +128,7 @@ The same is true for mixed vertices if the parameter \code{vertex_col} is \code{
 If the chart is to be plotted from a subset of all nodes or patterns and some become isolated
  because the other entities to which they are normally linked are not part of the subset \code{nopc},
  these nodes or patterns are placed at the end of the return data frame \code{edges}.
-These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
+These possible \code{n} additional rows are numbered \code{"A1"..."An"}.
 
 Additional arguments can be supplied to the function in charge of plotting the graph.
  See the list of parameters: \code{\link[sna:gplot]{sna::gplot}}.

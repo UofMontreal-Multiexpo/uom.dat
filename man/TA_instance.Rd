@@ -6,7 +6,7 @@
 \title{Example of a TransactionAnalyzer object}
 \format{
 An object of class \code{TransactionAnalyzer} created from 14 transactions, 25 items,
- 1 category associated to the items, and generating 12 nodes and 20 patterns by enumeration of the
+ 1 category associated with the items, and generating 12 nodes and 20 patterns by enumeration of the
  closed frequent itemsets.
 
 For more about the attributes, see \code{\link{TransactionAnalyzer}}.

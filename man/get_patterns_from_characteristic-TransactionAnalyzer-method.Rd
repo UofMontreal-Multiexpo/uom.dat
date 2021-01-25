@@ -21,7 +21,7 @@
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{characteristic}{Name of the characteristic on which to do the search.
-One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"length"}, \code{"specificity"}
+One of \code{"year"}, \code{"length"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"}
 See \code{\link{get_patterns_from_status}} to search by \code{"status"}.}
 
 \item{value}{Sought value for the characteristic specified by the parameter \code{characteristic}.}
@@ -52,10 +52,10 @@ Extract the patterns satisfying a search criterion according to one characterist
 }
 \examples{
 get_patterns_from_characteristic(TA_instance, TA_instance["patterns"],
-                                 characteristic = "weight",
+                                 characteristic = "frequency",
                                  value = 3)
 get_patterns_from_characteristic(TA_instance, TA_instance["patterns"],
-                                 characteristic = "weight",
+                                 characteristic = "frequency",
                                  value = 3, condition = ">=")
 get_patterns_from_characteristic(TA_instance, TA_instance["patterns"],
                                  characteristic = "length",

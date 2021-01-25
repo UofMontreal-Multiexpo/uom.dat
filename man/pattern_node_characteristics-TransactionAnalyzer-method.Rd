@@ -15,15 +15,15 @@ Any subset of \code{object["patterns"]$pattern}.}
 }
 \value{
 \describe{
-   \item{\code{weights}}{For each pattern, the weights of the nodes in which it is included.}
+   \item{\code{frequencies}}{For each pattern, the frequencies of the nodes in which it is included.}
    \item{\code{lengths}}{For each pattern, the lengths of the nodes in which it is included.}
  }
 }
 \description{
-For each pattern, extract the weights and lengths of the nodes in which it is included.
+For each pattern, extract the frequencies and lengths of the nodes in which it is included.
 }
 \seealso{
-\code{\link{weight_by_node_complexity}}.
+\code{\link{frequency_by_node_complexity}}.
 }
 \author{
 Gauthier Magnin

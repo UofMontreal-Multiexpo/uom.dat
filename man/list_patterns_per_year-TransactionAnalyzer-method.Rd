@@ -11,8 +11,8 @@
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 }
 \value{
-Invisible. Matrix of the weights of each pattern, per year.
- The lines correspond to the patterns. The column correspond to the years.
+Invisible. Matrix of the number of occurrences of each pattern in the transactions, per year.
+ The rows correspond to the patterns. The columns correspond to the years.
 }
 \description{
 Count the number of occurrences of each pattern per year.

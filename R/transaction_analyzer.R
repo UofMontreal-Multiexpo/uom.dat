@@ -112,9 +112,9 @@ PATTERN_LINKS = "pattern_links"
 #'  \describe{
 #'    \item{\code{node}}{Set of items composing the node.}
 #'    \item{\code{length}}{Number of items composing the node.}
-#'    \item{\code{weight}}{Number of transactions for which the set of items matches exactly.}
+#'    \item{\code{frequency}}{Number of transactions for which the set of items matches exactly.}
 #'  }
-#' @slot nodes_per_year Number of occurrences of each node, per year.
+#' @slot nodes_per_year Number of occurrences of each node in the transactions, per year.
 #' @slot n_links Set of weights of the links between the nodes. Adjacency matrix containing the number
 #'  of items in common between each pair of nodes.
 #' @slot node_links Set of links between the nodes and characteristics of these links.
@@ -133,15 +133,15 @@ PATTERN_LINKS = "pattern_links"
 #'  \describe{
 #'    \item{\code{pattern}}{Set of items composing the pattern.}
 #'    \item{\code{year}}{Year of appearance of the pattern among the transactions.}
-#'    \item{\code{frequency}}{Number of nodes containing the set of items of the pattern.}
-#'    \item{\code{weight}}{Number of transactions containing the set of items of the pattern.}
 #'    \item{\code{length}}{Number of items composing the pattern.}
+#'    \item{\code{frequency}}{Number of transactions containing the set of items of the pattern.}
+#'    \item{\code{weight}}{Number of nodes containing the set of items of the pattern.}
 #'    \item{\code{specificity}}{Specificity of the information conveyed by the pattern. It corresponds
 #'      to the nature of a pattern of being specific of a particular combination or ubiquitous and
 #'      allowing the formation of numerous combinations (with regard to the transactions).}
 #'    \item{\code{status}}{Dynamic status of the pattern: persistent, declining, emergent or latent.}
 #'  }
-#' @slot patterns_per_year Number of occurrences of each pattern, per year.
+#' @slot patterns_per_year Number of occurrences of each pattern in the transactions, per year.
 #' @slot p_links Set of weights of the links between the patterns. Adjacency matrix containing the number
 #'  of items in common between each pair of patterns.
 #' @slot pattern_links Set of links between the patterns and characteristics of these links.
@@ -651,11 +651,11 @@ setGeneric(name = "define_dynamic_status", def = function(object, patterns, t = 
 
 setGeneric(name = "spectrum_chart", def = function(object, pc, identifiers = "original", sort = TRUE, title = "Spectrum of patterns", path = NULL, name = NULL){ standardGeneric("spectrum_chart") })
 
-setGeneric(name = "plot_spectrum_chart", def = function(object, pc, weights, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
+setGeneric(name = "plot_spectrum_chart", def = function(object, pc, frequencies, title = "Spectrum of patterns"){ standardGeneric("plot_spectrum_chart") })
 
 setGeneric(name = "pattern_node_characteristics", def = function(object, patterns){ standardGeneric("pattern_node_characteristics") })
 
-setGeneric(name = "weight_by_node_complexity", def = function(object, patterns){ standardGeneric("weight_by_node_complexity") })
+setGeneric(name = "frequency_by_node_complexity", def = function(object, patterns){ standardGeneric("frequency_by_node_complexity") })
 
 
 # Methods for creating spectrosome graphs and computing related indicators
@@ -860,7 +860,7 @@ setMethod(f = "reset",
 #'  patterns.
 #' 
 #' @details
-#' The initialization of the nodes consists of the initialization of the attributes  `nodes` and
+#' The initialization of the nodes consists of the initialization of the attributes `nodes` and
 #'  `nodes_per_year`:
 #'  \enumerate{
 #'    \item{Enumeration of the transactions per year.}
@@ -1330,7 +1330,7 @@ setMethod(f = "check_init",
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @return Invisible. Matrix of the number of occurrences of each separate transaction, per year.
-#'  The lines correspond to the transactions. The columns correspond to the years.
+#'  The rows correspond to the transactions. The columns correspond to the years.
 #' 
 #' @author Gauthier Magnin
 #' @aliases list_trx_per_year
@@ -1357,7 +1357,7 @@ setMethod(f = "list_trx_per_year",
             # Redécomposition des items composant chaque noeud pour pouvoir calculer leur longueur
             nodes = strsplit(rownames(nodes_mat), split = "/")
             
-            # Tri par longueur et poids total décroissants puis par ordre alphanumérique
+            # Tri par longueur et fréquence totale décroissants puis par ordre alphanumérique
             the_order = order(sapply(nodes, length),
                               rowSums(nodes_mat),
                               order(order(rownames(nodes_mat), decreasing = TRUE)),
@@ -1374,8 +1374,8 @@ setMethod(f = "list_trx_per_year",
 
 #' Enumeration of nodes
 #' 
-#' Identify the separate transactions (considering only their respective items) and compute their size
-#'  and number of occurrences.
+#' Identify the separate transactions (considering only their respective items) and compute their number
+#'  of items and number of occurrences.
 #' The resulting data frame is assigned to the attribute \code{nodes} of \code{object}.
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
@@ -1395,8 +1395,8 @@ setMethod(f = "list_separate_trx",
             # Poids des noeuds par année
             nodes_per_year = object@nodes_per_year
             
-            # Calcul du poids total pour chaque noeud (= chaque transaction distincte)
-            nodes_df = data.frame("weight" = unname(rowSums(nodes_per_year)))
+            # Calcul de la fréquence totale pour chaque noeud (= chaque transaction distincte)
+            nodes_df = data.frame("frequency" = unname(rowSums(nodes_per_year)))
             nodes_df$node = lapply(strsplit(rownames(nodes_per_year), 'c\\("|", "|")'),
                                    function(node) {
                                      if (length(node) > 1) { return(node[-1]) }
@@ -1405,11 +1405,11 @@ setMethod(f = "list_separate_trx",
             
             # Calcul de la longueur de chaque noeud et réordonnement des colonnes
             nodes_df$length = sapply(nodes_df$node, length)
-            nodes_df = nodes_df[, c("node", "length", "weight")]
+            nodes_df = nodes_df[, c("node", "length", "frequency")]
             
             # Tri par longueur et poids décroissants puis par ordre alphanumérique
             nodes_df = nodes_df[order(nodes_df$length,
-                                      nodes_df$weight,
+                                      nodes_df$frequency,
                                       order(order(sapply(nodes_df$node, paste0, collapse = "/"), decreasing = TRUE)),
                                       decreasing = TRUE), ]
             rownames(nodes_df) = NULL
@@ -1630,10 +1630,10 @@ setMethod(f = "list_separate_patterns",
             # Rassemblement des motifs dans une data.frame
             patterns_df = data.frame(pattern = numeric(length(patterns)))
             patterns_df$pattern = sapply(patterns, c)
-            patterns_df$weight = res$count
+            patterns_df$frequency = res$count
             
             # Tri et renommage des lignes selon le nouvel ordre de la data.frame
-            patterns_df = patterns_df[order(patterns_df$weight, decreasing = TRUE), ]
+            patterns_df = patterns_df[order(patterns_df$frequency, decreasing = TRUE), ]
             rownames(patterns_df) = seq(nrow(patterns_df))
             
             # Définition de l'attribut et retour
@@ -1690,8 +1690,8 @@ setMethod(f = "list_patterns_by_node",
 #' The resulting matrix is assigned to the attribute \code{patterns_per_year} of \code{object}.
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
-#' @return Invisible. Matrix of the weights of each pattern, per year.
-#'  The lines correspond to the patterns. The column correspond to the years.
+#' @return Invisible. Matrix of the number of occurrences of each pattern in the transactions, per year.
+#'  The rows correspond to the patterns. The columns correspond to the years.
 #' 
 #' @author Gauthier Magnin
 #' @aliases list_patterns_per_year
@@ -1703,11 +1703,11 @@ setMethod(f = "list_patterns_per_year",
             # Nom de l'objet pour modification interne dans l'environnement parent
             object_name = deparse(substitute(object))
             
-            # Poids des noeuds par année
+            # Fréquences des noeuds par année
             nodes_per_year = object@nodes_per_year
             
-            # Calcul des poids par année pour chaque motif
-            weights = lapply(seq_along(object@patterns$pattern), function(p) {
+            # Calcul des fréquences par année pour chaque motif
+            frequencies = lapply(seq_along(object@patterns$pattern), function(p) {
               # Sélection des noeuds associées au motif
               nodes_names = object@nodes_patterns[, p]
               nodes = nodes_per_year[rownames(nodes_per_year) %in% names(nodes_names[nodes_names]), ]
@@ -1717,8 +1717,8 @@ setMethod(f = "list_patterns_per_year",
               return(nodes)
             })
             
-            # Matrice des poids des motifs par année
-            ppy = do.call(rbind, weights)
+            # Matrice des fréquences des motifs par année
+            ppy = do.call(rbind, frequencies)
             rownames(ppy) = object@patterns$pattern
             
             # Définition de l'attribut et retour
@@ -1730,12 +1730,12 @@ setMethod(f = "list_patterns_per_year",
 
 #' Computation of pattern characteristics
 #' 
-#' Compute the characteristics of the patterns (frequency, weight, length, specificity, dynamic status).
+#' Compute the characteristics of the patterns (length, frequency, weight, specificity, dynamic status).
 #' The resulting data frame is assigned to the attribute `patterns` of `object`.
 #' 
 #' @details
-#' The frequency and the weight of a pattern is the number of nodes and the number of transactions
-#'  containing it, respectively. The length of a pattern is the number of items composing it.
+#' The length of a pattern is the number of items composing it. The frequency and the weight of a pattern
+#'  is the number of transactions and the number of nodes containing it, respectively.
 #' 
 #' The specificity of a pattern is the information it conveys. It corresponds to the nature of the
 #'  pattern of being specific of a particular combination or ubiquitous and allowing the formation of
@@ -1752,7 +1752,7 @@ setMethod(f = "list_patterns_per_year",
 #' @template dynamic_status_classification
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
-#' @return Invisible. Data frame in which a line is an association between a pattern and its
+#' @return Invisible. Data frame in which each row is an association between a pattern and its
 #'  characteristics.
 #' 
 #' @author Gauthier Magnin
@@ -1771,8 +1771,8 @@ setMethod(f = "compute_patterns_characteristics",
             object_name = deparse(substitute(object))
             
             # Association de nouvelles caractéristiques aux motifs
-            object@patterns$frequency = sapply(seq_along(object@patterns$pattern),
-                                               function(p) sum(object@nodes_patterns[, p]))
+            object@patterns$weight = sapply(seq_along(object@patterns$pattern),
+                                            function(p) sum(object@nodes_patterns[, p]))
             object@patterns$length = sapply(object@patterns$pattern, length)
             object@patterns$year = apply(object@patterns_per_year, 1, function(x) {
                                                                         # Année d'apparition du motif
@@ -1784,7 +1784,7 @@ setMethod(f = "compute_patterns_characteristics",
             object@patterns$status = define_dynamic_status(object, object@patterns$pattern)$res$status
             
             # Changement de l'ordre des colonnes
-            object@patterns = object@patterns[, c("pattern", "year", "frequency", "weight", "length", "specificity", "status")]
+            object@patterns = object@patterns[, c("pattern", "year", "length", "frequency", "weight", "specificity", "status")]
             
             # Définition de l'attribut et retour
             assign(object_name, object, envir = parent.frame())
@@ -1820,8 +1820,8 @@ setMethod(f = "compute_specificity",
           definition = function(object, patterns, frequencies, weights) {
             
             # Renommage des variables pour mapper la formule
-            u = frequencies
             w = weights
+            f = frequencies
             h = numeric(length(patterns))
             specificity = rep(NA, length(patterns))
             
@@ -1830,23 +1830,23 @@ setMethod(f = "compute_specificity",
             
             
             # Présence du motif dans un seul noeud -> spécificité de 1
-            specificity[u == 1] = 1
+            specificity[w == 1] = 1
             
-            # Pour chaque motif
-            for (p in seq_along(patterns)[u != 1]) {
+            # Pour chaque autre motif
+            for (p in seq_along(patterns)[w != 1]) {
               
-              # Recherche des poids des noeuds qui contiennent le motif
-              a = object@nodes$weight[object@nodes_patterns[, p_indexes[p]]]
+              # Recherche des fréquences des noeuds qui contiennent le motif
+              a = object@nodes$frequency[object@nodes_patterns[, p_indexes[p]]]
               
-              # Spécificité de 0 si tous les noeuds ont le même poids ; sinon calcul selon la formule
+              # Spécificité de 0 si tous les noeuds ont la même fréquence ; sinon calcul selon la formule
               if (length(unique(a)) == 1) specificity[p] = 0
-              else h[p] = -1 * sum(a / w[p] * log(a / w[p]))
+              else h[p] = -1 * sum(a / f[p] * log(a / f[p]))
             }
             
-            # Calcul de la spécificité des motifs pour lesquels elle n'a pas encore été calculée
+            # Calcul de la spécificité des motifs pour lesquels elle n'a pas encore été définie
             to_compute = is.na(specificity)
-            h_max = log(u[to_compute])
-            h_min = log(w / (w - u + 1)) + (u - 1) / w * log(w - u + 1)
+            h_max = log(w[to_compute])
+            h_min = log(f / (f - w + 1)) + (w - 1) / f * log(f - w + 1)
             specificity[is.na(specificity)] = (h_max - h[to_compute]) / (h_max - h_min[to_compute])
             
             return(specificity)
@@ -1901,11 +1901,11 @@ setMethod(f = "check_RI_params",
 #'  
 #' @details
 #' \loadmathjax
-#' The reporting index of the pattern \eqn{p} given by:
-#'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
-#' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-#'  the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
-#'  defining the period on which to compute the reporting index.
+#' The reporting index of the pattern \mjseqn{p} is given by:
+#'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}}{RI_p(t_1,t_0) = sum F_pt from t = t_0 to t_1 / sum F_qt for q in P and from t = t_0 to t_1}
+#' where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency of the pattern
+#'  \mjseqn{p} in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first
+#'  and last years defining the period on which to compute the reporting index.
 #'  
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param patterns Patterns whose reporting indexes are to be computed.
@@ -1939,13 +1939,13 @@ setMethod(f = "compute_reporting_indexes",
             # Année de début de la période = année de fin - nombre d'années considérées + 1
             t0 = t1 - params$period + 1
             
-            # Poids total du motif sur la période / somme des poids de tous les motifs sur la période
-            p_weights = unname(apply(as.data.frame( # as.data.frame nécessaire au cas où une seule colonne
+            # Fréquence du motif sur la période / somme des fréquences de tous les motifs sur la période
+            p_frequencies = unname(apply(as.data.frame( # as.data.frame nécessaire au cas où une seule colonne
               object@patterns_per_year[match(as.character(patterns), rownames(object@patterns_per_year)),
                                        (as.numeric(colnames(object@patterns_per_year)) <= t1)
                                        & (as.numeric(colnames(object@patterns_per_year)) >= t0)]
               ), 1, sum))
-            return(p_weights / sum(p_weights))
+            return(p_frequencies / sum(p_frequencies))
           })
 
 
@@ -1959,15 +1959,15 @@ setMethod(f = "compute_reporting_indexes",
 #' 
 #' @details
 #' \loadmathjax
-#' The reporting indexes of the pattern \eqn{p} at the temporal limits are given by:
+#' The reporting indexes of the pattern \mjseqn{p} at the temporal limits are given by:
 #'  \mjdeqn{RI_{\infty,p} \; = lim_{t_0 \to -\infty} RI_p(t_1,t_0)}{RI_inf,p = lim of RI_p(t_1,t_0) as t approaches -inf}
 #'  \mjdeqn{RI_{l,p} = RI_p(t_1, t_1 - l + 1)}{RI_lp = RI_p(t_1, t_1 - l + 1)}
-#' where \eqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
-#'  is the reporting index of the pattern \eqn{p} given by:
-#'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_{q,t} for q in P and from t = t_0 to t_1}
-#' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-#'  the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
-#'  defining the period on which to compute the reporting index.
+#' where \mjseqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
+#'  is the reporting index of the pattern \mjseqn{p} given by:
+#'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}}{RI_p(t_1,t_0) = sum F_pt from t = t_0 to t_1 / sum F_qt for q in P and from t = t_0 to t_1}
+#' where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency of the pattern
+#'  \mjseqn{p} in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and
+#'  last years defining the period on which to compute the reporting index.
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param patterns Patterns whose limits are to be computed.
@@ -2016,11 +2016,11 @@ setMethod(f = "compute_reporting_indexes_limits",
 #' \loadmathjax
 #' The threshold \mjseqn{\xi} is given by:
 #'  \mjdeqn{\xi = \left\lceil \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil}{xi = ceiling(1 / sum(RI_p(t_1,t_0)^2) for p in P)}
-#' where \mjseqn{RI_p(t_1,t_0)} is the reporting index of the pattern \eqn{p} given by:
-#'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} W_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} W_{q,t}}}{RI_p(t_1,t_0) = sum W_pt from t = t_0 to t_1 / sum W_qt for q in P and from t = t_0 to t_1}
-#' where \eqn{P} is the set of patterns, \mjeqn{W_{p,t}}{W_pt} is the weight of the pattern \eqn{p} in
-#'  the transactions of the year \eqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
-#'  defining the period on which to compute the reporting index.
+#' where \mjseqn{RI_p(t_1,t_0)} is the reporting index of the pattern \mjseqn{p} given by:
+#'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}}{RI_p(t_1,t_0) = sum F_pt from t = t_0 to t_1 / sum F_qt for q in P and from t = t_0 to t_1}
+#' where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency of the pattern
+#'  \mjseqn{p} in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and
+#'  last years defining the period on which to compute the reporting index.
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
@@ -2174,7 +2174,7 @@ setMethod(f = "define_dynamic_status",
 #' @details
 #' The patterns are sorted according to their specificities (desc.), status (in order of
 #'  \code{object["status_colors"]}, default is  \code{"Persistent"}, \code{"Declining"},
-#'  \code{"Emergent"}, \code{"Latent"}), weights (desc.) and sizes (asc.).
+#'  \code{"Emergent"}, \code{"Latent"}), frequencies (desc.) and sizes (asc.).
 #'  If two patterns have the same characteristics concerning these ones, they are ordered relative to
 #'  each other in the order they are given.
 #' 
@@ -2228,18 +2228,18 @@ setMethod(f = "spectrum_chart",
             
             check_param(identifiers, values = c("original", "new"))
             
-            # Décomposition des poids des motifs selon le type de noeuds (simple ou complexe)
-            weights = weight_by_node_complexity(object, pc$pattern)
+            # Décomposition des fréquences des motifs selon le type de noeuds (simple ou complexe)
+            frequencies = frequency_by_node_complexity(object, pc$pattern)
             
-            # Tri des motifs selon spécificité, statut, poids, longueur
+            # Tri des motifs selon spécificité, statut, fréquence, longueur
             if (sort) {
               sorting_vector = order(1 - pc$specificity,
                                      match(pc$status, names(object@status_colors)),
-                                     max(pc$weight) - pc$weight,
+                                     max(pc$frequency) - pc$frequency,
                                      pc$length)
               
               pc = pc[sorting_vector, ]
-              weights = weights[sorting_vector, ]
+              frequencies = frequencies[sorting_vector, ]
             }
             
             # Attribution d'identifiants aux motifs
@@ -2250,10 +2250,10 @@ setMethod(f = "spectrum_chart",
             if (!is.null(name)) {
               grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
                              14, 10, paper = "a4r", pointsize = 11)
-              plot_spectrum_chart(object, pc, weights, title)
+              plot_spectrum_chart(object, pc, frequencies, title)
               grDevices::dev.off()
             } else {
-              plot_spectrum_chart(object, pc, weights, title)
+              plot_spectrum_chart(object, pc, frequencies, title)
             }
             
             # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
@@ -2268,22 +2268,22 @@ setMethod(f = "spectrum_chart",
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 #'  is to be plotted. Any subset of \code{object["patterns"]}.
-#' @param weights Two-column matrix containing, for each pattern, its weight related to complex nodes and
-#'  its weight related to simple nodes.
+#' @param frequencies Two-column matrix containing, for each pattern, its frequency related to complex
+#'  nodes and its frequency related to simple nodes.
 #' @param title Chart title.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{spectrum_chart}}, \code{\link{weight_by_node_complexity}},
+#' @seealso \code{\link{spectrum_chart}}, \code{\link{frequency_by_node_complexity}},
 #'          \code{\link{pattern_node_characteristics}}.
 #' 
 #' @aliases plot_spectrum_chart
 #' @keywords internal
 setMethod(f = "plot_spectrum_chart",
           signature = "TransactionAnalyzer",
-          definition = function(object, pc, weights, title = "Spectrum of patterns") {
+          definition = function(object, pc, frequencies, title = "Spectrum of patterns") {
             
             graphics::par(mar = c(6.0, 5.0, 2.0+1.4, 5.0))
             
@@ -2293,7 +2293,7 @@ setMethod(f = "plot_spectrum_chart",
             cex_lab = 1.05
             cex_id = 0.9
             
-            ## Bar chart relatif au poids
+            ## Bar chart relatif à la fréquence
             
             # Définition des couleurs des barres du barplot
             bars_colors = object@status_colors[pc$status]
@@ -2301,12 +2301,12 @@ setMethod(f = "plot_spectrum_chart",
             # Marge entre les barres et les axes à gauche et à droite
             x_margin = 0.03 * nrow(pc)
             
-            # Diagramme en barres selon le poids des motifs
-            bar_plot = graphics::barplot(t(weights),
+            # Diagramme en barres selon la fréquence des motifs
+            bar_plot = graphics::barplot(t(frequencies),
                                          col = NA, space = 0, lwd = 2,
                                          xlim = c(-x_margin, nrow(pc) + x_margin), xaxs = "i",
-                                         ylim = c(0, max(pc$weight)), yaxt = "n",
-                                         xlab = "Pattern IDs", ylab = "Weight",
+                                         ylim = c(0, max(pc$frequency)), yaxt = "n",
+                                         xlab = "Pattern IDs", ylab = "Frequency",
                                          names.arg = pc$ID, las = 3, font.axis = 2,
                                          cex.lab = cex_lab, cex.names = cex_id)
             bar_width_2 = diff(bar_plot[1:2]) / 2
@@ -2314,15 +2314,15 @@ setMethod(f = "plot_spectrum_chart",
             # Axe à gauche : suppression des nombres à virgule, orientation en fonction du nombre
             # et affichage éventuel d'un tick supplémentaire pour délimiter l'axe en haut du graphique
             ticks = unique(trunc(graphics::axTicks(2)))
-            if (max(ticks) < max(pc$weight)) {
-               ticks = append(ticks, max(pc$weight))
+            if (max(ticks) < max(pc$frequency)) {
+               ticks = append(ticks, max(pc$frequency))
             }
             graphics::axis(2, lwd = 2, cex.axis = cex_axis,
                            at = ticks, las = if (any(ticks >= 10)) 3 else 1)
             
             # Coloration des barres
-            for (i in seq(nrow(weights))) {
-              y = c(0, cumsum(c(weights[i, ])))
+            for (i in seq(nrow(frequencies))) {
+              y = c(0, cumsum(c(frequencies[i, ])))
               graphics::rect(bar_plot[i] - bar_width_2, y[ - length(y)],
                              bar_plot[i] + bar_width_2, y[ - 1],
                              col = bars_colors[i], density = c(-1, 15), border = "black")
@@ -2350,7 +2350,7 @@ setMethod(f = "plot_spectrum_chart",
             
             ## Texte relatif aux tailles des motifs (par-dessus la ligne)
             # Changement du système de coordonnées du au changement de graphique (bar -> line)
-            new_y = pc$weight * 1 / max(pc$weight)
+            new_y = pc$frequency * 1 / max(pc$frequency)
             shadowtext(bar_plot, new_y, utils::as.roman(pc$length),
                        col = "black", bg = "white", cex = cex_length, pos = 3, offset = cex_length, xpd = TRUE)
             
@@ -2376,16 +2376,16 @@ setMethod(f = "plot_spectrum_chart",
                              col = object@status_colors,
                              legend = names(object@status_colors))
             
-            # Légende des poids
-            weight_legend = graphics::legend("bottom", plot = FALSE,
+            # Légende des fréquences
+            freq_legend = graphics::legend("bottom", plot = FALSE,
                                              cex = cex_legend, fill = "red", density = c(-1, 15),
-                                             legend = c("Weight in complex nodes", "Weight in simple nodes"))
+                                             legend = c("Frequency in complex nodes", "Frequency in simple nodes"))
             
             graphics::legend(x = fig_in_usr_coords(1) + w_margin,
-                             y = fig_in_usr_coords(3) + weight_legend$rect$h + b_margin,
+                             y = fig_in_usr_coords(3) + freq_legend$rect$h + b_margin,
                              bty = "n", xpd = TRUE,
                              cex = cex_legend, fill = "red", density = c(-1, 15),
-                             legend = c("Weight in complex nodes", "Weight in simple nodes"))
+                             legend = c("Frequency in complex nodes", "Frequency in simple nodes"))
             
             # Légende de la spécificité et de la taille
             so_legend = graphics::legend("bottom", plot = FALSE,
@@ -2407,19 +2407,19 @@ setMethod(f = "plot_spectrum_chart",
 
 #' Pattern node characteristics
 #' 
-#' For each pattern, extract the weights and lengths of the nodes in which it is included.
+#' For each pattern, extract the frequencies and lengths of the nodes in which it is included.
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param patterns Patterns whose characteristics of the nodes that contain them are to be found.
 #'  Any subset of \code{object["patterns"]$pattern}.
 #' @return
 #'  \describe{
-#'    \item{\code{weights}}{For each pattern, the weights of the nodes in which it is included.}
+#'    \item{\code{frequencies}}{For each pattern, the frequencies of the nodes in which it is included.}
 #'    \item{\code{lengths}}{For each pattern, the lengths of the nodes in which it is included.}
 #'  }
 #'  
 #' @author Gauthier Magnin
-#' @seealso \code{\link{weight_by_node_complexity}}.
+#' @seealso \code{\link{frequency_by_node_complexity}}.
 #' 
 #' @aliases pattern_node_characteristics
 #' @keywords internal
@@ -2429,8 +2429,8 @@ setMethod(f = "pattern_node_characteristics",
             
             check_init(object, PATTERNS)
             
-            # Ensembles des poids et longueurs des noeuds contenant les motifs
-            weights = list()
+            # Ensembles des fréquences et longueurs des noeuds contenant les motifs
+            frequencies = list()
             lengths = list()
             
             # Pour chaque motif
@@ -2439,53 +2439,53 @@ setMethod(f = "pattern_node_characteristics",
               pat = as.character(patterns[i])
               nodes = object@nodes[object@nodes_patterns[, pat], ]
               
-              weights[[i]] = nodes$weight
+              frequencies[[i]] = nodes$frequency
               lengths[[i]] = nodes$length
             }
             
-            return(list(weights = weights, lengths = lengths))
+            return(list(frequencies = frequencies, lengths = lengths))
           })
 
 
-#' Pattern weight by node complexity
+#' Pattern frequency by node complexity
 #' 
-#' For each pattern, compute its weight related to complex nodes (i.e. nodes containing more than one
-#'  item and containing the pattern) and its weight related to simple node (i.e. nodes containing
+#' For each pattern, compute its frequency related to complex nodes (i.e. nodes containing more than one
+#'  item and containing the pattern) and its frequency related to simple node (i.e. nodes containing
 #'  only one item and containing the pattern).
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
-#' @param patterns Patterns whose weights according to the complexity of the nodes containing them
+#' @param patterns Patterns whose frequencies according to the complexity of the nodes containing them
 #'  are to be computed. Any subset of `object["patterns"]$pattern`.\cr
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]$pattern`.
-#' @return Two-column matrix containing, for each pattern, its weight related to complex nodes and
-#'  its weight related to simple nodes.
+#' @return Two-column matrix containing, for each pattern, its frequency related to complex nodes and
+#'  its frequency related to simple nodes.
 #'  
 #' @author Gauthier Magnin
 #' @seealso [`get_complexes`]
 #' 
 #' @examples
-#' weight_by_node_complexity(TA_instance, "patterns")
-#' weight_by_node_complexity(TA_instance, TA_instance["patterns"]$pattern[1:15])
+#' frequency_by_node_complexity(TA_instance, "patterns")
+#' frequency_by_node_complexity(TA_instance, TA_instance["patterns"]$pattern[1:15])
 #' 
-#' @aliases weight_by_node_complexity
+#' @aliases frequency_by_node_complexity
 #' @md
 #' @export
-setMethod(f = "weight_by_node_complexity",
+setMethod(f = "frequency_by_node_complexity",
           signature = "TransactionAnalyzer",
           definition = function(object, patterns) {
   
   patterns = get_tnp_itemsets(object, patterns, entities = PATTERNS)
   pnc = pattern_node_characteristics(object, patterns)
   
-  weights = t(sapply(seq_along(patterns), function(i) {
-    c(sum(pnc$weights[[i]][pnc$lengths[[i]] > 1]),
-      sum(pnc$weights[[i]][pnc$lengths[[i]] == 1]))
+  frequencies = t(sapply(seq_along(patterns), function(i) {
+    c(sum(pnc$frequencies[[i]][pnc$lengths[[i]] > 1]),
+      sum(pnc$frequencies[[i]][pnc$lengths[[i]] == 1]))
   }))
   
-  colnames(weights) = c("complex", "simple")
-  rownames(weights) = patterns
+  colnames(frequencies) = c("complex", "simple")
+  rownames(frequencies) = patterns
   
-  return(weights)
+  return(frequencies)
 })
 
 
@@ -2518,7 +2518,7 @@ setMethod(f = "weight_by_node_complexity",
 #'  all nodes or patterns, some of them may become isolated because their links to the other
 #'  entities may no longer be considered.
 #' These new isolated vertices are moved to the end of the return data frame \code{edges}.
-#' The \code{n} related lines are numbered \code{"A1"..."An"}.
+#' The \code{n} related rows are numbered \code{"A1"..."An"}.
 #' 
 #' @template default_category_values_colors
 #' 
@@ -2558,12 +2558,12 @@ setMethod(f = "weight_by_node_complexity",
 #'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
 #'  or vector of length equal to the number of nodes or patterns to plot.
 #'  \describe{
-#'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
+#'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the frequencies of the
 #'                             entities in \code{size_range}.}
-#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals
+#'    \item{\code{"grouped"}}{The frequencies of the entities are grouped according to 5 intervals
 #'                            defined by quantiles. The 5 corresponding size values are taken in a
 #'                            regular sequence bounded by \code{size_range}.}
-#'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
+#'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the frequency of
 #'                             the entity.}
 #'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
 #'    \item{A single numeric value}{The vertices are all the size defined by this value.}
@@ -2621,8 +2621,7 @@ setMethod(f = "weight_by_node_complexity",
 #' @examples
 #' spectrosome_1 <- spectrosome_chart(TA_instance, "nodes")
 #' spectrosome_2 <- spectrosome_chart(TA_instance, TA_instance["patterns"])
-#' spectrosome_3 <- spectrosome_chart(TA_instance, TA_instance["patterns"][1:15, ],
-#'                                    name = "spectrosome_of_patterns_1-15")
+#' spectrosome_3 <- spectrosome_chart(TA_instance, TA_instance["patterns"][1:15, ])
 #' 
 #' spectrosome_2 <- spectrosome_chart(TA_instance, "patterns",
 #'                                    path = getwd(),
@@ -2905,25 +2904,25 @@ setMethod(f = "spectrosome_chart",
             } else {
               switch(EXPR = vertex_size,
                      "relative" = {
-                       # Interpolation linéaire des poids aux valeurs [size_range[1], size_range[2]]
-                       if (min(nopc$weight) != max(nopc$weight)) {
-                         func = stats::approxfun(x = c(min(nopc$weight),
-                                                       max(nopc$weight)),
+                       # Interpolation linéaire des fréquences aux valeurs [size_range[1], size_range[2]]
+                       if (min(nopc$frequency) != max(nopc$frequency)) {
+                         func = stats::approxfun(x = c(min(nopc$frequency),
+                                                       max(nopc$frequency)),
                                                  y = size_range)
-                         vertices_sizes = func(nopc$weight)
+                         vertices_sizes = func(nopc$frequency)
                        } else {
-                         vertices_sizes = rep(mean(size_range), length(nopc$weight))
+                         vertices_sizes = rep(mean(size_range), length(nopc$frequency))
                        }
                      },
                      "grouped" = {
-                       # Groupement des valeurs des poids selon 5 quantiles
-                       breaks = round(stats::quantile(nopc$weight, prob = seq(0, 1, 0.2)))
-                       intervals = cut(nopc$weight, breaks = unique(breaks), include.lowest = TRUE)
+                       # Groupement des valeurs des fréquences selon 5 quantiles
+                       breaks = round(stats::quantile(nopc$frequency, prob = seq(0, 1, 0.2)))
+                       intervals = cut(nopc$frequency, breaks = unique(breaks), include.lowest = TRUE)
                        sizes = seq(size_range[1], size_range[2], length.out = length(levels(intervals)))
                        vertices_sizes = sizes[intervals]
                      },
                      "absolute" = {
-                       vertices_sizes = nopc$weight
+                       vertices_sizes = nopc$frequency
                      },
                      "equal" = {
                        # Valeur par défaut de l'argument vertex.cex de la fonction sna::gplot()
@@ -3053,7 +3052,8 @@ setMethod(f = "spectrosome_chart",
                 if (entities == PATTERNS && vertex_col[1] == "status") {
                   status_legend = paste0("(", count_status, ")")
                   
-                  status_legend_output = graphics::legend(x = vertex_legend_output$text$x[1] + strwidth(paste0(STATUS_PERSISTENT), cex = cex_legend),
+                  status_legend_output = graphics::legend(x = vertex_legend_output$text$x[1] + graphics::strwidth(paste0(STATUS_PERSISTENT),
+                                                                                                                  cex = cex_legend),
                                                           y = vertex_legend_output$rect$top,
                                                           bty = "n", title = "",
                                                           legend = status_legend, cex = cex_legend)
@@ -3222,7 +3222,7 @@ setMethod(f = "cluster_text",
 #' If the chart is to be plotted from a subset of all nodes or patterns and some become isolated
 #'  because the other entities to which they are normally linked are not part of the subset \code{nopc},
 #'  these nodes or patterns are placed at the end of the return data frame \code{edges}.
-#' These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
+#' These possible \code{n} additional rows are numbered \code{"A1"..."An"}.
 #' 
 #' Additional arguments can be supplied to the function in charge of plotting the graph.
 #'  See the list of parameters: \code{\link[sna:gplot]{sna::gplot}}.
@@ -3253,12 +3253,12 @@ setMethod(f = "cluster_text",
 #'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
 #'  or vector of length equal to the number of rows of \code{nopc}.
 #'  \describe{
-#'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the weights of the
+#'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the frequencies of the
 #'                             entities in \code{size_range}.}
-#'    \item{\code{"grouped"}}{The weights of the entities are grouped according to 5 intervals
+#'    \item{\code{"grouped"}}{The frequencies of the entities are grouped according to 5 intervals
 #'                            defined by quantiles. The 5 corresponding size values are taken in a
 #'                            regular sequence bounded by \code{size_range}.}
-#'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the weight of
+#'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the frequency of
 #'                             the entity.}
 #'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
 #'    \item{A single numeric value}{The vertices are all the size defined by this value.}
@@ -3375,7 +3375,8 @@ setMethod(f = "cluster_chart",
 #' Network density
 #' 
 #' Compute the density of a graph as the ratio between the number of links identified and the
-#'  maximum number of possible links (i.e. if all the vertices of the graph were connected to each other).
+#'  number of links there would be if it was a complete graph (i.e. if all the vertices of the graph
+#'  were connected to each other).
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param links Data frame of the links (or edges) of a spectrosome graph.
@@ -3397,7 +3398,7 @@ setMethod(f = "network_density",
             nb_edges = nrow(links) - sum(links$weight == 0)
             nb_vertices = length(unique(c(links$endpoint.1, links$endpoint.2)))
             
-            # Nombre maximal d'arêtes (1 entre chaque paire de sommets, sans boucle)
+            # Nombre maximal d'arêtes possible (1 entre chaque paire de sommets, sans boucle)
             nb_edges_max = nb_vertices * (nb_vertices - 1) / 2
             
             return(nb_edges / nb_edges_max)
@@ -3438,9 +3439,9 @@ setMethod(f = "degree",
 #' 
 #' @details
 #' If they are from nodes or patterns, itemsets are sorted according to their lengths then to their
-#'  weights. If they are from transactions, they are sorted according to their lengths only. When there
-#'  is equality of these characteristics, itemsets are then taken according to the initial order in
-#'  `tnpc`.
+#'  frequencies. If they are from transactions, they are sorted according to their lengths only.
+#'  When there is equality of these characteristics, itemsets are then taken according to the initial
+#'  order in `tnpc`.
 #' 
 #' If `category` is `NULL`, items are sorted alphanumerically. If it is not, items are sorted according
 #'  to the values of the category then alphanumerically.
@@ -3475,7 +3476,7 @@ setMethod(f = "degree",
 #'  * Identifiers: `"ID"`.
 #'  * One of the elements of the transactions (i.e. one of the values of `tnpc["names"]`), if `tnpc` is
 #'    an `TransactionSet`.
-#'  * One of the characteristics of the nodes or the patterns (`"weight"`, `"frequency"`, `"specificity"`,
+#'  * One of the characteristics of the nodes or the patterns (`"frequency"`, `"weight"`, `"specificity"`,
 #'    `"year"`, `"status"`), if `tnpc` is a data frame of nodes or patterns and their characteristics.
 #'  
 #'  `"status"` can only be used for the argument `"over"`.
@@ -3563,10 +3564,10 @@ setMethod(f = "itemset_chart",
               # Renommage de colonnes pour simplification
               colnames(tnpc)[colnames(tnpc) == "node" | colnames(tnpc) == "pattern"] = "itemset"
               
-              # Itemset de taille > 1, triés par taille croissant puis par poids décroissant
+              # Itemset de taille > 1, triés par taille croissant puis par fréquence décroissante
               tnpc = if (length_one) tnpc else tnpc[tnpc$length != 1, ]
               tnpc = tnpc[order(tnpc$length,
-                                max(tnpc$weight) - tnpc$weight), ]
+                                max(tnpc$frequency) - tnpc$frequency), ]
               
               # Attribution d'identifiants aux itemsets
               tnpc$ID = if (identifiers == "new") seq(nrow(tnpc)) else as.numeric(rownames(tnpc))
@@ -4501,9 +4502,9 @@ setMethod(f = "save_characteristics",
 #'  * `"any"`: at least one of the sought items must be part of the node.
 #'  * `"exact"`: the item set contained in the node must be exactly the same as the sought item set.
 #' 
-#' If `element` refers to a characteristic (i.e. is `"length"` or `"weight"`), the condition for a node
-#'  to be extracted is a comparison of the `value` according to one of the comparison operators (default
-#'  is equality):
+#' If `element` refers to a characteristic (i.e. is `"length"` or `"frequency"`), the condition for a
+#'  node to be extracted is a comparison of the `value` according to one of the comparison operators
+#'  (default is equality):
 #'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
 #'  * `"NE"`, `"!="`: **N**ot **E**qual. The value of the characteristic must be different from that
 #'    sought.
@@ -4526,7 +4527,7 @@ setMethod(f = "save_characteristics",
 #' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.\cr
 #'  `"nodes"` and `"n"` are special values for `object["nodes"]`.
 #' @param element Type of element on which to search.
-#'  One of `"items"`, `"length"`, `"weight"` or the name or number of a category on which to search
+#'  One of `"items"`, `"length"`, `"frequency"` or the name or number of a category on which to search
 #'  (numbering according to the order of the columns of `object["items_categories"]`).
 #' @param value Sought value(s) for the element specified by the argument `element`.
 #' @param condition Search condition, depending on `element`. See 'Details' section.
@@ -4546,9 +4547,9 @@ setMethod(f = "save_characteristics",
 #'           element = "items", value = c(3146, 3180), condition = "exact")
 #' 
 #' ## Search on characteristics
-#' get_nodes(TA_instance, TA_instance["nodes"], element = "weight", value = 2)
+#' get_nodes(TA_instance, TA_instance["nodes"], element = "frequency", value = 2)
 #' get_nodes(TA_instance, "nodes",
-#'           element = "weight", value = 2, condition = ">=")
+#'           element = "frequency", value = 2, condition = ">=")
 #' get_nodes(TA_instance, "nodes",
 #'           element = "length", value = 5, condition = "LT")
 #' 
@@ -4567,8 +4568,8 @@ setMethod(f = "get_nodes",
                                 element, value, condition = "default") {
             
             # Vérification du choix de l'élément sur lequel effectuer la recherche
-            if (!(element %in% c("items", "length", "weight")) && !check_access_for_category(object, element, NA, stop = FALSE))
-              stop("element must be one of \"items\", \"length\", \"weight\", or a category name or number.")
+            if (!(element %in% c("items", "length", "frequency")) && !check_access_for_category(object, element, NA, stop = FALSE))
+              stop("element must be one of \"items\", \"length\", \"frequency\", or a category name or number.")
             
             # Appel à la fonction spécifique
             if (element == "items") {
@@ -4577,7 +4578,7 @@ setMethod(f = "get_nodes",
               else
                 return(get_nodes_from_items(object, nc, value, condition))
             }
-            if (element %in% c("length", "weight")) {
+            if (element %in% c("length", "frequency")) {
               if (condition == "default")
                 return(get_nodes_from_characteristic(object, nc, element, value))
               else
@@ -4648,7 +4649,7 @@ setMethod(f = "get_nodes_from_items",
 #'  \code{object["nodes"]}.\cr
 #'  \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
-#'  One of \code{"length"}, \code{"weight"}.
+#'  One of \code{"length"}, \code{"frequency"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
 #' @param condition Search condition.
 #'  One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"},
@@ -4675,7 +4676,7 @@ setMethod(f = "get_nodes_from_items",
 #' 
 #' @examples
 #' get_nodes_from_characteristic(TA_instance, TA_instance["nodes"],
-#'                               characteristic = "weight",
+#'                               characteristic = "frequency",
 #'                               value = 2)
 #' get_nodes_from_characteristic(TA_instance, TA_instance["nodes"],
 #'                               characteristic = "length",
@@ -4694,8 +4695,8 @@ setMethod(f = "get_nodes_from_characteristic",
             check_init(object, NODES)
             nc = get_tnp(object, nc, NODES)
             
-            if (!(characteristic %in% c("length", "weight")))
-              stop("characteristic must be one of \"length\", \"weight\".")
+            if (!(characteristic %in% c("length", "frequency")))
+              stop("characteristic must be one of \"length\", \"frequency\".")
             
             operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
                           "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",
@@ -4795,9 +4796,9 @@ setMethod(f = "get_nodes_from_category",
 #'  * `"any"`: at least one of the sought items must be part of the pattern.
 #'  * `"exact"`: the item set contained in the pattern must be exactly the same as the sought item set.
 #' 
-#' If `element` refers to a characteristic other than status (i.e. is one of `"year"`, `"frequency"`,
-#'  `"weight"`, `"length"`, `"specificity"`), the condition for a pattern to be extracted is a comparaison
-#'  of the `value` according to one of the comparison operators (default is equality):
+#' If `element` refers to a characteristic other than status (i.e. is one of `"year"`, `"length"`,
+#'  `"frequency"`, `"weight"`, `"specificity"`), the condition for a pattern to be extracted is a
+#'  comparaison of the `value` according to one of the comparison operators (default is equality):
 #'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
 #'  * `"NE"`, `"!="`: **N**ot **E**qual. The value of the characteristic must be different from that
 #'    sought.
@@ -4829,7 +4830,7 @@ setMethod(f = "get_nodes_from_category",
 #'  `object["patterns"]`.\cr
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]`.
 #' @param element Type of element on which to search.
-#'  One of `"items"`, `"year"`, `"frequency"`, `"weight"`, `"length"`, `"specificity"`, `"status"`
+#'  One of `"items"`, `"year"`, `"length"`, `"frequency"`, `"weight"`, `"specificity"`, `"status"`
 #'  or the name or number of a category on which to search (numbering according to the order of the
 #'  columns of `object["items_categories"]`).
 #' @param value Sought value(s) for the element specified by the argument `element`.
@@ -4852,9 +4853,9 @@ setMethod(f = "get_nodes_from_category",
 #' 
 #' ## Search on characteristics
 #' get_patterns(TA_instance, TA_instance["patterns"],
-#'              element = "weight", value = 3)
+#'              element = "frequency", value = 3)
 #' get_patterns(TA_instance, "patterns",
-#'              element = "weight", value = 3, condition = ">=")
+#'              element = "frequency", value = 3, condition = ">=")
 #' get_patterns(TA_instance, "patterns",
 #'              element = "length", value = 3, condition = "LT")
 #' 
@@ -4878,10 +4879,10 @@ setMethod(f = "get_patterns",
                                 element, value, condition = "default") {
             
             # Vérification du choix de l'élément sur lequel effectuer la recherche
-            if (!(element %in% c("items", "year", "frequency", "weight", "length", "specificity", "status"))
+            if (!(element %in% c("items", "year", "length", "frequency", "weight", "specificity", "status"))
                 && !check_access_for_category(object, element, NA, stop = FALSE))
               stop(paste("element must be one of \"items\"",
-                         "\"year\", \"frequency\", \"weight\", \"length\", \"specificity\", \"status\"",
+                         "\"year\", \"length\", \"frequency\", \"weight\", \"specificity\", \"status\"",
                          "or a category name or number."))
             
             # Appel à la fonction spécifique
@@ -4891,7 +4892,7 @@ setMethod(f = "get_patterns",
               else
                 return(get_patterns_from_items(object, pc, value, condition))
             }
-            if (element %in% c("year", "frequency", "weight", "length", "specificity")) {
+            if (element %in% c("year", "length", "frequency", "weight", "specificity")) {
               if (condition == "default")
                 return(get_patterns_from_characteristic(object, pc, element, value))
               else
@@ -4970,7 +4971,7 @@ setMethod(f = "get_patterns_from_items",
 #'  \code{object["patterns"]}.\cr
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
-#'  One of \code{"year"}, \code{"frequency"}, \code{"weight"}, \code{"length"}, \code{"specificity"}
+#'  One of \code{"year"}, \code{"length"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"}
 #'  See \code{\link{get_patterns_from_status}} to search by \code{"status"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
 #' @param condition Search condition.
@@ -4998,10 +4999,10 @@ setMethod(f = "get_patterns_from_items",
 #' 
 #' @examples
 #' get_patterns_from_characteristic(TA_instance, TA_instance["patterns"],
-#'                                  characteristic = "weight",
+#'                                  characteristic = "frequency",
 #'                                  value = 3)
 #' get_patterns_from_characteristic(TA_instance, TA_instance["patterns"],
-#'                                  characteristic = "weight",
+#'                                  characteristic = "frequency",
 #'                                  value = 3, condition = ">=")
 #' get_patterns_from_characteristic(TA_instance, TA_instance["patterns"],
 #'                                  characteristic = "length",
@@ -5017,8 +5018,8 @@ setMethod(f = "get_patterns_from_characteristic",
             check_init(object, PATTERNS)
             pc = get_tnp(object, pc, PATTERNS)
             
-            if (!(characteristic %in% c("year", "frequency", "weight", "length", "specificity")))
-              stop("characteristic must be one of \"year\", \"frequency\", \"weight\", \"length\", \"specificity\".")
+            if (!(characteristic %in% c("year", "length", "frequency", "weight", "specificity")))
+              stop("characteristic must be one of \"year\", \"length\", \"frequency\", \"weight\", \"specificity\".")
             
             operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
                           "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",
@@ -5167,7 +5168,7 @@ setMethod(f = "get_patterns_from_category",
 #' If among the nodes or patterns for which the links are sought, some become isolated because the other
 #'  entities to which they are normally linked are not part of the subset \code{nopc}, these nodes or
 #'  patterns are placed at the end of the return data frame.
-#' These possible \code{n} additional lines are numbered \code{"A1"..."An"}.
+#' These possible \code{n} additional rows are numbered \code{"A1"..."An"}.
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
