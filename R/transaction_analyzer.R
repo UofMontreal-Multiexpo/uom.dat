@@ -2361,7 +2361,6 @@ setMethod(f = "plot_spectrum_chart",
             w_margin = convert_gunits(graphics::par("mai")[4]/10, "inches", "user", "w")        # = 0.5 mar (line)
             b_margin = convert_gunits(w_margin, "user", dim = "w", rotation = TRUE)             # = 0.5 mar
             tt_margin = convert_gunits(graphics::par("mai")[3]/1.7, "inches", "user", "h")      # = 2.0 mar
-            tp_margin = convert_gunits(graphics::par("mai")[3]/2.428571, "inches", "user", "h") # = 1.4 mar
             
             # Légende des statuts
             status_legend = graphics::legend("top", plot = FALSE,
@@ -2934,7 +2933,7 @@ setMethod(f = "spectrosome_chart",
             # Réseau généré avec le package network
             links = as.matrix(nop_links[, c("endpoint.1", "endpoint.2")], ncol = 2)
             network_data = network::network(links, directed = FALSE, matrix.type = "edgelist")
-            vertices_names = network::network.vertex.names(network_data)
+            # vertices_names = network::network.vertex.names(network_data)
             
             # Récupération des arguments additionnels et détermination de valeurs par défaut pour sna::gplot
             args = list(...)
@@ -2990,7 +2989,7 @@ setMethod(f = "spectrosome_chart",
                 
                 graphics::par(mar = c(0.5, 0.5, 3.5, 0.5))
                 graphics::plot.new()
-                w_margin = convert_gunits(graphics::par("mai")[4], "inches", "user", "w")
+                w_margin_inches = graphics::par("mai")[4]
                 
                 # Titres du graphique
                 title(main = title, cex.main = 1.3, line = 2)
@@ -3066,7 +3065,7 @@ setMethod(f = "spectrosome_chart",
                 
                 # Réinitialisation des marges de la zone graphique pour séparer légende et plot
                 graphics::par(new = TRUE, mai = graphics::par("mai") +
-                                c(0, convert_gunits(legend_width, "user", "inches", "w") + graphics::par("mai")[2], 0, 0))
+                                c(0, convert_gunits(legend_width, "user", "inches", "w") + w_margin_inches, 0, 0))
                 
                 tryCatch({
                   # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
