@@ -2377,10 +2377,10 @@ function(object, pc, frequencies, title = "Spectrum of patterns") {
   
   ## Légendes et titre
   
-  # Marges latérale, en bas et en haut (tt = zone du titre, tp = extra zone du plot (pour affichage taille))
-  w_margin = convert_gunits(graphics::par("mai")[4]/10, "inches", "user", "w")   # = 0.5 mar (line)
-  b_margin = convert_gunits(w_margin, "user", dim = "w", rotation = TRUE)        # = 0.5 mar
-  tt_margin = convert_gunits(graphics::par("mai")[3]/1.7, "inches", "user", "h") # = 2.0 mar
+  # Marges latérale, en bas et en haut
+  w_margin = convert_gunits(graphics::par("mai")[4]/10, "inches", "user", "w")  # = 0.5 mar (line)
+  b_margin = convert_gunits(w_margin, "user", dim = "w", rotation = TRUE)       # = 0.5 mar
+  t_margin = convert_gunits(graphics::par("mai")[3]/1.7, "inches", "user", "h") # = 2.0 mar
   
   # Légende des statuts
   status_legend = graphics::legend("top", plot = FALSE,
@@ -2389,7 +2389,7 @@ function(object, pc, frequencies, title = "Spectrum of patterns") {
   
   graphics::legend(x = fig_in_usr_coords(2) - w_margin - status_legend$rect$w +
                      (graphics::strwidth(STATUS_PERSISTENT) - graphics::strwidth(STATUS_LATENT)),
-                   y = fig_in_usr_coords(4) - tt_margin / 2 + status_legend$rect$h / 2,
+                   y = fig_in_usr_coords(4) - t_margin / 2 + status_legend$rect$h / 2,
                    bty = "n", horiz = TRUE, xpd = TRUE,
                    pch = 15, cex = cex_legend,
                    col = object@status_colors,
@@ -2419,7 +2419,7 @@ function(object, pc, frequencies, title = "Spectrum of patterns") {
   
   # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
   graphics::text(x = fig_in_usr_coords(1) + w_margin,
-                 y = fig_in_usr_coords(4) - tt_margin / 2,
+                 y = fig_in_usr_coords(4) - t_margin / 2,
                  "Spectrum of patterns", cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
 })
 
