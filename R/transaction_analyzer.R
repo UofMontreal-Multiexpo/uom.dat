@@ -5515,9 +5515,7 @@ setMethod(f = "has_item_names",
           signature = "TransactionAnalyzer",
           definition =
 function(object) {
-  
-  if (all(names(object@items) == object@items)) return(FALSE)
-  return(TRUE)
+  return(!all(names(object@items) == object@items))
 })
 
 
