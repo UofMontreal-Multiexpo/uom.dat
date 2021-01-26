@@ -794,64 +794,63 @@ setGeneric(name = "which_name", def = function(object, name){ standardGeneric("w
 #' @export
 setMethod(f = "reset",
           signature = "TransactionAnalyzer",
-          definition = function(object, from = 1, verbose = TRUE) {
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            # Matrice des instructions à effectuer et descriptions, pour chaque étape
-            steps = matrix(c(
-              
-              # Initialisation des attributs utiles à la construction d'un spectrosome des noeuds
-              "*** Step 01/10: Enumeration of the transactions per year... ",
-              expression(  list_trx_per_year(object)  ),
-              "\n*** Step 02/10: Enumeration of the nodes and calculation of the number of occurrences... ",
-              expression(  list_separate_trx(object)  ),
-              "\n*** Step 03/10: Counting links between nodes... ",
-              expression(  count_links(object, NODES)  ),
-              "\n*** Step 04/10: Elaboration of links between nodes... ",
-              expression(  search_links(object, NODES)  ),
-              
-              # Initialisation des attributs utiles à la construction d'un spectre
-              "\n*** Step 05/10: Mining for itemsets... ",
-              expression(  list_separate_patterns(object, object@parameters$target,
-                                                  object@parameters$count,
-                                                  object@parameters$min_length,
-                                                  object@parameters$max_length)  ),
-              "\n*** Step 06/10: Linking nodes to patterns... ",
-              expression(  list_patterns_by_node(object)  ),
-              "\n*** Step 07/10: Characterization of patterns per year... ",
-              expression(  list_patterns_per_year(object)  ),
-              "\n*** Step 08/10: Computation of pattern characteristics... ",
-              expression(  compute_patterns_characteristics(object)  ),
-              
-              # Initialisation des attributs utiles à la construction d'un spectrosome des motifs
-              "\n*** Step 09/10: Counting links between patterns... ",
-              expression(  count_links(object, PATTERNS)  ),
-              "\n*** Step 10/10: Elaboration of links between patterns... ",
-              expression(  search_links(object, PATTERNS)  )
-              
-            ), ncol = 2, nrow = 10, byrow = TRUE)
-            
-            # Étapes à réaliser effectivement
-            steps_todo = (from <= seq(nrow(steps))) & (!DEBUG_MODE_ | seq(nrow(steps)) <= UP_TO_STEP_)
-            
-            # Réalisation
-            for (i in seq(nrow(steps))) {
-              if (steps_todo[i]) {
-                if (verbose) {
-                  cat(steps[i, 1][[1]])
-                  eval(parse(text = paste("display_time(", steps[i, 2], ")")))
-                } else {
-                  eval(parse(text = steps[i, 2]))
-                }
-              }
-            }
-            
-            # Redéfinition de l'objet
-            assign(object_name, object, envir = parent.frame())
-            return(invisible())
-          })
+          definition =
+function(object, from = 1, verbose = TRUE) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  # Matrice des instructions à effectuer et descriptions, pour chaque étape
+  steps = matrix(c(
+    
+    # Initialisation des attributs utiles à la construction d'un spectrosome des noeuds
+    "*** Step 01/10: Enumeration of the transactions per year... ",
+    expression(  list_trx_per_year(object)  ),
+    "\n*** Step 02/10: Enumeration of the nodes and calculation of the number of occurrences... ",
+    expression(  list_separate_trx(object)  ),
+    "\n*** Step 03/10: Counting links between nodes... ",
+    expression(  count_links(object, NODES)  ),
+    "\n*** Step 04/10: Elaboration of links between nodes... ",
+    expression(  search_links(object, NODES)  ),
+    
+    # Initialisation des attributs utiles à la construction d'un spectre
+    "\n*** Step 05/10: Mining for itemsets... ",
+    expression(  list_separate_patterns(object, object@parameters$target, object@parameters$count,
+                                        object@parameters$min_length, object@parameters$max_length)  ),
+    "\n*** Step 06/10: Linking nodes to patterns... ",
+    expression(  list_patterns_by_node(object)  ),
+    "\n*** Step 07/10: Characterization of patterns per year... ",
+    expression(  list_patterns_per_year(object)  ),
+    "\n*** Step 08/10: Computation of pattern characteristics... ",
+    expression(  compute_patterns_characteristics(object)  ),
+    
+    # Initialisation des attributs utiles à la construction d'un spectrosome des motifs
+    "\n*** Step 09/10: Counting links between patterns... ",
+    expression(  count_links(object, PATTERNS)  ),
+    "\n*** Step 10/10: Elaboration of links between patterns... ",
+    expression(  search_links(object, PATTERNS)  )
+    
+  ), ncol = 2, nrow = 10, byrow = TRUE)
+  
+  # Étapes à réaliser effectivement
+  steps_todo = (from <= seq(nrow(steps))) & (!DEBUG_MODE_ | seq(nrow(steps)) <= UP_TO_STEP_)
+  
+  # Réalisation
+  for (i in seq(nrow(steps))) {
+    if (steps_todo[i]) {
+      if (verbose) {
+        cat(steps[i, 1][[1]])
+        eval(parse(text = paste("display_time(", steps[i, 2], ")")))
+      } else {
+        eval(parse(text = steps[i, 2]))
+      }
+    }
+  }
+  
+  # Redéfinition de l'objet
+  assign(object_name, object, envir = parent.frame())
+  return(invisible())
+})
 
 
 #' Initialization of attributes
@@ -927,7 +926,8 @@ setMethod(f = "reset",
 #' @export
 setMethod(f = "init",
           signature = "TransactionAnalyzer",
-          definition = function(object, part = NULL, verbose = TRUE) {
+          definition =
+function(object, part = NULL, verbose = TRUE) {
   
   # Nom de l'objet pour modification interne dans l'environnement parent
   object_name = deparse(substitute(object))
@@ -985,120 +985,126 @@ NULL
 #' @keywords internal
 setMethod(f = "init_nodes",
           signature = "TransactionAnalyzer",
-          definition = function(object, verbose = TRUE) {
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            if (verbose) {
-              cat("*** Step N.1/2: Enumeration of the transactions per year... ")
-              display_time(list_trx_per_year(object))
-              
-              cat("\n*** Step N.2/2: Enumeration of the nodes and calculation of the number of occurrences... ")
-              display_time(list_separate_trx(object))
-            } else {
-              list_trx_per_year(object)
-              list_separate_trx(object)
-            }
-            
-            # Redéfinition de l'objet
-            assign(object_name, object, envir = parent.frame())
-            return(invisible())
-          })
+          definition =
+function(object, verbose = TRUE) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  if (verbose) {
+    cat("*** Step N.1/2: Enumeration of the transactions per year... ")
+    display_time(list_trx_per_year(object))
+    
+    cat("\n*** Step N.2/2: Enumeration of the nodes and calculation of the number of occurrences... ")
+    display_time(list_separate_trx(object))
+  } else {
+    list_trx_per_year(object)
+    list_separate_trx(object)
+  }
+  
+  # Redéfinition de l'objet
+  assign(object_name, object, envir = parent.frame())
+  return(invisible())
+})
 
 #' @rdname specific_init-TransactionAnalyzer-method
 #' @aliases init_node_links
 #' @keywords internal
 setMethod(f = "init_node_links",
           signature = "TransactionAnalyzer",
-          definition = function(object, verbose = TRUE) {
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            if (verbose) {
-              cat("*** Step NL.1/2: Counting links between nodes... ")
-              display_time(count_links(object, NODES))
-              
-              cat("\n*** Step NL.2/2: Elaboration of links between nodes... ")
-              display_time(search_links(object, NODES))
-            } else {
-              count_links(object, NODES)
-              search_links(object, NODES)
-            }
-            
-            # Redéfinition de l'objet
-            assign(object_name, object, envir = parent.frame())
-            return(invisible())
-          })
+          definition =
+function(object, verbose = TRUE) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  if (verbose) {
+    cat("*** Step NL.1/2: Counting links between nodes... ")
+    display_time(count_links(object, NODES))
+    
+    cat("\n*** Step NL.2/2: Elaboration of links between nodes... ")
+    display_time(search_links(object, NODES))
+  } else {
+    count_links(object, NODES)
+    search_links(object, NODES)
+  }
+  
+  # Redéfinition de l'objet
+  assign(object_name, object, envir = parent.frame())
+  return(invisible())
+})
 
 #' @rdname specific_init-TransactionAnalyzer-method
 #' @aliases init_patterns
 #' @keywords internal
 setMethod(f = "init_patterns",
           signature = "TransactionAnalyzer",
-          definition = function(object, verbose = TRUE) {
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            if (verbose) {
-              cat("*** Step P.1/4: Mining for itemsets... ")
-              display_time(arules_p <- list_separate_patterns(object, object@parameters$target,
-                                                              object@parameters$count,
-                                                              object@parameters$min_length,
-                                                              object@parameters$max_length,
-                                                              arules = TRUE))
-              
-              cat("\n*** Step P.2/4: Linking nodes to patterns... ")
-              display_time(list_patterns_by_node(object))
-              
-              cat("\n*** Step P.3/4: Characterization of patterns per year... ")
-              display_time(list_patterns_per_year(object))
-              
-              cat("\n*** Step P.4/4: Computation of pattern characteristics... ")
-              display_time(compute_patterns_characteristics(object))
-            } else {
-              arules_p = list_separate_patterns(object, object@parameters$target,
-                                                object@parameters$count,
-                                                object@parameters$min_length,
-                                                object@parameters$max_length,
-                                                arules = TRUE)
-              list_patterns_by_node(object)
-              list_patterns_per_year(object)
-              compute_patterns_characteristics(object)
-            }
-            
-            # Redéfinition de l'objet
-            assign(object_name, object, envir = parent.frame())
-            return(invisible(arules_p))
-          })
+          definition =
+function(object, verbose = TRUE) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  if (verbose) {
+    cat("*** Step P.1/4: Mining for itemsets... ")
+    display_time(arules_p <- list_separate_patterns(object,
+                                                    object@parameters$target,
+                                                    object@parameters$count,
+                                                    object@parameters$min_length,
+                                                    object@parameters$max_length,
+                                                    arules = TRUE))
+    
+    cat("\n*** Step P.2/4: Linking nodes to patterns... ")
+    display_time(list_patterns_by_node(object))
+    
+    cat("\n*** Step P.3/4: Characterization of patterns per year... ")
+    display_time(list_patterns_per_year(object))
+    
+    cat("\n*** Step P.4/4: Computation of pattern characteristics... ")
+    display_time(compute_patterns_characteristics(object))
+  } else {
+    arules_p = list_separate_patterns(object,
+                                      object@parameters$target,
+                                      object@parameters$count,
+                                      object@parameters$min_length,
+                                      object@parameters$max_length,
+                                      arules = TRUE)
+    list_patterns_by_node(object)
+    list_patterns_per_year(object)
+    compute_patterns_characteristics(object)
+  }
+  
+  # Redéfinition de l'objet
+  assign(object_name, object, envir = parent.frame())
+  return(invisible(arules_p))
+})
 
 #' @rdname specific_init-TransactionAnalyzer-method
 #' @aliases init_pattern_links
 #' @keywords internal
 setMethod(f = "init_pattern_links",
           signature = "TransactionAnalyzer",
-          definition = function(object, verbose = TRUE) {
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            if (verbose) {
-              cat("*** Step PL.1/2: Counting links between patterns... ")
-              display_time(count_links(object, PATTERNS))
-              
-              cat("\n*** Step PL.2/2: Elaboration of links between patterns... ")
-              display_time(search_links(object, PATTERNS))
-            } else {
-              count_links(object, PATTERNS)
-              search_links(object, PATTERNS)
-            }
-            
-            # Redéfinition de l'objet
-            assign(object_name, object, envir = parent.frame())
-            return(invisible())
-          })
+          definition =
+function(object, verbose = TRUE) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  if (verbose) {
+    cat("*** Step PL.1/2: Counting links between patterns... ")
+    display_time(count_links(object, PATTERNS))
+    
+    cat("\n*** Step PL.2/2: Elaboration of links between patterns... ")
+    display_time(search_links(object, PATTERNS))
+  } else {
+    count_links(object, PATTERNS)
+    search_links(object, PATTERNS)
+  }
+  
+  # Redéfinition de l'objet
+  assign(object_name, object, envir = parent.frame())
+  return(invisible())
+})
 
 
 #' Test of attribute initialization
@@ -1153,7 +1159,8 @@ setMethod(f = "init_pattern_links",
 #' @export
 setMethod(f = "is_init",
           signature = "TransactionAnalyzer",
-          definition = function(object, part = NULL) {
+          definition =
+function(object, part = NULL) {
   
   check_param(part, types = c("character", "NULL"))
   
@@ -1196,45 +1203,45 @@ NULL
 #' @keywords internal
 setMethod(f = "is_init_nodes",
           signature = "TransactionAnalyzer",
-          definition = function(object) {
-            
-            return(nrow(object@nodes) != 0
-                   && nrow(object@nodes_per_year) != 0)
-          })
+          definition =
+function(object) {
+  return(nrow(object@nodes) != 0
+         && nrow(object@nodes_per_year) != 0)
+})
 
 #' @rdname specific_is_init-TransactionAnalyzer-method
 #' @aliases is_init_node_links
 #' @keywords internal
 setMethod(f = "is_init_node_links",
           signature = "TransactionAnalyzer",
-          definition = function(object) {
-            
-            return(nrow(object@n_links) != 0
-                   && nrow(object@node_links) != 0)
-          })
+          definition =
+function(object) {
+  return(nrow(object@n_links) != 0
+         && nrow(object@node_links) != 0)
+})
 
 #' @rdname specific_is_init-TransactionAnalyzer-method
 #' @aliases is_init_patterns
 #' @keywords internal
 setMethod(f = "is_init_patterns",
           signature = "TransactionAnalyzer",
-          definition = function(object) {
-            
-            return(nrow(object@nodes_patterns) != 0
-                   && nrow(object@patterns) != 0
-                   && nrow(object@patterns_per_year) != 0)
-          })
+          definition =
+function(object) {
+  return(nrow(object@nodes_patterns) != 0
+         && nrow(object@patterns) != 0
+         && nrow(object@patterns_per_year) != 0)
+})
 
 #' @rdname specific_is_init-TransactionAnalyzer-method
 #' @aliases is_init_pattern_links
 #' @keywords internal
 setMethod(f = "is_init_pattern_links",
           signature = "TransactionAnalyzer",
-          definition = function(object) {
-            
-            return(nrow(object@p_links) != 0
-                   && nrow(object@pattern_links) != 0)
-          })
+          definition =
+function(object) {
+  return(nrow(object@p_links) != 0
+         && nrow(object@pattern_links) != 0)
+})
 
 
 #' Initialization validation
@@ -1274,8 +1281,8 @@ setMethod(f = "is_init_pattern_links",
 #' @keywords internal
 setMethod(f = "check_init",
           signature = "TransactionAnalyzer",
-          definition = function(object, part = NULL,
-                                stop = TRUE, prefix = "", suffix = "") {
+          definition =
+function(object, part = NULL, stop = TRUE, prefix = "", suffix = "") {
   
   check_param(part, types = c("character", "NULL"))
   
@@ -1337,39 +1344,40 @@ setMethod(f = "check_init",
 #' @keywords internal
 setMethod(f = "list_trx_per_year",
           signature = "TransactionAnalyzer",
-          definition = function(object){
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            
-            # Conversion de la liste de transactions en une data.frame (et tri des items de chaque transaction)
-            trx_df = data.frame(year = sapply(object@transactions@data, "[[", object@transactions@year_key))
-            trx_df$node = lapply(object@transactions[object@transactions@item_key], sort)
-            
-            # Concaténation des identifiants des items (nécessaire pour la fonction "table" et un tri plus rapide)
-            trx_df$node = sapply(trx_df$node, paste0, collapse = "/")
-            
-            # Calcul de la distribution des ensembles distincts d'items par année et conversion en matrice
-            nodes_df = as.data.frame(table(trx_df), stringsAsFactors = FALSE)
-            nodes_mat = with(nodes_df, tapply(Freq, list(node, year), sum))
-            
-            # Redécomposition des items composant chaque noeud pour pouvoir calculer leur longueur
-            nodes = strsplit(rownames(nodes_mat), split = "/")
-            
-            # Tri par longueur et fréquence totale décroissants puis par ordre alphanumérique
-            the_order = order(sapply(nodes, length),
-                              rowSums(nodes_mat),
-                              order(order(rownames(nodes_mat), decreasing = TRUE)),
-                              decreasing = TRUE)
-            nodes_mat = nodes_mat[the_order, ]
-            rownames(nodes_mat) = nodes[the_order]
-            
-            # Définition de l'attribut et retour
-            object@nodes_per_year = nodes_mat
-            assign(object_name, object, envir = parent.frame())
-            return(invisible(nodes_mat))
-          })
+          definition =
+function(object) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  
+  # Conversion de la liste de transactions en une data.frame (et tri des items de chaque transaction)
+  trx_df = data.frame(year = sapply(object@transactions@data, "[[", object@transactions@year_key))
+  trx_df$node = lapply(object@transactions[object@transactions@item_key], sort)
+  
+  # Concaténation des identifiants des items (nécessaire pour la fonction "table" et un tri plus rapide)
+  trx_df$node = sapply(trx_df$node, paste0, collapse = "/")
+  
+  # Calcul de la distribution des ensembles distincts d'items par année et conversion en matrice
+  nodes_df = as.data.frame(table(trx_df), stringsAsFactors = FALSE)
+  nodes_mat = with(nodes_df, tapply(Freq, list(node, year), sum))
+  
+  # Redécomposition des items composant chaque noeud pour pouvoir calculer leur longueur
+  nodes = strsplit(rownames(nodes_mat), split = "/")
+  
+  # Tri par longueur et fréquence totale décroissants puis par ordre alphanumérique
+  the_order = order(sapply(nodes, length),
+                    rowSums(nodes_mat),
+                    order(order(rownames(nodes_mat), decreasing = TRUE)),
+                    decreasing = TRUE)
+  nodes_mat = nodes_mat[the_order, ]
+  rownames(nodes_mat) = nodes[the_order]
+  
+  # Définition de l'attribut et retour
+  object@nodes_per_year = nodes_mat
+  assign(object_name, object, envir = parent.frame())
+  return(invisible(nodes_mat))
+})
 
 
 #' Enumeration of nodes
@@ -1387,38 +1395,39 @@ setMethod(f = "list_trx_per_year",
 #' @keywords internal
 setMethod(f = "list_separate_trx",
           signature = "TransactionAnalyzer",
-          definition = function(object){
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            # Poids des noeuds par année
-            nodes_per_year = object@nodes_per_year
-            
-            # Calcul de la fréquence totale pour chaque noeud (= chaque transaction distincte)
-            nodes_df = data.frame("frequency" = unname(rowSums(nodes_per_year)))
-            nodes_df$node = lapply(strsplit(rownames(nodes_per_year), 'c\\("|", "|")'),
-                                   function(node) {
-                                     if (length(node) > 1) { return(node[-1]) }
-                                     return(node)
-                                   })
-            
-            # Calcul de la longueur de chaque noeud et réordonnement des colonnes
-            nodes_df$length = sapply(nodes_df$node, length)
-            nodes_df = nodes_df[, c("node", "length", "frequency")]
-            
-            # Tri par longueur et poids décroissants puis par ordre alphanumérique
-            nodes_df = nodes_df[order(nodes_df$length,
-                                      nodes_df$frequency,
-                                      order(order(sapply(nodes_df$node, paste0, collapse = "/"), decreasing = TRUE)),
-                                      decreasing = TRUE), ]
-            rownames(nodes_df) = NULL
-            
-            # Définition de l'attribut et retour
-            object@nodes = nodes_df
-            assign(object_name, object, envir = parent.frame())
-            return(invisible(nodes_df))
-          })
+          definition =
+function(object) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  # Poids des noeuds par année
+  nodes_per_year = object@nodes_per_year
+  
+  # Calcul de la fréquence totale pour chaque noeud (= chaque transaction distincte)
+  nodes_df = data.frame("frequency" = unname(rowSums(nodes_per_year)))
+  nodes_df$node = lapply(strsplit(rownames(nodes_per_year), 'c\\("|", "|")'),
+                         function(node) {
+                           if (length(node) > 1) { return(node[-1]) }
+                           return(node)
+                         })
+  
+  # Calcul de la longueur de chaque noeud et réordonnement des colonnes
+  nodes_df$length = sapply(nodes_df$node, length)
+  nodes_df = nodes_df[, c("node", "length", "frequency")]
+  
+  # Tri par longueur et poids décroissants puis par ordre alphanumérique
+  nodes_df = nodes_df[order(nodes_df$length,
+                            nodes_df$frequency,
+                            order(order(sapply(nodes_df$node, paste0, collapse = "/"), decreasing = TRUE)),
+                            decreasing = TRUE), ]
+  rownames(nodes_df) = NULL
+  
+  # Définition de l'attribut et retour
+  object@nodes = nodes_df
+  assign(object_name, object, envir = parent.frame())
+  return(invisible(nodes_df))
+})
 
 
 
@@ -1441,33 +1450,34 @@ setMethod(f = "list_separate_trx",
 #' @keywords internal
 setMethod(f = "count_links",
           signature = "TransactionAnalyzer",
-          definition = function(object, entities){
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            # Ensemble des noeuds ou motifs
-            if (entities == NODES) to_link = object@nodes$node
-            else if (entities == PATTERNS) to_link = object@patterns$pattern
-            else stop("entities must be NODES or PATTERNS.")
-            
-            # Compte le nombre d'items en commun pour chaque paire d'éléments à lier
-            names(to_link) = sapply(to_link, paste0, collapse = "/")
-            n_intersections = crossprod(table(utils::stack(to_link)))
-            
-            # Nommage des colonnes et lignes par les itemsets correspondants
-            dimnames(n_intersections) = NULL
-            colnames(n_intersections) = rownames(n_intersections) = to_link
-            
-            # Minimisation de la taille en mémoire
-            class(n_intersections) = "integer"
-            
-            # Définition de l'attribut et retour
-            if (entities == NODES) object@n_links = n_intersections
-            else if (entities == PATTERNS) object@p_links = n_intersections
-            assign(object_name, object, envir = parent.frame())
-            return(invisible(n_intersections))
-          })
+          definition =
+function(object, entities) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  # Ensemble des noeuds ou motifs
+  if (entities == NODES) to_link = object@nodes$node
+  else if (entities == PATTERNS) to_link = object@patterns$pattern
+  else stop("entities must be NODES or PATTERNS.")
+  
+  # Compte le nombre d'items en commun pour chaque paire d'éléments à lier
+  names(to_link) = sapply(to_link, paste0, collapse = "/")
+  n_intersections = crossprod(table(utils::stack(to_link)))
+  
+  # Nommage des colonnes et lignes par les itemsets correspondants
+  dimnames(n_intersections) = NULL
+  colnames(n_intersections) = rownames(n_intersections) = to_link
+  
+  # Minimisation de la taille en mémoire
+  class(n_intersections) = "integer"
+  
+  # Définition de l'attribut et retour
+  if (entities == NODES) object@n_links = n_intersections
+  else if (entities == PATTERNS) object@p_links = n_intersections
+  assign(object_name, object, envir = parent.frame())
+  return(invisible(n_intersections))
+})
 
 
 #' Elaboration of links
@@ -1488,96 +1498,96 @@ setMethod(f = "count_links",
 #' @keywords internal
 setMethod(f = "search_links",
           signature = "TransactionAnalyzer",
-          definition = function(object, entities){
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            # Ensemble des noeuds ou motifs
-            if (entities == NODES) {
-              to_link = object@nodes$node
-              entities_links = object@n_links
-            } else if (entities == PATTERNS) {
-              to_link = object@patterns$pattern
-              entities_links = object@p_links
-            } else stop("entities must be NODES or PATTERNS.")
-            
-            
-            # Recherche des indices des éléments liés
-            linked_indexes = which(apply(entities_links, 1,
-                                         function(x) sum(x) != x[parent.frame()$i[]]))
-            names(linked_indexes) = NULL
-            
-            # Utilisation de la propriété de symétrie de la matrice pour compter le nombre de liens
-            nb_links = (sum(entities_links != 0) - nrow(entities_links)) / 2
-            links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == PATTERNS, 5, 4))
-            
-            link_counter = 0
-            loop_index = 0
-            
-            # Recherche des liens entre chaque paire d'éléments à lier
-            for(i in linked_indexes[1:(length(linked_indexes) - 1)]) {
-              loop_index = loop_index + 1
-              
-              for(j in linked_indexes[(loop_index + 1):length(linked_indexes)]) {
-                if (entities_links[i, j] != 0) {
-                  # Nouveau lien identifié
-                  link_counter = link_counter + 1
-                  intersection = to_link[[j]][to_link[[j]] %in% to_link[[i]]]
-                  
-                  # Élément i, élément j, items en communs, nb items en communs (, année d'apparition du lien)
-                  if (entities == PATTERNS) {
-                    links[link_counter, ] = c(i, j,
-                                              paste(intersection, collapse = "/"), entities_links[i, j],
-                                              max(object@patterns[i, "year"], object@patterns[j, "year"]))
-                  } else {
-                    links[link_counter, ] = c(i, j, paste(intersection, collapse = "/"), entities_links[i, j])
-                  }
-                }
-              }
-            }
-            
-            
-            # Recherche des éléments isolés
-            isolated_indexes = which(apply(entities_links, 1,
-                                           function(x) sum(x) == x[parent.frame()$i[]]))
-            names(isolated_indexes) = NULL
-            
-            # Matrice des éléments isolés qui complète celle des paires de éléments liés
-            if (length(isolated_indexes) != 0) {
-              no_links = t(sapply(isolated_indexes, entity = entities,
-                                  function(x, entity) {
-                                    if (entity == PATTERNS) {
-                                      return(c(x, x, "", 0, object@patterns[parent.frame()$i[], "year"]))
-                                    }
-                                    return(c(x, x, "", 0))
-                                  }))
-            } else {
-              # Matrice vide pour la fusion qui suit (sans avoir à tester aucune des deux)
-              no_links = matrix(NA, nrow = 0, ncol = ifelse(entities == PATTERNS, 5, 4))
-            }
-            
-            
-            # Fusion des listes en une data frame unique
-            merged = as.data.frame(rbind(links, no_links), stringsAsFactors = FALSE)
-            
-            # Affectation de noms de colonnes et rétablissement des types
-            if (entities == PATTERNS) {
-              colnames(merged) = c("endpoint.1", "endpoint.2", "items", "weight", "year")
-              class(merged$year) = "integer"
-            } else {
-              colnames(merged) = c("endpoint.1", "endpoint.2", "items", "weight")
-            }
-            rownames(merged) = NULL
-            class(merged$endpoint.1) = class(merged$endpoint.2) = class(merged$weight) = "integer"
-            
-            
-            # Définition de l'attribut et retour
-            if (entities == NODES) object@node_links = merged
-            else if (entities == PATTERNS) object@pattern_links = merged
-            assign(object_name, object, envir = parent.frame())
-            return(invisible(object@node_links))
-          })
+          definition =
+function(object, entities) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  # Ensemble des noeuds ou motifs
+  if (entities == NODES) {
+    to_link = object@nodes$node
+    entities_links = object@n_links
+  } else if (entities == PATTERNS) {
+    to_link = object@patterns$pattern
+    entities_links = object@p_links
+  } else stop("entities must be NODES or PATTERNS.")
+  
+  
+  # Recherche des indices des éléments liés
+  linked_indexes = which(apply(entities_links, 1, function(x) sum(x) != x[parent.frame()$i[]]))
+  names(linked_indexes) = NULL
+  
+  # Utilisation de la propriété de symétrie de la matrice pour compter le nombre de liens
+  nb_links = (sum(entities_links != 0) - nrow(entities_links)) / 2
+  links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == PATTERNS, 5, 4))
+  
+  link_counter = 0
+  loop_index = 0
+  
+  # Recherche des liens entre chaque paire d'éléments à lier
+  for(i in linked_indexes[1:(length(linked_indexes) - 1)]) {
+    loop_index = loop_index + 1
+    
+    for(j in linked_indexes[(loop_index + 1):length(linked_indexes)]) {
+      if (entities_links[i, j] != 0) {
+        # Nouveau lien identifié
+        link_counter = link_counter + 1
+        intersection = to_link[[j]][to_link[[j]] %in% to_link[[i]]]
+        
+        # Élément i, élément j, items en communs, nb items en communs (, année d'apparition du lien)
+        if (entities == PATTERNS) {
+          links[link_counter, ] = c(i, j,
+                                    paste(intersection, collapse = "/"), entities_links[i, j],
+                                    max(object@patterns[i, "year"], object@patterns[j, "year"]))
+        } else {
+          links[link_counter, ] = c(i, j, paste(intersection, collapse = "/"), entities_links[i, j])
+        }
+      }
+    }
+  }
+  
+  
+  # Recherche des éléments isolés
+  isolated_indexes = which(apply(entities_links, 1,
+                                 function(x) sum(x) == x[parent.frame()$i[]]))
+  names(isolated_indexes) = NULL
+  
+  # Matrice des éléments isolés qui complète celle des paires de éléments liés
+  if (length(isolated_indexes) != 0) {
+    no_links = t(sapply(isolated_indexes, entity = entities,
+                        function(x, entity) {
+                          if (entity == PATTERNS) {
+                            return(c(x, x, "", 0, object@patterns[parent.frame()$i[], "year"]))
+                          }
+                          return(c(x, x, "", 0))
+                        }))
+  } else {
+    # Matrice vide pour la fusion qui suit (sans avoir à tester aucune des deux)
+    no_links = matrix(NA, nrow = 0, ncol = ifelse(entities == PATTERNS, 5, 4))
+  }
+  
+  
+  # Fusion des listes en une data frame unique
+  merged = as.data.frame(rbind(links, no_links), stringsAsFactors = FALSE)
+  
+  # Affectation de noms de colonnes et rétablissement des types
+  if (entities == PATTERNS) {
+    colnames(merged) = c("endpoint.1", "endpoint.2", "items", "weight", "year")
+    class(merged$year) = "integer"
+  } else {
+    colnames(merged) = c("endpoint.1", "endpoint.2", "items", "weight")
+  }
+  rownames(merged) = NULL
+  class(merged$endpoint.1) = class(merged$endpoint.2) = class(merged$weight) = "integer"
+  
+  
+  # Définition de l'attribut et retour
+  if (entities == NODES) object@node_links = merged
+  else if (entities == PATTERNS) object@pattern_links = merged
+  assign(object_name, object, envir = parent.frame())
+  return(invisible(object@node_links))
+})
 
 
 
@@ -1606,42 +1616,42 @@ setMethod(f = "search_links",
 #' @keywords internal
 setMethod(f = "list_separate_patterns",
           signature = "TransactionAnalyzer",
-          definition = function(object, target, count = 1, min_length = 1, max_length = Inf,
-                                arules = FALSE) {
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            
-            # Conversion des transactions en transactions : une ligne par transaction, une colonne par item
-            transact = as(object@transactions, "transactions")
-            
-            # Énumération des motifs recherchés
-            params = list(supp = count/dim(transact)[1], 
-                          minlen = min_length,
-                          maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length), 
-                          target = target)
-            result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
-            res = as(result, "data.frame") # Contient aussi le support
-            
-            # Exraction des motifs issus du résultat et transformation en liste de vecteurs
-            patterns = vector_notation(res$items)
-            
-            # Rassemblement des motifs dans une data.frame
-            patterns_df = data.frame(pattern = numeric(length(patterns)))
-            patterns_df$pattern = sapply(patterns, c)
-            patterns_df$frequency = res$count
-            
-            # Tri et renommage des lignes selon le nouvel ordre de la data.frame
-            patterns_df = patterns_df[order(patterns_df$frequency, decreasing = TRUE), ]
-            rownames(patterns_df) = seq(nrow(patterns_df))
-            
-            # Définition de l'attribut et retour
-            object@patterns = patterns_df
-            assign(object_name, object, envir = parent.frame())
-            if (arules) return(invisible(result))
-            return(invisible(patterns_df))
-          })
+          definition =
+function(object, target, count = 1, min_length = 1, max_length = Inf, arules = FALSE) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  
+  # Conversion des transactions en transactions : une ligne par transaction, une colonne par item
+  transact = as(object@transactions, "transactions")
+  
+  # Énumération des motifs recherchés
+  params = list(supp = count/dim(transact)[1], 
+                minlen = min_length,
+                maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length), 
+                target = target)
+  result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
+  res = as(result, "data.frame") # Contient aussi le support
+  
+  # Exraction des motifs issus du résultat et transformation en liste de vecteurs
+  patterns = vector_notation(res$items)
+  
+  # Rassemblement des motifs dans une data.frame
+  patterns_df = data.frame(pattern = numeric(length(patterns)))
+  patterns_df$pattern = sapply(patterns, c)
+  patterns_df$frequency = res$count
+  
+  # Tri et renommage des lignes selon le nouvel ordre de la data.frame
+  patterns_df = patterns_df[order(patterns_df$frequency, decreasing = TRUE), ]
+  rownames(patterns_df) = seq(nrow(patterns_df))
+  
+  # Définition de l'attribut et retour
+  object@patterns = patterns_df
+  assign(object_name, object, envir = parent.frame())
+  if (arules) return(invisible(result))
+  return(invisible(patterns_df))
+})
 
 
 #' Linking nodes to patterns
@@ -1658,30 +1668,31 @@ setMethod(f = "list_separate_patterns",
 #' @keywords internal
 setMethod(f = "list_patterns_by_node",
           signature = "TransactionAnalyzer",
-          definition = function(object) {
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            
-            # Pour chaque motif et chaque noeud, recherche si le motif est inclus dans le noeud
-            associations = sapply(object@patterns$pattern,
-                                  function(pattern) {
-                                    sapply(object@nodes$node, pattern = pattern,
-                                           function(node, pattern) {
-                                             return(all(pattern %in% node))
-                                           })
-                                  })
-            
-            # Renommage des lignes et colonnes
-            rownames(associations) = object@nodes$node
-            colnames(associations) = object@patterns$pattern
-            
-            # Définition de l'attribut et retour
-            object@nodes_patterns = associations
-            assign(object_name, object, envir = parent.frame())
-            return(invisible(object@nodes_patterns))
-          })
+          definition =
+function(object) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  
+  # Pour chaque motif et chaque noeud, recherche si le motif est inclus dans le noeud
+  associations = sapply(object@patterns$pattern,
+                        function(pattern) {
+                          sapply(object@nodes$node, pattern = pattern,
+                                 function(node, pattern) {
+                                   return(all(pattern %in% node))
+                                 })
+                        })
+  
+  # Renommage des lignes et colonnes
+  rownames(associations) = object@nodes$node
+  colnames(associations) = object@patterns$pattern
+  
+  # Définition de l'attribut et retour
+  object@nodes_patterns = associations
+  assign(object_name, object, envir = parent.frame())
+  return(invisible(object@nodes_patterns))
+})
 
 
 #' Enumeration of patterns per year
@@ -1698,34 +1709,35 @@ setMethod(f = "list_patterns_by_node",
 #' @keywords internal
 setMethod(f = "list_patterns_per_year",
           signature = "TransactionAnalyzer",
-          definition = function(object) {
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            # Fréquences des noeuds par année
-            nodes_per_year = object@nodes_per_year
-            
-            # Calcul des fréquences par année pour chaque motif
-            frequencies = lapply(seq_along(object@patterns$pattern), function(p) {
-              # Sélection des noeuds associées au motif
-              nodes_names = object@nodes_patterns[, p]
-              nodes = nodes_per_year[rownames(nodes_per_year) %in% names(nodes_names[nodes_names]), ]
-              
-              # Somme des poids selon l'année
-              if (is.matrix(nodes)) { return(colSums(nodes)) }
-              return(nodes)
-            })
-            
-            # Matrice des fréquences des motifs par année
-            ppy = do.call(rbind, frequencies)
-            rownames(ppy) = object@patterns$pattern
-            
-            # Définition de l'attribut et retour
-            object@patterns_per_year = ppy
-            assign(object_name, object, envir = parent.frame())
-            return(invisible(ppy))
-          })
+          definition =
+function(object) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  # Fréquences des noeuds par année
+  nodes_per_year = object@nodes_per_year
+  
+  # Calcul des fréquences par année pour chaque motif
+  frequencies = lapply(seq_along(object@patterns$pattern), function(p) {
+    # Sélection des noeuds associées au motif
+    nodes_names = object@nodes_patterns[, p]
+    nodes = nodes_per_year[rownames(nodes_per_year) %in% names(nodes_names[nodes_names]), ]
+    
+    # Somme des poids selon l'année
+    if (is.matrix(nodes)) { return(colSums(nodes)) }
+    return(nodes)
+  })
+  
+  # Matrice des fréquences des motifs par année
+  ppy = do.call(rbind, frequencies)
+  rownames(ppy) = object@patterns$pattern
+  
+  # Définition de l'attribut et retour
+  object@patterns_per_year = ppy
+  assign(object_name, object, envir = parent.frame())
+  return(invisible(ppy))
+})
 
 
 #' Computation of pattern characteristics
@@ -1765,31 +1777,33 @@ setMethod(f = "list_patterns_per_year",
 #' @keywords internal
 setMethod(f = "compute_patterns_characteristics",
           signature = "TransactionAnalyzer",
-          definition = function(object) {
-            
-            # Nom de l'objet pour modification interne dans l'environnement parent
-            object_name = deparse(substitute(object))
-            
-            # Association de nouvelles caractéristiques aux motifs
-            object@patterns$weight = sapply(seq_along(object@patterns$pattern),
-                                            function(p) sum(object@nodes_patterns[, p]))
-            object@patterns$length = sapply(object@patterns$pattern, length)
-            object@patterns$year = apply(object@patterns_per_year, 1, function(x) {
-                                                                        # Année d'apparition du motif
-                                                                        as.numeric(names(x[x > 0])[1])
-                                                                      })
-            
-            # Calcul de la spécificité et du statut dynamique de chaque motif
-            object@patterns$specificity = compute_specificity(object, object@patterns$pattern, object@patterns$frequency, object@patterns$weight)
-            object@patterns$status = define_dynamic_status(object, object@patterns$pattern)$res$status
-            
-            # Changement de l'ordre des colonnes
-            object@patterns = object@patterns[, c("pattern", "year", "length", "frequency", "weight", "specificity", "status")]
-            
-            # Définition de l'attribut et retour
-            assign(object_name, object, envir = parent.frame())
-            return(invisible(object@patterns))
-          })
+          definition =
+function(object) {
+  
+  # Nom de l'objet pour modification interne dans l'environnement parent
+  object_name = deparse(substitute(object))
+  
+  # Association de nouvelles caractéristiques aux motifs
+  object@patterns$weight = sapply(seq_along(object@patterns$pattern),
+                                  function(p) sum(object@nodes_patterns[, p]))
+  object@patterns$length = sapply(object@patterns$pattern, length)
+  object@patterns$year = apply(object@patterns_per_year, 1, function(x) {
+                                                              # Année d'apparition du motif
+                                                              as.numeric(names(x[x > 0])[1])
+                                                            })
+  
+  # Calcul de la spécificité et du statut dynamique de chaque motif
+  object@patterns$specificity = compute_specificity(object, object@patterns$pattern,
+                                                    object@patterns$frequency, object@patterns$weight)
+  object@patterns$status = define_dynamic_status(object, object@patterns$pattern)$res$status
+  
+  # Changement de l'ordre des colonnes
+  object@patterns = object@patterns[, c("pattern", "year", "length", "frequency", "weight", "specificity", "status")]
+  
+  # Définition de l'attribut et retour
+  assign(object_name, object, envir = parent.frame())
+  return(invisible(object@patterns))
+})
 
 
 #' Specificity computation
@@ -1817,40 +1831,41 @@ setMethod(f = "compute_patterns_characteristics",
 #' @keywords internal
 setMethod(f = "compute_specificity",
           signature = "TransactionAnalyzer",
-          definition = function(object, patterns, frequencies, weights) {
-            
-            # Renommage des variables pour mapper la formule
-            w = weights
-            f = frequencies
-            h = numeric(length(patterns))
-            specificity = rep(NA, length(patterns))
-            
-            # Indices des motifs dans la matrice liant les motifs aux noeuds
-            p_indexes = match(as.character(patterns), colnames(object@nodes_patterns))
-            
-            
-            # Présence du motif dans un seul noeud -> spécificité de 1
-            specificity[w == 1] = 1
-            
-            # Pour chaque autre motif
-            for (p in seq_along(patterns)[w != 1]) {
-              
-              # Recherche des fréquences des noeuds qui contiennent le motif
-              a = object@nodes$frequency[object@nodes_patterns[, p_indexes[p]]]
-              
-              # Spécificité de 0 si tous les noeuds ont la même fréquence ; sinon calcul selon la formule
-              if (length(unique(a)) == 1) specificity[p] = 0
-              else h[p] = -1 * sum(a / f[p] * log(a / f[p]))
-            }
-            
-            # Calcul de la spécificité des motifs pour lesquels elle n'a pas encore été définie
-            to_compute = is.na(specificity)
-            h_max = log(w[to_compute])
-            h_min = log(f / (f - w + 1)) + (w - 1) / f * log(f - w + 1)
-            specificity[is.na(specificity)] = (h_max - h[to_compute]) / (h_max - h_min[to_compute])
-            
-            return(specificity)
-          })
+          definition =
+function(object, patterns, frequencies, weights) {
+  
+  # Renommage des variables pour mapper la formule
+  w = weights
+  f = frequencies
+  h = numeric(length(patterns))
+  specificity = rep(NA, length(patterns))
+  
+  # Indices des motifs dans la matrice liant les motifs aux noeuds
+  p_indexes = match(as.character(patterns), colnames(object@nodes_patterns))
+  
+  
+  # Présence du motif dans un seul noeud -> spécificité de 1
+  specificity[w == 1] = 1
+  
+  # Pour chaque autre motif
+  for (p in seq_along(patterns)[w != 1]) {
+    
+    # Recherche des fréquences des noeuds qui contiennent le motif
+    a = object@nodes$frequency[object@nodes_patterns[, p_indexes[p]]]
+    
+    # Spécificité de 0 si tous les noeuds ont la même fréquence ; sinon calcul selon la formule
+    if (length(unique(a)) == 1) specificity[p] = 0
+    else h[p] = -1 * sum(a / f[p] * log(a / f[p]))
+  }
+  
+  # Calcul de la spécificité des motifs pour lesquels elle n'a pas encore été définie
+  to_compute = is.na(specificity)
+  h_max = log(w[to_compute])
+  h_min = log(f / (f - w + 1)) + (w - 1) / f * log(f - w + 1)
+  specificity[is.na(specificity)] = (h_max - h[to_compute]) / (h_max - h_min[to_compute])
+  
+  return(specificity)
+})
 
 
 #' Validation of RI computation parameters
@@ -1869,28 +1884,29 @@ setMethod(f = "compute_specificity",
 #' @keywords internal
 setMethod(f = "check_RI_params",
           signature = "TransactionAnalyzer",
-          definition = function(object, t, period) {
-            
-            # Années maximale et minimale
-            max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
-            min_year = as.numeric(colnames(object@nodes_per_year)[1])
-            
-            # Validation du paramètre définissant la fin de la période sur laquelle effectuer les calculs
-            if (is.null(t)) t = max_year
-            else if (t > max_year || t < min_year) {
-              stop("t must not be less than the year of the oldest transaction (", min_year, ")",
-                   " nor greater than the year of the most recent one (", max_year, ").")
-            }
-            
-            # Validation du paramètre définissant la longueur de la période de calcul
-            if (is.infinite(period)) period = t - min_year + 1
-            else if (period < 1 || period > t - min_year + 1) {
-              stop("period must be greater than 0",
-                   " and t - period + 1 must not be less than the year of the oldest transaction.")
-            }
-            
-            return(list(t = t, period = period))
-          })
+          definition =
+function(object, t, period) {
+  
+  # Années maximale et minimale
+  max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
+  min_year = as.numeric(colnames(object@nodes_per_year)[1])
+  
+  # Validation du paramètre définissant la fin de la période sur laquelle effectuer les calculs
+  if (is.null(t)) t = max_year
+  else if (t > max_year || t < min_year) {
+    stop("t must not be less than the year of the oldest transaction (", min_year, ")",
+         " nor greater than the year of the most recent one (", max_year, ").")
+  }
+  
+  # Validation du paramètre définissant la longueur de la période de calcul
+  if (is.infinite(period)) period = t - min_year + 1
+  else if (period < 1 || period > t - min_year + 1) {
+    stop("period must be greater than 0",
+         " and t - period + 1 must not be less than the year of the oldest transaction.")
+  }
+  
+  return(list(t = t, period = period))
+})
 
 
 #' Computation of the Reporting Index (RI)
@@ -1930,23 +1946,24 @@ setMethod(f = "check_RI_params",
 #' @keywords internal
 setMethod(f = "compute_reporting_indexes",
           signature = "TransactionAnalyzer",
-          definition = function(object, patterns, t = NULL, period = Inf) {
-            
-            # Valeurs ajustées des paramètres
-            params = check_RI_params(object, t, period)
-            t1 = params$t
-            
-            # Année de début de la période = année de fin - nombre d'années considérées + 1
-            t0 = t1 - params$period + 1
-            
-            # Fréquence du motif sur la période / somme des fréquences de tous les motifs sur la période
-            p_frequencies = unname(apply(as.data.frame( # as.data.frame nécessaire au cas où une seule colonne
-              object@patterns_per_year[match(as.character(patterns), rownames(object@patterns_per_year)),
-                                       (as.numeric(colnames(object@patterns_per_year)) <= t1)
-                                       & (as.numeric(colnames(object@patterns_per_year)) >= t0)]
-              ), 1, sum))
-            return(p_frequencies / sum(p_frequencies))
-          })
+          definition =
+function(object, patterns, t = NULL, period = Inf) {
+  
+  # Valeurs ajustées des paramètres
+  params = check_RI_params(object, t, period)
+  t1 = params$t
+  
+  # Année de début de la période = année de fin - nombre d'années considérées + 1
+  t0 = t1 - params$period + 1
+  
+  # Fréquence du motif sur la période / somme des fréquences de tous les motifs sur la période
+  p_frequencies = unname(apply(as.data.frame( # as.data.frame nécessaire au cas où une seule colonne
+    object@patterns_per_year[match(as.character(patterns), rownames(object@patterns_per_year)),
+                             (as.numeric(colnames(object@patterns_per_year)) <= t1)
+                             & (as.numeric(colnames(object@patterns_per_year)) >= t0)]
+    ), 1, sum))
+  return(p_frequencies / sum(p_frequencies))
+})
 
 
 #' Computation of RI at temporal limits 
@@ -1995,17 +2012,17 @@ setMethod(f = "compute_reporting_indexes",
 #' @keywords internal
 setMethod(f = "compute_reporting_indexes_limits",
           signature = "TransactionAnalyzer",
-          definition = function(object, patterns,
-                                t = NULL, period = Inf, short_limit = object["status_limit"]) {
+          definition =
+function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]) {
             
-            if (short_limit >= period) stop("short_limit must be lower than period.")
-            
-            ri_period = compute_reporting_indexes(object, patterns, t, period)
-            ri_limit = compute_reporting_indexes(object, patterns, t, short_limit)
-            
-            return(matrix(c(ri_period, ri_limit), ncol = 2, byrow = FALSE,
-                          dimnames = list(NULL, c("RI.period", "RI.limit"))))
-          })
+  if (short_limit >= period) stop("short_limit must be lower than period.")
+  
+  ri_period = compute_reporting_indexes(object, patterns, t, period)
+  ri_limit = compute_reporting_indexes(object, patterns, t, short_limit)
+  
+  return(matrix(c(ri_period, ri_limit),
+                ncol = 2, byrow = FALSE, dimnames = list(NULL, c("RI.period", "RI.limit"))))
+})
 
 
 #' Computation of threshold xi
@@ -2036,10 +2053,10 @@ setMethod(f = "compute_reporting_indexes_limits",
 #' @keywords internal
 setMethod(f = "compute_xi_threshold",
           signature = "TransactionAnalyzer",
-          definition = function(object, reporting_indexes) {
-            
-            return(ceiling(1 / sum(reporting_indexes ^ 2)))
-          })
+          definition =
+function(object, reporting_indexes) {
+   return(ceiling(1 / sum(reporting_indexes ^ 2)))
+})
 
 
 #' RI threshold computation
@@ -2067,14 +2084,15 @@ setMethod(f = "compute_xi_threshold",
 #' @keywords internal
 setMethod(f = "compute_ri_threshold",
           signature = "TransactionAnalyzer",
-          definition = function(object, reporting_indexes, xi = NULL) {
-            
-            # Calcul du seuil xi si non fourni en paramètre
-            if (is.null(xi)) xi = compute_xi_threshold(object, reporting_indexes)
-            
-            # Extraction de la valeur de RI du xi_ème élément (ordonnés par RI)
-            return(sort(reporting_indexes, decreasing = TRUE)[xi])
-          })
+          definition =
+function(object, reporting_indexes, xi = NULL) {
+  
+  # Calcul du seuil xi si non fourni en paramètre
+  if (is.null(xi)) xi = compute_xi_threshold(object, reporting_indexes)
+  
+  # Extraction de la valeur de RI du xi_ème élément (ordonnés par RI)
+  return(sort(reporting_indexes, decreasing = TRUE)[xi])
+})
 
 
 #' Dynamic status classification
@@ -2122,45 +2140,45 @@ setMethod(f = "compute_ri_threshold",
 #' @export
 setMethod(f = "define_dynamic_status",
           signature = "TransactionAnalyzer",
-          definition = function(object, patterns,
-                                t = NULL, period = Inf, short_limit = object["status_limit"]) {
-            
-            check_init(object, PATTERNS)
-            patterns = get_tnp_itemsets(object, patterns, entities = PATTERNS)
-            
-            # Calcul des limites et des seuils associés
-            ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
-            
-            ri_names = colnames(ri_limits)
-            xi = ri_thresholds = numeric(2)
-            for (i in seq_along(ri_names)) {
-              xi[i] = compute_xi_threshold(object, ri_limits[, ri_names[i]])
-              ri_thresholds[i] = compute_ri_threshold(object, ri_limits[, ri_names[i]], xi[i])
-            }
-            names(xi) = ri_names
-            names(ri_thresholds) = ri_names
-            
-            # Mise en évidence des RI ayant une valeur supérieure aux seuils
-            substantial_period = ri_limits[, "RI.period"] >= ri_thresholds["RI.period"]
-            substantial_limit = ri_limits[, "RI.limit"] >= ri_thresholds["RI.limit"]
-            
-            # Interprétation
-            status = character(length(patterns))
-            status[( substantial_period &  substantial_limit)] = STATUS_PERSISTENT
-            status[( substantial_period & !substantial_limit)] = STATUS_DECLINING
-            status[(!substantial_period &  substantial_limit)] = STATUS_EMERGENT
-            status[(!substantial_period & !substantial_limit)] = STATUS_LATENT
-            
-            return(list(res = data.frame(RI.period = ri_limits[, "RI.period"],
-                                         is.above.threshold.1 = substantial_period,
-                                         RI.limit = ri_limits[, "RI.limit"],
-                                         is.above.threshold.2 = substantial_limit,
-                                         status = status,
-                                         stringsAsFactors = FALSE),
-                        thresholds = matrix(c(xi, ri_thresholds),
-                                            ncol = 2, nrow = 2, byrow = TRUE,
-                                            dimnames = list(c("xi", "RI"), c("threshold.1", "threshold.2")))))
-          })
+          definition =
+function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]) {
+  
+  check_init(object, PATTERNS)
+  patterns = get_tnp_itemsets(object, patterns, entities = PATTERNS)
+  
+  # Calcul des limites et des seuils associés
+  ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
+  
+  ri_names = colnames(ri_limits)
+  xi = ri_thresholds = numeric(2)
+  for (i in seq_along(ri_names)) {
+    xi[i] = compute_xi_threshold(object, ri_limits[, ri_names[i]])
+    ri_thresholds[i] = compute_ri_threshold(object, ri_limits[, ri_names[i]], xi[i])
+  }
+  names(xi) = ri_names
+  names(ri_thresholds) = ri_names
+  
+  # Mise en évidence des RI ayant une valeur supérieure aux seuils
+  substantial_period = ri_limits[, "RI.period"] >= ri_thresholds["RI.period"]
+  substantial_limit = ri_limits[, "RI.limit"] >= ri_thresholds["RI.limit"]
+  
+  # Interprétation
+  status = character(length(patterns))
+  status[( substantial_period &  substantial_limit)] = STATUS_PERSISTENT
+  status[( substantial_period & !substantial_limit)] = STATUS_DECLINING
+  status[(!substantial_period &  substantial_limit)] = STATUS_EMERGENT
+  status[(!substantial_period & !substantial_limit)] = STATUS_LATENT
+  
+  return(list(res = data.frame(RI.period = ri_limits[, "RI.period"],
+                               is.above.threshold.1 = substantial_period,
+                               RI.limit = ri_limits[, "RI.limit"],
+                               is.above.threshold.2 = substantial_limit,
+                               status = status,
+                               stringsAsFactors = FALSE),
+              thresholds = matrix(c(xi, ri_thresholds),
+                                  ncol = 2, nrow = 2, byrow = TRUE,
+                                  dimnames = list(c("xi", "RI"), c("threshold.1", "threshold.2")))))
+})
 
 
 
@@ -2219,46 +2237,47 @@ setMethod(f = "define_dynamic_status",
 #' @export
 setMethod(f = "spectrum_chart",
           signature = "TransactionAnalyzer",
-          definition = function(object, pc, identifiers = "original", sort = TRUE,
-                                title = "Spectrum of patterns", path = NULL, name = NULL) {
-            
-            # Récupération des patterns
-            check_init(object, PATTERNS)
-            pc = get_tnp(object, pc, PATTERNS)
-            
-            check_param(identifiers, values = c("original", "new"))
-            
-            # Décomposition des fréquences des motifs selon le type de noeuds (simple ou complexe)
-            frequencies = frequency_by_complexity(object, pc$pattern)
-            
-            # Tri des motifs selon spécificité, statut, fréquence, longueur
-            if (sort) {
-              sorting_vector = order(1 - pc$specificity,
-                                     match(pc$status, names(object@status_colors)),
-                                     max(pc$frequency) - pc$frequency,
-                                     pc$length)
-              
-              pc = pc[sorting_vector, ]
-              frequencies = frequencies[sorting_vector, ]
-            }
-            
-            # Attribution d'identifiants aux motifs
-            if (identifiers == "new") pc$ID = seq(nrow(pc))
-            else pc$ID = as.numeric(rownames(pc))
-            
-            # Traçage du graphique (dans le device actif ou dans un fichier PDF)
-            if (!is.null(name)) {
-              grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
-                             14, 10, paper = "a4r", pointsize = 11)
-              plot_spectrum_chart(object, pc, frequencies, title)
-              grDevices::dev.off()
-            } else {
-              plot_spectrum_chart(object, pc, frequencies, title)
-            }
-            
-            # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
-            return(pc[order(pc$ID), c(ncol(pc), seq(ncol(pc)-1))])
-          })
+          definition =
+function(object, pc, identifiers = "original", sort = TRUE,
+         title = "Spectrum of patterns", path = NULL, name = NULL) {
+  
+  # Récupération des patterns
+  check_init(object, PATTERNS)
+  pc = get_tnp(object, pc, PATTERNS)
+  
+  check_param(identifiers, values = c("original", "new"))
+  
+  # Décomposition des fréquences des motifs selon le type de noeuds (simple ou complexe)
+  frequencies = frequency_by_complexity(object, pc$pattern)
+  
+  # Tri des motifs selon spécificité, statut, fréquence, longueur
+  if (sort) {
+    sorting_vector = order(1 - pc$specificity,
+                           match(pc$status, names(object@status_colors)),
+                           max(pc$frequency) - pc$frequency,
+                           pc$length)
+    
+    pc = pc[sorting_vector, ]
+    frequencies = frequencies[sorting_vector, ]
+  }
+  
+  # Attribution d'identifiants aux motifs
+  if (identifiers == "new") pc$ID = seq(nrow(pc))
+  else pc$ID = as.numeric(rownames(pc))
+  
+  # Traçage du graphique (dans le device actif ou dans un fichier PDF)
+  if (!is.null(name)) {
+    grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
+                   14, 10, paper = "a4r", pointsize = 11)
+    plot_spectrum_chart(object, pc, frequencies, title)
+    grDevices::dev.off()
+  } else {
+    plot_spectrum_chart(object, pc, frequencies, title)
+  }
+  
+  # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
+  return(pc[order(pc$ID), c(ncol(pc), seq(ncol(pc)-1))])
+})
 
 
 #' Pattern spectrum plotting
@@ -2283,125 +2302,126 @@ setMethod(f = "spectrum_chart",
 #' @keywords internal
 setMethod(f = "plot_spectrum_chart",
           signature = "TransactionAnalyzer",
-          definition = function(object, pc, frequencies, title = "Spectrum of patterns") {
-            
-            graphics::par(mar = c(6.0, 5.0, 2.0+1.4, 5.0))
-            
-            cex_legend = 0.85
-            cex_length = 0.75
-            cex_axis = 1.05
-            cex_lab = 1.05
-            cex_id = 0.9
-            
-            ## Bar chart relatif à la fréquence
-            
-            # Définition des couleurs des barres du barplot
-            bars_colors = object@status_colors[pc$status]
-            
-            # Marge entre les barres et les axes à gauche et à droite
-            x_margin = 0.03 * nrow(pc)
-            
-            # Diagramme en barres selon la fréquence des motifs
-            bar_plot = graphics::barplot(t(frequencies),
-                                         col = NA, space = 0, lwd = 2,
-                                         xlim = c(-x_margin, nrow(pc) + x_margin), xaxs = "i",
-                                         ylim = c(0, max(pc$frequency)), yaxt = "n",
-                                         xlab = "Pattern IDs", ylab = "Frequency",
-                                         names.arg = pc$ID, las = 3, font.axis = 2,
-                                         cex.lab = cex_lab, cex.names = cex_id)
-            bar_width_2 = diff(bar_plot[1:2]) / 2
-            
-            # Axe à gauche : suppression des nombres à virgule, orientation en fonction du nombre
-            # et affichage éventuel d'un tick supplémentaire pour délimiter l'axe en haut du graphique
-            ticks = unique(trunc(graphics::axTicks(2)))
-            if (max(ticks) < max(pc$frequency)) {
-               ticks = append(ticks, max(pc$frequency))
-            }
-            graphics::axis(2, lwd = 2, cex.axis = cex_axis,
-                           at = ticks, las = if (any(ticks >= 10)) 3 else 1)
-            
-            # Coloration des barres
-            for (i in seq(nrow(frequencies))) {
-              y = c(0, cumsum(c(frequencies[i, ])))
-              graphics::rect(bar_plot[i] - bar_width_2, y[ - length(y)],
-                             bar_plot[i] + bar_width_2, y[ - 1],
-                             col = bars_colors[i], density = c(-1, 15), border = "black")
-            }
-            
-            
-            ## Line chart relatif à la spécificité
-            graphics::par(new = TRUE)
-            
-            # Ligne de la spécificité et seuil
-            graphics::plot(x = seq(0.5, nrow(pc) - 0.5),
-                           y = pc$specificity,
-                           lwd = 3, type = "b", col = "black", pch = 20, xpd = TRUE,
-                           bty = "n", xlab = "", ylab = "", main = "",
-                           xlim = c(-x_margin, nrow(pc) + x_margin), xaxt = "n", xaxs = "i",
-                           ylim = c(0, 1), yaxt = "n", yaxs = "i")
-            graphics::segments(x0 = 0, y0 = 0.5,
-                               x1 = nrow(pc) * (1 + x_margin),
-                               lwd = 0.5, lty = "dotted")
-            
-            # Axe à droite
-            graphics::axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = cex_axis)
-            graphics::mtext("Specificity", side = 4, line = 3, cex = cex_lab, at = 0.5)
-            
-            
-            ## Texte relatif aux tailles des motifs (par-dessus la ligne)
-            # Changement du système de coordonnées du au changement de graphique (bar -> line)
-            new_y = pc$frequency * 1 / max(pc$frequency)
-            shadowtext(bar_plot, new_y, utils::as.roman(pc$length),
-                       col = "black", bg = "white", cex = cex_length, pos = 3, offset = cex_length, xpd = TRUE)
-            
-            
-            ## Légendes et titre
-            
-            # Marges latérale, en bas et en haut (tt = zone du titre, tp = extra zone du plot (pour affichage taille))
-            w_margin = convert_gunits(graphics::par("mai")[4]/10, "inches", "user", "w")        # = 0.5 mar (line)
-            b_margin = convert_gunits(w_margin, "user", dim = "w", rotation = TRUE)             # = 0.5 mar
-            tt_margin = convert_gunits(graphics::par("mai")[3]/1.7, "inches", "user", "h")      # = 2.0 mar
-            
-            # Légende des statuts
-            status_legend = graphics::legend("top", plot = FALSE,
-                                             horiz = TRUE, pch = 15, cex = cex_legend,
-                                             col = object@status_colors, legend = names(object@status_colors))
-            
-            graphics::legend(x = fig_in_usr_coords(2) - w_margin - status_legend$rect$w +
-                               (graphics::strwidth(STATUS_PERSISTENT) - graphics::strwidth(STATUS_LATENT)),
-                             y = fig_in_usr_coords(4) - tt_margin / 2 + status_legend$rect$h / 2,
-                             bty = "n", horiz = TRUE, xpd = TRUE,
-                             pch = 15, cex = cex_legend,
-                             col = object@status_colors,
-                             legend = names(object@status_colors))
-            
-            # Légende des fréquences
-            freq_legend = graphics::legend("bottom", plot = FALSE,
-                                             cex = cex_legend, fill = "red", density = c(-1, 15),
-                                             legend = c("Frequency in complex transactions", "Frequency in simple transactions"))
-            
-            graphics::legend(x = fig_in_usr_coords(1) + w_margin,
-                             y = fig_in_usr_coords(3) + freq_legend$rect$h + b_margin,
-                             bty = "n", xpd = TRUE,
-                             cex = cex_legend, fill = "red", density = c(-1, 15),
-                             legend = c("Frequency in complex transactions", "Frequency in simple transactions"))
-            
-            # Légende de la spécificité et de la taille
-            so_legend = graphics::legend("bottom", plot = FALSE,
-                                         pch = c(20, 86), lty = c("dotted", NA), cex = cex_legend,
-                                         legend = c("Specificity", "Length"))
-            
-            graphics::legend(x = fig_in_usr_coords(2) - so_legend$rect$w - w_margin,
-                             y = fig_in_usr_coords(3) + so_legend$rect$h + b_margin,
-                             bty = "n", xpd = TRUE,
-                             pch = c(19, 86), lty = c("dotted", NA), cex = cex_legend,
-                             legend = c("Specificity", "Length"))
-            
-            # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
-            graphics::text(x = fig_in_usr_coords(1) + w_margin,
-                           y = fig_in_usr_coords(4) - tt_margin / 2,
-                           "Spectrum of patterns", cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
-          })
+          definition =
+function(object, pc, frequencies, title = "Spectrum of patterns") {
+  
+  graphics::par(mar = c(6.0, 5.0, 2.0+1.4, 5.0))
+  
+  cex_legend = 0.85
+  cex_length = 0.75
+  cex_axis = 1.05
+  cex_lab = 1.05
+  cex_id = 0.9
+  
+  ## Bar chart relatif à la fréquence
+  
+  # Définition des couleurs des barres du barplot
+  bars_colors = object@status_colors[pc$status]
+  
+  # Marge entre les barres et les axes à gauche et à droite
+  x_margin = 0.03 * nrow(pc)
+  
+  # Diagramme en barres selon la fréquence des motifs
+  bar_plot = graphics::barplot(t(frequencies),
+                               col = NA, space = 0, lwd = 2,
+                               xlim = c(-x_margin, nrow(pc) + x_margin), xaxs = "i",
+                               ylim = c(0, max(pc$frequency)), yaxt = "n",
+                               xlab = "Pattern IDs", ylab = "Frequency",
+                               names.arg = pc$ID, las = 3, font.axis = 2,
+                               cex.lab = cex_lab, cex.names = cex_id)
+  bar_width_2 = diff(bar_plot[1:2]) / 2
+  
+  # Axe à gauche : suppression des nombres à virgule, orientation en fonction du nombre
+  # et affichage éventuel d'un tick supplémentaire pour délimiter l'axe en haut du graphique
+  ticks = unique(trunc(graphics::axTicks(2)))
+  if (max(ticks) < max(pc$frequency)) {
+     ticks = append(ticks, max(pc$frequency))
+  }
+  graphics::axis(2, lwd = 2, cex.axis = cex_axis,
+                 at = ticks, las = if (any(ticks >= 10)) 3 else 1)
+  
+  # Coloration des barres
+  for (i in seq(nrow(frequencies))) {
+    y = c(0, cumsum(c(frequencies[i, ])))
+    graphics::rect(bar_plot[i] - bar_width_2, y[ - length(y)],
+                   bar_plot[i] + bar_width_2, y[ - 1],
+                   col = bars_colors[i], density = c(-1, 15), border = "black")
+  }
+  
+  
+  ## Line chart relatif à la spécificité
+  graphics::par(new = TRUE)
+  
+  # Ligne de la spécificité et seuil
+  graphics::plot(x = seq(0.5, nrow(pc) - 0.5),
+                 y = pc$specificity,
+                 lwd = 3, type = "b", col = "black", pch = 20, xpd = TRUE,
+                 bty = "n", xlab = "", ylab = "", main = "",
+                 xlim = c(-x_margin, nrow(pc) + x_margin), xaxt = "n", xaxs = "i",
+                 ylim = c(0, 1), yaxt = "n", yaxs = "i")
+  graphics::segments(x0 = 0, y0 = 0.5,
+                     x1 = nrow(pc) * (1 + x_margin),
+                     lwd = 0.5, lty = "dotted")
+  
+  # Axe à droite
+  graphics::axis(4, yaxp = c(0, 1, 5), lwd = 2, cex.axis = cex_axis)
+  graphics::mtext("Specificity", side = 4, line = 3, cex = cex_lab, at = 0.5)
+  
+  
+  ## Texte relatif aux tailles des motifs (par-dessus la ligne)
+  # Changement du système de coordonnées du au changement de graphique (bar -> line)
+  new_y = pc$frequency * 1 / max(pc$frequency)
+  shadowtext(bar_plot, new_y, utils::as.roman(pc$length),
+             col = "black", bg = "white", cex = cex_length, pos = 3, offset = cex_length, xpd = TRUE)
+  
+  
+  ## Légendes et titre
+  
+  # Marges latérale, en bas et en haut (tt = zone du titre, tp = extra zone du plot (pour affichage taille))
+  w_margin = convert_gunits(graphics::par("mai")[4]/10, "inches", "user", "w")   # = 0.5 mar (line)
+  b_margin = convert_gunits(w_margin, "user", dim = "w", rotation = TRUE)        # = 0.5 mar
+  tt_margin = convert_gunits(graphics::par("mai")[3]/1.7, "inches", "user", "h") # = 2.0 mar
+  
+  # Légende des statuts
+  status_legend = graphics::legend("top", plot = FALSE,
+                                   horiz = TRUE, pch = 15, cex = cex_legend,
+                                   col = object@status_colors, legend = names(object@status_colors))
+  
+  graphics::legend(x = fig_in_usr_coords(2) - w_margin - status_legend$rect$w +
+                     (graphics::strwidth(STATUS_PERSISTENT) - graphics::strwidth(STATUS_LATENT)),
+                   y = fig_in_usr_coords(4) - tt_margin / 2 + status_legend$rect$h / 2,
+                   bty = "n", horiz = TRUE, xpd = TRUE,
+                   pch = 15, cex = cex_legend,
+                   col = object@status_colors,
+                   legend = names(object@status_colors))
+  
+  # Légende des fréquences
+  freq_legend = graphics::legend("bottom", plot = FALSE,
+                                   cex = cex_legend, fill = "red", density = c(-1, 15),
+                                   legend = c("Frequency in complex transactions", "Frequency in simple transactions"))
+  
+  graphics::legend(x = fig_in_usr_coords(1) + w_margin,
+                   y = fig_in_usr_coords(3) + freq_legend$rect$h + b_margin,
+                   bty = "n", xpd = TRUE,
+                   cex = cex_legend, fill = "red", density = c(-1, 15),
+                   legend = c("Frequency in complex transactions", "Frequency in simple transactions"))
+  
+  # Légende de la spécificité et de la taille
+  so_legend = graphics::legend("bottom", plot = FALSE,
+                               pch = c(20, 86), lty = c("dotted", NA), cex = cex_legend,
+                               legend = c("Specificity", "Length"))
+  
+  graphics::legend(x = fig_in_usr_coords(2) - so_legend$rect$w - w_margin,
+                   y = fig_in_usr_coords(3) + so_legend$rect$h + b_margin,
+                   bty = "n", xpd = TRUE,
+                   pch = c(19, 86), lty = c("dotted", NA), cex = cex_legend,
+                   legend = c("Specificity", "Length"))
+  
+  # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
+  graphics::text(x = fig_in_usr_coords(1) + w_margin,
+                 y = fig_in_usr_coords(4) - tt_margin / 2,
+                 "Spectrum of patterns", cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
+})
 
 
 #' Pattern node characteristics
@@ -2424,26 +2444,27 @@ setMethod(f = "plot_spectrum_chart",
 #' @keywords internal
 setMethod(f = "pattern_node_characteristics",
           signature = "TransactionAnalyzer",
-          definition = function(object, patterns) {
-            
-            check_init(object, PATTERNS)
-            
-            # Ensembles des fréquences et longueurs des noeuds contenant les motifs
-            frequencies = list()
-            lengths = list()
-            
-            # Pour chaque motif
-            for (i in seq_along(patterns)) {
-              # Ensemble des noeuds contenant le motif
-              pat = as.character(patterns[i])
-              nodes = object@nodes[object@nodes_patterns[, pat], ]
-              
-              frequencies[[i]] = nodes$frequency
-              lengths[[i]] = nodes$length
-            }
-            
-            return(list(frequencies = frequencies, lengths = lengths))
-          })
+          definition =
+function(object, patterns) {
+  
+  check_init(object, PATTERNS)
+  
+  # Ensembles des fréquences et longueurs des noeuds contenant les motifs
+  frequencies = list()
+  lengths = list()
+  
+  # Pour chaque motif
+  for (i in seq_along(patterns)) {
+    # Ensemble des noeuds contenant le motif
+    pat = as.character(patterns[i])
+    nodes = object@nodes[object@nodes_patterns[, pat], ]
+    
+    frequencies[[i]] = nodes$frequency
+    lengths[[i]] = nodes$length
+  }
+  
+  return(list(frequencies = frequencies, lengths = lengths))
+})
 
 
 #' Pattern frequency by transaction complexity
@@ -2472,7 +2493,8 @@ setMethod(f = "pattern_node_characteristics",
 #' @export
 setMethod(f = "frequency_by_complexity",
           signature = "TransactionAnalyzer",
-          definition = function(object, patterns) {
+          definition =
+function(object, patterns) {
   
   patterns = get_tnp_itemsets(object, patterns, entities = PATTERNS)
   pnc = pattern_node_characteristics(object, patterns)
@@ -2631,497 +2653,493 @@ setMethod(f = "frequency_by_complexity",
 #' @export
 setMethod(f = "spectrosome_chart",
           signature = "TransactionAnalyzer",
-          definition = function(object, nopc,
-                                identifiers = "original",
-                                nb_graphs = 1, min_link_weight = 1,
-                                vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
-                                clusters = Inf, highlight = 3,
-                                use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE,
-                                title = NULL, path = NULL, name = NULL, ...) {
-            
-            # Récupération des noeuds/patterns et recherche du type d'entités fourni
-            entities = which_entities(object, nopc)
-            nopc = get_tnp(object, nopc)
-            check_init(object, c(entities, which_associated_links(object, entities)))
-            
-            # Validation des paramètres
-            if (nrow(nopc) < 2)
-              stop("There must be at least 2 nodes or patterns to draw a spectrosome.")
-            
-            if (identifiers != "original" && identifiers != "new")
-              stop("identifiers must be \"original\" or \"new\".")
-            
-            if (!(vertex_col %in% c("status", "categories", "none"))
-                && !(length(vertex_col) %in% c(1, nrow(nopc)))) {
-              stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
-                         "a vector of R predefined color names or hexadecimal values",
-                         "of length 1 or of length equal to the number of rows of nopc."))
-            }
-            if (!(vertex_size %in% c("relative", "grouped", "absolute", "equal"))
-                && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
-              stop(paste("vertex_size be one of \"relative\", \"grouped\", \"absolute\", \"equal\"",
-                         "or a numeric vector of length 1 or of length equal to the number of",
-                         "rows of nopc."))
-            }
-            
-            
-            # Extraction des liens pour les éléments à visualiser (nop_links = node or pattern links)
-            nop_links = get_links(object, nopc)
-            
-            if (all(nop_links$weight == 0) && "displayisolates" %in% names(list(...)) && !(list(...)$displayisolates)) {
-              warning("There is no graph to plot: displayisolates = FALSE and all entities are isolated.")
-              return(NULL)
-            }
-            
-            if (entities == NODES) {
-              # Texte affiché sur le graphique
-              nop_subtitle_1 = "Nodes: %d (%d isolate"
-              nop_subtitle_2 = "); Links: %d"
-              
-              not_identical = !identical(object@nodes, nopc)
-              
-              # Renommage de colonnes pour simplification ultérieure (cf. vertices_colors et vertices_shapes)
-              colnames(nopc)[colnames(nopc) == "node"] = "pattern"
-              
-            } else if (entities == PATTERNS) {
-              # Texte affiché sur le graphique
-              nop_subtitle_1 = "Patterns: %d (%d isolate"
-              nop_subtitle_2 = "); Links: %d"
-              
-              not_identical = !identical(object@patterns, nopc)
-            }
-            
-            # Identifiants des sommets du graphe
-            vertices_id = seq(nrow(nopc))
-            
-            if (not_identical) {
-              # Nouvelle numérotation des éléments conservés
-              names(vertices_id) = rownames(nopc)
-              nop_links$endpoint.1 = vertices_id[as.character(nop_links$endpoint.1)]
-              nop_links$endpoint.2 = vertices_id[as.character(nop_links$endpoint.2)]
-            }
-            
-            # Retrait des liens entre les sommets qui ont moins de min_link_weight items en commun
-            if (min_link_weight > 1) {
-              all_vertices = unique(c(t(nop_links[, 1:2]))) # unlist horizontalement
-              nop_links = nop_links[nop_links$weight >= min_link_weight | nop_links$weight == 0, ]
-              
-              # Redéfinition des sommets maintenant sans lien
-              missing_vertices = as.data.frame(t(
-                sapply(setdiff(all_vertices, unique(unlist(nop_links[, 1:2]))),
-                       function(x){
-                         if (entities == NODES) return(c(x, x, "", 0))
-                         return(c(x, x, "", 0, object@patterns[x, "year"]))
-                       })), stringsAsFactors = FALSE)
-              
-              # Réattribution des noms et classes des colonnes avant concaténation à la data frame des liens
-              colnames(missing_vertices) = colnames(nop_links)
-              for (c_name in colnames(missing_vertices)) class(missing_vertices[c_name]) = class(nop_links[c_name])
-              class(missing_vertices$endpoint.1) = class(missing_vertices$endpoint.2) = class(missing_vertices$weight) = "integer"
-              if(entities == PATTERNS) class(missing_vertices$year) = "integer"
-              nop_links = rbind(nop_links, missing_vertices)
-              
-              # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
-              rownames(nop_links) = c(rownames(nop_links)[1:(nrow(nop_links) - nrow(missing_vertices))],
-                                      paste0("A", seq_len(nrow(missing_vertices))))
-            }
-            # Attribution d'identifiants aux liens
-            nop_links$ID = seq_len(nrow(nop_links))
-            if (entities == NODES) nop_links = nop_links[, c("ID", "endpoint.1", "endpoint.2", "items", "weight")]
-            else nop_links = nop_links[, c("ID", "endpoint.1", "endpoint.2", "items", "weight", "year")]
-            
-            
-            # Couleurs et légendes pour chaque catégorie existante
-            categories_colors = list()
-            links_colors = list()
-            
-            # Définition des couleurs des liens en recherchant les catégories associées aux items formants les liens
-            if (length(object@items_categories) == 0) {
-              # Si aucune catégorie n'est associée aux éléments, aucune ne l'est aux liens
-              categories_colors[[1]] = character(0)
-              links_colors[[1]] = 1
-              
-            } else {
-              # Pour chaque type de catégorie
-              for (category in seq_len(ncol(object@items_categories))) {
-                
-                # S'il n'y a aucun lien
-                if (sum(nop_links$weight != 0) == 0) {
-                  categories_colors[[category]] = character(0)
-                  links_colors[[category]] = rep("white", nrow(nop_links))
-                  
-                } else if (length(levels(object@items_categories[, category])) > 1) {
-                  
-                  # Catégories associées aux liens
-                  links_categories = lapply(strsplit(nop_links$items, "/"),
-                                            function(x) sort(unique(as.character(object@items_categories[x, category]))))
-                  category_values = unique(unlist(links_categories))
-                  links_categories = unlist(lapply(links_categories, function(x) {
-                    if (length(x) == 1) return(x)
-                    if (length(x) > 1) return("Mixt")
-                    return("Isolated")
-                  }))
-                  
-                  # Séparation des valeurs de la catégorie qui sont uniquement inclus dans des liens mixtes
-                  category_mixed = sort(setdiff(category_values, unique(links_categories)))
-                  category_not_mixed = sort(setdiff(category_values, category_mixed))
-                  
-                  # Sélection des couleurs associées
-                  categories_colors[[category]] = c(object@categories_colors[[category]][category_not_mixed],
-                                                    "black", "white")
-                  names(categories_colors[[category]]) = c(category_not_mixed, "Mixt", "Isolated")
-                  
-                  # Couleurs des liens tracés sur le graphique
-                  links_colors[[category]] = categories_colors[[category]][links_categories]
-                  
-                  # Retrait du noir associé aux liens mixtes s'il n'y en a pas et retrait du blanc
-                  # associé aux isolés, pour ne pas les afficher ultérieurement dans la légende
-                  if (length(category_mixed) == 0 && !("Mixt" %in% links_categories)) {
-                    categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-2)]
-                  } else {
-                    categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
-                    
-                    # Ajout des valeurs de catégorie inclus uniquement dans des liens mixtes
-                    if (display_mixt) {
-                      new_names = c(names(categories_colors[[category]]), category_mixed)
-                      categories_colors[[category]] = append(categories_colors[[category]], rep("white", length(category_mixed)))
-                      names(categories_colors[[category]]) = new_names
-                    }
-                  }
-                  
-                } else if(length(levels(object@items_categories[, category])) == 1) {
-                  # Une unique catégorie
-                  categories_colors[[category]] = c("black", "white")
-                  names(categories_colors[[category]]) = c(levels(object@items_categories[, category]), "Isolated")
-                  
-                  links_categories = ifelse(nop_links$weight == 0, "Isolated", levels(object@items_categories[, category]))
-                  
-                  # Couleurs des liens tracés sur le graphique
-                  links_colors[[category]] = categories_colors[[category]][links_categories]
-                  
-                  # Retrait du blanc associé aux isolés pour ne pas l'afficher ultérieurement dans la légende
-                  categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
-                  
-                } else {
-                  stop("The categories associated with the items must be factor type and it must have at least one factor.")
-                }
-              }
-            }
-            
-            
-            # Définition des couleurs des sommets en fonction du statut et nombre pour chaque statut
-            if (entities == PATTERNS && vertex_col[1] == "status") {
-              vertices_colors = object@status_colors[nopc$status]
-              count_status = sapply(names(object@status_colors),
-                                    function(status) sum(nopc$status == status))
-              
-              # Légende associée
-              vertex_legend_legend = c(names(object@status_colors), "", "Single items", "Multiple items")
-              vertex_legend_col = c(object@status_colors, "white", "black", "black")
-              
-            } else if (vertex_col[1] == "categories") {
-              # Couleurs en fonction de la catégorie
-              v.categories_colors = list()
-              vertices_colors = list()
-              vertex_legend_legend = list()
-              vertex_legend_col = list()
-              
-              if (length(object@items_categories) == 0) {
-                v.categories_colors[[1]] = character(0)
-                vertices_colors[[1]] = rep("grey", nrow(nopc))
-                vertex_legend_legend[[1]] = c("Single items", "Multiple items")
-                vertex_legend_col[[1]] = c("black", "black")
-                
-              } else {
-                # Pour chaque catégorie
-                for (category in seq_len(ncol(object@items_categories))) {
-                  
-                  # Valeurs de la catégorie associées aux sommets
-                  vertices_categories = lapply(nopc$pattern,
-                                               function(x) sort(unique(as.character(object@items_categories[x, category]))))
-                  category_values = unique(unlist(vertices_categories))
-                  vertices_categories = unlist(lapply(vertices_categories, function(x) {
-                    if (length(x) == 1) return(x)
-                    if (length(x) > 1) return("Mixt")
-                  }))
-                  
-                  # Séparation des valeurs de la catégorie qui sont uniquement inclus dans des sommets mixtes
-                  category_mixed = sort(setdiff(category_values, unique(vertices_categories)))
-                  category_not_mixed = sort(setdiff(category_values, category_mixed))
-                  
-                  # Sélection des couleurs associées
-                  v.categories_colors[[category]] = c(object@categories_colors[[category]][category_not_mixed],
-                                                      "black")
-                  names(v.categories_colors[[category]]) = c(category_not_mixed, "Mixt")
-                  
-                  # Couleurs des sommets tracés sur le graphique
-                  vertices_colors[[category]] = v.categories_colors[[category]][vertices_categories]
-                  
-                  # Retrait du noir associé aux sommets mixtes s'il n'y en a pas, pour ne pas l'afficher ultérieurement dans la légende
-                  if (length(category_mixed) == 0) {
-                    v.categories_colors[[category]] = v.categories_colors[[category]][seq(length(v.categories_colors[[category]])-1)]
-                  } else {
-                    # Ajout des valeurs de catégorie inclus uniquement dans des sommets mixtes
-                    if (display_mixt) {
-                      new_names = c(names(v.categories_colors[[category]]), category_mixed)
-                      v.categories_colors[[category]] = append(v.categories_colors[[category]], rep("white", length(category_mixed)))
-                      names(v.categories_colors[[category]]) = new_names
-                    }
-                  }
-                  
-                  # Légende associée
-                  vertex_legend_legend[[category]] = c(names(v.categories_colors[[category]]),
-                                                       "", "Single items", "Multiple items")
-                  vertex_legend_col[[category]] = c(v.categories_colors[[category]], "white", "black", "black")
-                }
-              }
-            } else {
-              if (vertex_col[1] == "none" || vertex_col[1] == "status") {
-                # "none" ou "status" et noeuds : couleur grise
-                vertices_colors = rep("grey", nrow(nopc))
-              } else if (length(vertex_col == 1)) {
-                vertices_colors = rep(vertex_col, nrow(nopc))
-              } else { # length(vertex_col) == nrow(nopc)
-                vertices_colors = vertex_col
-              }
-              
-              # Légende associée
-              vertex_legend_legend = c("Single items", "Multiple items")
-              vertex_legend_col = c("black", "black")
-            }
-            
-            # Sommets à plusieurs items en cercle ; triangle sinon
-            vertices_shapes = rep(100 , nrow(nopc))
-            vertices_shapes[nopc$length == 1] = 3
-            
-            # Définition des tailles des sommets
-            if (is.numeric(vertex_size)) {
-              if (length(vertex_size) == 1) {
-                vertices_sizes = rep(vertex_size, nrow(nopc))
-              } else { # length(vertex_size == nrow(nopc)
-                vertices_sizes = vertex_size
-              }
-            } else {
-              switch(EXPR = vertex_size,
-                     "relative" = {
-                       # Interpolation linéaire des fréquences aux valeurs [size_range[1], size_range[2]]
-                       if (min(nopc$frequency) != max(nopc$frequency)) {
-                         func = stats::approxfun(x = c(min(nopc$frequency),
-                                                       max(nopc$frequency)),
-                                                 y = size_range)
-                         vertices_sizes = func(nopc$frequency)
-                       } else {
-                         vertices_sizes = rep(mean(size_range), length(nopc$frequency))
-                       }
-                     },
-                     "grouped" = {
-                       # Groupement des valeurs des fréquences selon 5 quantiles
-                       breaks = round(stats::quantile(nopc$frequency, prob = seq(0, 1, 0.2)))
-                       intervals = cut(nopc$frequency, breaks = unique(breaks), include.lowest = TRUE)
-                       sizes = seq(size_range[1], size_range[2], length.out = length(levels(intervals)))
-                       vertices_sizes = sizes[intervals]
-                     },
-                     "absolute" = {
-                       vertices_sizes = nopc$frequency
-                     },
-                     "equal" = {
-                       # Valeur par défaut de l'argument vertex.cex de la fonction sna::gplot()
-                       vertices_sizes = 1
-                     }) 
-            }
-            
-            
-            # Réseau généré avec le package network
-            links = as.matrix(nop_links[, c("endpoint.1", "endpoint.2")], ncol = 2)
-            network_data = network::network(links, directed = FALSE, matrix.type = "edgelist")
-            # vertices_names = network::network.vertex.names(network_data)
-            
-            # Récupération des arguments additionnels et détermination de valeurs par défaut pour sna::gplot
-            args = list(...)
-            if(!("mode" %in% names(args))) args$mode = "fruchtermanreingold"
-            if(!("displaylabels" %in% names(args))) args$displaylabels = TRUE
-            if(!("label.pos" %in% names(args))) args$label.pos = 0
-            if(!("boxed.labels" %in% names(args))) args$boxed.labels = TRUE
-            if(!("displayisolates" %in% names(args))) args$displayisolates = TRUE
-            if(!("label" %in% names(args))) {
-              if (identifiers == "new") args$label = vertices_id
-              else args$label = rownames(nopc)
-            }
-            
-            # Duplication de la fonction utilisée par l'argument "mode" de la fonction sna::gplot
-            # pour fonctionner sans avoir à charger le package
-            eval(parse(text = paste0("gplot.layout.", args$mode, " <- sna::gplot.layout.", args$mode)))
-            
-            # Nombre de variantes du graphique
-            nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
-            
-            # Définition de la valeur par défaut du titre et vérifications du nom de fichier
-            if (is.null(title)) title = paste0("Spectrosome of ", entities)
-            if (!is.null(name)) name = check_extension(name, "png")
-            path = turn_into_path(path)
-            
-            # Réutilisation ou non de coordonnées
-            if ("coord" %in% names(args)) {
-              coord = args$coord
-              args$coord = NULL
-              is.missing = is.null(coord)
-              
-            } else { is.missing = TRUE }
-            coords_list = list()
-            
-            # Traçage des graphiques
-            for (i in seq(nb_graphs)) {
-              # Coordonnées qui seront réutilisées
-              if (is.missing) coord = NULL
-              
-              for (j in seq(nb_categories)) {
-                
-                # Ouverture d'un fichier PNG si spécifié
-                if (!is.null(name)) {
-                  # Nom du graphique en fonction du nombre
-                  file_name = ifelse(nb_graphs == 1, name, sub(".png", paste0("-", i, ".png"), name))
-                  file_name = ifelse(nb_categories == 1,
-                                     file_name,
-                                     sub(".png", paste0("-", colnames(object@items_categories)[j], ".png"), file_name))
-                  
-                  # Traçage des graphiques dans des fichiers PNG
-                  grDevices::png(paste0(path, file_name), 950, 700)
-                }
-                
-                graphics::par(mar = c(0.5, 0.5, 3.5, 0.5))
-                graphics::plot.new()
-                w_margin_inches = graphics::par("mai")[4]
-                
-                # Titres du graphique
-                title(main = title, cex.main = 1.3, line = 2)
-                nb_isolates = length(sna::isolates(network_data))
-                title(main = paste0(sprintf(nop_subtitle_1, nrow(nopc), nb_isolates),
-                                    if (nb_isolates < 2) "" else "s",
-                                    sprintf(nop_subtitle_2, sum(nop_links$weight != 0))),
-                      font.main = 3, cex.main = 1.1, line = 0.7)
-                
-                # Préparation des formes de la légende des sommets
-                if (entities == PATTERNS && vertex_col[1] == "status") {
-                  vertex_legend_pt.cex = c(rep(2, length(object@status_colors)), 0, 1.6, 2)
-                  vertex_legend_pch = c(rep(15, length(object@status_colors)), 0, 2, 1)
-                } else if (vertex_col[1] != "categories" || length(object@items_categories) == 0) {
-                  vertex_legend_pt.cex = c(1.6, 2)
-                  vertex_legend_pch = c(2, 1)
-                } else {
-                  vertex_legend_pt.cex = c(rep(2, length(v.categories_colors[[j]])), 0, 1.6, 2)
-                  vertex_legend_pch = c(rep(15, length(v.categories_colors[[j]])), 0, 2, 1)
-                }
-                
-                # Préparation du texte et de la couleur de la légende des sommets
-                if (vertex_col[1] != "categories") {
-                  legend_legend = vertex_legend_legend
-                } else {
-                  if (length(object@items_categories) != 0) {
-                    # Application du cutoff sur la légende des couleurs des sommets si fonction de la catégorie
-                    nb_vertices_leg = length(vertex_legend_legend[[j]])
-                    legend_legend = c(substr2(vertex_legend_legend[[j]][1:(nb_vertices_leg-3)], stop = c.cutoff),
-                                      vertex_legend_legend[[j]][(nb_vertices_leg-2):nb_vertices_leg])
-                  } else {
-                    legend_legend = vertex_legend_legend[[1]]
-                  }
-                }
-                legend_col = if (vertex_col[1] == "categories") vertex_legend_col[[j]] else vertex_legend_col
-                
-                # Affichage de la légende
-                cex_legend = 1
-                vertex_legend_output = graphics::legend("topleft", bty = "n",
-                                                        title = cap(entities), title.adj = 0,
-                                                        pt.cex = vertex_legend_pt.cex, pch = vertex_legend_pch,
-                                                        lwd = -1, cex = cex_legend,
-                                                        col = legend_col, legend = legend_legend)
-                if (length(object@items_categories) != 0) {
-                  edge_legend_legend = substr2(names(categories_colors[[j]]), stop = c.cutoff)
-                  
-                  edge_legend_output = graphics::legend(x = vertex_legend_output$rect$left,
-                                                        y = vertex_legend_output$rect$top - vertex_legend_output$rect$h,
-                                                        bty = "n", title = "Links", title.adj = 0,
-                                                        pch = NA_integer_, lwd = 3, cex = cex_legend,
-                                                        col = categories_colors[[j]], legend = edge_legend_legend)
-                  
-                  legend_width = max(vertex_legend_output$rect$w, edge_legend_output$rect$w)
-                } else {
-                  legend_width = vertex_legend_output$rect$w
-                }
-                
-                # Légende supplémentaire concernant la distribution des statuts
-                if (entities == PATTERNS && vertex_col[1] == "status") {
-                  status_legend = paste0("(", count_status, ")")
-                  
-                  status_legend_output = graphics::legend(x = vertex_legend_output$text$x[1] + graphics::strwidth(paste0(STATUS_PERSISTENT),
-                                                                                                                  cex = cex_legend),
-                                                          y = vertex_legend_output$rect$top,
-                                                          bty = "n", title = "",
-                                                          legend = status_legend, cex = cex_legend)
-                  
-                  if (status_legend_output$rect$w + status_legend_output$rect$left > legend_width + vertex_legend_output$rect$left) {
-                    legend_width = status_legend_output$rect$left - vertex_legend_output$rect$left + status_legend_output$rect$w
-                  }
-                }
-                
-                
-                # Réinitialisation des marges de la zone graphique pour séparer légende et plot
-                graphics::par(new = TRUE, mai = graphics::par("mai") +
-                                c(0, convert_gunits(legend_width, "user", "inches", "w") + w_margin_inches, 0, 0))
-                
-                tryCatch({
-                  # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
-                  coord = do.call(sna::gplot, c(list(
-                    dat = network_data, gmode = "graph",
-                    coord = coord,
-                    vertex.sides = vertices_shapes,
-                    vertex.cex = vertices_sizes,
-                    vertex.col = if (vertex_col[1] == "categories") vertices_colors[[j]] else vertices_colors,
-                    edge.col = links_colors[[j]]
-                  ), args))
-                },
-                error = function(e) {
-                  # Fermeture et suppression du fichier graphique avant affichage du message d'erreur
-                  if (!is.null(name)) {
-                    grDevices::dev.off()
-                    file.remove(paste0(path, file_name))
-                  }
-                  stop(e)
-                  # Exemple d'erreur possible : vertex_col contient des noms de couleurs incorrects
-                })
-                
-                # S'il y a bien des liens, identification et affichage des noms des clusters
-                if (sum(nop_links$weight != 0)) {
-                  cluster_text(object, coord, nop_links, clusters, highlight, use_names, n.cutoff)
-                }
-                
-                # Fermeture du fichier PNG
-                if (!is.null(name)) grDevices::dev.off()
-              }
-              
-              # Récupération des coordonnées des sommets du graphe
-              coords_list[[i]] = coord
-            }
-            
-            # Calcul du degré de chaque sommet dans le graphe
-            degrees = sapply(vertices_id, function(ID) degree(object, ID, nop_links))
-            # Renommage initial des colonnes avant retour
-            if (entities == NODES) {
-              colnames(nopc)[colnames(nopc) == "pattern"] = "node"
-            }
-            
-            # Réattribution des ID d'origine (non compatibles avec sna::gplot)
-            if (identifiers == "original" && not_identical) {
-              nop_links$endpoint.1 = as.integer(names(vertices_id[nop_links$endpoint.1]))
-              nop_links$endpoint.2 = as.integer(names(vertices_id[nop_links$endpoint.2]))
-              
-              vertices_id = as.numeric(rownames(nopc))
-            }
-            
-            # Noeuds ou motifs, caractéristiques, identifiants sur le graphique et degrés dans le graphe
-            return(list(vertices = data.frame(ID = vertices_id, nopc, degree = degrees),
-                        edges = nop_links,
-                        coords = coords_list))
-          })
+          definition =
+function(object, nopc, identifiers = "original",
+         nb_graphs = 1, min_link_weight = 1,
+         vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
+         clusters = Inf, highlight = 3,
+         use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, display_mixt = TRUE,
+         title = NULL, path = NULL, name = NULL, ...) {
+  
+  # Récupération des noeuds/patterns et recherche du type d'entités fourni
+  entities = which_entities(object, nopc)
+  nopc = get_tnp(object, nopc)
+  check_init(object, c(entities, which_associated_links(object, entities)))
+  
+  # Validation des paramètres
+  if (nrow(nopc) < 2)
+    stop("There must be at least 2 nodes or patterns to draw a spectrosome.")
+  
+  if (identifiers != "original" && identifiers != "new")
+    stop("identifiers must be \"original\" or \"new\".")
+  
+  if (!(vertex_col %in% c("status", "categories", "none"))
+      && !(length(vertex_col) %in% c(1, nrow(nopc)))) {
+    stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
+               "a vector of R predefined color names or hexadecimal values",
+               "of length 1 or of length equal to the number of rows of nopc."))
+  }
+  if (!(vertex_size %in% c("relative", "grouped", "absolute", "equal"))
+      && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
+    stop(paste("vertex_size be one of \"relative\", \"grouped\", \"absolute\", \"equal\"",
+               "or a numeric vector of length 1 or of length equal to the number of",
+               "rows of nopc."))
+  }
+  
+  
+  # Extraction des liens pour les éléments à visualiser (nop_links = node or pattern links)
+  nop_links = get_links(object, nopc)
+  
+  if (all(nop_links$weight == 0) && "displayisolates" %in% names(list(...)) && !(list(...)$displayisolates)) {
+    warning("There is no graph to plot: displayisolates = FALSE and all entities are isolated.")
+    return(NULL)
+  }
+  
+  if (entities == NODES) {
+    # Texte affiché sur le graphique
+    nop_subtitle_1 = "Nodes: %d (%d isolate"
+    nop_subtitle_2 = "); Links: %d"
+    
+    not_identical = !identical(object@nodes, nopc)
+    
+    # Renommage de colonnes pour simplification ultérieure (cf. vertices_colors et vertices_shapes)
+    colnames(nopc)[colnames(nopc) == "node"] = "pattern"
+    
+  } else if (entities == PATTERNS) {
+    # Texte affiché sur le graphique
+    nop_subtitle_1 = "Patterns: %d (%d isolate"
+    nop_subtitle_2 = "); Links: %d"
+    
+    not_identical = !identical(object@patterns, nopc)
+  }
+  
+  # Identifiants des sommets du graphe
+  vertices_id = seq(nrow(nopc))
+  
+  if (not_identical) {
+    # Nouvelle numérotation des éléments conservés
+    names(vertices_id) = rownames(nopc)
+    nop_links$endpoint.1 = vertices_id[as.character(nop_links$endpoint.1)]
+    nop_links$endpoint.2 = vertices_id[as.character(nop_links$endpoint.2)]
+  }
+  
+  # Retrait des liens entre les sommets qui ont moins de min_link_weight items en commun
+  if (min_link_weight > 1) {
+    all_vertices = unique(c(t(nop_links[, 1:2]))) # unlist horizontalement
+    nop_links = nop_links[nop_links$weight >= min_link_weight | nop_links$weight == 0, ]
+    
+    # Redéfinition des sommets maintenant sans lien
+    missing_vertices = as.data.frame(t(
+      sapply(setdiff(all_vertices, unique(unlist(nop_links[, 1:2]))),
+             function(x){
+               if (entities == NODES) return(c(x, x, "", 0))
+               return(c(x, x, "", 0, object@patterns[x, "year"]))
+             })), stringsAsFactors = FALSE)
+    
+    # Réattribution des noms et classes des colonnes avant concaténation à la data frame des liens
+    colnames(missing_vertices) = colnames(nop_links)
+    for (c_name in colnames(missing_vertices)) class(missing_vertices[c_name]) = class(nop_links[c_name])
+    class(missing_vertices$endpoint.1) = class(missing_vertices$endpoint.2) = class(missing_vertices$weight) = "integer"
+    if(entities == PATTERNS) class(missing_vertices$year) = "integer"
+    nop_links = rbind(nop_links, missing_vertices)
+    
+    # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
+    rownames(nop_links) = c(rownames(nop_links)[1:(nrow(nop_links) - nrow(missing_vertices))],
+                            paste0("A", seq_len(nrow(missing_vertices))))
+  }
+  # Attribution d'identifiants aux liens
+  nop_links$ID = seq_len(nrow(nop_links))
+  if (entities == NODES) nop_links = nop_links[, c("ID", "endpoint.1", "endpoint.2", "items", "weight")]
+  else nop_links = nop_links[, c("ID", "endpoint.1", "endpoint.2", "items", "weight", "year")]
+  
+  
+  # Couleurs et légendes pour chaque catégorie existante
+  categories_colors = list()
+  links_colors = list()
+  
+  # Définition des couleurs des liens en recherchant les catégories associées aux items formants les liens
+  if (length(object@items_categories) == 0) {
+    # Si aucune catégorie n'est associée aux éléments, aucune ne l'est aux liens
+    categories_colors[[1]] = character(0)
+    links_colors[[1]] = 1
+    
+  } else {
+    # Pour chaque type de catégorie
+    for (category in seq_len(ncol(object@items_categories))) {
+      
+      # S'il n'y a aucun lien
+      if (sum(nop_links$weight != 0) == 0) {
+        categories_colors[[category]] = character(0)
+        links_colors[[category]] = rep("white", nrow(nop_links))
+        
+      } else if (length(levels(object@items_categories[, category])) > 1) {
+        
+        # Catégories associées aux liens
+        links_categories = lapply(strsplit(nop_links$items, "/"),
+                                  function(x) sort(unique(as.character(object@items_categories[x, category]))))
+        category_values = unique(unlist(links_categories))
+        links_categories = unlist(lapply(links_categories, function(x) {
+          if (length(x) == 1) return(x)
+          if (length(x) > 1) return("Mixt")
+          return("Isolated")
+        }))
+        
+        # Séparation des valeurs de la catégorie qui sont uniquement inclus dans des liens mixtes
+        category_mixed = sort(setdiff(category_values, unique(links_categories)))
+        category_not_mixed = sort(setdiff(category_values, category_mixed))
+        
+        # Sélection des couleurs associées
+        categories_colors[[category]] = c(object@categories_colors[[category]][category_not_mixed],
+                                          "black", "white")
+        names(categories_colors[[category]]) = c(category_not_mixed, "Mixt", "Isolated")
+        
+        # Couleurs des liens tracés sur le graphique
+        links_colors[[category]] = categories_colors[[category]][links_categories]
+        
+        # Retrait du noir associé aux liens mixtes s'il n'y en a pas et retrait du blanc
+        # associé aux isolés, pour ne pas les afficher ultérieurement dans la légende
+        if (length(category_mixed) == 0 && !("Mixt" %in% links_categories)) {
+          categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-2)]
+        } else {
+          categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
+          
+          # Ajout des valeurs de catégorie inclus uniquement dans des liens mixtes
+          if (display_mixt) {
+            new_names = c(names(categories_colors[[category]]), category_mixed)
+            categories_colors[[category]] = append(categories_colors[[category]], rep("white", length(category_mixed)))
+            names(categories_colors[[category]]) = new_names
+          }
+        }
+        
+      } else if(length(levels(object@items_categories[, category])) == 1) {
+        # Une unique catégorie
+        categories_colors[[category]] = c("black", "white")
+        names(categories_colors[[category]]) = c(levels(object@items_categories[, category]), "Isolated")
+        
+        links_categories = ifelse(nop_links$weight == 0, "Isolated", levels(object@items_categories[, category]))
+        
+        # Couleurs des liens tracés sur le graphique
+        links_colors[[category]] = categories_colors[[category]][links_categories]
+        
+        # Retrait du blanc associé aux isolés pour ne pas l'afficher ultérieurement dans la légende
+        categories_colors[[category]] = categories_colors[[category]][seq(length(categories_colors[[category]])-1)]
+        
+      } else {
+        stop("The categories associated with the items must be factor type and it must have at least one factor.")
+      }
+    }
+  }
+  
+  
+  # Définition des couleurs des sommets en fonction du statut et nombre pour chaque statut
+  if (entities == PATTERNS && vertex_col[1] == "status") {
+    vertices_colors = object@status_colors[nopc$status]
+    count_status = sapply(names(object@status_colors), function(status) sum(nopc$status == status))
+    
+    # Légende associée
+    vertex_legend_legend = c(names(object@status_colors), "", "Single items", "Multiple items")
+    vertex_legend_col = c(object@status_colors, "white", "black", "black")
+    
+  } else if (vertex_col[1] == "categories") {
+    # Couleurs en fonction de la catégorie
+    v.categories_colors = list()
+    vertices_colors = list()
+    vertex_legend_legend = list()
+    vertex_legend_col = list()
+    
+    if (length(object@items_categories) == 0) {
+      v.categories_colors[[1]] = character(0)
+      vertices_colors[[1]] = rep("grey", nrow(nopc))
+      vertex_legend_legend[[1]] = c("Single items", "Multiple items")
+      vertex_legend_col[[1]] = c("black", "black")
+      
+    } else {
+      # Pour chaque catégorie
+      for (category in seq_len(ncol(object@items_categories))) {
+        
+        # Valeurs de la catégorie associées aux sommets
+        vertices_categories = lapply(nopc$pattern,
+                                     function(x) sort(unique(as.character(object@items_categories[x, category]))))
+        category_values = unique(unlist(vertices_categories))
+        vertices_categories = unlist(lapply(vertices_categories, function(x) {
+          if (length(x) == 1) return(x)
+          if (length(x) > 1) return("Mixt")
+        }))
+        
+        # Séparation des valeurs de la catégorie qui sont uniquement inclus dans des sommets mixtes
+        category_mixed = sort(setdiff(category_values, unique(vertices_categories)))
+        category_not_mixed = sort(setdiff(category_values, category_mixed))
+        
+        # Sélection des couleurs associées
+        v.categories_colors[[category]] = c(object@categories_colors[[category]][category_not_mixed],
+                                            "black")
+        names(v.categories_colors[[category]]) = c(category_not_mixed, "Mixt")
+        
+        # Couleurs des sommets tracés sur le graphique
+        vertices_colors[[category]] = v.categories_colors[[category]][vertices_categories]
+        
+        # Retrait du noir associé aux sommets mixtes s'il n'y en a pas, pour ne pas l'afficher ultérieurement dans la légende
+        if (length(category_mixed) == 0) {
+          v.categories_colors[[category]] = v.categories_colors[[category]][seq(length(v.categories_colors[[category]])-1)]
+        } else {
+          # Ajout des valeurs de catégorie inclus uniquement dans des sommets mixtes
+          if (display_mixt) {
+            new_names = c(names(v.categories_colors[[category]]), category_mixed)
+            v.categories_colors[[category]] = append(v.categories_colors[[category]], rep("white", length(category_mixed)))
+            names(v.categories_colors[[category]]) = new_names
+          }
+        }
+        
+        # Légende associée
+        vertex_legend_legend[[category]] = c(names(v.categories_colors[[category]]),
+                                             "", "Single items", "Multiple items")
+        vertex_legend_col[[category]] = c(v.categories_colors[[category]], "white", "black", "black")
+      }
+    }
+  } else {
+    if (vertex_col[1] == "none" || vertex_col[1] == "status") {
+      # "none" ou "status" et noeuds : couleur grise
+      vertices_colors = rep("grey", nrow(nopc))
+    } else if (length(vertex_col == 1)) {
+      vertices_colors = rep(vertex_col, nrow(nopc))
+    } else { # length(vertex_col) == nrow(nopc)
+      vertices_colors = vertex_col
+    }
+    
+    # Légende associée
+    vertex_legend_legend = c("Single items", "Multiple items")
+    vertex_legend_col = c("black", "black")
+  }
+  
+  # Sommets à plusieurs items en cercle ; triangle sinon
+  vertices_shapes = rep(100 , nrow(nopc))
+  vertices_shapes[nopc$length == 1] = 3
+  
+  # Définition des tailles des sommets
+  if (is.numeric(vertex_size)) {
+    if (length(vertex_size) == 1) {
+      vertices_sizes = rep(vertex_size, nrow(nopc))
+    } else { # length(vertex_size == nrow(nopc)
+      vertices_sizes = vertex_size
+    }
+  } else {
+    switch(EXPR = vertex_size,
+           "relative" = {
+             # Interpolation linéaire des fréquences aux valeurs [size_range[1], size_range[2]]
+             if (min(nopc$frequency) != max(nopc$frequency)) {
+               func = stats::approxfun(x = c(min(nopc$frequency), max(nopc$frequency)),
+                                       y = size_range)
+               vertices_sizes = func(nopc$frequency)
+             } else {
+               vertices_sizes = rep(mean(size_range), length(nopc$frequency))
+             }
+           },
+           "grouped" = {
+             # Groupement des valeurs des fréquences selon 5 quantiles
+             breaks = round(stats::quantile(nopc$frequency, prob = seq(0, 1, 0.2)))
+             intervals = cut(nopc$frequency, breaks = unique(breaks), include.lowest = TRUE)
+             sizes = seq(size_range[1], size_range[2], length.out = length(levels(intervals)))
+             vertices_sizes = sizes[intervals]
+           },
+           "absolute" = {
+             vertices_sizes = nopc$frequency
+           },
+           "equal" = {
+             # Valeur par défaut de l'argument vertex.cex de la fonction sna::gplot()
+             vertices_sizes = 1
+           })
+  }
+  
+  
+  # Réseau généré avec le package network
+  links = as.matrix(nop_links[, c("endpoint.1", "endpoint.2")], ncol = 2)
+  network_data = network::network(links, directed = FALSE, matrix.type = "edgelist")
+  # vertices_names = network::network.vertex.names(network_data)
+  
+  # Récupération des arguments additionnels et détermination de valeurs par défaut pour sna::gplot
+  args = list(...)
+  if(!("mode" %in% names(args))) args$mode = "fruchtermanreingold"
+  if(!("displaylabels" %in% names(args))) args$displaylabels = TRUE
+  if(!("label.pos" %in% names(args))) args$label.pos = 0
+  if(!("boxed.labels" %in% names(args))) args$boxed.labels = TRUE
+  if(!("displayisolates" %in% names(args))) args$displayisolates = TRUE
+  if(!("label" %in% names(args))) {
+    if (identifiers == "new") args$label = vertices_id
+    else args$label = rownames(nopc)
+  }
+  
+  # Duplication de la fonction utilisée par l'argument "mode" de la fonction sna::gplot
+  # pour fonctionner sans avoir à charger le package
+  eval(parse(text = paste0("gplot.layout.", args$mode, " <- sna::gplot.layout.", args$mode)))
+  
+  # Nombre de variantes du graphique
+  nb_categories = ifelse(length(object@items_categories) == 0, 1, ncol(object@items_categories))
+  
+  # Définition de la valeur par défaut du titre et vérifications du nom de fichier
+  if (is.null(title)) title = paste0("Spectrosome of ", entities)
+  if (!is.null(name)) name = check_extension(name, "png")
+  path = turn_into_path(path)
+  
+  # Réutilisation ou non de coordonnées
+  if ("coord" %in% names(args)) {
+    coord = args$coord
+    args$coord = NULL
+    is.missing = is.null(coord)
+    
+  } else { is.missing = TRUE }
+  coords_list = list()
+  
+  # Traçage des graphiques
+  for (i in seq(nb_graphs)) {
+    # Coordonnées qui seront réutilisées
+    if (is.missing) coord = NULL
+    
+    for (j in seq(nb_categories)) {
+      
+      # Ouverture d'un fichier PNG si spécifié
+      if (!is.null(name)) {
+        # Nom du graphique en fonction du nombre
+        file_name = ifelse(nb_graphs == 1, name, sub(".png", paste0("-", i, ".png"), name))
+        file_name = ifelse(nb_categories == 1,
+                           file_name,
+                           sub(".png", paste0("-", colnames(object@items_categories)[j], ".png"), file_name))
+        
+        # Traçage des graphiques dans des fichiers PNG
+        grDevices::png(paste0(path, file_name), 950, 700)
+      }
+      
+      graphics::par(mar = c(0.5, 0.5, 3.5, 0.5))
+      graphics::plot.new()
+      w_margin_inches = graphics::par("mai")[4]
+      
+      # Titres du graphique
+      title(main = title, cex.main = 1.3, line = 2)
+      nb_isolates = length(sna::isolates(network_data))
+      title(main = paste0(sprintf(nop_subtitle_1, nrow(nopc), nb_isolates),
+                          if (nb_isolates < 2) "" else "s",
+                          sprintf(nop_subtitle_2, sum(nop_links$weight != 0))),
+            font.main = 3, cex.main = 1.1, line = 0.7)
+      
+      # Préparation des formes de la légende des sommets
+      if (entities == PATTERNS && vertex_col[1] == "status") {
+        vertex_legend_pt.cex = c(rep(2, length(object@status_colors)), 0, 1.6, 2)
+        vertex_legend_pch = c(rep(15, length(object@status_colors)), 0, 2, 1)
+      } else if (vertex_col[1] != "categories" || length(object@items_categories) == 0) {
+        vertex_legend_pt.cex = c(1.6, 2)
+        vertex_legend_pch = c(2, 1)
+      } else {
+        vertex_legend_pt.cex = c(rep(2, length(v.categories_colors[[j]])), 0, 1.6, 2)
+        vertex_legend_pch = c(rep(15, length(v.categories_colors[[j]])), 0, 2, 1)
+      }
+      
+      # Préparation du texte et de la couleur de la légende des sommets
+      if (vertex_col[1] != "categories") {
+        legend_legend = vertex_legend_legend
+      } else {
+        if (length(object@items_categories) != 0) {
+          # Application du cutoff sur la légende des couleurs des sommets si fonction de la catégorie
+          nb_vertices_leg = length(vertex_legend_legend[[j]])
+          legend_legend = c(substr2(vertex_legend_legend[[j]][1:(nb_vertices_leg-3)], stop = c.cutoff),
+                            vertex_legend_legend[[j]][(nb_vertices_leg-2):nb_vertices_leg])
+        } else {
+          legend_legend = vertex_legend_legend[[1]]
+        }
+      }
+      legend_col = if (vertex_col[1] == "categories") vertex_legend_col[[j]] else vertex_legend_col
+      
+      # Affichage de la légende
+      cex_legend = 1
+      vertex_legend_output = graphics::legend("topleft", bty = "n",
+                                              title = cap(entities), title.adj = 0,
+                                              pt.cex = vertex_legend_pt.cex, pch = vertex_legend_pch,
+                                              lwd = -1, cex = cex_legend,
+                                              col = legend_col, legend = legend_legend)
+      if (length(object@items_categories) != 0) {
+        edge_legend_legend = substr2(names(categories_colors[[j]]), stop = c.cutoff)
+        
+        edge_legend_output = graphics::legend(x = vertex_legend_output$rect$left,
+                                              y = vertex_legend_output$rect$top - vertex_legend_output$rect$h,
+                                              bty = "n", title = "Links", title.adj = 0,
+                                              pch = NA_integer_, lwd = 3, cex = cex_legend,
+                                              col = categories_colors[[j]], legend = edge_legend_legend)
+        
+        legend_width = max(vertex_legend_output$rect$w, edge_legend_output$rect$w)
+      } else {
+        legend_width = vertex_legend_output$rect$w
+      }
+      
+      # Légende supplémentaire concernant la distribution des statuts
+      if (entities == PATTERNS && vertex_col[1] == "status") {
+        status_legend = paste0("(", count_status, ")")
+        
+        status_legend_output = graphics::legend(x = vertex_legend_output$text$x[1] + 
+                                                  graphics::strwidth(paste0(STATUS_PERSISTENT), cex = cex_legend),
+                                                y = vertex_legend_output$rect$top,
+                                                bty = "n", title = "",
+                                                legend = status_legend, cex = cex_legend)
+        
+        if (status_legend_output$rect$w + status_legend_output$rect$left > legend_width + vertex_legend_output$rect$left) {
+          legend_width = status_legend_output$rect$left - vertex_legend_output$rect$left + status_legend_output$rect$w
+        }
+      }
+      
+      
+      # Réinitialisation des marges de la zone graphique pour séparer légende et plot
+      graphics::par(new = TRUE, mai = graphics::par("mai") +
+                      c(0, convert_gunits(legend_width, "user", "inches", "w") + w_margin_inches, 0, 0))
+      
+      tryCatch({
+        # Dessin du graphe : appel de sna::gplot avec les arguments de ... modifiés (variable args)
+        coord = do.call(sna::gplot, c(list(
+          dat = network_data, gmode = "graph",
+          coord = coord,
+          vertex.sides = vertices_shapes,
+          vertex.cex = vertices_sizes,
+          vertex.col = if (vertex_col[1] == "categories") vertices_colors[[j]] else vertices_colors,
+          edge.col = links_colors[[j]]
+        ), args))
+      },
+      error = function(e) {
+        # Fermeture et suppression du fichier graphique avant affichage du message d'erreur
+        if (!is.null(name)) {
+          grDevices::dev.off()
+          file.remove(paste0(path, file_name))
+        }
+        stop(e)
+        # Exemple d'erreur possible : vertex_col contient des noms de couleurs incorrects
+      })
+      
+      # S'il y a bien des liens, identification et affichage des noms des clusters
+      if (sum(nop_links$weight != 0)) {
+        cluster_text(object, coord, nop_links, clusters, highlight, use_names, n.cutoff)
+      }
+      
+      # Fermeture du fichier PNG
+      if (!is.null(name)) grDevices::dev.off()
+    }
+    
+    # Récupération des coordonnées des sommets du graphe
+    coords_list[[i]] = coord
+  }
+  
+  # Calcul du degré de chaque sommet dans le graphe
+  degrees = sapply(vertices_id, function(ID) degree(object, ID, nop_links))
+  # Renommage initial des colonnes avant retour
+  if (entities == NODES) colnames(nopc)[colnames(nopc) == "pattern"] = "node"
+  
+  # Réattribution des ID d'origine (non compatibles avec sna::gplot)
+  if (identifiers == "original" && not_identical) {
+    nop_links$endpoint.1 = as.integer(names(vertices_id[nop_links$endpoint.1]))
+    nop_links$endpoint.2 = as.integer(names(vertices_id[nop_links$endpoint.2]))
+    
+    vertices_id = as.numeric(rownames(nopc))
+  }
+  
+  # Noeuds ou motifs, caractéristiques, identifiants sur le graphique et degrés dans le graphe
+  return(list(vertices = data.frame(ID = vertices_id, nopc, degree = degrees),
+              edges = nop_links,
+              coords = coords_list))
+})
 
 
 #' Display of cluster names
@@ -3149,57 +3167,58 @@ setMethod(f = "spectrosome_chart",
 #' @keywords internal
 setMethod(f = "cluster_text",
           signature = "TransactionAnalyzer",
-          definition = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){
-            
-            # Calcul des coordonnées des milieux des liaisons
-            coord_e1 = graph[links$endpoint.1, ] # Coordonnées des premiers sommets des liens
-            coord_e2 = graph[links$endpoint.2, ] # Coordonnées des seconds sommets des liens
-            # S'il y a plusieurs liens
-            if (!is.vector(coord_e1)) {
-              coord_L = data.frame(X = rowMeans(cbind(coord_e1[, "x"], coord_e2[, "x"])), 
-                                   Y = rowMeans(cbind(coord_e1[, "y"], coord_e2[, "y"])),
-                                   LABEL = links$items)
-            } else {
-              # S'il n'y a qu'un seul lien et que deux sommets
-              coord_L = data.frame(X = mean(c(coord_e1["x"], coord_e2["x"])), 
-                                   Y = mean(c(coord_e1["y"], coord_e2["y"])),
-                                   LABEL = links$items)
-            }
-            # Regroupement en fonction du type de liaison ("LABEL")
-            coord_L = coord_L[order(coord_L$LABEL), ]
-            
-            # Décomposition des liens multiples et calcul du nombre de liaisons réelles de chaque item
-            clusters = sort(table(unlist(strsplit(as.character(coord_L$LABEL[coord_L$LABEL != ""]), "/"))), decreasing = TRUE)
-            clusters = names(clusters)
-            
-            # Moyenne des coordonnées des liens pour chaque type de lien ("LABEL")
-            coords = stats::aggregate(data.frame(MOY.X = coord_L$X),
-                                      by = list(LABEL = coord_L$LABEL), mean)
-            coords$MOY.Y = tapply(coord_L$Y, coord_L$LABEL, mean)
-            
-            # Association des coordonnées moyennes des liens exactes (non multiples et non décomposés) aux noms des items ayant générés le plus de liaisons
-            coords = coords[match(clusters, as.character(coords$LABEL)), ]
-            #! Les coordonnées ne sont donc pas la moyenne de tous les liens correspondant à l'item
-            #! mais uniquement de ceux qui correspondent exactement à cet item (pas de combinaisons)
-            #! bien que la variable "cluster" a recherché le nombre de liens correspondant à l'item, qu'il y ait une combinaison ou non.
-            #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'item.
-            
-            # Extraction des noms des items ayant générés le plus de liaisons
-            coords = coords[stats::complete.cases(coords), ]
-            if (nrow(coords) >= display) coords = coords[seq_len(display), ]
-            
-            # S'il y a effectivement des clusters à nommer (ce n'est pas le cas s'il n'y a que des liens mixtes)
-            if (nrow(coords) > 0) {
-              # Affichage des noms des "clusters" retenus
-              if (use_names) {
-                clusters = get_item_names(object, coords$LABEL)
-                if (!is.null(cutoff)) clusters = substr(clusters, 1, cutoff)
-              }
-              shadowtext(coords$MOY.X, coords$MOY.Y, clusters, r = 0.3,
-                         col = "black", bg = "white", cex = 0.9,
-                         font = ifelse(clusters %in% clusters[seq_len(highlight)], 2, 1))
-            }
-          })
+          definition =
+function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL) {
+  
+  # Calcul des coordonnées des milieux des liaisons
+  coord_e1 = graph[links$endpoint.1, ] # Coordonnées des premiers sommets des liens
+  coord_e2 = graph[links$endpoint.2, ] # Coordonnées des seconds sommets des liens
+  # S'il y a plusieurs liens
+  if (!is.vector(coord_e1)) {
+    coord_L = data.frame(X = rowMeans(cbind(coord_e1[, "x"], coord_e2[, "x"])), 
+                         Y = rowMeans(cbind(coord_e1[, "y"], coord_e2[, "y"])),
+                         LABEL = links$items)
+  } else {
+    # S'il n'y a qu'un seul lien et que deux sommets
+    coord_L = data.frame(X = mean(c(coord_e1["x"], coord_e2["x"])), 
+                         Y = mean(c(coord_e1["y"], coord_e2["y"])),
+                         LABEL = links$items)
+  }
+  # Regroupement en fonction du type de liaison ("LABEL")
+  coord_L = coord_L[order(coord_L$LABEL), ]
+  
+  # Décomposition des liens multiples et calcul du nombre de liaisons réelles de chaque item
+  clusters = sort(table(unlist(strsplit(as.character(coord_L$LABEL[coord_L$LABEL != ""]), "/"))), decreasing = TRUE)
+  clusters = names(clusters)
+  
+  # Moyenne des coordonnées des liens pour chaque type de lien ("LABEL")
+  coords = stats::aggregate(data.frame(MOY.X = coord_L$X),
+                            by = list(LABEL = coord_L$LABEL), mean)
+  coords$MOY.Y = tapply(coord_L$Y, coord_L$LABEL, mean)
+  
+  # Association des coordonnées moyennes des liens exactes (non multiples et non décomposés) aux noms des items ayant générés le plus de liaisons
+  coords = coords[match(clusters, as.character(coords$LABEL)), ]
+  #! Les coordonnées ne sont donc pas la moyenne de tous les liens correspondant à l'item
+  #! mais uniquement de ceux qui correspondent exactement à cet item (pas de combinaisons)
+  #! bien que la variable "cluster" a recherché le nombre de liens correspondant à l'item, qu'il y ait une combinaison ou non.
+  #! => Permet une sorte d'attraction du label vers les sommets partageant uniquement l'item.
+  
+  # Extraction des noms des items ayant générés le plus de liaisons
+  coords = coords[stats::complete.cases(coords), ]
+  if (nrow(coords) >= display) coords = coords[seq_len(display), ]
+  
+  # S'il y a effectivement des clusters à nommer (ce n'est pas le cas s'il n'y a que des liens mixtes)
+  if (nrow(coords) > 0) {
+    # Affichage des noms des "clusters" retenus
+    if (use_names) {
+      clusters = get_item_names(object, coords$LABEL)
+      if (!is.null(cutoff)) clusters = substr(clusters, 1, cutoff)
+    }
+    shadowtext(coords$MOY.X, coords$MOY.Y, clusters, r = 0.3,
+               col = "black", bg = "white", cex = 0.9,
+               font = ifelse(clusters %in% clusters[seq_len(highlight)], 2, 1))
+  }
+})
 
 
 #' Cluster: subgraph of a spectrosome
@@ -3305,71 +3324,70 @@ setMethod(f = "cluster_text",
 #' @export
 setMethod(f = "cluster_chart",
           signature = "TransactionAnalyzer",
-          definition = function(object, nopc, item,
-                                identifiers = "original",
-                                use_name = TRUE, n.cutoff = NULL,
-                                vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
-                                c.cutoff = NULL, display_mixt = TRUE,
-                                title = NULL, path = NULL, name = NULL, ...) {
-            
-            # Récupération des noeuds/patterns et recherche du type d'entités fourni
-            entities = which_entities(object, nopc)
-            nopc = get_tnp(object, nopc)
-            check_init(object, c(entities, which_associated_links(object, entities)))
-            
-            # Vérifie qu'un seul item est mentionné
-            if (length(item) != 1 && entities == NODES)
-              stop("item must refer to only one item. For more, check out the functions get_nodes and spectrosome_chart.")
-            if (length(item) != 1 && entities == PATTERNS)
-              stop("item must refer to only one item. For more, check out the functions get_patterns and spectrosome_chart.")
-            
-            # Extraction des noeuds ou motifs contenant l'item recherché ("nop" = "nodes or patterns")
-            if (entities == NODES) nop = get_nodes_from_items(object, nopc, item)
-            else if (entities == PATTERNS) nop = get_patterns_from_items(object, nopc, item)
-            
-            # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
-            if (nrow(nop) > 1) {
-              # Définition de la valeur par défaut du titre
-              if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)
-              
-              # Vérification du paramètre de colorisation des sommets
-              if (!(vertex_col %in% c("status", "categories", "none"))
-                  && !(length(vertex_col) %in% c(1, nrow(nopc)))) {
-                stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
-                           "a vector of R predefined color names or hexadecimal values",
-                           "of length 1 or of length equal to the number of rows of nopc."))
-              } else if (length(vertex_col) == nrow(nopc)) {
-                # Sous-ensemble de vertex_col s'il définit une couleur pour chaque nop
-                names(vertex_col) = rownames(nopc)
-                vertex_col = vertex_col[rownames(nop)]
-              }
-              # Vérification du paramètre de taille des sommets
-              if (!(vertex_size %in% c("relative", "grouped", "absolute", "equal"))
-                  && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
-                stop(paste("vertex_size be one of \"relative\", \"grouped\", \"absolute\", \"equal\"",
-                           "or a numeric vector of length 1 or of length equal to the number of",
-                           "rows of nopc."))
-              } else if (length(vertex_size) == nrow(nopc)) {
-                # Sous-ensemble de vertex_size s'il définit une couleur pour chaque nop
-                names(vertex_size) = rownames(nopc)
-                vertex_size = vertex_size[rownames(nop)]
-              }
-              
-              # Construction du spectrosome associé
-              to_return = spectrosome_chart(object, nop,
-                                            identifiers = identifiers,
-                                            vertex_size = vertex_size, vertex_col = vertex_col,
-                                            use_names = use_name, n.cutoff = n.cutoff, c.cutoff = c.cutoff,
-                                            display_mixt = display_mixt,
-                                            title = title, path = path, name = name, ...)
-              return(list(vertices = to_return$vertices, edges = to_return$edges, coords = to_return$coords[[1]]))
-              
-            } else {
-              warning(paste0("There is no cluster for item ", item,
-                             " (", nrow(nop), " ", substr(entities, 1, nchar(entities) - 1), ")."))
-              return(NULL)
-            }
-          })
+          definition =
+function(object, nopc, item, identifiers = "original",
+         use_name = TRUE, n.cutoff = NULL,
+         vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
+         c.cutoff = NULL, display_mixt = TRUE,
+         title = NULL, path = NULL, name = NULL, ...) {
+  
+  # Récupération des noeuds/patterns et recherche du type d'entités fourni
+  entities = which_entities(object, nopc)
+  nopc = get_tnp(object, nopc)
+  check_init(object, c(entities, which_associated_links(object, entities)))
+  
+  # Vérifie qu'un seul item est mentionné
+  if (length(item) != 1 && entities == NODES)
+    stop("item must refer to only one item. For more, check out the functions get_nodes and spectrosome_chart.")
+  if (length(item) != 1 && entities == PATTERNS)
+    stop("item must refer to only one item. For more, check out the functions get_patterns and spectrosome_chart.")
+  
+  # Extraction des noeuds ou motifs contenant l'item recherché ("nop" = "nodes or patterns")
+  if (entities == NODES) nop = get_nodes_from_items(object, nopc, item)
+  else if (entities == PATTERNS) nop = get_patterns_from_items(object, nopc, item)
+  
+  # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
+  if (nrow(nop) > 1) {
+    # Définition de la valeur par défaut du titre
+    if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)
+    
+    # Vérification du paramètre de colorisation des sommets
+    if (!(vertex_col %in% c("status", "categories", "none"))
+        && !(length(vertex_col) %in% c(1, nrow(nopc)))) {
+      stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
+                 "a vector of R predefined color names or hexadecimal values",
+                 "of length 1 or of length equal to the number of rows of nopc."))
+    } else if (length(vertex_col) == nrow(nopc)) {
+      # Sous-ensemble de vertex_col s'il définit une couleur pour chaque nop
+      names(vertex_col) = rownames(nopc)
+      vertex_col = vertex_col[rownames(nop)]
+    }
+    # Vérification du paramètre de taille des sommets
+    if (!(vertex_size %in% c("relative", "grouped", "absolute", "equal"))
+        && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
+      stop(paste("vertex_size be one of \"relative\", \"grouped\", \"absolute\", \"equal\"",
+                 "or a numeric vector of length 1 or of length equal to the number of",
+                 "rows of nopc."))
+    } else if (length(vertex_size) == nrow(nopc)) {
+      # Sous-ensemble de vertex_size s'il définit une couleur pour chaque nop
+      names(vertex_size) = rownames(nopc)
+      vertex_size = vertex_size[rownames(nop)]
+    }
+    
+    # Construction du spectrosome associé
+    to_return = spectrosome_chart(object, nop, identifiers = identifiers,
+                                  vertex_size = vertex_size, vertex_col = vertex_col,
+                                  use_names = use_name, n.cutoff = n.cutoff, c.cutoff = c.cutoff,
+                                  display_mixt = display_mixt,
+                                  title = title, path = path, name = name, ...)
+    return(list(vertices = to_return$vertices, edges = to_return$edges, coords = to_return$coords[[1]]))
+    
+  } else {
+    warning(paste0("There is no cluster for item ", item,
+                   " (", nrow(nop), " ", substr(entities, 1, nchar(entities) - 1), ")."))
+    return(NULL)
+  }
+})
 
 
 #' Network density
@@ -3392,17 +3410,18 @@ setMethod(f = "cluster_chart",
 #' @export
 setMethod(f = "network_density",
           signature = "TransactionAnalyzer",
-          definition = function(object, links) {
-            
-            # Nombre d'arêtes et de sommets
-            nb_edges = nrow(links) - sum(links$weight == 0)
-            nb_vertices = length(unique(c(links$endpoint.1, links$endpoint.2)))
-            
-            # Nombre maximal d'arêtes possible (1 entre chaque paire de sommets, sans boucle)
-            nb_edges_max = nb_vertices * (nb_vertices - 1) / 2
-            
-            return(nb_edges / nb_edges_max)
-          })
+          definition =
+function(object, links) {
+  
+  # Nombre d'arêtes et de sommets
+  nb_edges = nrow(links) - sum(links$weight == 0)
+  nb_vertices = length(unique(c(links$endpoint.1, links$endpoint.2)))
+  
+  # Nombre maximal d'arêtes possible (1 entre chaque paire de sommets, sans boucle)
+  nb_edges_max = nb_vertices * (nb_vertices - 1) / 2
+  
+  return(nb_edges / nb_edges_max)
+})
 
 
 #' Degree of a vertex
@@ -3424,10 +3443,10 @@ setMethod(f = "network_density",
 #' @export
 setMethod(f = "degree",
           signature = "TransactionAnalyzer",
-          definition = function(object, ID, links) {
-            
-            return(sum(xor(links$endpoint.1 == ID, links$endpoint.2 == ID)))
-          })
+          definition =
+function(object, ID, links) {
+  return(sum(xor(links$endpoint.1 == ID, links$endpoint.2 == ID)))
+})
 
 
 
@@ -3527,117 +3546,117 @@ setMethod(f = "degree",
 #' @export
 setMethod(f = "itemset_chart",
           signature = "TransactionAnalyzer",
-          definition = function(object, tnpc, identifiers = "original",
-                                length_one = FALSE, jitter = TRUE,
-                                under = "ID", over = "status",
-                                use_names = TRUE, n.cutoff = NULL,
-                                category = NULL, c.cutoff = NULL, sort_by = "category",
-                                title = NULL, path = NULL, name = NULL) {
-            
-            # Récupération des noeuds/patterns et recherche du type d'entités fourni
-            entities = which_entities(object, tnpc, NODES_PATTERNS_OR_TRANSACTIONS)
-            if (entities != TRANSACTIONS) check_init(object, entities)
-            tnpc = get_tnp(object, tnpc, NODES_PATTERNS_OR_TRANSACTIONS)
-            
-            # Validation des paramètres
-            check_access_for_category(object, category, NA)
-            check_param(sort_by, values = c("category", "item"))
-            if (is.null(category) && sort_by == "category") sort_by = "item"
-            check_param(identifiers, values = c("original", "new"))
-            
-            if (entities != PATTERNS && !is.null(over) && over == "status") over = NULL
-            if (!is.null(under) && under == "status") under = NULL
-            category = if (is.numeric(category)) colnames(object@items_categories)[category] else category
-            
-            
-            # Préparation des variables pour la fonction de traçage graphique
-            if (entities == TRANSACTIONS) {
-              vars = prepare_itemset_chart(tnpc, identifiers, length_one, under, over)
-              
-              itemsets = vars$itemsets
-              items = data.frame(item = as.character(vars$items$item), stringsAsFactors = FALSE)
-              under_text = vars$under
-              over_text = vars$over
-              over_legend = NULL
-            }
-            else{
-              # Renommage de colonnes pour simplification
-              colnames(tnpc)[colnames(tnpc) == "node" | colnames(tnpc) == "pattern"] = "itemset"
-              
-              # Itemset de taille > 1, triés par taille croissant puis par fréquence décroissante
-              tnpc = if (length_one) tnpc else tnpc[tnpc$length != 1, ]
-              tnpc = tnpc[order(tnpc$length,
-                                max(tnpc$frequency) - tnpc$frequency), ]
-              
-              # Attribution d'identifiants aux itemsets
-              tnpc$ID = if (identifiers == "new") seq(nrow(tnpc)) else as.numeric(rownames(tnpc))
-              
-              # Itemsets et items distincts parmi les itemsets
-              itemsets = tnpc$itemset
-              items = data.frame(item = unique(unlist(tnpc$itemset)), stringsAsFactors = FALSE)
-              
-              # Texte à afficher
-              under_text = if (is.null(under)) NULL else tnpc[, under]
-              if (is.null(over)) over_text = over_legend = NULL
-              else if (over == "status") {
-                over_text = object@status_colors[tnpc[, over]]
-                over_legend = object@status_colors
-              } else {
-                over_text = tnpc[, over]
-                over_legend = NULL
-              }
-            }
-            
-            # Labels et valeurs d'une catégorie associés aux items
-            if (!is.null(category)) items[, category] = object@items_categories[items$item, category]
-            if (use_names) items$label = substr2(get_item_names(object, items$item), stop = n.cutoff)
-            else items$label = items$item
-            
-            # Tri des items
-            if (use_names && sort_by == "item") { # Par nom
-              items = items[order(get_item_names(object, items$item)), ]
-            }
-            else if (sort_by == "item") {         # Par code
-              items = items[order(match(items$item, object@items)), ]
-            }
-            else {                                # Selon la catégorie (puis nom ou code)
-              items = items[order(items[[category]],
-                                  if (has_item_names(object) && use_names) get_item_names(object, items$item)
-                                  else match(items$item, object@items)), ]
-            }
-            rownames(items) = NULL
-            
-            # Valeurs de catégories, couleurs et labels associés
-            if (!is.null(category)) {
-              category_name = category
-              
-              category = data.frame(value = unique(items[, category_name]), stringsAsFactors = FALSE)
-              category$col = object@categories_colors[[category_name]][category$value]
-              category$label = substr2(category$value, stop = c.cutoff)
-              category = category[order(category$value), ]
-            }
-            
-            
-            # Définition de la valeur par défaut du titre
-            if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "itemsets")
-            
-            # Traçage du graphique (dans le device actif ou dans un fichier PDF)
-            if (!is.null(name)) grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
-                                               14, 10, paper = "a4r", pointsize = 11)
-            plot_itemset_chart(itemsets, items, category,
-                               jitter, under_text, over_text, over_legend, title)
-            if (!is.null(name)) grDevices::dev.off()
-            
-            
-            # Retour (si transactions)
-            if (entities == TRANSACTIONS) return(vars$transactions)
-            
-            # Renommage initial des colonnes avant retour (si noeuds ou patterns)
-            colnames(tnpc)[colnames(tnpc) == "itemset"] = substr(entities, 1, nchar(entities)-1)
-            # Noeuds/motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
-            return(tnpc[order(tnpc$ID),
-                        c(ncol(tnpc), seq(ncol(tnpc)-1))])
-          })
+          definition =
+function(object, tnpc, identifiers = "original",
+         length_one = FALSE, jitter = TRUE,
+         under = "ID", over = "status",
+         use_names = TRUE, n.cutoff = NULL,
+         category = NULL, c.cutoff = NULL, sort_by = "category",
+         title = NULL, path = NULL, name = NULL) {
+  
+  # Récupération des noeuds/patterns et recherche du type d'entités fourni
+  entities = which_entities(object, tnpc, NODES_PATTERNS_OR_TRANSACTIONS)
+  if (entities != TRANSACTIONS) check_init(object, entities)
+  tnpc = get_tnp(object, tnpc, NODES_PATTERNS_OR_TRANSACTIONS)
+  
+  # Validation des paramètres
+  check_access_for_category(object, category, NA)
+  check_param(sort_by, values = c("category", "item"))
+  if (is.null(category) && sort_by == "category") sort_by = "item"
+  check_param(identifiers, values = c("original", "new"))
+  
+  if (entities != PATTERNS && !is.null(over) && over == "status") over = NULL
+  if (!is.null(under) && under == "status") under = NULL
+  category = if (is.numeric(category)) colnames(object@items_categories)[category] else category
+  
+  
+  # Préparation des variables pour la fonction de traçage graphique
+  if (entities == TRANSACTIONS) {
+    vars = prepare_itemset_chart(tnpc, identifiers, length_one, under, over)
+    
+    itemsets = vars$itemsets
+    items = data.frame(item = as.character(vars$items$item), stringsAsFactors = FALSE)
+    under_text = vars$under
+    over_text = vars$over
+    over_legend = NULL
+  }
+  else{
+    # Renommage de colonnes pour simplification
+    colnames(tnpc)[colnames(tnpc) == "node" | colnames(tnpc) == "pattern"] = "itemset"
+    
+    # Itemset de taille > 1, triés par taille croissant puis par fréquence décroissante
+    tnpc = if (length_one) tnpc else tnpc[tnpc$length != 1, ]
+    tnpc = tnpc[order(tnpc$length,
+                      max(tnpc$frequency) - tnpc$frequency), ]
+    
+    # Attribution d'identifiants aux itemsets
+    tnpc$ID = if (identifiers == "new") seq(nrow(tnpc)) else as.numeric(rownames(tnpc))
+    
+    # Itemsets et items distincts parmi les itemsets
+    itemsets = tnpc$itemset
+    items = data.frame(item = unique(unlist(tnpc$itemset)), stringsAsFactors = FALSE)
+    
+    # Texte à afficher
+    under_text = if (is.null(under)) NULL else tnpc[, under]
+    if (is.null(over)) over_text = over_legend = NULL
+    else if (over == "status") {
+      over_text = object@status_colors[tnpc[, over]]
+      over_legend = object@status_colors
+    } else {
+      over_text = tnpc[, over]
+      over_legend = NULL
+    }
+  }
+  
+  # Labels et valeurs d'une catégorie associés aux items
+  if (!is.null(category)) items[, category] = object@items_categories[items$item, category]
+  if (use_names) items$label = substr2(get_item_names(object, items$item), stop = n.cutoff)
+  else items$label = items$item
+  
+  # Tri des items
+  if (use_names && sort_by == "item") { # Par nom
+    items = items[order(get_item_names(object, items$item)), ]
+  }
+  else if (sort_by == "item") {         # Par code
+    items = items[order(match(items$item, object@items)), ]
+  }
+  else {                                # Selon la catégorie (puis nom ou code)
+    items = items[order(items[[category]],
+                        if (has_item_names(object) && use_names) get_item_names(object, items$item)
+                        else match(items$item, object@items)), ]
+  }
+  rownames(items) = NULL
+  
+  # Valeurs de catégories, couleurs et labels associés
+  if (!is.null(category)) {
+    category_name = category
+    
+    category = data.frame(value = unique(items[, category_name]), stringsAsFactors = FALSE)
+    category$col = object@categories_colors[[category_name]][category$value]
+    category$label = substr2(category$value, stop = c.cutoff)
+    category = category[order(category$value), ]
+  }
+  
+  
+  # Définition de la valeur par défaut du titre
+  if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "itemsets")
+  
+  # Traçage du graphique (dans le device actif ou dans un fichier PDF)
+  if (!is.null(name)) grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
+                                     14, 10, paper = "a4r", pointsize = 11)
+  plot_itemset_chart(itemsets, items, category, jitter, under_text, over_text, over_legend, title)
+  if (!is.null(name)) grDevices::dev.off()
+  
+  
+  # Retour (si transactions)
+  if (entities == TRANSACTIONS) return(vars$transactions)
+  
+  # Renommage initial des colonnes avant retour (si noeuds ou patterns)
+  colnames(tnpc)[colnames(tnpc) == "itemset"] = substr(entities, 1, nchar(entities)-1)
+  # Noeuds/motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
+  return(tnpc[order(tnpc$ID),
+              c(ncol(tnpc), seq(ncol(tnpc)-1))])
+})
 
 
 
@@ -3692,12 +3711,13 @@ setMethod(f = "itemset_chart",
 #' @export
 setMethod(f = "category_tree_chart",
           signature = "TransactionAnalyzer",
-          definition = function(object, category = NULL, items = object["items"],
-                                use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL,
-                                vertex_size = 4, vertex_alpha = 1,
-                                leaf_size = 3, leaf_alpha = 1, leaf_margin = 0,
-                                label_size = 3, label_margin = 0.05) {
-            
+          definition =
+function(object, category = NULL, items = object["items"],
+         use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL,
+         vertex_size = 4, vertex_alpha = 1,
+         leaf_size = 3, leaf_alpha = 1, leaf_margin = 0,
+         label_size = 3, label_margin = 0.05) {
+  
   # Validation du paramètre d'accès à la catégorie et des items fournis
   check_access_for_category(object, category, NA)
   items = get_items(object, items)
@@ -3828,12 +3848,13 @@ setMethod(f = "category_tree_chart",
 #' @export
 setMethod(f = "co_occurrence_chart",
           signature = "TransactionAnalyzer",
-          definition = function(object, items, category = NULL, min_occ = 1, max_occ = Inf,
-                                use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category",
-                                vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
-                                label_size = 3, label_margin = 0.05,
-                                edge_tension = 0.8, edge_alpha = 1,
-                                palette = "Blues", palette_direction = 1) {
+          definition =
+function(object, items, category = NULL, min_occ = 1, max_occ = Inf,
+         use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category",
+         vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
+         label_size = 3, label_margin = 0.05,
+         edge_tension = 0.8, edge_alpha = 1,
+         palette = "Blues", palette_direction = 1) {
   
   # Validation du paramètre d'accès à la catégorie et des items fournis
   check_access_for_category(object, category, NA)
@@ -4009,68 +4030,69 @@ setMethod(f = "co_occurrence_chart",
 #' @export
 setMethod(f = "extract_rules",
           signature = "TransactionAnalyzer",
-          definition = function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...) {
-            
-            # Validation du paramètre de choix des itemsets desquels extraire les règles
-            if (is.character(from) && from != "transactions" && from != "patterns")
-              stop("from must be \"transactions\", \"patterns\" or a list of item sets.")
-            
-            # Conversion des transactions en transactions
-            transact = as(object@transactions, "transactions")
-            
-            if (is.character(from) && from == "transactions") {
-              
-              # Vérification du bon choix du paramètre demandant l'extraction de règles
-              args = list(...)
-              if ("parameter" %in% names(args) && "target" %in% names(args$parameter)
-                  && args$parameter$target != "rules") stop("target parameter must be \"rules\"")
-              
-              # Spécification du non-affichage de la progression
-              if (!("control" %in% names(args))) args$control = list(verbose = FALSE)
-              else if (!("verbose" %in% names(args$control))) args$control$verbose = FALSE
-              
-              # Extraction des règles d'association
-              # rules = arules::apriori(transact, ...)
-              rules = do.call(arules::apriori, c(data = transact, args))
-              
-            } else {
-              if (is.character(from)) {
-                check_init(object, PATTERNS, prefix = "If from = \"patterns\", ")
-                from = object@patterns$pattern
-              }
-              
-              # Conversion de la liste d'item sets en objet arules::itemMatrix puis arules::itemsets
-              itemsets = methods::new("itemsets", items = arules::encode(from, object@items))
-              
-              # Extraction des règles d'association
-              rules = arules::ruleInduction(itemsets, transact, ...)
-            }
-            
-            # Recherche et retrait des règles redondantes
-            if (pruning) rules = rules[!arules::is.redundant(rules)]
-            
-            
-            # Si aucune règle ne correspond aux critères de recherche : NULL
-            if (length(rules) == 0) return(NULL)
-            
-            # Si demandé, retour des règles sous forme de classe rules du package arules
-            if (arules) return(rules)
-            
-            
-            # Conversion en data frame
-            rules_df = arules::DATAFRAME(rules)
-            
-            # Changement de notation
-            if (!as_sets) {
-              rules_df[, c("LHS", "RHS")] = apply(rules_df[, c("LHS", "RHS")], 2, vector_notation)
-            }
-            
-            # Renommage des colonnes "LHS" et "RHS" et replacement de la colonne "=>"
-            colnames(rules_df)[c(1,2)] = c("antecedent", "consequent")
-            rownames(rules_df) = NULL
-            rules_df[, " "] = "=>"
-            return(rules_df[, c(1, ncol(rules_df), seq(2, ncol(rules_df)-1))])
-          })
+          definition =
+function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...) {
+  
+  # Validation du paramètre de choix des itemsets desquels extraire les règles
+  if (is.character(from) && from != "transactions" && from != "patterns")
+    stop("from must be \"transactions\", \"patterns\" or a list of item sets.")
+  
+  # Conversion des transactions en transactions
+  transact = as(object@transactions, "transactions")
+  
+  if (is.character(from) && from == "transactions") {
+    
+    # Vérification du bon choix du paramètre demandant l'extraction de règles
+    args = list(...)
+    if ("parameter" %in% names(args) && "target" %in% names(args$parameter)
+        && args$parameter$target != "rules") stop("target parameter must be \"rules\"")
+    
+    # Spécification du non-affichage de la progression
+    if (!("control" %in% names(args))) args$control = list(verbose = FALSE)
+    else if (!("verbose" %in% names(args$control))) args$control$verbose = FALSE
+    
+    # Extraction des règles d'association
+    # rules = arules::apriori(transact, ...)
+    rules = do.call(arules::apriori, c(data = transact, args))
+    
+  } else {
+    if (is.character(from)) {
+      check_init(object, PATTERNS, prefix = "If from = \"patterns\", ")
+      from = object@patterns$pattern
+    }
+    
+    # Conversion de la liste d'item sets en objet arules::itemMatrix puis arules::itemsets
+    itemsets = methods::new("itemsets", items = arules::encode(from, object@items))
+    
+    # Extraction des règles d'association
+    rules = arules::ruleInduction(itemsets, transact, ...)
+  }
+  
+  # Recherche et retrait des règles redondantes
+  if (pruning) rules = rules[!arules::is.redundant(rules)]
+  
+  
+  # Si aucune règle ne correspond aux critères de recherche : NULL
+  if (length(rules) == 0) return(NULL)
+  
+  # Si demandé, retour des règles sous forme de classe rules du package arules
+  if (arules) return(rules)
+  
+  
+  # Conversion en data frame
+  rules_df = arules::DATAFRAME(rules)
+  
+  # Changement de notation
+  if (!as_sets) {
+    rules_df[, c("LHS", "RHS")] = apply(rules_df[, c("LHS", "RHS")], 2, vector_notation)
+  }
+  
+  # Renommage des colonnes "LHS" et "RHS" et replacement de la colonne "=>"
+  colnames(rules_df)[c(1,2)] = c("antecedent", "consequent")
+  rownames(rules_df) = NULL
+  rules_df[, " "] = "=>"
+  return(rules_df[, c(1, ncol(rules_df), seq(2, ncol(rules_df)-1))])
+})
 
 
 #' Length-two association rule visualization
@@ -4201,16 +4223,17 @@ setMethod(f = "extract_rules",
 #' @export
 setMethod(f = "rules_chart",
           signature = "TransactionAnalyzer",
-          definition = function(object, rules = NULL, items = NULL,
-                                parameters = list(supp = 0.001, conf = 0),
-                                display = "highest confidence", threshold = 0,
-                                use_names = TRUE, n.cutoff = NULL,
-                                category = NULL, c.cutoff = NULL,
-                                sort_by = "category",
-                                vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
-                                label_size = 3, label_margin = 0.05,
-                                edge_tension = 0.8, edge_alpha = 1,
-                                palette = "default", palette_direction = 1) {
+          definition =
+function(object, rules = NULL, items = NULL,
+         parameters = list(supp = 0.001, conf = 0),
+         display = "highest confidence", threshold = 0,
+         use_names = TRUE, n.cutoff = NULL,
+         category = NULL, c.cutoff = NULL,
+         sort_by = "category",
+         vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
+         label_size = 3, label_margin = 0.05,
+         edge_tension = 0.8, edge_alpha = 1,
+         palette = "default", palette_direction = 1) {
   
   # Conversion des factor de rules en character si nécessaire
   a_factor = FALSE
@@ -4470,25 +4493,26 @@ setMethod(f = "rules_chart",
 #' @export
 setMethod(f = "export",
           signature = "TransactionAnalyzer",
-          definition = function(object, nporc, ...) {
-            
-            # Recherche du type d'entités fourni
-            entities = which_entities(object, nporc, NODES_PATTERNS_OR_RULES)
-            
-            # Nom des colonnes dans lesquelles chercher les vecteurs à convertir
-            if (entities == NODES || entities == PATTERNS) {
-              columns = substr(entities, 1, nchar(entities) - 1)
-            } else if (entities == RULES) {
-              columns = c("antecedent", "consequent")
-            }
-            
-            # Conversion des itemsets en chaînes de caractères
-            itemsets = apply(nporc[columns], 2, turn_list_into_char)
-            nporc[, columns] = unlist(itemsets)
-            
-            # Enregistrement des données
-            utils::write.csv2(x = nporc, ...)
-          })
+          definition =
+function(object, nporc, ...) {
+  
+  # Recherche du type d'entités fourni
+  entities = which_entities(object, nporc, NODES_PATTERNS_OR_RULES)
+  
+  # Nom des colonnes dans lesquelles chercher les vecteurs à convertir
+  if (entities == NODES || entities == PATTERNS) {
+    columns = substr(entities, 1, nchar(entities) - 1)
+  } else if (entities == RULES) {
+    columns = c("antecedent", "consequent")
+  }
+  
+  # Conversion des itemsets en chaînes de caractères
+  itemsets = apply(nporc[columns], 2, turn_list_into_char)
+  nporc[, columns] = unlist(itemsets)
+  
+  # Enregistrement des données
+  utils::write.csv2(x = nporc, ...)
+})
 
 
 #' Search for nodes by item, characteristic or category
@@ -4565,28 +4589,28 @@ setMethod(f = "export",
 #' @export
 setMethod(f = "get_nodes",
           signature = "TransactionAnalyzer",
-          definition = function(object, nc,
-                                element, value, condition = "default") {
-            
-            # Vérification du choix de l'élément sur lequel effectuer la recherche
-            if (!(element %in% c("items", "length", "frequency")) && !check_access_for_category(object, element, NA, stop = FALSE))
-              stop("element must be one of \"items\", \"length\", \"frequency\", or a category name or number.")
-            
-            # Appel à la fonction spécifique
-            if (element == "items") {
-              if (condition == "default")
-                return(get_nodes_from_items(object, nc, value))
-              else
-                return(get_nodes_from_items(object, nc, value, condition))
-            }
-            if (element %in% c("length", "frequency")) {
-              if (condition == "default")
-                return(get_nodes_from_characteristic(object, nc, element, value))
-              else
-                return(get_nodes_from_characteristic(object, nc, element, value, condition))
-            }
-            return(get_nodes_from_category(object, nc, element, value, condition))
-          })
+          definition =
+function(object, nc, element, value, condition = "default") {
+  
+  # Vérification du choix de l'élément sur lequel effectuer la recherche
+  if (!(element %in% c("items", "length", "frequency")) && !check_access_for_category(object, element, NA, stop = FALSE))
+    stop("element must be one of \"items\", \"length\", \"frequency\", or a category name or number.")
+  
+  # Appel à la fonction spécifique
+  if (element == "items") {
+    if (condition == "default")
+      return(get_nodes_from_items(object, nc, value))
+    else
+      return(get_nodes_from_items(object, nc, value, condition))
+  }
+  if (element %in% c("length", "frequency")) {
+    if (condition == "default")
+      return(get_nodes_from_characteristic(object, nc, element, value))
+    else
+      return(get_nodes_from_characteristic(object, nc, element, value, condition))
+  }
+  return(get_nodes_from_category(object, nc, element, value, condition))
+})
 
 
 #' Search for nodes by item
@@ -4625,20 +4649,21 @@ setMethod(f = "get_nodes",
 #' @keywords internal
 setMethod(f = "get_nodes_from_items",
           signature = "TransactionAnalyzer",
-          definition = function(object, nc, items, condition = "all") {
-            
-            # Récupération des noeuds
-            check_init(object, NODES)
-            nc = get_tnp(object, nc, NODES)
-            
-            if (!(condition %in% c("all", "any", "exact")))
-              stop("condition must be \"all\", \"any\" or \"exact\".")
-            
-            if (condition == "exact") return(subset(nc, sapply(nc$node, function(x) setequal(items, x))))
-            
-            func = if (condition == "all") all else any
-            return(subset(nc, sapply(nc$node, function(x) func(items %in% x))))
-          })
+          definition =
+function(object, nc, items, condition = "all") {
+  
+  # Récupération des noeuds
+  check_init(object, NODES)
+  nc = get_tnp(object, nc, NODES)
+  
+  if (!(condition %in% c("all", "any", "exact")))
+    stop("condition must be \"all\", \"any\" or \"exact\".")
+  
+  if (condition == "exact") return(subset(nc, sapply(nc$node, function(x) setequal(items, x))))
+  
+  func = if (condition == "all") all else any
+  return(subset(nc, sapply(nc$node, function(x) func(items %in% x))))
+})
 
 
 #' Search for nodes by characteristic
@@ -4690,28 +4715,29 @@ setMethod(f = "get_nodes_from_items",
 #' @keywords internal
 setMethod(f = "get_nodes_from_characteristic",
           signature = "TransactionAnalyzer",
-          definition = function(object, nc, characteristic, value, condition = "EQ") {
-            
-            # Récupération des noeuds
-            check_init(object, NODES)
-            nc = get_tnp(object, nc, NODES)
-            
-            if (!(characteristic %in% c("length", "frequency")))
-              stop("characteristic must be one of \"length\", \"frequency\".")
-            
-            operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
-                          "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",
-                          "LE" = "<=", "<=" = "<=",    "GE" = ">=", ">=" = ">=")
-            
-            if (!(condition %in% names(operators))) {
-              stop(paste("condition must be one of",
-                         "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
-                         "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\"."))
-            }
-            
-            # Lignes de "nc" dont "characteristic" est "condition" (égal, etc.) à "value
-            return(nc[eval(parse(text = paste("nc[characteristic]", operators[condition], "value"))), ])
-          })
+          definition =
+function(object, nc, characteristic, value, condition = "EQ") {
+  
+  # Récupération des noeuds
+  check_init(object, NODES)
+  nc = get_tnp(object, nc, NODES)
+  
+  if (!(characteristic %in% c("length", "frequency")))
+    stop("characteristic must be one of \"length\", \"frequency\".")
+  
+  operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
+                "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",
+                "LE" = "<=", "<=" = "<=",    "GE" = ">=", ">=" = ">=")
+  
+  if (!(condition %in% names(operators))) {
+    stop(paste("condition must be one of",
+               "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
+               "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\"."))
+  }
+  
+  # Lignes de "nc" dont "characteristic" est "condition" (égal, etc.) à "value
+  return(nc[eval(parse(text = paste("nc[characteristic]", operators[condition], "value"))), ])
+})
 
 
 #' Search for nodes by category
@@ -4752,37 +4778,38 @@ setMethod(f = "get_nodes_from_characteristic",
 #' @keywords internal
 setMethod(f = "get_nodes_from_category",
           signature = "TransactionAnalyzer",
-          definition = function(object, nc, category, value, condition) {
-            
-            # Récupération des noeuds
-            nc = get_tnp(object, nc, NODES)
-            
-            # Validation des paramètres liés à une valeur de catégorie
-            check_access_for_category(object, category, value)
-            
-            if (condition == "items" || condition == "vertices") {
-              check_init(object, NODES)
-              
-              # Recherche des items correspondant à la catégorie recherchée
-              items = rownames(subset(object@items_categories, object@items_categories[category] == value))
-              # Extraction des noeuds contenant ces items
-              return(get_nodes_from_items(object, nc, items, condition = "any"))
-              
-            } else if (condition == "links" || condition == "edges") {
-              check_init(object, c(NODES, NODE_LINKS))
-              
-              # Recherche de l'ensemble de liens correspondant aux motifs
-              links = get_links(object, nc)
-              # Valeurs associées à chaque lien pour le type de catégorie recherché
-              categories_links = lapply(strsplit(links$items, "/"),
-                                        function(x) sort(unique(as.character(object@items_categories[x, category]))))
-              # Extraction des liens qui correspondent à la valeur de catégorie recherchée
-              links = links[sapply(categories_links, function(x) value %in% x), ]
-              # Récupération des noeuds associés
-              return(nc[unique(unlist(links[, 1:2])), ])
-            }
-            stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".")
-          })
+          definition =
+function(object, nc, category, value, condition) {
+  
+  # Récupération des noeuds
+  nc = get_tnp(object, nc, NODES)
+  
+  # Validation des paramètres liés à une valeur de catégorie
+  check_access_for_category(object, category, value)
+  
+  if (condition == "items" || condition == "vertices") {
+    check_init(object, NODES)
+    
+    # Recherche des items correspondant à la catégorie recherchée
+    items = rownames(subset(object@items_categories, object@items_categories[category] == value))
+    # Extraction des noeuds contenant ces items
+    return(get_nodes_from_items(object, nc, items, condition = "any"))
+    
+  } else if (condition == "links" || condition == "edges") {
+    check_init(object, c(NODES, NODE_LINKS))
+    
+    # Recherche de l'ensemble de liens correspondant aux motifs
+    links = get_links(object, nc)
+    # Valeurs associées à chaque lien pour le type de catégorie recherché
+    categories_links = lapply(strsplit(links$items, "/"),
+                              function(x) sort(unique(as.character(object@items_categories[x, category]))))
+    # Extraction des liens qui correspondent à la valeur de catégorie recherchée
+    links = links[sapply(categories_links, function(x) value %in% x), ]
+    # Récupération des noeuds associés
+    return(nc[unique(unlist(links[, 1:2])), ])
+  }
+  stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".")
+})
 
 
 #' Search for patterns by item, characteristic or category
@@ -4876,37 +4903,37 @@ setMethod(f = "get_nodes_from_category",
 #' @export
 setMethod(f = "get_patterns",
           signature = "TransactionAnalyzer",
-          definition = function(object, pc,
-                                element, value, condition = "default") {
-            
-            # Vérification du choix de l'élément sur lequel effectuer la recherche
-            if (!(element %in% c("items", "year", "length", "frequency", "weight", "specificity", "status"))
-                && !check_access_for_category(object, element, NA, stop = FALSE))
-              stop(paste("element must be one of \"items\"",
-                         "\"year\", \"length\", \"frequency\", \"weight\", \"specificity\", \"status\"",
-                         "or a category name or number."))
-            
-            # Appel à la fonction spécifique
-            if (element == "items") {
-              if (condition == "default")
-                return(get_patterns_from_items(object, pc, value))
-              else
-                return(get_patterns_from_items(object, pc, value, condition))
-            }
-            if (element %in% c("year", "length", "frequency", "weight", "specificity")) {
-              if (condition == "default")
-                return(get_patterns_from_characteristic(object, pc, element, value))
-              else
-                return(get_patterns_from_characteristic(object, pc, element, value, condition))
-            }
-            if (element == "status") {
-              if (condition == "default")
-                return(get_patterns_from_status(object, pc, value))
-              else
-                return(get_patterns_from_status(object, pc, value, condition))
-            }
-            return(get_patterns_from_category(object, pc, element, value, condition))
-          })
+          definition =
+function(object, pc, element, value, condition = "default") {
+  
+  # Vérification du choix de l'élément sur lequel effectuer la recherche
+  if (!(element %in% c("items", "year", "length", "frequency", "weight", "specificity", "status"))
+      && !check_access_for_category(object, element, NA, stop = FALSE))
+    stop(paste("element must be one of \"items\"",
+               "\"year\", \"length\", \"frequency\", \"weight\", \"specificity\", \"status\"",
+               "or a category name or number."))
+  
+  # Appel à la fonction spécifique
+  if (element == "items") {
+    if (condition == "default")
+      return(get_patterns_from_items(object, pc, value))
+    else
+      return(get_patterns_from_items(object, pc, value, condition))
+  }
+  if (element %in% c("year", "length", "frequency", "weight", "specificity")) {
+    if (condition == "default")
+      return(get_patterns_from_characteristic(object, pc, element, value))
+    else
+      return(get_patterns_from_characteristic(object, pc, element, value, condition))
+  }
+  if (element == "status") {
+    if (condition == "default")
+      return(get_patterns_from_status(object, pc, value))
+    else
+      return(get_patterns_from_status(object, pc, value, condition))
+  }
+  return(get_patterns_from_category(object, pc, element, value, condition))
+})
 
 
 #' Search for patterns by item
@@ -4947,20 +4974,21 @@ setMethod(f = "get_patterns",
 #' @keywords internal
 setMethod(f = "get_patterns_from_items",
           signature = "TransactionAnalyzer",
-          definition = function(object, pc, items, condition = "all") {
-            
-            # Récupération des patterns
-            check_init(object, PATTERNS)
-            pc = get_tnp(object, pc, PATTERNS)
-            
-            if (!(condition %in% c("all", "any", "exact")))
-              stop("condition must be \"all\", \"any\" or \"exact\".")
-            
-            if (condition == "exact") return(subset(pc, sapply(pc$pattern, function(x) setequal(items, x))))
-            
-            func = if (condition == "all") all else any
-            return(subset(pc, sapply(pc$pattern, function(x) func(items %in% x))))
-          })
+          definition =
+function(object, pc, items, condition = "all") {
+  
+  # Récupération des patterns
+  check_init(object, PATTERNS)
+  pc = get_tnp(object, pc, PATTERNS)
+  
+  if (!(condition %in% c("all", "any", "exact")))
+    stop("condition must be \"all\", \"any\" or \"exact\".")
+  
+  if (condition == "exact") return(subset(pc, sapply(pc$pattern, function(x) setequal(items, x))))
+  
+  func = if (condition == "all") all else any
+  return(subset(pc, sapply(pc$pattern, function(x) func(items %in% x))))
+})
 
 
 #' Search for patterns by characteristic
@@ -5013,28 +5041,29 @@ setMethod(f = "get_patterns_from_items",
 #' @keywords internal
 setMethod(f = "get_patterns_from_characteristic",
           signature = "TransactionAnalyzer",
-          definition = function(object, pc, characteristic, value, condition = "EQ") {
-            
-            # Récupération des patterns
-            check_init(object, PATTERNS)
-            pc = get_tnp(object, pc, PATTERNS)
-            
-            if (!(characteristic %in% c("year", "length", "frequency", "weight", "specificity")))
-              stop("characteristic must be one of \"year\", \"length\", \"frequency\", \"weight\", \"specificity\".")
-            
-            operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
-                          "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",
-                          "LE" = "<=", "<=" = "<=",    "GE" = ">=", ">=" = ">=")
-            
-            if (!(condition %in% names(operators))) {
-              stop(paste("condition must be one of",
-                         "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
-                         "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\"."))
-            }
-            
-            # Lignes de "pc" dont "characteristic" est "condition" (égal, etc.) à "value
-            return(pc[eval(parse(text = paste("pc[characteristic]", operators[condition], "value"))), ])
-          })
+          definition =
+function(object, pc, characteristic, value, condition = "EQ") {
+  
+  # Récupération des patterns
+  check_init(object, PATTERNS)
+  pc = get_tnp(object, pc, PATTERNS)
+  
+  if (!(characteristic %in% c("year", "length", "frequency", "weight", "specificity")))
+    stop("characteristic must be one of \"year\", \"length\", \"frequency\", \"weight\", \"specificity\".")
+  
+  operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
+                "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",
+                "LE" = "<=", "<=" = "<=",    "GE" = ">=", ">=" = ">=")
+  
+  if (!(condition %in% names(operators))) {
+    stop(paste("condition must be one of",
+               "\"EQ\", \"NE\", \"LT\", \"GT\", \"LE\", \"GE\",",
+               "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\"."))
+  }
+  
+  # Lignes de "pc" dont "characteristic" est "condition" (égal, etc.) à "value
+  return(pc[eval(parse(text = paste("pc[characteristic]", operators[condition], "value"))), ])
+})
 
 
 #' Search for patterns by status
@@ -5072,21 +5101,22 @@ setMethod(f = "get_patterns_from_characteristic",
 #' @keywords internal
 setMethod(f = "get_patterns_from_status",
           signature = "TransactionAnalyzer",
-          definition = function(object, pc, value, condition = "EQ") {
-            
-            # Récupération des patterns
-            check_init(object, PATTERNS)
-            pc = get_tnp(object, pc, PATTERNS)
-            
-            switch(EXPR = condition,
-                   "EQ" = { return(pc[pc$status %in% value, ]) },
-                   "==" = { return(pc[pc$status %in% value, ]) },
-                   
-                   "NE" = { return(pc[!(pc$status %in% value), ]) },
-                   "!=" = { return(pc[!(pc$status %in% value), ]) },
-                   
-                   stop("condition must be one of \"EQ\", \"NE\", \"==\", \"!=\"."))
-          })
+          definition =
+function(object, pc, value, condition = "EQ") {
+  
+  # Récupération des patterns
+  check_init(object, PATTERNS)
+  pc = get_tnp(object, pc, PATTERNS)
+  
+  switch(EXPR = condition,
+         "EQ" = { return(pc[pc$status %in% value, ]) },
+         "==" = { return(pc[pc$status %in% value, ]) },
+         
+         "NE" = { return(pc[!(pc$status %in% value), ]) },
+         "!=" = { return(pc[!(pc$status %in% value), ]) },
+         
+         stop("condition must be one of \"EQ\", \"NE\", \"==\", \"!=\"."))
+})
 
 
 #' Search for patterns by category
@@ -5127,37 +5157,38 @@ setMethod(f = "get_patterns_from_status",
 #' @keywords internal
 setMethod(f = "get_patterns_from_category",
           signature = "TransactionAnalyzer",
-          definition = function(object, pc, category, value, condition) {
-            
-            # Récupération des patterns
-            pc = get_tnp(object, pc, PATTERNS)
-            
-            # Validation des paramètres liés à une valeur de catégorie
-            check_access_for_category(object, category, value)
-            
-            if (condition == "items" || condition == "vertices") {
-              check_init(object, PATTERNS)
-              
-              # Recherche des items correspondant à la catégorie recherchée
-              items = rownames(subset(object@items_categories, object@items_categories[category] == value))
-              # Extraction des motifs contenant ces items
-              return(get_patterns_from_items(object, pc, items, condition = "any"))
-              
-            } else if (condition == "links" || condition == "edges") {
-              check_init(object, c(PATTERNS, PATTERN_LINKS))
-              
-              # Recherche de l'ensemble de liens correspondant aux motifs
-              links = get_links(object, pc)
-              # Valeurs associées à chaque lien pour le type de catégorie recherché
-              categories_links = lapply(strsplit(links$items, "/"),
-                                        function(x) sort(unique(as.character(object@items_categories[x, category]))))
-              # Extraction des liens qui correspondent à la valeur de catégorie recherchée
-              links = links[sapply(categories_links, function(x) value %in% x), ]
-              # Récupération des motifs associés
-              return(pc[unique(unlist(links[, 1:2])), ])
-            }
-            stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".")
-          })
+          definition =
+function(object, pc, category, value, condition) {
+  
+  # Récupération des patterns
+  pc = get_tnp(object, pc, PATTERNS)
+  
+  # Validation des paramètres liés à une valeur de catégorie
+  check_access_for_category(object, category, value)
+  
+  if (condition == "items" || condition == "vertices") {
+    check_init(object, PATTERNS)
+    
+    # Recherche des items correspondant à la catégorie recherchée
+    items = rownames(subset(object@items_categories, object@items_categories[category] == value))
+    # Extraction des motifs contenant ces items
+    return(get_patterns_from_items(object, pc, items, condition = "any"))
+    
+  } else if (condition == "links" || condition == "edges") {
+    check_init(object, c(PATTERNS, PATTERN_LINKS))
+    
+    # Recherche de l'ensemble de liens correspondant aux motifs
+    links = get_links(object, pc)
+    # Valeurs associées à chaque lien pour le type de catégorie recherché
+    categories_links = lapply(strsplit(links$items, "/"),
+                              function(x) sort(unique(as.character(object@items_categories[x, category]))))
+    # Extraction des liens qui correspondent à la valeur de catégorie recherchée
+    links = links[sapply(categories_links, function(x) value %in% x), ]
+    # Récupération des motifs associés
+    return(pc[unique(unlist(links[, 1:2])), ])
+  }
+  stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".")
+})
 
 
 #' Get links between nodes or patterns
@@ -5190,62 +5221,63 @@ setMethod(f = "get_patterns_from_category",
 #' @export
 setMethod(f = "get_links",
           signature = "TransactionAnalyzer",
-          definition = function(object, nopc) {
-            
-            # Récupération des noeuds/patterns et recherche du type d'entités fourni
-            entities = which_entities(object, nopc)
-            nopc = get_tnp(object, nopc)
-            check_init(object, c(entities, which_associated_links(object, entities)))
-            
-            # Si les liens recherchés correspondent à l'intégralité des liens
-            if (entities == NODES && identical(object@nodes, nopc)) {
-              return(object@node_links)
-            }
-            if (entities == PATTERNS && identical(object@patterns, nopc)) {
-              return(object@pattern_links)
-            }
-            
-            # Sinon...
-            search_nodes = (entities == NODES)
-            all_links = if(search_nodes) object@node_links else object@pattern_links
-            
-            # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
-            # (nop_links = node or pattern links)
-            nop_links = all_links[all_links$endpoint.1 %in% rownames(nopc)
-                                  & all_links$endpoint.2 %in% rownames(nopc), ]
-            
-            # Identification des nouveaux sommets isolés
-            isolated = lapply(rownames(nopc),
-                              function(x) {
-                                if (!(x %in% unlist(nop_links[, 1:2]))) {
-                                  if (search_nodes) return(c(x, x, "", 0))
-                                  return(c(x, x, "", 0, object@patterns[x, "year"]))
-                                }
-                                return(NULL)
-                              })
-            
-            # S'il y a de nouveaux isolés
-            if (any(sapply(isolated, function(x) !is.null(x)))) {
-              
-              # Ajout à l'ensemble des liens/sommets
-              no_links = do.call(rbind, isolated)
-              colnames(no_links) = colnames(nop_links)
-              nop_links = rbind(nop_links, no_links, stringsAsFactors = FALSE)
-              class(nop_links$endpoint.1) = class(nop_links$endpoint.2) = class(nop_links$weight) = "integer"
-              if(!search_nodes) class(nop_links$year) = "integer"
-              
-              # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
-              if (nrow(no_links) == nrow(nop_links)) {
-                # Si toutes les lignes ne sont que des nouveaux isolés
-                rownames(nop_links) = paste0("A", seq_len(nrow(nop_links)))
-              } else {
-                rownames(nop_links) = c(rownames(nop_links)[1:(nrow(nop_links) - nrow(no_links))],
-                                        paste0("A", seq_len(nrow(no_links))))
-              }
-            }
-            
-            return(nop_links)
-          })
+          definition =
+function(object, nopc) {
+  
+  # Récupération des noeuds/patterns et recherche du type d'entités fourni
+  entities = which_entities(object, nopc)
+  nopc = get_tnp(object, nopc)
+  check_init(object, c(entities, which_associated_links(object, entities)))
+  
+  # Si les liens recherchés correspondent à l'intégralité des liens
+  if (entities == NODES && identical(object@nodes, nopc)) {
+    return(object@node_links)
+  }
+  if (entities == PATTERNS && identical(object@patterns, nopc)) {
+    return(object@pattern_links)
+  }
+  
+  # Sinon...
+  search_nodes = (entities == NODES)
+  all_links = if(search_nodes) object@node_links else object@pattern_links
+  
+  # Sous-ensemble des liens pour lesquels les deux sommets sont à afficher
+  # (nop_links = node or pattern links)
+  nop_links = all_links[all_links$endpoint.1 %in% rownames(nopc)
+                        & all_links$endpoint.2 %in% rownames(nopc), ]
+  
+  # Identification des nouveaux sommets isolés
+  isolated = lapply(rownames(nopc),
+                    function(x) {
+                      if (!(x %in% unlist(nop_links[, 1:2]))) {
+                        if (search_nodes) return(c(x, x, "", 0))
+                        return(c(x, x, "", 0, object@patterns[x, "year"]))
+                      }
+                      return(NULL)
+                    })
+  
+  # S'il y a de nouveaux isolés
+  if (any(sapply(isolated, function(x) !is.null(x)))) {
+    
+    # Ajout à l'ensemble des liens/sommets
+    no_links = do.call(rbind, isolated)
+    colnames(no_links) = colnames(nop_links)
+    nop_links = rbind(nop_links, no_links, stringsAsFactors = FALSE)
+    class(nop_links$endpoint.1) = class(nop_links$endpoint.2) = class(nop_links$weight) = "integer"
+    if(!search_nodes) class(nop_links$year) = "integer"
+    
+    # Attribution d'index aux nouvelles lignes, différents de ceux de la data frame générale (l'attribut)
+    if (nrow(no_links) == nrow(nop_links)) {
+      # Si toutes les lignes ne sont que des nouveaux isolés
+      rownames(nop_links) = paste0("A", seq_len(nrow(nop_links)))
+    } else {
+      rownames(nop_links) = c(rownames(nop_links)[1:(nrow(nop_links) - nrow(no_links))],
+                              paste0("A", seq_len(nrow(no_links))))
+    }
+  }
+  
+  return(nop_links)
+})
 
 
 #' Search for isolated nodes or patterns
@@ -5272,12 +5304,13 @@ setMethod(f = "get_links",
 #' @export
 setMethod(f = "get_isolates",
           signature = "TransactionAnalyzer",
-          definition = function(object, nopc) {
-            
-            links = get_links(object, nopc)
-            row_id = as.character(links$endpoint.1[links$weight == 0])
-            return(get_tnp(object, nopc)[row_id, ])
-          })
+          definition =
+function(object, nopc) {
+  
+  links = get_links(object, nopc)
+  row_id = as.character(links$endpoint.1[links$weight == 0])
+  return(get_tnp(object, nopc)[row_id, ])
+})
 
 
 #' Search for non-isolated nodes or patterns
@@ -5304,13 +5337,13 @@ setMethod(f = "get_isolates",
 #' @export
 setMethod(f = "get_non_isolates",
           signature = "TransactionAnalyzer",
-          definition = function(object, nopc) {
-            
-            links = get_links(object, nopc)
-            row_id = as.character(sort(unique(unlist(links[links$weight != 0,
-                                                           c("endpoint.1", "endpoint.2")]))))
-            return(get_tnp(object, nopc)[row_id, ])
-          })
+          definition =
+function(object, nopc) {
+  
+  links = get_links(object, nopc)
+  row_id = as.character(sort(unique(unlist(links[links$weight != 0, c("endpoint.1", "endpoint.2")]))))
+  return(get_tnp(object, nopc)[row_id, ])
+})
 
 
 #' Search for complex nodes or patterns
@@ -5357,52 +5390,53 @@ setMethod(f = "get_non_isolates",
 #' @export
 setMethod(f = "get_complexes",
           signature = "TransactionAnalyzer",
-          definition = function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2) {
-            
-            # Récupération des noeuds/patterns et recherche du type d'entités fourni
-            entities = which_entities(object, nopc)
-            nopc = get_tnp(object, nopc)
-            
-            if (is.null(category)) {
-              check_init(object, entities)
-              
-              # Entités possédant au moins min_nb_values items
-              return(nopc[nopc[, "length"] >= min_nb_values, ])
-              
-            } else {
-              # Validation du paramètre d'accès à la catégorie
-              check_access_for_category(object, category, NA)
-              
-              if (condition == "items" || condition == "vertices") {
-                check_init(object, entities)
-                
-                # Catégories associées à chaque noeud ou motif
-                nop_category = lapply(nopc[[substr(entities, 1, nchar(entities) - 1)]],
-                                      function(x) unique(as.character(object@items_categories[x, category])))
-                
-                # Entités associées à au moins min_nb_values valeurs différentes pour la catégorie
-                return(nopc[lapply(nop_category, length) >= min_nb_values, ])
-                
-              } else if (condition == "links" || condition == "edges") {
-                check_init(object, c(entities, which_associated_links(object, entities)))
-                
-                # Liens associés aux noeuds ou motifs
-                nop_links = get_links(object, nopc)
-                
-                # Catégories associées à chaque lien
-                links_category = lapply(strsplit(nop_links$items, "/"),
-                                        function(x) sort(unique(as.character(object@items_categories[x, category]))))
-                
-                # Identifiants des entités dont au moins un lien est associé à au moins min_nb_values valeurs différentes pour la catégorie
-                id = unique(unlist(nop_links[which(lapply(links_category, length) >= min_nb_values),
-                                             c("endpoint.1", "endpoint.2")]))
-                
-                # Entités correspondantes
-                return(nopc[as.character(id), ])
-              }
-              stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".") 
-            }
-          })
+          definition =
+function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2) {
+  
+  # Récupération des noeuds/patterns et recherche du type d'entités fourni
+  entities = which_entities(object, nopc)
+  nopc = get_tnp(object, nopc)
+  
+  if (is.null(category)) {
+    check_init(object, entities)
+    
+    # Entités possédant au moins min_nb_values items
+    return(nopc[nopc[, "length"] >= min_nb_values, ])
+    
+  } else {
+    # Validation du paramètre d'accès à la catégorie
+    check_access_for_category(object, category, NA)
+    
+    if (condition == "items" || condition == "vertices") {
+      check_init(object, entities)
+      
+      # Catégories associées à chaque noeud ou motif
+      nop_category = lapply(nopc[[substr(entities, 1, nchar(entities) - 1)]],
+                            function(x) unique(as.character(object@items_categories[x, category])))
+      
+      # Entités associées à au moins min_nb_values valeurs différentes pour la catégorie
+      return(nopc[lapply(nop_category, length) >= min_nb_values, ])
+      
+    } else if (condition == "links" || condition == "edges") {
+      check_init(object, c(entities, which_associated_links(object, entities)))
+      
+      # Liens associés aux noeuds ou motifs
+      nop_links = get_links(object, nopc)
+      
+      # Catégories associées à chaque lien
+      links_category = lapply(strsplit(nop_links$items, "/"),
+                              function(x) sort(unique(as.character(object@items_categories[x, category]))))
+      
+      # Identifiants des entités dont au moins un lien est associé à au moins min_nb_values valeurs différentes pour la catégorie
+      id = unique(unlist(nop_links[which(lapply(links_category, length) >= min_nb_values),
+                                   c("endpoint.1", "endpoint.2")]))
+      
+      # Entités correspondantes
+      return(nopc[as.character(id), ])
+    }
+    stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".") 
+  }
+})
 
 
 
@@ -5432,33 +5466,34 @@ setMethod(f = "get_complexes",
 #' @keywords internal
 setMethod(f = "check_access_for_category",
           signature = "TransactionAnalyzer",
-          definition = function(object, category, value, stop = TRUE) {
-            
-            # S'il n'existe pas de catégorie, la valeur doit être NULL ou NA
-            if (is.null(category) || is.na(category)) return(TRUE)
-            if (ncol(object@items_categories) == 0) {
-              if (!stop) return(FALSE)
-              stop("There is no category associated with the items.")
-            }
-            
-            # Vérification que le type de catégorie recherché existe
-            if (is.character(category) & !(category %in% colnames(object@items_categories))) {
-              if (!stop) return(FALSE)
-              stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
-                                                      collapse = ", ") ,".")
-            } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
-              if (!stop) return(FALSE)
-              stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
-            }
-            
-            # Vérification que la valeur de la catégorie recherchée existe
-            if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
-              if (!stop) return(FALSE)
-              stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
-                                                   collapse = ", ") ,".")
-            }
-            return(TRUE)
-          })
+          definition =
+function(object, category, value, stop = TRUE) {
+  
+  # S'il n'existe pas de catégorie, la valeur doit être NULL ou NA
+  if (is.null(category) || is.na(category)) return(TRUE)
+  if (ncol(object@items_categories) == 0) {
+    if (!stop) return(FALSE)
+    stop("There is no category associated with the items.")
+  }
+  
+  # Vérification que le type de catégorie recherché existe
+  if (is.character(category) & !(category %in% colnames(object@items_categories))) {
+    if (!stop) return(FALSE)
+    stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
+                                            collapse = ", ") ,".")
+  } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
+    if (!stop) return(FALSE)
+    stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
+  }
+  
+  # Vérification que la valeur de la catégorie recherchée existe
+  if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
+    if (!stop) return(FALSE)
+    stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
+                                         collapse = ", ") ,".")
+  }
+  return(TRUE)
+})
 
 
 #' Check if the items have names
@@ -5478,11 +5513,12 @@ setMethod(f = "check_access_for_category",
 #' @keywords internal
 setMethod(f = "has_item_names",
           signature = "TransactionAnalyzer",
-          definition = function(object) {
-            
-            if (all(names(object@items) == object@items)) return(FALSE)
-            return(TRUE)
-          })
+          definition =
+function(object) {
+  
+  if (all(names(object@items) == object@items)) return(FALSE)
+  return(TRUE)
+})
 
 
 #' Get item names
@@ -5501,9 +5537,10 @@ setMethod(f = "has_item_names",
 #' @keywords internal
 setMethod(f = "get_item_names",
           signature = "TransactionAnalyzer",
-          definition = function(object, items) {
-            return(names(object@items)[match(items, object@items)])
-          })
+          definition =
+function(object, items) {
+  return(names(object@items)[match(items, object@items)])
+})
 
 
 #' Get items
@@ -5533,21 +5570,22 @@ setMethod(f = "get_item_names",
 #' @keywords internal
 setMethod(f = "get_items",
           signature = "TransactionAnalyzer",
-          definition = function(object, items) {
-            
-            # Valeur spécifique faisant référence à l'intégralité des items
-            if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
-              return(object@items)
-            
-            # Vecteur d'items (sous-ensemble de object@items)
-            if (all(items %in% object@items)) {
-              # Avec ou sans les noms associées
-              if (is_named(items)) return(items)
-              return(object@items[match(items, object@items)])
-            }
-            
-            stop("items must be \"items\" or a subset of object[\"items\"].")
-          })
+          definition =
+function(object, items) {
+  
+  # Valeur spécifique faisant référence à l'intégralité des items
+  if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
+    return(object@items)
+  
+  # Vecteur d'items (sous-ensemble de object@items)
+  if (all(items %in% object@items)) {
+    # Avec ou sans les noms associées
+    if (is_named(items)) return(items)
+    return(object@items[match(items, object@items)])
+  }
+  
+  stop("items must be \"items\" or a subset of object[\"items\"].")
+})
 
 
 #' Get transactions or nodes or patterns and their characteristics
@@ -5582,30 +5620,31 @@ setMethod(f = "get_items",
 #' @keywords internal
 setMethod(f = "get_tnp",
           signature = "TransactionAnalyzer",
-          definition = function(object, tnp, entities = NODES_OR_PATTERNS) {
-            
-            if (is.character(tnp)) {
-              if (tnp == TRANSACTIONS || tnp == first_characters(TRANSACTIONS)) return(object@transactions)
-              if (tnp == NODES        || tnp == first_characters(NODES))        return(object@nodes)
-              if (tnp == PATTERNS     || tnp == first_characters(PATTERNS))     return(object@patterns)
-              
-              var_name = deparse(substitute(tnp))
-              
-              if (entities == TRANSACTIONS)
-                msg = paste(var_name, "must be \"transactions\" or an object of class TransactionSet.")
-              else if (entities == NODES)
-                msg = paste(var_name, "must be \"nodes\" or a data frame of nodes and their characteristics.")
-              else if (entities == PATTERNS)
-                msg = paste(var_name, "must be \"patterns\" or a data frame of patterns and their characteristics.")
-              else if (entities == NODES_OR_PATTERNS)
-                msg = paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics.")
-              else # NODES_PATTERNS_OR_TRANSACTIONS
-                msg = paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\", an object of class TransactionSet or a data frame of nodes or patterns and their characteristics.")
-              
-              stop(msg)
-            }
-            return(tnp)
-          })
+          definition =
+function(object, tnp, entities = NODES_OR_PATTERNS) {
+  
+  if (is.character(tnp)) {
+    if (tnp == TRANSACTIONS || tnp == first_characters(TRANSACTIONS)) return(object@transactions)
+    if (tnp == NODES        || tnp == first_characters(NODES))        return(object@nodes)
+    if (tnp == PATTERNS     || tnp == first_characters(PATTERNS))     return(object@patterns)
+    
+    var_name = deparse(substitute(tnp))
+    
+    if (entities == TRANSACTIONS)
+      msg = paste(var_name, "must be \"transactions\" or an object of class TransactionSet.")
+    else if (entities == NODES)
+      msg = paste(var_name, "must be \"nodes\" or a data frame of nodes and their characteristics.")
+    else if (entities == PATTERNS)
+      msg = paste(var_name, "must be \"patterns\" or a data frame of patterns and their characteristics.")
+    else if (entities == NODES_OR_PATTERNS)
+      msg = paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics.")
+    else # NODES_PATTERNS_OR_TRANSACTIONS
+      msg = paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\", an object of class TransactionSet or a data frame of nodes or patterns and their characteristics.")
+    
+    stop(msg)
+  }
+  return(tnp)
+})
 
 
 #' Get transaction, node or pattern itemsets
@@ -5638,32 +5677,33 @@ setMethod(f = "get_tnp",
 #' @keywords internal
 setMethod(f = "get_tnp_itemsets",
           signature = "TransactionAnalyzer",
-          definition = function(object, tnp, entities = NODES_OR_PATTERNS) {
-            
-            if (is.character(tnp)) {
-              if (tnp == TRANSACTIONS || tnp == first_characters(TRANSACTIONS)) {
-                return(object@transactions[object@transactions@item_key])
-              }
-              if (tnp == NODES    || tnp == first_characters(NODES))    return(object@nodes$node)
-              if (tnp == PATTERNS || tnp == first_characters(PATTERNS)) return(object@patterns$pattern)
-              
-              var_name = deparse(substitute(tnp))
-              
-              if (entities == TRANSACTIONS)
-                msg = paste(var_name, "must be \"transactions\" or a list of transactions.")
-              else if (entities == NODES)
-                msg = paste(var_name, "must be \"nodes\" or a list of nodes.")
-              else if (entities == PATTERNS)
-                msg = paste(var_name, "must be \"patterns\" or a list of patterns.")
-              else if (entities == NODES_OR_PATTERNS)
-                msg = paste(var_name, "must be \"nodes\", \"patterns\" or a list of nodes or patterns.")
-              else # NODES_PATTERNS_OR_TRANSACTIONS
-                msg = paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\" or a list of transactions, nodes or patterns.")
-              
-              stop(msg)
-            }
-            return(tnp)
-          })
+          definition =
+function(object, tnp, entities = NODES_OR_PATTERNS) {
+  
+  if (is.character(tnp)) {
+    if (tnp == TRANSACTIONS || tnp == first_characters(TRANSACTIONS)) {
+      return(object@transactions[object@transactions@item_key])
+    }
+    if (tnp == NODES    || tnp == first_characters(NODES))    return(object@nodes$node)
+    if (tnp == PATTERNS || tnp == first_characters(PATTERNS)) return(object@patterns$pattern)
+    
+    var_name = deparse(substitute(tnp))
+    
+    if (entities == TRANSACTIONS)
+      msg = paste(var_name, "must be \"transactions\" or a list of transactions.")
+    else if (entities == NODES)
+      msg = paste(var_name, "must be \"nodes\" or a list of nodes.")
+    else if (entities == PATTERNS)
+      msg = paste(var_name, "must be \"patterns\" or a list of patterns.")
+    else if (entities == NODES_OR_PATTERNS)
+      msg = paste(var_name, "must be \"nodes\", \"patterns\" or a list of nodes or patterns.")
+    else # NODES_PATTERNS_OR_TRANSACTIONS
+      msg = paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\" or a list of transactions, nodes or patterns.")
+    
+    stop(msg)
+  }
+  return(tnp)
+})
 
 
 #' Detect the type of entities
@@ -5697,45 +5737,46 @@ setMethod(f = "get_tnp_itemsets",
 #' @keywords internal
 setMethod(f = "which_entities",
           signature = "TransactionAnalyzer",
-          definition = function(object, tnpr, entities = NODES_OR_PATTERNS) {
-            
-            if (is.character(tnpr)) {
-              if (tnpr == TRANSACTIONS || tnpr == first_characters(TRANSACTIONS)) return(TRANSACTIONS)
-              if (tnpr == NODES        || tnpr == first_characters(NODES))        return(NODES)
-              if (tnpr == PATTERNS     || tnpr == first_characters(PATTERNS))     return(PATTERNS)
-              if (tnpr == RULES        || tnpr == first_characters(RULES))        return(RULES)
-              
-              var_name = deparse(substitute(tnpr))
-              
-              if (entities == NODES_OR_PATTERNS)
-                msg = paste("If", var_name, "is character, it must be \"nodes\" or \"patterns\".")
-              else if (entities == NODES_PATTERNS_OR_RULES)
-                msg = paste("If", var_name, "is character, it must be \"nodes\", \"patterns\" or \"rules\".")
-              else # NODES_PATTERNS_OR_TRANSACTIONS
-                msg = paste("If", var_name, "is character, it must be \"transactions\", \"nodes\" or \"patterns\".")
-              
-              stop(msg)
-            }
-            
-            if (class(tnpr) == "TransactionSet") return(TRANSACTIONS)
-            if ("node" %in% colnames(tnpr)) return(NODES)
-            if ("pattern" %in% colnames(tnpr)) return(PATTERNS)
-            if ("antecedent" %in% colnames(tnpr)) return(RULES)
-            
-            var_name = deparse(substitute(tnpr))
-            
-            if (entities == NODES_OR_PATTERNS) {
-              stop(paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics."))
-            }
-            else if (entities == NODES_PATTERNS_OR_RULES) {
-              stop(paste(var_name, "must be a data frame of nodes or patterns and their",
-                         "characteristics, or a data frame of association rules."))
-            }
-            # entities = NODES_PATTERNS_OR_TRANSACTIONS
-            stop(paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\", an",
-                       "object of class TransactionSet or a data frame of nodes or patterns and",
-                       "their characteristics."))
-          })
+          definition =
+function(object, tnpr, entities = NODES_OR_PATTERNS) {
+  
+  if (is.character(tnpr)) {
+    if (tnpr == TRANSACTIONS || tnpr == first_characters(TRANSACTIONS)) return(TRANSACTIONS)
+    if (tnpr == NODES        || tnpr == first_characters(NODES))        return(NODES)
+    if (tnpr == PATTERNS     || tnpr == first_characters(PATTERNS))     return(PATTERNS)
+    if (tnpr == RULES        || tnpr == first_characters(RULES))        return(RULES)
+    
+    var_name = deparse(substitute(tnpr))
+    
+    if (entities == NODES_OR_PATTERNS)
+      msg = paste("If", var_name, "is character, it must be \"nodes\" or \"patterns\".")
+    else if (entities == NODES_PATTERNS_OR_RULES)
+      msg = paste("If", var_name, "is character, it must be \"nodes\", \"patterns\" or \"rules\".")
+    else # NODES_PATTERNS_OR_TRANSACTIONS
+      msg = paste("If", var_name, "is character, it must be \"transactions\", \"nodes\" or \"patterns\".")
+    
+    stop(msg)
+  }
+  
+  if (class(tnpr) == "TransactionSet") return(TRANSACTIONS)
+  if ("node" %in% colnames(tnpr)) return(NODES)
+  if ("pattern" %in% colnames(tnpr)) return(PATTERNS)
+  if ("antecedent" %in% colnames(tnpr)) return(RULES)
+  
+  var_name = deparse(substitute(tnpr))
+  
+  if (entities == NODES_OR_PATTERNS) {
+    stop(paste(var_name, "must be \"nodes\", \"patterns\" or a data frame of nodes or patterns and their characteristics."))
+  }
+  else if (entities == NODES_PATTERNS_OR_RULES) {
+    stop(paste(var_name, "must be a data frame of nodes or patterns and their",
+               "characteristics, or a data frame of association rules."))
+  }
+  # entities = NODES_PATTERNS_OR_TRANSACTIONS
+  stop(paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\", an",
+             "object of class TransactionSet or a data frame of nodes or patterns and",
+             "their characteristics."))
+})
 
 
 #' Type of links relating to a type of entities
@@ -5755,13 +5796,14 @@ setMethod(f = "which_entities",
 #' @keywords internal
 setMethod(f = "which_associated_links",
           signature = "TransactionAnalyzer",
-          definition = function(object, entities) {
-            
-            if (entities == NODES    || entities == first_characters(NODES))    return(NODE_LINKS)
-            if (entities == PATTERNS || entities == first_characters(PATTERNS)) return(PATTERN_LINKS)
-            
-            stop("entities must refer to nodes or patterns.")
-          })
+          definition =
+function(object, entities) {
+  
+  if (entities == NODES    || entities == first_characters(NODES))    return(NODE_LINKS)
+  if (entities == PATTERNS || entities == first_characters(PATTERNS)) return(PATTERN_LINKS)
+  
+  stop("entities must refer to nodes or patterns.")
+})
 
 
 #' Type of entities or links corresponding to a name
@@ -5783,16 +5825,17 @@ setMethod(f = "which_associated_links",
 #' @keywords internal
 setMethod(f = "which_name",
           signature = "TransactionAnalyzer",
-          definition = function(object, name) {
-            
-            if (length(name) > 1) return(sapply(name, which_name, object = object))
-            
-            if (name == TRANSACTIONS  || name == first_characters(TRANSACTIONS))  return(TRANSACTIONS)
-            if (name == NODES         || name == first_characters(NODES))         return(NODES)
-            if (name == PATTERNS      || name == first_characters(PATTERNS))      return(PATTERNS)
-            if (name == RULES         || name == first_characters(RULES))         return(RULES)
-            if (name == NODE_LINKS    || name == first_characters(NODE_LINKS))    return(NODE_LINKS)
-            if (name == PATTERN_LINKS || name == first_characters(PATTERN_LINKS)) return(PATTERN_LINKS)
-          })
+          definition =
+function(object, name) {
+  
+  if (length(name) > 1) return(sapply(name, which_name, object = object))
+  
+  if (name == TRANSACTIONS  || name == first_characters(TRANSACTIONS))  return(TRANSACTIONS)
+  if (name == NODES         || name == first_characters(NODES))         return(NODES)
+  if (name == PATTERNS      || name == first_characters(PATTERNS))      return(PATTERNS)
+  if (name == RULES         || name == first_characters(RULES))         return(RULES)
+  if (name == NODE_LINKS    || name == first_characters(NODE_LINKS))    return(NODE_LINKS)
+  if (name == PATTERN_LINKS || name == first_characters(PATTERN_LINKS)) return(PATTERN_LINKS)
+})
 
 
