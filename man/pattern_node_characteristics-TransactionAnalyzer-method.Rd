@@ -23,7 +23,7 @@ Any subset of \code{object["patterns"]$pattern}.}
 For each pattern, extract the frequencies and lengths of the nodes in which it is included.
 }
 \seealso{
-\code{\link{frequency_by_node_complexity}}.
+\code{\link{frequency_by_complexity}}.
 }
 \author{
 Gauthier Magnin

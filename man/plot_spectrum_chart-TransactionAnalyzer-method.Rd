@@ -27,7 +27,7 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{spectrum_chart}}, \code{\link{frequency_by_node_complexity}},
+\code{\link{spectrum_chart}}, \code{\link{frequency_by_complexity}},
          \code{\link{pattern_node_characteristics}}.
 }
 \author{

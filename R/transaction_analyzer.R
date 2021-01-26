@@ -655,7 +655,7 @@ setGeneric(name = "plot_spectrum_chart", def = function(object, pc, frequencies,
 
 setGeneric(name = "pattern_node_characteristics", def = function(object, patterns){ standardGeneric("pattern_node_characteristics") })
 
-setGeneric(name = "frequency_by_node_complexity", def = function(object, patterns){ standardGeneric("frequency_by_node_complexity") })
+setGeneric(name = "frequency_by_complexity", def = function(object, patterns){ standardGeneric("frequency_by_complexity") })
 
 
 # Methods for creating spectrosome graphs and computing related indicators
@@ -692,7 +692,7 @@ setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NU
 
 # Methods for search and save
 
-setGeneric(name = "save_characteristics", def = function(object, characteristics, ...){ standardGeneric("save_characteristics") })
+setGeneric(name = "export", def = function(object, characteristics, ...){ standardGeneric("export") })
 
 setGeneric(name = "get_nodes", def = function(object, nc, element, value, condition = "default"){ standardGeneric("get_nodes") })
 
@@ -2229,7 +2229,7 @@ setMethod(f = "spectrum_chart",
             check_param(identifiers, values = c("original", "new"))
             
             # Décomposition des fréquences des motifs selon le type de noeuds (simple ou complexe)
-            frequencies = frequency_by_node_complexity(object, pc$pattern)
+            frequencies = frequency_by_complexity(object, pc$pattern)
             
             # Tri des motifs selon spécificité, statut, fréquence, longueur
             if (sort) {
@@ -2276,7 +2276,7 @@ setMethod(f = "spectrum_chart",
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{spectrum_chart}}, \code{\link{frequency_by_node_complexity}},
+#' @seealso \code{\link{spectrum_chart}}, \code{\link{frequency_by_complexity}},
 #'          \code{\link{pattern_node_characteristics}}.
 #' 
 #' @aliases plot_spectrum_chart
@@ -2378,13 +2378,13 @@ setMethod(f = "plot_spectrum_chart",
             # Légende des fréquences
             freq_legend = graphics::legend("bottom", plot = FALSE,
                                              cex = cex_legend, fill = "red", density = c(-1, 15),
-                                             legend = c("Frequency in complex nodes", "Frequency in simple nodes"))
+                                             legend = c("Frequency in complex transactions", "Frequency in simple transactions"))
             
             graphics::legend(x = fig_in_usr_coords(1) + w_margin,
                              y = fig_in_usr_coords(3) + freq_legend$rect$h + b_margin,
                              bty = "n", xpd = TRUE,
                              cex = cex_legend, fill = "red", density = c(-1, 15),
-                             legend = c("Frequency in complex nodes", "Frequency in simple nodes"))
+                             legend = c("Frequency in complex transactions", "Frequency in simple transactions"))
             
             # Légende de la spécificité et de la taille
             so_legend = graphics::legend("bottom", plot = FALSE,
@@ -2418,7 +2418,7 @@ setMethod(f = "plot_spectrum_chart",
 #'  }
 #'  
 #' @author Gauthier Magnin
-#' @seealso \code{\link{frequency_by_node_complexity}}.
+#' @seealso \code{\link{frequency_by_complexity}}.
 #' 
 #' @aliases pattern_node_characteristics
 #' @keywords internal
@@ -2446,30 +2446,31 @@ setMethod(f = "pattern_node_characteristics",
           })
 
 
-#' Pattern frequency by node complexity
+#' Pattern frequency by transaction complexity
 #' 
-#' For each pattern, compute its frequency related to complex nodes (i.e. nodes containing more than one
-#'  item and containing the pattern) and its frequency related to simple node (i.e. nodes containing
-#'  only one item and containing the pattern).
+#' For each pattern, compute its frequency related to complex transactions (i.e. the number of
+#'  transactions containing more than one item and containing the pattern) and its frequency related to
+#'  simple transactions (i.e. the number of transactions containing only one item and containing the
+#'  pattern).
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
-#' @param patterns Patterns whose frequencies according to the complexity of the nodes containing them
-#'  are to be computed. Any subset of `object["patterns"]$pattern`.\cr
+#' @param patterns Patterns whose frequencies according to the complexity of the transactions containing
+#'  them are to be computed. Any subset of `object["patterns"]$pattern`.\cr
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]$pattern`.
-#' @return Two-column matrix containing, for each pattern, its frequency related to complex nodes and
-#'  its frequency related to simple nodes.
-#'  
+#' @return Two-column matrix containing, for each pattern, its frequency related to complex transactions
+#'  and its frequency related to simple transactions.
+#' 
 #' @author Gauthier Magnin
-#' @seealso [`get_complexes`]
+#' @seealso [`get_complex_trx`], [`get_simple_trx`], [`get_complexes`]
 #' 
 #' @examples
-#' frequency_by_node_complexity(TA_instance, "patterns")
-#' frequency_by_node_complexity(TA_instance, TA_instance["patterns"]$pattern[1:15])
+#' frequency_by_complexity(TA_instance, "patterns")
+#' frequency_by_complexity(TA_instance, TA_instance["patterns"]$pattern[1:15])
 #' 
-#' @aliases frequency_by_node_complexity
+#' @aliases frequency_by_complexity
 #' @md
 #' @export
-setMethod(f = "frequency_by_node_complexity",
+setMethod(f = "frequency_by_complexity",
           signature = "TransactionAnalyzer",
           definition = function(object, patterns) {
   
@@ -4439,39 +4440,40 @@ setMethod(f = "rules_chart",
 
 #### Methods for search and save ####
 
-#' Saving nodes, patterns or association rules
+#' Save nodes, patterns or association rules
 #' 
-#' Save in CSV format a set of nodes, patterns or association rules as well as their characteristics.
+#' Write to a CSV file a data frame of nodes, patterns or association rules.
 #' 
-#' @param object S4 object of class \code{TransactionAnalyzer}.
-#' @param characteristics Data frame of the characteristics of nodes, patterns or rules.
-#' @param ... Further arguments to the function \code{\link[utils:write.table]{utils::write.csv2}}.
+#' @param object S4 object of class `TransactionAnalyzer`.
+#' @param nporc Data frame of **n**odes, **p**atterns **o**r **r**ules and their **c**haracteristics.
+#' @param ... Further arguments to the function [`utils::write.csv2`][utils::write.table].
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link[utils:write.table]{utils::write.csv2}}.
+#' @seealso [`utils::write.csv2`][utils::write.table].
 #' 
 #' @examples
-#' save_characteristics(TA_instance, TA_instance["nodes"],
-#'                      file = "nodes.csv")
-#' save_characteristics(TA_instance, TA_instance["patterns"][1:15, ],
-#'                      file = "patterns.csv")
+#' export(TA_instance, TA_instance["nodes"],
+#'        file = "nodes.csv")
+#' export(TA_instance, TA_instance["patterns"][1:15, ],
+#'        file = "patterns.csv")
 #' 
 #' spectrosome <- spectrosome_chart(TA_instance, "patterns")
-#' save_characteristics(TA_instance, spectrosome[["vertices"]],
-#'                      file = "spectrosome_vertices.csv", row.names = FALSE)
+#' export(TA_instance, spectrosome[["vertices"]],
+#'        file = "spectrosome_vertices.csv", row.names = FALSE)
 #' 
 #' rules <- extract_rules(TA_instance, from = "transactions")
-#' save_characteristics(TA_instance, rules,
-#'                      file = "rules.csv", row.names = FALSE)
+#' export(TA_instance, rules,
+#'        file = "rules.csv", row.names = FALSE)
 #' 
-#' @aliases save_characteristics
+#' @aliases export
+#' @md
 #' @export
-setMethod(f = "save_characteristics",
+setMethod(f = "export",
           signature = "TransactionAnalyzer",
-          definition = function(object, characteristics, ...) {
+          definition = function(object, nporc, ...) {
             
             # Recherche du type d'entités fourni
-            entities = which_entities(object, characteristics, NODES_PATTERNS_OR_RULES)
+            entities = which_entities(object, nporc, NODES_PATTERNS_OR_RULES)
             
             # Nom des colonnes dans lesquelles chercher les vecteurs à convertir
             if (entities == NODES || entities == PATTERNS) {
@@ -4481,11 +4483,11 @@ setMethod(f = "save_characteristics",
             }
             
             # Conversion des itemsets en chaînes de caractères
-            itemsets = apply(characteristics[columns], 2, turn_list_into_char)
-            characteristics[, columns] = unlist(itemsets)
+            itemsets = apply(nporc[columns], 2, turn_list_into_char)
+            nporc[, columns] = unlist(itemsets)
             
             # Enregistrement des données
-            utils::write.csv2(x = characteristics, ...)
+            utils::write.csv2(x = nporc, ...)
           })
 
 

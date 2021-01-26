@@ -111,12 +111,12 @@ Computations on spectrosomes:
 
 Computations on nodes and patterns:
 
-* [frequency_by_node_complexity](../html/frequency_by_node_complexity-TransactionAnalyzer-method.html)
+* [frequency_by_complexity](../html/frequency_by_complexity-TransactionAnalyzer-method.html)
 * [define_dynamic_status](../html/define_dynamic_status-TransactionAnalyzer-method.html)
 
 Saving nodes or patterns:
 
-* [save_characteristics](../html/save_characteristics-TransactionAnalyzer-method.html)
+* [export](../html/export-TransactionAnalyzer-method.html)
 
 
 
@@ -126,7 +126,7 @@ Extracting, visualizing and saving association rules:
 
 * [extract_rules](../html/extract_rules-TransactionAnalyzer-method.html)
 * [rules_chart](../html/rules_chart-TransactionAnalyzer-method.html)
-* [save_characteristics](../html/save_characteristics-TransactionAnalyzer-method.html)
+* [export](../html/export-TransactionAnalyzer-method.html)
 
 Switching between mathematical notation and vector notation for sets:
 
