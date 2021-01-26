@@ -174,13 +174,15 @@ turn_into_data_frame = function(x) {
 #' Convert itemsets written in mathematical notation into a list of character vectors.
 #' Example of conversion: \code{{item i,item j}} becomes \code{c("item i", "item j")}.
 #' 
-#' @param sets Itemsets written in mathematical notation. Must be of vector type or of factor type.
+#' @param sets Itemsets written in mathematical notation. Must be of character vector type or of
+#'  factor type.
 #' @return List of character vectors corresponding to the itemsets \code{sets}.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{set_notation}}.
 #' 
 #' @examples
+#' vector_notation(c("{A}", "{B,C}", "{A,B}", "{A}"))
 #' vector_notation(as.factor(c("{A}", "{B,C}", "{A,B}", "{A}")))
 #' 
 #' @export

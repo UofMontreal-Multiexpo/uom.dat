@@ -7,7 +7,8 @@
 vector_notation(sets)
 }
 \arguments{
-\item{sets}{Itemsets written in mathematical notation. Must be of vector type or of factor type.}
+\item{sets}{Itemsets written in mathematical notation. Must be of character vector type or of
+factor type.}
 }
 \value{
 List of character vectors corresponding to the itemsets \code{sets}.
@@ -17,6 +18,7 @@ Convert itemsets written in mathematical notation into a list of character vecto
 Example of conversion: \code{{item i,item j}} becomes \code{c("item i", "item j")}.
 }
 \examples{
+vector_notation(c("{A}", "{B,C}", "{A,B}", "{A}"))
 vector_notation(as.factor(c("{A}", "{B,C}", "{A,B}", "{A}")))
 
 }

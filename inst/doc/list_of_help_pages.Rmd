@@ -85,12 +85,13 @@ Making *TransactionAnalyzer* objects:
 
 Making charts:
 
+* [itemset_chart](../html/itemset_chart-TransactionAnalyzer-method.html)
+* [co_occurrence_chart](../html/co_occurrence_chart-TransactionAnalyzer-method.html)
+* [category_tree_chart](../html/category_tree_chart-TransactionAnalyzer-method.html)
+* [spectrum_chart](../html/spectrum_chart-TransactionAnalyzer-method.html)
 * [spectrosome_chart](../html/spectrosome_chart-TransactionAnalyzer-method.html)
 * [cluster_chart](../html/cluster_chart-TransactionAnalyzer-method.html)
-* [spectrum_chart](../html/spectrum_chart-TransactionAnalyzer-method.html)
-* [itemset_chart](../html/itemset_chart-TransactionAnalyzer-method.html)
-* [category_tree_chart](../html/category_tree_chart-TransactionAnalyzer-method.html)
-* [co_occurrence_chart](../html/co_occurrence_chart-TransactionAnalyzer-method.html)
+* [rules_chart](../html/rules_chart-TransactionAnalyzer-method.html)
 
 Search for nodes or patterns:
 
@@ -104,7 +105,7 @@ Search for links between nodes or between patterns:
 
 * [get_links](../html/get_links-TransactionAnalyzer-method.html)
 
-Computations on spectrosomes:
+Computations on spectrosome graphs:
 
 * [degree](../html/degree-TransactionAnalyzer-method.html)
 * [network_density](../html/network_density-TransactionAnalyzer-method.html)
@@ -114,24 +115,15 @@ Computations on nodes and patterns:
 * [frequency_by_complexity](../html/frequency_by_complexity-TransactionAnalyzer-method.html)
 * [define_dynamic_status](../html/define_dynamic_status-TransactionAnalyzer-method.html)
 
-Saving nodes or patterns:
-
-* [export](../html/export-TransactionAnalyzer-method.html)
-
-
-
-# About association rules and sets
-
-Extracting, visualizing and saving association rules:
+Extracting association rules and switching between mathematical notation and vector notation for sets:
 
 * [extract_rules](../html/extract_rules-TransactionAnalyzer-method.html)
-* [rules_chart](../html/rules_chart-TransactionAnalyzer-method.html)
-* [export](../html/export-TransactionAnalyzer-method.html)
-
-Switching between mathematical notation and vector notation for sets:
-
 * [vector_notation](../html/vector_notation.html)
 * [set_notation](../html/set_notation.html)
+
+Saving nodes, patterns or association rules:
+
+* [export](../html/export-TransactionAnalyzer-method.html)
 
 
 
