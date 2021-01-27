@@ -1303,7 +1303,7 @@ function(object, part = NULL, stop = TRUE, prefix = "", suffix = "") {
     beginning = if (prefix == "") "Attributes " else "attributes "
     
     if (is.null(part)) stop(prefix, beginning, "are not all initialized", suffix, ".")
-    stop(prefix, beginning, "relating to ", which_name(part), " must first be initialized", suffix, ".")
+    stop(prefix, beginning, "relating to ", which_name(object, part), " must first be initialized", suffix, ".")
   }
   else {
     for (i in seq_along(part)) {
