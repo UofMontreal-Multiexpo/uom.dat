@@ -733,6 +733,8 @@ setGeneric(name = "get_item_names", def = function(object, items){ standardGener
 
 # setGeneric(name = "get_items", def = function(object, ...){ standardGeneric("get_items") })
 
+setGeneric(name = "get_items_from_category", def = function(object, category, value, force.character = FALSE){ standardGeneric("get_items_from_category") })
+
 setGeneric(name = "get_tnp", def = function(object, tnp, entities = NODES_OR_PATTERNS){ standardGeneric("get_tnp") })
 
 setGeneric(name = "get_tnp_itemsets", def = function(object, tnp, entities = NODES_OR_PATTERNS){ standardGeneric("get_tnp_itemsets") })
@@ -4521,14 +4523,8 @@ setMethod(f = "get_trx_from_category",
           signature = "TransactionAnalyzer",
           definition =
 function(object, trx, category, value) {
-  
-  # Validation des paramètres liés à une valeur de catégorie
-  check_access_for_category(object, category, value)
-  
-  # Recherche des items correspondant à la valeur de catégorie recherchée
-  items = rownames(subset(object@items_categories, object@items_categories[category] == value))
-  # Recherche des transactions contenant ces items
-  return(get_trx_from_items(trx, items, presence = "any"))
+  # Items correspondant à la valeur de catégorie recherchée puis transactions contenant ces items
+  return(get_trx_from_items(trx, get_items_from_category(object, category, value), presence = "any"))
 })
 
 
@@ -4807,10 +4803,9 @@ function(object, nc, category, value, condition) {
   if (condition == "items" || condition == "vertices") {
     check_init(object, NODES)
     
-    # Recherche des items correspondant à la valeur de catégorie recherchée
-    items = rownames(subset(object@items_categories, object@items_categories[category] == value))
-    # Extraction des noeuds contenant ces items
-    return(get_nodes_from_items(object, nc, items, condition = "any"))
+    # Items correspondant à la valeur de catégorie recherchée puis noeuds contenant ces items
+    return(get_nodes_from_items(object, nc, get_items_from_category(object, category, value, TRUE),
+                                condition = "any"))
     
   } else if (condition == "links" || condition == "edges") {
     check_init(object, c(NODES, NODE_LINKS))
@@ -5186,10 +5181,9 @@ function(object, pc, category, value, condition) {
   if (condition == "items" || condition == "vertices") {
     check_init(object, PATTERNS)
     
-    # Recherche des items correspondant à la valeur de catégorie recherchée
-    items = rownames(subset(object@items_categories, object@items_categories[category] == value))
-    # Extraction des motifs contenant ces items
-    return(get_patterns_from_items(object, pc, items, condition = "any"))
+    # Items correspondant à la valeur de catégorie recherchée puis motifs contenant ces items
+    return(get_patterns_from_items(object, pc, get_items_from_category(object, category, value, TRUE),
+                                   condition = "any"))
     
   } else if (condition == "links" || condition == "edges") {
     check_init(object, c(PATTERNS, PATTERN_LINKS))
@@ -5603,6 +5597,37 @@ function(object, items) {
   }
   
   stop("items must be \"items\" or a subset of object[\"items\"].")
+})
+
+
+#' Search for items by category
+#' 
+#' Extract the items corresponding to a sought category value.
+#' 
+#' @param object S4 object of class `TransactionAnalyzer`.
+#' @param category Name or number of the category on which to search (numbering according to the order
+#'  of the columns of `object["items_categories"]`).
+#' @param value Sought value for the category specified by the argument `category`.
+#' @param force.character If `TRUE`, items are returned as character values.
+#'  If `FALSE`, they are the same type as in `object["items"]` (numeric or character).
+#' @return 
+#' 
+#' @author Gauthier Magnin
+#' @aliases get_items_from_category
+#' @md
+#' @keywords internal
+setMethod(f = "get_items_from_category",
+          signature = "TransactionAnalyzer",
+          definition =
+function(object, category, value, force.character = FALSE) {
+  
+  # Vérification des paramètres d'accès à une catégorie et recherche des items correspondant
+  check_access_for_category(object, category, value)
+  items = rownames(object@items_categories)[object@items_categories[[category]] == value]
+  
+  # Type correspondant à l'attribut items ou character
+  if (is.numeric(object@items) && !force.character) return(as.numeric(items))
+  else return(items)
 })
 
 
