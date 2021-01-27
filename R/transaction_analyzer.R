@@ -694,6 +694,8 @@ setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NU
 
 # setGeneric(name = "export", def = function(object, ...){ standardGeneric("export") })
 
+setGeneric(name = "get_trx_from_category", def = function(object, trx, category, value){ standardGeneric("get_trx_from_category") })
+
 setGeneric(name = "get_nodes", def = function(object, nc, element, value, condition = "default"){ standardGeneric("get_nodes") })
 
 setGeneric(name = "get_nodes_from_items", def = function(object, nc, items, condition = "all"){ standardGeneric("get_nodes_from_items") })
@@ -4487,6 +4489,46 @@ function(object, nporc, ...) {
   
   # Enregistrement des données
   utils::write.csv2(x = nporc, ...)
+})
+
+
+#' Search for transactions by category
+#' 
+#' Extract the transactions corresponding to a sought category value.
+#' 
+#' @param object S4 object of class `TransactionAnalyzer`.
+#' @param trx S4 object of class `TransactionSet`. Any subset of `object["transactions"]`.
+#' @param category Name or number of the category on which to search (numbering according to the order
+#'  of the columns of `object["items_categories"]`.
+#' @param value Sought value for the category specified by the argument `category`.
+#' @return Subset of the transaction set that match the search criteria.
+#' 
+#' @author Gauthier Magnin
+#' @seealso
+#' About transactions: [`get_trx_from_items`], [`get_trx_from_info`], [`get_complex_trx`],
+#'  [`get_simple_trx`].
+#' 
+#' About nodes and patterns: [`get_nodes`], [`get_patterns`], [`get_complexes`], [`get_isolates`],
+#'  [`get_non_isolates`].
+#' 
+#' @examples
+#' get_trx_from_category(TA_instance, TA_instance["transactions"], "family", "Chrome")
+#' 
+#' @aliases get_trx_from_category
+#' @md
+#' @export
+setMethod(f = "get_trx_from_category",
+          signature = "TransactionAnalyzer",
+          definition =
+function(object, trx, category, value) {
+  
+  # Validation des paramètres liés à une valeur de catégorie
+  check_access_for_category(object, category, value)
+  
+  # Recherche des items correspondant à la valeur de catégorie recherchée
+  items = rownames(subset(object@items_categories, object@items_categories[category] == value))
+  # Recherche des transactions contenant ces items
+  return(get_trx_from_items(trx, items, presence = "any"))
 })
 
 

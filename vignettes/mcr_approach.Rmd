@@ -891,8 +891,9 @@ Making charts:
 * [cluster_chart](../html/cluster_chart-TransactionAnalyzer-method.html)
 * [rules_chart](../html/rules_chart-TransactionAnalyzer-method.html)
 
-Search for nodes or patterns:
+Search for transactions, nodes or patterns:
 
+* [get_trx_from_category](../html/get_trx_from_category-TransactionAnalyzer-method.html)
 * [get_nodes](../html/get_nodes-TransactionAnalyzer-method.html)
 * [get_patterns](../html/get_patterns-TransactionAnalyzer-method.html)
 * [get_complexes](../html/get_complexes-TransactionAnalyzer-method.html)
