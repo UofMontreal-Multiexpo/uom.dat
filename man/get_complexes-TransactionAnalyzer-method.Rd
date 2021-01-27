@@ -57,8 +57,10 @@ get_complexes(TA_instance, TA_instance["patterns"][1:15, ],
 
 }
 \seealso{
-\code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}},
-         \code{\link{weight_by_node_complexity}}.
+About nodes and patterns: \code{\link{get_isolates}}, \code{\link{get_non_isolates}},
+ \code{\link{get_links}}, \code{\link{frequency_by_complexity}}.
+
+About transactions: \code{\link{get_complex_trx}}, \code{\link{get_simple_trx}}.
 }
 \author{
 Gauthier Magnin

@@ -2226,7 +2226,7 @@ function(object, patterns, t = NULL, period = Inf, short_limit = object["status_
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{weight_by_node_complexity}}.
+#' @seealso \code{\link{frequency_by_complexity}}.
 #' 
 #' @examples
 #' spectrum_1 <- spectrum_chart(TA_instance, "patterns")
@@ -4807,7 +4807,7 @@ function(object, nc, category, value, condition) {
   if (condition == "items" || condition == "vertices") {
     check_init(object, NODES)
     
-    # Recherche des items correspondant à la catégorie recherchée
+    # Recherche des items correspondant à la valeur de catégorie recherchée
     items = rownames(subset(object@items_categories, object@items_categories[category] == value))
     # Extraction des noeuds contenant ces items
     return(get_nodes_from_items(object, nc, items, condition = "any"))
@@ -5186,7 +5186,7 @@ function(object, pc, category, value, condition) {
   if (condition == "items" || condition == "vertices") {
     check_init(object, PATTERNS)
     
-    # Recherche des items correspondant à la catégorie recherchée
+    # Recherche des items correspondant à la valeur de catégorie recherchée
     items = rownames(subset(object@items_categories, object@items_categories[category] == value))
     # Extraction des motifs contenant ces items
     return(get_patterns_from_items(object, pc, items, condition = "any"))
@@ -5393,8 +5393,11 @@ function(object, nopc) {
 #' @return Subset of the data frame that corresponds to the complex entities sought.
 #' 
 #' @author Gauthier Magnin
-#' @seealso \code{\link{get_isolates}}, \code{\link{get_non_isolates}}, \code{\link{get_links}},
-#'          \code{\link{weight_by_node_complexity}}.
+#' @seealso 
+#' About nodes and patterns: \code{\link{get_isolates}}, \code{\link{get_non_isolates}},
+#'  \code{\link{get_links}}, \code{\link{frequency_by_complexity}}.
+#' 
+#' About transactions: \code{\link{get_complex_trx}}, \code{\link{get_simple_trx}}.
 #' 
 #' @examples
 #' get_complexes(TA_instance, "patterns")

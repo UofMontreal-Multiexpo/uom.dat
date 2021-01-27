@@ -73,7 +73,7 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{weight_by_node_complexity}}.
+\code{\link{frequency_by_complexity}}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin
