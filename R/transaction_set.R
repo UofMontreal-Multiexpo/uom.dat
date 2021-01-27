@@ -345,6 +345,7 @@ setAs(from = "TransactionSet",
 # Methods for processing on transactions
 setGeneric(name = "subset")
 setGeneric(name = "reorder")
+setGeneric(name = "export", def = function(object, ...){ standardGeneric("export") })
 
 # Methods for search in transactions
 setGeneric(name = "get_all_items",       def = function(object){ standardGeneric("get_all_items") })
@@ -444,6 +445,60 @@ setMethod(f = "reorder",
           definition =
 function(x, permutation) {
   return(subset(x, permutation, keep_names = is_named(x@data)[1]))
+})
+
+
+#' Save transactions, nodes, patterns or association rules
+#' 
+#' Write in CSV format a data frame of transactions, nodes, patterns or association rules.
+#' 
+#' @param object S4 object of class `TransactionSet` or of class `TransactionAnalyzer`.
+#' @param nporc Data frame of **n**odes, **p**atterns **o**r **r**ules and their **c**haracteristics.
+#' @param ... Further arguments to the function [`utils::write.csv2`][utils::write.table].
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`utils::write.csv2`][utils::write.table].
+#' 
+#' @examples
+#' ## Saving a set of transactions
+#' export(TS_instance file = "transactions.csv")
+#' 
+#' ## Saving nodes, patterns or association rules
+#' export(TA_instance, TA_instance["nodes"],
+#'        file = "nodes.csv")
+#' export(TA_instance, TA_instance["patterns"][1:15, ],
+#'        file = "patterns.csv")
+#' 
+#' spectrosome <- spectrosome_chart(TA_instance, "patterns")
+#' export(TA_instance, spectrosome[["vertices"]],
+#'        file = "spectrosome_vertices.csv", row.names = FALSE)
+#' 
+#' rules <- extract_rules(TA_instance, from = "transactions")
+#' export(TA_instance, rules,
+#'        file = "rules.csv", row.names = FALSE)
+#' 
+#' @aliases export
+#' @name export
+#' @md
+NULL
+
+#' @rdname export
+#' @aliases export,TransactionSet
+#' @export
+setMethod(f = "export",
+          signature = "TransactionSet",
+          definition =
+function(object, ...) {
+  
+  # Conversion en data frame
+  df = as(object, "data.frame")
+  
+  # Conversion des listes en chaînes de charactères
+  columns = colnames(df)[sapply(df, is.list)]
+  df[, columns] = apply(df[columns], 2, turn_list_into_char)
+  
+  # Enregistrement des données
+  utils::write.csv2(x = df, ...)
 })
 
 

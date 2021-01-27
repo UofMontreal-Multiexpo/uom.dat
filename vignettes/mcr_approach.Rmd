@@ -865,6 +865,10 @@ Making charts about transactions:
 * [itemset_chart](../html/itemset_chart-TransactionSet-method.html)
 * [co_occurrence_chart](../html/co_occurrence_chart-TransactionSet-method.html)
 
+Saving transactions:
+
+* [export](../html/export.html)
+
 
 ## About transaction analysis
 
@@ -917,7 +921,7 @@ Extracting association rules and switching between mathematical notation and vec
 
 Saving nodes, patterns or association rules:
 
-* [export](../html/export-TransactionAnalyzer-method.html)
+* [export](../html/export.html)
 
 
 ## About the maximum cumulative ratio approach

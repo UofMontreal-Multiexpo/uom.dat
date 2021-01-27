@@ -692,7 +692,7 @@ setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NU
 
 # Methods for search and save
 
-setGeneric(name = "export", def = function(object, characteristics, ...){ standardGeneric("export") })
+# setGeneric(name = "export", def = function(object, ...){ standardGeneric("export") })
 
 setGeneric(name = "get_nodes", def = function(object, nc, element, value, condition = "default"){ standardGeneric("get_nodes") })
 
@@ -4463,33 +4463,8 @@ function(object, rules = NULL, items = NULL,
 
 #### Methods for search and save ####
 
-#' Save nodes, patterns or association rules
-#' 
-#' Write to a CSV file a data frame of nodes, patterns or association rules.
-#' 
-#' @param object S4 object of class `TransactionAnalyzer`.
-#' @param nporc Data frame of **n**odes, **p**atterns **o**r **r**ules and their **c**haracteristics.
-#' @param ... Further arguments to the function [`utils::write.csv2`][utils::write.table].
-#' 
-#' @author Gauthier Magnin
-#' @seealso [`utils::write.csv2`][utils::write.table].
-#' 
-#' @examples
-#' export(TA_instance, TA_instance["nodes"],
-#'        file = "nodes.csv")
-#' export(TA_instance, TA_instance["patterns"][1:15, ],
-#'        file = "patterns.csv")
-#' 
-#' spectrosome <- spectrosome_chart(TA_instance, "patterns")
-#' export(TA_instance, spectrosome[["vertices"]],
-#'        file = "spectrosome_vertices.csv", row.names = FALSE)
-#' 
-#' rules <- extract_rules(TA_instance, from = "transactions")
-#' export(TA_instance, rules,
-#'        file = "rules.csv", row.names = FALSE)
-#' 
-#' @aliases export
-#' @md
+#' @rdname export
+#' @aliases export,TransactionAnalyzer
 #' @export
 setMethod(f = "export",
           signature = "TransactionAnalyzer",
