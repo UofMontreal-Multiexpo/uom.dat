@@ -25,6 +25,15 @@ setClassUnion("characterOrNA", c("character", "logical"))
 #' @slot item_key Name of the element containing the items of a transaction.
 #' @slot year_key Name of the element containing the year in which a transaction was made.
 #' 
+#' @section Coercion:
+#' \describe{
+#'   \item{`as(trx, "data.frame")`}{Convert a `TransactionSet` object `trx` to `data.frame` (considering
+#'         the parameter `stringAsFactors` as `FALSE`).}
+#'   \item{`as(trx, "transactions")`}{Convert a `TransactionSet` object `trx` to a set of
+#'         [`transactions`][arules::transactions-class] from the [`arules`] package. Only the items of
+#'         the transactions are considered. Other data are ignored.}
+#' }
+#' 
 #' @author Gauthier Magnin
 #' @seealso
 #' The `TransactionSet` constructor: [`transaction.set`].
@@ -288,6 +297,7 @@ setReplaceMethod(f = "[",
 
 # Turn a TransactionSet into a data.frame.
 # Parameter `stringAsFactors` is FALSE.
+# Documented in TransactionSet-class manual (section "Coercion").
 setAs(from = "TransactionSet",
       to = "data.frame",
       def = function(from) {
@@ -311,6 +321,7 @@ setAs(from = "TransactionSet",
 # Turn a TransactionSet into a set of [`transactions`][arules::transactions-class] from the
 # package [`arules`].
 # Only the items of the transactions are considered. Other data are ignored.
+# Documented in TransactionSet-class manual (section "Coercion").
 setAs(from = "TransactionSet",
       to = "transactions",
       def = function(from) {

@@ -28,6 +28,17 @@ the list corresponding to a transaction).}
 \item{\code{year_key}}{Name of the element containing the year in which a transaction was made.}
 }}
 
+\section{Coercion}{
+
+\describe{
+\item{\code{as(trx, "data.frame")}}{Convert a \code{TransactionSet} object \code{trx} to \code{data.frame} (considering
+the parameter \code{stringAsFactors} as \code{FALSE}).}
+\item{\code{as(trx, "transactions")}}{Convert a \code{TransactionSet} object \code{trx} to a set of
+\code{\link[arules:transactions-class]{transactions}} from the \code{\link{arules}} package. Only the items of
+the transactions are considered. Other data are ignored.}
+}
+}
+
 \seealso{
 The \code{TransactionSet} constructor: \code{\link{transaction.set}}.
 
