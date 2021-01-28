@@ -5,7 +5,7 @@
 \alias{get_items_from_category}
 \title{Search for items by category}
 \usage{
-\S4method{get_items_from_category}{TransactionAnalyzer}(object, category, value, force.character = FALSE)
+\S4method{get_items_from_category}{TransactionAnalyzer}(object, category, value, force_character = FALSE)
 }
 \arguments{
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
@@ -15,7 +15,7 @@ of the columns of \code{object["items_categories"]}).}
 
 \item{value}{Sought value for the category specified by the argument \code{category}.}
 
-\item{force.character}{If \code{TRUE}, items are returned as character values.
+\item{force_character}{If \code{TRUE}, items are returned as character values.
 If \code{FALSE}, they are the same type as in \code{object["items"]} (numeric or character).}
 }
 \value{

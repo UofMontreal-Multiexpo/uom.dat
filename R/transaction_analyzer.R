@@ -734,7 +734,7 @@ setGeneric(name = "get_item_names", def = function(object, items){ standardGener
 
 # setGeneric(name = "get_items", def = function(object, ...){ standardGeneric("get_items") })
 
-setGeneric(name = "get_items_from_category", def = function(object, category, value, force.character = FALSE){ standardGeneric("get_items_from_category") })
+setGeneric(name = "get_items_from_category", def = function(object, category, value, force_character = FALSE){ standardGeneric("get_items_from_category") })
 
 setGeneric(name = "get_tnp", def = function(object, tnp, entities = NODES_OR_PATTERNS){ standardGeneric("get_tnp") })
 
@@ -5635,7 +5635,7 @@ function(object, items) {
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of `object["items_categories"]`).
 #' @param value Sought value for the category specified by the argument `category`.
-#' @param force.character If `TRUE`, items are returned as character values.
+#' @param force_character If `TRUE`, items are returned as character values.
 #'  If `FALSE`, they are the same type as in `object["items"]` (numeric or character).
 #' @return 
 #' 
@@ -5646,14 +5646,14 @@ function(object, items) {
 setMethod(f = "get_items_from_category",
           signature = "TransactionAnalyzer",
           definition =
-function(object, category, value, force.character = FALSE) {
+function(object, category, value, force_character = FALSE) {
   
   # Vérification des paramètres d'accès à une catégorie et recherche des items correspondant
   check_access_for_category(object, category, value)
   items = rownames(object@items_categories)[object@items_categories[[category]] == value]
   
   # Type correspondant à l'attribut items ou character
-  if (is.numeric(object@items) && !force.character) return(as.numeric(items))
+  if (is.numeric(object@items) && !force_character) return(as.numeric(items))
   else return(items)
 })
 
