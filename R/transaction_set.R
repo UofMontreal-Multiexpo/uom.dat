@@ -30,7 +30,7 @@ setClassUnion("characterOrNA", c("character", "logical"))
 #'   \item{`as(trx, "data.frame")`}{Convert a `TransactionSet` object `trx` to `data.frame` (considering
 #'         the parameter `stringAsFactors` as `FALSE`).}
 #'   \item{`as(trx, "transactions")`}{Convert a `TransactionSet` object `trx` to a set of
-#'         [`transactions`][arules::transactions-class] from the [`arules`] package. Only the items of
+#'         [`transactions`][arules::transactions-class] from the package `arules`. Only the items of
 #'         the transactions are considered. Other data are ignored.}
 #' }
 #' 
