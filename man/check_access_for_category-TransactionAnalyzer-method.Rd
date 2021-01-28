@@ -13,20 +13,21 @@
 \item{category}{Name or number of the category to access (numbering according to the order of the
 columns of \code{object["items_categories"]}).}
 
-\item{value}{Sought value for the category specified by the argument \code{category}, or NA.}
+\item{value}{Sought value for the category specified by the argument \code{category}, or \code{NA}.}
 
 \item{stop}{If \code{TRUE}, stop the execution and print an error message if the parameters do not
-allow access to a category. If \code{FALSE}, see 'Value' section.}
+allow access to a category and a category value. If \code{FALSE}, see 'Value' section.}
 }
 \value{
-\code{TRUE} or \code{FALSE} whether the parameters allow access to a category.
+\code{TRUE} or \code{FALSE} whether the parameters allow access to a category and a category
+ value.
 }
 \description{
-Check that the parameters provided match an existing category.
-Stop the execution and print an error message if not.
+Check that the parameters provided match an existing category and an existing value within this
+ category. Stop the execution and print an error message if not.
 }
 \details{
-If \code{value = NA}, only the parameter \code{category} is checked.
+If \code{value} is \code{NA}, it is not checked; only the parameter \code{category} is.
 }
 \seealso{
 \code{\link{get_patterns}}, \code{\link{get_nodes}}.

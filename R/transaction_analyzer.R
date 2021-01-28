@@ -4606,8 +4606,13 @@ setMethod(f = "get_nodes",
 function(object, nc, element, value, condition = "default") {
   
   # Vérification du choix de l'élément sur lequel effectuer la recherche
-  if (!(element %in% c("items", "length", "frequency")) && !check_access_for_category(object, element, NA, stop = FALSE))
+  if (!(element %in% c("items", "length", "frequency"))
+      && !check_access_for_category(object, element, NA, stop = FALSE)) {
+    
+    if (ncol(object@items_categories) == 0)
+      stop("There is no category associated with the items. element must be one of \"items\", \"length\", \"frequency\".")
     stop("element must be one of \"items\", \"length\", \"frequency\", or a category name or number.")
+  }
   
   # Appel à la fonction spécifique
   if (element == "items") {
@@ -4920,10 +4925,14 @@ function(object, pc, element, value, condition = "default") {
   
   # Vérification du choix de l'élément sur lequel effectuer la recherche
   if (!(element %in% c("items", "year", "length", "frequency", "weight", "specificity", "status"))
-      && !check_access_for_category(object, element, NA, stop = FALSE))
-    stop(paste("element must be one of \"items\"",
-               "\"year\", \"length\", \"frequency\", \"weight\", \"specificity\", \"status\"",
-               "or a category name or number."))
+      && !check_access_for_category(object, element, NA, stop = FALSE)) {
+    
+    if (ncol(object@items_categories) == 0)
+      stop(paste("There is no category associated with the items. element must be one of \"items\",",
+                 "\"year\", \"length\", \"frequency\", \"weight\", \"specificity\", \"status\"."))
+    stop(paste("element must be one of \"items\", \"year\", \"length\", \"frequency\", \"weight\",",
+               "\"specificity\", \"status\" or a category name or number."))
+  }
   
   # Appel à la fonction spécifique
   if (element == "items") {
@@ -5458,19 +5467,20 @@ function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2) {
 
 #' Validation of parameters for search by category
 #' 
-#' Check that the parameters provided match an existing category.
-#' Stop the execution and print an error message if not.
+#' Check that the parameters provided match an existing category and an existing value within this
+#'  category. Stop the execution and print an error message if not.
 #' 
 #' @details
-#' If \code{value = NA}, only the parameter \code{category} is checked.
+#' If \code{value} is \code{NA}, it is not checked; only the parameter \code{category} is.
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param category Name or number of the category to access (numbering according to the order of the
 #'  columns of \code{object["items_categories"]}).
-#' @param value Sought value for the category specified by the argument \code{category}, or NA.
+#' @param value Sought value for the category specified by the argument \code{category}, or \code{NA}.
 #' @param stop If \code{TRUE}, stop the execution and print an error message if the parameters do not
-#'  allow access to a category. If \code{FALSE}, see 'Value' section.
-#' @return \code{TRUE} or \code{FALSE} whether the parameters allow access to a category.
+#'  allow access to a category and a category value. If \code{FALSE}, see 'Value' section.
+#' @return \code{TRUE} or \code{FALSE} whether the parameters allow access to a category and a category
+#'  value.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{get_patterns}}, \code{\link{get_nodes}}.
@@ -5491,20 +5501,18 @@ function(object, category, value, stop = TRUE) {
   }
   
   # Vérification que le type de catégorie recherché existe
-  if (is.character(category) & !(category %in% colnames(object@items_categories))) {
+  if (is.character(category) && !(category %in% colnames(object@items_categories))
+      || is.numeric(category) && (category < 1 || category > ncol(object@items_categories))) {
     if (!stop) return(FALSE)
-    stop("category must be one of ", paste0("\"", colnames(object@items_categories), "\"",
-                                            collapse = ", ") ,".")
-  } else if (is.numeric(category) & (category < 1 | category > ncol(object@items_categories))) {
-    if (!stop) return(FALSE)
-    stop(paste0("category must be in range [1,", ncol(object@items_categories), "]."))
+    stop("category must be in range [1,", ncol(object@items_categories), "] or one of the following: ",
+         paste0("\"", colnames(object@items_categories), "\"", collapse = ", "), ".")
   }
   
   # Vérification que la valeur de la catégorie recherchée existe
   if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
     if (!stop) return(FALSE)
-    stop("value must be one of ", paste0("\"", levels(object@items_categories[, category]), "\"",
-                                         collapse = ", ") ,".")
+    stop("value must be one of the levels of the given category (",
+         if (is.numeric(category)) category else paste0("\"", category,  "\""), ").")
   }
   return(TRUE)
 })
