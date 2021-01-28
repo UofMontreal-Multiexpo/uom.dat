@@ -17,7 +17,8 @@
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
-\code{object["patterns"]}.\cr
+\code{object["patterns"]}.
+
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{characteristic}{Name of the characteristic on which to do the search.

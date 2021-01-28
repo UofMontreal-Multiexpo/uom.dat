@@ -11,7 +11,8 @@
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
 \item{nc}{Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
-\code{object["nodes"]}.\cr
+\code{object["nodes"]}.
+
 \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.}
 
 \item{category}{Name or number of the category on which to search (numbering according to the order

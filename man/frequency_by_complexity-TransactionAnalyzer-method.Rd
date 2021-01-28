@@ -11,7 +11,8 @@
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
 \item{patterns}{Patterns whose frequencies according to the complexity of the transactions containing
-them are to be computed. Any subset of \code{object["patterns"]$pattern}.\cr
+them are to be computed. Any subset of \code{object["patterns"]$pattern}.
+
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]$pattern}.}
 }
 \value{

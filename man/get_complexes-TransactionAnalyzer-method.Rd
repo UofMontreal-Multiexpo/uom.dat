@@ -18,7 +18,8 @@
 
 \item{nopc}{Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 \strong{c}haracteristics. Nodes or patterns whose complexes are to be sought. Any subset of
-\code{object["nodes"]} or \code{object["patterns"]}.\cr
+\code{object["nodes"]} or \code{object["patterns"]}.
+
 \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 \code{object["nodes"]} and \code{object["patterns"]}.}
 

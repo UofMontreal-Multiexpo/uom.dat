@@ -36,8 +36,8 @@ Only those of length 2 are considered. If \code{NULL}, rules of length 2 are ext
 \code{object["transactions"]} using the mining parameters \code{parameters}.}
 
 \item{items}{Items to consider in the given or extracted rules. If \code{NULL}, only items from the given
-\code{rules} are considered.
-Any subset of \code{object["items"]}.\cr
+\code{rules} are considered. Any subset of \code{object["items"]}.
+
 \code{"items"} and \code{"i"} are special values for \code{object["items"]}.}
 
 \item{parameters}{List of mining parameters specifying minimum support and minimum confidence of

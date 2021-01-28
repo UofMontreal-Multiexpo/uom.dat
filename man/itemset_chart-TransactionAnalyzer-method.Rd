@@ -32,7 +32,7 @@ their \strong{c}haracteristics. Itemsets whose chart is to be plotted. Any subse
 \code{object["transactions"]}, \code{object["nodes"]} or \code{object["patterns"]}.
 
 \code{"transactions"}, \code{"t"}, \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
-\verb{"object["transactions"]}, \code{object["nodes"]} and \code{object["patterns"]}.}
+\code{object["transactions"]}, \code{object["nodes"]} and \code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the itemsets on the chart and in the
 return. One of \code{"original"}, \code{"new"}.

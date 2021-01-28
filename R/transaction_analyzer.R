@@ -1876,7 +1876,7 @@ function(object, patterns, frequencies, weights) {
 #' 
 #' Check the validity of the values of the parameters given for the computation of reporting indexes.
 #' Stop the execution and print an error message if they are not usable.
-#' Adapt their values if they match the special values.
+#' Adapt their values if they match the special values (\code{NULL} and \code{Inf} respectively).
 #' 
 #' @inheritParams compute_reporting_indexes,TransactionAnalyzer-method
 #' @param object S4 object of class \code{TransactionAnalyzer}.
@@ -2108,7 +2108,8 @@ function(object, reporting_indexes, xi = NULL) {
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param patterns Patterns whose dynamic status are to be defined.
-#'  Any subset of `object["patterns"]$pattern`.\cr
+#'  Any subset of `object["patterns"]$pattern`.
+#'  
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]$pattern`.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
 #'  `NULL` specifies that the characterization must be done in relation to the last year covered
@@ -2205,7 +2206,8 @@ function(object, patterns, t = NULL, period = Inf, short_limit = object["status_
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
-#'  is to be plotted. Any subset of \code{object["patterns"]}.\cr
+#'  is to be plotted. Any subset of \code{object["patterns"]}.
+#'  
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the patterns on the chart and in the return data frame.
 #'  One of \code{"original"}, \code{"new"}.
@@ -2480,7 +2482,8 @@ function(object, patterns) {
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param patterns Patterns whose frequencies according to the complexity of the transactions containing
-#'  them are to be computed. Any subset of `object["patterns"]$pattern`.\cr
+#'  them are to be computed. Any subset of `object["patterns"]$pattern`.
+#'  
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]$pattern`.
 #' @return Two-column matrix containing, for each pattern, its frequency related to complex transactions
 #'  and its frequency related to simple transactions.
@@ -2567,7 +2570,8 @@ function(object, patterns) {
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose spectrosome is to be plotted. Any subset of
-#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{object["nodes"]} or \code{object["patterns"]}.
+#'  
 #'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @param identifiers Which IDs to use to identify the nodes or patterns on the chart and in the
@@ -3264,7 +3268,8 @@ function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, c
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns of which one of the clusters is to be plotted. Any subset
-#'  of \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  of \code{object["nodes"]} or \code{object["patterns"]}.
+#'  
 #'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @param item Identification code of the item whose cluster is to be plotted.
@@ -3480,7 +3485,7 @@ function(object, ID, links) {
 #'  `object["transactions"]`, `object["nodes"]` or `object["patterns"]`.
 #'  
 #'  `"transactions"`, `"t"`, `"nodes"`, `"n"`, `"patterns"` and `"p"` are special values for
-#'  `"object["transactions"]`, `object["nodes"]` and `object["patterns"]`.
+#'  `object["transactions"]`, `object["nodes"]` and `object["patterns"]`.
 #' @param identifiers Which IDs to use to identify the itemsets on the chart and in the
 #'  return. One of `"original"`, `"new"`.
 #'  \describe{
@@ -3681,8 +3686,8 @@ function(object, tnpc, identifiers = "original",
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param category Name or number of the category to represent on the tree (numbering according to
 #'  the order of the columns of `object["items_categories"]`).
-#' @param items Items to represent on the tree.
-#'  Any subset of `object["items"]`.\cr
+#' @param items Items to represent on the tree. Any subset of `object["items"]`.
+#'  
 #'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param use_names  If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
@@ -3818,7 +3823,8 @@ function(object, category = NULL, items = object["items"],
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
-#'  Any subset of `object["items"]`.\cr
+#'  Any subset of `object["items"]`.
+#'  
 #'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param category Name or number of the category to represent on the graph (numbering according to
 #'  the order of the columns of `object["items_categories"]`).
@@ -4129,8 +4135,8 @@ function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...) {
 #'  Only those of length 2 are considered. If `NULL`, rules of length 2 are extracted from
 #'  `object["transactions"]` using the mining parameters `parameters`.
 #' @param items Items to consider in the given or extracted rules. If `NULL`, only items from the given
-#' `rules` are considered.
-#'  Any subset of `object["items"]`.\cr
+#' `rules` are considered. Any subset of `object["items"]`.
+#'  
 #'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param parameters List of mining parameters specifying minimum support and minimum confidence of
 #'  association rules to extract. Ignored if `rules` is not `NULL`. See
@@ -4562,7 +4568,8 @@ function(object, trx, category, value) {
 #'  * `"links"`, `"edges"`: search for nodes generating links corresponding to the sought category value.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
-#' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.\cr
+#' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.
+#' 
 #'  `"nodes"` and `"n"` are special values for `object["nodes"]`.
 #' @param element Type of element on which to search.
 #'  One of `"items"`, `"length"`, `"frequency"` or the name or number of a category on which to search
@@ -4636,7 +4643,8 @@ function(object, nc, element, value, condition = "default") {
 #' Extract the nodes containing one or more sought items.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
-#' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.\cr
+#' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.
+#' 
 #'  `"nodes"` and `"n"` are special values for `object["nodes"]`.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a node to be extracted.
@@ -4690,7 +4698,8 @@ function(object, nc, items, condition = "all") {
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
-#'  \code{object["nodes"]}.\cr
+#'  \code{object["nodes"]}.
+#'  
 #'  \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"length"}, \code{"frequency"}.
@@ -4764,7 +4773,8 @@ function(object, nc, characteristic, value, condition = "EQ") {
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
-#'  \code{object["nodes"]}.\cr
+#'  \code{object["nodes"]}.
+#'  
 #'  \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
@@ -4872,7 +4882,8 @@ function(object, nc, category, value, condition) {
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param pc Data frame of **p**atterns and their **c**haracteristics. Any subset of
-#'  `object["patterns"]`.\cr
+#'  `object["patterns"]`.
+#'  
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]`.
 #' @param element Type of element on which to search.
 #'  One of `"items"`, `"year"`, `"length"`, `"frequency"`, `"weight"`, `"specificity"`, `"status"`
@@ -4963,7 +4974,8 @@ function(object, pc, element, value, condition = "default") {
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
-#'  \code{object["patterns"]}.\cr
+#'  \code{object["patterns"]}.
+#'  
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a pattern to be extracted.
@@ -5018,7 +5030,8 @@ function(object, pc, items, condition = "all") {
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
-#'  \code{object["patterns"]}.\cr
+#'  \code{object["patterns"]}.
+#'  
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"year"}, \code{"length"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"}
@@ -5093,7 +5106,8 @@ function(object, pc, characteristic, value, condition = "EQ") {
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
-#'  \code{object["patterns"]}.\cr
+#'  \code{object["patterns"]}.
+#'  
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param value Status value sought (one or more).
 #' @param condition Search condition. One of \code{"EQ"}, \code{"NE"}, \code{"=="}, \code{"!="}.
@@ -5146,7 +5160,8 @@ function(object, pc, value, condition = "EQ") {
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
-#'  \code{object["patterns"]}.\cr
+#'  \code{object["patterns"]}.
+#'  
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
@@ -5225,7 +5240,8 @@ function(object, pc, category, value, condition) {
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose links are be to sought. Any subset of
-#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{object["nodes"]} or \code{object["patterns"]}.
+#'  
 #'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @return Data frame associating the linked nodes or linked patterns.
@@ -5308,7 +5324,8 @@ function(object, nopc) {
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose isolated are to be sought. Any subset of
-#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{object["nodes"]} or \code{object["patterns"]}.
+#'  
 #'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @return Subset of the data frame that corresponds to isolated entities.
@@ -5341,7 +5358,8 @@ function(object, nopc) {
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose non-isolated are to be sought. Any subset of
-#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{object["nodes"]} or \code{object["patterns"]}.
+#'  
 #'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @return Subset of the data frame that corresponds to non-isolated entities.
@@ -5378,7 +5396,8 @@ function(object, nopc) {
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
 #'  \strong{c}haracteristics. Nodes or patterns whose complexes are to be sought. Any subset of
-#'  \code{object["nodes"]} or \code{object["patterns"]}.\cr
+#'  \code{object["nodes"]} or \code{object["patterns"]}.
+#'  
 #'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
 #'  \code{object["nodes"]} and \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order

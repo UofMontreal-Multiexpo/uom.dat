@@ -31,7 +31,8 @@
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
 \item{items}{Items for which to count co-occurrences between pairs and to plot on the graph.
-Any subset of \code{object["items"]}.\cr
+Any subset of \code{object["items"]}.
+
 \code{"items"} and \code{"i"} are special values for \code{object["items"]}.}
 
 \item{category}{Name or number of the category to represent on the graph (numbering according to

@@ -19,7 +19,8 @@
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
 \item{pc}{Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
-is to be plotted. Any subset of \code{object["patterns"]}.\cr
+is to be plotted. Any subset of \code{object["patterns"]}.
+
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{identifiers}{Which IDs to use to identify the patterns on the chart and in the return data frame.

@@ -17,7 +17,8 @@
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
 \item{patterns}{Patterns whose dynamic status are to be defined.
-Any subset of \code{object["patterns"]$pattern}.\cr
+Any subset of \code{object["patterns"]$pattern}.
+
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]$pattern}.}
 
 \item{t}{Year of the end of the period, i.e. the date on which to characterize the patterns.

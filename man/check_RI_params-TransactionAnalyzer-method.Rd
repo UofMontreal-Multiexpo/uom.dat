@@ -27,7 +27,7 @@ List containing the final values of \code{t} and \code{period}.
 \description{
 Check the validity of the values of the parameters given for the computation of reporting indexes.
 Stop the execution and print an error message if they are not usable.
-Adapt their values if they match the special values.
+Adapt their values if they match the special values (\code{NULL} and \code{Inf} respectively).
 }
 \seealso{
 \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}}.
