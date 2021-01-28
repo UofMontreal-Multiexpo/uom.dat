@@ -651,7 +651,7 @@ setGeneric(name = "compute_ri_threshold", def = function(object, reporting_index
 setGeneric(name = "define_dynamic_status", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("define_dynamic_status") })
 
 
-# Methods for creating spectrum graphs
+# Methods for creating spectrum charts
 
 setGeneric(name = "spectrum_chart", def = function(object, pc, identifiers = "original", sort = TRUE, title = "Spectrum of patterns", path = NULL, name = NULL){ standardGeneric("spectrum_chart") })
 
@@ -675,12 +675,9 @@ setGeneric(name = "network_density", def = function(object, links){ standardGene
 setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("degree") })
 
 
-# Methods for creating itemset graphs
+# Methods for creating itemset charts, category trees and co-occurrence graphs
 
 # setGeneric(name = "itemset_chart", def = function(object, ...){ standardGeneric("itemset_chart") })
-
-
-# Methods for creating category trees and co-occurrence graphs
 
 setGeneric(name = "category_tree_chart", def = function(object, category = NULL, items = object["items"], use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, vertex_size = 4, vertex_alpha = 1, leaf_size = 3, leaf_alpha = 1, leaf_margin = 0, label_size = 3, label_margin = 0.05){ standardGeneric("category_tree_chart") })
 
@@ -2191,7 +2188,7 @@ function(object, patterns, t = NULL, period = Inf, short_limit = object["status_
 
 
 
-#### Methods for creating spectrum graphs ####
+#### Methods for creating spectrum charts ####
 
 #' Pattern spectrum
 #' 
@@ -3463,7 +3460,7 @@ function(object, ID, links) {
 
 
 
-#### Methods for creating itemset graphs ####
+#### Methods for creating itemset charts, category trees and co-occurrence graphs ####
 
 #' Itemset chart, for TransactionAnalyzer
 #' 
@@ -3671,9 +3668,6 @@ function(object, tnpc, identifiers = "original",
               c(ncol(tnpc), seq(ncol(tnpc)-1))])
 })
 
-
-
-#### Methods for creating category trees and co-occurrence graphs ####
 
 #' Category tree
 #' 
