@@ -5496,6 +5496,8 @@ function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2) {
 #' @details
 #' If \code{value} is \code{NA}, it is not checked; only the parameter \code{category} is.
 #' 
+#' If \code{category} is \code{NA}, only existence of any category is checked.
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param category Name or number of the category to access (numbering according to the order of the
 #'  columns of \code{object["items_categories"]}).
@@ -5516,8 +5518,8 @@ setMethod(f = "check_access_for_category",
           definition =
 function(object, category, value, stop = TRUE) {
   
-  # S'il n'existe pas de catégorie, la valeur doit être NULL ou NA
-  if (is.null(category) || is.na(category)) return(TRUE)
+  # S'il n'existe pas de catégorie, la valeur doit être NULL
+  if (is.null(category)) return(TRUE)
   if (ncol(object@items_categories) == 0) {
     if (!stop) return(FALSE)
     stop("There is no category associated with the items.")

@@ -28,6 +28,8 @@ Check that the parameters provided match an existing category and an existing va
 }
 \details{
 If \code{value} is \code{NA}, it is not checked; only the parameter \code{category} is.
+
+If \code{category} is \code{NA}, only existence of any category is checked.
 }
 \seealso{
 \code{\link{get_patterns}}, \code{\link{get_nodes}}.
