@@ -10,18 +10,18 @@
 \arguments{
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
-\item{tnp}{List of \strong{t}ransaction, \strong{n}ode or \strong{p}attern itemsets or one of the following character
-values: \code{"transactions"}, \code{"t"}, \code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}.}
+\item{tnp}{List of \strong{t}ransaction, \strong{n}ode or \strong{p}attern itemsets (or of any itemsets) or one of
+the following character values: \code{"transactions"}, \code{"t"}, \code{"nodes"}, \code{"n"}, \code{"patterns"}, \code{"p"}.}
 
 \item{entities}{Type of the entities that the list may refer to (\code{TRANSACTIONS}, \code{NODES}, \code{PATTERNS},
-\code{NODES_OR_PATTERNS} or \code{NODES_PATTERNS_OR_TRANSACTIONS}).}
+\code{NODES_OR_PATTERNS}, \code{NODES_PATTERNS_OR_TRANSACTIONS}, \code{ANY_ITEMSETS}).}
 }
 \value{
 List of transaction, node or pattern itemsets corresponding to the arguments.
 }
 \description{
-Find and return the list corresponding to the transactions, the nodes or the patterns of the object of
-class \code{TransactionAnalyzer}, or return the given list.
+Find and return the list of itemsets corresponding to the transactions, the nodes or the patterns of
+the object of class \code{TransactionAnalyzer}, or return the given list.
 }
 \details{
 If \code{tnp} is a list, it is returned.

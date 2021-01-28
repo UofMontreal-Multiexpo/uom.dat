@@ -57,6 +57,10 @@ NODES_PATTERNS_OR_RULES = "npr"
 #' @description Reference value for defining possible entities: nodes, patterns or transactions.
 #' @keywords internal
 NODES_PATTERNS_OR_TRANSACTIONS = "npt"
+#' ANY_ITEMSETS
+#' @description Reference value for defining possible entities: any itemsets.
+#' @keywords internal
+ANY_ITEMSETS = "itemsets"
 
 #' NODE_LINKS
 #' @description Reference value for naming links between entities: links between nodes.
@@ -5719,8 +5723,8 @@ function(object, tnp, entities = NODES_OR_PATTERNS) {
 
 #' Get transaction, node or pattern itemsets
 #' 
-#' Find and return the list corresponding to the transactions, the nodes or the patterns of the object of
-#'  class `TransactionAnalyzer`, or return the given list.
+#' Find and return the list of itemsets corresponding to the transactions, the nodes or the patterns of
+#'  the object of class `TransactionAnalyzer`, or return the given list.
 #' 
 #' @details
 #' If `tnp` is a list, it is returned.
@@ -5733,10 +5737,10 @@ function(object, tnp, entities = NODES_OR_PATTERNS) {
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
-#' @param tnp List of **t**ransaction, **n**ode or **p**attern itemsets or one of the following character
-#'  values: `"transactions"`, `"t"`, `"nodes"`, `"n"`, `"patterns"`, `"p"`.
+#' @param tnp List of **t**ransaction, **n**ode or **p**attern itemsets (or of any itemsets) or one of
+#'  the following character values: `"transactions"`, `"t"`, `"nodes"`, `"n"`, `"patterns"`, `"p"`.
 #' @param entities Type of the entities that the list may refer to (`TRANSACTIONS`, `NODES`, `PATTERNS`,
-#'  `NODES_OR_PATTERNS` or `NODES_PATTERNS_OR_TRANSACTIONS`).
+#'  `NODES_OR_PATTERNS`, `NODES_PATTERNS_OR_TRANSACTIONS`, `ANY_ITEMSETS`).
 #' @return List of transaction, node or pattern itemsets corresponding to the arguments.
 #' 
 #' @author Gauthier Magnin
@@ -5767,8 +5771,10 @@ function(object, tnp, entities = NODES_OR_PATTERNS) {
       msg = paste(var_name, "must be \"patterns\" or a list of patterns.")
     else if (entities == NODES_OR_PATTERNS)
       msg = paste(var_name, "must be \"nodes\", \"patterns\" or a list of nodes or patterns.")
-    else # NODES_PATTERNS_OR_TRANSACTIONS
+    else if (entities == NODES_PATTERNS_OR_TRANSACTIONS)
       msg = paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\" or a list of transactions, nodes or patterns.")
+    else # entities == ANY_ITEMSETS
+      msg = paste(var_name, "must be \"transactions\", \"nodes\", \"patterns\" or a list of any itemsets.")
     
     stop(msg)
   }
