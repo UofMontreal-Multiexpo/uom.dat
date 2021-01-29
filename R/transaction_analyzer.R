@@ -2613,7 +2613,7 @@ function(object, patterns) {
 #'  If a vector of size equal to the number of nodes or patterns to plot, the colors are directly
 #'  assigned to these entities. If \code{"none"}, the vertices are colored gray.
 #' @param clusters Maximum number of clusters to name on the graph.
-#'  If the actual number of clusters is greater, the names of the smaller clusters are not displayed.
+#'  If the actual number of clusters is greater, the names of the smaller ones are not displayed.
 #' @param highlight Number of clusters to highlight among those named on the graph.
 #'  The names of the largest clusters are displayed in bold.
 #' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification
@@ -3143,7 +3143,8 @@ function(object, nopc, identifiers = "original",
 
 #' Display of cluster names
 #' 
-#' Identify and display the names of the clusters on the graph provided as an argument.
+#' Identify and display the names of the clusters of the graph provided, corresponding to nodes or
+#'  patterns sharing one item.
 #' The names of clusters confused because all of their links are mixed links, are not displayed.
 #' Texts are written on the active graphics device.
 #' 
@@ -3152,7 +3153,7 @@ function(object, nopc, identifiers = "original",
 #'  \code{sna}: "A two-column matrix containing the vertex positions as x,y coordinates".
 #' @param links Links of nodes or patterns used to generate \code{graph}.
 #' @param display Maximum number of clusters to name on the graph.
-#'  If the actual number of clusters is greater, the names of the smaller clusters are not displayed.
+#'  If the actual number of clusters is greater, the names of the smaller ones are not displayed.
 #' @param highlight Number of clusters to highlight among those named on the graph.
 #'  The names of the largest clusters are displayed in bold.
 #' @param use_names If \code{TRUE}, display item names if they are defined. Display their identification

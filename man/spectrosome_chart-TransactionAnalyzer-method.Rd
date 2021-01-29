@@ -80,7 +80,7 @@ If a vector of size equal to the number of nodes or patterns to plot, the colors
 assigned to these entities. If \code{"none"}, the vertices are colored gray.}
 
 \item{clusters}{Maximum number of clusters to name on the graph.
-If the actual number of clusters is greater, the names of the smaller clusters are not displayed.}
+If the actual number of clusters is greater, the names of the smaller ones are not displayed.}
 
 \item{highlight}{Number of clusters to highlight among those named on the graph.
 The names of the largest clusters are displayed in bold.}
