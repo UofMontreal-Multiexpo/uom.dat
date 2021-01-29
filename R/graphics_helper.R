@@ -52,7 +52,8 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' @md
 #' @keywords internal
 is_color = function(x, int = TRUE) {
-  is_valid_R_color = sapply(x, function(col) tryCatch(is.matrix(col2rgb(col)), error = function(e) FALSE))
+  is_valid_R_color = sapply(x, function(col) tryCatch(is.matrix(grDevices::col2rgb(col)),
+                                                      error = function(e) FALSE))
   
   if (!int) {
     is_not_int = suppressWarnings(is.na(sapply(x, as.numeric)))
@@ -102,10 +103,11 @@ convert_gunits = function(measures, from, to = from, dim, rotation = FALSE) {
   if (rotation) {
     # Ratio largeur/hauteur = (étendue en Y / étendue en X selon le système de coordonnées actuelle) *
     #                         (largeur de la zone en inches / hauteur de la zone en inches)
-    wh_ratio = c(user = ((par("usr")[4] - par("usr")[3]) / (par("usr")[2] - par("usr")[1])) *
-                   (par("pin")[1] / par("pin")[2]),
+    par_usr = graphics::par("usr")
+    wh_ratio = c(user = ((par_usr[4] - par_usr[3]) / (par_usr[2] - par_usr[1])) *
+                   (graphics::par("pin")[1] / graphics::par("pin")[2]),
                  inches = 1,
-                 figure = par("fin")[1] / par("fin")[2])
+                 figure = graphics::par("fin")[1] / graphics::par("fin")[2])
     
     # Application du ratio pour effectuer la transition d'unité (largeur -> hauteur ou inversement)
     if (dim == "width") measures = measures * unname(wh_ratio[from])
@@ -294,7 +296,7 @@ plot_itemset_chart = function(itemsets, items, category = NULL,
   cex_uo = 0.5       # Texte under et over
   cex_legend = 0.85  # Légendes
   cex_items = 0.75   # Items
-  offset_items_inches = par("cin")[1] * cex_items
+  offset_items_inches = graphics::par("cin")[1] * cex_items
   
   # Définition des marges et initialisation de la zone graphique
   if (!is.null(category)) graphics::par(mar = c(3.9, 0.5, 2.0, 0.5))
@@ -474,7 +476,7 @@ plot_itemset_chart = function(itemsets, items, category = NULL,
   if (is.null(under)) {
     # Position de l'item le plus bas - moitié de la taille du texte de l'item associé (nécessaire pour
     # que le point et les lignes qui correspondent à cet item ne soient pas tronqués)
-    ymin_2 = min(items$y) - strheight("A", units = "user", cex = cex_items) / 2
+    ymin_2 = min(items$y) - graphics::strheight("A", units = "user", cex = cex_items) / 2
   }
   
   # Recalcul des espaces au bas et en haut du graphique en fonction de la taille du texte à afficher
@@ -527,7 +529,7 @@ plot_itemset_chart = function(itemsets, items, category = NULL,
       } else {
         # Position de l'item le plus bas - moitié de la taille du texte de l'item associé (nécessaire pour
         # que le point et les lignes qui correspondent à cet item ne soient pas tronqués)
-        ymin_2 = min(items$y) - strheight("A", units = "user", cex = cex_items) / 2
+        ymin_2 = min(items$y) - graphics::strheight("A", units = "user", cex = cex_items) / 2
       }
       
       if (!is.null(over) && !display_cs) {

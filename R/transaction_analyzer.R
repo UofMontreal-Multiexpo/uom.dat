@@ -1629,7 +1629,7 @@ function(object, target, count = 1, min_length = 1, max_length = Inf, arules = F
   
   
   # Conversion des transactions en transactions : une ligne par transaction, une colonne par item
-  transact = as(object@transactions, "transactions")
+  transact = methods::as(object@transactions, "transactions")
   
   # Énumération des motifs recherchés
   params = list(supp = count/dim(transact)[1], 
@@ -1637,7 +1637,7 @@ function(object, target, count = 1, min_length = 1, max_length = Inf, arules = F
                 maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length), 
                 target = target)
   result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
-  res = as(result, "data.frame") # Contient aussi le support
+  res = methods::as(result, "data.frame") # Contient aussi le support
   
   # Exraction des motifs issus du résultat et transformation en liste de vecteurs
   patterns = vector_notation(res$items)
@@ -3871,7 +3871,7 @@ function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...) {
     stop("from must be \"transactions\", \"patterns\" or a list of item sets.")
   
   # Conversion des transactions en transactions
-  transact = as(object@transactions, "transactions")
+  transact = methods::as(object@transactions, "transactions")
   
   if (is.character(from) && from == "transactions") {
     
@@ -4236,7 +4236,7 @@ function(object, rules = NULL, items = NULL,
     ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
                                                     colors = rules_to_plot[, col_to_display]),
                              ggplot2::aes(color = colors,
-                                          alpha = if (col_to_display == "confidence") stat(index) else edge_alpha),
+                                          alpha = if (col_to_display == "confidence") ggplot2::stat(index) else edge_alpha),
                              tension = edge_tension) +
     
     ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
@@ -4260,7 +4260,7 @@ function(object, rules = NULL, items = NULL,
                                              guide = ggraph::guide_edge_direction(order = 2)) +
       
       ggraph::scale_edge_color_manual("Confidence",
-                                      values = setNames(
+                                      values = stats::setNames(
                                         if (palette == "category10") ggsci::pal_d3("category10")(10)
                                         else ggsci::pal_material(palette, reverse = palette_direction == -1)(10),
                                         levels(rules_to_plot[, "confidence"])),

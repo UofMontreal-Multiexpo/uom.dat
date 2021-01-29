@@ -222,7 +222,7 @@ setMethod(f = "[",
             }
             
             # Accès à un attribut
-            if (i %in% slotNames("TransactionSet"))
+            if (i %in% methods::slotNames("TransactionSet"))
               return(eval(parse(text = paste0("x@", i))))
             
             # Accès à un sous-élément de la liste de transactions
@@ -263,7 +263,7 @@ setReplaceMethod(f = "[",
                      else x@data[i] = value
                    }
                    else {
-                     if (!is.element(i, slotNames("TransactionSet")))
+                     if (!is.element(i, methods::slotNames("TransactionSet")))
                        stop("Unknown attribute.")
                      
                      if (i == "names") {
@@ -491,7 +491,7 @@ setMethod(f = "export",
 function(object, ...) {
   
   # Conversion en data frame
-  df = as(object, "data.frame")
+  df = methods::as(object, "data.frame")
   
   # Conversion des listes en chaînes de charactères
   columns = colnames(df)[sapply(df, is.list)]
@@ -926,7 +926,7 @@ function(object, items = NULL) {
   if (is.null(items)) items = get_all_items(object)
   
   # Pour chaque pair d'items, recherche du nombre de transactions dans lesquelles la paire apparaît
-  pairs = combn(items, 2)
+  pairs = utils::combn(items, 2)
   co = apply(pairs, 2, function(pair) length(get_trx_from_items(object, pair)))
   
   # Création d'une matrice qui correspondra à la table de contingence
@@ -1069,7 +1069,7 @@ function(object, identifiers, length_one, under, over) {
   if (identifiers == "new") names(to_plot@data) = seq_along(to_plot@data)
   
   # Conversion en data frame
-  trx_df = as(to_plot, "data.frame")
+  trx_df = methods::as(to_plot, "data.frame")
   trx_df$ID = rownames(trx_df)
   
   # Texte à afficher

@@ -1151,7 +1151,7 @@ plot_mcr_log_part = function(chart, xlim, ylim,
   fun.mhq_1 = function(x) log10(10^x - 1)
   xmin_fun = 0.001
   xmax_fun = xlim[2] + 1
-  root_fun = uniroot(fun.mhq_1, c(0, 1))$root   # fun.mhq_1(log10(2)) = 0
+  root_fun = stats::uniroot(fun.mhq_1, c(0, 1))$root   # fun.mhq_1(log10(2)) = 0
   
   # Pour placement du label "Group IIIB" : abscisse maximale de la courbe fun.mhq_1 selon la limite
   # fixée par ylim (fonction inverse de fun.mhq_1 := log10(10^y + 1))
