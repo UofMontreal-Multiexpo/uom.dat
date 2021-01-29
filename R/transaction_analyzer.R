@@ -2649,7 +2649,8 @@ function(object, patterns) {
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
+#' @seealso \code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link{network_density}},
+#'  \code{\link[sna:gplot]{sna::gplot}}.
 #' 
 #' @examples
 #' spectrosome_1 <- spectrosome_chart(TA_instance, "nodes")
@@ -3408,17 +3409,19 @@ function(object, nopc, item, identifiers = "original",
 #'  number of links there would be if it was a complete graph (i.e. if all the vertices of the graph
 #'  were connected to each other).
 #' 
-#' @param object S4 object of class \code{TransactionAnalyzer}.
+#' @param object S4 object of class `TransactionAnalyzer`.
 #' @param links Data frame of the links (or edges) of a spectrosome graph.
 #' @return Density of the network.
 #' 
 #' @author Gauthier Magnin
+#' @seealso [`spectrosome_chart`], [`get_links`], [`degree`].
 #' 
 #' @examples
 #' spectrosome <- spectrosome_chart(TA_instance, TA_instance["patterns"][1:15, ])
 #' network_density(TA_instance, spectrosome[["edges"]])
 #' 
 #' @aliases network_density
+#' @md
 #' @export
 setMethod(f = "network_density",
           signature = "TransactionAnalyzer",
@@ -3440,18 +3443,20 @@ function(object, links) {
 #' 
 #' Compute the degree of a vertex in a graph, i.e. the number of vertices to which it is adjacent.
 #' 
-#' @param object S4 object of class \code{TransactionAnalyzer}.
+#' @param object S4 object of class `TransactionAnalyzer`.
 #' @param ID Identifier of the vertex (node or pattern) whose degree is to be computed.
 #' @param links Data frame of the links (or edges) of a spectrosome graph.
 #' @return Degree of the vertex.
 #' 
 #' @author Gauthier Magnin
+#' @seealso [`spectrosome_chart`], [`get_links`], [`network_density`].
 #' 
 #' @examples
 #' spectrosome <- spectrosome_chart(TA_instance, TA_instance["patterns"][1:15, ])
 #' degree(TA_instance, 7, spectrosome[["edges"]])
 #' 
 #' @aliases degree
+#' @md
 #' @export
 setMethod(f = "degree",
           signature = "TransactionAnalyzer",

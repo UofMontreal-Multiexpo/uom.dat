@@ -185,7 +185,8 @@ Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
+\code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link{network_density}},
+ \code{\link[sna:gplot]{sna::gplot}}.
 }
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin

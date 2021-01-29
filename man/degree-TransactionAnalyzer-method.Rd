@@ -25,6 +25,9 @@ spectrosome <- spectrosome_chart(TA_instance, TA_instance["patterns"][1:15, ])
 degree(TA_instance, 7, spectrosome[["edges"]])
 
 }
+\seealso{
+\code{\link{spectrosome_chart}}, \code{\link{get_links}}, \code{\link{network_density}}.
+}
 \author{
 Gauthier Magnin
 }
