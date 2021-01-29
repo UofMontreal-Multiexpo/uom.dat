@@ -916,7 +916,6 @@ Making charts:
 * [category_tree_chart](../html/category_tree_chart-TransactionAnalyzer-method.html)
 * [spectrum_chart](../html/spectrum_chart-TransactionAnalyzer-method.html)
 * [spectrosome_chart](../html/spectrosome_chart-TransactionAnalyzer-method.html)
-* [cluster_chart](../html/cluster_chart-TransactionAnalyzer-method.html)
 * [rules_chart](../html/rules_chart-TransactionAnalyzer-method.html)
 
 Computations on spectrosome graphs:

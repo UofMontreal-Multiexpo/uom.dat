@@ -668,8 +668,6 @@ setGeneric(name = "spectrosome_chart", def = function(object, nopc, identifiers 
 
 setGeneric(name = "cluster_text", def = function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, cutoff = NULL){ standardGeneric("cluster_text") })
 
-setGeneric(name = "cluster_chart", def = function(object, nopc, item, identifiers = "original", use_name = TRUE, n.cutoff = NULL, vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status", c.cutoff = NULL, display_mixt = TRUE, title = NULL, path = NULL, name = NULL, ...){ standardGeneric("cluster_chart") })
-
 setGeneric(name = "network_density", def = function(object, links){ standardGeneric("network_density") })
 
 setGeneric(name = "degree", def = function(object, ID, links){ standardGeneric("degree") })
@@ -2649,8 +2647,7 @@ function(object, patterns) {
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.
 #'             \url{https://doi.org/10.1371/journal.pone.0190196}.
-#' @seealso \code{\link{cluster_chart}}, \code{\link{degree}}, \code{\link{network_density}},
-#'  \code{\link[sna:gplot]{sna::gplot}}.
+#' @seealso \code{\link{degree}}, \code{\link{network_density}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' 
 #' @examples
 #' spectrosome_1 <- spectrosome_chart(TA_instance, "nodes")
@@ -3174,7 +3171,7 @@ function(object, nopc, identifiers = "original",
 #'  of the represented items.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
-#' @seealso \code{\link{spectrosome_chart}}, \code{\link{cluster_chart}}, \code{\link[sna:gplot]{sna::gplot}}.
+#' @seealso \code{\link{spectrosome_chart}}, \code{\link[sna:gplot]{sna::gplot}}.
 #' @aliases cluster_text
 #' @keywords internal
 setMethod(f = "cluster_text",
@@ -3229,176 +3226,6 @@ function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, c
     shadowtext(coords$MOY.X, coords$MOY.Y, clusters, r = 0.3,
                col = "black", bg = "white", cex = 0.9,
                font = ifelse(clusters %in% clusters[seq_len(highlight)], 2, 1))
-  }
-})
-
-
-#' Cluster: subgraph of a spectrosome
-#' 
-#' Identify the cluster corresponding to one specific item and plot a spectrosome of this cluster.
-#'  Only nodes or patterns sharing this item are plotted.
-#' 
-#' @details
-#' If the argument \code{name} is not \code{NULL}, charts are plotted in PNG files of size 950 x 700
-#'  pixels. If it is \code{NULL}, charts are plotted in the active device, one behind the other.
-#' 
-#' If categories are associated with the items, each category generates a spectrosome. If there is more
-#'  than one category and \code{name} is not \code{NULL}, the category name is appended to the end of
-#'  the file name.
-#' 
-#' If mixed links are relative to category values that are not represented by single links, these
-#'  values are present in the legend below "Mixt", with no associated color.
-#' The same is true for mixed vertices if the parameter \code{vertex_col} is \code{"categories"}.
-#' 
-#' If the chart is to be plotted from a subset of all nodes or patterns and some become isolated
-#'  because the other entities to which they are normally linked are not part of the subset \code{nopc},
-#'  these nodes or patterns are placed at the end of the return data frame \code{edges}.
-#' These possible \code{n} additional rows are numbered \code{"A1"..."An"}.
-#' 
-#' Additional arguments can be supplied to the function in charge of plotting the graph.
-#'  See the list of parameters: \code{\link[sna:gplot]{sna::gplot}}.
-#' Among them, the following parameters are already defined and cannot be modified: \code{dat},
-#'  \code{gmode}, \code{vertex.sides}, \code{vertex.cex}, \code{vertex.col}, \code{edge.col}.
-#' The following parameters, which can be redefined, have the following values:
-#'  \itemize{
-#'    \item{\code{mode = "fruchtermanreingold"}}
-#'    \item{\code{displaylabels = TRUE}}
-#'    \item{\code{label.pos = 0}}
-#'    \item{\code{boxed.labels = TRUE}}
-#'    \item{\code{displayisolates = TRUE}}
-#'  }
-#' 
-#' @inheritParams spectrosome_chart,TransactionAnalyzer-method
-#' @param object S4 object of class \code{TransactionAnalyzer}.
-#' @param nopc Data frame of \strong{n}odes \strong{o}r \strong{p}atterns and their
-#'  \strong{c}haracteristics. Nodes or patterns of which one of the clusters is to be plotted. Any subset
-#'  of \code{object["nodes"]} or \code{object["patterns"]}.
-#'  
-#'  \code{"nodes"}, \code{"n"}, \code{"patterns"} and \code{"p"} are special values for
-#'  \code{object["nodes"]} and \code{object["patterns"]}.
-#' @param item Identification code of the item whose cluster is to be plotted.
-#' @param use_name If \code{TRUE}, display the item name if it is defined. Display its identification
-#'  code otherwise.
-#' @param n.cutoff If \code{use_name = TRUE}, limit number of characters to display concerning the name
-#'  of the item.
-#' @param vertex_size Way how the sizes of the vertices of the graph should be defined.
-#'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
-#'  or vector of length equal to the number of rows of \code{nopc}.
-#'  \describe{
-#'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the frequencies of the
-#'                             entities in \code{size_range}.}
-#'    \item{\code{"grouped"}}{The frequencies of the entities are grouped according to 5 intervals
-#'                            defined by quantiles. The 5 corresponding size values are taken in a
-#'                            regular sequence bounded by \code{size_range}.}
-#'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the frequency of
-#'                             the entity.}
-#'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
-#'    \item{A single numeric value}{The vertices are all the size defined by this value.}
-#'    \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
-#'                                   entities contained in \code{nopc}.}
-#'  }
-#' @param vertex_col Way how the colors of the vertices of the graph should be defined.
-#'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a single character value or vector
-#'  of length equal to the number of rows of \code{nopc} (characters corresponding to R predefined
-#'  color names or hexadecimal values).
-#'  
-#'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
-#'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-#'  the entities represented. If one specific color, all vertices are colored with this color.
-#'  If a vector of size equal to the number of rows of \code{nopc}, the colors are directly
-#'  assigned to these entities. If \code{"none"}, the vertices are colored gray.
-#' @param title Chart title. Default title depends on the type of entities contained in \code{nopc} and
-#'  on the argument \code{item}. Example of default title: \code{"Node cluster of 25"} if \code{nopc}
-#'  contains nodes and \code{item = 25}.
-#' @param ... Additional arguments to the function \code{\link[sna:gplot]{gplot}} from the package
-#'  \code{sna} for plotting the graph. See Details section.
-#' @return \code{NULL} if none or only one node or pattern contains the sought item.\cr
-#'  Otherwise:
-#'  \describe{
-#'    \item{\code{vertices}}{Data frame of the nodes or patterns and characteristics used,
-#'                           associated with the identifiers of the vertices of the graph and their
-#'                           degrees in the graph.}
-#'    \item{\code{edges}}{Data frame of information relating to the edges of the graph.}
-#'    \item{\code{coords}}{Matrix of the coordinates of the vertices of the graph.
-#'                         Can be reused via the parameter \code{coord} (see \code{...}).}
-#'  }
-#' 
-#' @author Gauthier Magnin
-#' @seealso \code{\link{spectrosome_chart}}, \code{\link{degree}}, \code{\link[sna:gplot]{sna::gplot}}.
-#' 
-#' @examples
-#' cluster_1 <- cluster_chart(TA_instance, "nodes", item = 3146)
-#' cluster_2 <- cluster_chart(TA_instance, TA_instance["patterns"], item = 3146)
-#' 
-#' cluster_2 <- cluster_chart(TA_instance, "patterns", item = 3146,
-#'                            path = getwd(), name = "pattern_cluster_of_3146")
-#' 
-#' @aliases cluster_chart
-#' @export
-setMethod(f = "cluster_chart",
-          signature = "TransactionAnalyzer",
-          definition =
-function(object, nopc, item, identifiers = "original",
-         use_name = TRUE, n.cutoff = NULL,
-         vertex_size = "relative", size_range = c(0.5, 2.5), vertex_col = "status",
-         c.cutoff = NULL, display_mixt = TRUE,
-         title = NULL, path = NULL, name = NULL, ...) {
-  
-  # Récupération des noeuds/patterns et recherche du type d'entités fourni
-  entities = which_entities(object, nopc)
-  nopc = get_tnp(object, nopc)
-  check_init(object, c(entities, which_associated_links(object, entities)))
-  
-  # Vérifie qu'un seul item est mentionné
-  if (length(item) != 1 && entities == NODES)
-    stop("item must refer to only one item. For more, check out the functions get_nodes and spectrosome_chart.")
-  if (length(item) != 1 && entities == PATTERNS)
-    stop("item must refer to only one item. For more, check out the functions get_patterns and spectrosome_chart.")
-  
-  # Extraction des noeuds ou motifs contenant l'item recherché ("nop" = "nodes or patterns")
-  if (entities == NODES) nop = get_nodes_from_items(object, nopc, item)
-  else if (entities == PATTERNS) nop = get_patterns_from_items(object, nopc, item)
-  
-  # Pas de cluster à construire si un seul ou aucun noeud/motif ne contient l'item
-  if (nrow(nop) > 1) {
-    # Définition de la valeur par défaut du titre
-    if (is.null(title)) title = paste(cap(substr(entities, 1, nchar(entities) - 1)), "cluster of", item)
-    
-    # Vérification du paramètre de colorisation des sommets
-    if (!(vertex_col %in% c("status", "categories", "none"))
-        && !(length(vertex_col) %in% c(1, nrow(nopc)))) {
-      stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
-                 "a vector of R predefined color names or hexadecimal values",
-                 "of length 1 or of length equal to the number of rows of nopc."))
-    } else if (length(vertex_col) == nrow(nopc)) {
-      # Sous-ensemble de vertex_col s'il définit une couleur pour chaque nop
-      names(vertex_col) = rownames(nopc)
-      vertex_col = vertex_col[rownames(nop)]
-    }
-    # Vérification du paramètre de taille des sommets
-    if (!(vertex_size %in% c("relative", "grouped", "absolute", "equal"))
-        && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
-      stop(paste("vertex_size be one of \"relative\", \"grouped\", \"absolute\", \"equal\"",
-                 "or a numeric vector of length 1 or of length equal to the number of",
-                 "rows of nopc."))
-    } else if (length(vertex_size) == nrow(nopc)) {
-      # Sous-ensemble de vertex_size s'il définit une couleur pour chaque nop
-      names(vertex_size) = rownames(nopc)
-      vertex_size = vertex_size[rownames(nop)]
-    }
-    
-    # Construction du spectrosome associé
-    to_return = spectrosome_chart(object, nop, identifiers = identifiers,
-                                  vertex_size = vertex_size, vertex_col = vertex_col,
-                                  use_names = use_name, n.cutoff = n.cutoff, c.cutoff = c.cutoff,
-                                  display_mixt = display_mixt,
-                                  title = title, path = path, name = name, ...)
-    return(list(vertices = to_return$vertices, edges = to_return$edges, coords = to_return$coords[[1]]))
-    
-  } else {
-    warning(paste0("There is no cluster for item ", item,
-                   " (", nrow(nop), " ", substr(entities, 1, nchar(entities) - 1), ")."))
-    return(NULL)
   }
 })
 
