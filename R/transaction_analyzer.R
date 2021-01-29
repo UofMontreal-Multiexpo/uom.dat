@@ -723,6 +723,8 @@ setGeneric(name = "get_non_isolates", def = function(object, nopc){ standardGene
 
 setGeneric(name = "get_complexes", def = function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2){ standardGeneric("get_complexes") })
 
+setGeneric(name = "category_values", def = function(object, itemsets, as_character = FALSE, unique = TRUE){ standardGeneric("category_values") })
+
 
 # Other specific methods
 
@@ -5476,6 +5478,85 @@ function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2) {
     }
     stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".") 
   }
+})
+
+
+#' Itemset category values
+#' 
+#' Give the category values associated with specific itemsets.
+#' 
+#' @param object S4 object of class `TransactionAnalyzer`.
+#' @param itemsets List of itemsets whose category values are to be found. Can be any itemsets.
+#'  
+#'  `"transactions"`, `"t"`, `"nodes"`, `"n"`, `"patterns"` and `"p"` are special values for the itemsets
+#'  corresponding to the transactions, the nodes or the patterns contained in `object`.
+#' @param as_character If `FALSE`, category values are returned as factor, in a list.
+#'  If `TRUE`, they are returned as character, in a data frame.
+#' @param unique If `TRUE`, sorted unique values are returned for each itemsets. If `FALSE`,
+#'  duplicated values are not removed and there is correspondance between the return values and the
+#'  items forming the given itemsets.
+#' @return List or data frame (depending on the value of `as_character`) contaning for each category
+#'  (associated with the items in `object["items_categories"]`) the values regarding each itemset.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`get_nodes`], [`get_patterns`], [`get_complexes`], [`get_trx_from_category`]
+#' 
+#' @examples
+#' ## Values associated with specific itemsets
+#' itemset_list <- list(c("19", "25"),
+#'                      c("3156", "3157", "3345"),
+#'                      c("19", "163", "929"))
+#' 
+#' category_values(TA_instance, itemset_list, unique = TRUE)
+#' category_values(TA_instance, itemset_list, unique = FALSE)
+#' 
+#' category_values(TA_instance, itemset_list, as_character = FALSE)
+#' category_values(TA_instance, itemset_list, as_character = TRUE)
+#' 
+#' ## Values associated with itemsets from transactions or patterns
+#' category_values(TA_instance, "transactions")
+#' category_values(TA_instance, TA_instance["patterns"]$pattern[17:18])
+#' 
+#' ## Values associated with itemsets from association rules
+#' rules <- extract_rules(TA_instance, from = "transactions")
+#' category_values(TA_instance, rules$antecedent)
+#' category_values(TA_instance, rules$consequent)
+#' 
+#' @aliases category_values
+#' @md
+#' @export
+setMethod(f = "category_values",
+          signature = "TransactionAnalyzer",
+          definition =
+function(object, itemsets, as_character = FALSE, unique = TRUE) {
+  
+  # Vérification de l'existence d'au moins une catégorie
+  check_access_for_category(object, NA, NA)
+  
+  # Récupération éventuelle d'itemsets précis et vérification du type des itemsets
+  itemsets = get_tnp_itemsets(object, itemsets, entities = ANY_ITEMSETS)
+  if (is.numeric(itemsets[[1]])) itemsets = lapply(itemsets, as.character)
+  
+  # Liste de facteurs contenant les correspondances de chaque itemset pour chaque catégorie
+  the_list = stats::setNames(
+    lapply(names(object@items_categories), function(category)
+      lapply(itemsets, function(itemset) object@items_categories[itemset, category])),
+    names(object@items_categories))
+  if (unique) the_list = lapply(the_list, function(l) lapply(l, function(values) sort(unique(values))))
+  
+  # Retour de la liste de facteurs ou d'une data frame de character
+  if (!as_character) return(the_list)
+  if (length(the_list[[1]]) != 1) {
+    return(as.data.frame(sapply(the_list, function(l) lapply(l, as.character)), stringsAsFactors = FALSE))
+  }
+  
+  # Cas particulier de création d'une data frame s'il n'y a qu'un seul itemset
+  # Définition d'une colonne temporaire pour pouvoir placer le ou les vecteurs sur une seule ligne
+  df = data.frame(tmp_col = character(1), stringsAsFactors = FALSE)
+  char_list = lapply(the_list, function(l) lapply(l, as.character))
+  for (name in names(char_list)) df[[name]] = char_list[[name]]
+  df$tmp_col = NULL
+  return(df)
 })
 
 

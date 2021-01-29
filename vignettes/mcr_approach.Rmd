@@ -849,10 +849,10 @@ Search in transactions:
 
 Search for transactions:
 
-* [get_complex_trx](../html/get_complex_trx-TransactionSet-method.html)
-* [get_simple_trx](../html/get_simple_trx-TransactionSet-method.html)
 * [get_trx_from_items](../html/get_trx_from_items-TransactionSet-method.html)
 * [get_trx_from_info](../html/get_trx_from_info-TransactionSet-method.html)
+* [get_complex_trx](../html/get_complex_trx-TransactionSet-method.html)
+* [get_simple_trx](../html/get_simple_trx-TransactionSet-method.html)
 
 Computations on transactions:
 
@@ -881,6 +881,34 @@ Making *TransactionAnalyzer* objects:
 * [reset](../html/reset-TransactionAnalyzer-method.html)
 * [\[](../html/sub-TransactionAnalyzer-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-TransactionAnalyzer-ANY-ANY-ANY-method.html)
 
+Search for transactions, nodes or patterns:
+
+* [get_trx_from_category](../html/get_trx_from_category-TransactionAnalyzer-method.html)
+* [get_nodes](../html/get_nodes-TransactionAnalyzer-method.html)
+* [get_patterns](../html/get_patterns-TransactionAnalyzer-method.html)
+* [get_complexes](../html/get_complexes-TransactionAnalyzer-method.html)
+* [get_isolates](../html/get_isolates-TransactionAnalyzer-method.html)
+* [get_non_isolates](../html/get_non_isolates-TransactionAnalyzer-method.html)
+
+Computations on nodes and patterns:
+
+* [frequency_by_complexity](../html/frequency_by_complexity-TransactionAnalyzer-method.html)
+* [define_dynamic_status](../html/define_dynamic_status-TransactionAnalyzer-method.html)
+
+Search for links between nodes or between patterns:
+
+* [get_links](../html/get_links-TransactionAnalyzer-method.html)
+
+Extracting association rules and switching between mathematical notation and vector notation for sets:
+
+* [extract_rules](../html/extract_rules-TransactionAnalyzer-method.html)
+* [vector_notation](../html/vector_notation.html)
+* [set_notation](../html/set_notation.html)
+
+Find category values associated with itemsets:
+
+* [category_values](../html/category_values-TransactionAnalyzer-method.html)
+
 Making charts:
 
 * [itemset_chart](../html/itemset_chart-TransactionAnalyzer-method.html)
@@ -891,34 +919,10 @@ Making charts:
 * [cluster_chart](../html/cluster_chart-TransactionAnalyzer-method.html)
 * [rules_chart](../html/rules_chart-TransactionAnalyzer-method.html)
 
-Search for transactions, nodes or patterns:
-
-* [get_trx_from_category](../html/get_trx_from_category-TransactionAnalyzer-method.html)
-* [get_nodes](../html/get_nodes-TransactionAnalyzer-method.html)
-* [get_patterns](../html/get_patterns-TransactionAnalyzer-method.html)
-* [get_complexes](../html/get_complexes-TransactionAnalyzer-method.html)
-* [get_isolates](../html/get_isolates-TransactionAnalyzer-method.html)
-* [get_non_isolates](../html/get_non_isolates-TransactionAnalyzer-method.html)
-
-Search for links between nodes or between patterns:
-
-* [get_links](../html/get_links-TransactionAnalyzer-method.html)
-
 Computations on spectrosome graphs:
 
 * [degree](../html/degree-TransactionAnalyzer-method.html)
 * [network_density](../html/network_density-TransactionAnalyzer-method.html)
-
-Computations on nodes and patterns:
-
-* [frequency_by_complexity](../html/frequency_by_complexity-TransactionAnalyzer-method.html)
-* [define_dynamic_status](../html/define_dynamic_status-TransactionAnalyzer-method.html)
-
-Extracting association rules and switching between mathematical notation and vector notation for sets:
-
-* [extract_rules](../html/extract_rules-TransactionAnalyzer-method.html)
-* [vector_notation](../html/vector_notation.html)
-* [set_notation](../html/set_notation.html)
 
 Saving nodes, patterns or association rules:
 
