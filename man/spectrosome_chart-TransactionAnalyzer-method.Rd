@@ -50,8 +50,8 @@ return data frames. One of \code{"original"}, \code{"new"}.
 the chart.}
 
 \item{vertex_size}{Way how the sizes of the vertices of the graph should be defined.
-One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
-or vector of length equal to the number of nodes or patterns to plot.
+One of \code{"relative"}, \code{"grouped"}, \code{"absolute"} or a numeric vector of length 1 of
+length equal to the number of nodes or patterns to plot.
 \describe{
   \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the frequencies of the
                            entities in \code{size_range}.}
@@ -60,7 +60,6 @@ or vector of length equal to the number of nodes or patterns to plot.
                           regular sequence bounded by \code{size_range}.}
   \item{\code{"absolute"}}{The size of a vertex is defined directly according to the frequency of
                            the entity.}
-  \item{\code{"equal"}}{The vertices are all the same size of 1.}
   \item{A single numeric value}{The vertices are all the size defined by this value.}
   \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
                                  nodes of patterns to plot.}

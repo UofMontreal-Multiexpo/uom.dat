@@ -2586,8 +2586,8 @@ function(object, patterns) {
 #' @param min_link_weight Minimum number of items in common between two entities to plot their link on
 #'  the chart.
 #' @param vertex_size Way how the sizes of the vertices of the graph should be defined.
-#'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"}, \code{"equal"} or a numeric value
-#'  or vector of length equal to the number of nodes or patterns to plot.
+#'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"} or a numeric vector of length 1 of
+#'  length equal to the number of nodes or patterns to plot.
 #'  \describe{
 #'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the frequencies of the
 #'                             entities in \code{size_range}.}
@@ -2596,7 +2596,6 @@ function(object, patterns) {
 #'                            regular sequence bounded by \code{size_range}.}
 #'    \item{\code{"absolute"}}{The size of a vertex is defined directly according to the frequency of
 #'                             the entity.}
-#'    \item{\code{"equal"}}{The vertices are all the same size of 1.}
 #'    \item{A single numeric value}{The vertices are all the size defined by this value.}
 #'    \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
 #'                                   nodes of patterns to plot.}
@@ -2688,9 +2687,9 @@ function(object, nopc, identifiers = "original",
                "a vector of R predefined color names or hexadecimal values",
                "of length 1 or of length equal to the number of rows of nopc."))
   }
-  if (!(vertex_size %in% c("relative", "grouped", "absolute", "equal"))
+  if (!(vertex_size %in% c("relative", "grouped", "absolute"))
       && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
-    stop(paste("vertex_size be one of \"relative\", \"grouped\", \"absolute\", \"equal\"",
+    stop(paste("vertex_size must be one of \"relative\", \"grouped\", \"absolute\"",
                "or a numeric vector of length 1 or of length equal to the number of",
                "rows of nopc."))
   }
@@ -2925,13 +2924,8 @@ function(object, nopc, identifiers = "original",
   vertices_shapes[nopc$length == 1] = 3
   
   # Définition des tailles des sommets
-  if (is.numeric(vertex_size)) {
-    if (length(vertex_size) == 1) {
-      vertices_sizes = rep(vertex_size, nrow(nopc))
-    } else { # length(vertex_size == nrow(nopc)
-      vertices_sizes = vertex_size
-    }
-  } else {
+  if (is.numeric(vertex_size)) vertices_sizes = vertex_size
+  else {
     switch(EXPR = vertex_size,
            "relative" = {
              # Interpolation linéaire des fréquences aux valeurs [size_range[1], size_range[2]]
@@ -2952,10 +2946,6 @@ function(object, nopc, identifiers = "original",
            },
            "absolute" = {
              vertices_sizes = nopc$frequency
-           },
-           "equal" = {
-             # Valeur par défaut de l'argument vertex.cex de la fonction sna::gplot()
-             vertices_sizes = 1
            })
   }
   
