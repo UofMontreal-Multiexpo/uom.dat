@@ -11,7 +11,8 @@ mcr_chart(values, references,
           regions_alpha = 0.2,
           regions_lab = !regions,
           regression = FALSE,
-          log_transform = TRUE)
+          log_transform = TRUE,
+          plot = TRUE)
 mcr_chart(hi, mcr, thq,
           thq_col = NULL,
           regions = FALSE,
@@ -19,7 +20,8 @@ mcr_chart(hi, mcr, thq,
           regions_alpha = 0.2,
           regions_lab = !regions,
           regression = FALSE,
-          log_transform = TRUE)
+          log_transform = TRUE,
+          plot = TRUE)
 }
 \arguments{
 \item{values}{Numeric named matrix or list of numeric named vectors. Vectors of values for which the

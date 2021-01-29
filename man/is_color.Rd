@@ -24,8 +24,9 @@ Josh O'Brien. Stack Overflow topic:
 \href{https://stackoverflow.com/questions/13289009/check-if-character-string-is-a-valid-color-representation}{Check if character string is a valid color representation}.
 }
 \seealso{
-Color names: \code{\link{colors}}, hexadecimal values: \code{\link{rgb}}, graphics palette: \code{\link{palette}}.
+Color names: \code{\link[grDevices:colors]{grDevices::colors}}, hexadecimal values: \code{\link[grDevices:rgb]{grDevices::rgb}},
+graphics palette: \code{\link[grDevices:palette]{grDevices::palette}}.
 
-Color to RGB conversion: \code{\link{col2rgb}}.
+Color to RGB conversion: \code{\link[grDevices:col2rgb]{grDevices::col2rgb}}.
 }
 \keyword{internal}

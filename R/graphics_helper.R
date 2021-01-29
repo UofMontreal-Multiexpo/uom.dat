@@ -46,9 +46,10 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' 
 #' @references Josh O'Brien. Stack Overflow topic:
 #'  [Check if character string is a valid color representation](https://stackoverflow.com/questions/13289009/check-if-character-string-is-a-valid-color-representation).
-#' @seealso Color names: [`colors`], hexadecimal values: [`rgb`], graphics palette: [`palette`].
+#' @seealso Color names: [`grDevices::colors`], hexadecimal values: [`grDevices::rgb`],
+#'  graphics palette: [`grDevices::palette`].
 #' 
-#' Color to RGB conversion: [`col2rgb`].
+#' Color to RGB conversion: [`grDevices::col2rgb`].
 #' @md
 #' @keywords internal
 is_color = function(x, int = TRUE) {

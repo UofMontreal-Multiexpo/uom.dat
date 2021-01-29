@@ -173,7 +173,7 @@ PATTERN_LINKS = "pattern_links"
 #' The \code{TransactionAnalyzer} constructor: \code{\link{transaction.analyzer}}.
 #' 
 #' An example object of class \code{TransactionAnalyzer}: \code{\link{TA_instance}}.
-#' @aliases TransactionAnalyzer
+#' @aliases TransactionAnalyzer print,TransactionAnalyzer-method summary,TransactionAnalyzer-method
 #' @export
 setClass(Class = "TransactionAnalyzer",
          slots = c(
@@ -5541,7 +5541,7 @@ function(object, items) {
 #' @param value Sought value for the category specified by the argument `category`.
 #' @param force_character If `TRUE`, items are returned as character values.
 #'  If `FALSE`, they are the same type as in `object["items"]` (numeric or character).
-#' @return 
+#' @return Items that match the search criteria.
 #' 
 #' @author Gauthier Magnin
 #' @aliases get_items_from_category

@@ -4,6 +4,8 @@
 \name{TransactionAnalyzer-class}
 \alias{TransactionAnalyzer-class}
 \alias{TransactionAnalyzer}
+\alias{print,TransactionAnalyzer-method}
+\alias{summary,TransactionAnalyzer-method}
 \title{Transaction Analyzer}
 \description{
 S4 object class allowing transaction analysis.

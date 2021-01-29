@@ -24,7 +24,7 @@ Write in CSV format a data frame of transactions, nodes, patterns or association
 }
 \examples{
 ## Saving a set of transactions
-export(TS_instance file = "transactions.csv")
+export(TS_instance, file = "transactions.csv")
 
 ## Saving nodes, patterns or association rules
 export(TA_instance, TA_instance["nodes"],

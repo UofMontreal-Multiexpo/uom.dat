@@ -14,16 +14,18 @@ setClassUnion("characterOrNA", c("character", "logical"))
 #'  A transaction is defined as an itemset associated with any other data.
 #' 
 #' @details
-#' Since `year_key` is not required, transactions do not need to contain temporal data. In such a case,
-#'  `year_key` is `NA`.
+#' The length of a `TransactionSet` object is the number of transactions it contains (i.e. is equal to
+#'  the length of the attribute `data`).
+#' 
+#' If the transactions do not contain temporal data, then the attribute `year_key` is `NA`.
 #' 
 #' @slot data List of transactions containing items and any additional data.
 #'  Each transaction is itself a list. All transactions share the same element names (corresponding to
 #'  the names of the various data).
 #' @slot names Names of the elements present in each transaction (i.e. names of the elements contained in
 #'  the list corresponding to a transaction).
-#' @slot item_key Name of the element containing the items of a transaction.
-#' @slot year_key Name of the element containing the year in which a transaction was made.
+#' @slot item_key Name of the element of a transaction containing its items.
+#' @slot year_key Name of the element of a transaction containing the year in which it was made.
 #' 
 #' @section Coercion:
 #' \describe{
@@ -40,7 +42,7 @@ setClassUnion("characterOrNA", c("character", "logical"))
 #' 
 #' An example object of class `TransactionSet`: [`TS_instance`].
 #' 
-#' @aliases TransactionSet
+#' @aliases TransactionSet print,TransactionSet-method length,TransactionSet-method
 #' @md
 #' @export
 setClass(Class = "TransactionSet",
@@ -461,7 +463,7 @@ function(x, permutation) {
 #' 
 #' @examples
 #' ## Saving a set of transactions
-#' export(TS_instance file = "transactions.csv")
+#' export(TS_instance, file = "transactions.csv")
 #' 
 #' ## Saving nodes, patterns or association rules
 #' export(TA_instance, TA_instance["nodes"],

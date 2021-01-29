@@ -45,7 +45,7 @@ Due to the multiple possible usages, the argument \code{hq} must be explicitly n
 \examples{
 hazard_index(c(1,2,3,4,5), c(1,2,3,4,5))
 hazard_index(hq = hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5)))
-hazard_index(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1) ncol = 2),
+hazard_index(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1), ncol = 2),
              references = c(1,2,3,4,5))
 
 }

@@ -105,7 +105,7 @@ hazard_quotient = function(values, references) {
 #' @examples
 #' hazard_index(c(1,2,3,4,5), c(1,2,3,4,5))
 #' hazard_index(hq = hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5)))
-#' hazard_index(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1) ncol = 2),
+#' hazard_index(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1), ncol = 2),
 #'              references = c(1,2,3,4,5))
 #' 
 #' @md
@@ -914,7 +914,8 @@ mcr_summary_for_list = function(values, references) {
 #'           regions_alpha = 0.2,
 #'           regions_lab = !regions,
 #'           regression = FALSE,
-#'           log_transform = TRUE)
+#'           log_transform = TRUE,
+#'           plot = TRUE)
 #' mcr_chart(hi, mcr, thq,
 #'           thq_col = NULL,
 #'           regions = FALSE,
@@ -922,7 +923,8 @@ mcr_summary_for_list = function(values, references) {
 #'           regions_alpha = 0.2,
 #'           regions_lab = !regions,
 #'           regression = FALSE,
-#'           log_transform = TRUE)
+#'           log_transform = TRUE,
+#'           plot = TRUE)
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  chart is to be plotted.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the

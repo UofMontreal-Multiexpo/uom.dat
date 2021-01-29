@@ -4,14 +4,18 @@
 \name{TransactionSet-class}
 \alias{TransactionSet-class}
 \alias{TransactionSet}
+\alias{print,TransactionSet-method}
+\alias{length,TransactionSet-method}
 \title{Transaction Set}
 \description{
 S4 object class for representing transactions.
 A transaction is defined as an itemset associated with any other data.
 }
 \details{
-Since \code{year_key} is not required, transactions do not need to contain temporal data. In such a case,
-\code{year_key} is \code{NA}.
+The length of a \code{TransactionSet} object is the number of transactions it contains (i.e. is equal to
+the length of the attribute \code{data}).
+
+If the transactions do not contain temporal data, then the attribute \code{year_key} is \code{NA}.
 }
 \section{Slots}{
 
@@ -23,9 +27,9 @@ the names of the various data).}
 \item{\code{names}}{Names of the elements present in each transaction (i.e. names of the elements contained in
 the list corresponding to a transaction).}
 
-\item{\code{item_key}}{Name of the element containing the items of a transaction.}
+\item{\code{item_key}}{Name of the element of a transaction containing its items.}
 
-\item{\code{year_key}}{Name of the element containing the year in which a transaction was made.}
+\item{\code{year_key}}{Name of the element of a transaction containing the year in which it was made.}
 }}
 
 \section{Coercion}{
