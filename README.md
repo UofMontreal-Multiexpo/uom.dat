@@ -58,7 +58,7 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * A description of the Maximum Cumulative Ratio approach providing an example of application, in the file `mcr_approach.html`. This one also presents the use of functions for classification data management.
 
-* An explanation with illustrated examples about the different types of itemsets, in the file `frequent_itemsets.html`.
+* Explanations with illustrated examples about the different types of itemsets, in the file `itemset_mining.html`.
 
 * The detail of the data structures used by the **TransactionAnalyzer** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
 

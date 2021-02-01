@@ -1,12 +1,12 @@
 ---
-title: "Mining itemsets"
+title: "Itemset mining"
 author: "Gauthier Magnin"
 date: "Last update: `r Sys.Date()`"
 output: 
   rmarkdown::html_vignette: 
     toc: true
 vignette: >
-  %\VignetteIndexEntry{Mining itemsets}
+  %\VignetteIndexEntry{Itemset mining}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -36,13 +36,13 @@ img {
 Here is the example we will use in this document. It is a list of 9 transactions and the identified items of each one among $A$, $B$, $C$, $D$ and $E$:
 
 <center>
-![](./frequent_itemsets/list_of_transactions.png){class=table}
+![](./itemset_mining/list_of_transactions.png){class=table}
 </center>
 
 Here is the lattice of the powerset of $\{A, B, C, D, E\}$ (i.e. a graph detailing the set of all subsets of $\{A, B, C, D, E\}$). This is the set of all possible itemsets:
 
 <center>
-![](./frequent_itemsets/lattice_1.png){width=100%}
+![](./itemset_mining/lattice_1.png){width=100%}
 </center>
 
 
@@ -51,7 +51,7 @@ Here is the lattice of the powerset of $\{A, B, C, D, E\}$ (i.e. a graph detaili
 The one thing to do is to count occurrences of the itemsets in the transactions:
 
 <center>
-![](./frequent_itemsets/list_of_transactions.png){class=table} ![](./frequent_itemsets/lattice_2-with_occurrences.png){class=right_lattice}
+![](./itemset_mining/list_of_transactions.png){class=table} ![](./itemset_mining/lattice_2-with_occurrences.png){class=right_lattice}
 </center>
 
 With a frequency threshold $\sigma$, the **frequent itemsets** are all itemsets that appear at least $\sigma$ times in the transactions.
@@ -68,7 +68,7 @@ An **equivalence class** is the set of itemsets appearing in the same transactio
 In the following picture, each color represents one equivalence class:
 
 <center>
-![](./frequent_itemsets/list_of_transactions_2.png){class=table} ![](./frequent_itemsets/lattice_3-with_classes.png){class=right_lattice}
+![](./itemset_mining/list_of_transactions_2.png){class=table} ![](./itemset_mining/lattice_3-with_classes.png){class=right_lattice}
 </center>
 
 For example, the dark green equivalence class is the set of the itemsets $A$, $AC$, $AD$ and $ACD$. That means that all transactions containing the item $A$ are all transactions containing the itemsets $AC$, $AD$ an $ACD$. In other words, saying we have found the item $A$ in an transaction is equivalent to:
@@ -84,7 +84,7 @@ We can then keep only the itemset $ACD$ and its occurrence value of 6 without lo
 In our example, if we do not take into account the empty set and take a frequency threshold of $1$, that makes only 8 itemsets:
 
 <center>
-![](./frequent_itemsets/list_of_transactions_2.png){class=table} ![](./frequent_itemsets/lattice_4-with_classes_and_closed.png){class=right_lattice}
+![](./itemset_mining/list_of_transactions_2.png){class=table} ![](./itemset_mining/lattice_4-with_classes_and_closed.png){class=right_lattice}
 </center>
 
 
@@ -95,7 +95,7 @@ In our example, if we do not take into account the empty set and take a frequenc
 In our example with a frequency threshold of $1$, there are 3 maximal frequent itemsets:
 
 <center>
-![](./frequent_itemsets/list_of_transactions.png){class=table} ![](./frequent_itemsets/lattice_5-with_maximals_wo_links.png){class=right_lattice}
+![](./itemset_mining/list_of_transactions.png){class=table} ![](./itemset_mining/lattice_5-with_maximals_wo_links.png){class=right_lattice}
 </center>
 
 
@@ -114,7 +114,7 @@ In the following picture summarizing the example with a frequency threshold of 1
 * Maximal frequent itemsets are those framed in grey.
 
 <center>
-![](./frequent_itemsets/list_of_transactions.png){class=table} ![](./frequent_itemsets/lattice_6-summary.png){class=right_lattice}
+![](./itemset_mining/list_of_transactions.png){class=table} ![](./itemset_mining/lattice_6-summary.png){class=right_lattice}
 </center>
 
 
