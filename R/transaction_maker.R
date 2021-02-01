@@ -23,7 +23,7 @@ NULL
 #'    the same line in `data` (as many values as there are rows grouped).
 #'  * Otherwise, vector of variable names included in `colnames(data)` for which the removal of
 #'    duplicates must be performed.
-#' @param item_key,year_key If the output have to be an `TransactionSet`, names of the variables of
+#' @param item_key,year_key If the output have to be a `TransactionSet`, names of the variables of
 #'  `data` containing the items of the transactions and the year in which the transactions were made.
 #' @return List of transactions identified or S4 object of class `TransactionSet` containing this list
 #'  (depending on whether `item_key` is `NA` or not).

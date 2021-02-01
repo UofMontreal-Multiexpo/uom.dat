@@ -32,7 +32,7 @@ the same line in \code{data} (as many values as there are rows grouped).
 duplicates must be performed.
 }}
 
-\item{item_key, year_key}{If the output have to be an \code{TransactionSet}, names of the variables of
+\item{item_key, year_key}{If the output have to be a \code{TransactionSet}, names of the variables of
 \code{data} containing the items of the transactions and the year in which the transactions were made.}
 }
 \value{

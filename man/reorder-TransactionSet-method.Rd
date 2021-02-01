@@ -17,7 +17,7 @@ S4 object of class \code{TransactionSet} containing the transactions of \code{x}
 defined by \code{permutation}.
 }
 \description{
-Return a copy of an \code{TransactionSet} in which the transactions are in another order.
+Return a copy of a \code{TransactionSet} in which the transactions are in another order.
 }
 \examples{
 reorder(TS_instance, c(2, 1, 3:14))

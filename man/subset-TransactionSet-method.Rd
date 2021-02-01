@@ -21,7 +21,7 @@ S4 object of class \code{TransactionSet} having a subset of transactions from \c
 of the attribute \code{data} from \code{x}).
 }
 \description{
-Return an \code{TransactionSet} in which transactions are a subset of the ones of another \code{TransactionSet}.
+Return a \code{TransactionSet} in which transactions are a subset of the ones of another \code{TransactionSet}.
 }
 \details{
 If the transactions from \code{x} are not named and \code{keep_names = TRUE}, the transactions of the resulting

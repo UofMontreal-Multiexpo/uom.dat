@@ -381,7 +381,7 @@ setGeneric(name = "get_items",           def = function(object, ...){ standardGe
 
 #' Subsetting Transaction Set
 #' 
-#' Return an `TransactionSet` in which transactions are a subset of the ones of another `TransactionSet`.
+#' Return a `TransactionSet` in which transactions are a subset of the ones of another `TransactionSet`.
 #' 
 #' @details
 #' If the transactions from `x` are not named and `keep_names = TRUE`, the transactions of the resulting
@@ -426,7 +426,7 @@ function(x, indexes, keep_names = TRUE) {
 
 #' Reorder Transaction Set
 #' 
-#' Return a copy of an `TransactionSet` in which the transactions are in another order.
+#' Return a copy of a `TransactionSet` in which the transactions are in another order.
 #' 
 #' @param x S4 object of class `TransactionSet`.
 #' @param permutation Numeric or character vector. Permutation to use to rearrange the transactions.

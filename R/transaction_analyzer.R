@@ -3329,7 +3329,7 @@ function(object, ID, links) {
 #'  Can be:
 #'  * Identifiers: `"ID"`.
 #'  * One of the elements of the transactions (i.e. one of the values of `tnpc["names"]`), if `tnpc` is
-#'    an `TransactionSet`.
+#'    a `TransactionSet`.
 #'  * One of the characteristics of the nodes or the patterns (`"frequency"`, `"weight"`, `"specificity"`,
 #'    `"year"`, `"status"`), if `tnpc` is a data frame of nodes or patterns and their characteristics.
 #'  

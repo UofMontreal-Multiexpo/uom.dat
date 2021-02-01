@@ -55,7 +55,7 @@ Can be:
 \itemize{
 \item Identifiers: \code{"ID"}.
 \item One of the elements of the transactions (i.e. one of the values of \code{tnpc["names"]}), if \code{tnpc} is
-an \code{TransactionSet}.
+a \code{TransactionSet}.
 \item One of the characteristics of the nodes or the patterns (\code{"frequency"}, \code{"weight"}, \code{"specificity"},
 \code{"year"}, \code{"status"}), if \code{tnpc} is a data frame of nodes or patterns and their characteristics.
 }
