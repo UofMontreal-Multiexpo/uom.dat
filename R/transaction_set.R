@@ -275,6 +275,8 @@ setReplaceMethod(f = "[",
                        if (length(value) < length(x@names)) {
                          to_remove = x@names[which(!is.element(x@names, value))]
                          for (o in seq_along(x@data)) for (name in to_remove) x@data[[o]][name] = NULL
+                         
+                         if (x@year_key %in% to_remove) x@year_key = NA
                        }
                        else { # length(value) = length(x@names)
                          to_rename = which(value != x@names)
