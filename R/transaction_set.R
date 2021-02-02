@@ -833,8 +833,9 @@ function(object, info, presence = "all") {
 #' @param object S4 object of class `TransactionSet`.
 #' @param items Items for which to compute the complexity ratio. The default `NULL` means to compute
 #'  it for each existing item.
-#' @return Named vector of complexity ratios: for each item, the proportion of complex transactions
-#'  containing it among all transactions containing it.
+#' @return Complexity ratios: for each item, the proportion of complex transactions containing it among
+#'  all transactions containing it.
+#'  Named vector if `items` contains more than one item. Single value otherwise.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_index`], [`co_occurrence_matrix`],
@@ -855,11 +856,14 @@ function(object, items = NULL) {
   if (is.null(items)) items = get_all_items(object)
   
   # Pour chaque item, nombre de transactions complexes contenant l'item / nombre de trx contenant l'item
-  return(sapply(items,
-                function(item) {
-                  trx_item = get_trx_from_items(object, item)
-                  return(stats::setNames(length(get_complex_trx(trx_item)) / length(trx_item), item))
-                }))
+  to_return =  sapply(items,
+                      function(item) {
+                        trx_item = get_trx_from_items(object, item)
+                        return(stats::setNames(length(get_complex_trx(trx_item)) / length(trx_item), item))
+                        })
+  
+  if (length(to_return) == 1) return(unname(to_return[1]))
+  return(to_return)
 })
 
 
@@ -870,8 +874,8 @@ function(object, items = NULL) {
 #' @param object S4 object of class `TransactionSet`.
 #' @param items Items for which to calculate the complexity index. The default `NULL` means to calculate
 #'  it for each existing item.
-#' @return Named vector of complexity indexes: for each item, the number of complex transactions
-#'  containing it.
+#' @return Complexity indexes: for each item, the number of complex transactions containing it.
+#'  Named vector if `items` contains more than one item. Single value otherwise.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_ratio`], [`co_occurrence_matrix`],
@@ -892,11 +896,14 @@ function(object, items = NULL) {
   if (is.null(items)) items = get_all_items(object)
   
   # Pour chaque item, nombre de transactions complexes parmi les transactions contenant l'item
-  return(sapply(items,
-                function(item)
-                  stats::setNames(length(
-                    get_complex_trx(get_trx_from_items(object, item))
-                  ), item)))
+  to_return = sapply(items,
+                     function(item)
+                       stats::setNames(length(
+                         get_complex_trx(get_trx_from_items(object, item))
+                         ), item))
+  
+  if (length(to_return) == 1) return(unname(to_return[1]))
+  return(to_return)
 })
 
 

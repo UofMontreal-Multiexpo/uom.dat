@@ -14,8 +14,9 @@
 it for each existing item.}
 }
 \value{
-Named vector of complexity ratios: for each item, the proportion of complex transactions
-containing it among all transactions containing it.
+Complexity ratios: for each item, the proportion of complex transactions containing it among
+all transactions containing it.
+Named vector if \code{items} contains more than one item. Single value otherwise.
 }
 \description{
 For each item, compute the ratio between the number of complex transactions containing the item and

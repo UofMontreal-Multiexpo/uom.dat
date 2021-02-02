@@ -14,8 +14,8 @@
 it for each existing item.}
 }
 \value{
-Named vector of complexity indexes: for each item, the number of complex transactions
-containing it.
+Complexity indexes: for each item, the number of complex transactions containing it.
+Named vector if \code{items} contains more than one item. Single value otherwise.
 }
 \description{
 For each item, count the number of complex transactions containing the item.
