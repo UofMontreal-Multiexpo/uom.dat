@@ -162,7 +162,7 @@ setMethod(f = "print",
                 "  data:     ", length(x), pluralize(" transaction", x), "\n",
                 "  names:    ", paste0("\"", x@names, "\"", collapse = ", "), "\n",
                 "  item_key: \"", x@item_key, "\"\n",
-                "  year_key: ", if (is.na(x@year_key)) NA else paste0("\"", x@year_key, "\""),
+                "  year_key: ", if (is.na(x@year_key)) NA else paste0("\"", x@year_key, "\"\n"),
                 sep = "")
           })
 
@@ -172,7 +172,7 @@ setMethod(f = "show",
           definition = function(object) {
             cat("TransactionSet\n ",
                 length(object), pluralize("transaction", object), "\n ",
-                "Slots:", paste(methods::slotNames("TransactionSet"), collapse = ", "))
+                "Slots:", paste(methods::slotNames("TransactionSet"), collapse = ", "), "\n")
           })
 
 # length: object length
