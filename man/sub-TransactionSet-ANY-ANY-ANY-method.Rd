@@ -81,7 +81,7 @@ Sub-elements of the attribute \code{data} can be accessed this way as well.
 Numeric values can be used to access elements of the attribute \code{data}. Replacing one element of
 \code{data} will not replace its name.
 
-Replacing the attribute \code{names} renames the elements containing in each transaction if \code{value} is the
+Replacing the attribute \code{names} renames the elements contained in each transaction if \code{value} is the
 same length as \code{names}. In this case, the attributes \code{item_key} and \code{year_key} are updated (unless
 \code{year_key} is \code{NA}).
 

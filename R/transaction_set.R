@@ -237,7 +237,7 @@ setMethod(f = "[",
 #' @rdname sub-TransactionSet-ANY-ANY-ANY-method
 #' 
 #' @details
-#' Replacing the attribute `names` renames the elements containing in each transaction if `value` is the
+#' Replacing the attribute `names` renames the elements contained in each transaction if `value` is the
 #'  same length as `names`. In this case, the attributes `item_key` and `year_key` are updated (unless
 #'  `year_key` is `NA`).
 #'  
@@ -517,7 +517,7 @@ function(object, ...) {
 #' @return Vector of all unique items.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_itemsets`].
+#' @seealso [`get_itemsets`], [`get_items_from_info`].
 #' 
 #' @examples
 #' get_all_items(TS_instance)

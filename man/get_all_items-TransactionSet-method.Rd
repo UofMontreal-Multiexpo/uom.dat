@@ -21,7 +21,7 @@ get_all_items(TS_instance)
 
 }
 \seealso{
-\code{\link{get_itemsets}}.
+\code{\link{get_itemsets}}, \code{\link{get_items_from_info}}.
 }
 \author{
 Gauthier Magnin
