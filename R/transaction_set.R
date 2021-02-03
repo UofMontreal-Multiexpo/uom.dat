@@ -1121,6 +1121,11 @@ function(object, identifiers, length_one, under, over) {
 #' Items are ordered according to the order they are given. If one of the special values is given,
 #'  they are ordered alphanumerically.
 #' 
+#' @note
+#' If the value of the argument `edge_alpha` is not \eqn{1}, edges may not be displayed in
+#'  the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
+#'  clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+#' 
 #' @param object S4 object of class `TransactionSet`.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
 #'  The default `NULL` means to consider each existing item.

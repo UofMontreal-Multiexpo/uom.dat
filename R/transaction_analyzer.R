@@ -3644,6 +3644,11 @@ function(object, category = NULL, items = object["items"],
 #' 
 #' @template default_category_values_colors
 #' 
+#' @note
+#' If the value of the argument `edge_alpha` is not \eqn{1}, edges may not be displayed in
+#'  the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
+#'  clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+#' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
 #'  Any subset of `object["items"]`.

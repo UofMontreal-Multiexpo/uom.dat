@@ -100,6 +100,11 @@ For example, the \out{22<sup>nd</sup>} value will share the color of the \out{2<
 See attribute \code{categories_colors} of the \code{TransactionAnalyzer} object to reassign colors to the
 category values.
 }
+\note{
+If the value of the argument \code{edge_alpha} is not \eqn{1}, edges may not be displayed in
+the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
+clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+}
 \examples{
 co_occurrence_chart(TA_instance, category = "family")
 co_occurrence_chart(TA_instance, category = 1, n.cutoff = 20) +

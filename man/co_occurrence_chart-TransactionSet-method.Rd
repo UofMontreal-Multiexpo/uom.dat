@@ -73,6 +73,11 @@ afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the retu
 Items are ordered according to the order they are given. If one of the special values is given,
 they are ordered alphanumerically.
 }
+\note{
+If the value of the argument \code{edge_alpha} is not \eqn{1}, edges may not be displayed in
+the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
+clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+}
 \examples{
 co_occurrence_chart(TS_instance)
 co_occurrence_chart(TS_instance) +

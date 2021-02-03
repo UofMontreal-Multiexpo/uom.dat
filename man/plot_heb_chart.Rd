@@ -83,6 +83,11 @@ Plot a hierarchical edge bundling chart: graph in which vertices are arranged ci
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 }
+\note{
+If the value of the argument \code{edge_alpha} is not \eqn{1}, edges may not be displayed in
+the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
+clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+}
 \author{
 Gauthier Magnin
 }

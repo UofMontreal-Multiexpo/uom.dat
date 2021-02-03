@@ -153,6 +153,11 @@ fig_in_usr_coords = function(n = 1:4) {
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
+#' @note
+#' If the value of the argument `edge_alpha` is not \eqn{1}, edges may not be displayed in
+#'  the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
+#'  clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+#' 
 #' @param hierarchy A two-column data frame representing the hierarchical network structure. A tree-like
 #'  representation of the vertices with a root and any internal nodes (only leaves are plotted).
 #' @param vertices Data frame containing the vertices to plot (i.e. the leaves of the tree
