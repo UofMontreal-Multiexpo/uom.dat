@@ -1151,7 +1151,7 @@ setMethod(f = "co_occurrence_chart",
 function(object, items = NULL, min_occ = 1, max_occ = Inf,
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,
-         edge_tension = 0.8, edge_alpha = 1,
+         edge_looseness = 0.8, edge_alpha = 1,
          palette = "Blues", palette_direction = 1) {
   
   # Validation des items fournis
@@ -1174,7 +1174,7 @@ function(object, items = NULL, min_occ = 1, max_occ = Inf,
   return(plot_heb_chart(hierarchy, vertices, connections, limits = c(1, max(co_occ$Freq)),
                         vertex_size = vertex_size, vertex_alpha = vertex_alpha, vertex_margin = vertex_margin,
                         label_size = label_size, label_margin = label_margin,
-                        edge_tension = edge_tension, edge_alpha = edge_alpha,
+                        edge_looseness = edge_looseness, edge_alpha = edge_alpha,
                         palette = palette, palette_direction = palette_direction))
 })
 

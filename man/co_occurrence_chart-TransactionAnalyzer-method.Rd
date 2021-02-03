@@ -21,7 +21,7 @@
   vertex_margin = 0.05,
   label_size = 3,
   label_margin = 0.05,
-  edge_tension = 0.8,
+  edge_looseness = 0.8,
   edge_alpha = 1,
   palette = "Blues",
   palette_direction = 1
@@ -64,7 +64,7 @@ centers of the vertices).}
 \item{label_margin}{Margin before the labels (i.e. distance between the centers of the vertices and
 the labels).}
 
-\item{edge_tension}{Looseness of the connecting lines (from 0 to 1).
+\item{edge_looseness}{Looseness of the connecting lines (from 0 to 1).
 The closer the value is to 0, the straighter the lines will be.
 The closer the value is to 1, the more the lines will be curved.}
 

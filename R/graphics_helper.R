@@ -178,7 +178,7 @@ fig_in_usr_coords = function(n = 1:4) {
 #' @param label_size Size of the labels associated with the vertices.
 #' @param label_margin Margin before the labels (i.e. distance between the centers of the vertices and
 #'  the labels).
-#' @param edge_tension Looseness of the connecting lines (from 0 to 1).
+#' @param edge_looseness Looseness of the connecting lines (from 0 to 1).
 #'  The closer the value is to 0, the straighter the lines will be.
 #'  The closer the value is to 1, the more the lines will be curved.
 #' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
@@ -198,7 +198,7 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
                           legend_name = NULL, legend_values = NULL,
                           vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
                           label_size = 3, label_margin = 0.05,
-                          edge_tension = 0.8, edge_alpha = 1,
+                          edge_looseness = 0.8, edge_alpha = 1,
                           palette = "Blues", palette_direction = 1) {
   
   # Décalages qui seront appliquées aux sommets et labels
@@ -223,7 +223,7 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
     ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
                                                     colors = edges[, 3]),
                              ggplot2::aes(color = colors),
-                             tension = edge_tension, alpha = edge_alpha) +
+                             tension = edge_looseness, alpha = edge_alpha) +
     ggraph::scale_edge_color_distiller("Co-occurrence", palette = palette, direction = palette_direction,
                                        # Définition de l'échelle (pour n'avoir que des entiers)
                                        limits = limits,

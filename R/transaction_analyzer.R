@@ -686,7 +686,7 @@ setGeneric(name = "category_tree_chart", def = function(object, category = NULL,
 
 setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
 
-setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameters = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_tension = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1){ standardGeneric("rules_chart") })
+setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameters = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1){ standardGeneric("rules_chart") })
 
 
 # Methods for search and save
@@ -3686,7 +3686,7 @@ function(object, items = object["items"], category = NULL, min_occ = 1, max_occ 
          use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category",
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,
-         edge_tension = 0.8, edge_alpha = 1,
+         edge_looseness = 0.8, edge_alpha = 1,
          palette = "Blues", palette_direction = 1) {
   
   # Validation du paramètre d'accès à la catégorie et des items fournis
@@ -3732,7 +3732,7 @@ function(object, items = object["items"], category = NULL, min_occ = 1, max_occ 
               limits = c(1, max(co_occ$Freq)),
               vertex_size = vertex_size, vertex_alpha = vertex_alpha, vertex_margin = vertex_margin,
               label_size = label_size, label_margin = label_margin,
-              edge_tension = edge_tension, edge_alpha = edge_alpha,
+              edge_looseness = edge_looseness, edge_alpha = edge_alpha,
               palette = palette, palette_direction = palette_direction)
   
   if (!is.null(category)) {
@@ -3994,7 +3994,7 @@ function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...) {
 #' @param label_size Size of the labels associated with the vertices.
 #' @param label_margin Margin before the labels (i.e. distance between the centers of the vertices and
 #'  the labels).
-#' @param edge_tension Looseness of the connecting lines (from 0 to 1).
+#' @param edge_looseness Looseness of the connecting lines (from 0 to 1).
 #'  The closer the value is to 0, the straighter the lines will be.
 #'  The closer the value is to 1, the more the lines will be curved.
 #' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
@@ -4065,7 +4065,7 @@ function(object, rules = NULL, items = NULL,
          sort_by = "category",
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,
-         edge_tension = 0.8, edge_alpha = 1,
+         edge_looseness = 0.8, edge_alpha = 1,
          palette = "default", palette_direction = 1) {
   
   # Conversion des factor de rules en character si nécessaire
@@ -4237,7 +4237,7 @@ function(object, rules = NULL, items = NULL,
                                                     colors = rules_to_plot[, col_to_display]),
                              ggplot2::aes(color = colors,
                                           alpha = if (col_to_display == "confidence") ggplot2::stat(index) else edge_alpha),
-                             tension = edge_tension) +
+                             tension = edge_looseness) +
     
     ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
                                          y = y * vertex_coord_multiplier,
