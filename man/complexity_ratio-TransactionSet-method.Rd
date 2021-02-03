@@ -17,6 +17,7 @@ it for each existing item.}
 Complexity ratios: for each item, the proportion of complex transactions containing it among
 all transactions containing it.
 Named vector if \code{items} contains more than one item. Single value otherwise.
+\code{NA} values are assigned to given items that do not exist in the transations.
 }
 \description{
 For each item, compute the ratio between the number of complex transactions containing the item and
@@ -26,6 +27,7 @@ ratio between the number of times the item appears alone and the number of times
 \examples{
 complexity_ratio(TS_instance)
 complexity_ratio(TS_instance, items = c(25, 148, 3146))
+complexity_ratio(TS_instance, items = 3146)
 
 }
 \seealso{

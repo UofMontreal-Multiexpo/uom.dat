@@ -836,6 +836,7 @@ function(object, info, presence = "all") {
 #' @return Complexity ratios: for each item, the proportion of complex transactions containing it among
 #'  all transactions containing it.
 #'  Named vector if `items` contains more than one item. Single value otherwise.
+#'  `NA` values are assigned to given items that do not exist in the transations.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_index`], [`co_occurrence_matrix`],
@@ -844,6 +845,7 @@ function(object, info, presence = "all") {
 #' @examples
 #' complexity_ratio(TS_instance)
 #' complexity_ratio(TS_instance, items = c(25, 148, 3146))
+#' complexity_ratio(TS_instance, items = 3146)
 #' 
 #' @aliases complexity_ratio
 #' @md
@@ -854,16 +856,20 @@ setMethod(f = "complexity_ratio",
 function(object, items = NULL) {
   
   if (is.null(items)) items = get_all_items(object)
+  existing_items = stats::setNames(items %in% get_all_items(object), items)
   
   # Pour chaque item, nombre de transactions complexes contenant l'item / nombre de trx contenant l'item
-  to_return =  sapply(items,
-                      function(item) {
-                        trx_item = get_trx_from_items(object, item)
-                        return(stats::setNames(length(get_complex_trx(trx_item)) / length(trx_item), item))
-                        })
+  to_return = sapply(items,
+                     function(item) {
+                       if (!existing_items[as.character(item)]) return(NA)
+                       
+                       trx_item = get_trx_from_items(object, item)
+                       return(length(get_complex_trx(trx_item)) / length(trx_item))
+                     })
+  # Le vecteur résultant est un vecteur nommé si les items sont des characters et non des numerics
   
-  if (length(to_return) == 1) return(unname(to_return[1]))
-  return(to_return)
+  if (length(items) == 1) return(to_return[[1]])
+  return(stats::setNames(to_return, items))
 })
 
 
@@ -876,6 +882,7 @@ function(object, items = NULL) {
 #'  it for each existing item.
 #' @return Complexity indexes: for each item, the number of complex transactions containing it.
 #'  Named vector if `items` contains more than one item. Single value otherwise.
+#'  `NA` values are assigned to given items that do not exist in the transations.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_ratio`], [`co_occurrence_matrix`],
@@ -884,6 +891,7 @@ function(object, items = NULL) {
 #' @examples
 #' complexity_index(TS_instance)
 #' complexity_index(TS_instance, items = c(19, 25, 148))
+#' complexity_index(TS_instance, items = 3146)
 #' 
 #' @aliases complexity_index
 #' @md
@@ -894,16 +902,18 @@ setMethod(f = "complexity_index",
 function(object, items = NULL) {
   
   if (is.null(items)) items = get_all_items(object)
+  existing_items = stats::setNames(items %in% get_all_items(object), items)
   
   # Pour chaque item, nombre de transactions complexes parmi les transactions contenant l'item
   to_return = sapply(items,
-                     function(item)
-                       stats::setNames(length(
-                         get_complex_trx(get_trx_from_items(object, item))
-                         ), item))
+                     function(item) {
+                       if (!existing_items[as.character(item)]) return(NA)
+                       return(length(get_complex_trx(get_trx_from_items(object, item))))
+                     })
+  # Le vecteur résultant est un vecteur nommé si les items sont des characters et non des numerics
   
-  if (length(to_return) == 1) return(unname(to_return[1]))
-  return(to_return)
+  if (length(items) == 1) return(to_return[[1]])
+  return(stats::setNames(to_return, items))
 })
 
 
@@ -917,6 +927,7 @@ function(object, items = NULL) {
 #' @param items Items for which to count co-occurrences between pairs. The default `NULL` means to count
 #'  them considering each existing item.
 #' @return Co-occurrence matrix between each pair of items.
+#'  `NA` values are assigned to given items that do not exist in the transations.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_ratio`], [`complexity_index`],

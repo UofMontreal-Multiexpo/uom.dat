@@ -15,6 +15,7 @@ them considering each existing item.}
 }
 \value{
 Co-occurrence matrix between each pair of items.
+\code{NA} values are assigned to given items that do not exist in the transations.
 }
 \description{
 Build the co-occurrence matrix: the matrix of the number of transactions containing a specific pair of

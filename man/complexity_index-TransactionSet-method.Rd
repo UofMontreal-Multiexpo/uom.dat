@@ -16,6 +16,7 @@ it for each existing item.}
 \value{
 Complexity indexes: for each item, the number of complex transactions containing it.
 Named vector if \code{items} contains more than one item. Single value otherwise.
+\code{NA} values are assigned to given items that do not exist in the transations.
 }
 \description{
 For each item, count the number of complex transactions containing the item.
@@ -23,6 +24,7 @@ For each item, count the number of complex transactions containing the item.
 \examples{
 complexity_index(TS_instance)
 complexity_index(TS_instance, items = c(19, 25, 148))
+complexity_index(TS_instance, items = 3146)
 
 }
 \seealso{
