@@ -8,7 +8,7 @@
 \usage{
 \S4method{co_occurrence_chart}{TransactionAnalyzer}(
   object,
-  items,
+  items = object["items"],
   category = NULL,
   min_occ = 1,
   max_occ = Inf,
@@ -101,10 +101,10 @@ See attribute \code{categories_colors} of the \code{TransactionAnalyzer} object 
 category values.
 }
 \examples{
-co_occurrence_chart(TA_instance, TA_instance["items"], "family")
-co_occurrence_chart(TA_instance, "items", category = 1, n.cutoff = 20) +
+co_occurrence_chart(TA_instance, category = "family")
+co_occurrence_chart(TA_instance, category = 1, n.cutoff = 20) +
   ggplot2::expand_limits(x = c(-1.5, 1.5), y = c(-1.5, 1.5))
-co_occurrence_chart(TA_instance, "items", category = "family",
+co_occurrence_chart(TA_instance, category = "family",
                     min_occ = 2, palette = "OrRd")
 co_occurrence_chart(TA_instance, TA_instance["items"][2:13], "family")
 

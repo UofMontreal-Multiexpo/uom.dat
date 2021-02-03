@@ -8,7 +8,7 @@
 \usage{
 \S4method{co_occurrence_chart}{TransactionSet}(
   object,
-  items,
+  items = NULL,
   min_occ = 1,
   max_occ = Inf,
   vertex_size = 3,
@@ -25,8 +25,8 @@
 \arguments{
 \item{object}{S4 object of class \code{TransactionSet}.}
 
-\item{items}{Items for which to count co-occurrences between pairs and to plot on the graph.\cr
-\code{"items"} and \code{"i"} are special values specifying to use all existing items.}
+\item{items}{Items for which to count co-occurrences between pairs and to plot on the graph.
+The default \code{NULL} means to consider each existing item.}
 
 \item{min_occ}{Minimum number of co-occurrences to consider to plot a link between two items.}
 
@@ -74,11 +74,10 @@ Items are ordered according to the order they are given. If one of the special v
 they are ordered alphanumerically.
 }
 \examples{
-co_occurrence_chart(TS_instance, get_all_items(TS_instance))
-co_occurrence_chart(TS_instance, "items") +
+co_occurrence_chart(TS_instance)
+co_occurrence_chart(TS_instance) +
   ggplot2::expand_limits(x = c(-1.2, 1.2), y = c(-1.2, 1.2))
-co_occurrence_chart(TS_instance, "items",
-                    min_occ = 2, palette = "OrRd")
+co_occurrence_chart(TS_instance, min_occ = 2, palette = "OrRd")
 co_occurrence_chart(TS_instance, items = c(25, 27, 49, 87, 148, 192, 252, 328))
 
 }

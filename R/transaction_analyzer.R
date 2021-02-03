@@ -3669,10 +3669,10 @@ function(object, category = NULL, items = object["items"],
 #' [`co_occurrence_chart,TransactionSet`][co_occurrence_chart,TransactionSet-method].
 #' 
 #' @examples
-#' co_occurrence_chart(TA_instance, TA_instance["items"], "family")
-#' co_occurrence_chart(TA_instance, "items", category = 1, n.cutoff = 20) +
+#' co_occurrence_chart(TA_instance, category = "family")
+#' co_occurrence_chart(TA_instance, category = 1, n.cutoff = 20) +
 #'   ggplot2::expand_limits(x = c(-1.5, 1.5), y = c(-1.5, 1.5))
-#' co_occurrence_chart(TA_instance, "items", category = "family",
+#' co_occurrence_chart(TA_instance, category = "family",
 #'                     min_occ = 2, palette = "OrRd")
 #' co_occurrence_chart(TA_instance, TA_instance["items"][2:13], "family")
 #' 
@@ -3682,7 +3682,7 @@ function(object, category = NULL, items = object["items"],
 setMethod(f = "co_occurrence_chart",
           signature = "TransactionAnalyzer",
           definition =
-function(object, items, category = NULL, min_occ = 1, max_occ = Inf,
+function(object, items = object["items"], category = NULL, min_occ = 1, max_occ = Inf,
          use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category",
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,

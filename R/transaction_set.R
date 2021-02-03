@@ -1122,8 +1122,8 @@ function(object, identifiers, length_one, under, over) {
 #'  they are ordered alphanumerically.
 #' 
 #' @param object S4 object of class `TransactionSet`.
-#' @param items Items for which to count co-occurrences between pairs and to plot on the graph.\cr
-#'  `"items"` and `"i"` are special values specifying to use all existing items.
+#' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
+#'  The default `NULL` means to consider each existing item.
 #' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
 #' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
 #' @inheritParams plot_heb_chart
@@ -1136,11 +1136,10 @@ function(object, identifiers, length_one, under, over) {
 #' [`co_occurrence_chart,TransactionAnalyzer`][co_occurrence_chart,TransactionAnalyzer-method].
 #' 
 #' @examples
-#' co_occurrence_chart(TS_instance, get_all_items(TS_instance))
-#' co_occurrence_chart(TS_instance, "items") +
+#' co_occurrence_chart(TS_instance)
+#' co_occurrence_chart(TS_instance) +
 #'   ggplot2::expand_limits(x = c(-1.2, 1.2), y = c(-1.2, 1.2))
-#' co_occurrence_chart(TS_instance, "items",
-#'                     min_occ = 2, palette = "OrRd")
+#' co_occurrence_chart(TS_instance, min_occ = 2, palette = "OrRd")
 #' co_occurrence_chart(TS_instance, items = c(25, 27, 49, 87, 148, 192, 252, 328))
 #' 
 #' @aliases co_occurrence_chart co_occurrence_chart,TransactionSet
@@ -1149,14 +1148,16 @@ function(object, identifiers, length_one, under, over) {
 setMethod(f = "co_occurrence_chart",
           signature = "TransactionSet",
           definition =
-function(object, items, min_occ = 1, max_occ = Inf,
+function(object, items = NULL, min_occ = 1, max_occ = Inf,
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,
          edge_tension = 0.8, edge_alpha = 1,
          palette = "Blues", palette_direction = 1) {
   
   # Validation des items fournis
-  items = get_items(object, items)
+  if (is.null(items)) items = get_all_items(object)
+  else if (!all(items %in% get_all_items(object)))
+    stop("items must be NULL or a subset of the items contained in object.")
   
   # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
@@ -1244,7 +1245,7 @@ function(object, items) {
   if (all(items %in% get_all_items(object)))
     return(items)
   
-  stop("items must be \"items\" or a subset of items contained in object.")
+  stop("items must be \"items\" or a subset of the items contained in object.")
 })
 
 
