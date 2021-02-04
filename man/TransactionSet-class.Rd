@@ -35,9 +35,9 @@ the list corresponding to a transaction).}
 \section{Coercion}{
 
 \describe{
-\item{\code{as(trx, "data.frame")}}{Convert a \code{TransactionSet} object \code{trx} to \code{data.frame} (considering
-the parameter \code{stringAsFactors} as \code{FALSE}).}
-\item{\code{as(trx, "transactions")}}{Convert a \code{TransactionSet} object \code{trx} to a set of
+\item{\code{as(object, Class = "data.frame")}}{Convert a \code{TransactionSet} object to \code{data.frame}
+(considering the parameter \code{stringAsFactors} as \code{FALSE}).}
+\item{\code{as(object, Class = "transactions")}}{Convert a \code{TransactionSet} object to a set of
 \code{\link[arules:transactions-class]{transactions}} from the package \code{arules}. Only the items of
 the transactions are considered. Other data are ignored.}
 }

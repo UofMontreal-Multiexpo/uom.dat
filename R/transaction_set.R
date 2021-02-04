@@ -29,9 +29,9 @@ setClassUnion("characterOrNA", c("character", "logical"))
 #' 
 #' @section Coercion:
 #' \describe{
-#'   \item{`as(trx, "data.frame")`}{Convert a `TransactionSet` object `trx` to `data.frame` (considering
-#'         the parameter `stringAsFactors` as `FALSE`).}
-#'   \item{`as(trx, "transactions")`}{Convert a `TransactionSet` object `trx` to a set of
+#'   \item{`as(object, Class = "data.frame")`}{Convert a `TransactionSet` object to `data.frame`
+#'         (considering the parameter `stringAsFactors` as `FALSE`).}
+#'   \item{`as(object, Class = "transactions")`}{Convert a `TransactionSet` object to a set of
 #'         [`transactions`][arules::transactions-class] from the package `arules`. Only the items of
 #'         the transactions are considered. Other data are ignored.}
 #' }
