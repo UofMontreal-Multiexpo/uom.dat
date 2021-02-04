@@ -25,26 +25,28 @@ knitr::opts_chunk$set(fig.align = "center")
 
 
 
-Proposed as a tool for the assessment of occupational exposure to chemical agents, the **Maximum Cumulative Ratio approach** helps determine wheter a cumulative risk assessment is necessary.
+Proposed as a tool for the assessment of occupational exposure to chemical agents, the **Maximum Cumulative Ratio approach** helps determine whether a cumulative risk assessment is necessary.
 
 This approach proposes a set of indicators. The main one (the maximum cumulative ratio) is defined as the ratio of the cumulative toxicity received by an individual from exposure to multiple chemical stressors to the largest toxicity from a single chemical stressor. The maximum cumulative ratio is a quantitiative measure of the difference in an individual's toxicity estimated using a chemical-by-chemical approach and using an additive model of toxicity. As such, it provides a conservative estimate of the degree to which individuals’ toxicities could be underestimated by not performing a cumulative risk assessment.
 
 Nevertheless, as the indicators of the Maximum Cumulative Ratio approach are based only on **effective values** and **reference values**, they can be applied to other fields and situations in which we would like to know the importance of the **cumulative aspect** compared to the **individual aspect**.
 
 
-<p id="plan_announcement">This document describes the Maximum Cumulative Ratio approach providing an example of application to occupational co-exposure data. The first section prepares the data that are used in other sections. The second one applies the approach to these data, computing indicators and plotting graphs. The third section proposes to apply this approach by considering a classification of the substances the data are from. Finally, the last one presents some computations and formatting of a classification system in general, and additional transformations on the structure containing the values being analyzed.</p>
+<p id="plan_announcement">This document describes the Maximum Cumulative Ratio approach by providing an example of application to occupational co-exposure data. The first section prepares the data that are used in other sections. The second one applies the approach to these data, computing indicators and plotting graphs. The third section proposes to apply this approach by considering a classification of the substances the data are from. Finally, the last one presents some computations and formatting of a classification system in general, and additional transformations on the structure containing the values being analyzed.</p>
+
+
+```{r message=FALSE}
+library(uom.dat)
+```
 
 
 
 # 1. Data preparation
 
-## 1.1. Transactions and values
+## 1.1. Effective values
 
-Foremost, we will create for our example a list of transactions as presented in the document "Spectral analysis and observation processing example". For short, these transactions will simply group data from a dataset. The values we will use will be taken from these transactions.
-```{r message=FALSE}
-# Loading the package
-library(uom.dat)
-
+Foremost, we will create for our example a list of transactions as presented in the document [Transaction sets](./transaction_sets.html). For short, these transactions will simply group data from a dataset. The values we will use will be taken from these transactions.
+```{r}
 # Creation of specific transactions
 transactions <- make_OE_transactions(
   oedb_sample,
@@ -813,171 +815,8 @@ Application of the maximum cumulative ratio (MCR) as a screening tool for the ev
 ---
 
 
-# List of datasets, functions, classes and methods
-
-The package help page: [uom.dat](../html/uom.dat-package.html)
-
-## Datasets
-
-Datasets used as examples:
-
-* [oedb_sample](../html/oedb_sample.html)
-* [substances_information](../html/substances_information.html)
-* [TS_instance](../html/TS_instance.html)
-* [TA_instance](../html/TA_instance.html)
-
-
-## About transaction set
-
-The class: [TransactionSet](../html/TransactionSet-class.html)
-
-Making *TransactionSet* objects:
-
-* [transaction.set](../html/transaction.set.html)
-* [make_transactions](../html/make_transactions.html)
-* [make_OE_transactions](../html/make_OE_transactions.html)
-* [\[](../html/sub-TransactionSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-TransactionSet-ANY-ANY-ANY-method.html)
-* [subset](../html/subset-TransactionSet-method.html)
-* [reorder](../html/reorder-TransactionSet-method.html)
-
-Search in transactions:
-
-* [get_all_items](../html/get_all_items-TransactionSet-method.html)
-* [get_itemsets](../html/get_itemsets-TransactionSet-method.html)
-* [get_items_from_info](../html/get_items_from_info-TransactionSet-method.html)
-* [get_info_from_items](../html/get_info_from_items-TransactionSet-method.html)
-
-Search for transactions:
-
-* [get_trx_from_items](../html/get_trx_from_items-TransactionSet-method.html)
-* [get_trx_from_info](../html/get_trx_from_info-TransactionSet-method.html)
-* [get_complex_trx](../html/get_complex_trx-TransactionSet-method.html)
-* [get_simple_trx](../html/get_simple_trx-TransactionSet-method.html)
-
-Computations on transactions:
-
-* [complexity_ratio](../html/complexity_ratio-TransactionSet-method.html)
-* [complexity_index](../html/complexity_index-TransactionSet-method.html)
-* [co_occurrence_matrix](../html/co_occurrence_matrix-TransactionSet-method.html)
-
-Making charts about transactions:
-
-* [itemset_chart](../html/itemset_chart-TransactionSet-method.html)
-* [co_occurrence_chart](../html/co_occurrence_chart-TransactionSet-method.html)
-
-Saving transactions:
-
-* [export](../html/export.html)
-
-
-## About transaction analysis
-
-The class: [TransactionAnalyzer](../html/TransactionAnalyzer-class.html)
-
-Making *TransactionAnalyzer* objects:
-
-* [transaction.analyzer](../html/transaction.analyzer.html)
-* [init](../html/init-TransactionAnalyzer-method.html) and [is_init](../html/is_init-TransactionAnalyzer-method.html)
-* [reset](../html/reset-TransactionAnalyzer-method.html)
-* [\[](../html/sub-TransactionAnalyzer-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-TransactionAnalyzer-ANY-ANY-ANY-method.html)
-
-Search for transactions, nodes or patterns:
-
-* [get_trx_from_category](../html/get_trx_from_category-TransactionAnalyzer-method.html)
-* [get_nodes](../html/get_nodes-TransactionAnalyzer-method.html)
-* [get_patterns](../html/get_patterns-TransactionAnalyzer-method.html)
-* [get_complexes](../html/get_complexes-TransactionAnalyzer-method.html)
-* [get_isolates](../html/get_isolates-TransactionAnalyzer-method.html)
-* [get_non_isolates](../html/get_non_isolates-TransactionAnalyzer-method.html)
-
-Computations on nodes and patterns:
-
-* [frequency_by_complexity](../html/frequency_by_complexity-TransactionAnalyzer-method.html)
-* [define_dynamic_status](../html/define_dynamic_status-TransactionAnalyzer-method.html)
-
-Search for links between nodes or between patterns:
-
-* [get_links](../html/get_links-TransactionAnalyzer-method.html)
-
-Extracting association rules and switching between mathematical notation and vector notation for sets:
-
-* [extract_rules](../html/extract_rules-TransactionAnalyzer-method.html)
-* [vector_notation](../html/vector_notation.html)
-* [set_notation](../html/set_notation.html)
-
-Find category values associated with itemsets:
-
-* [category_values](../html/category_values-TransactionAnalyzer-method.html)
-
-Making charts:
-
-* [itemset_chart](../html/itemset_chart-TransactionAnalyzer-method.html)
-* [co_occurrence_chart](../html/co_occurrence_chart-TransactionAnalyzer-method.html)
-* [category_tree_chart](../html/category_tree_chart-TransactionAnalyzer-method.html)
-* [spectrum_chart](../html/spectrum_chart-TransactionAnalyzer-method.html)
-* [spectrosome_chart](../html/spectrosome_chart-TransactionAnalyzer-method.html)
-* [rules_chart](../html/rules_chart-TransactionAnalyzer-method.html)
-
-Computations on spectrosome graphs:
-
-* [degree](../html/degree-TransactionAnalyzer-method.html)
-* [network_density](../html/network_density-TransactionAnalyzer-method.html)
-
-Saving nodes, patterns or association rules:
-
-* [export](../html/export.html)
-
-
-## About the maximum cumulative ratio approach
-
-Computation of the main indicators:
-
-* [hazard_quotient](../html/hazard_quotient.html)
-* [hazard_index](../html/hazard_index.html)
-* [maximum_hazard_quotient](../html/maximum_hazard_quotient.html)
-* [maximum_cumulative_ratio](../html/maximum_cumulative_ratio.html)
-* [missed_toxicity](../html/missed_toxicity.html)
-
-Computation of additional indicators:
-
-* [reciprocal_of_mcr](../html/reciprocal_of_mcr.html)
-* [top_hazard_quotient](../html/top_hazard_quotient.html)
-* [classify_mixture](../html/classify_mixture.html)
-
-Summarising indicators:
-
-* [mcr_summary](../html/mcr_summary.html)
-* [mcr_chart](../html/mcr_chart.html)
-* [thq_pairs](../html/thq_pairs.html)
-* [thq_by_group](../html/thq_by_group.html)
-
-Application of the approach according to a classification
-
-* [mcr_approach_by_class](../html/mcr_approach_by_class.html)
-* [mcr_summary_by_class](../html/mcr_summary_by_class.html)
-* [mcr_chart_by_class](../html/mcr_chart_by_class.html)
-* [thq_pairs_by_class](../html/thq_pairs_by_class.html)
-* [thq_by_group_by_class](../html/thq_by_group_by_class.html)
-
-
-## About lists
-
-Computations on lists:
-
-* [intersect_on_list](../html/intersect_on_list.html)
-* [union_on_list](../html/union_on_list.html)
-* [table_on_list](../html/table_on_list.html)
-
-Transformation of lists and transformation into lists:
-
-* [invert_list](../html/invert_list.html)
-* [coerce_list](../html/coerce_list.html)
-* [coerce_to_list](../html/coerce_to_list.html)
-
-Search in lists:
-
-* [nth_values](../html/nth_values.html)
-
+```{r child="list_of_help_pages.inc.Rmd"}
+```
 
 
 ---

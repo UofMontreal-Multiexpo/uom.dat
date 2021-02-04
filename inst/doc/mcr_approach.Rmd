@@ -25,26 +25,28 @@ knitr::opts_chunk$set(fig.align = "center")
 
 
 
-Proposed as a tool for the assessment of occupational exposure to chemical agents, the **Maximum Cumulative Ratio approach** helps determine wheter a cumulative risk assessment is necessary.
+Proposed as a tool for the assessment of occupational exposure to chemical agents, the **Maximum Cumulative Ratio approach** helps determine whether a cumulative risk assessment is necessary.
 
 This approach proposes a set of indicators. The main one (the maximum cumulative ratio) is defined as the ratio of the cumulative toxicity received by an individual from exposure to multiple chemical stressors to the largest toxicity from a single chemical stressor. The maximum cumulative ratio is a quantitiative measure of the difference in an individual's toxicity estimated using a chemical-by-chemical approach and using an additive model of toxicity. As such, it provides a conservative estimate of the degree to which individuals’ toxicities could be underestimated by not performing a cumulative risk assessment.
 
 Nevertheless, as the indicators of the Maximum Cumulative Ratio approach are based only on **effective values** and **reference values**, they can be applied to other fields and situations in which we would like to know the importance of the **cumulative aspect** compared to the **individual aspect**.
 
 
-<p id="plan_announcement">This document describes the Maximum Cumulative Ratio approach providing an example of application to occupational co-exposure data. The first section prepares the data that are used in other sections. The second one applies the approach to these data, computing indicators and plotting graphs. The third section proposes to apply this approach by considering a classification of the substances the data are from. Finally, the last one presents some computations and formatting of a classification system in general, and additional transformations on the structure containing the values being analyzed.</p>
+<p id="plan_announcement">This document describes the Maximum Cumulative Ratio approach by providing an example of application to occupational co-exposure data. The first section prepares the data that are used in other sections. The second one applies the approach to these data, computing indicators and plotting graphs. The third section proposes to apply this approach by considering a classification of the substances the data are from. Finally, the last one presents some computations and formatting of a classification system in general, and additional transformations on the structure containing the values being analyzed.</p>
+
+
+```{r message=FALSE}
+library(uom.dat)
+```
 
 
 
 # 1. Data preparation
 
-## 1.1. Transactions and values
+## 1.1. Effective values
 
-Foremost, we will create for our example a list of transactions as presented in the document "Spectral analysis and observation processing example". For short, these transactions will simply group data from a dataset. The values we will use will be taken from these transactions.
-```{r message=FALSE}
-# Loading the package
-library(uom.dat)
-
+Foremost, we will create for our example a list of transactions as presented in the document [Transaction sets](./transaction_sets.html). For short, these transactions will simply group data from a dataset. The values we will use will be taken from these transactions.
+```{r}
 # Creation of specific transactions
 transactions <- make_OE_transactions(
   oedb_sample,

@@ -56,7 +56,7 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * An example of transaction analysis, presented in the file `spectral_analysis_example.nb.html`.
 
-* A description of the Maximum Cumulative Ratio approach providing an example of application, in the file `mcr_approach.html`. This one also presents the use of functions for classification data management.
+* A description of the Maximum Cumulative Ratio approach by providing an example of application, in the file `mcr_approach.html`. This one also presents the use of functions for classification data management.
 
 * Explanations with illustrated examples about the different types of itemsets, in the file `itemset_mining.html`.
 

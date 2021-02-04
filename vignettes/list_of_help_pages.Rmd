@@ -32,7 +32,7 @@ Datasets used as examples:
 
 
 
-# About transaction set
+# About transaction sets
 
 The class: [TransactionSet](../html/TransactionSet-class.html)
 
@@ -61,8 +61,8 @@ Search for transactions:
 
 Computations on transactions:
 
-* [complexity_ratio](../html/complexity_ratio-TransactionSet-method.html)
 * [complexity_index](../html/complexity_index-TransactionSet-method.html)
+* [complexity_ratio](../html/complexity_ratio-TransactionSet-method.html)
 * [co_occurrence_matrix](../html/co_occurrence_matrix-TransactionSet-method.html)
 
 Making charts about transactions:
@@ -76,7 +76,7 @@ Saving transactions:
 
 
 
-# About transaction analysis
+# About transaction analyzes
 
 The class: [TransactionAnalyzer](../html/TransactionAnalyzer-class.html)
 

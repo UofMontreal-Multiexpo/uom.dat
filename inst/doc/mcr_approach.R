@@ -3,9 +3,9 @@
 knitr::opts_chunk$set(fig.align = "center")
 
 ## ----message=FALSE------------------------------------------------------------
-# Loading the package
 library(uom.dat)
 
+## -----------------------------------------------------------------------------
 # Creation of specific transactions
 transactions <- make_OE_transactions(
   oedb_sample,
