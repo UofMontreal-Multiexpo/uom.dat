@@ -16,3 +16,7 @@ h1:not(.title) {
 #plan_announcement {
   margin-top: 1.5rem;
 }
+
+.border_none {
+  border: none;
+}

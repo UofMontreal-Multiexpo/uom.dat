@@ -54,15 +54,17 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * An organized list of the datasets, functions, classes and methods, in the file `list_of_help_pages.html`.
 
+* A description of the class `TransactionSet`, the dataset `TS_instance`, and what to do with transactions, in the file `transaction_sets.html`.
+
 * An example of transaction analysis, presented in the file `spectral_analysis_example.nb.html`.
 
 * A description of the Maximum Cumulative Ratio approach by providing an example of application, in the file `mcr_approach.html`. This one also presents the use of functions for classification data management.
 
 * Explanations with illustrated examples about the different types of itemsets, in the file `itemset_mining.html`.
 
-* The detail of the data structures used by the **TransactionAnalyzer** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
-
 * The detail of the data structures used by the **TransactionSet** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_TS.pdf`. 
+
+* The detail of the data structures used by the **TransactionAnalyzer** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
 
 These files can be accessed using `help(package = "uom.dat")` then clicking on "User guides, package vignettes and other documentation".
 

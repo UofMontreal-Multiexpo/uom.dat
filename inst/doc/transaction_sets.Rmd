@@ -1,0 +1,756 @@
+---
+title: "Transaction sets"
+author: "Gauthier Magnin"
+date: "Last update: `r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette: 
+    toc: true
+    toc_depth: 3
+    css: 
+     - !expr system.file("rmarkdown/templates/html_vignette/resources/vignette.css", package = "rmarkdown")
+     - styles.css
+    df_print: kable
+    fig_width: 7
+    fig_height: 4.5
+vignette: >
+  %\VignetteIndexEntry{Transaction sets}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align = "center",
+                      results = "hold")
+```
+
+
+
+Initially introduce in the field of data mining for market basket analysis, the notion of **transaction** correspond to a set of any elements, called **itemset**. In this historical example, the transactional dataset is the set of lists of purchase made in supermarkets in which the products are the items and any set of products is an itemset. The purpose was to find regularities in the shopping behavior of customers (or patterns) by finding the frequent itemsets to improve arrangement of products in shelves or in catalog, suggest other products, product bundling...
+
+Nevertheless, this data mining approach can be applied to many other domains, such as the one in which the example we will use falls: health. Occupational health and safety research institutes use databases of exposure to chemicals in workplaces for the purpose of prevention of occupational accidents and diseases.
+
+
+<p id="plan_announcement">This document presents basic processing of transactions (more complex analyzes of transactions are presented in the document [Transaction analyzes](./transaction_analyzes.html)). The first section describes the structure of an object of class `TransactionSet` and how to create such objects. The second one presents methods to search for data in the transactions and to search for specific transactions. The third section proposes computations on transactions and plots. Finally, the last one presents how to save transactions and coercion possibilities.</p>
+
+
+```{r message=FALSE}
+library(uom.dat)
+```
+
+
+
+# 1. Structure of a set of transactions
+
+## 1.1. Class TransactionSet
+
+### 1.1.1. TransactionSet example
+
+Let's begin by describing `TS_instance`, the example object of class `TransactionSet` accessible in the package.
+```{r}
+print(TS_instance)
+```
+
+This transaction set is composed of 14 transactions. These transactions are lists in which the itemsets are stored in the element list named `"CODE"` referred as the **item key** and temporal data are stored in the element list named `"YEAR"` referred as the **year key**. These temporal data indicate when the transaction were made. Further data are associated with a transaction, accessible by the names `JOB.TITLE`, `JOB.TASK` and `SAMPLE.ID`.
+
+Actually, these names will correspond to the dataset used and the data selected when calling the function in charge of the construction of the transaction set. To give some context, since the example data come from an occupational exposure database:
+
+* element named `"SAMPLE.ID"` refers to identifiers of atmospheric samples in specific workplaces;
+* elements named `"JOB.TITLE"` and `"JOB.TASK"` refers to the job title and task of the people working in these workplaces;
+* `"YEAR"` refers to the year in which the samples were made;
+* `"CODE"` refers to chemical substance identifiers actually observed in the workplaces.
+
+Here is what we can see by calling the function `View`.
+```{r eval=FALSE}
+View(TS_instance)
+```
+<center>
+![](./transaction_sets/view_TS_instance.png){class=border_none}
+</center>
+
+We can see the 14 transactions in the attribute `data`. The second one:
+
+* is identified by `2013-A-7`;
+* corresponds to an itemset composed of 2 items whose identifiers are `57` and `77`;
+* corresponds to samples made in `2013`;
+* has additional data referencing the job titled `44132024`, the task `A5310` and the atmospheric samples number `18`, `1` and `21`.
+
+
+### 1.1.2. Create TransactionSet objects
+
+There are three functions allowing to create objects of class `TransactionSet`.
+
+* `transaction.set`: the main constructor of the class.
+* `make_transactions`: for grouping data from a data frame.
+* `make_OE_transactions`: for grouping data from a data frame, in a specific way to the occupational exposure domain.
+
+Note that in any case, having temporal data is not required and the related attribute `year_key` can be set as `NA`.
+
+#### Function transaction.set
+
+The function `transaction.set` takes as argument values which will be directly assigned to the attributes of the object.
+```{r}
+# Creation of a list of transactions
+trx_list <- list(T1 = list(items = "A",
+                           date = 2018,
+                           labels = c("l1", "l2")),
+                 
+                 T2 = list(items = c("A", "B", "D"),
+                           date = 2018,
+                           labels = "l3"),
+                 
+                 T3 = list(items = c("B", "C", "D"),
+                           date = 2019,
+                           labels = c("l2", "l3")),
+                 
+                 T4 = list(items = c("A", "B", "C", "D"),
+                           date = 2020,
+                           labels = c("l1", "l2", "l3"))
+                 )
+
+# Creation of a TransactionSet object
+trx_object_1 <- transaction.set(trx_list,
+                                item_key = "items",
+                                year_key = "date")
+print(trx_object_1)
+```
+
+#### Function make_transactions
+
+The function `make_transactions` aggregates data from a data frame while keeping specific data.
+```{r}
+# Creation of a dataset for the example
+a_dataset <- data.frame(ID = c("T1", "T2", "T3", "T4", "T1", "T2",
+                               "T3", "T4", "T2", "T3", "T4", "T4"),
+                        items = c("A", "A", "B", "A", "A", "B",
+                                  "C", "B", "D", "D", "C", "D"),
+                        date = c(2018, 2018, 2019, 2020, 2018, 2018,
+                                 2019, 2020, 2018, 2019, 2020, 2020),
+                        labels = c("l1", "l3", "l2", "l1", "l2", "l3",
+                                   "l3", "l2", "l3", "l2", "l3", "l3"),
+                        some.more.data = c(5, 1, 3, 9, 8, 5, 3, 3, 3, 9, 4, 4))
+a_dataset
+```
+
+```{r}
+# Creation of a TransactionSet
+trx_object_2 <- make_transactions(a_dataset,
+                                  by = "ID",
+                                  additional = c("items", "date", "labels"),
+                                  unique_values = TRUE,
+                                  item_key = "items",
+                                  year_key = "date")
+print(trx_object_2)
+```
+
+```{r}
+# Print the second transaction to see what it looks like
+print(trx_object_2["data"][[2]])
+```
+
+Note that `factor`s are coerced to `character`s in order to reduce the memory space used by the resulting object. Since the data are divided into different lists, the "levels" attributes of the factor variables would be duplicated in each list.
+
+As for the arguments:
+
+* `data` is the dataset to work with;
+* `by` defines which variable of the data frame to use to aggregate the data;
+* `additional` defines which variables of the data frame are data to consider and aggregate;
+* `unique_values` defines if duplicate values in aggregations must be removed;
+* `item_key` and `year_key` define which variables correspond to items and to temporal data.
+
+#### Function make_OE_transactions
+
+The function `make_OE_transactions` consists of grouping data according to inspection and work situations. Work situations are defined by specific variables among the data. One situation can be any combination of these variables or can be described by one or several specific combinations of values from those.
+
+Let's define 3 specific work situations by combining the variables `JOB.TITLE` and `JOB.TASK`.
+```{r}
+ws_variables <- c("JOB.TITLE", "JOB.TASK")
+
+work_situations <- data.frame(WS.ID = c(1, 2, 2, 3, 3),
+                              JOB.TITLE = c(44121004, 44142001, 44132032, 44132019, 44132030),
+                              JOB.TASK = c("A5440", "A6410", "A5110", "A5260", "A5240"),
+                              stringsAsFactors = FALSE)
+work_situations
+```
+
+The first situation is defined by one combination of the two variables. The second one is defined by two combinations. That is to say, the two specific combinations correspond to the same work situation. The third one is defined the same way. For this fictitious example, the combinations have been arbitrarily defined in a more or less random way and are not necessarily interpretable.
+
+Note that the data frame must have one column named **WS.ID** to identify the different work situations described. Note also that the other columns must be named like the variables of the dataset used.
+
+Now let's define the data we want to have in our transactions and the key variables allowing access to inspection identifiers, substance identifiers and years of inspection.
+```{r}
+data_variables <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
+key_variables <- c("ID", "CODE", "YEAR")
+```
+
+There are 3 ways to group data with the function `make_OE_transactions`.
+
+* One transaction corresponds to the samples of one inspection in one of the work situations described previously (parameter `mode = 2`).
+* One transaction corresponds to the samples of one inspection for one any combination of values of the variables used to identify one work situation (parameter `mode = 3`).
+* One transaction can be either a set of samples of one inspection for one of the described work situations or for one any combination of values (parameter `mode = 1`).
+
+First case: one transaction per work situation described and per inspection. Samples (i.e. rows) matching no work situations are ignored.
+```{r}
+trx_object_3 <- make_OE_transactions(measures = oedb_sample,
+                                     keys = key_variables,
+                                     mode = 2,
+                                     work_situations = work_situations,
+                                     additional = data_variables)
+print(trx_object_3)
+```
+
+Second case: as many work situations as different `JOB.TITLE`-`JOB.TASK` pairs; one transaction per work situation found and per inspection.
+```{r}
+trx_object_4 <- make_OE_transactions(measures = oedb_sample,
+                                     keys = key_variables,
+                                     mode = 3,
+                                     variable_names = ws_variables,
+                                     additional = data_variables)
+print(trx_object_4)
+```
+
+Third case: one transaction per work situation (from those described or any other combinations of the variables `JOB.TITLE` and `JOB.TASK`) and per inspection. This is a combination of the two previous cases. It first searches for the working situations described, then for the remaining samples, searches for the possible combinations of the two defined variables.
+```{r}
+trx_object_5 <- make_OE_transactions(measures = oedb_sample,
+                                     keys = key_variables,
+                                     mode = 1,
+                                     work_situations = work_situations,
+                                     variable_names = ws_variables,
+                                     additional = data_variables)
+print(trx_object_5)
+```
+
+
+## 1.2. Manipulations of transactions
+
+### 1.2.1. Accessors
+
+The opertors `[` and `[<-` allow access to the attributes of an object of class `TransactionSet`.
+
+* Attributes can be accessed by character values.
+* Sub-elements of the attribute `data` can be accessed by character values as well.
+* Transactions (elements of the attribute `data`) can be accessed by numeric values.
+* Replacing the attribute `names` renames the elements contained in each transaction if the given value is the same length as this attribute.
+* Replacing the attribute `names` removes missing elements of the given value if it is smaller than this attribute.
+
+Here are some examples.
+```{r}
+# Access an attribute
+trx_object_3["item_key"]
+```
+
+```{r}
+# The original TransactionSet
+print(trx_object_3)
+
+# Remove elements of the transactions by naming those to keep
+trx_object_3["names"] <- c("CODE", "NAME")
+print(trx_object_3)
+```
+
+```{r}
+# Access the transactions 1 and 3
+trx_object_3[c(1,3)]
+```
+
+```{r}
+# Access a sub-element of each of the 3 transactions
+trx_object_3["CODE"]
+```
+
+### 1.2.2. Subsetting and reordering transactions
+
+The method `subset` allows to get a subset of a set of transactions using a numeric or logical vector of the transactions to keep.
+```{r}
+# The original TransactionSet
+cat("The original object of class TransactionSet:\n")
+print(trx_object_1)
+
+# Subset containing the transactions 1, 2 and 4 (using a numeric vector)
+trx_subset_1 <- subset(trx_object_1,
+                       c(1, 2, 4))
+cat("\nA subset:\n")
+print(trx_subset_1)
+
+# Subset containing the transactions 2 and 4 (using a logical vector)
+trx_subset_2 <- subset(trx_object_1,
+                       c(FALSE, TRUE, FALSE, TRUE))
+cat("\nAnother subset:\n")
+print(trx_subset_2)
+```
+
+The method `reorder` allows to get a copy of a set of transactions in another order.
+```{r}
+# Print the names identifying the transactions
+cat("Original transaction names:\n")
+print(names(trx_object_1["data"]))
+
+# Reorder the first three transactions
+reordered_trx_object <- reorder(trx_object_1,
+                                c(3, 1, 2, 4))
+
+# Print the names identifying the transactions of the TransactionSet copy
+cat("New transaction names after reordering:\n")
+print(names(reordered_trx_object["data"]))
+```
+
+
+
+# 2. Searches
+
+## 2.1 Search in transactions
+
+Four methods allow to extract data from an object of class `TransactionSet`.
+
+* `get_all_items` extracts the different items contained in the transactions.
+* `get_itemsets` extracts the itemsets corresponding to the transactions.
+* `get_items_from_info` searches for items associated with transactions whose data matches one or more sought values.
+* `get_info_from_items` searches for values of data from transactions that contain a set of sought items.
+
+Here are examples of the first two methods.
+```{r}
+cat("Items contained in the transactions of 'trx_object_1':\n")
+get_all_items(trx_object_1)
+```
+
+```{r}
+cat("List of the itemsets corresponding to the transactions of 'trx_object_1':\n")
+get_itemsets(trx_object_1)
+```
+
+The main purpose of the method `get_items_from_info` is to found items related to specific values of the other data. The argument `presence` allows to define if all the transactions to focus on must be associated with all the sought values or any of them. The argument `additional` allows to extract other variable values.
+```{r}
+# Items existing in the object TS_instance
+cat("Items from the TransactionSet 'TS_instance':\n")
+get_all_items(TS_instance)
+
+# Items associated with one specific value of another variable
+cat("\nItems from the transactions having the JOB.TITLE value '44132017':\n")
+get_items_from_info(TS_instance,
+                    info = list(JOB.TITLE = 44132017))
+
+# Items associated with one of the specific values of other variables
+cat("\nItems from the transactions having the JOB.TITLE value '44132017'",
+    "or '45113004' or having the JOB.TASK value 'A5310':\n")
+get_items_from_info(TS_instance,
+                    info = list(JOB.TITLE = c(44132017, 45113004),
+                                JOB.TASK = "A5310"),
+                    presence = "any")
+
+# Items and other data associated with one specific value of another variable
+cat("\nItems and values of SAMPLE.ID from the transactions associated with the",
+    "JOB.TITLE value '44132017':\n")
+get_items_from_info(TS_instance,
+                    info = list(JOB.TITLE = 44132017),
+                    additional = "SAMPLE.ID")
+```
+
+The method `get_info_from_items` is the opposite of the previous one: it finds data associated with specified items. The argument `presence` allows to specify if the transactions to focus on must contain all the sought items, any of them, or exactly the same itemset.
+```{r}
+# Data associated with one specific item
+cat("SAMPLE.ID values from the transactions having the item '3146':\n")
+get_info_from_items(TS_instance,
+                    items = 3146,
+                    info_names = "SAMPLE.ID")
+
+# Data associated with at least one of two specific items
+cat("\nJOB.TITLE and JOB.TASK values from the transactions having the item '19' or '25':\n")
+get_info_from_items(TS_instance,
+                    items = c(19, 25),
+                    info_names = c("JOB.TITLE", "JOB.TASK"),
+                    presence = "any")
+
+# Data associated with exactly two specific items
+cat("\nJOB.TITLE and JOB.TASK values from the transactions having exactly the itemset composed",
+    "of '19' and '25':\n")
+get_info_from_items(TS_instance,
+                    items = c(19, 25),
+                    info_names = c("JOB.TITLE", "JOB.TASK"),
+                    presence = "exact")
+```
+
+Obviously, if no transaction contains the sought items, no related data can be found. Hence the `NULL` results in the last example.
+
+
+## 2.2. Search for transactions
+
+In addition to the method `subset`, four methods allow to extract transactions from an object of class `TransactionSet`.
+
+* `get_trx_from_items` searches for transactions containing specific items.
+* `get_trx_from_info` searches for transactions whose data matches one or more sought values.
+* `get_complex_trx` extracts the transactions containing more than one item.
+* `get_simple_trx` extracts transactions containing exactly one item.
+
+### 2.2.1. Search by item or other data
+
+Like for the method `get_info_from_items`, the method `get_trx_from_items` has an argument `presence` allowing to specify if the transactions to extract must contain all the sought items, any of them, or exactly the same itemset.
+```{r}
+# Transactions containing at least two specific items
+trx_subset_4 <- get_trx_from_items(TS_instance,
+                                   items = c(25, 192),
+                                   presence = "all")
+cat("Transactions with itemsets composed at least of the items '25' and '192':\n")
+print(trx_subset_4)
+
+# Transactions containing at least one of two specific items
+trx_subset_5 <- get_trx_from_items(TS_instance,
+                                   items = c(25, 192),
+                                   presence = "any")
+cat("\nTransactions with itemsets composed at least of the item '25' or '192':\n")
+print(trx_subset_5)
+
+# Transactions corresponding exactly to a specific itemset
+trx_subset_6 <- get_trx_from_items(TS_instance,
+                                   items = c(25, 192),
+                                   presence = "exact")
+cat("\nTransactions with itemsets composed exactly of the items '25' and '192':\n")
+print(trx_subset_6)
+```
+
+As we can see with the last example, a `TransactionSet` can be composed of 0 transaction; the other attributes may still have interest.
+
+The method `get_trx_from_info` works like `get_items_from_info`: the argument `presence` allows to specify if the transactions to extract must be associated with all the sought values or any of them.
+```{r}
+# Transactions associated with one of the specific values of certain variables
+trx_subset_7 <- get_trx_from_info(TS_instance,
+                                  info = list(JOB.TITLE = 44132017,
+                                              JOB.TASK = "A5310"),
+                                  presence = "any")
+cat("Transactions containing the JOB.TITLE value '44132017' or the JOB.TASK value 'A5310':\n")
+print(trx_subset_7)
+
+# Items associated with all specified values of certain variables
+trx_subset_8 <- get_trx_from_info(TS_instance,
+                                  info = list(JOB.TITLE = 44132017,
+                                              JOB.TASK = "A5310"),
+                                  presence = "all")
+cat("\nTransactions containing both JOB.TITLE value '44132017' and JOB.TASK value 'A5310':\n")
+print(trx_subset_8)
+```
+
+### 2.2.2. Search by complexity
+
+The methods `get_complex_trx` and `get_simple_trx` are related to the itemset lengths. In other words, they are related to the number of items forming the transactions. Complex transactions are transactions having more than one item. Simple transactions are transactions having only one item.
+```{r}
+# Complex transactions
+trx_subset_9 <- get_complex_trx(TS_instance)
+cat("Transactions with itemsets larger than 1:\n")
+print(trx_subset_9)
+
+# Length of each extracted transaction
+cat("\nNumber of items of each transaction:\n")
+sapply(trx_subset_9["CODE"], length)
+```
+
+```{r}
+# Simple transactions
+trx_subset_10 <- get_simple_trx(TS_instance)
+cat("Transactions with itemsets of length 1:\n")
+print(trx_subset_10)
+
+# Length of each extracted transaction
+cat("\nNumber of items of each transaction:\n")
+sapply(trx_subset_10["CODE"], length)
+```
+
+
+
+# 3. Computations and plots
+
+## 3.1. Computations on transactions
+
+### 3.1.1. Complexity indicators
+
+Related to the notion of complex transactions, two indicators can be computed on each of the existing items.
+
+* A complexity index: the number of complex transactions containing the item.
+* A complexity ratio: the number of complex transactions containing the item relatively to the total number of transactions containing it.
+
+The two related methods `complexity_index` and `complexity_ratio` compute these indicators. The first argument refers to the `TransactionSet` object. The second one refers to the items for which to compute the indicators. If the latter is not given, the computations are made for all existing items.
+
+```{r}
+cat("Transaction itemsets of 'trx_object_1':\n")
+get_itemsets(trx_object_1)
+```
+
+```{r}
+cat("Complexity indexes of the item 'A', then of all items:\n")
+complexity_index(trx_object_1, "A")
+complexity_index(trx_object_1)
+```
+
+```{r}
+cat("Complexity ratios of the item 'A', then of all items:\n")
+complexity_ratio(trx_object_1, "A")
+complexity_ratio(trx_object_1)
+```
+
+In addition, a simple calculation can be done to know the proportion of transactions involving more than one item, as follows.
+```{r}
+cat("Proportion of complex transactions in 'TS_instance':",
+    length(get_complex_trx(TS_instance)) / length(TS_instance))
+```
+
+### 3.1.2. Occurrences and co-occurrences between items
+
+Co-occurrences between items in the transactions can be counted using the method `co_occurrence_matrix`. The resulting matrix contains the numbers of transactions containing each existing pair of items. The diagonal of the matrix is the number of transactions containing each single item.
+
+```{r}
+cat("Transaction itemsets of 'trx_object_1':\n")
+get_itemsets(trx_object_1)
+```
+
+```{r}
+# Compute co-occurrences for all items
+co_occurrence_matrix(trx_object_1)
+```
+
+An argument `items` also allows to specify which items to focus on to compute a smaller matrix.
+```{r}
+# Compute co-occurrences for specific items
+co_occurrence_matrix(trx_object_1, c("A", "C", "D"))
+```
+
+In addition, the number of occurrences of each item can be counted using the function `table_on_list`. Note that such values do not necessarily correspond to the number of transactions containing the items if transactions contain duplicated items.
+```{r}
+table_on_list(trx_object_1["items"])
+```
+
+
+## 3.2. Plots about transactions
+
+Two main kinds of charts can be plotted from a set of transaction.
+
+* Co-occurrence charts consist in plotting matrices of co-occurrences between items.
+* Itemset charts consist in plotting the transaction itemsets.
+
+### 3.2.1. Co-occurrence charts
+
+Co-occurrence charts are graphs in which vertices are items and edges are their co-occurrences in transactions (i.e. for each pair of items, the number of transactions containing it). The method to use to plot such graphs is `co_occurrence_chart`.
+
+Here are two examples.
+```{r}
+# Co-occurrence chart on the TransactionSet 'trx_object_1' and all existing items
+co_occurrence_chart(trx_object_1)
+```
+
+```{r}
+# Co-occurrence chart on the TransactionSet 'TS_instance' and all existing items
+co_occurrence_chart(TS_instance)
+```
+
+#### Items
+
+The argument `items` allows to refine the graph by specifying the items to consider.
+```{r}
+co_occurrence_chart(TS_instance,
+                    items = c(25, 27, 49, 87, 148, 192, 252, 328))
+```
+
+
+#### Co-occurrence range
+
+The arguments `min_occ` and `max_occ` allow to specify the range of co-occurrence values to consider.
+```{r}
+co_occurrence_chart(TS_instance,
+                    min_occ = 2,
+                    max_occ = 2)
+```
+
+#### Vertices
+
+Three arguments are related to the vertices. They correspond to their size, their transparency and the space between them and the incident edges: `vertex_size`, `vertex_alpha` and `vertex_margin`.
+```{r}
+co_occurrence_chart(TS_instance,
+                    vertex_size = 4,
+                    vertex_alpha = 0.4,
+                    vertex_margin = 0.15)
+```
+
+#### Labels
+
+Two arguments are related to the labels next to the vertices. They correspond to their size and the space between them and the related vertices: `label_size` and `label_margin`.
+```{r}
+co_occurrence_chart(TS_instance,
+                    label_size = 5,
+                    label_margin = 0.15)
+```
+
+#### ggplot2
+
+By the way, the chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed afterwards using the ggplot2 `last_plot` fuction or the returned object. We can for example change the plot limits to make truncated labels more visible.
+```{r warning=FALSE}
+# Loading the package
+library(ggplot2)
+
+# Make changes to the last plot
+last_plot() + expand_limits(x = c(-1.5, 1.5),
+                            y = c(-1.5, 1.5))
+```
+
+#### Edges
+
+Two arguments are related to the edges. They correspond to their looseness and their transparency: `edge_looseness` and `edge_alpha`. Looseness value close to $0$ implies straighter lines and value close to $1$ implies more curved lines.
+```{r}
+co_occurrence_chart(TS_instance,
+                    edge_looseness = 0,
+                    edge_alpha = 0.5)
+```
+
+Note that the RStudio graphics device may not be able to plot edges with transparency. In such a case, the edges will be actually displayed in the "Plot Zoom" window or while exporting the plot.
+
+#### Palette
+
+Two arguments are related to the palette used for coloring the edges. The first one allows to specify the sequential palette: `palette`. Here is the list of available palettes.
+```{r echo=FALSE, out.extra="class='border_none'"}
+old_par <- par(mar = c(0, 4.1, 0, 2.1))
+RColorBrewer::display.brewer.all(type = "seq")
+par(old_par)
+```
+
+The second palette argument allows to specify the direction: `palette_direction`. The direction can be $1$: from the lightest to the darkest; or $-1$: from the darkest to the lightest. It can be used whether to higlight higher values or lower values.
+```{r}
+co_occurrence_chart(TS_instance,
+                    palette = "OrRd",
+                    palette_direction = -1)
+```
+
+
+### 3.2.2. Package corrplot
+
+The package `corrplot` can be applied to co-occurrence matrices to plot extra charts using the parameter `is.corr = FALSE`. 
+```{r warning=FALSE, message=FALSE}
+# Loading the package
+library(corrplot)
+
+# Creating a matrix
+co_occ_matrix <- co_occurrence_matrix(TS_instance)
+```
+
+Here are two examples. See [the documentation of the package](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html) `corrplot` for more possibilities.
+```{r fig.width=5}
+corrplot(co_occ_matrix,
+         is.corr = FALSE)
+```
+
+```{r fig.width=5}
+corrplot.mixed(co_occ_matrix,
+               is.corr = FALSE,
+               upper = "color",
+               tl.col = "black",
+               order = "hclust")
+```
+
+
+### 3.2.3. Itemset charts
+
+Itemset charts are visualizations of itemsets composing transactions. The method to use is `itemset_chart`. Here are two examples.
+```{r}
+# Itemset chart on the TransactionSet 'trx_object_1'
+itemset_chart(trx_object_1,
+              title = "Itemsets from trx_object_1")
+```
+```{r}
+# Itemset chart on the TransactionSet 'TS_instance'
+itemset_chart(TS_instance,
+              title = "Itemsets from TS_instance")
+```
+
+Items are aligned on the left part of the plot; itemsets are grouped according to their lengths then to the original order of the transactions; and the identifiers of the transactions are displayed on one side of the related itemsets. The returned object is the set of transactions actually plotted, in the order they are plotted.
+
+#### Itemsets of length 1
+
+The argument `length_one` specifies whether to plot itemsets with only one item. The argument `jitter` specifies how to plot them.	
+
+* If `TRUE`, non-equivalent length-one itemsets that correspond to items side-by-side on the chart are spread over several vertical lines to avoid overplotting.
+* If `FALSE`, non-equivalent length-one itemsets are aligned vertically.
+* If `NA`, all length-one itemsets are plotted one after the other.
+
+The latter argument is useful when the displayed texts associated with such transactions overlap.
+
+```{r}
+itemset_chart(TS_instance,
+              jitter = NA)
+```
+
+```{r}
+itemset_chart(TS_instance,
+              length_one = FALSE)
+```
+
+As there are 10 transactions that contain more than one item, the returned `TransactionSet` object corresponds to these 10 transactions.
+
+#### Displayed text
+
+Two arguments allow to define what to display next to the itemsets: `under` and `over`. The values accepted by these arguments are `"ID"` to display the transaction identifiers, or one of the names associated with the transaction data.
+
+For the object `TS_instance`, possible values which are added to `"ID"` ar the following.
+```{r}
+TS_instance["names"]
+```
+
+```{r}
+# Plot the itemset chart of 'TS_instance' and display the identifiers and years
+# associated to the transactions
+itemset_chart(TS_instance,
+              under = "YEAR",
+              over = "ID",
+              jitter = NA)
+```
+
+#### Transaction identifiers
+
+The value `"new"` can be given to the argument `identifiers` to assign new identifiers to the transactions regarding the order in which they are plotted. These new identifiers are used on the chart and replace the original identifiers in the returned `TransactionSet` object.
+
+```{r}
+itemset_chart(TS_instance,
+              identifiers = "new",
+              under = "ID",
+              jitter = NA)
+```
+
+
+
+# 4. Save and coerce transactions
+
+## 4.1. Export transactions
+
+`TransactionSet` objects can be written in CSV format using the method `export`. Its arguments correspond to those of the function `write.csv2` from the package `utils`. For example:
+```{r}
+# Write in CSV the TransactionSet 'trx_object_1'
+export(trx_object_1)
+```
+
+```{r eval=FALSE}
+# Write in a CSV file the TransactionSet 'TS_instance'
+export(TS_instance,
+       file = "transactions.csv")
+```
+
+
+## 4.2. Coerce transactions
+
+The method `as` can be use to turn a `TransactionSet` object into a `data.frame` or an object of class `transactions` from the package `arules`.
+
+Here is how to use it.
+```{r}
+# Coerce a TransactionSet to a data.frame
+as(trx_object_1, "data.frame")
+```
+
+Note that, while coercing a `TransactionSet` to a `transactions` object, only itemsets are considered; other data are ignored.
+```{r}
+# Coerce a 'TransactionSet' object to a 'transactions' object
+arules_trx <- as(trx_object_1, "transactions")
+arules_trx
+```
+
+
+
+---
+
+
+```{r child="list_of_help_pages.inc.Rmd"}
+```
+
+
+---

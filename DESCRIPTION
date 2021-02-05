@@ -34,6 +34,7 @@ Suggests:
     corrplot,
     knitr,
     mathjaxr,
+    RColorBrewer,
     rmarkdown,
     tools
 RdMacros: mathjaxr
