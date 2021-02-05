@@ -43,6 +43,9 @@ The initialization of the patterns consists of the initialization of the attribu
 The initialization of the links between patterns consists of the initialization of the attributes
 \code{p_links} and \code{pattern_links}.
 }
+\note{
+These methods are not exported from the package.
+}
 \seealso{
 \code{\link{is_init}}, \code{\link{init}}.
 }

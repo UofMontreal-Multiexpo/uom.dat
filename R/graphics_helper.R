@@ -8,6 +8,8 @@ NULL
 #' The outline is created by first drawing the text with the second color serveral times
 #'  and with slight offsets.
 #' 
+#' @template function_not_exported
+#' 
 #' @param x,y Coordinates where the text \code{labels} should be written.
 #' @param labels Text to be written.
 #' @param col Text color.
@@ -39,6 +41,8 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' Check if a character value is a valid color representation.
 #' The three kinds of R color specifications are considered as valid representations (color name,
 #'  hexadecimal string and positive integer).
+#' 
+#' @template function_not_exported
 #' 
 #' @param x Character vector.
 #' @param int Logical indicating whether to consider integer values as valid representations.
@@ -80,6 +84,8 @@ is_color = function(x, int = TRUE) {
 #' 
 #' The results of the functions [`graphics::strwidth`] and [`graphics::strheight`] applied to the
 #'  character `"1"` and each different unit serve as reference values for conversions.
+#' 
+#' @template function_not_exported
 #' 
 #' @param measures Values to convert.
 #' @param from Graphical unit in which the measures are. One of `"user"`, `"inches"`, `"figure"`.
@@ -127,6 +133,8 @@ convert_gunits = function(measures, from, to = from, dim, rotation = FALSE) {
 #' Compute the coordinates of the figure region in user coordinate units.
 #' Only available after [`graphics::plot.new`] has been called.
 #' 
+#' @template function_not_exported
+#' 
 #' @param n Numbers of the values to compute between `1` and `4`.
 #'  The same numbering as for `par("fig")`, `par("plt")` and `par("usr")`: `x0`, `x1`, `y0`, `y1`.
 #' @return User coordinates of the figure region.
@@ -157,6 +165,8 @@ fig_in_usr_coords = function(n = 1:4) {
 #' If the value of the argument `edge_alpha` is not \eqn{1}, edges may not be displayed in
 #'  the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
 #'  clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+#' 
+#' @template function_not_exported
 #' 
 #' @param hierarchy A two-column data frame representing the hierarchical network structure. A tree-like
 #'  representation of the vertices with a root and any internal nodes (only leaves are plotted).
@@ -268,6 +278,8 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
 #' 
 #' Plot a chart of itemsets. A color scale can be associated to the items and additional data
 #'  can be plotted under and over each itemset.
+#' 
+#' @template function_not_exported
 #' 
 #' @param itemsets List of character vectors. Itemsets to plot.
 #' @param items Data frame associating each item of `itemsets` (column `"item"`) with a label

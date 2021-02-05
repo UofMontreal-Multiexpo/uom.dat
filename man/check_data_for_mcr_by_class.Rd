@@ -42,6 +42,9 @@ The criteria about naming and structure are the following:
 
 If \code{references = NULL}, check the \code{values} only.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link{mcr_summary_by_class}} \code{\link{mcr_chart_by_class}}, \code{\link{thq_pairs_by_class}},
 \code{\link{thq_by_group_by_class}}.

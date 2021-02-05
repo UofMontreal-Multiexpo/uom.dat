@@ -39,6 +39,9 @@ set of frequencies of the nodes containing the pattern \mjseqn{p} and:
  \item{}{where \mjseqn{F_p} is the frequency of the pattern \mjseqn{p}.}
 }
 }
+\note{
+This method is not exported from the package.
+}
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.

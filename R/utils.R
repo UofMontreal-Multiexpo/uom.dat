@@ -6,6 +6,8 @@
 #' Convert a period defined in seconds to a character string.
 #' Examples of the format of the returned string: 1d 02h 25m 47s; 01m 05s; 19s.
 #' 
+#' @template function_not_exported
+#' 
 #' @param t numeric. Time to convert, in seconds.
 #' @return Character string corresponding to the converted time.
 #' 
@@ -41,6 +43,8 @@ dhms = function(t){
 #' @details
 #' A call to the garbage collector is made beforme timing.
 #' 
+#' @template function_not_exported
+#' 
 #' @param expr Valid \code{R} expression to be timed.
 #' 
 #' @author Gauthier Magnin
@@ -55,6 +59,8 @@ display_time = function(expr) {
 #' Capitalize a character string
 #' 
 #' Change the first letter of a string to an uppercase.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x Character string to be capitalized.
 #' @return The character string corresponding to the argument `x`, starting with a capital letter.
@@ -72,6 +78,8 @@ cap = function(x) {
 #' Pluzalize a character string
 #' 
 #' Add an "s" at the end of the string if the given variable has a length greater than \eqn{1}.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x Character string to be pluralized.
 #' @param var Variable to consider whether to add an "s" to the string.
@@ -91,6 +99,8 @@ pluralize = function(x, var) {
 #' Find the first characters
 #' 
 #' Search for the first character of each word and concatenate them.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x Character string (one or more) from which the first characters are to be extracted.
 #' @param sep Character string each of which is a word separator.
@@ -114,6 +124,8 @@ first_characters = function(x, sep = " _-") {
 #' 
 #' Extract substrings in a character vector. Wrapper of the [`substr`] function allowing to use
 #'  `NULL` value.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x A character vector.
 #' @param start Indice of the first character to extract from each element of `x`.
@@ -142,6 +154,8 @@ substr2 = function(x, start = 1, stop = NULL) {
 #' @details
 #' If `x` is a vector, the output is a one-line data frame.
 #' Otherwise, the output has the same dimensions as `x`.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x Table, matrix or vector to turn into a data frame.
 #' @return Data frame corresponding to the input variable.
@@ -229,6 +243,8 @@ set_notation = function(sets, type = "character") {
 #' Check if a string can be used as a directory path.
 #' Add a \code{"/"} character if it cannot.
 #' 
+#' @template function_not_exported
+#' 
 #' @param path Character string to be used as a directory path.
 #' @return Character string \code{path}, ending with \code{"/"}.
 #' 
@@ -245,6 +261,8 @@ turn_into_path = function(path) {
 #' 
 #' Check if a filename has the desired extension.
 #' Add this extension if it has not.
+#' 
+#' @template function_not_exported
 #' 
 #' @param filename Character string to be considered as a filename.
 #' @param ext Desired extension.
@@ -267,6 +285,8 @@ check_extension = function(filename, ext) {
 #' 
 #' @details
 #' Use of the maximum compression level (9).
+#' 
+#' @template function_not_exported
 #' 
 #' @param paths A character vector of paths to found data and save files.
 #' 
@@ -320,6 +340,8 @@ resave_with_best_compression = function(paths){
 #' 
 #' Check if the elements of a data structure are named.
 #' 
+#' @template function_not_exported
+#' 
 #' @param x A vector, matrix, data frame or list.
 #' @return Logical value or logical vector of length 2.
 #' * If `x` is a vector: `TRUE` or `FALSE` if the vector is named or not.
@@ -352,6 +374,8 @@ is_named = function(x) {
 #' Related validation is ignored if `types`, `values` or `range` is `NULL`.
 #' 
 #' Parameter type is checked using the [`base::mode`] function.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x Parameter to validate.
 #' @param types Types among which `x` must be.
@@ -414,6 +438,8 @@ check_param = function(x, types = NULL, values = NULL, range = NULL,
 #' 
 #' Perform a comparison between two elements and return the resulting logical value or evaluate
 #'  an expression.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x First element to be compared.
 #' @param operator Relational operator to use to compare `x` and `y`.

@@ -1047,6 +1047,8 @@ function(object, identifiers = "original",
 #' 
 #' Prepare transactions, itemsets, items and text for itemset chart.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class `TransactionSet`.
 #' @param identifiers Which IDs to use to identify the transactions on the chart and in the
 #'  return object. One of `"original"`, `"new"`.
@@ -1191,6 +1193,8 @@ function(object, items = NULL, min_occ = 1, max_occ = Inf,
 #' 
 #' Equivalent to checking if the attribute `year_key` is not `NA`, but more explicit.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class `TransactionSet`.
 #' @return `TRUE` or `FALSE` whether `object` contains temporal data.
 #' 
@@ -1224,6 +1228,8 @@ function(object) {
 #' 
 #' If `items` is a character value equal to `"items"` or `"i"`, the vector of unique items contained
 #'  in `object` is returned.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class `TransactionSet`.
 #' @param items Vector of items or one of the following character value: `"items"`, `"i"`.

@@ -24,6 +24,9 @@ Items that match the search criteria.
 \description{
 Extract the items corresponding to a sought category value.
 }
+\note{
+This method is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

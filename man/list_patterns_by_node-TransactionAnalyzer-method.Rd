@@ -18,6 +18,9 @@ Invisible. Logical matrix in which rows correspond to nodes and columns correspo
 Associate each separate transaction (i.e. each node) with the patterns included in it.
 The resulting matrix is assigned to the attribute \code{nodes_patterns} of \code{object}.
 }
+\note{
+This method is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

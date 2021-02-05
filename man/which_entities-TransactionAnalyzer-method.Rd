@@ -34,6 +34,9 @@ column names \code{"node"}, \code{"pattern"} or \code{"antecedent"} for nodes, p
 
 The argument \code{entities} is only used to adapt a possible error message.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{get_tnp}}, \code{\link{which_associated_links}}, \code{\link{which_name}}.
 }

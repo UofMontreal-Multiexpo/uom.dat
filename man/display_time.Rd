@@ -17,6 +17,9 @@ Examples of the display format: [1d 02h 25m 47s]; [01m 05s]; [19s].
 \details{
 A call to the garbage collector is made beforme timing.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link{dhms}}, \code{\link{system.time}}.
 }

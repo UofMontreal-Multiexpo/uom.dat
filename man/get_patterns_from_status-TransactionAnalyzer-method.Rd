@@ -31,6 +31,9 @@ Subset of the data frame of patterns that match the search criteria.
 \description{
 Extract the patterns whose status match one or more sought values.
 }
+\note{
+This method is not exported from the package.
+}
 \examples{
 get_patterns_from_status(TA_instance, TA_instance["patterns"],
                          value = "Persistent",

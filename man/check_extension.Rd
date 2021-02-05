@@ -18,6 +18,9 @@ Character string \code{filename}, ending with the extension \code{ext}.
 Check if a filename has the desired extension.
 Add this extension if it has not.
 }
+\note{
+This function is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

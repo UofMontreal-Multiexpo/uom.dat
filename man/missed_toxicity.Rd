@@ -56,7 +56,7 @@ The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
 }
 \note{
-Due to the multiple possible usages, the argument \code{mcr} msut be explicitly named in the function call.
+Due to the multiple possible usages, the argument \code{mcr} must be explicitly named in the function call.
 }
 \examples{
 missed_toxicity(c(1,2,3,4,5), c(1,2,3,4,5))

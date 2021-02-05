@@ -23,6 +23,9 @@ the list are named.
 \description{
 Check if the elements of a data structure are named.
 }
+\note{
+This function is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

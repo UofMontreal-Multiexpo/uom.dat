@@ -22,6 +22,9 @@ Any subset of \code{object["patterns"]$pattern}.}
 \description{
 For each pattern, extract the frequencies and lengths of the nodes in which it is included.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{frequency_by_complexity}}.
 }

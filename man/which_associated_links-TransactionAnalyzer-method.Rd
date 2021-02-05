@@ -19,6 +19,9 @@ Character corresponding to \code{NODE_LINKS} or \code{PATTERN_LINKS}.
 \description{
 Give a type of links given a type of entities (nodes or patterns).
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{which_entities}}, \code{\link{which_name}}.
 }

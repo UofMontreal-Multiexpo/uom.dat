@@ -23,6 +23,9 @@ Identify the links according to items in common between nodes or patterns.
 The resulting data frame is assigned respectively to the attribute \code{node_links} or
  \code{pattern_links} of \code{object}.
 }
+\note{
+This method is not exported from the package.
+}
 \author{
 Delphine Bosson-Rieutort, Gauthier Magnin
 }

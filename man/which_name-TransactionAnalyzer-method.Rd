@@ -21,6 +21,9 @@ Vector of characters corresponding to \code{TRANSACTIONS}, \code{NODES}, \code{P
 \description{
 Give the type of entities or links given a name referring to it.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{which_entities}}, \code{\link{which_associated_links}}.
 }

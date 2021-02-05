@@ -41,6 +41,9 @@ Identify and display the names of the clusters of the graph provided, correspond
 The names of clusters confused because all of their links are mixed links, are not displayed.
 Texts are written on the active graphics device.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{spectrosome_chart}}, \code{\link[sna:gplot]{sna::gplot}}.
 }

@@ -23,6 +23,9 @@ corresponding to the first element of \code{indices} and whose values correspond
 \description{
 Turn two columns or two lines of a chararacter matrix into a named list.
 }
+\note{
+This function is not exported from the package.
+}
 \examples{
 m1 <- matrix(c("e1", "e1", "e1", "e2", "e3", "e3", "e4",
                "e4", "e4", "e4", "e5", "e5", "e5", "e5", "e5",

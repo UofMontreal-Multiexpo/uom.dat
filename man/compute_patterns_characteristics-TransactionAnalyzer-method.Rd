@@ -95,6 +95,9 @@ and \mjeqn{RI_{l,p}}{RI_lp} is lower than the related threshold are classified a
 thresholds are classified as "Latent".
 }
 }
+\note{
+This method is not exported from the package.
+}
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.

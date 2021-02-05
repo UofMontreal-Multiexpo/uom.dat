@@ -19,6 +19,9 @@ List whose values correspond to the values \code{TRUE} of each row or of each co
 \description{
 Turn a logical matrix into a named list using the names of the columns and rows of the matrix.
 }
+\note{
+This function is not exported from the package.
+}
 \examples{
 m <- matrix(c(FALSE, FALSE, FALSE, FALSE, TRUE,  TRUE,  FALSE, TRUE,
               FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE,

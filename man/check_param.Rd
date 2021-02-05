@@ -46,6 +46,9 @@ Related validation is ignored if \code{types}, \code{values} or \code{range} is 
 
 Parameter type is checked using the \code{\link[base:mode]{base::mode}} function.
 }
+\note{
+This function is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

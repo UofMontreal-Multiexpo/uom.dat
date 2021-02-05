@@ -29,6 +29,9 @@ Check the validity of the values of the parameters given for the computation of 
 Stop the execution and print an error message if they are not usable.
 Adapt their values if they match the special values (\code{NULL} and \code{Inf} respectively).
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}}.
 }

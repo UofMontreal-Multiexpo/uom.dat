@@ -59,6 +59,9 @@ a transaction.}
 Grouping samples in the form of transactions: make transactions from work situations.
 A transaction corresponds to a set of substances found in the same work situation.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link{make_OE_transactions}}, \code{\link{make_trx_from_unspecified_ws}}.
 }

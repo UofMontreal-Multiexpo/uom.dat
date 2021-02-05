@@ -21,6 +21,9 @@ A character vector of the same length as \code{x} containing the extracted parts
 Extract substrings in a character vector. Wrapper of the \code{\link{substr}} function allowing to use
 \code{NULL} value.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link{cap}}, \code{\link{pluralize}}, \code{\link{first_characters}}.
 }

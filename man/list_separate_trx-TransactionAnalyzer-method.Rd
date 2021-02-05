@@ -19,6 +19,9 @@ Identify the separate transactions (considering only their respective items) and
  of items and number of occurrences.
 The resulting data frame is assigned to the attribute \code{nodes} of \code{object}.
 }
+\note{
+This method is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

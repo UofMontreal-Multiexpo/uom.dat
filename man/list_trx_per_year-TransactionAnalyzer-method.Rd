@@ -19,6 +19,9 @@ Identify the separate transactions per year (considering only their respective i
  number of occurrences for each one.
 The resulting matrix is assigned to the attribute \code{nodes_per_year} of \code{object}.
 }
+\note{
+This method is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

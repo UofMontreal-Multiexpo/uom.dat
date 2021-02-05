@@ -35,6 +35,9 @@ If \code{tnp} is a character value equal to:
 
 The argument \code{entities} is only used to adapt a possible error message.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{get_tnp}}, \code{\link{which_entities}}, \code{\link[=get_items,TransactionAnalyzer-method]{get_items}}.
 }

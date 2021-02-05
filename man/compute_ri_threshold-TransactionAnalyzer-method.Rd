@@ -34,6 +34,9 @@ where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency 
  \mjseqn{p} in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and
  last years defining the period on which to compute the reporting index.
 }
+\note{
+This method is not exported from the package.
+}
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.

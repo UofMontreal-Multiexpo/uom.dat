@@ -28,6 +28,9 @@ named subset of \code{object["items"]} is returned.
 
 If \code{items} is a character value equal to \code{"items"} or \code{"i"}, \code{object["items"]} is returned.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{get_item_names}}, \code{\link{has_item_names}}, \code{\link{get_tnp}}, \code{\link{which_entities}}.
 

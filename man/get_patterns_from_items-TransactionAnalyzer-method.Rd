@@ -34,6 +34,9 @@ Subset of the data frame of patterns that match the search criteria.
 \description{
 Extract the patterns containing one or more sought items.
 }
+\note{
+This method is not exported from the package.
+}
 \examples{
 get_patterns_from_items(TA_instance, TA_instance["patterns"], items = 3146)
 get_patterns_from_items(TA_instance, TA_instance["patterns"],

@@ -51,6 +51,9 @@ Subset of the data frame of patterns that match the search criteria.
 \description{
 Extract the patterns satisfying a search criterion according to one characteristic.
 }
+\note{
+This method is not exported from the package.
+}
 \examples{
 get_patterns_from_characteristic(TA_instance, TA_instance["patterns"],
                                  characteristic = "frequency",

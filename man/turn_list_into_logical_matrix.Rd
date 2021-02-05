@@ -19,6 +19,9 @@ of the list or the names of these values (according to \code{by_name}).
 Turn a list into a logical matrix associating names of the list with its values or with the names of
 these values.
 }
+\note{
+This function is not exported from the package.
+}
 \examples{
 l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
           e2 = c(v1 = "I"),

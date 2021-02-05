@@ -87,6 +87,8 @@ afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the retu
 If the value of the argument \code{edge_alpha} is not \eqn{1}, edges may not be displayed in
 the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
 clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+
+This function is not exported from the package.
 }
 \author{
 Gauthier Magnin

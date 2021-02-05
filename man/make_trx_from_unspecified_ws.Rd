@@ -53,6 +53,9 @@ A transaction corresponds to a set of substances found in the same work situatio
 These situations are described by the possible combinations of values of the variables whose names
 are defined in arguments.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link{make_OE_transactions}}, \code{\link{make_trx_from_ws}}.
 }

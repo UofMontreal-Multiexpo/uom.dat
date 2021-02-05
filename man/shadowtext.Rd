@@ -33,6 +33,9 @@ Draw text with an outline on a plot.
 The outline is created by first drawing the text with the second color serveral times
  and with slight offsets.
 }
+\note{
+This function is not exported from the package.
+}
 \references{
 Greg Snow. Stack Overflow topic:
  \href{https://stackoverflow.com/questions/25631216/r-plots-is-there-any-way-to-draw-border-shadow-or-buffer-around-text-labels}{Any way to draw border, shadow or buffer around text labels}.

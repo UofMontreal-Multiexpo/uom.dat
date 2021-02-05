@@ -16,6 +16,9 @@ with this method.
 \details{
 Use of the maximum compression level (9).
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link[tools:checkRdaFiles]{tools::resaveRdaFiles}}, \code{\link[tools:checkRdaFiles]{tools::checkRdaFiles}}.
 }

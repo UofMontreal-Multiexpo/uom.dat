@@ -31,6 +31,9 @@ Logical value resulting of the comparison otherwise.
 Perform a comparison between two elements and return the resulting logical value or evaluate
 an expression.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link[base:expression]{base::expression}}, \code{\link[base:Control]{base::if}}.
 }

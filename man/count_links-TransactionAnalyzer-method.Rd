@@ -22,6 +22,9 @@ Count the number of items in common between each pair of nodes or patterns.
 The resulting matrix is assigned respectively to the attribute \code{n_links} or \code{p_links}
  of \code{object}.
 }
+\note{
+This method is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

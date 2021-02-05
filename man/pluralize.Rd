@@ -17,6 +17,9 @@ The character string corresponding to the argument \code{x}, ending with an "s" 
 \description{
 Add an "s" at the end of the string if the given variable has a length greater than \eqn{1}.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link{cap}}, \code{\link{first_characters}}, \code{\link{substr2}}.
 }

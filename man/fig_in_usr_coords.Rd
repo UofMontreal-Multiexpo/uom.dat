@@ -17,6 +17,9 @@ User coordinates of the figure region.
 Compute the coordinates of the figure region in user coordinate units.
 Only available after \code{\link[graphics:frame]{graphics::plot.new}} has been called.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link{convert_gunits}}.
 }

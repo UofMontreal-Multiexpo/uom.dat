@@ -20,6 +20,9 @@ of \code{indices} and whose values correspond to the column of \code{x} correspo
 \description{
 Turn two columns of a data frame into a list.
 }
+\note{
+This function is not exported from the package.
+}
 \examples{
 df1 <- data.frame(V1 = c("e1", "e1", "e1", "e2", "e3", "e3", "e4", "e4",
                          "e4", "e4", "e5", "e5", "e5", "e5", "e5"),

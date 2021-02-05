@@ -38,6 +38,9 @@ colonnes: item and label.}
 \description{
 Prepare transactions, itemsets, items and text for itemset chart.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link[=itemset_chart,TransactionSet-method]{itemset_chart,TransactionSet}}.
 }

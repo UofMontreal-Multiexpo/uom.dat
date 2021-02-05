@@ -19,6 +19,9 @@ Turn a table, a matrix or a vector into a data frame.
 If \code{x} is a vector, the output is a one-line data frame.
 Otherwise, the output has the same dimensions as \code{x}.
 }
+\note{
+This function is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

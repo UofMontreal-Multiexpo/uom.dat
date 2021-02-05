@@ -50,6 +50,9 @@ Subset of the data frame of nodes that match the search criteria.
 \description{
 Extract the nodes satisfying a search criterion according to one characteristic.
 }
+\note{
+This method is not exported from the package.
+}
 \examples{
 get_nodes_from_characteristic(TA_instance, TA_instance["nodes"],
                               characteristic = "frequency",

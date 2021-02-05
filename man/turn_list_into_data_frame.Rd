@@ -26,6 +26,9 @@ contains the related values or the names of these values (according to \code{by_
 Turn a list into a data frame associating names of the list with its values or with the names of
 these values.
 }
+\note{
+This function is not exported from the package.
+}
 \examples{
 l <- list(e1 = c(v1 = "E", v2 = "F", v3 = "I"),
           e2 = c(v1 = "I"),

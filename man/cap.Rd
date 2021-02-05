@@ -15,6 +15,9 @@ The character string corresponding to the argument \code{x}, starting with a cap
 \description{
 Change the first letter of a string to an uppercase.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link{pluralize}}, \code{\link{first_characters}}, \code{\link{substr2}}.
 }

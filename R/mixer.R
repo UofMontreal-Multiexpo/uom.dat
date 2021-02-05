@@ -301,7 +301,7 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
 #' @note
-#' Due to the multiple possible usages, the argument `mcr` msut be explicitly named in the function call.
+#' Due to the multiple possible usages, the argument `mcr` must be explicitly named in the function call.
 #' 
 #' @usage
 #' missed_toxicity(values, references)
@@ -781,6 +781,8 @@ mcr_summary = function(values, references) {
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
 #' 
+#' @template function_not_exported
+#' 
 #' @param values List of numeric named vectors. Values whose indicators of the MCR approach are to be
 #'  computed.
 #' @param references Numeric named vector or list of numeric vectors. Reference values associated with
@@ -1131,6 +1133,8 @@ mcr_chart = function(values = NULL, references = NULL,
 #' 
 #' Color specification can be done using the R predefined color names or hexadecimal values.
 #' 
+#' @template function_not_exported
+#' 
 #' @param chart `ggplot` object on which to add the log part.
 #' @param xlim Lower and uper limits of the abscissa of the graph.
 #' @param ylim Lower and uper limits of the ordinate of the graph.
@@ -1250,6 +1254,8 @@ plot_mcr_log_part = function(chart, xlim, ylim,
 #' 
 #' The grey area represents the region in which no point can be plotted because \eqn{MCR} cannot be lower
 #'  than 1.
+#' 
+#' @template function_not_exported
 #' 
 #' @param chart `ggplot` object on which to add the standard part.
 #' @param xlim Lower and uper limits of the abscissa of the graph.
@@ -1525,6 +1531,8 @@ thq_pairs = function(values = NULL, references = NULL,
 #' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
 #'  named in the function call.
 #' 
+#' @template function_not_exported
+#' 
 #' @usage
 #' thq_pairs_for_list(values, references,
 #'                    levels = NULL,
@@ -1672,6 +1680,8 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' @note
 #' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
 #'  named in the function call.
+#' 
+#' @template function_not_exported
 #' 
 #' @usage
 #' thq_pairs_for_matrix(values, references,
@@ -1975,6 +1985,8 @@ thq_by_group = function(values = NULL, references = NULL,
 #' * If `values` is a list and `references` is a vector, the values of the latter must be named.
 #' 
 #' If `references = NULL`, check the `values` only.
+#' 
+#' @template function_not_exported
 #' 
 #' @param values Numeric named vector or matrix, or list of numeric named vectors. Data structure
 #'  whose naming is to be checked.

@@ -39,6 +39,9 @@ Invisible. Object of class \code{itemsets} or data frame in which a line is an a
 Identify the patterns generated from the transactions.
 The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 }
+\note{
+This method is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

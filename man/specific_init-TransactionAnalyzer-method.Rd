@@ -64,6 +64,9 @@ The initialization of the links between patterns consists of the initialization 
 \item{Elaboration of links between patterns.}
 }
 }
+\note{
+These methods are not exported from the package.
+}
 \seealso{
 \code{\link{init}}, \code{\link{is_init}}.
 }

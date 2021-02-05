@@ -169,6 +169,8 @@ table_on_list = function(list, indices = seq_along(list), with_zero = FALSE) {
 #' 
 #' Each element of the list is turned into a character value so the list is turned into a character vector.
 #' 
+#' @template function_not_exported
+#' 
 #' @param x List to turn into a character vector.
 #' @return Character vector corresponding to the input list.
 #' 
@@ -284,6 +286,8 @@ coerce_list = function(x, to, by_name = FALSE,
 #' Turn a list into a logical matrix associating names of the list with its values or with the names of
 #'  these values.
 #' 
+#' @template function_not_exported
+#' 
 #' @param x List of vectors to turn into a logical matrix.
 #' @param by_name If `FALSE`, use the values of the list. If `TRUE`, use the names of these values.
 #' @return Logical matrix in which row names are the names of the list and column names are the values
@@ -326,6 +330,8 @@ turn_list_into_logical_matrix = function(x, by_name = FALSE) {
 #' Turn a list into a character matrix associating names of the list with its values or with the names of
 #'  these values.
 #' 
+#' @template function_not_exported
+#' 
 #' @param x List of vectors to turn into a matrix.
 #' @param by_name If `FALSE`, use the values of the list. If `TRUE`, use the names of these values.
 #' @param inline If `TRUE` associations are made in line: one association per line. If `FALSE`:
@@ -367,6 +373,8 @@ turn_list_into_char_matrix = function(x, by_name = FALSE, inline = TRUE) {
 #' 
 #' Turn a list into a data frame associating names of the list with its values or with the names of
 #'  these values.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x List of vectors to turn into a data frame.
 #' @param by_name If `FALSE`, use the values of the list. If `TRUE`, use the names of these values.
@@ -473,6 +481,8 @@ coerce_to_list = function(x, by_row = TRUE) {
 #' 
 #' Turn a logical matrix into a named list using the names of the columns and rows of the matrix.
 #' 
+#' @template function_not_exported
+#' 
 #' @param x Logical matrix to turn into a list.
 #' @param by_row If `TRUE`, use the names of the rows as names of the list. If `FALSE`, use the names of
 #'  the columns as names of the list.
@@ -510,6 +520,8 @@ turn_logical_matrix_into_list = function(x, by_row = TRUE) {
 #' Turn a char matrix into a list
 #' 
 #' Turn two columns or two lines of a chararacter matrix into a named list.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x Character matrix to turn into a list.
 #' @param indices Two-element vector indicating the names of the associated rows or columns (according
@@ -560,6 +572,8 @@ turn_char_matrix_into_list = function(x, indices = c(1, 2), inline = TRUE) {
 #' Turn a data frame into a list
 #' 
 #' Turn two columns of a data frame into a list.
+#' 
+#' @template function_not_exported
 #' 
 #' @param x Data frame to turn into a list.
 #' @param indices Two-element vector indicating the names of the associated columns to use to create

@@ -18,6 +18,9 @@ Names of the \code{items} in \code{object["items"]}.
 \description{
 Find the names associated with items given their identification codes.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link[=get_items,TransactionAnalyzer-method]{get_items}}, \code{\link{has_item_names}}.
 }

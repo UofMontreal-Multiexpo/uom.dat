@@ -18,6 +18,9 @@ of all words.
 \description{
 Search for the first character of each word and concatenate them.
 }
+\note{
+This function is not exported from the package.
+}
 \seealso{
 \code{\link{cap}}, \code{\link{pluralize}}, \code{\link{substr2}}.
 }

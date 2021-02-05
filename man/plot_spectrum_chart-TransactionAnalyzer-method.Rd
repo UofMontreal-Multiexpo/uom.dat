@@ -21,6 +21,9 @@ nodes and its frequency related to simple nodes.}
 \description{
 Plot a spectrum chart.
 }
+\note{
+This method is not exported from the package.
+}
 \references{
 Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
             The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196.

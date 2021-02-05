@@ -52,6 +52,9 @@ The chart being plotted with the \code{ggplot2} package, it can be modified or c
 
 Color specification can be done using the R predefined color names or hexadecimal values.
 }
+\note{
+This function is not exported from the package.
+}
 \references{
 Reyes JM, Price PS (2018).
 An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.

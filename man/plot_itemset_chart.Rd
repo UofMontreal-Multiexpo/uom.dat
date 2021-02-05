@@ -44,6 +44,9 @@ values are the colored used and names are associated labels to plot a specific l
 Plot a chart of itemsets. A color scale can be associated to the items and additional data
 can be plotted under and over each itemset.
 }
+\note{
+This function is not exported from the package.
+}
 \references{
 Bosson-Rieutort D, Sarazin P, Bicout DJ, Ho V, Lavoué J (2020).
 Occupational Co-exposures to Multiple Chemical Agents from Workplace Measurements by the US Occupational Safety and Health Administration.

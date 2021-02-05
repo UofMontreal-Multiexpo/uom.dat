@@ -247,6 +247,8 @@ make_OE_transactions = function(measures, keys, mode,
 #' Grouping samples in the form of transactions: make transactions from work situations.
 #' A transaction corresponds to a set of substances found in the same work situation.
 #' 
+#' @template function_not_exported
+#' 
 #' @inheritParams make_OE_transactions
 #' @param measures Set of sampling measures. Data frame that must contain at least two variables for:
 #'  * A code identifying the substance being sampled.
@@ -346,6 +348,8 @@ make_trx_from_ws = function(measures, keys, work_situations,
 #' A transaction corresponds to a set of substances found in the same work situation.
 #' These situations are described by the possible combinations of values of the variables whose names
 #'  are defined in arguments.
+#' 
+#' @template function_not_exported
 #' 
 #' @inheritParams make_trx_from_ws
 #' @param variable_names Names of variables to be taken into account to consider a work situation,

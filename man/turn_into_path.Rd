@@ -16,6 +16,9 @@ Character string \code{path}, ending with \code{"/"}.
 Check if a string can be used as a directory path.
 Add a \code{"/"} character if it cannot.
 }
+\note{
+This function is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

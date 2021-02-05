@@ -35,6 +35,9 @@ Subset of the data frame of patterns that match the search criteria.
 \description{
 Extract the patterns corresponding to a sought category value.
 }
+\note{
+This method is not exported from the package.
+}
 \examples{
 get_patterns_from_category(TA_instance, TA_instance["patterns"],
                            category = "family", value = "Chrome",

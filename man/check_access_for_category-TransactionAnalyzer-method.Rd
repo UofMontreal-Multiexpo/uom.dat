@@ -31,6 +31,9 @@ If \code{value} is \code{NA}, it is not checked; only the parameter \code{catego
 
 If \code{category} is \code{NA}, only existence of any category is checked.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{get_patterns}}, \code{\link{get_nodes}}.
          \code{\link{get_patterns_from_category}}, \code{\link{get_nodes_from_category}}.

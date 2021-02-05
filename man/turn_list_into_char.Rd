@@ -15,6 +15,9 @@ Character vector corresponding to the input list.
 \description{
 Each element of the list is turned into a character value so the list is turned into a character vector.
 }
+\note{
+This function is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

@@ -54,6 +54,9 @@ Color specification can be done using the R predefined color names or hexadecima
 The grey area represents the region in which no point can be plotted because \eqn{MCR} cannot be lower
 than 1.
 }
+\note{
+This function is not exported from the package.
+}
 \references{
 De Brouwere K, et al. (2014).
 Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.

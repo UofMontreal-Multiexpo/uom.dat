@@ -32,6 +32,9 @@ Subset of the data frame of nodes that match the search criteria.
 \description{
 Extract the nodes containing one or more sought items.
 }
+\note{
+This method is not exported from the package.
+}
 \examples{
 get_nodes_from_items(TA_instance, TA_instance["nodes"], items = 3146)
 get_nodes_from_items(TA_instance, TA_instance["nodes"],

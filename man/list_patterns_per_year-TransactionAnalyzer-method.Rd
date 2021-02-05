@@ -18,6 +18,9 @@ Invisible. Matrix of the number of occurrences of each pattern in the transactio
 Count the number of occurrences of each pattern per year.
 The resulting matrix is assigned to the attribute \code{patterns_per_year} of \code{object}.
 }
+\note{
+This method is not exported from the package.
+}
 \author{
 Gauthier Magnin
 }

@@ -974,6 +974,8 @@ function(object, part = NULL, verbose = TRUE) {
 #' @inherit init,TransactionAnalyzer-method description
 #' @inherit init,TransactionAnalyzer-method details
 #' 
+#' @template methods_not_exported
+#' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param verbose Logical value indicating whether to report progress.
 #' @return Invisible. Object of class [`itemsets`][arules::itemsets-class] (from the package `arules`)
@@ -1194,6 +1196,8 @@ function(object, part = NULL) {
 #' @inherit is_init,TransactionAnalyzer-method description
 #' @inherit is_init,TransactionAnalyzer-method details
 #' 
+#' @template methods_not_exported
+#' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @return `TRUE` if the related attributes are initialized. `FALSE` otherwise.
 #' 
@@ -1255,6 +1259,8 @@ function(object) {
 #' Stop the execution and print an error message if not.
 #' 
 #' @inherit is_init,TransactionAnalyzer-method details
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param part `NULL` or character value corresponding to the part of the attributes to test.
@@ -1340,6 +1346,8 @@ function(object, part = NULL, stop = TRUE, prefix = "", suffix = "") {
 #'  number of occurrences for each one.
 #' The resulting matrix is assigned to the attribute \code{nodes_per_year} of \code{object}.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @return Invisible. Matrix of the number of occurrences of each separate transaction, per year.
 #'  The rows correspond to the transactions. The columns correspond to the years.
@@ -1390,6 +1398,8 @@ function(object) {
 #' Identify the separate transactions (considering only their respective items) and compute their number
 #'  of items and number of occurrences.
 #' The resulting data frame is assigned to the attribute \code{nodes} of \code{object}.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @return Invisible. Data frame of the separate transactions and their characteristics (length and
@@ -1444,6 +1454,8 @@ function(object) {
 #' The resulting matrix is assigned respectively to the attribute \code{n_links} or \code{p_links}
 #'  of \code{object}.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param entities Type of entities for which to count links (nodes or patterns).
 #'  \code{NODES} or \code{PATTERNS}.
@@ -1490,6 +1502,8 @@ function(object, entities) {
 #' Identify the links according to items in common between nodes or patterns.
 #' The resulting data frame is assigned respectively to the attribute \code{node_links} or
 #'  \code{pattern_links} of \code{object}.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param entities Type of entities for which to elaborate links (nodes or patterns).
@@ -1603,6 +1617,8 @@ function(object, entities) {
 #' Identify the patterns generated from the transactions.
 #' The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param target Type of patterns to enumerate. One of \code{"frequent itemsets"},
 #'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
@@ -1664,6 +1680,8 @@ function(object, target, count = 1, min_length = 1, max_length = Inf, arules = F
 #' Associate each separate transaction (i.e. each node) with the patterns included in it.
 #' The resulting matrix is assigned to the attribute \code{nodes_patterns} of \code{object}.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @return Invisible. Logical matrix in which rows correspond to nodes and columns correspond to
 #'  patterns. A value of \code{TRUE} means the pattern is included in the node.
@@ -1704,6 +1722,8 @@ function(object) {
 #' 
 #' Count the number of occurrences of each pattern per year.
 #' The resulting matrix is assigned to the attribute \code{patterns_per_year} of \code{object}.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @return Invisible. Matrix of the number of occurrences of each pattern in the transactions, per year.
@@ -1768,6 +1788,8 @@ function(object) {
 #' @details ## Dynamic status
 #' @template dynamic_status_classification
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @return Invisible. Data frame in which each row is an association between a pattern and its
 #'  characteristics.
@@ -1820,6 +1842,8 @@ function(object) {
 #' 
 #' \loadmathjax
 #' @template specificity_computation
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param patterns Patterns whose specificity is to be computed.
@@ -1879,6 +1903,8 @@ function(object, patterns, frequencies, weights) {
 #' Stop the execution and print an error message if they are not usable.
 #' Adapt their values if they match the special values (\code{NULL} and \code{Inf} respectively).
 #' 
+#' @template method_not_exported
+#' 
 #' @inheritParams compute_reporting_indexes,TransactionAnalyzer-method
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @return List containing the final values of \code{t} and \code{period}.
@@ -1927,6 +1953,8 @@ function(object, t, period) {
 #' where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency of the pattern
 #'  \mjseqn{p} in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first
 #'  and last years defining the period on which to compute the reporting index.
+#' 
+#' @template method_not_exported
 #'  
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param patterns Patterns whose reporting indexes are to be computed.
@@ -1991,6 +2019,8 @@ function(object, patterns, t = NULL, period = Inf) {
 #'  \mjseqn{p} in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and
 #'  last years defining the period on which to compute the reporting index.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param patterns Patterns whose limits are to be computed.
 #' @param t Year of the end of the period, i.e. the date on which to characterize the pattern.
@@ -2044,6 +2074,8 @@ function(object, patterns, t = NULL, period = Inf, short_limit = object["status_
 #'  \mjseqn{p} in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and
 #'  last years defining the period on which to compute the reporting index.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
 #' @return Computed threshold.
@@ -2072,6 +2104,8 @@ function(object, reporting_indexes) {
 #'  the threshold \mjseqn{\xi}.
 #'  
 #' @inherit compute_xi_threshold,TransactionAnalyzer-method details
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param reporting_indexes Reporting indexes associated with the patterns.
@@ -2291,6 +2325,8 @@ function(object, pc, identifiers = "original", sort = TRUE,
 #' 
 #' Plot a spectrum chart.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Patterns whose spectrum
 #'  is to be plotted. Any subset of \code{object["patterns"]}.
@@ -2434,6 +2470,8 @@ function(object, pc, frequencies, title = "Spectrum of patterns") {
 #' Pattern node characteristics
 #' 
 #' For each pattern, extract the frequencies and lengths of the nodes in which it is included.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param patterns Patterns whose characteristics of the nodes that contain them are to be found.
@@ -3147,6 +3185,8 @@ function(object, nopc, identifiers = "original",
 #'  patterns sharing one item.
 #' The names of clusters confused because all of their links are mixed links, are not displayed.
 #' Texts are written on the active graphics device.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param graph Graph generated by the function \code{\link[sna:gplot]{gplot}} from the package
@@ -4470,6 +4510,8 @@ function(object, nc, element, value, condition = "default") {
 #' 
 #' Extract the nodes containing one or more sought items.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param nc Data frame of **n**odes and their **c**haracteristics. Any subset of `object["nodes"]`.
 #' 
@@ -4523,6 +4565,8 @@ function(object, nc, items, condition = "all") {
 #' Search for nodes by characteristic
 #' 
 #' Extract the nodes satisfying a search criterion according to one characteristic.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
@@ -4598,6 +4642,8 @@ function(object, nc, characteristic, value, condition = "EQ") {
 #' Search for nodes by category
 #' 
 #' Extract the nodes corresponding to a sought category value.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param nc Data frame of \strong{n}odes and their \strong{c}haracteristics. Any subset of
@@ -4800,6 +4846,8 @@ function(object, pc, element, value, condition = "default") {
 #' 
 #' Extract the patterns containing one or more sought items.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.
@@ -4855,6 +4903,8 @@ function(object, pc, items, condition = "all") {
 #' Search for patterns by characteristic
 #' 
 #' Extract the patterns satisfying a search criterion according to one characteristic.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
@@ -4932,6 +4982,8 @@ function(object, pc, characteristic, value, condition = "EQ") {
 #' 
 #' Extract the patterns whose status match one or more sought values.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
 #'  \code{object["patterns"]}.
@@ -4985,6 +5037,8 @@ function(object, pc, value, condition = "EQ") {
 #' Search for patterns by category
 #' 
 #' Extract the patterns corresponding to a sought category value.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param pc Data frame of \strong{p}atterns and their \strong{c}haracteristics. Any subset of
@@ -5401,6 +5455,8 @@ function(object, itemsets, as_character = FALSE, unique = TRUE) {
 #' 
 #' If \code{category} is \code{NA}, only existence of any category is checked.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param category Name or number of the category to access (numbering according to the order of the
 #'  columns of \code{object["items_categories"]}).
@@ -5451,6 +5507,8 @@ function(object, category, value, stop = TRUE) {
 #' Check if the `TransactionAnalyzer` has item names, i.e. if the current names associated with the items
 #'  are different from their identification codes.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @return `TRUE` if at least one of the names of `object["items"]` is different from the related item.
 #'  `FALSE` if all names of `object["items"]` are equal to the values of `object["items"]`.
@@ -5472,6 +5530,8 @@ function(object) {
 #' Get item names
 #' 
 #' Find the names associated with items given their identification codes.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param items Vector of items: unnamed subset of `object["items"]`.
@@ -5503,6 +5563,8 @@ function(object, items) {
 #'  named subset of `object["items"]` is returned.
 #' 
 #' If `items` is a character value equal to `"items"` or `"i"`, `object["items"]` is returned.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param items Vector of items or one of the following character value: `"items"`, `"i"`.
@@ -5539,6 +5601,8 @@ function(object, items) {
 #' Search for items by category
 #' 
 #' Extract the items corresponding to a sought category value.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param category Name or number of the category on which to search (numbering according to the order
@@ -5581,6 +5645,8 @@ function(object, category, value, force_character = FALSE) {
 #'  * `"patterns"` or `"p"`: `object["patterns"]` is returned.
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param tnp Object of class `TransactionSet` (**t**) or data frame of **n**odes or **p**atterns and
@@ -5641,6 +5707,8 @@ function(object, tnp, entities = NODES_OR_PATTERNS) {
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param tnp List of **t**ransaction, **n**ode or **p**attern itemsets (or of any itemsets) or one of
 #'  the following character values: `"transactions"`, `"t"`, `"nodes"`, `"n"`, `"patterns"`, `"p"`.
@@ -5698,6 +5766,8 @@ function(object, tnp, entities = NODES_OR_PATTERNS) {
 #'  column names `"node"`, `"pattern"` or `"antecedent"` for nodes, patterns or rules, respectively.
 #' 
 #' The argument `entities` is only used to adapt a possible error message.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param tnpr Object of class `TransactionSet` (**t**) or data frame of **n**odes, **p**atterns or
@@ -5764,6 +5834,8 @@ function(object, tnpr, entities = NODES_OR_PATTERNS) {
 #' 
 #' Give a type of links given a type of entities (nodes or patterns).
 #' 
+#' @template method_not_exported
+#' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param entities Type of entities for which to give the type of links.
 #'  Character corresponding to `NODES`, `PATTERNS` or their simplifications (see [`first_characters`]).
@@ -5790,6 +5862,8 @@ function(object, entities) {
 #' Type of entities or links corresponding to a name
 #' 
 #' Give the type of entities or links given a name referring to it.
+#' 
+#' @template method_not_exported
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param name Type of entities or links.

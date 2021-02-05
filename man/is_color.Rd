@@ -19,6 +19,9 @@ Check if a character value is a valid color representation.
 The three kinds of R color specifications are considered as valid representations (color name,
 hexadecimal string and positive integer).
 }
+\note{
+This function is not exported from the package.
+}
 \references{
 Josh O'Brien. Stack Overflow topic:
 \href{https://stackoverflow.com/questions/13289009/check-if-character-string-is-a-valid-color-representation}{Check if character string is a valid color representation}.

@@ -27,6 +27,9 @@ it is returned.
 If \code{items} is a character value equal to \code{"items"} or \code{"i"}, the vector of unique items contained
 in \code{object} is returned.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 Method for signature \code{TransactionAnalyzer}:
 \code{\link[=get_items,TransactionAnalyzer-method]{get_items,TransactionAnalyzer}}.

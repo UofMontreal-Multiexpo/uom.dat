@@ -18,6 +18,9 @@
 Check if the \code{TransactionAnalyzer} has item names, i.e. if the current names associated with the items
 are different from their identification codes.
 }
+\note{
+This method is not exported from the package.
+}
 \seealso{
 \code{\link{get_item_names}}, \code{\link[=get_items,TransactionAnalyzer-method]{get_items}}.
 }

@@ -66,6 +66,8 @@ where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{reference
 \note{
 Due to the multiple possible usages, all arguments except \code{values} and \code{references} must be explicitly
 named in the function call.
+
+This function is not exported from the package.
 }
 \references{
 Reyes JM, Price PS (2018).

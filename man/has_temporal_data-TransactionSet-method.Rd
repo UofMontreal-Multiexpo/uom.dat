@@ -16,6 +16,9 @@
 \description{
 Equivalent to checking if the attribute \code{year_key} is not \code{NA}, but more explicit.
 }
+\note{
+This method is not exported from the package.
+}
 \examples{
 has_temporal_data(TS_instance)
 
