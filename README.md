@@ -27,7 +27,7 @@ A personal access token provides access to the GitHub API. To have one if you do
 * Click on button "Generate token".
 * Copy the given token.
 
-Then you must run the following instruction using your token as the `auth_token` argument:
+Then you must run the following instruction using your token as the `auth_token` argument.
 ```r
 devtools::install_github("UofMontreal-Multiexpo/uom.dat",
                          auth_token = "my_personal_access_token")
@@ -36,16 +36,29 @@ devtools::install_github("UofMontreal-Multiexpo/uom.dat",
 ### B. Getting all files then installing
 
 1. Clone the repository or download a ZIP copy.
-2. In the RStudio IDE, open the project file `uom.dat.Rproj`.
-3. Install the required packages by running:
+2. Install the required packages by running:
    ```r
    install.packages(c("arules", "ggplot2", "ggraph", "ggsci", "graphics",
                       "grDevices", "igraph", "mathjaxr", "methods", "network",
                       "sna", "stats", "utils"))
    ```
-4. In the "Build" menu, click on the "Install and Restart" menu item.
 
-You can now close the project **uom.dat** and work on your own one using our package.
+If using the RStudio IDE:
+
+3. Open the project file `uom.dat.Rproj`.
+4. In the "Build" menu, click on the "Install and Restart" menu item.
+5. You can close the project **uom.dat** and work on your own one.
+
+If not using the RStudio IDE:
+
+3. Run the following instruction using the path to the package directory.
+   ```r
+   devtools::build("path_to_package", binary = TRUE)
+   ```
+4. Run the following instruction using the path to the file created by the previous instruction.
+   ```r
+   install.packages("path_to_zip_file", type = "binary", repos = NULL)
+   ```
 
 
 ## Documentation
@@ -64,7 +77,7 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * The detail of the data structures used by the `TransactionSet` class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_TS.pdf`. 
 
-* The detail of the data structures used by the `TransactionAnalyzer` class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
+* The detail of the data structures used by the `TransactionAnalyzer` class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_TA.pdf`.
 
 These files can be accessed using `help(package = "uom.dat")` then clicking on "User guides, package vignettes and other documentation".
 
