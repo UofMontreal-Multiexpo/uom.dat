@@ -74,9 +74,9 @@ Items are ordered according to the order they are given. If one of the special v
 they are ordered alphanumerically.
 }
 \note{
-If the value of the argument \code{edge_alpha} is not \eqn{1}, edges may not be displayed in
-the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
-clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+If using the RStudio IDE and the value of the argument \code{edge_alpha} is not \eqn{1}, edges may not
+be displayed in the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom"
+window; while exporting the plot; or using another graphics device.
 }
 \examples{
 co_occurrence_chart(TS_instance)

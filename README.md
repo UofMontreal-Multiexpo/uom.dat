@@ -36,7 +36,7 @@ devtools::install_github("UofMontreal-Multiexpo/uom.dat",
 ### B. Getting all files then installing
 
 1. Clone the repository or download a ZIP copy.
-2. In RStudio, open the project file `uom.dat.Rproj`.
+2. In the RStudio IDE, open the project file `uom.dat.Rproj`.
 3. Install the required packages by running:
    ```r
    install.packages(c("arules", "ggplot2", "ggraph", "ggsci", "graphics",
@@ -60,11 +60,11 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * A description of the Maximum Cumulative Ratio approach by providing an example of application, in the file `mcr_approach.html`. This one also presents the use of functions for classification data management.
 
-* Explanations with illustrated examples about the different types of itemsets, in the file `itemset_mining.html`.
+* Explanations with illustrated examples about different types of itemsets, in the file `itemset_mining.html`.
 
-* The detail of the data structures used by the **TransactionSet** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_TS.pdf`. 
+* The detail of the data structures used by the `TransactionSet` class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_TS.pdf`. 
 
-* The detail of the data structures used by the **TransactionAnalyzer** class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
+* The detail of the data structures used by the `TransactionAnalyzer` class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_SA.pdf`.
 
 These files can be accessed using `help(package = "uom.dat")` then clicking on "User guides, package vignettes and other documentation".
 
@@ -78,7 +78,7 @@ These files can be accessed using `help(package = "uom.dat")` then clicking on "
 
 ## Collaboration
 
-* [INRS](http://en.inrs.fr/): The French National Research and Safety Institute for the Prevention of Occupational Accidents and Diseases (French: *Institut National de Recherche et de Sécurité, INRS*).
+* [INRS](http://en.inrs.fr/): The French National Research and Safety Institute for the Prevention of Occupational Accidents and Diseases (French: *Institut National de Recherche et de Sécurité pour la prévention des accidents du travail et des maladies professionnelles, INRS*).
 
 
 ---

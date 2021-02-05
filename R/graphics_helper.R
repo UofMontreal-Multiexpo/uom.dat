@@ -162,9 +162,9 @@ fig_in_usr_coords = function(n = 1:4) {
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
 #' @note
-#' If the value of the argument `edge_alpha` is not \eqn{1}, edges may not be displayed in
-#'  the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
-#'  clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+#' If using the RStudio IDE and the value of the argument `edge_alpha` is not \eqn{1}, edges may not
+#'  be displayed in the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom"
+#'  window; while exporting the plot; or using another graphics device.
 #' 
 #' @template function_not_exported
 #' 

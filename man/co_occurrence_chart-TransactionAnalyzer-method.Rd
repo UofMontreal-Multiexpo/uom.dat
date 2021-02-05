@@ -101,9 +101,9 @@ See attribute \code{categories_colors} of the \code{TransactionAnalyzer} object 
 category values.
 }
 \note{
-If the value of the argument \code{edge_alpha} is not \eqn{1}, edges may not be displayed in
-the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
-clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+If using the RStudio IDE and the value of the argument \code{edge_alpha} is not \eqn{1}, edges may not
+be displayed in the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom"
+window; while exporting the plot; or using another graphics device.
 }
 \examples{
 co_occurrence_chart(TA_instance, category = "family")

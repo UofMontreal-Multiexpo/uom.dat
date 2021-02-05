@@ -3685,9 +3685,9 @@ function(object, category = NULL, items = object["items"],
 #' @template default_category_values_colors
 #' 
 #' @note
-#' If the value of the argument `edge_alpha` is not \eqn{1}, edges may not be displayed in
-#'  the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
-#'  clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot.
+#' If using the RStudio IDE and the value of the argument `edge_alpha` is not \eqn{1}, edges may not
+#'  be displayed in the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom"
+#'  window; while exporting the plot; or using another graphics device.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
@@ -3993,10 +3993,10 @@ function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...) {
 #' @template default_category_values_colors
 #' 
 #' @note
-#' If the argument `display` refers to the characteristic confidence, edges may not be displayed in
-#'  the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom" window (by
-#'  clicking on the "Zoom" button in the "Plots" pane) or while exporting the plot. Moreover, such
-#'  plotting may take a while.
+#' If using the RStudio IDE and the argument `display` refers to the characteristic confidence,
+#'  edges may not be displayed in the RStudio "Plots" pane. However, they will be actually displayed
+#'  in the "Plot Zoom" window; while exporting the plot; or using another graphics device.
+#' Moreover, such plotting may take a while.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param rules Data frame of association rules to plot (given by the [`extract_rules`] function).
