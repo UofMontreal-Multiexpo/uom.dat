@@ -426,156 +426,156 @@ transaction.analyzer = function(transactions, items = NULL, target = "closed fre
 #' @export
 setMethod(f = "print",
           signature = "TransactionAnalyzer",
-          definition = function(x, ...) {
-            
-            numbers = c(items = length(x@items),
-                        categories = ncol(x@items_categories),
-                        transactions = length(x@transactions))
-            
-            if (is_init_nodes(x)) {
-              numbers = c(numbers, nodes = nrow(x@nodes))
-              
-              if (is_init_node_links(x))
-                numbers = c(numbers, node_links = sum(x@node_links$weight != 0))
-              
-              if (is_init_patterns(x)) {
-                numbers = c(numbers, patterns = nrow(x@patterns))
-                
-                if (is_init_pattern_links(x))
-                  numbers = c(numbers, pattern_links = sum(x@pattern_links$weight != 0))
-              }
-            }
-            
-            if (is_init_patterns(x)) {
-              std_numbers = standardize_nchar(c(" ", numbers[c("items", "categories", "transactions", "nodes", "patterns")]))
-              names(std_numbers) = c(" ", "items", "categories", "transactions", "nodes", "patterns")
-            } else if (is_init_nodes(x)) {
-              std_numbers = standardize_nchar(c(" ", numbers[c("items", "categories", "transactions", "nodes")]))
-              names(std_numbers) = c(" ", "items", "categories", "transactions", "nodes")
-            } else {
-              std_numbers = standardize_nchar(c(" ", numbers))
-              names(std_numbers) = c(" ", names(numbers))
-            }
-            
-            std_categories = standardize_nchar(paste0("\"", colnames(x@items_categories), "\":"), at_end = TRUE)
-            categories_numbers = sapply(x@items_categories, function(c) length(levels(c)))
-            std_category_numbers = standardize_nchar(categories_numbers)
-            to_show_categories = character(length(std_categories))
-            
-            for (c in seq_along(std_categories)) {
-              to_show_categories[c] = paste("\n ", std_numbers[" "],
-                                            std_categories[c],
-                                            std_category_numbers[c],
-                                            pluralize("level", categories_numbers[c]))
-            }
-            
-            to_show = paste0("TransactionAnalyzer",
-              "\n  ", std_numbers["items"], " ", pluralize("item", numbers["items"]),
-              "\n  ", std_numbers["categories"], " ", pluralize("category", numbers["categories"]),
-              paste(to_show_categories, collapse = ""),
-              "\n  ", std_numbers["transactions"], pluralize(" transaction", numbers["transactions"]),
-              "\n  ", std_numbers[" "], " names:    ", paste0("\"", x@transactions@names, "\"", collapse = ", "),
-              "\n  ", std_numbers[" "], " item_key: \"", x@transactions@item_key, "\"",
-              "\n  ", std_numbers[" "], " year_key: ", if (is.na(x@transactions@year_key)) NA else paste0("\"", x@transactions@year_key, "\"")
-            )
-            
-            if (is_init_nodes(x)) {
-              to_show = paste0(to_show,
-                               "\n  ", std_numbers["nodes"], " ",
-                               pluralize("node", numbers["nodes"]))
-              
-              if (is_init_node_links(x)) {
-                to_show = paste(to_show, "with", numbers["node_links"],
-                                pluralize("link", numbers["node_links"]))
-              }
-              if (is_init_patterns(x)) {
-                to_show = paste0(to_show,
-                                 "\n  ", std_numbers["patterns"], " ",
-                                 pluralize("pattern", numbers["patterns"]))
-                
-                if (is_init_pattern_links(x)) {
-                  to_show = paste(to_show, "with", numbers["pattern_links"],
-                                  pluralize("link", numbers["pattern_links"]))
-                }
-                
-                to_show = paste0(to_show,
-                                 "\n  ", std_numbers[" "], " ", cap(x@parameters$target),
-                                 "\n  ", std_numbers[" "], " Minimum frequency parameter: ", x@parameters$count,
-                                 "\n  ", std_numbers[" "], " Length in ", interval(1, Inf),
-                                 "\n  ", std_numbers[" "], " Status characterization over ",
-                                 x@parameters$status_limit, pluralize(" year", x@parameters$status_limit))
-              }
-            }
-            
-            cat(to_show)
-          })
+          definition =
+function(x, ...) {
+  
+  numbers = c(items = length(x@items),
+              categories = ncol(x@items_categories),
+              transactions = length(x@transactions))
+  
+  if (is_init_nodes(x)) {
+    numbers = c(numbers, nodes = nrow(x@nodes))
+    
+    if (is_init_node_links(x))
+      numbers = c(numbers, node_links = sum(x@node_links$weight != 0))
+    
+    if (is_init_patterns(x)) {
+      numbers = c(numbers, patterns = nrow(x@patterns))
+      
+      if (is_init_pattern_links(x))
+        numbers = c(numbers, pattern_links = sum(x@pattern_links$weight != 0))
+    }
+  }
+  
+  if (is_init_patterns(x)) {
+    std_numbers = standardize_nchar(c(" ", numbers[c("items", "categories", "transactions", "nodes", "patterns")]))
+    names(std_numbers) = c(" ", "items", "categories", "transactions", "nodes", "patterns")
+  } else if (is_init_nodes(x)) {
+    std_numbers = standardize_nchar(c(" ", numbers[c("items", "categories", "transactions", "nodes")]))
+    names(std_numbers) = c(" ", "items", "categories", "transactions", "nodes")
+  } else {
+    std_numbers = standardize_nchar(c(" ", numbers))
+    names(std_numbers) = c(" ", names(numbers))
+  }
+  
+  std_categories = standardize_nchar(paste0("\"", colnames(x@items_categories), "\":"), at_end = TRUE)
+  categories_numbers = sapply(x@items_categories, function(c) length(levels(c)))
+  std_category_numbers = standardize_nchar(categories_numbers)
+  to_show_categories = character(length(std_categories))
+  
+  for (c in seq_along(std_categories)) {
+    to_show_categories[c] = paste("\n ", std_numbers[" "],
+                                  std_categories[c],
+                                  std_category_numbers[c],
+                                  pluralize("level", categories_numbers[c]))
+  }
+  
+  to_show = paste0("TransactionAnalyzer",
+    "\n  ", std_numbers["items"], " ", pluralize("item", numbers["items"]),
+    "\n  ", std_numbers["categories"], " ", pluralize("category", numbers["categories"]),
+    paste(to_show_categories, collapse = ""),
+    "\n  ", std_numbers["transactions"], pluralize(" transaction", numbers["transactions"]),
+    "\n  ", std_numbers[" "], " names:    ", paste0("\"", x@transactions@names, "\"", collapse = ", "),
+    "\n  ", std_numbers[" "], " item_key: \"", x@transactions@item_key, "\"",
+    "\n  ", std_numbers[" "], " year_key: ", if (is.na(x@transactions@year_key)) NA else paste0("\"", x@transactions@year_key, "\"")
+  )
+  
+  if (is_init_nodes(x)) {
+    to_show = paste0(to_show,
+                     "\n  ", std_numbers["nodes"], " ",
+                     pluralize("node", numbers["nodes"]))
+    
+    if (is_init_node_links(x)) {
+      to_show = paste(to_show, "with", numbers["node_links"],
+                      pluralize("link", numbers["node_links"]))
+    }
+    if (is_init_patterns(x)) {
+      to_show = paste0(to_show,
+                       "\n  ", std_numbers["patterns"], " ",
+                       pluralize("pattern", numbers["patterns"]))
+      
+      if (is_init_pattern_links(x)) {
+        to_show = paste(to_show, "with", numbers["pattern_links"],
+                        pluralize("link", numbers["pattern_links"]))
+      }
+      
+      to_show = paste0(to_show,
+                       "\n  ", std_numbers[" "], " ", cap(x@parameters$target),
+                       "\n  ", std_numbers[" "], " Minimum frequency parameter: ", x@parameters$count,
+                       "\n  ", std_numbers[" "], " Length in ", interval(1, Inf),
+                       "\n  ", std_numbers[" "], " Status characterization over ",
+                       x@parameters$status_limit, pluralize(" year", x@parameters$status_limit))
+    }
+  }
+  
+  cat(to_show)
+})
 
 # show: short display in console
 setMethod(f = "show",
           signature = "TransactionAnalyzer",
-          definition = function(object) {
-            
-            numbers = c(item = length(object@items),
-                        category = ncol(object@items_categories),
-                        transaction = length(object@transactions))
-            
-            if (is_init_nodes(object)) numbers = c(numbers, node = nrow(object@nodes))
-            if (is_init_patterns(object)) numbers = c(numbers, pattern = nrow(object@patterns))
-            
-            std_numbers = standardize_nchar(numbers)
-            to_show = character(length(numbers))
-            
-            for (n in seq_along(numbers)) {
-              to_show[n] = paste0("\n  ", std_numbers[n],
-                                  " ", pluralize(names(numbers[n]), numbers[n]))
-            }
-            
-            cat("TransactionAnalyzer",
-                paste(to_show, collapse = ""),
-                "\n  Slots:", paste(methods::slotNames("TransactionAnalyzer"), collapse = ", "), "\n")
-          })
+          definition =
+function(object) {
+  
+  numbers = c(item = length(object@items),
+              category = ncol(object@items_categories),
+              transaction = length(object@transactions))
+  
+  if (is_init_nodes(object)) numbers = c(numbers, node = nrow(object@nodes))
+  if (is_init_patterns(object)) numbers = c(numbers, pattern = nrow(object@patterns))
+  
+  std_numbers = standardize_nchar(numbers)
+  to_show = character(length(numbers))
+  
+  for (n in seq_along(numbers)) {
+    to_show[n] = paste0("\n  ", std_numbers[n], " ", pluralize(names(numbers[n]), numbers[n]))
+  }
+  
+  cat("TransactionAnalyzer",
+      paste(to_show, collapse = ""),
+      "\n  Slots:", paste(methods::slotNames("TransactionAnalyzer"), collapse = ", "), "\n")
+})
 
 # summary: object summary
 #' @export
 setMethod(f = "summary",
           signature = "TransactionAnalyzer",
-          definition = function(object, ...) {
-            
-            if (!is_init_patterns(object)) {
-              # Si les motifs n'ont pas été calculés ; seulement une partie du résumé
-              return(c(items = length(object@items),
-                       categories = ncol(object@items_categories),
-                       transactions = length(object@transactions),
-                       nodes = if (is_init_nodes(object)) nrow(object@nodes) else NA,
-                       patterns = NA))
-            }
-            
-            summaries = list()
-            
-            # Résumé des caractéristiques des motifs
-            main = cbind(
-              "year" = summary(object@patterns$year),
-              "frequency" = summary(object@patterns$frequency),
-              "weight" = summary(object@patterns$weight),
-              "specificity" = summary(object@patterns$specificity)
-            )
-            colnames(main) = c("year", "frequency", "weight", "specificity")
-            
-            summaries[["patterns"]] = list(main = main)
-            summaries[["patterns"]][["length"]] = as.data.frame(table(object@patterns$length))
-            summaries[["patterns"]][["status"]] = as.data.frame(table(object@patterns$status))
-            colnames(summaries[["patterns"]][["length"]]) = c("length", "count")
-            colnames(summaries[["patterns"]][["status"]]) = c("status", "count")
-            
-            # Tailles des attributs principaux
-            summaries[["count"]] = c(items = length(object@items),
-                                     categories = ncol(object@items_categories),
-                                     transactions = length(object@transactions),
-                                     nodes = nrow(object@nodes),
-                                     patterns = nrow(object@patterns))
-            
-            return(summaries)
-          })
+          definition =
+function(object, ...) {
+  
+  if (!is_init_patterns(object)) {
+    # Si les motifs n'ont pas été calculés ; seulement une partie du résumé
+    return(c(items = length(object@items),
+             categories = ncol(object@items_categories),
+             transactions = length(object@transactions),
+             nodes = if (is_init_nodes(object)) nrow(object@nodes) else NA,
+             patterns = NA))
+  }
+  
+  summaries = list()
+  
+  # Résumé des caractéristiques des motifs
+  main = cbind("year" = summary(object@patterns$year),
+               "frequency" = summary(object@patterns$frequency),
+               "weight" = summary(object@patterns$weight),
+               "specificity" = summary(object@patterns$specificity))
+  colnames(main) = c("year", "frequency", "weight", "specificity")
+  
+  summaries[["patterns"]] = list(main = main)
+  summaries[["patterns"]][["length"]] = as.data.frame(table(object@patterns$length))
+  summaries[["patterns"]][["status"]] = as.data.frame(table(object@patterns$status))
+  colnames(summaries[["patterns"]][["length"]]) = c("length", "count")
+  colnames(summaries[["patterns"]][["status"]]) = c("status", "count")
+  
+  # Tailles des attributs principaux
+  summaries[["count"]] = c(items = length(object@items),
+                           categories = ncol(object@items_categories),
+                           transactions = length(object@transactions),
+                           nodes = nrow(object@nodes),
+                           patterns = nrow(object@patterns))
+  
+  return(summaries)
+})
 
 
 
