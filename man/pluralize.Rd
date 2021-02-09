@@ -9,13 +9,14 @@ pluralize(x, var)
 \arguments{
 \item{x}{Character string to be pluralized.}
 
-\item{var}{Variable to consider whether to add an "s" to the string.}
+\item{var}{Variable to consider whether to pluralize the string.}
 }
 \value{
-The character string corresponding to the argument \code{x}, ending with an "s" if \code{length(var) > 1}.
+The character string corresponding to the argument \code{x}, possibly in its plural form.
 }
 \description{
-Add an "s" at the end of the string if the given variable has a length greater than \eqn{1}.
+Give the plural form of the string if the given variable is numeric and is greater than \eqn{1} or
+has a length greater than \eqn{1}. Add an "s" at the end of the string or turn "y" into "ies".
 }
 \note{
 This function is not exported from the package.

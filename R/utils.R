@@ -77,13 +77,14 @@ cap = function(x) {
 
 #' Pluzalize a character string
 #' 
-#' Add an "s" at the end of the string if the given variable has a length greater than \eqn{1}.
+#' Give the plural form of the string if the given variable is numeric and is greater than \eqn{1} or
+#'  has a length greater than \eqn{1}. Add an "s" at the end of the string or turn "y" into "ies".
 #' 
 #' @template function_not_exported
 #' 
 #' @param x Character string to be pluralized.
-#' @param var Variable to consider whether to add an "s" to the string.
-#' @return The character string corresponding to the argument `x`, ending with an "s" if `length(var) > 1`.
+#' @param var Variable to consider whether to pluralize the string.
+#' @return The character string corresponding to the argument `x`, possibly in its plural form.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`cap`], [`first_characters`], [`substr2`].
@@ -91,7 +92,10 @@ cap = function(x) {
 #' @md
 #' @keywords internal
 pluralize = function(x, var) {
-  if (length(var) > 1) return(paste0(x, "s"))
+  if (is.numeric(var) && var > 1 || length(var) > 1) {
+    if (substring(x, nchar(x)) == "y") return(paste0(substr(x, 1, nchar(x)-1), "ies"))
+    return(paste0(x, "s"))
+  }
   return(x)
 }
 
