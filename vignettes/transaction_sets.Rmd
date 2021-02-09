@@ -25,9 +25,9 @@ knitr::opts_chunk$set(fig.align = "center",
 
 
 
-Initially introduced in the field of data mining for market basket analysis, the notion of **transaction** correspond to a set of any elements, called **itemset**. In this historical example, the transactional dataset is the set of lists of purchase made in supermarkets in which the products are the items and any set of products is an itemset. The purpose was to find regularities in the shopping behavior of customers (or patterns) by finding the frequent itemsets to improve arrangement of products in shelves or in catalog, suggest other products, product bundling...
+Initially introduced in the field of data mining for market basket analysis, the notion of **transaction** correspond to a set of any elements, called **itemset**. In this historical example, the transactional dataset is the set of lists of purchases made in supermarkets in which the products are the items and any set of products is an itemset. The purpose was to find regularities in the shopping behavior of customers (or patterns) by finding the frequent itemsets to improve arrangement of products in shelves or in catalog, suggest other products, product bundling...
 
-Nevertheless, this data mining approach can be applied to many other domains, such as the one in which the example we will use falls: health. Occupational health and safety research institutes use databases of exposure to chemicals in workplaces for the purpose of prevention of occupational accidents and diseases.
+Nevertheless, this data mining approach can be applied to many other domains, such as the one in which certain of the examples we will use fall: health. Occupational health and safety research institutes use databases of exposure to chemicals in workplaces for the purpose of prevention of occupational accidents and diseases.
 
 
 <p id="plan_announcement">This document presents basic processing of transactions (more complex analyzes of transactions are presented in the document [Transaction analyzes](./transaction_analyzes.html)). The first section describes the structure of an object of class `TransactionSet` and how to create such objects. The second one presents methods to search for data in the transactions and to search for specific transactions. The third section proposes computations on transactions and plots. Finally, the last one presents how to save transactions and coercion possibilities.</p>
@@ -297,7 +297,7 @@ print(names(reordered_trx_object["data"]))
 
 # 2. Searches
 
-## 2.1 Search in transactions
+## 2.1. Search in transactions
 
 Four methods allow to extract data from an object of class `TransactionSet`.
 
