@@ -25,7 +25,7 @@ Extract substrings in a character vector. Wrapper of the \code{\link{substr}} fu
 This function is not exported from the package.
 }
 \seealso{
-\code{\link{cap}}, \code{\link{pluralize}}, \code{\link{first_characters}}.
+\code{\link{cap}}, \code{\link{pluralize}}, \code{\link{standardize_nchar}}, \code{\link{first_characters}}.
 }
 \author{
 Gauthier Magnin

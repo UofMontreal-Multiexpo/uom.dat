@@ -22,7 +22,7 @@ Search for the first character of each word and concatenate them.
 This function is not exported from the package.
 }
 \seealso{
-\code{\link{cap}}, \code{\link{pluralize}}, \code{\link{substr2}}.
+\code{\link{cap}}, \code{\link{pluralize}}, \code{\link{standardize_nchar}}, \code{\link{substr2}}.
 }
 \author{
 Gauthier Magnin

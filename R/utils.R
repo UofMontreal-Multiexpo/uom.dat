@@ -66,7 +66,7 @@ display_time = function(expr) {
 #' @return The character string corresponding to the argument `x`, starting with a capital letter.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`pluralize`], [`first_characters`], [`substr2`].
+#' @seealso [`pluralize`], [`standardize_nchar`], [`first_characters`], [`substr2`].
 #' 
 #' @md
 #' @keywords internal
@@ -87,7 +87,7 @@ cap = function(x) {
 #' @return The character string corresponding to the argument `x`, possibly in its plural form.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`cap`], [`first_characters`], [`substr2`].
+#' @seealso [`cap`], [`standardize_nchar`], [`first_characters`], [`substr2`].
 #' 
 #' @md
 #' @keywords internal
@@ -97,6 +97,32 @@ pluralize = function(x, var) {
     return(paste0(x, "s"))
   }
   return(x)
+}
+
+
+#' Standardize the nuber of characters in strings
+#' 
+#' Add zero, one or multiple spaces at the beginning or the end of each string so that they all have the
+#'  same number of characters.
+#' 
+#' @template function_not_exported
+#' 
+#' @param x Character vector containing the strings to standardize.
+#' @param at_end `TRUE` or `FALSE` depending on whether to add spaces at the end or at the beginning
+#'  of the strings.
+#' @return Vector of the same length as `x` in which all character values have the same number
+#'  of characters.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`cap`], [`pluralize`], [`first_characters`], [`substr2`].
+#' 
+#' @md
+#' @keywords internal
+standardize_nchar = function(x, at_end = FALSE) {
+  max_char = max(nchar(x))
+  if (at_end)
+    return(unname(sapply(x, function(y) paste0(y, paste0(rep(" ", max_char - nchar(y)), collapse = "")))))
+  return(unname(sapply(x, function(y) paste0(paste0(rep(" ", max_char - nchar(y)), collapse = ""), y))))
 }
 
 
@@ -112,7 +138,7 @@ pluralize = function(x, var) {
 #'  of all words.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`cap`], [`pluralize`], [`substr2`].
+#' @seealso [`cap`], [`pluralize`], [`standardize_nchar`], [`substr2`].
 #' 
 #' @md
 #' @keywords internal
@@ -138,7 +164,7 @@ first_characters = function(x, sep = " _-") {
 #' @return A character vector of the same length as `x` containing the extracted parts.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`cap`], [`pluralize`], [`first_characters`].
+#' @seealso [`cap`], [`pluralize`], [`standardize_nchar`], [`first_characters`].
 #' 
 #' @md
 #' @keywords internal

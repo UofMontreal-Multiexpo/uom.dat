@@ -22,7 +22,7 @@ has a length greater than \eqn{1}. Add an "s" at the end of the string or turn "
 This function is not exported from the package.
 }
 \seealso{
-\code{\link{cap}}, \code{\link{first_characters}}, \code{\link{substr2}}.
+\code{\link{cap}}, \code{\link{standardize_nchar}}, \code{\link{first_characters}}, \code{\link{substr2}}.
 }
 \author{
 Gauthier Magnin
