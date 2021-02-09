@@ -177,6 +177,29 @@ substr2 = function(x, start = 1, stop = NULL) {
 }
 
 
+#' Mathematical interval as character string
+#' 
+#' Create a string corresponding to the mathematical notation of an interval.
+#' 
+#' @template function_not_exported
+#' 
+#' @param x1,x2 Numeric values. Endpoints of the interval.
+#' @param inc1,inc2 If `TRUE`, the related endpoint is included in the interval.
+#'  If `FALSE`, it is excluded.
+#' @return String corresponding to the interval defined by the given arguments.
+#' 
+#' @author Gauthier Magnin
+#' @md
+#' @keywords internal
+interval = function(x1, x2, inc1 = TRUE, inc2 = TRUE) {
+  if (is.infinite(x1)) first_part = "]-Inf,"
+  else first_part = paste0(if (inc1) "[" else "]", x1, ",")
+  
+  if (is.infinite(x2)) return(paste0(first_part, "Inf["))
+  return(paste0(first_part, x2, if (inc2) "]" else "["))
+}
+
+
 #' Turn into data frame
 #' 
 #' Turn a table, a matrix or a vector into a data frame.
