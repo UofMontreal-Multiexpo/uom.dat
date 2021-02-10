@@ -458,16 +458,19 @@ function(x, ...) {
     names(std_numbers) = c(" ", names(numbers))
   }
   
-  std_categories = standardize_nchar(paste0("\"", colnames(x@items_categories), "\":"), at_end = TRUE)
-  categories_numbers = sapply(x@items_categories, function(c) length(levels(c)))
-  std_category_numbers = standardize_nchar(categories_numbers)
-  to_show_categories = character(length(std_categories))
-  
-  for (c in seq_along(std_categories)) {
-    to_show_categories[c] = paste("\n ", std_numbers[" "],
-                                  std_categories[c],
-                                  std_category_numbers[c],
-                                  pluralize("level", categories_numbers[c]))
+  if (numbers["categories"] == 0) to_show_categories = ""
+  else {
+    std_categories = standardize_nchar(paste0("\"", colnames(x@items_categories), "\":"), at_end = TRUE)
+    categories_numbers = sapply(x@items_categories, function(c) length(levels(c)))
+    std_category_numbers = standardize_nchar(categories_numbers)
+    to_show_categories = character(length(std_categories))
+    
+    for (c in seq_along(std_categories)) {
+      to_show_categories[c] = paste("\n ", std_numbers[" "],
+                                    std_categories[c],
+                                    std_category_numbers[c],
+                                    pluralize("level", categories_numbers[c]))
+    }
   }
   
   to_show = paste0("TransactionAnalyzer",
