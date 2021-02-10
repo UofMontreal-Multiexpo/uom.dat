@@ -40,7 +40,8 @@ is the presence of the sought items (argument \code{value}). The argument \code{
 
 If \code{element} refers to a characteristic (i.e. is \code{"length"} or \code{"frequency"}), the condition for a
 node to be extracted is a comparison of the \code{value} according to one of the comparison operators
-(default is equality):
+(default is equality). If the condition refers to equality or non-equality, several values can be
+given. If it does not, only one value must be given. The argument \code{condition} must be one of:
 \itemize{
 \item \code{"EQ"}, \code{"=="}: \strong{EQ}ual. The value of the characteristic must be equal to that sought.
 \item \code{"NE"}, \code{"!="}: \strong{N}ot \strong{E}qual. The value of the characteristic must be different from that

@@ -24,7 +24,8 @@
 \item{characteristic}{Name of the characteristic on which to do the search.
 One of \code{"length"}, \code{"frequency"}.}
 
-\item{value}{Sought value for the characteristic specified by the parameter \code{characteristic}.}
+\item{value}{Sought value for the characteristic specified by the parameter \code{characteristic}.
+Several values can be given if \code{condition} refers to equality or non-equality.}
 
 \item{condition}{Search condition.
 One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"},

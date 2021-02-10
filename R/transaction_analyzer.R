@@ -4525,7 +4525,8 @@ function(object, trx, category, value) {
 #' 
 #' If `element` refers to a characteristic (i.e. is `"length"` or `"frequency"`), the condition for a
 #'  node to be extracted is a comparison of the `value` according to one of the comparison operators
-#'  (default is equality):
+#'  (default is equality). If the condition refers to equality or non-equality, several values can be
+#'  given. If it does not, only one value must be given. The argument `condition` must be one of:
 #'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
 #'  * `"NE"`, `"!="`: **N**ot **E**qual. The value of the characteristic must be different from that
 #'    sought.
@@ -4685,6 +4686,7 @@ function(object, nc, items, condition = "all") {
 #' @param characteristic Name of the characteristic on which to do the search.
 #'  One of \code{"length"}, \code{"frequency"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
+#'  Several values can be given if \code{condition} refers to equality or non-equality.
 #' @param condition Search condition.
 #'  One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"},
 #'  \code{"=="}, \code{"!="}, \code{"<"}, \code{">"}, \code{"<="}, \code{">="}.
@@ -4743,8 +4745,14 @@ function(object, nc, characteristic, value, condition = "EQ") {
                "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\"."))
   }
   
-  # Lignes de "nc" dont "characteristic" est "condition" (égal, etc.) à "value
-  return(nc[eval(parse(text = paste("nc[characteristic]", operators[condition], "value"))), ])
+  # Cas de recherche exacte (égal ou différent) : possibilité de rechercher plusieurs valeurs
+  if (operators[condition] %in% c("==", "!=")){
+    return(nc[eval(parse(text = paste0(ifelse(operators[condition] == "!=", "!", ""),
+                                       "is.element(nc[[characteristic]], value)"))), ])
+  }
+  
+  # Lignes de "nc" dont "characteristic" est "condition" (supérieur, etc.) à "value"
+  return(nc[eval(parse(text = paste("nc[[characteristic]]", operators[condition], "value"))), ])
 })
 
 
@@ -4836,7 +4844,9 @@ function(object, nc, category, value, condition) {
 #' 
 #' If `element` refers to a characteristic other than status (i.e. is one of `"year"`, `"length"`,
 #'  `"frequency"`, `"weight"`, `"specificity"`), the condition for a pattern to be extracted is a
-#'  comparaison of the `value` according to one of the comparison operators (default is equality):
+#'  comparaison of the `value` according to one of the comparison operators (default is equality).
+#'  If the condition refers to equality or non-equality, several values can be given. If it does not,
+#'  only one value must be given. The argument `condition` must be one of:
 #'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
 #'  * `"NE"`, `"!="`: **N**ot **E**qual. The value of the characteristic must be different from that
 #'    sought.
@@ -5024,6 +5034,7 @@ function(object, pc, items, condition = "all") {
 #'  One of \code{"year"}, \code{"length"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"}
 #'  See \code{\link{get_patterns_from_status}} to search by \code{"status"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
+#'  Several values can be given if \code{condition} refers to equality or non-equality.
 #' @param condition Search condition.
 #'  One of \code{"EQ"}, \code{"NE"}, \code{"LT"}, \code{"GT"}, \code{"LE"}, \code{"GE"},
 #'  \code{"=="}, \code{"!="}, \code{"<"}, \code{">"}, \code{"<="}, \code{">="}.
@@ -5082,7 +5093,13 @@ function(object, pc, characteristic, value, condition = "EQ") {
                "\"==\", \"!=\", \"<\", \">\", \"<=\", \">=\"."))
   }
   
-  # Lignes de "pc" dont "characteristic" est "condition" (égal, etc.) à "value
+  # Cas de recherche exacte (égal ou différent) : possibilité de rechercher plusieurs valeurs
+  if (operators[condition] %in% c("==", "!=")){
+    return(pc[eval(parse(text = paste0(ifelse(operators[condition] == "!=", "!", ""),
+                                       "is.element(pc[[characteristic]], value)"))), ])
+  }
+  
+  # Lignes de "pc" dont "characteristic" est "condition" (supérieur, etc.) à "value"
   return(pc[eval(parse(text = paste("pc[characteristic]", operators[condition], "value"))), ])
 })
 
