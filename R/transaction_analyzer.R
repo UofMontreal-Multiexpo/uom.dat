@@ -908,7 +908,7 @@ function(object, from = 1, verbose = TRUE) {
   steps = matrix(c(
     
     # Initialisation des attributs utiles à la construction d'un spectrosome des noeuds
-    "*** Step 01/10: Enumeration of the transactions per year... ",
+    "\n*** Step 01/10: Enumeration of the transactions per year... ",
     expression(  list_trx_per_year(object)  ),
     "\n*** Step 02/10: Enumeration of the nodes and calculation of the number of occurrences... ",
     expression(  list_separate_trx(object)  ),
@@ -938,6 +938,8 @@ function(object, from = 1, verbose = TRUE) {
   
   # Étapes à réaliser effectivement
   steps_todo = (from <= seq(nrow(steps))) & (!DEBUG_MODE_ | seq(nrow(steps)) <= UP_TO_STEP_)
+  # Retrait du retour à la ligne de la première des étapes à refaire
+  steps[[which(steps_todo)[1]]] = substring(steps[[which(steps_todo)[1]]], 2)
   
   # Réalisation
   for (i in seq(nrow(steps))) {
@@ -1103,6 +1105,7 @@ function(object, verbose = TRUE) {
     
     cat("\n*** Step N.2/2: Enumeration of the nodes and calculation of the number of occurrences... ")
     display_time(list_separate_trx(object))
+    cat("\n")
   } else {
     list_trx_per_year(object)
     list_separate_trx(object)
@@ -1130,6 +1133,7 @@ function(object, verbose = TRUE) {
     
     cat("\n*** Step NL.2/2: Elaboration of links between nodes... ")
     display_time(search_links(object, NODES))
+    cat("\n")
   } else {
     count_links(object, NODES)
     search_links(object, NODES)
@@ -1168,6 +1172,7 @@ function(object, verbose = TRUE) {
     
     cat("\n*** Step P.4/4: Computation of pattern characteristics... ")
     display_time(compute_patterns_characteristics(object))
+    cat("\n")
   } else {
     arules_p = list_separate_patterns(object,
                                       object@parameters$target,
@@ -1202,6 +1207,7 @@ function(object, verbose = TRUE) {
     
     cat("\n*** Step PL.2/2: Elaboration of links between patterns... ")
     display_time(search_links(object, PATTERNS))
+    cat("\n")
   } else {
     count_links(object, PATTERNS)
     search_links(object, PATTERNS)
