@@ -10,7 +10,9 @@
 \arguments{
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
-\item{trx}{S4 object of class \code{TransactionSet}. Any subset of \code{object["transactions"]}.}
+\item{trx}{S4 object of class \code{TransactionSet}. Any subset of \code{object["transactions"]}.
+
+\code{"transactions"} and \code{"t"} are special values for \code{object["transactions"]}.}
 
 \item{category}{Name or number of the category on which to search (numbering according to the order
 of the columns of \code{object["items_categories"]}.}

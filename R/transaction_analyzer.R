@@ -4479,6 +4479,8 @@ function(object, nporc, ...) {
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param trx S4 object of class `TransactionSet`. Any subset of `object["transactions"]`.
+#' 
+#' `"transactions"` and `"t"` are special values for `object["transactions"]`.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of `object["items_categories"]`.
 #' @param value Sought value for the category specified by the argument `category`.
@@ -4503,7 +4505,9 @@ setMethod(f = "get_trx_from_category",
           definition =
 function(object, trx, category, value) {
   # Items correspondant à la valeur de catégorie recherchée puis transactions contenant ces items
-  return(get_trx_from_items(trx, get_items_from_category(object, category, value), presence = "any"))
+  return(get_trx_from_items(get_tnp(object, trx, TRANSACTIONS),
+                            get_items_from_category(object, category, value),
+                            presence = "any"))
 })
 
 
