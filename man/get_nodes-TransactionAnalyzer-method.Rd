@@ -41,7 +41,8 @@ is the presence of the sought items (argument \code{value}). The argument \code{
 If \code{element} refers to a characteristic (i.e. is \code{"length"} or \code{"frequency"}), the condition for a
 node to be extracted is a comparison of the \code{value} according to one of the comparison operators
 (default is equality). If the condition refers to equality or non-equality, several values can be
-given. If it does not, only one value must be given. The argument \code{condition} must be one of:
+given. If it does not, only one value must be given. The argument \code{condition} must be one of the
+following.
 \itemize{
 \item \code{"EQ"}, \code{"=="}: \strong{EQ}ual. The value of the characteristic must be equal to that sought.
 \item \code{"NE"}, \code{"!="}: \strong{N}ot \strong{E}qual. The value of the characteristic must be different from that
@@ -56,8 +57,9 @@ than or equal to that sought.
 }
 
 If \code{element} is the name or the number of a category, the condition for a node to be extracted is
-the correspondence to the sought category value (argument \code{value}). The argument \code{condition} must
-be one of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"} (no default).
+the correspondence to the sought category value (argument \code{value}). If several values are given,
+nodes related to any one of them are extracted. The argument \code{condition} must be one of \code{"items"},
+\code{"links"}, \code{"vertices"}, \code{"edges"} (no default).
 \itemize{
 \item \code{"items"}, \code{"vertices"}: search for nodes containing an item associated with the sought category
 value.

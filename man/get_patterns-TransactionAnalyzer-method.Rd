@@ -44,7 +44,7 @@ If \code{element} refers to a characteristic other than status (i.e. is one of \
 \code{"frequency"}, \code{"weight"}, \code{"specificity"}), the condition for a pattern to be extracted is a
 comparaison of the \code{value} according to one of the comparison operators (default is equality).
 If the condition refers to equality or non-equality, several values can be given. If it does not,
-only one value must be given. The argument \code{condition} must be one of:
+only one value must be given. The argument \code{condition} must be one of the following.
 \itemize{
 \item \code{"EQ"}, \code{"=="}: \strong{EQ}ual. The value of the characteristic must be equal to that sought.
 \item \code{"NE"}, \code{"!="}: \strong{N}ot \strong{E}qual. The value of the characteristic must be different from that
@@ -68,8 +68,9 @@ values.
 }
 
 If \code{element} is the name or the number of a category, the condition for a pattern to be extracted is
-the correspondence to the sought category  value (argument \code{value}). The argument \code{condition} must
-be one of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"} (no default).
+the correspondence to the sought category value (argument \code{value}). If several values are given,
+patterns related to any one of them are extracted. The argument \code{condition} must be one of \code{"items"},
+\code{"links"}, \code{"vertices"}, \code{"edges"} (no default).
 \itemize{
 \item \code{"items"}, \code{"vertices"}: search for patterns containing an item associated with the sought
 category value.

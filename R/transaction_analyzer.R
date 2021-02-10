@@ -4483,7 +4483,8 @@ function(object, nporc, ...) {
 #' `"transactions"` and `"t"` are special values for `object["transactions"]`.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of `object["items_categories"]`.
-#' @param value Sought value for the category specified by the argument `category`.
+#' @param value Sought value(s) for the category specified by the argument `category`. If several values
+#'  are given, transactions related to any one of them are extracted.
 #' @return Subset of the transaction set that match the search criteria.
 #' 
 #' @author Gauthier Magnin
@@ -4526,7 +4527,8 @@ function(object, trx, category, value) {
 #' If `element` refers to a characteristic (i.e. is `"length"` or `"frequency"`), the condition for a
 #'  node to be extracted is a comparison of the `value` according to one of the comparison operators
 #'  (default is equality). If the condition refers to equality or non-equality, several values can be
-#'  given. If it does not, only one value must be given. The argument `condition` must be one of:
+#'  given. If it does not, only one value must be given. The argument `condition` must be one of the
+#'  following.
 #'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
 #'  * `"NE"`, `"!="`: **N**ot **E**qual. The value of the characteristic must be different from that
 #'    sought.
@@ -4539,8 +4541,9 @@ function(object, trx, category, value) {
 #'    than or equal to that sought.
 #' 
 #' If `element` is the name or the number of a category, the condition for a node to be extracted is
-#'  the correspondence to the sought category value (argument `value`). The argument `condition` must
-#'  be one of `"items"`, `"links"`, `"vertices"`, `"edges"` (no default).
+#'  the correspondence to the sought category value (argument `value`). If several values are given,
+#'  nodes related to any one of them are extracted. The argument `condition` must be one of `"items"`,
+#'  `"links"`, `"vertices"`, `"edges"` (no default).
 #'  * `"items"`, `"vertices"`: search for nodes containing an item associated with the sought category
 #'    value.
 #'  * `"links"`, `"edges"`: search for nodes generating links corresponding to the sought category value.
@@ -4769,7 +4772,8 @@ function(object, nc, characteristic, value, condition = "EQ") {
 #'  \code{"nodes"} and \code{"n"} are special values for \code{object["nodes"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
-#' @param value Sought value for the category specified by the argument \code{category}.
+#' @param value Sought value(s) for the category specified by the argument \code{category}.
+#'  If several values are given, nodes related to any one of them are extracted.
 #' @param condition Category value search condition for a node to be extracted.
 #'  One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 #'  \describe{
@@ -4846,7 +4850,7 @@ function(object, nc, category, value, condition) {
 #'  `"frequency"`, `"weight"`, `"specificity"`), the condition for a pattern to be extracted is a
 #'  comparaison of the `value` according to one of the comparison operators (default is equality).
 #'  If the condition refers to equality or non-equality, several values can be given. If it does not,
-#'  only one value must be given. The argument `condition` must be one of:
+#'  only one value must be given. The argument `condition` must be one of the following.
 #'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
 #'  * `"NE"`, `"!="`: **N**ot **E**qual. The value of the characteristic must be different from that
 #'    sought.
@@ -4866,8 +4870,9 @@ function(object, nc, category, value, condition) {
 #'    values.
 #' 
 #' If `element` is the name or the number of a category, the condition for a pattern to be extracted is
-#'  the correspondence to the sought category  value (argument `value`). The argument `condition` must
-#'  be one of `"items"`, `"links"`, `"vertices"`, `"edges"` (no default).
+#'  the correspondence to the sought category value (argument `value`). If several values are given,
+#'  patterns related to any one of them are extracted. The argument `condition` must be one of `"items"`,
+#'  `"links"`, `"vertices"`, `"edges"` (no default).
 #'  * `"items"`, `"vertices"`: search for patterns containing an item associated with the sought
 #'    category value.
 #'  * `"links"`, `"edges"`: search for patterns generating links corresponding to the sought category
@@ -5173,7 +5178,8 @@ function(object, pc, value, condition = "EQ") {
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of \code{object["items_categories"]}).
-#' @param value Sought value for the category specified by the argument \code{category}.
+#' @param value Sought value(s) for the category specified by the argument \code{category}.
+#'  If several values are given, patterns related to any one of them are extracted.
 #' @param condition Category value search condition for a pattern to be extracted.
 #'  One of \code{"items"}, \code{"links"}, \code{"vertices"}, \code{"edges"}.
 #'  \describe{
@@ -5586,7 +5592,7 @@ function(object, itemsets, as_character = FALSE, unique = TRUE) {
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param category Name or number of the category to access (numbering according to the order of the
 #'  columns of \code{object["items_categories"]}).
-#' @param value Sought value for the category specified by the argument \code{category}, or \code{NA}.
+#' @param value Sought value(s) for the category specified by the argument \code{category}, or \code{NA}.
 #' @param stop If \code{TRUE}, stop the execution and print an error message if the parameters do not
 #'  allow access to a category and a category value. If \code{FALSE}, see 'Value' section.
 #' @return \code{TRUE} or \code{FALSE} whether the parameters allow access to a category and a category
@@ -5618,10 +5624,12 @@ function(object, category, value, stop = TRUE) {
          paste0("\"", colnames(object@items_categories), "\"", collapse = ", "), ".")
   }
   
-  # Vérification que la valeur de la catégorie recherchée existe
-  if (!is.na(value) && !(value %in% levels(object@items_categories[, category]))) {
+  # Vérification que les valeurs de la catégorie recherchées existent
+  if (length(value) == 1 && is.na(value)) return(TRUE)
+  
+  if (any(!(value %in% levels(object@items_categories[, category])))) {
     if (!stop) return(FALSE)
-    stop("value must be one of the levels of the given category (",
+    stop("value must be one or more of the levels of the given category (",
          if (is.numeric(category)) category else paste0("\"", category,  "\""), ").")
   }
   return(TRUE)
@@ -5733,7 +5741,7 @@ function(object, items) {
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param category Name or number of the category on which to search (numbering according to the order
 #'  of the columns of `object["items_categories"]`).
-#' @param value Sought value for the category specified by the argument `category`.
+#' @param value Sought value(s) for the category specified by the argument `category`.
 #' @param force_character If `TRUE`, items are returned as character values.
 #'  If `FALSE`, they are the same type as in `object["items"]` (numeric or character).
 #' @return Items that match the search criteria.
@@ -5749,7 +5757,7 @@ function(object, category, value, force_character = FALSE) {
   
   # Vérification des paramètres d'accès à une catégorie et recherche des items correspondant
   check_access_for_category(object, category, value)
-  items = rownames(object@items_categories)[object@items_categories[[category]] == value]
+  items = rownames(object@items_categories)[object@items_categories[[category]] %in% value]
   
   # Type correspondant à l'attribut items ou character
   if (is.numeric(object@items) && !force_character) return(as.numeric(items))

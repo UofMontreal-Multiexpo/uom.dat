@@ -17,7 +17,8 @@
 \item{category}{Name or number of the category on which to search (numbering according to the order
 of the columns of \code{object["items_categories"]}.}
 
-\item{value}{Sought value for the category specified by the argument \code{category}.}
+\item{value}{Sought value(s) for the category specified by the argument \code{category}. If several values
+are given, transactions related to any one of them are extracted.}
 }
 \value{
 Subset of the transaction set that match the search criteria.

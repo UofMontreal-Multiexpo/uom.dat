@@ -13,7 +13,7 @@
 \item{category}{Name or number of the category to access (numbering according to the order of the
 columns of \code{object["items_categories"]}).}
 
-\item{value}{Sought value for the category specified by the argument \code{category}, or \code{NA}.}
+\item{value}{Sought value(s) for the category specified by the argument \code{category}, or \code{NA}.}
 
 \item{stop}{If \code{TRUE}, stop the execution and print an error message if the parameters do not
 allow access to a category and a category value. If \code{FALSE}, see 'Value' section.}

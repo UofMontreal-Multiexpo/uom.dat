@@ -13,7 +13,7 @@
 \item{category}{Name or number of the category on which to search (numbering according to the order
 of the columns of \code{object["items_categories"]}).}
 
-\item{value}{Sought value for the category specified by the argument \code{category}.}
+\item{value}{Sought value(s) for the category specified by the argument \code{category}.}
 
 \item{force_character}{If \code{TRUE}, items are returned as character values.
 If \code{FALSE}, they are the same type as in \code{object["items"]} (numeric or character).}
