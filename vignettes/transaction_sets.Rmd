@@ -622,7 +622,7 @@ The package `corrplot` can be applied to co-occurrence matrices to plot extra ch
 # Loading the package
 library(corrplot)
 
-# Creating a matrix
+# Creation of a matrix
 co_occ_matrix <- co_occurrence_matrix(TS_instance)
 ```
 

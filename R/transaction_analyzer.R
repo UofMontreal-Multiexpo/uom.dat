@@ -321,7 +321,7 @@ setMethod(f = "initialize",
 #'  closed frequent itemsets.
 #'  
 #' For an explanation with illustrated examples about the different types of itemsets, read the
-#'  vignette titled "\emph{Mining itemsets}".
+#'  vignette titled "\emph{Itemset mining}".
 #'  
 #' The steps for initializing a transaction analyzer are:
 #'  \enumerate{

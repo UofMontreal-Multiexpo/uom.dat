@@ -353,7 +353,7 @@ co_occurrence_chart(TS_instance,
 # Loading the package
 library(corrplot)
 
-# Creating a matrix
+# Creation of a matrix
 co_occ_matrix <- co_occurrence_matrix(TS_instance)
 
 ## ----fig.width=5--------------------------------------------------------------
