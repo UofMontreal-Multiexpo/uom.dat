@@ -820,6 +820,8 @@ setGeneric(name = "get_non_isolates", def = function(object, nopc){ standardGene
 
 setGeneric(name = "get_complexes", def = function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2){ standardGeneric("get_complexes") })
 
+setGeneric(name = "get_item_names", def = function(object, items){ standardGeneric("get_item_names") })
+
 setGeneric(name = "category_values", def = function(object, itemsets, as_character = FALSE, unique = TRUE){ standardGeneric("category_values") })
 
 
@@ -828,8 +830,6 @@ setGeneric(name = "category_values", def = function(object, itemsets, as_charact
 setGeneric(name = "check_access_for_category", def = function(object, category, value, stop = TRUE){ standardGeneric("check_access_for_category") })
 
 setGeneric(name = "has_item_names", def = function(object){ standardGeneric("has_item_names") })
-
-setGeneric(name = "get_item_names", def = function(object, items){ standardGeneric("get_item_names") })
 
 # setGeneric(name = "get_items", def = function(object, ...){ standardGeneric("get_items") })
 
@@ -5496,6 +5496,29 @@ function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2) {
 })
 
 
+#' Get item names
+#' 
+#' Find the names associated with items given their identification codes.
+#' 
+#' @param object S4 object of class `TransactionAnalyzer`.
+#' @param items Vector of items: unnamed subset of `object["items"]`.
+#' @return Names of the `items` in `object["items"]`.
+#' 
+#' @author Gauthier Magnin
+#' @examples
+#' get_item_names(TA_instance, items = c("19", "163", "1603"))
+#' 
+#' @aliases get_item_names
+#' @md
+#' @export
+setMethod(f = "get_item_names",
+          signature = "TransactionAnalyzer",
+          definition =
+function(object, items) {
+  return(names(object@items)[match(items, object@items)])
+})
+
+
 #' Itemset category values
 #' 
 #' Give the category values associated with specific itemsets.
@@ -5659,30 +5682,6 @@ setMethod(f = "has_item_names",
           definition =
 function(object) {
   return(!all(names(object@items) == object@items))
-})
-
-
-#' Get item names
-#' 
-#' Find the names associated with items given their identification codes.
-#' 
-#' @template method_not_exported
-#' 
-#' @param object S4 object of class `TransactionAnalyzer`.
-#' @param items Vector of items: unnamed subset of `object["items"]`.
-#' @return Names of the `items` in `object["items"]`.
-#' 
-#' @author Gauthier Magnin
-#' @seealso [`get_items`][get_items,TransactionAnalyzer-method], [`has_item_names`].
-#' 
-#' @aliases get_item_names
-#' @md
-#' @keywords internal
-setMethod(f = "get_item_names",
-          signature = "TransactionAnalyzer",
-          definition =
-function(object, items) {
-  return(names(object@items)[match(items, object@items)])
 })
 
 
