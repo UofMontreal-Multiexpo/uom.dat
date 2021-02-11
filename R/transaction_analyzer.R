@@ -952,6 +952,7 @@ function(object, from = 1, verbose = TRUE) {
       }
     }
   }
+  if (verbose) cat("\n")
   
   # Redéfinition de l'objet
   assign(object_name, object, envir = parent.frame())
