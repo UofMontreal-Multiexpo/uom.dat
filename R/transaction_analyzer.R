@@ -3647,6 +3647,8 @@ function(object, tnpc, identifiers = "original",
 #'  specific category value.
 #' 
 #' @details
+#' Items are sorted according to the values of the category then alphanumerically by their identifiers.
+#' 
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
