@@ -7,7 +7,7 @@
 \usage{
 \S4method{extract_rules}{TransactionAnalyzer}(
   object,
-  from,
+  itemsets = NULL,
   pruning = FALSE,
   arules = FALSE,
   as_sets = FALSE,
@@ -17,9 +17,10 @@
 \arguments{
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
-\item{from}{Character or list of itemsets for which to extract the association rules.
+\item{itemsets}{If not \code{NULL}, character or list of itemsets for which to extract the
+association rules.
 \itemize{
-  \item{If \code{"transactions"}, look for all rules within the transactions saved in \code{object}
+  \item{If \code{NULL}, look for all rules within the transactions saved in \code{object}
         or for rules with specific items.}
   \item{If \code{"patterns"}, look for rules whose union of the antecedent and the consequent form
         an entire pattern among those contained in \code{object} (more precisely, in
@@ -44,8 +45,8 @@ Ignored if \code{arules} is \code{TRUE}.}
 Data frame or object of class \code{rules} (according to the argument \code{arules})
  containing the extracted rules and their characteristics.
  
- If \code{from} is not \code{"transactions"}, the column \code{"itemset"} refers to the index of the
- itemset from which the rule was generated in the list of patterns (if \code{from = "patterns"})
+ If \code{itemsets} is not \code{NULL}, the column \code{"itemset"} refers to the index of the
+ one from which the rule was generated in the list of patterns (if \code{from = "patterns"})
  or in the given list (otherwise).
 }
 \description{
@@ -90,13 +91,13 @@ A rule is redundant if a more general rule with the same or higher confidence ex
  words, having inferred a dependency \mjeqn{X \rightarrow Y}{X -> Y}, any other dependency of the
  form \mjeqn{X \cup A \rightarrow Y}{X union A -> Y} is considered redundant.
 
-If \code{from = "transactions"}, additional arguments are \code{parameter}, \code{appearance} and
+If \code{itemsets = NULL}, additional arguments are \code{parameter}, \code{appearance} and
  \code{control} of function \code{\link[arules:apriori]{apriori}} from the package \code{arules}.
  These arguments allow to specify minimum support (default \code{0.1}), minimum confidence (default
  \code{0.8}), minimum length (default \code{1}), maximum length (default \code{10}), specific items
  in antecedent or consequent, and some operating parameters of the rule extraction algorithm.
 
-If \code{from} is \code{"patterns"} or a list, additional arguments are \code{confidence} and
+If \code{itemsets} is \code{"patterns"} or a list, additional arguments are \code{confidence} and
  \code{control} of function \code{\link[arules:ruleInduction]{ruleInduction}} from the package
  \code{arules}. These arguments allow to specify minimum confidence (default \code{0.8}) and some
  operating parameters of the rule extraction algorithm.
@@ -107,26 +108,26 @@ Defining minimum support \eqn{s} and confidence \eqn{c} means that the union of 
 }
 \examples{
 ## Basic rule extraction
-rules_1 <- extract_rules(TA_instance, from = "transactions")
-rules_2 <- extract_rules(TA_instance, from = "patterns")
-rules_3 <- extract_rules(TA_instance, from = list(c("931", "3180"),
-                                                  c("25", "192", "328")))
+rules_1 <- extract_rules(TA_instance, itemsets = NULL)
+rules_2 <- extract_rules(TA_instance, itemsets = "patterns")
+rules_3 <- extract_rules(TA_instance, itemsets = list(c("931", "3180"),
+                                                      c("25", "192", "328")))
 
 ## Rule extraction with conditions on the antecedent and the consequent
 params <- list(supp = 0.001, conf = 0.5, maxlen = 2)
-rules_4 <- extract_rules(TA_instance, from = "transactions",
+rules_4 <- extract_rules(TA_instance,
                          parameter = params,
                          appearance = list(rhs = "328"))
-rules_5 <- extract_rules(TA_instance, from = "transactions",
+rules_5 <- extract_rules(TA_instance,
                          parameter = params,
                          appearance = list(lhs = "497"))
-rules_6 <- extract_rules(TA_instance, from = "transactions",
+rules_6 <- extract_rules(TA_instance,
                          parameter = list(supp = 0.001, conf = 0,
                                           minlen = 2, maxlen = 2),
                          appearance = list(lhs = "328", rhs = "3180"))
 
 ## Getting rules as an object of class rules from the package arules
-rules_7 <- extract_rules(TA_instance, from = "transactions", arules = TRUE)
+rules_7 <- extract_rules(TA_instance, arules = TRUE)
 arules::inspect(rules_7)
 
 }
