@@ -988,7 +988,7 @@ function(object, items = NULL) {
 #'  If `TRUE`, they are spread over several vertical lines to avoid overplotting while taking as little
 #'  space as possible. If `NA`, they are plotted one after the other.
 #'  Ignored if `length_one` is `FALSE`.
-#' @param under,over Text to display on the chart under and over the itemsets.
+#' @param under,over Data to display on the chart under and over the itemsets.
 #'  Identifiers (`"ID"`) or one of the elements of the transactions (i.e. one of the values of
 #'  `object["names"]`).
 #' @param title Chart title.
@@ -1059,7 +1059,7 @@ function(object, identifiers = "original",
 #'  }
 #' @param length_one If `FALSE`, itemsets of length \eqn{1} are not plotted. If `TRUE`, all itemsets
 #'  are plotted.
-#' @param under,over Text to display on the chart under and over the itemsets.
+#' @param under,over Data to display on the chart under and over the itemsets.
 #'  Identifiers (`"ID"`) or one of the elements of the transactions (i.e. one of the values of
 #'  `object["names"]`).
 #' @return 
@@ -1068,8 +1068,8 @@ function(object, identifiers = "original",
 #'    \item{`itemsets`}{List of itemsets to plot.}
 #'    \item{`items`}{Data frame containing the items contained in the itemsets to plot, duplicated in two
 #'                   colonnes: item and label.}
-#'    \item{`under`}{Text to display under the itemsets.}
-#'    \item{`over`}{Text to display over the itemsets.}
+#'    \item{`under`}{Data to display under the itemsets.}
+#'    \item{`over`}{Data to display over the itemsets.}
 #'  }
 #' 
 #' @seealso [`itemset_chart,TransactionSet`][itemset_chart,TransactionSet-method].

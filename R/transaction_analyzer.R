@@ -2757,7 +2757,7 @@ function(object, patterns) {
 #'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 #'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
 #'  the entities represented. If one specific color, all vertices are colored with this color.
-#'  If a vector of size equal to the number of nodes or patterns to plot, the colors are directly
+#'  If a vector of length equal to the number of nodes or patterns to plot, the colors are directly
 #'  assigned to these entities. If \code{"none"}, the vertices are colored gray.
 #' @param clusters Maximum number of clusters to name on the graph.
 #'  If the actual number of clusters is greater, the names of the smaller ones are not displayed.
@@ -2785,8 +2785,8 @@ function(object, patterns) {
 #'                           degrees in the graph.}
 #'    \item{\code{edges}}{Data frame of information relating to the edges of the graph.}
 #'    \item{\code{coords}}{List containing the coordinate matrices of the vertices of the graph.
-#'                         As many matrices as there are charts (\code{nb_graphs}), which can be
-#'                         reused via the argument \code{coord} (see \code{...}).}
+#'                         As many matrices as there are graphs (argument \code{nb_graphs}), which can
+#'                         be reused via the argument \code{coord} (see \code{...}).}
 #'  }
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
@@ -3444,13 +3444,14 @@ function(object, ID, links) {
 #' Plot a chart of the transaction, node or pattern itemsets. It can be automatically saved as a PDF file.
 #' 
 #' @details
-#' If they are from nodes or patterns, itemsets are sorted according to their lengths then to their
-#'  frequencies. If they are from transactions, they are sorted according to their lengths only.
-#'  When there is equality of these characteristics, itemsets are then taken according to the initial
-#'  order in `tnpc`.
+#' If they are from nodes or patterns, itemsets are sorted according to their lengths increasing) then
+#'  to their frequencies (decreasing). If they are from transactions, they are sorted according to their
+#'  lengths only. When there is equality of these characteristics, itemsets are then taken according to
+#'  the initial order in `tnpc`.
 #' 
-#' If `category` is `NULL`, items are sorted alphanumerically. If it is not, items are sorted according
-#'  to the values of the category then alphanumerically.
+#' If `category` is `NULL` or `sort_by = "item"`, items are sorted alphanumerically.
+#' If `category` is not `NULL` and `sort_by = "category"`, items are sorted according to the values of
+#'  the category then alphanumerically.
 #' 
 #' If the argument `name` is not `NULL`, the chart is plotted in a PDF file of A4 landscape paper size.
 #'  If it is `NULL`, the chart is plotted in the active device.
@@ -3477,7 +3478,7 @@ function(object, ID, links) {
 #'  If `TRUE`, they are spread over several vertical lines to avoid overplotting while taking as little
 #'  space as possible. If `NA`, they are plotted one after the other.
 #'  Ignored if `length_one` is `FALSE`.
-#' @param under,over Text to display on the chart under and over the itemsets.
+#' @param under,over Data to display on the chart under and over the itemsets.
 #'  Can be:
 #'  * Identifiers: `"ID"`.
 #'  * One of the elements of the transactions (i.e. one of the values of `tnpc["names"]`), if `tnpc` is
@@ -3793,8 +3794,9 @@ function(object, category = NULL, items = object["items"],
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
-#' If `category` is `NULL`, items are sorted alphanumerically. If it is not, items are sorted according
-#'  to the values of the category then alphanumerically.
+#' If `category` is `NULL` or `sort_by = "item"`, items are sorted alphanumerically.
+#' If `category` is not `NULL` and `sort_by = "category"`, items are sorted according to the values of
+#'  the category then alphanumerically.
 #' 
 #' @template default_category_values_colors
 #' 

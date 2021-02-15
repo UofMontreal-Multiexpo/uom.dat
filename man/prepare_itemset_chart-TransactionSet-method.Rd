@@ -21,7 +21,7 @@ about the sort that is performed).}
 \item{length_one}{If \code{FALSE}, itemsets of length \eqn{1} are not plotted. If \code{TRUE}, all itemsets
 are plotted.}
 
-\item{under, over}{Text to display on the chart under and over the itemsets.
+\item{under, over}{Data to display on the chart under and over the itemsets.
 Identifiers (\code{"ID"}) or one of the elements of the transactions (i.e. one of the values of
 \code{object["names"]}).}
 }
@@ -31,8 +31,8 @@ Identifiers (\code{"ID"}) or one of the elements of the transactions (i.e. one o
 \item{\code{itemsets}}{List of itemsets to plot.}
 \item{\code{items}}{Data frame containing the items contained in the itemsets to plot, duplicated in two
 colonnes: item and label.}
-\item{\code{under}}{Text to display under the itemsets.}
-\item{\code{over}}{Text to display over the itemsets.}
+\item{\code{under}}{Data to display under the itemsets.}
+\item{\code{over}}{Data to display over the itemsets.}
 }
 }
 \description{

@@ -90,8 +90,9 @@ each pair of items, the number of transactions containing it).
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 
-If \code{category} is \code{NULL}, items are sorted alphanumerically. If it is not, items are sorted according
-to the values of the category then alphanumerically.
+If \code{category} is \code{NULL} or \code{sort_by = "item"}, items are sorted alphanumerically.
+If \code{category} is not \code{NULL} and \code{sort_by = "category"}, items are sorted according to the values of
+the category then alphanumerically.
 
 Default colors associated with the values of each category represented are selected circularly
 among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).

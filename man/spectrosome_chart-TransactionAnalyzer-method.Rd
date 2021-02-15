@@ -76,7 +76,7 @@ predefined color names or hexadecimal values).
 If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 patterns. If \code{"categories"}, coloring according to the categories associated with the items of
 the entities represented. If one specific color, all vertices are colored with this color.
-If a vector of size equal to the number of nodes or patterns to plot, the colors are directly
+If a vector of length equal to the number of nodes or patterns to plot, the colors are directly
 assigned to these entities. If \code{"none"}, the vertices are colored gray.}
 
 \item{clusters}{Maximum number of clusters to name on the graph.
@@ -115,8 +115,8 @@ in the active device.}
                           degrees in the graph.}
    \item{\code{edges}}{Data frame of information relating to the edges of the graph.}
    \item{\code{coords}}{List containing the coordinate matrices of the vertices of the graph.
-                        As many matrices as there are charts (\code{nb_graphs}), which can be
-                        reused via the argument \code{coord} (see \code{...}).}
+                        As many matrices as there are graphs (argument \code{nb_graphs}), which can
+                        be reused via the argument \code{coord} (see \code{...}).}
  }
 }
 \description{

@@ -37,7 +37,7 @@ If \code{TRUE}, they are spread over several vertical lines to avoid overplottin
 space as possible. If \code{NA}, they are plotted one after the other.
 Ignored if \code{length_one} is \code{FALSE}.}
 
-\item{under, over}{Text to display on the chart under and over the itemsets.
+\item{under, over}{Data to display on the chart under and over the itemsets.
 Identifiers (\code{"ID"}) or one of the elements of the transactions (i.e. one of the values of
 \code{object["names"]}).}
 

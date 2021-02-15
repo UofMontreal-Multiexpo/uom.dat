@@ -50,7 +50,7 @@ If \code{TRUE}, they are spread over several vertical lines to avoid overplottin
 space as possible. If \code{NA}, they are plotted one after the other.
 Ignored if \code{length_one} is \code{FALSE}.}
 
-\item{under, over}{Text to display on the chart under and over the itemsets.
+\item{under, over}{Data to display on the chart under and over the itemsets.
 Can be:
 \itemize{
 \item Identifiers: \code{"ID"}.
@@ -94,13 +94,14 @@ or \code{over} is \code{"ID"}).
 Plot a chart of the transaction, node or pattern itemsets. It can be automatically saved as a PDF file.
 }
 \details{
-If they are from nodes or patterns, itemsets are sorted according to their lengths then to their
-frequencies. If they are from transactions, they are sorted according to their lengths only.
-When there is equality of these characteristics, itemsets are then taken according to the initial
-order in \code{tnpc}.
+If they are from nodes or patterns, itemsets are sorted according to their lengths increasing) then
+to their frequencies (decreasing). If they are from transactions, they are sorted according to their
+lengths only. When there is equality of these characteristics, itemsets are then taken according to
+the initial order in \code{tnpc}.
 
-If \code{category} is \code{NULL}, items are sorted alphanumerically. If it is not, items are sorted according
-to the values of the category then alphanumerically.
+If \code{category} is \code{NULL} or \code{sort_by = "item"}, items are sorted alphanumerically.
+If \code{category} is not \code{NULL} and \code{sort_by = "category"}, items are sorted according to the values of
+the category then alphanumerically.
 
 If the argument \code{name} is not \code{NULL}, the chart is plotted in a PDF file of A4 landscape paper size.
 If it is \code{NULL}, the chart is plotted in the active device.
