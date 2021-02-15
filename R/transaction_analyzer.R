@@ -3844,6 +3844,7 @@ function(object, items = object["items"], category = NULL, min_occ = 1, max_occ 
   
   # Validation du paramètre d'accès à la catégorie et des items fournis
   check_access_for_category(object, category, NA)
+  check_param(sort_by, values = c("category", "item"))
   if (is.null(category) && sort_by == "category") sort_by = "item"
   items = get_items(object, items)
   
