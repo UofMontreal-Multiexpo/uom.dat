@@ -2338,7 +2338,7 @@ function(object, patterns, t = NULL, period = Inf, short_limit = object["status_
 #' @details
 #' The patterns are sorted according to their specificities (desc.), status (in order of
 #'  \code{object["status_colors"]}, default is  \code{"Persistent"}, \code{"Declining"},
-#'  \code{"Emergent"}, \code{"Latent"}), frequencies (desc.) and sizes (asc.).
+#'  \code{"Emergent"}, \code{"Latent"}), frequencies (desc.) and lengths (asc.).
 #'  If two patterns have the same characteristics concerning these ones, they are ordered relative to
 #'  each other in the order they are given.
 #' 
@@ -2365,7 +2365,8 @@ function(object, patterns, t = NULL, period = Inf, short_limit = object["status_
 #' @param name Name of the PDF file in which to save the chart. To be ignored to plot the chart in the
 #'  active device.
 #' @return Data frame of the patterns and characteristics used, associated with the identifiers visible
-#'  on the chart.
+#'  on the chart and with the distribution of pattern frequencies between complex and simple
+#'  transactions.
 #' 
 #' @author Delphine Bosson-Rieutort, Gauthier Magnin
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
@@ -2422,8 +2423,10 @@ function(object, pc, identifiers = "original", sort = TRUE,
     plot_spectrum_chart(object, pc, frequencies, title)
   }
   
-  # Motifs et caractéristiques, ordonnés selon ID (replacé en 1ère colonne)
-  return(pc[order(pc$ID), c(ncol(pc), seq(ncol(pc)-1))])
+  # Motifs et caractéristiques (et décomposition fréquence), ordonnés selon ID (replacé en 1ère colonne)
+  pc = cbind(pc, f.complex = frequencies[, "complex"], f.simple = frequencies[, "simple"])
+  return(pc[order(pc$ID), c("ID", "pattern", "year", "length", "frequency", "f.complex", "f.simple",
+                            "weight", "specificity", "status")])
 })
 
 
