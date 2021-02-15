@@ -2572,7 +2572,7 @@ function(object, pc, frequencies, title = "Spectrum of patterns") {
   # Titre du graphique (fonction text au lieu de title pour placement précis avec des coordonnées)
   graphics::text(x = fig_in_usr_coords(1) + w_margin,
                  y = fig_in_usr_coords(4) - t_margin / 2,
-                 "Spectrum of patterns", cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
+                 title, cex = 1.3, font = 2, adj = c(0, 0.5), xpd = TRUE)
 })
 
 
