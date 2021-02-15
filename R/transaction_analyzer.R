@@ -3326,12 +3326,14 @@ function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, c
   if (!is.vector(coord_e1)) {
     coord_L = data.frame(X = rowMeans(cbind(coord_e1[, "x"], coord_e2[, "x"])), 
                          Y = rowMeans(cbind(coord_e1[, "y"], coord_e2[, "y"])),
-                         LABEL = links$items)
+                         LABEL = links$items,
+                         stringsAsFactors = FALSE)
   } else {
     # S'il n'y a qu'un seul lien et que deux sommets
     coord_L = data.frame(X = mean(c(coord_e1["x"], coord_e2["x"])), 
                          Y = mean(c(coord_e1["y"], coord_e2["y"])),
-                         LABEL = links$items)
+                         LABEL = links$items,
+                         stringsAsFactors = FALSE)
   }
   # Regroupement en fonction du type de liaison ("LABEL")
   coord_L = coord_L[order(coord_L$LABEL), ]
@@ -3358,14 +3360,15 @@ function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, c
   
   # S'il y a effectivement des clusters à nommer (ce n'est pas le cas s'il n'y a que des liens mixtes)
   if (nrow(coords) > 0) {
+    
     # Affichage des noms des "clusters" retenus
     if (use_names) {
-      clusters = get_item_names(object, coords$LABEL)
-      if (!is.null(cutoff)) clusters = substr(clusters, 1, cutoff)
+      coords$LABEL = get_item_names(object, coords$LABEL)
+      if (!is.null(cutoff)) coords$LABEL = substr(coords$LABEL, 1, cutoff)
     }
-    shadowtext(coords$MOY.X, coords$MOY.Y, clusters, r = 0.3,
+    shadowtext(coords$MOY.X, coords$MOY.Y, coords$LABEL, r = 0.3,
                col = "black", bg = "white", cex = 0.9,
-               font = ifelse(clusters %in% clusters[seq_len(highlight)], 2, 1))
+               font = ifelse(coords$LABEL %in% coords$LABEL[seq_len(highlight)], 2, 1))
   }
 })
 
