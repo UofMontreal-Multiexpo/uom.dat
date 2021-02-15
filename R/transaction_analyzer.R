@@ -2750,15 +2750,15 @@ function(object, patterns) {
 #' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"},
 #'  range of vertex size values (given as expansion factors). Ignored otherwise.
 #' @param vertex_col Way how the colors of the vertices of the graph should be defined.
-#'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a single character value or vector
-#'  of length equal to the number of nodes or patterns to plot (characters corresponding to R
-#'  predefined color names or hexadecimal values).
+#'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a character vector corresponding to
+#'  R predefined color names or hexadecimal values.
 #'  
 #'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
 #'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
 #'  the entities represented. If one specific color, all vertices are colored with this color.
-#'  If a vector of length equal to the number of nodes or patterns to plot, the colors are directly
-#'  assigned to these entities. If \code{"none"}, the vertices are colored gray.
+#'  If a longer vector, the colors are directly assigned to nodes or patterns to plot. If the length of
+#'  this vector is not equal to the number of entities to plot, it is recycled.
+#'  If \code{"none"}, the vertices are colored gray.
 #' @param clusters Maximum number of clusters to name on the graph.
 #'  If the actual number of clusters is greater, the names of the smaller ones are not displayed.
 #' @param highlight Number of clusters to highlight among those named on the graph.
@@ -2828,11 +2828,9 @@ function(object, nopc, identifiers = "original",
   if (identifiers != "original" && identifiers != "new")
     stop("identifiers must be \"original\" or \"new\".")
   
-  if (!(vertex_col %in% c("status", "categories", "none"))
-      && !(length(vertex_col) %in% c(1, nrow(nopc)))) {
+  if (!is.character(vertex_col)) {
     stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
-               "a vector of R predefined color names or hexadecimal values",
-               "of length 1 or of length equal to the number of rows of nopc."))
+               "a vector of R predefined color names or hexadecimal values."))
   }
   if (!(vertex_size %in% c("relative", "grouped", "absolute"))
       && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
