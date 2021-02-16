@@ -9,7 +9,7 @@
   object,
   rules = NULL,
   items = NULL,
-  parameters = list(supp = 0.001, conf = 0),
+  parameter = list(supp = 0.001, conf = 0),
   display = "highest confidence",
   threshold = 0,
   use_names = TRUE,
@@ -33,14 +33,14 @@
 
 \item{rules}{Data frame of association rules to plot (given by the \code{\link{extract_rules}} function).
 Only those of length 2 are considered. If \code{NULL}, rules of length 2 are extracted from
-\code{object["transactions"]} using the mining parameters \code{parameters}.}
+\code{object["transactions"]} using the mining parameters given as \code{parameter}.}
 
 \item{items}{Items to consider in the given or extracted rules. If \code{NULL}, only items from the given
 \code{rules} are considered. Any subset of \code{object["items"]}.
 
 \code{"items"} and \code{"i"} are special values for \code{object["items"]}.}
 
-\item{parameters}{List of mining parameters specifying minimum support and minimum confidence of
+\item{parameter}{List of mining parameters specifying minimum support and minimum confidence of
 association rules to extract. Ignored if \code{rules} is not \code{NULL}. See
 \link[arules:ASparameter-class]{APparameter} for more.}
 
@@ -109,13 +109,13 @@ If \code{1}, colors are in original order: from the lightest to the darkest.
 If \code{-1}, color order is reversed: from the darkest to the lightest.}
 }
 \value{
-\code{NULL} if no association rule meets the criteria defined by \code{items}, \code{parameters} and
+\code{NULL} if no association rule meets the criteria defined by \code{items}, \code{parameter} and
 \code{threshold}.\cr
 Otherwise:
 \describe{
 \item{\code{graph}}{Graph created with the packages \code{ggraph} and \code{ggplot2}.}
 \item{\code{rules}}{Association rules represented on the graph (i.e. of length 2 and considering
-\code{items}, \code{parameters} and \code{threshold}).}
+\code{items}, \code{parameter} and \code{threshold}).}
 }
 }
 \description{

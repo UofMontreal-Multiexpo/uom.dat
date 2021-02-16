@@ -785,7 +785,7 @@ setGeneric(name = "category_tree_chart", def = function(object, category = NULL,
 
 setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
 
-setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameters = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1){ standardGeneric("rules_chart") })
+setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameter = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1){ standardGeneric("rules_chart") })
 
 
 # Methods for search and save
@@ -4128,12 +4128,12 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param rules Data frame of association rules to plot (given by the [`extract_rules`] function).
 #'  Only those of length 2 are considered. If `NULL`, rules of length 2 are extracted from
-#'  `object["transactions"]` using the mining parameters `parameters`.
+#'  `object["transactions"]` using the mining parameters given as `parameter`.
 #' @param items Items to consider in the given or extracted rules. If `NULL`, only items from the given
 #' `rules` are considered. Any subset of `object["items"]`.
 #'  
 #'  `"items"` and `"i"` are special values for `object["items"]`.
-#' @param parameters List of mining parameters specifying minimum support and minimum confidence of
+#' @param parameter List of mining parameters specifying minimum support and minimum confidence of
 #'  association rules to extract. Ignored if `rules` is not `NULL`. See
 #'  [APparameter][arules::APparameter] for more.
 #' @param display Rule characteristic to visualize or to use to choose between one rule and its reciprocal.
@@ -4185,13 +4185,13 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' @param palette_direction Direction in which to use the color palette.
 #'  If `1`, colors are in original order: from the lightest to the darkest.
 #'  If `-1`, color order is reversed: from the darkest to the lightest.
-#' @return `NULL` if no association rule meets the criteria defined by `items`, `parameters` and
+#' @return `NULL` if no association rule meets the criteria defined by `items`, `parameter` and
 #'  `threshold`.\cr
 #'  Otherwise:
 #'  \describe{
 #'    \item{`graph`}{Graph created with the packages `ggraph` and `ggplot2`.}
 #'    \item{`rules`}{Association rules represented on the graph (i.e. of length 2 and considering
-#'                   `items`, `parameters` and `threshold`).}
+#'                   `items`, `parameter` and `threshold`).}
 #'  }
 #' 
 #' @author Gauthier Magnin
@@ -4230,7 +4230,7 @@ setMethod(f = "rules_chart",
           signature = "TransactionAnalyzer",
           definition =
 function(object, rules = NULL, items = NULL,
-         parameters = list(supp = 0.001, conf = 0),
+         parameter = list(supp = 0.001, conf = 0),
          display = "highest confidence", threshold = 0,
          use_names = TRUE, n.cutoff = NULL,
          category = NULL, c.cutoff = NULL,
@@ -4263,8 +4263,8 @@ function(object, rules = NULL, items = NULL,
   
   # Validation des paramètres de recherche RA fournis
   if (is.null(rules)) {
-    if (is.null(parameters)) parameters = list(minlen = 2, maxlen = 2)
-    else parameters$minlen = parameters$maxlen = 2
+    if (is.null(parameter)) parameter = list(minlen = 2, maxlen = 2)
+    else parameter$minlen = parameter$maxlen = 2
   }
   
   # Validation du paramètre d'accès à la catégorie
@@ -4304,9 +4304,9 @@ function(object, rules = NULL, items = NULL,
   if (is.null(rules)) {
     # Calcul des règles sans ou avec spécification des items
     if (is.null(items) || identical(items, object@items)) {
-      rules = extract_rules(object, "transactions", parameter = parameters)
+      rules = extract_rules(object, "transactions", parameter = parameter)
     } else {
-      rules = extract_rules(object, "transactions", parameter = parameters,
+      rules = extract_rules(object, "transactions", parameter = parameter,
                             appearance = list(both = items))
     }
     
