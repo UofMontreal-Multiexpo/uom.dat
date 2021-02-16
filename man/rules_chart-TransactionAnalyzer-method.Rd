@@ -25,7 +25,8 @@
   edge_looseness = 0.8,
   edge_alpha = 1,
   palette = "default",
-  palette_direction = 1
+  palette_direction = 1,
+  plot = FALSE
 )
 }
 \arguments{
@@ -107,6 +108,8 @@ If \code{display} refers to the support or the lift, one of \code{"Blues"}, \cod
 \item{palette_direction}{Direction in which to use the color palette.
 If \code{1}, colors are in original order: from the lightest to the darkest.
 If \code{-1}, color order is reversed: from the darkest to the lightest.}
+
+\item{plot}{If \code{TRUE}, the chart is plotted in the active graphics device before the return.}
 }
 \value{
 \code{NULL} if no association rule meets the criteria defined by \code{items}, \code{parameter} and
@@ -134,6 +137,12 @@ rule and its reciprocal have the same confidence, both rules are represented.
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 
+Since other values are returned besides the graph and a graph is automatically plotted if
+the return is not assigned to a variable but is not plotted if the return is assigned,
+the argument \code{plot} allows to counter this natural effect. The graph can thus be plotted despite
+an assignment thanks to the parameter. However, if \code{plot = TRUE} and the return is not assigned
+to a variable, the graph will be plotted twice.
+
 Default colors associated with the values of each category represented are selected circularly
 among the 20 colors of the palette \code{category20} from D3 (see \code{ggsci::pal_d3("category20")}).
 Therefore, if the number of values exceeds \code{20}, some colors will be used more than once.
@@ -150,7 +159,6 @@ Moreover, such plotting may take a while.
 \examples{
 ## All rules of length 2 (plotting may take a while)
 result <- rules_chart(TA_instance, items = TA_instance["items"], category = "family")
-plot(result$graph)
 result$rules
 
 ## Rules from a data frame

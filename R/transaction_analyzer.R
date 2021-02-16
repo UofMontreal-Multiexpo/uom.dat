@@ -785,7 +785,7 @@ setGeneric(name = "category_tree_chart", def = function(object, category = NULL,
 
 setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
 
-setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameter = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1){ standardGeneric("rules_chart") })
+setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameter = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1, plot = FALSE){ standardGeneric("rules_chart") })
 
 
 # Methods for search and save
@@ -4117,6 +4117,12 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
+#' Since other values are returned besides the graph and a graph is automatically plotted if
+#'  the return is not assigned to a variable but is not plotted if the return is assigned,
+#'  the argument `plot` allows to counter this natural effect. The graph can thus be plotted despite
+#'  an assignment thanks to the parameter. However, if `plot = TRUE` and the return is not assigned
+#'  to a variable, the graph will be plotted twice.
+#' 
 #' @template default_category_values_colors
 #' 
 #' @note
@@ -4185,6 +4191,7 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' @param palette_direction Direction in which to use the color palette.
 #'  If `1`, colors are in original order: from the lightest to the darkest.
 #'  If `-1`, color order is reversed: from the darkest to the lightest.
+#' @param plot If `TRUE`, the chart is plotted in the active graphics device before the return.
 #' @return `NULL` if no association rule meets the criteria defined by `items`, `parameter` and
 #'  `threshold`.\cr
 #'  Otherwise:
@@ -4200,7 +4207,6 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' @examples
 #' ## All rules of length 2 (plotting may take a while)
 #' result <- rules_chart(TA_instance, items = TA_instance["items"], category = "family")
-#' plot(result$graph)
 #' result$rules
 #' 
 #' ## Rules from a data frame
@@ -4238,7 +4244,8 @@ function(object, rules = NULL, items = NULL,
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,
          edge_looseness = 0.8, edge_alpha = 1,
-         palette = "default", palette_direction = 1) {
+         palette = "default", palette_direction = 1,
+         plot = FALSE) {
   
   # Conversion des factor de rules en character si nécessaire
   a_factor = FALSE
@@ -4458,6 +4465,9 @@ function(object, rules = NULL, items = NULL,
   # Reconversion des règles en factor si elles ont été données ainsi
   if (a_factor) rules$antecedent = set_notation(rules$antecedent)
   if (c_factor) rules$consequent = set_notation(rules$consequent)
+  
+  # Puisque l'assignation du retour empêche le plot du graphique, utilisation d'un paramètre
+  if (plot) graphics::plot(graph)
   
   # Si mode debug, retour supplémentaire de la sélection de règles réellement tracées
   if (DEBUG_MODE_) return(list(graph = graph, rules = rules, plotted_rules = rules_to_plot))
