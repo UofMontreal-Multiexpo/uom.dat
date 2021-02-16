@@ -44,7 +44,7 @@ Texts are written on the active graphics device.
 \details{
 The identifiers of the items forming the clusters are sorted in alphanumeric order to define those
  which are displayed and those highlighted. Therefore, if several clusters are of the same size but
- the value given to the related argument (i.e. \code{clusters} or \code{highlight}) does not allow
+ the value given to the related argument (\code{display} or \code{highlight}) does not allow
  all of them to be considered, only the first ones will be, using this order.
 }
 \note{
