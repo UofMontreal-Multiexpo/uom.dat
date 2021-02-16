@@ -2733,8 +2733,7 @@ function(object, patterns) {
 #' @param min_link_weight Minimum number of items in common between two entities to plot their link on
 #'  the chart.
 #' @param vertex_size Way how the sizes of the vertices of the graph should be defined.
-#'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"} or a numeric vector of length 1 of
-#'  length equal to the number of nodes or patterns to plot.
+#'  One of \code{"relative"}, \code{"grouped"}, \code{"absolute"} or a numeric vector.
 #'  \describe{
 #'    \item{\code{"relative"}}{The sizes are defined by a linear interpolation of the frequencies of the
 #'                             entities in \code{size_range}.}
@@ -2745,7 +2744,8 @@ function(object, patterns) {
 #'                             the entity.}
 #'    \item{A single numeric value}{The vertices are all the size defined by this value.}
 #'    \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
-#'                                   nodes of patterns to plot.}
+#'                                   nodes of patterns to plot. Is recycled if smaller than the number
+#'                                   of entities.}
 #'  }
 #' @param size_range If \code{vertex_size} is \code{"relative"} or \code{"grouped"},
 #'  range of vertex size values (given as expansion factors). Ignored otherwise.
@@ -2830,13 +2830,11 @@ function(object, nopc, identifiers = "original",
   
   if (!is.character(vertex_col)) {
     stop(paste("vertex_col must be \"status\", \"categories\", \"none\" or",
-               "a vector of R predefined color names or hexadecimal values."))
+               "a character vector of R predefined color names or hexadecimal values."))
   }
-  if (!(vertex_size %in% c("relative", "grouped", "absolute"))
-      && (!is.numeric(vertex_size) || !(length(vertex_size) %in% c(1, nrow(nopc))))) {
+  if (!(vertex_size %in% c("relative", "grouped", "absolute")) && !is.numeric(vertex_size)) {
     stop(paste("vertex_size must be one of \"relative\", \"grouped\", \"absolute\"",
-               "or a numeric vector of length 1 or of length equal to the number of",
-               "rows of nopc."))
+               "or a numeric vector."))
   }
   
   
