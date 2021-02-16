@@ -4415,7 +4415,7 @@ function(object, rules = NULL, items = NULL,
     ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
                                                     colors = rules_to_plot[, col_to_display]),
                              ggplot2::aes(color = colors,
-                                          alpha = if (col_to_display == "confidence") ggplot2::stat(index) else edge_alpha),
+                                          alpha = if (col_to_display == "confidence") ggplot2::after_stat(index) else edge_alpha),
                              tension = edge_looseness) +
     
     ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
