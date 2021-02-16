@@ -72,12 +72,16 @@ range of vertex size values (given as expansion factors). Ignored otherwise.}
 One of \code{"status"}, \code{"categories"}, \code{"none"} or a character vector corresponding to
 R predefined color names or hexadecimal values.
 
-If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
-patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-the entities represented. If one specific color, all vertices are colored with this color.
-If a longer vector, the colors are directly assigned to nodes or patterns to plot. If the length of
-this vector is not equal to the number of entities to plot, it is recycled.
-If \code{"none"}, the vertices are colored gray.}
+\describe{
+ \item{\code{"status"}}{If \code{nopc} refers to patterns, coloring according to the status of the
+       patterns. If it refers to nodes, consider the value \code{"none"}.}
+ \item{\code{"categories"}}{Coloring according to the categories associated with the items of
+       the entities represented.}
+ \item{\code{"none"}}{Vertices are colored gray.}
+ \item{A single character value}{All vertices are colored with this color.}
+ \item{A longer character vector}{The colors are directly assigned to nodes or patterns to plot.
+       If the length of this vector is not equal to the number of entities to plot, it is recycled.}
+}}
 
 \item{clusters}{Maximum number of clusters to name on the graph.
 If the actual number of clusters is greater, the names of the smaller ones are not displayed.}
@@ -154,6 +158,10 @@ See attribute \code{categories_colors} of the \code{TransactionAnalyzer} object 
 category values.
 
 The names of clusters confused because all of their links are mixed links, are not displayed.
+ The identifiers of the items forming the clusters are sorted in alphanumeric order to define those
+ which are displayed and those highlighted. Therefore, if several clusters are of the same size but
+ the value given to the related argument (i.e. \code{clusters} or \code{highlight}) does not allow
+ all of them to be considered, only the first ones will be, using this order.
 
 Additional arguments can be supplied to the function in charge of plotting the graph.
  See the list of parameters: \code{\link[sna:gplot]{sna::gplot}}.

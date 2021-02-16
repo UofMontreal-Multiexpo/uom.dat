@@ -41,6 +41,12 @@ Identify and display the names of the clusters of the graph provided, correspond
 The names of clusters confused because all of their links are mixed links, are not displayed.
 Texts are written on the active graphics device.
 }
+\details{
+The identifiers of the items forming the clusters are sorted in alphanumeric order to define those
+ which are displayed and those highlighted. Therefore, if several clusters are of the same size but
+ the value given to the related argument (i.e. \code{clusters} or \code{highlight}) does not allow
+ all of them to be considered, only the first ones will be, using this order.
+}
 \note{
 This method is not exported from the package.
 }

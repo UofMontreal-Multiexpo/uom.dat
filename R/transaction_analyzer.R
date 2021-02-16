@@ -2701,6 +2701,10 @@ function(object, patterns) {
 #' 
 #' @details
 #' The names of clusters confused because all of their links are mixed links, are not displayed.
+#'  The identifiers of the items forming the clusters are sorted in alphanumeric order to define those
+#'  which are displayed and those highlighted. Therefore, if several clusters are of the same size but
+#'  the value given to the related argument (i.e. \code{clusters} or \code{highlight}) does not allow
+#'  all of them to be considered, only the first ones will be, using this order.
 #' 
 #' Additional arguments can be supplied to the function in charge of plotting the graph.
 #'  See the list of parameters: \code{\link[sna:gplot]{sna::gplot}}.
@@ -2753,12 +2757,16 @@ function(object, patterns) {
 #'  One of \code{"status"}, \code{"categories"}, \code{"none"} or a character vector corresponding to
 #'  R predefined color names or hexadecimal values.
 #'  
-#'  If \code{"status"} and \code{nopc} refers to patterns, coloring according to the status of the
-#'  patterns. If \code{"categories"}, coloring according to the categories associated with the items of
-#'  the entities represented. If one specific color, all vertices are colored with this color.
-#'  If a longer vector, the colors are directly assigned to nodes or patterns to plot. If the length of
-#'  this vector is not equal to the number of entities to plot, it is recycled.
-#'  If \code{"none"}, the vertices are colored gray.
+#'  \describe{
+#'   \item{\code{"status"}}{If \code{nopc} refers to patterns, coloring according to the status of the
+#'         patterns. If it refers to nodes, consider the value \code{"none"}.}
+#'   \item{\code{"categories"}}{Coloring according to the categories associated with the items of
+#'         the entities represented.}
+#'   \item{\code{"none"}}{Vertices are colored gray.}
+#'   \item{A single character value}{All vertices are colored with this color.}
+#'   \item{A longer character vector}{The colors are directly assigned to nodes or patterns to plot.
+#'         If the length of this vector is not equal to the number of entities to plot, it is recycled.}
+#'  }
 #' @param clusters Maximum number of clusters to name on the graph.
 #'  If the actual number of clusters is greater, the names of the smaller ones are not displayed.
 #' @param highlight Number of clusters to highlight among those named on the graph.
@@ -3287,6 +3295,12 @@ function(object, nopc, identifiers = "original",
 #'  patterns sharing one item.
 #' The names of clusters confused because all of their links are mixed links, are not displayed.
 #' Texts are written on the active graphics device.
+#' 
+#' @details
+#' The identifiers of the items forming the clusters are sorted in alphanumeric order to define those
+#'  which are displayed and those highlighted. Therefore, if several clusters are of the same size but
+#'  the value given to the related argument (i.e. \code{clusters} or \code{highlight}) does not allow
+#'  all of them to be considered, only the first ones will be, using this order.
 #' 
 #' @template method_not_exported
 #' 
