@@ -3048,12 +3048,9 @@ function(object, nopc, identifiers = "original",
       }
     }
   } else {
-    if (vertex_col[1] == "none" || vertex_col[1] == "status") {
-      # "none" ou "status" et noeuds : couleur grise
-      vertices_colors = rep("grey", nrow(nopc))
-    } else if (length(vertex_col == 1)) {
-      vertices_colors = rep(vertex_col, nrow(nopc))
-    } else { # length(vertex_col) == nrow(nopc)
+    if (vertex_col[1] == "none" || vertex_col[1] == "status") { # ("none") ou ("status" et noeuds)
+      vertices_colors = "grey"
+    } else {
       vertices_colors = vertex_col
     }
     
