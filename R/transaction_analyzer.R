@@ -3201,7 +3201,8 @@ function(object, nopc, identifiers = "original",
                                               pt.cex = vertex_legend_pt.cex, pch = vertex_legend_pch,
                                               lwd = -1, cex = cex_legend,
                                               col = legend_col, legend = legend_legend)
-      if (length(object@items_categories) != 0) {
+      
+      if (length(object@items_categories) != 0 && length(categories_colors[[j]]) != 0) {
         edge_legend_legend = substr2(names(categories_colors[[j]]), stop = c.cutoff)
         
         edge_legend_output = graphics::legend(x = vertex_legend_output$rect$left,
