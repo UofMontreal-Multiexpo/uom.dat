@@ -59,8 +59,8 @@ between the two rules existing between two items is represented.}
 items are both represented.}
 }}
 
-\item{threshold}{Threshold above which the characteristic referred by \code{display} must be greater for
-a rule to be considered.}
+\item{threshold}{Threshold above which the characteristic referred by \code{display} must be for a rule to
+be considered.}
 
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}

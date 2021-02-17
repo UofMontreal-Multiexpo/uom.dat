@@ -783,7 +783,7 @@ setGeneric(name = "category_tree_chart", def = function(object, category = NULL,
 
 # Methods for association rule extraction and visualization
 
-setGeneric(name = "extract_rules", def = function(object, from, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
+setGeneric(name = "extract_rules", def = function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
 
 setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameter = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1, plot = FALSE){ standardGeneric("rules_chart") })
 
@@ -4159,8 +4159,8 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #'    \item{`"confidence"`, `"conf"`}{The two confidence values of the two rules existing between two
 #'          items are both represented.}
 #'  }
-#' @param threshold Threshold above which the characteristic referred by `display` must be greater for
-#'  a rule to be considered.
+#' @param threshold Threshold above which the characteristic referred by `display` must be for a rule to
+#'  be considered.
 #' @param use_names If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
@@ -4314,10 +4314,9 @@ function(object, rules = NULL, items = NULL,
   if (is.null(rules)) {
     # Calcul des règles sans ou avec spécification des items
     if (is.null(items) || identical(items, object@items)) {
-      rules = extract_rules(object, "transactions", parameter = parameter)
+      rules = extract_rules(object, parameter = parameter)
     } else {
-      rules = extract_rules(object, "transactions", parameter = parameter,
-                            appearance = list(both = items))
+      rules = extract_rules(object, parameter = parameter, appearance = list(both = items))
     }
   } else {
     # Retrait des règles qui ne sont pas de taille 2
