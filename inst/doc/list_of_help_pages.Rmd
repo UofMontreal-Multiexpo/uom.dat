@@ -99,7 +99,7 @@ Search for transactions, nodes or patterns:
 Computations on nodes and patterns:
 
 * [frequency_by_complexity](../html/frequency_by_complexity-TransactionAnalyzer-method.html)
-* [define_dynamic_status](../html/define_dynamic_status-TransactionAnalyzer-method.html)
+* [dynamic_status](../html/dynamic_status-TransactionAnalyzer-method.html)
 
 Search for links between nodes or between patterns:
 

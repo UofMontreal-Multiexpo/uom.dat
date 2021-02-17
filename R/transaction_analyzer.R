@@ -747,7 +747,7 @@ setGeneric(name = "compute_xi_threshold", def = function(object, reporting_index
 
 setGeneric(name = "compute_ri_threshold", def = function(object, reporting_indexes, xi = NULL){ standardGeneric("compute_ri_threshold") })
 
-setGeneric(name = "define_dynamic_status", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("define_dynamic_status") })
+setGeneric(name = "dynamic_status", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("dynamic_status") })
 
 
 # Methods for creating spectrum charts
@@ -1904,7 +1904,7 @@ function(object) {
 #' @references Bosson-Rieutort D, de Gaudemaris R, Bicout DJ (2018).
 #'             The spectrosome of occupational health problems. *PLoS ONE* 13(1): e0190196.
 #'             <https://doi.org/10.1371/journal.pone.0190196>.
-#' @seealso [`compute_specificity`], [`define_dynamic_status`],
+#' @seealso [`compute_specificity`], [`dynamic_status`],
 #' @aliases compute_patterns_characteristics
 #' @md
 #' @keywords internal
@@ -1928,7 +1928,7 @@ function(object) {
   # Calcul de la spécificité et du statut dynamique de chaque motif
   object@patterns$specificity = compute_specificity(object, object@patterns$pattern,
                                                     object@patterns$frequency, object@patterns$weight)
-  object@patterns$status = define_dynamic_status(object, object@patterns$pattern)$res$status
+  object@patterns$status = dynamic_status(object, object@patterns$pattern)$res$status
   
   # Changement de l'ordre des colonnes
   object@patterns = object@patterns[, c("pattern", "year", "length", "frequency", "weight", "specificity", "status")]
@@ -2278,13 +2278,13 @@ function(object, reporting_indexes, xi = NULL) {
 #'             <https://doi.org/10.1371/journal.pone.0190196>.
 #' 
 #' @examples
-#' define_dynamic_status(TA_instance, "patterns")
-#' define_dynamic_status(TA_instance, TA_instance["patterns"]$pattern[1:15])
+#' dynamic_status(TA_instance, "patterns")
+#' dynamic_status(TA_instance, TA_instance["patterns"]$pattern[1:15])
 #' 
-#' @aliases define_dynamic_status
+#' @aliases dynamic_status
 #' @md
 #' @export
-setMethod(f = "define_dynamic_status",
+setMethod(f = "dynamic_status",
           signature = "TransactionAnalyzer",
           definition =
 function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]) {

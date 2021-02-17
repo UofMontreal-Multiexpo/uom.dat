@@ -104,7 +104,7 @@ The spectrosome of occupational health problems. \emph{PLoS ONE} 13(1): e0190196
 \url{https://doi.org/10.1371/journal.pone.0190196}.
 }
 \seealso{
-\code{\link{compute_specificity}}, \code{\link{define_dynamic_status}},
+\code{\link{compute_specificity}}, \code{\link{dynamic_status}},
 }
 \author{
 Gauthier Magnin
