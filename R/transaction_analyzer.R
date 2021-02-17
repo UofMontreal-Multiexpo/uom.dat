@@ -4117,6 +4117,10 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
+#' If `category` is `NULL` or `sort_by = "item"`, items are sorted alphanumerically.
+#' If `category` is not `NULL` and `sort_by = "category"`, items are sorted according to the values of
+#'  the category then alphanumerically.
+#' 
 #' Since other values are returned besides the graph and a graph is automatically plotted if
 #'  the return is not assigned to a variable but is not plotted if the return is assigned,
 #'  the argument `plot` allows to counter this natural effect. The graph can thus be plotted despite
@@ -4364,10 +4368,11 @@ function(object, rules = NULL, items = NULL,
   # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
   
-  # Tri par nom, par identifiant ou selon les valeurs de la catégorie
+  # Tri par nom, par identifiant ou selon les valeurs de la catégorie (puis nom ou code)
   if (use_names && sort_by == "item") hierarchy = hierarchy[order(names(items)), ]
   else if (sort_by == "item") hierarchy = hierarchy[order(items), ]
-  else hierarchy = hierarchy[order(object@items_categories[as.character(items), category]), ]
+  else hierarchy = hierarchy[order(object@items_categories[as.character(items), category],
+                                   if (has_item_names(object) && use_names) names(items) else items), ]
   
   # Sommets du graphe
   vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)

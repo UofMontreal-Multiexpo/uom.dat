@@ -137,6 +137,10 @@ rule and its reciprocal have the same confidence, both rules are represented.
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 
+If \code{category} is \code{NULL} or \code{sort_by = "item"}, items are sorted alphanumerically.
+If \code{category} is not \code{NULL} and \code{sort_by = "category"}, items are sorted according to the values of
+the category then alphanumerically.
+
 Since other values are returned besides the graph and a graph is automatically plotted if
 the return is not assigned to a variable but is not plotted if the return is assigned,
 the argument \code{plot} allows to counter this natural effect. The graph can thus be plotted despite
