@@ -4120,7 +4120,7 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' Since other values are returned besides the graph and a graph is automatically plotted if
 #'  the return is not assigned to a variable but is not plotted if the return is assigned,
 #'  the argument `plot` allows to counter this natural effect. The graph can thus be plotted despite
-#'  an assignment thanks to the parameter. However, if `plot = TRUE` and the return is not assigned
+#'  an assignment thanks to this argument. However, if `plot = TRUE` and the return is not assigned
 #'  to a variable, the graph will be plotted twice.
 #' 
 #' @template default_category_values_colors
@@ -4132,7 +4132,7 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' Moreover, such plotting may take a while.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
-#' @param rules Data frame of association rules to plot (given by the [`extract_rules`] function).
+#' @param rules Data frame of association rules to plot (given by the [`extract_rules`] method).
 #'  Only those of length 2 are considered. If `NULL`, rules of length 2 are extracted from
 #'  `object["transactions"]` using the mining parameters given as `parameter`.
 #' @param items Items to consider in the given or extracted rules. If `NULL`, only items from the given

@@ -32,7 +32,7 @@
 \arguments{
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
-\item{rules}{Data frame of association rules to plot (given by the \code{\link{extract_rules}} function).
+\item{rules}{Data frame of association rules to plot (given by the \code{\link{extract_rules}} method).
 Only those of length 2 are considered. If \code{NULL}, rules of length 2 are extracted from
 \code{object["transactions"]} using the mining parameters given as \code{parameter}.}
 
@@ -140,7 +140,7 @@ afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the retu
 Since other values are returned besides the graph and a graph is automatically plotted if
 the return is not assigned to a variable but is not plotted if the return is assigned,
 the argument \code{plot} allows to counter this natural effect. The graph can thus be plotted despite
-an assignment thanks to the parameter. However, if \code{plot = TRUE} and the return is not assigned
+an assignment thanks to this argument. However, if \code{plot = TRUE} and the return is not assigned
 to a variable, the graph will be plotted twice.
 
 Default colors associated with the values of each category represented are selected circularly
