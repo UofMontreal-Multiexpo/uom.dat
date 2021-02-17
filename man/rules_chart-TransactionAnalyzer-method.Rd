@@ -36,8 +36,8 @@
 Only those of length 2 are considered. If \code{NULL}, rules of length 2 are extracted from
 \code{object["transactions"]} using the mining parameters given as \code{parameter}.}
 
-\item{items}{Items to consider in the given or extracted rules. If \code{NULL}, only items from the given
-\code{rules} are considered. Any subset of \code{object["items"]}.
+\item{items}{Items to consider in the given or extracted rules. If \code{NULL}, items considered are all
+those present in the given or extracted rules. Any subset of \code{object["items"]}.
 
 \code{"items"} and \code{"i"} are special values for \code{object["items"]}.}
 
@@ -92,7 +92,7 @@ The closer the value is to 0, the straighter the lines will be.
 The closer the value is to 1, the more the lines will be curved.}
 
 \item{edge_alpha}{Opacity of the lines connecting vertices (from 0 to 1).
-Ignored if \code{display} is \code{"confidence"} (or \code{"conf"}).}
+Ignored if \code{display} refers to the confidence.}
 
 \item{palette}{Name of the palette to use for coloring the edges.
 
@@ -162,12 +162,15 @@ Moreover, such plotting may take a while.
 }
 \examples{
 ## All rules of length 2 (plotting may take a while)
-result <- rules_chart(TA_instance, items = TA_instance["items"], category = "family")
+result <- rules_chart(TA_instance, category = "family")
+plot(result$graph)
 result$rules
 
 ## Rules from a data frame
 rules_chart(TA_instance, rules = result$rules[11:20, ], category = 1)
+rules_chart(TA_instance, rules = result$rules[11:20, ], items = "items")
 
+## Rules relating to specific items
 ## Display of confidence or display rules of highest or of lowest confidence
 rules_chart(TA_instance, items = c(497, 930, 402), category = 1,
             display = "confidence")
@@ -179,9 +182,9 @@ rules_chart(TA_instance, items = c(497, 930, 402), category = 1,
             display = "lowest confidence", palette_direction = -1)
 
 ## Display of support or lift
-rules_chart(TA_instance, items = "items", category = 1, display = "support")
-rules_chart(TA_instance, items = "items", category = 1, display = "lift")
-rules_chart(TA_instance, items = "items", category = 1, display = "lift",
+rules_chart(TA_instance, category = 1, display = "support")
+rules_chart(TA_instance, category = 1, display = "lift")
+rules_chart(TA_instance, category = 1, display = "lift",
             threshold = 5, n.cutoff = 20)$graph +
   ggplot2::expand_limits(x = c(-1.5, 1.5), y = c(-1.5, 1.5))
 

@@ -4139,8 +4139,8 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' @param rules Data frame of association rules to plot (given by the [`extract_rules`] method).
 #'  Only those of length 2 are considered. If `NULL`, rules of length 2 are extracted from
 #'  `object["transactions"]` using the mining parameters given as `parameter`.
-#' @param items Items to consider in the given or extracted rules. If `NULL`, only items from the given
-#' `rules` are considered. Any subset of `object["items"]`.
+#' @param items Items to consider in the given or extracted rules. If `NULL`, items considered are all
+#'  those present in the given or extracted rules. Any subset of `object["items"]`.
 #'  
 #'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param parameter List of mining parameters specifying minimum support and minimum confidence of
@@ -4180,7 +4180,7 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #'  The closer the value is to 0, the straighter the lines will be.
 #'  The closer the value is to 1, the more the lines will be curved.
 #' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
-#'  Ignored if `display` is `"confidence"` (or `"conf"`).
+#'  Ignored if `display` refers to the confidence.
 #' @param palette
 #'  Name of the palette to use for coloring the edges.
 #'  
@@ -4210,12 +4210,15 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' 
 #' @examples
 #' ## All rules of length 2 (plotting may take a while)
-#' result <- rules_chart(TA_instance, items = TA_instance["items"], category = "family")
+#' result <- rules_chart(TA_instance, category = "family")
+#' plot(result$graph)
 #' result$rules
 #' 
 #' ## Rules from a data frame
 #' rules_chart(TA_instance, rules = result$rules[11:20, ], category = 1)
+#' rules_chart(TA_instance, rules = result$rules[11:20, ], items = "items")
 #' 
+#' ## Rules relating to specific items
 #' ## Display of confidence or display rules of highest or of lowest confidence
 #' rules_chart(TA_instance, items = c(497, 930, 402), category = 1,
 #'             display = "confidence")
@@ -4227,9 +4230,9 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #'             display = "lowest confidence", palette_direction = -1)
 #' 
 #' ## Display of support or lift
-#' rules_chart(TA_instance, items = "items", category = 1, display = "support")
-#' rules_chart(TA_instance, items = "items", category = 1, display = "lift")
-#' rules_chart(TA_instance, items = "items", category = 1, display = "lift",
+#' rules_chart(TA_instance, category = 1, display = "support")
+#' rules_chart(TA_instance, category = 1, display = "lift")
+#' rules_chart(TA_instance, category = 1, display = "lift",
 #'             threshold = 5, n.cutoff = 20)$graph +
 #'   ggplot2::expand_limits(x = c(-1.5, 1.5), y = c(-1.5, 1.5))
 #' 
@@ -4266,11 +4269,7 @@ function(object, rules = NULL, items = NULL,
   }
   
   # Validation des items fournis
-  if (is.null(items)) {
-    if (!is.null(rules)) items = unique(unlist(rules[, c("antecedent", "consequent")]))
-    else stop("At least one of the two arguments items and rules must not be NULL.")
-  }
-  items = get_items(object, items)
+  if (!is.null(items)) items = get_items(object, items)
   
   # Validation des paramètres de recherche RA fournis
   if (is.null(rules)) {
@@ -4311,7 +4310,7 @@ function(object, rules = NULL, items = NULL,
   }
   
   
-  # Calcul des règles et retrait des règles inappropriées
+  # Calcul des règles ou retrait des règles inappropriées
   if (is.null(rules)) {
     # Calcul des règles sans ou avec spécification des items
     if (is.null(items) || identical(items, object@items)) {
@@ -4320,19 +4319,20 @@ function(object, rules = NULL, items = NULL,
       rules = extract_rules(object, "transactions", parameter = parameter,
                             appearance = list(both = items))
     }
-    
-    if (is.null(items)) {
-      items = object@items[match(unique(unlist(rules[, c("antecedent", "consequent")])), object@items)]
-    }
   } else {
     # Retrait des règles qui ne sont pas de taille 2
     rules = rules[sapply(rules[, "antecedent"], length) == 1
                   & sapply(rules[, "consequent"], length) == 1, ]
     
-    # Retrait des règles relatives à des items qui ne sont pas recherchés
-    rules = rules[rules[, "antecedent"] %in% items
-                  & rules[, "consequent"] %in% items, ]
+    if (!is.null(items)) {
+      # Retrait des règles relatives à des items qui ne sont pas recherchés
+      rules = rules[rules[, "antecedent"] %in% items
+                    & rules[, "consequent"] %in% items, ]
+    }
   }
+  # Récupération des items correspondant aux règles extraites ou données
+  if (is.null(items)) items = get_items(object, unique(unlist(rules[, c("antecedent", "consequent")])))
+  
   # Application du seuil sur la caractéristique à afficher
   rules = rules[rules[, col_to_display] > threshold, ]
   
@@ -4406,7 +4406,7 @@ function(object, rules = NULL, items = NULL,
   # Return NULL si aucune règle ne satisfait les différents critères
   if (nrow(rules_to_plot) == 0) return(NULL)
   
-  # Discrétisation du support, de la confiance ou du lift des règles
+  # Discrétisation de la confiance des règles (pour mieux distinguer les éventuelles double coloration)
   if (col_to_display == "confidence") {
     rules_to_plot$confidence = cut(rules_to_plot[, "confidence"],
                                    breaks = seq(0, 1, 0.1), include.lowest = TRUE)
