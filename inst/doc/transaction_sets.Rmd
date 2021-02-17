@@ -39,9 +39,9 @@ library(uom.dat)
 
 
 
-# 1. Structure of a set of transactions
+# 1. Class TransactionSet
 
-## 1.1. Class TransactionSet
+## 1.1. Structure of a set of transactions
 
 ### 1.1.1. TransactionSet example
 
@@ -429,7 +429,7 @@ print(trx_subset_8)
 
 ### 2.2.2. Search by complexity
 
-The methods `get_complex_trx` and `get_simple_trx` are related to the itemset lengths. In other words, they are related to the number of items forming the transactions. Complex transactions are transactions having more than one item. Simple transactions are transactions having only one item.
+The methods `get_complex_trx` and `get_simple_trx` are relating to the itemset lengths. In other words, they are relating to the number of items forming the transactions. Complex transactions are transactions having more than one item. Simple transactions are transactions having only one item.
 ```{r}
 # Complex transactions
 trx_subset_9 <- get_complex_trx(TS_instance)
@@ -558,7 +558,7 @@ co_occurrence_chart(TS_instance,
 
 #### Vertices
 
-Three arguments are related to the vertices. They correspond to their size, their transparency and the space between them and the incident edges: `vertex_size`, `vertex_alpha` and `vertex_margin`.
+Three arguments are relating to the vertices. They correspond to their size, their transparency and the space between them and the incident edges: `vertex_size`, `vertex_alpha` and `vertex_margin`.
 ```{r}
 co_occurrence_chart(TS_instance,
                     vertex_size = 4,
@@ -568,7 +568,7 @@ co_occurrence_chart(TS_instance,
 
 #### Labels
 
-Two arguments are related to the labels next to the vertices. They correspond to their size and the space between them and the related vertices: `label_size` and `label_margin`.
+Two arguments are relating to the labels next to the vertices. They correspond to their size and the space between them and the related vertices: `label_size` and `label_margin`.
 ```{r}
 co_occurrence_chart(TS_instance,
                     label_size = 5,
@@ -589,7 +589,7 @@ last_plot() + expand_limits(x = c(-1.5, 1.5),
 
 #### Edges
 
-Two arguments are related to the edges. They correspond to their looseness and their transparency: `edge_looseness` and `edge_alpha`. Looseness value close to $0$ implies straighter lines and value close to $1$ implies more curved lines.
+Two arguments are relating to the edges. They correspond to their looseness and their transparency: `edge_looseness` and `edge_alpha`. Looseness value close to $0$ implies straighter lines and value close to $1$ implies more curved lines.
 ```{r}
 co_occurrence_chart(TS_instance,
                     edge_looseness = 0,
@@ -600,7 +600,7 @@ Note that the RStudio graphics device may not be able to plot edges with transpa
 
 #### Palette
 
-Two arguments are related to the palette used for coloring the edges. The first one allows to specify the sequential palette: `palette`. Here is the list of available palettes.
+Two arguments are relating to the palette used for coloring the edges. The first one allows to specify the sequential palette: `palette`. Here is the list of available palettes.
 ```{r echo=FALSE, out.extra="class='border_none'"}
 old_par <- par(mar = c(0, 4.1, 0, 2.1))
 RColorBrewer::display.brewer.all(type = "seq")
@@ -679,11 +679,11 @@ itemset_chart(TS_instance,
 
 As there are 10 transactions that contain more than one item, the returned `TransactionSet` object corresponds to these 10 transactions.
 
-#### Displayed text
+#### Displayed data
 
 Two arguments allow to define what to display next to the itemsets: `under` and `over`. The values accepted by these arguments are `"ID"` to display the transaction identifiers, or one of the names associated with the transaction data.
 
-For the object `TS_instance`, possible values which are added to `"ID"` ar the following.
+For example, for the object `TS_instance`, the possible values which are added to `"ID"` are the following.
 ```{r}
 TS_instance["names"]
 ```
