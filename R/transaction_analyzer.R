@@ -737,17 +737,17 @@ setGeneric(name = "compute_patterns_characteristics", def = function(object){ st
 
 setGeneric(name = "compute_specificity", def = function(object, patterns, frequencies, weights){ standardGeneric("compute_specificity") })
 
-setGeneric(name = "check_RI_params", def = function(object, t, period){ standardGeneric("check_RI_params") })
+setGeneric(name = "check_RI_params", def = function(object, end, period){ standardGeneric("check_RI_params") })
 
-setGeneric(name = "compute_reporting_indexes", def = function(object, patterns, t = NULL, period = Inf){ standardGeneric("compute_reporting_indexes") })
+setGeneric(name = "compute_reporting_indexes", def = function(object, patterns, end = NULL, period = Inf){ standardGeneric("compute_reporting_indexes") })
 
-setGeneric(name = "compute_reporting_indexes_limits", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("compute_reporting_indexes_limits") })
+setGeneric(name = "compute_reporting_indexes_limits", def = function(object, patterns, end = NULL, overall_period = Inf, recent_period = object["status_limit"]){ standardGeneric("compute_reporting_indexes_limits") })
 
 setGeneric(name = "compute_xi_threshold", def = function(object, reporting_indexes){ standardGeneric("compute_xi_threshold") })
 
 setGeneric(name = "compute_ri_threshold", def = function(object, reporting_indexes, xi = NULL){ standardGeneric("compute_ri_threshold") })
 
-setGeneric(name = "dynamic_status", def = function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]){ standardGeneric("dynamic_status") })
+setGeneric(name = "dynamic_status", def = function(object, patterns, end = NULL, overall_period = Inf, recent_period = object["status_limit"]){ standardGeneric("dynamic_status") })
 
 
 # Methods for creating spectrum charts
@@ -1892,7 +1892,7 @@ function(object) {
 #' @template specificity_computation
 #' 
 #' @details ## Dynamic status
-#' @template dynamic_status_classification
+#' @template dynamic_status_classification_specific
 #' 
 #' @template method_not_exported
 #' 
@@ -2013,7 +2013,7 @@ function(object, patterns, frequencies, weights) {
 #' 
 #' @inheritParams compute_reporting_indexes,TransactionAnalyzer-method
 #' @param object S4 object of class \code{TransactionAnalyzer}.
-#' @return List containing the final values of \code{t} and \code{period}.
+#' @return List containing the final values of \code{end} and \code{period}.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}}.
@@ -2022,27 +2022,27 @@ function(object, patterns, frequencies, weights) {
 setMethod(f = "check_RI_params",
           signature = "TransactionAnalyzer",
           definition =
-function(object, t, period) {
+function(object, end, period) {
   
   # Années maximale et minimale
   max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
   min_year = as.numeric(colnames(object@nodes_per_year)[1])
   
   # Validation du paramètre définissant la fin de la période sur laquelle effectuer les calculs
-  if (is.null(t)) t = max_year
-  else if (t > max_year || t < min_year) {
-    stop("t must not be less than the year of the oldest transaction (", min_year, ")",
+  if (is.null(end)) end = max_year
+  else if (end > max_year || end < min_year) {
+    stop("end must not be less than the year of the oldest transaction (", min_year, ")",
          " nor greater than the year of the most recent one (", max_year, ").")
   }
   
   # Validation du paramètre définissant la longueur de la période de calcul
-  if (is.infinite(period)) period = t - min_year + 1
-  else if (period < 1 || period > t - min_year + 1) {
+  if (is.infinite(period)) period = end - min_year + 1
+  else if (period < 1 || period > end - min_year + 1) {
     stop("period must be greater than 0",
-         " and t - period + 1 must not be less than the year of the oldest transaction.")
+         " and end - period + 1 must not be less than the year of the oldest transaction.")
   }
   
-  return(list(t = t, period = period))
+  return(list(end = end, period = period))
 })
 
 
@@ -2064,15 +2064,15 @@ function(object, t, period) {
 #'  
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param patterns Patterns whose reporting indexes are to be computed.
-#' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
+#' @param end Year of end of the period, i.e. the date on which to characterize the patterns.
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
 #'  by the transactions.
 #' @param period Time interval over which to compute the reporting indexes (number of years).
-#'  For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
+#'  For example, if \code{end = 2019} and \code{period = 9} then the computation is made over the
 #'  period [2011 - 2019].
 #'  
-#'  \code{Inf} specifies that the period considered covers an interval starting on the date of the
-#'  oldest transaction and ending in the year \code{t}.
+#'  \code{Inf} specifies that the period considered covers the interval starting in the year of the
+#'  oldest transaction and ending in the year \code{end}.
 #' @return Vector containing the reporting index of each pattern contained in \code{patterns}.
 #' 
 #' @author Gauthier Magnin
@@ -2086,11 +2086,11 @@ function(object, t, period) {
 setMethod(f = "compute_reporting_indexes",
           signature = "TransactionAnalyzer",
           definition =
-function(object, patterns, t = NULL, period = Inf) {
+function(object, patterns, end = NULL, period = Inf) {
   
   # Valeurs ajustées des paramètres
-  params = check_RI_params(object, t, period)
-  t1 = params$t
+  params = check_RI_params(object, end, period)
+  t1 = params$end
   
   # Année de début de la période = année de fin - nombre d'années considérées + 1
   t0 = t1 - params$period + 1
@@ -2108,17 +2108,16 @@ function(object, patterns, t = NULL, period = Inf) {
 #' Computation of RI at temporal limits 
 #' 
 #' Compute the reporting indexes at the temporal limits used to characterize the patterns.
-#' The first one corresponds to the reporting index computed over the period defined by the arguments
-#'  \code{t} and \code{period}.
-#' The second one corresponds to the reporting index computed over the period defined by the arguments
-#'  \code{t} and \code{short_limit}.
+#' The first ones correspond to the reporting indexes computed over the period defined by the arguments
+#'  \code{end} and \code{overall_period}.
+#' The second ones correspond to the reporting indexes computed over the period defined by the arguments
+#'  \code{end} and \code{recent_period}.
 #' 
 #' @details
 #' \loadmathjax
-#' The reporting indexes of the pattern \mjseqn{p} at the temporal limits are given by:
-#'  \mjdeqn{RI_{\infty,p} \; = lim_{t_0 \to -\infty} RI_p(t_1,t_0)}{RI_inf,p = lim of RI_p(t_1,t_0) as t approaches -inf}
+#' The reporting index of the pattern \mjseqn{p} at the temporal limit \mjseqn{l} is given by:
 #'  \mjdeqn{RI_{l,p} = RI_p(t_1, t_1 - l + 1)}{RI_lp = RI_p(t_1, t_1 - l + 1)}
-#' where \mjseqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
+#' where \mjseqn{t_1} is the year of end of the period to consider and \mjseqn{RI_p(t_1,t_0)}
 #'  is the reporting index of the pattern \mjseqn{p} given by:
 #'  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}}{RI_p(t_1,t_0) = sum F_pt from t = t_0 to t_1 / sum F_qt for q in P and from t = t_0 to t_1}
 #' where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency of the pattern
@@ -2129,18 +2128,18 @@ function(object, patterns, t = NULL, period = Inf) {
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param patterns Patterns whose limits are to be computed.
-#' @param t Year of the end of the period, i.e. the date on which to characterize the pattern.
+#' @param end Year of end of the periods, i.e. the date on which to characterize the patterns.
 #'  \code{NULL} specifies that the characterization must be done in relation to the last year covered
 #'  by the transactions.
-#' @param period Time interval over which to do the overall computation (number of years).
-#'  For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
-#'  period [2011 - 2019].
+#' @param overall_period Time interval over which to compute the overall reporting indexes (number of
+#'  years). For example, if \code{end = 2019} and \code{overall_period = 9} then the computation is made
+#'  over the period [2011 - 2019].
 #'  
-#'  \code{Inf} specifies that the period considered covers an interval starting on the date of the
-#'  oldest transaction and ending in the year \code{t}.
-#' @param short_limit Time interval over which to compute the shorter limit (number of years).
-#'  For example, if \code{t = 2019} and \code{short_limit = 2} then the computation is made over the
-#'  period [2018 - 2019].
+#'  \code{Inf} specifies that the period considered covers the interval starting in the year of the
+#'  oldest transaction and ending in the year \code{end}.
+#' @param recent_period Shorter time interval over which to compute the second reporting indexes
+#'  (number of years). For example, if \code{end = 2019} and \code{recent_period = 2} then the
+#'  computation is made over the period [2018 - 2019].
 #' @return Matrix containing the two reporting indexes of each pattern contained in \code{patterns}.
 #' 
 #' @author Gauthier Magnin
@@ -2154,15 +2153,15 @@ function(object, patterns, t = NULL, period = Inf) {
 setMethod(f = "compute_reporting_indexes_limits",
           signature = "TransactionAnalyzer",
           definition =
-function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]) {
+function(object, patterns, end = NULL, overall_period = Inf, recent_period = object["status_limit"]) {
             
-  if (short_limit >= period) stop("short_limit must be lower than period.")
+  if (recent_period >= overall_period) stop("recent_period must be lower than overall_period.")
   
-  ri_period = compute_reporting_indexes(object, patterns, t, period)
-  ri_limit = compute_reporting_indexes(object, patterns, t, short_limit)
+  ri_overall = compute_reporting_indexes(object, patterns, end, overall_period)
+  ri_recent = compute_reporting_indexes(object, patterns, end, recent_period)
   
-  return(matrix(c(ri_period, ri_limit),
-                ncol = 2, byrow = FALSE, dimnames = list(NULL, c("RI.period", "RI.limit"))))
+  return(matrix(c(ri_overall, ri_recent),
+                ncol = 2, byrow = FALSE, dimnames = list(NULL, c("RI.overall", "RI.recent"))))
 })
 
 
@@ -2243,28 +2242,29 @@ function(object, reporting_indexes, xi = NULL) {
 #' Dynamic status classification
 #' 
 #' Define the dynamic status of each pattern: persistent, declining, emergent or latent.
+#'  Compute the reporting indexes of the patterns at two temporal limits and compare them to two
+#'  thresholds.
 #' 
 #' \loadmathjax
-#' @template dynamic_status_classification
+#' @template dynamic_status_classification_generic
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param patterns Patterns whose dynamic status are to be defined.
 #'  Any subset of `object["patterns"]$pattern`.
 #'  
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]$pattern`.
-#' @param t Year of the end of the period, i.e. the date on which to characterize the patterns.
+#' @param end Year of end of the periods, i.e. the date on which to characterize the patterns.
 #'  `NULL` specifies that the characterization must be done in relation to the last year covered
 #'  by the transactions.
-#' @param period Time interval over which to characterize the patterns (number of years).
-#'  For example, if `t = 2019` and `period = 9` then the computation is made over the
+#' @param overall_period Time interval over which to compute the overall reporting indexes (number of
+#'  years). For example, if `end = 2019` and `overall_period = 9` then the computation is made over the
 #'  period \[2011 - 2019\].
 #'  
-#'  `Inf` specifies that the period considered covers an interval starting on the date of the
-#'  oldest transaction and ending in the year `t`.
-#' @param short_limit Time interval over which to characterize the status of the patterns in relation
-#'  to the period defined by the arguments `t` and `period` (number of years).
-#'  For example, if `t = 2019` and `short_limit = 2` then the computation is made over the
-#'  period \[2018 - 2019\].
+#'  `Inf` specifies that the period considered covers the interval starting in the year of the
+#'  oldest transaction and ending in the year `end`.
+#' @param recent_period Shorter time interval over which to compute the second reporting indexes
+#'  (number of years). For example, if `end = 2019` and `recent_period = 2` then the computation is made
+#'  over the period \[2018 - 2019\].
 #' @return \describe{
 #'  \item{`res`}{Data frame containing the dynamic status of each pattern contained in `patterns` and
 #'               the results of intermediate computations.}
@@ -2279,7 +2279,7 @@ function(object, reporting_indexes, xi = NULL) {
 #' 
 #' @examples
 #' dynamic_status(TA_instance, "patterns")
-#' dynamic_status(TA_instance, TA_instance["patterns"]$pattern[1:15])
+#' dynamic_status(TA_instance, TA_instance["patterns"]$pattern[1:12])
 #' 
 #' @aliases dynamic_status
 #' @md
@@ -2287,13 +2287,13 @@ function(object, reporting_indexes, xi = NULL) {
 setMethod(f = "dynamic_status",
           signature = "TransactionAnalyzer",
           definition =
-function(object, patterns, t = NULL, period = Inf, short_limit = object["status_limit"]) {
+function(object, patterns, end = NULL, overall_period = Inf, recent_period = object["status_limit"]) {
   
   check_init(object, PATTERNS)
   patterns = get_tnp_itemsets(object, patterns, entities = PATTERNS)
   
   # Calcul des limites et des seuils associés
-  ri_limits = compute_reporting_indexes_limits(object, patterns, t, period, short_limit)
+  ri_limits = compute_reporting_indexes_limits(object, patterns, end, overall_period, recent_period)
   
   ri_names = colnames(ri_limits)
   xi = ri_thresholds = numeric(2)
@@ -2305,20 +2305,20 @@ function(object, patterns, t = NULL, period = Inf, short_limit = object["status_
   names(ri_thresholds) = ri_names
   
   # Mise en évidence des RI ayant une valeur supérieure aux seuils
-  substantial_period = ri_limits[, "RI.period"] >= ri_thresholds["RI.period"]
-  substantial_limit = ri_limits[, "RI.limit"] >= ri_thresholds["RI.limit"]
+  substantial_overall = ri_limits[, "RI.overall"] >= ri_thresholds["RI.overall"]
+  substantial_recent = ri_limits[, "RI.recent"] >= ri_thresholds["RI.recent"]
   
   # Interprétation
   status = character(length(patterns))
-  status[( substantial_period &  substantial_limit)] = STATUS_PERSISTENT
-  status[( substantial_period & !substantial_limit)] = STATUS_DECLINING
-  status[(!substantial_period &  substantial_limit)] = STATUS_EMERGENT
-  status[(!substantial_period & !substantial_limit)] = STATUS_LATENT
+  status[( substantial_overall &  substantial_recent)] = STATUS_PERSISTENT
+  status[( substantial_overall & !substantial_recent)] = STATUS_DECLINING
+  status[(!substantial_overall &  substantial_recent)] = STATUS_EMERGENT
+  status[(!substantial_overall & !substantial_recent)] = STATUS_LATENT
   
-  return(list(res = data.frame(RI.period = ri_limits[, "RI.period"],
-                               is.above.threshold.1 = substantial_period,
-                               RI.limit = ri_limits[, "RI.limit"],
-                               is.above.threshold.2 = substantial_limit,
+  return(list(res = data.frame(RI.overall = ri_limits[, "RI.overall"],
+                               is.above.threshold.1 = substantial_overall,
+                               RI.recent = ri_limits[, "RI.recent"],
+                               is.above.threshold.2 = substantial_recent,
                                status = status,
                                stringsAsFactors = FALSE),
               thresholds = matrix(c(xi, ri_thresholds),

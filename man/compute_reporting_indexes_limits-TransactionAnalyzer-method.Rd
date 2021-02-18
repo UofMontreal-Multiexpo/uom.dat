@@ -8,9 +8,9 @@
 \S4method{compute_reporting_indexes_limits}{TransactionAnalyzer}(
   object,
   patterns,
-  t = NULL,
-  period = Inf,
-  short_limit = object["status_limit"]
+  end = NULL,
+  overall_period = Inf,
+  recent_period = object["status_limit"]
 )
 }
 \arguments{
@@ -18,37 +18,36 @@
 
 \item{patterns}{Patterns whose limits are to be computed.}
 
-\item{t}{Year of the end of the period, i.e. the date on which to characterize the pattern.
+\item{end}{Year of end of the periods, i.e. the date on which to characterize the patterns.
 \code{NULL} specifies that the characterization must be done in relation to the last year covered
 by the transactions.}
 
-\item{period}{Time interval over which to do the overall computation (number of years).
-For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
-period [2011 - 2019].
+\item{overall_period}{Time interval over which to compute the overall reporting indexes (number of
+years). For example, if \code{end = 2019} and \code{overall_period = 9} then the computation is made
+over the period [2011 - 2019].
 
-\code{Inf} specifies that the period considered covers an interval starting on the date of the
-oldest transaction and ending in the year \code{t}.}
+\code{Inf} specifies that the period considered covers the interval starting in the year of the
+oldest transaction and ending in the year \code{end}.}
 
-\item{short_limit}{Time interval over which to compute the shorter limit (number of years).
-For example, if \code{t = 2019} and \code{short_limit = 2} then the computation is made over the
-period [2018 - 2019].}
+\item{recent_period}{Shorter time interval over which to compute the second reporting indexes
+(number of years). For example, if \code{end = 2019} and \code{recent_period = 2} then the
+computation is made over the period [2018 - 2019].}
 }
 \value{
 Matrix containing the two reporting indexes of each pattern contained in \code{patterns}.
 }
 \description{
 Compute the reporting indexes at the temporal limits used to characterize the patterns.
-The first one corresponds to the reporting index computed over the period defined by the arguments
- \code{t} and \code{period}.
-The second one corresponds to the reporting index computed over the period defined by the arguments
- \code{t} and \code{short_limit}.
+The first ones correspond to the reporting indexes computed over the period defined by the arguments
+ \code{end} and \code{overall_period}.
+The second ones correspond to the reporting indexes computed over the period defined by the arguments
+ \code{end} and \code{recent_period}.
 }
 \details{
 \loadmathjax
-The reporting indexes of the pattern \mjseqn{p} at the temporal limits are given by:
- \mjdeqn{RI_{\infty,p} \; = lim_{t_0 \to -\infty} RI_p(t_1,t_0)}{RI_inf,p = lim of RI_p(t_1,t_0) as t approaches -inf}
+The reporting index of the pattern \mjseqn{p} at the temporal limit \mjseqn{l} is given by:
  \mjdeqn{RI_{l,p} = RI_p(t_1, t_1 - l + 1)}{RI_lp = RI_p(t_1, t_1 - l + 1)}
-where \mjseqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
+where \mjseqn{t_1} is the year of end of the period to consider and \mjseqn{RI_p(t_1,t_0)}
  is the reporting index of the pattern \mjseqn{p} given by:
  \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}}{RI_p(t_1,t_0) = sum F_pt from t = t_0 to t_1 / sum F_qt for q in P and from t = t_0 to t_1}
 where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency of the pattern

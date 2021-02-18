@@ -5,24 +5,24 @@
 \alias{check_RI_params}
 \title{Validation of RI computation parameters}
 \usage{
-\S4method{check_RI_params}{TransactionAnalyzer}(object, t, period)
+\S4method{check_RI_params}{TransactionAnalyzer}(object, end, period)
 }
 \arguments{
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
-\item{t}{Year of the end of the period, i.e. the date on which to characterize the patterns.
+\item{end}{Year of end of the period, i.e. the date on which to characterize the patterns.
 \code{NULL} specifies that the characterization must be done in relation to the last year covered
 by the transactions.}
 
 \item{period}{Time interval over which to compute the reporting indexes (number of years).
-For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
+For example, if \code{end = 2019} and \code{period = 9} then the computation is made over the
 period [2011 - 2019].
 
-\code{Inf} specifies that the period considered covers an interval starting on the date of the
-oldest transaction and ending in the year \code{t}.}
+\code{Inf} specifies that the period considered covers the interval starting in the year of the
+oldest transaction and ending in the year \code{end}.}
 }
 \value{
-List containing the final values of \code{t} and \code{period}.
+List containing the final values of \code{end} and \code{period}.
 }
 \description{
 Check the validity of the values of the parameters given for the computation of reporting indexes.

@@ -8,9 +8,9 @@
 \S4method{dynamic_status}{TransactionAnalyzer}(
   object,
   patterns,
-  t = NULL,
-  period = Inf,
-  short_limit = object["status_limit"]
+  end = NULL,
+  overall_period = Inf,
+  recent_period = object["status_limit"]
 )
 }
 \arguments{
@@ -21,21 +21,20 @@ Any subset of \code{object["patterns"]$pattern}.
 
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]$pattern}.}
 
-\item{t}{Year of the end of the period, i.e. the date on which to characterize the patterns.
+\item{end}{Year of end of the periods, i.e. the date on which to characterize the patterns.
 \code{NULL} specifies that the characterization must be done in relation to the last year covered
 by the transactions.}
 
-\item{period}{Time interval over which to characterize the patterns (number of years).
-For example, if \code{t = 2019} and \code{period = 9} then the computation is made over the
+\item{overall_period}{Time interval over which to compute the overall reporting indexes (number of
+years). For example, if \code{end = 2019} and \code{overall_period = 9} then the computation is made over the
 period [2011 - 2019].
 
-\code{Inf} specifies that the period considered covers an interval starting on the date of the
-oldest transaction and ending in the year \code{t}.}
+\code{Inf} specifies that the period considered covers the interval starting in the year of the
+oldest transaction and ending in the year \code{end}.}
 
-\item{short_limit}{Time interval over which to characterize the status of the patterns in relation
-to the period defined by the arguments \code{t} and \code{period} (number of years).
-For example, if \code{t = 2019} and \code{short_limit = 2} then the computation is made over the
-period [2018 - 2019].}
+\item{recent_period}{Shorter time interval over which to compute the second reporting indexes
+(number of years). For example, if \code{end = 2019} and \code{recent_period = 2} then the computation is made
+over the period [2018 - 2019].}
 }
 \value{
 \describe{
@@ -47,6 +46,8 @@ patterns.}
 }
 \description{
 Define the dynamic status of each pattern: persistent, declining, emergent or latent.
+Compute the reporting indexes of the patterns at two temporal limits and compare them to two
+thresholds.
 }
 \details{
 \loadmathjax
@@ -57,8 +58,8 @@ to define its status.
 A pattern is:
 \itemize{
 \item Persistent when it appears substantially during both the entire period of the
-transactions (defined by the arguments \code{period} and \code{t}) and a shorter period defined by the
-arguments \code{short_limit} and \code{t}.
+transactions (defined by the arguments \code{overall_period} and \code{end}) and a shorter period defined by the
+arguments \code{recent_period} and \code{end}.
 \item Declining when it appears substantially during the entire period but much less during
 the shorter period.
 \item Emergent when it appears insignificantly during the entire period but much more during
@@ -66,18 +67,18 @@ the shorter period.
 \item Latent when it appears insignificantly during both the entire period and the shorter period.
 }
 
-The reporting indexes of the pattern \mjseqn{p} which are computed are those at the two temporal limits
-given by:
-\mjdeqn{RI_{\infty,p} \; = lim_{t_0 \to -\infty} RI_p(t_1,t_0)}{RI_inf,p = lim of RI_p(t_1,t_0) as t approaches -inf}
-\mjdeqn{RI_{l,p} = RI_p(t_1, t_1 - l + 1)}{RI_lp = RI_p(t_1, t_1 - l + 1)}
-where \mjseqn{l} is the shorter period on which to compute a reporting index and \mjseqn{RI_p(t_1,t_0)}
+The reporting indexes of the pattern \mjseqn{p} are computed at the two temporal limits
+\mjseqn{l_1} and \mjseqn{l_2} and are given by:
+\mjdeqn{RI_{l_1,p} = RI_p(t_1, t_1 - l_1 + 1)}{RI_l1p = RI_p(t1, t1 - l1 + 1)}
+\mjdeqn{RI_{l_2,p} = RI_p(t_1, t_1 - l_2 + 1)}{RI_l2p = RI_p(t1, t1 - l2 + 1)}
+where \mjseqn{t_1} is the year of end of the periods to consider and \mjseqn{RI_p(t_1,t_0)}
 is the reporting index of the pattern \mjseqn{p} given by:
 \mjdeqn{RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}}{RI_p(t_1,t_0) = sum F_pt from t = t_0 to t_1 / sum F_qt for q in P and from t = t_0 to t_1}
 where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency of the pattern \mjseqn{p}
 in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
 defining the period on which to compute the reporting index.
 
-For each set of reporting indexes:
+For each one of the two sets of reporting indexes:
 \itemize{
 \item One threshold \mjseqn{\xi} is computed as follows:
 \mjdeqn{\xi = \left\lceil \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil}{xi = ceiling(1 / sum(RI_p(t_1,t_0)^2) for p in P)}
@@ -89,19 +90,19 @@ classify the patterns.
 
 The patterns are then classified as follows:
 \itemize{
-\item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} and \mjeqn{RI_{l,p}}{RI_lp} are greater than or
+\item Patterns for which \mjeqn{RI_{l_1,p}}{RI_l1p} and \mjeqn{RI_{l_2,p}}{RI_l2p} are greater than or
 equal to the \mjseqn{RI} thresholds are classified as "Persistent".
-\item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} is greater than or equal to the related threshold
-and \mjeqn{RI_{l,p}}{RI_lp} is lower than the related threshold are classified as "Declining".
-\item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} is lower than the related threshold and
-\mjeqn{RI_{l,p}}{RI_lp} is greater than or equal to the related threshold are classified as "Emergent".
-\item Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} and \mjeqn{RI_{l,p}}{RI_lp} are lower than the
+\item Patterns for which \mjeqn{RI_{l_1,p}}{RI_l1p} is greater than or equal to the related threshold
+and \mjeqn{RI_{l_2,p}}{RI_l2p} is lower than the related threshold are classified as "Declining".
+\item Patterns for which \mjeqn{RI_{l_1,p}}{RI_l1p} is lower than the related threshold and
+\mjeqn{RI_{l_2,p}}{RI_l2p} is greater than or equal to the related threshold are classified as "Emergent".
+\item Patterns for which \mjeqn{RI_{l_1,p}}{RI_l1p} and \mjeqn{RI_{l_2,p}}{RI_l2p} are lower than the
 thresholds are classified as "Latent".
 }
 }
 \examples{
 dynamic_status(TA_instance, "patterns")
-dynamic_status(TA_instance, TA_instance["patterns"]$pattern[1:15])
+dynamic_status(TA_instance, TA_instance["patterns"]$pattern[1:12])
 
 }
 \references{

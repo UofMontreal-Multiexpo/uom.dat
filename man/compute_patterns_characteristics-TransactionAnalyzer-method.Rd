@@ -53,8 +53,7 @@ to define its status.
 A pattern is:
 \itemize{
 \item Persistent when it appears substantially during both the entire period of the
-transactions (defined by the arguments \code{period} and \code{t}) and a shorter period defined by the
-arguments \code{short_limit} and \code{t}.
+transactions and a shorter period defined by the attribute \code{status_limit} of \code{object}.
 \item Declining when it appears substantially during the entire period but much less during
 the shorter period.
 \item Emergent when it appears insignificantly during the entire period but much more during
@@ -73,7 +72,7 @@ where \mjseqn{P} is the set of patterns, \mjeqn{F_{p,t}}{F_pt} is the frequency 
 in the transactions of the year \mjseqn{t}, \mjseqn{t_0} and \mjseqn{t_1} are the first and last years
 defining the period on which to compute the reporting index.
 
-For each set of reporting indexes:
+For each one of the two sets of reporting indexes:
 \itemize{
 \item One threshold \mjseqn{\xi} is computed as follows:
 \mjdeqn{\xi = \left\lceil \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil}{xi = ceiling(1 / sum(RI_p(t_1,t_0)^2) for p in P)}
