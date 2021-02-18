@@ -2660,8 +2660,6 @@ function(object, patterns) {
   }))
   
   colnames(frequencies) = c("complex", "simple")
-  rownames(frequencies) = patterns
-  
   return(frequencies)
 })
 
