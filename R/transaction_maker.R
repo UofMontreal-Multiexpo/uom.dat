@@ -87,7 +87,7 @@ make_transactions = function(data, by, additional = NULL, unique_values = TRUE,
   list_cols = names(which(sapply(trx, class) == "list"))
   if (length(list_cols > 0)) {
     if (length(list_cols) == 1) {
-      factor_cols = if (trx[, list_cols][[1]] == "factor") list_cols else NULL
+      factor_cols = if (class(trx[, list_cols][[1]]) == "factor") list_cols else NULL
     } else {
       factor_cols = list_cols[which(sapply(trx[, list_cols], function(x) class(x[[1]])) == "factor")]
     }
