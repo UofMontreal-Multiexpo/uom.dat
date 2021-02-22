@@ -47,7 +47,10 @@ names <- substances_information[match(substances,
                                       substances_information$CODE),
                                 "NAME"]
 
-items <- data.frame(item = substances, name = names, family = families)
+items <- data.frame(item = substances,
+                    name = names,
+                    family = as.factor(families),
+                    stringsAsFactors = FALSE)
 
 ## Creation of the TransactionAnalyzer
 TA_instance <- transaction.analyzer(trx, items)

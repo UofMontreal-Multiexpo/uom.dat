@@ -257,7 +257,7 @@ setMethod(f = "initialize",
               .Object@items = get_all_items(transactions)
               names(.Object@items) = .Object@items
             } else {
-              .Object@items = items$item
+              .Object@items = if (is.factor(items$item)) as.character(items$item) else items$item
               names(.Object@items) = if ("name" %in% colnames(items)) items$name else items$item
               .Object@items_categories = items[-which(colnames(items) %in% c("item", "name"))]
               rownames(.Object@items_categories) = items$item
@@ -359,8 +359,9 @@ setMethod(f = "initialize",
 #'  values.
 #' @param items Data frame associating a name (column \code{name}) and possibly one or more categories
 #'  (additional columns) to each item (column \code{item}). Each category must be of type \code{factor}.
-#'  The columns \code{item} and \code{name} must be of type \code{character}. The default value
-#'  (\code{NULL}) specifies that no name or category is defined.
+#'  The column \code{item} must be of type \code{character} or \code{numeric}. The column \code{name}
+#'  must be of type \code{character}. The default value (\code{NULL}) specifies that no name or
+#'  category is defined.
 #' @param target Type of patterns to mine. One of \code{"frequent itemsets"},
 #'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"} (see 'Details').
 #' @param count Minimum number of occurrences that a pattern must appear to be considered as "frequent".
