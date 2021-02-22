@@ -1881,9 +1881,9 @@ function(object) {
 #' The length of a pattern is the number of items composing it. The frequency and the weight of a pattern
 #'  is the number of transactions and the number of nodes containing it, respectively.
 #' 
-#' The specificity of a pattern is the information it conveys. It corresponds to the nature of the
-#'  pattern of being specific of a particular combination or ubiquitous and allowing the formation of
-#'  numerous combinations (with regard to the transactions).
+#' The specificity of a pattern corresponds to the nature of the pattern of being specific of a
+#'  particular combination or ubiquitous and allowing the formation of numerous combinations (with
+#'  regard to the transactions).
 #' 
 #' The dynamic status is one of persistent, declining, emergent or latent.
 #' 
