@@ -9,6 +9,10 @@ h1:not(.title) {
   margin-bottom: 2.2rem;
 }
 
+img {
+  max-width: 98%;
+}
+
 
 
 /* New CSS style */

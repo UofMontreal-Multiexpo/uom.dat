@@ -69,6 +69,8 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * A description of the class `TransactionSet`, the dataset `TS_instance`, and what to do with transactions, in the file `transaction_sets.html`.
 
+* A description of the class `TransactionAnalyzer`, the dataset `TA_instance`, and what to do with transaction analyzers, in the file `transaction_analyzes.html`.
+
 * A description of the Maximum Cumulative Ratio approach by providing an example of application, in the file `mcr_approach.html`. This one also presents the use of functions for classification data management.
 
 * Explanations with illustrated examples about different types of itemsets, in the file `itemset_mining.html`.
