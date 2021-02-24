@@ -2458,7 +2458,7 @@ setMethod(f = "plot_spectrum_chart",
           definition =
 function(object, pc, frequencies, title = "Spectrum of patterns") {
   
-  graphics::par(mar = c(6.0, 5.0, 2.0+1.4, 5.0))
+  graphics::par(mar = c(6.3, 5.0, 2.0+1.4, 5.0))
   
   cex_legend = 0.85
   cex_length = 0.75
