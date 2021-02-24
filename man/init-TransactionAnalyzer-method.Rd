@@ -50,7 +50,7 @@ The initialization of the patterns consists of the initialization of the attribu
 \enumerate{
 \item{Mining for itemsets.}
 \item{Linking nodes to patterns.}
-\item{Characterization of patterns per year.}
+\item{Enumeration of the patterns per year.}
 \item{Computation of pattern characteristics.}
 }
 

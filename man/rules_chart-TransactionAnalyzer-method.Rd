@@ -157,7 +157,7 @@ category values.
 \note{
 If using the RStudio IDE and the argument \code{display} refers to the characteristic confidence,
 edges may not be displayed in the RStudio "Plots" pane. However, they will be actually displayed
-in the "Plot Zoom" window; while exporting the plot; or using another graphics device.
+in the "Plot Zoom" window; while exporting the plot; or by using another graphics device.
 Moreover, such plotting may take a while.
 }
 \examples{

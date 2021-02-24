@@ -331,7 +331,7 @@ setMethod(f = "initialize",
 #'    \item{Elaboration of links between nodes.}
 #'    \item{Mining for itemsets.}
 #'    \item{Linking nodes to patterns.}
-#'    \item{Characterization of patterns per year.}
+#'    \item{Enumeration of the patterns per year.}
 #'    \item{Computation of pattern characteristics.}
 #'    \item{Counting links between patterns.}
 #'    \item{Elaboration of links between patterns.}
@@ -863,7 +863,7 @@ setGeneric(name = "which_name", def = function(object, name){ standardGeneric("w
 #'   \item{Elaboration of links between nodes.}
 #'   \item{Mining for itemsets.}
 #'   \item{Linking nodes to patterns.}
-#'   \item{Characterization of patterns per year.}
+#'   \item{Enumeration of the patterns per year.}
 #'   \item{Computation of pattern characteristics.}
 #'   \item{Counting links between patterns.}
 #'   \item{Elaboration of links between patterns.}
@@ -924,7 +924,7 @@ function(object, from = 1, verbose = TRUE) {
                                         object@parameters$min_length, object@parameters$max_length)  ),
     "\n*** Step 06/10: Linking nodes to patterns... ",
     expression(  list_patterns_by_node(object)  ),
-    "\n*** Step 07/10: Characterization of patterns per year... ",
+    "\n*** Step 07/10: Enumeration of the patterns per year... ",
     expression(  list_patterns_per_year(object)  ),
     "\n*** Step 08/10: Computation of pattern characteristics... ",
     expression(  compute_patterns_characteristics(object)  ),
@@ -986,7 +986,7 @@ function(object, from = 1, verbose = TRUE) {
 #'  \enumerate{
 #'    \item{Mining for itemsets.}
 #'    \item{Linking nodes to patterns.}
-#'    \item{Characterization of patterns per year.}
+#'    \item{Enumeration of the patterns per year.}
 #'    \item{Computation of pattern characteristics.}
 #'  }
 #' 
@@ -1169,7 +1169,7 @@ function(object, verbose = TRUE) {
     cat("\n*** Step P.2/4: Linking nodes to patterns... ")
     display_time(list_patterns_by_node(object))
     
-    cat("\n*** Step P.3/4: Characterization of patterns per year... ")
+    cat("\n*** Step P.3/4: Enumeration of the patterns per year... ")
     display_time(list_patterns_per_year(object))
     
     cat("\n*** Step P.4/4: Computation of pattern characteristics... ")
@@ -3810,7 +3810,7 @@ function(object, category = NULL, items = object["items"],
 #' @note
 #' If using the RStudio IDE and the value of the argument `edge_alpha` is not \eqn{1}, edges may not
 #'  be displayed in the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom"
-#'  window; while exporting the plot; or using another graphics device.
+#'  window; while exporting the plot; or by using another graphics device.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
@@ -4131,7 +4131,7 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' @note
 #' If using the RStudio IDE and the argument `display` refers to the characteristic confidence,
 #'  edges may not be displayed in the RStudio "Plots" pane. However, they will be actually displayed
-#'  in the "Plot Zoom" window; while exporting the plot; or using another graphics device.
+#'  in the "Plot Zoom" window; while exporting the plot; or by using another graphics device.
 #' Moreover, such plotting may take a while.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.

@@ -164,7 +164,7 @@ fig_in_usr_coords = function(n = 1:4) {
 #' @note
 #' If using the RStudio IDE and the value of the argument `edge_alpha` is not \eqn{1}, edges may not
 #'  be displayed in the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom"
-#'  window; while exporting the plot; or using another graphics device.
+#'  window; while exporting the plot; or by using another graphics device.
 #' 
 #' @template function_not_exported
 #' 

@@ -26,7 +26,7 @@ The steps for initializing a transaction analyzer are:
   \item{Elaboration of links between nodes.}
   \item{Mining for itemsets.}
   \item{Linking nodes to patterns.}
-  \item{Characterization of patterns per year.}
+  \item{Enumeration of the patterns per year.}
   \item{Computation of pattern characteristics.}
   \item{Counting links between patterns.}
   \item{Elaboration of links between patterns.}
