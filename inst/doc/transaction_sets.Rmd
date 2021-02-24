@@ -182,11 +182,13 @@ data_variables <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
 key_variables <- c("ID", "CODE", "YEAR")
 ```
 
-There are 3 ways to group data with the function `make_OE_transactions`.
+There are three ways to group data with the function `make_OE_transactions`.
 
 * One transaction corresponds to the samples of one inspection in one of the work situations described previously (parameter `mode = 2`).
 * One transaction corresponds to the samples of one inspection for one any combination of values of the variables used to identify one work situation (parameter `mode = 3`).
 * One transaction can be either a set of samples of one inspection for one of the described work situations or for one any combination of values (parameter `mode = 1`).
+
+The three following examples use the dataset `oedb_sample` accessible in the package.
 
 First case: one transaction per work situation described and per inspection. Samples (i.e. rows) matching no work situations are ignored.
 ```{r}
@@ -596,7 +598,7 @@ co_occurrence_chart(TS_instance,
                     edge_alpha = 0.5)
 ```
 
-Note that the RStudio graphics device may not be able to plot edges with transparency. In such a case, the edges will be actually displayed in the "Plot Zoom" window of the RStudio IDE; while exporting the plot; or using another graphics device.
+Note that the RStudio graphics device may not be able to plot edges with transparency. In such a case, the edges will be actually displayed in the "Plot Zoom" window of the RStudio IDE; while exporting the plot; or by using another graphics device.
 
 #### Palette
 
