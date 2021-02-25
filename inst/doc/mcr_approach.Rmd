@@ -45,7 +45,10 @@ library(uom.dat)
 
 ## 1.1. Effective values
 
-Foremost, we will create for our example a list of transactions as presented in the document [Transaction sets](./transaction_sets.html). For short, these transactions will simply group data from a dataset. The values we will use will be taken from these transactions.
+Foremost, we will create a list of transactions as presented in the document [Transaction sets](./transaction_sets.html) using the dataset `oedb_sample`. For short, these transactions will simply group data from this dataset accessible in the package.
+
+Note that this step is not necessary. The `TransactionSet` structure will only be used as an intermediary to get concentration values for the examples.
+
 ```{r}
 # Creation of specific transactions
 transactions <- make_OE_transactions(
@@ -60,16 +63,18 @@ transactions <- make_OE_transactions(
   additional = c("NAME", "CONCENTRATION", "SAMPLE.ID", "JOB.TITLE", "JOB.TASK"),
   unique_values = c("JOB.TITLE", "JOB.TASK")
 )
+
+print(transactions)
 ```
 
-A transaction contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession carried out for which the environment has been sampled. A transaction looks like that:
+A transaction contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession for which the environment has been sampled. A transaction looks like that:
 ```{r}
 transactions[2]
 ```
+
 Here we can see a transaction composed by 3 samples having the `SAMPLE.ID`s 18, 1 and 21 corresponding to the substances having the `CODE`s 57 and 77. The concentration values for these samples are respectively 0.007, 0.004 and 0.05.
 
-
-Now we will separate the concentration values and name them with the substances they correspond to. We will have a list of named values which will have the same length as the list of transactions:
+Now we will separate the concentration values and name them with the substances they correspond to. The resulting list of named values will have the same length as the list of transactions (14 elements).
 ```{r}
 concentration_values <- lapply(transactions["data"],
                                function(trx) setNames(trx$CONCENTRATION, trx$NAME))
@@ -85,7 +90,7 @@ The analysis will be carried out on this set of concentration values.
 
 ## 1.2. Classification
 
-Now let's take a look at the classification which will be used concerning the substances the values are from. This classification is the `TOXICITY` variable of the dataset `substances_information`. Here is a example of it:
+Now let's take a look at the classification which will be used concerning the substances the values are from. This classification is the `TOXICITY` variable of the dataset `substances_information` which is accessible in the package. Here is a example of it:
 ```{r}
 substances_information[349:353, c("CODE", "NAME", "TOXICITY")]
 ```
@@ -106,7 +111,7 @@ class_names
 
 ## 1.3. Reference values
 
-The dataset `substances_information` also contains the reference value of each substance in the variable `LIMIT`. However, some of them have no value for this variable. We will therefore set an arbitrary limit value for these variables without reference:
+The dataset `substances_information` also contains the reference value of each substance in the variable `LIMIT`. However, some of the substances have no value for this variable. We will therefore set an arbitrary limit value for these variables without reference:
 ```{r}
 # First, let's check that the value we are going to assign will be unique to substances
 # that have no limit
@@ -274,7 +279,7 @@ In the function `top_hazard_quotient`, the argument `k` defines how many of the 
 
 ### 2.2.1. Simple scatter plot
 
-The hazard and the maximum cumulative raio can be visualized by plotting $HI$ versus $MCR$ and displaying the percentage of the reciprocal of the maximum cumulative ratio, the elements producting the top hazard quotients and the associated MIAT groups. The function to use for this is `mcr_chart`.
+The hazard index and the maximum cumulative ratio can be visualized by plotting $HI$ versus $MCR$ and displaying the percentage of the reciprocal of the maximum cumulative ratio, the elements producting the top hazard quotients and the associated MIAT groups. The function to use for this is `mcr_chart`.
 
 ```{r}
 mcr_chart(values = concentration_values,
@@ -440,7 +445,7 @@ plot(x = mcr_s$HI,
 Then, the temporal trend of one indicator, for instance the hazard index:
 ```{r}
 # Use of the year information associated with the concentration values
-# in the original transactions
+# in the original dataset and in the transactions created
 cor(x = unlist(transactions["YEAR"]),
     y = mcr_s$HI)
 ```
@@ -517,7 +522,7 @@ summaries[[s]]
 ```
 `NULL` results correspond to sets of values not belonging to any class.
 
-**Note that functions presented in section [2.1.3. Compute a specific indicator](#compute-a-specific-indicator) cannot be used via this function.**
+Note that functions presented in section [2.1.3. Compute a specific indicator](#compute-a-specific-indicator) cannot be used via this function. However, specific indicators can be easily extracted from the data frames returned by the use of `mcr_summary`.
 
 
 ## 3.2. Scatter plots according to classes
@@ -740,8 +745,8 @@ coerce_to_list(classification_3)
 
 Before starting this section, we will name the sets of concentration values to better identify them:
 ```{r}
-# Naming the sets of concentration values: T1 to T14
-names(concentration_values) <- paste0("T", 1:14)
+# Naming the sets of concentration values: S1 to S14
+names(concentration_values) <- paste0("S", 1:14)
 ```
 
 
@@ -783,10 +788,10 @@ We can see that only 8 sets of concentration values contain substances related t
 Let's take a look at the values from the 6th set, in which only two of the three values were kept:
 ```{r results="hold"}
 cat("Values of the sixth set of concentration values:\n")
-concentration_values$T6
+concentration_values$S6
 
 cat("\nValues of the sixth set of concentration values related to the ninth class:\n")
-subsets[["values"]]$T6
+subsets[["values"]]$S6
 ```
 
 To finish, we can look at the subset of references, which will also give the set of substances related to the class:

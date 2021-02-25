@@ -20,6 +20,8 @@ transactions <- make_OE_transactions(
   unique_values = c("JOB.TITLE", "JOB.TASK")
 )
 
+print(transactions)
+
 ## -----------------------------------------------------------------------------
 transactions[2]
 
@@ -216,7 +218,7 @@ plot(x = mcr_s$HI,
 
 ## -----------------------------------------------------------------------------
 # Use of the year information associated with the concentration values
-# in the original transactions
+# in the original dataset and in the transactions created
 cor(x = unlist(transactions["YEAR"]),
     y = mcr_s$HI)
 
@@ -426,8 +428,8 @@ classification_3
 coerce_to_list(classification_3)
 
 ## -----------------------------------------------------------------------------
-# Naming the sets of concentration values: T1 to T14
-names(concentration_values) <- paste0("T", 1:14)
+# Naming the sets of concentration values: S1 to S14
+names(concentration_values) <- paste0("S", 1:14)
 
 ## -----------------------------------------------------------------------------
 # Just look at some columns
@@ -451,10 +453,10 @@ sapply(subsets[["values"]], length)
 
 ## ----results="hold"-----------------------------------------------------------
 cat("Values of the sixth set of concentration values:\n")
-concentration_values$T6
+concentration_values$S6
 
 cat("\nValues of the sixth set of concentration values related to the ninth class:\n")
-subsets[["values"]]$T6
+subsets[["values"]]$S6
 
 ## -----------------------------------------------------------------------------
 subsets[["references"]]
