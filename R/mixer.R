@@ -952,8 +952,8 @@ mcr_summary_for_list = function(values, references) {
 #' @param log_transform If `TRUE`, the log version of the chart is plotted (i.e.
 #'  \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}). If `FALSE`,
 #'  the standard version of the chart is plotted (i.e. \eqn{HI} versus \eqn{MCR}).
-#' @param plot If `FALSE`, the chart is not plotted. If `TRUE`, the chart is plotted in the active
-#'  graphics device.
+#' @param plot If `FALSE` and the returned object is assigned, the chart is not plotted.
+#'  Otherwise, the chart is plotted in the active graphics device.
 #' @return Chart created with the `ggplot2` package (invisible) or `NULL` if no points can be plotted
 #'  (see 'Details').
 #' 
@@ -2429,8 +2429,9 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
 #' @param log_transform If `TRUE`, the log version of the charts are created (i.e.
 #'  \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}). If `FALSE`,
 #'  the standard version of the charts are created (i.e. \eqn{HI} versus \eqn{MCR}).
-#' @param plot If `FALSE`, the charts are not plotted. If `TRUE`, the charts are all plotted in the
-#'  active graphics device.
+#' @param plot If `FALSE` and the returned list is assigned, the charts are not plotted.
+#'  Otherwise, the charts are all plotted in the active graphics device.
+#'  If `TRUE` and the returned list is not assigned, the charts are plotted twice.
 #' @return List of charts created with the `ggplot2` package or `NULL` if no points can be plotted
 #'  (see 'Details'). The length of the list corresponds to the number of classes encountered.
 #' 
