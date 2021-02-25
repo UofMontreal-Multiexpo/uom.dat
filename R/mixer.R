@@ -1223,7 +1223,7 @@ plot_mcr_log_part = function(chart, xlim, ylim,
                            color = "black", linetype = "longdash") +
     # Titres des axes et légende
     ggplot2::labs(x = bquote(log[10]*"(HI)"),
-                  y = bquote(log[10]*"(MCR - 1); MHQ / HI"),
+                  y = bquote(atop(log[10]*"(MCR - 1)", "MHQ / HI")),
                   col = "Top Hazard Quotients") +
     # Ajout de la réciproque de MCR aux labels de l'axe Y
     ggplot2::scale_y_continuous(labels = function(y) {
@@ -1346,7 +1346,8 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
     ggplot2::geom_segment(ggplot2::aes(x = 2, y = 2, xend = xmax, yend = xmax),
                           color = "black", linetype = "longdash") +
     # Titres des axes et légende
-    ggplot2::labs(x = "HI", y = "MCR; MHQ / HI",
+    ggplot2::labs(x = "HI",
+                  y = bquote(atop("MCR", "MHQ / HI")),
                   col = "Top Hazard Quotients") +
     # Ajout de la réciproque de MCR aux labels de l'axe Y
     ggplot2::scale_y_continuous(labels = function(y) {

@@ -309,8 +309,10 @@ The grey region is the one in which no point can be plotted because the maximum 
 By the way, the chart being plotted with the `ggplot2` package, it can be modified or completed afterwards using the ggplot2 `last_plot` function or the returned object.
 We can for example change the limits:
 ```{r warning=FALSE}
+# Loading the package
 library(ggplot2)
 
+# Make changes to the last plot
 last_plot() + coord_cartesian(xlim = c(-0.5, 5),
                               ylim = c(0.5, 8))
 ```

@@ -137,8 +137,10 @@ mcr_chart(values = concentration_values,
           log_transform = FALSE)
 
 ## ----warning=FALSE------------------------------------------------------------
+# Loading the package
 library(ggplot2)
 
+# Make changes to the last plot
 last_plot() + coord_cartesian(xlim = c(-0.5, 5),
                               ylim = c(0.5, 8))
 
