@@ -47,7 +47,7 @@ If using the RStudio IDE:
 
 3. Open the project file `uom.dat.Rproj`.
 4. In the "Build" menu, click on the "Install and Restart" menu item.
-5. You can close the project **uom.dat** and work on your own one.
+5. Close the project **uom.dat**.
 
 If not using the RStudio IDE:
 
