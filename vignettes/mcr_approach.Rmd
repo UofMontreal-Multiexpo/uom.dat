@@ -169,8 +169,9 @@ mcr_summary(values = concentration_values,
             references = reference_values)
 ```
 
-We can see that the output data frame has 14 rows: one for each set of values. It has 7 columns for the 7 indicators:
+We can see that the output data frame has 14 rows: one for each set of values. It has 8 columns: one reminding the number of values and seven others for the seven indicators:
 
+* **n**: number of values.
 * **HI**: Hazard Index.
 * **MCR**: Maximum Cumulative Ratio.
 * **Reciprocal**: Reciprocal of the maximum cumulative ratio.

@@ -14,8 +14,9 @@ Values whose indicators of the MCR approach are to be computed.}
 \code{values}. See 'Details' to know the way it is associated with \code{values}.}
 }
 \value{
-Data frame of the main indicators of the MCR approach, computed on the given \code{values}:
+Data frame containing the main indicators of the MCR approach, computed on the given \code{values}:
 \itemize{
+\item \strong{n}: number of values.
 \item \strong{HI}: Hazard Index.
 \item \strong{MCR}: Maximum Cumulative Ratio.
 \item \strong{Reciprocal}: Reciprocal of the maximum cumulative ratio.

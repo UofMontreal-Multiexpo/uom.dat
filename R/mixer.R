@@ -663,7 +663,8 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  Values whose indicators of the MCR approach are to be computed.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @return Data frame of the main indicators of the MCR approach, computed on the given `values`:
+#' @return Data frame containing the main indicators of the MCR approach, computed on the given `values`:
+#' * **n**: number of values.
 #' * **HI**: Hazard Index.
 #' * **MCR**: Maximum Cumulative Ratio.
 #' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
@@ -734,12 +735,14 @@ mcr_summary = function(values, references) {
   
   # Différence vector/matrix
   if (is.vector(values)) {
-    return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+    return(data.frame(n = length(values),
+                      HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
                       THQ = names(top_hazard_quotient(hq = hq, k = 1)),
                       MHQ = mhq, Missed = mt,
                       row.names = NULL))
   }
-  return(data.frame(HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+  return(data.frame(n = apply(values, 2, length),
+                    HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
                     THQ = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1)))),
                     MHQ = mhq, Missed = mt))
 }
@@ -787,7 +790,8 @@ mcr_summary = function(values, references) {
 #'  computed.
 #' @param references Numeric named vector or list of numeric vectors. Reference values associated with
 #'  the `values`. See 'Details' to know the way it is associated with `values`.
-#' @return Data frame of the main indicators computed on the given `values`:.
+#' @return Data frame containing the main indicators of the MCR approach, computed on the given `values`:
+#' * **n**: number of values.
 #' * **HI**: Hazard Index.
 #' * **MCR**: Maximum Cumulative Ratio.
 #' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
@@ -838,11 +842,11 @@ mcr_summary_for_list = function(values, references) {
   } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
   
   # Unlist en deux temps sinon les facteurs sont transformés en numeric
-  to_return = as.data.frame(apply(summary[, c(1,2,3,6,7)], 2, unlist))
+  to_return = as.data.frame(apply(summary[, c("n","HI","MCR","Reciprocal","MHQ","Missed")], 2, unlist))
   to_return[, "Group"] = unlist(summary[, "Group"])
   to_return[, "THQ"] = unlist(summary[, "THQ"])
   
-  return(to_return[, c("HI", "MCR", "Reciprocal", "Group", "THQ", "MHQ", "Missed")])
+  return(to_return[, colnames(summary)])
 }
 
 
@@ -2086,8 +2090,9 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
 #'  If logical matrix, its columns are named according to the classes and the row names
 #'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
 #'  is part of a specific class.
-#' @return Data frame or list of data frames (according to `values`) of the main indicators of the MCR
-#'  approach, computed on the given `values` and for each class encountered:
+#' @return Data frame or list of data frames (according to `values`) containing the main indicators of
+#'  the MCR approach, computed on the given `values` and for each class encountered:
+#' * **n**: number of values.
 #' * **HI**: Hazard Index.
 #' * **MCR**: Maximum Cumulative Ratio.
 #' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.

@@ -20,9 +20,10 @@ contain the names associated with the \code{values}. A \code{TRUE} value indicat
 is part of a specific class.}
 }
 \value{
-Data frame or list of data frames (according to \code{values}) of the main indicators of the MCR
-approach, computed on the given \code{values} and for each class encountered:
+Data frame or list of data frames (according to \code{values}) containing the main indicators of
+the MCR approach, computed on the given \code{values} and for each class encountered:
 \itemize{
+\item \strong{n}: number of values.
 \item \strong{HI}: Hazard Index.
 \item \strong{MCR}: Maximum Cumulative Ratio.
 \item \strong{Reciprocal}: Reciprocal of the maximum cumulative ratio.
