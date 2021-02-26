@@ -40,11 +40,11 @@ The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
 
 The maximum hazard quotient of the vector \eqn{i} is given by:
-\mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-where \eqn{N} denotes the number of hazard quotients.
+\mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
+where \eqn{n} denotes the number of hazard quotients.
 
 The hazard index of the vector \eqn{i} is given by:
-\mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
+\mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
 
 The maximum cumulative ratio of the vector \eqn{i} is given by:
 \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}

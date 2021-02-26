@@ -62,8 +62,8 @@ function with the arguments \code{hq} and \code{hi} is faster (if they are alrea
 
 \loadmathjax
 The hazard index of the vector \eqn{i} is given by:
-\mjdeqn{HI_i = \sum_{j = 1}^N HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to N}
-where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+\mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
+where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
 
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}

@@ -32,8 +32,8 @@ If \code{values} or \code{hq} is a matrix, one maximum hazard quotient is search
 
 \loadmathjax
 The maximum hazard quotient of the vector \eqn{i} is given by:
-\mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,N\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-where \eqn{HQ} denotes the hazard quotients and \eqn{N} denotes the number of hazard quotients.
+\mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
+where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
 
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
