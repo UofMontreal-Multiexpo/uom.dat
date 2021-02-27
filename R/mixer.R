@@ -2220,152 +2220,6 @@ mcr_summary_by_class = function(values, references, classes) {
 }
 
 
-#' Subsets of values and references by class
-#' 
-#' Extract from values and references those corresponding to one specific class.
-#' 
-#' @details
-#' If `values` is a matrix, it must have one reference value for each row.
-#' 
-#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
-#'  if `references` is a vector, there must be one reference for each name present in `values`.
-#'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
-#'  so that `values` and `references` can be matched.
-#' 
-#' @param values Numeric named matrix or list of numeric named vectors. Values from which to extract a
-#'  subset according to one specific class.
-#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
-#'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @param classes List or logical matrix associating the `values` names with classes.
-#'  If list, its names are those present in `values` and the elements are vectors of associated classes.
-#'  If logical matrix, its columns are named according to the classes and the row names
-#'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
-#'  is part of a specific class.
-#' @param class_name Name of the class of interest, the one for which to extract the corresponding
-#'  subsets of `values` and `references`.
-#' @return
-#' If `references` is `NULL`, subset of values that correspond to the class of interest.\cr
-#' If not, list containing:
-#' \describe{
-#'  \item{`values`}{Subset of values that correspond to the class of interest.}
-#'  \item{`references`}{Subset of references that correspond to the class of interest.}
-#' }
-#' 
-#' @author Gauthier Magnin
-#' @seealso 
-#' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
-#' 
-#' Specific functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
-#'  [`mcr_chart_by_class`], [`thq_pairs_by_class`], [`thq_by_group_by_class`].
-#' 
-#' @examples
-#' ## Association of classes (C1 to C8) with elements A, B, C, D and E
-#' classes <- list(A = c("C5", "C6", "C8"),
-#'                 B = "C8",
-#'                 C = c("C3", "C8"),
-#'                 D = c("C1", "C3", "C4", "C6"),
-#'                 E = c("C2", "C4", "C5", "C7", "C8"))
-#' 
-#' ## Subsets with values as a matrix
-#' subset_from_class(values = matrix(c(0.1,0.2,0.3,0.4,0.5,
-#'                                     0.6,0.7,0.8,0.9,1.),
-#'                                   ncol = 2,
-#'                                   dimnames = list(LETTERS[1:5], c("V1", "V2"))),
-#'                   references = c(1,2,3,4,5),
-#'                   classes = classes,
-#'                   class_name = "C8")
-#' 
-#' ## Subsets with values as a list
-#' v <- list(V1 = c(A = 0.1, D = 0.5),
-#'           V2 = c(D = 0.2),
-#'           V3 = c(A = 0.3, C = 0.4))
-#' 
-#' subset_from_class(values = v,
-#'                   classes = classes,
-#'                   class_name = "C8")
-#' 
-#' subset_from_class(values = v,
-#'                   references = c(A = 1, C = 3, D = 4),
-#'                   classes = classes,
-#'                   class_name = "C8")
-#' 
-#' subset_from_class(values = v,
-#'                   references = list(c(1, 4),
-#'                                     4,
-#'                                     c(1, 3)),
-#'                   classes = classes,
-#'                   class_name = "C8")
-#' 
-#' @md
-#' @export
-subset_from_class = function(values, references = NULL, classes, class_name) {
-  
-  # Vérification que les structures de données sont nommées
-  check_data_for_mcr_by_class(values, references, vector = FALSE)
-  
-  # Utilisation des classes sous forme de matrice binaire
-  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
-  else if (!is.matrix(classes) || typeof(classes) != "logical")
-    stop("classes must be a list or a logical matrix.")
-  
-  # Noms des éléments qui correspondent à la classe
-  items_in_class = rownames(classes)[classes[, class_name]]
-  
-  
-  # Cas d'une liste de valeurs
-  if (is.list(values)) {
-    
-    # Sous-ensembles de values et references correspondant aux éléments de la classe
-    values_class = list()
-    if (!is.null(references)) {
-      if (is.list(references)) {
-        references_class = list()
-      } else {
-        # Si references est un unique vecteur, création immédiate du sous-ensemble
-        references_class = references[items_in_class]
-        # Retrait des NA (lorsque des noms associés à la classe ne font pas partie des références)
-        references_class = references_class[!is.na(references_class)]
-      }
-    }
-    nb_elements = 0
-    
-    # Ajout aux nouveaux ensembles de chaque élément qui fait partie de la classe
-    for (i in seq_along(values)) {
-      indices = names(values[[i]]) %in% items_in_class
-      
-      if (sum(indices) != 0) {
-        nb_elements = nb_elements + 1
-        name_element = if (is.null(names(values))) nb_elements else names(values)[i]
-          
-        values_class[[name_element]] = values[[i]][indices]
-        
-        if (!is.null(references) && is.list(references))
-          references_class[[name_element]] = references[[i]][indices]
-      }
-    }
-  }
-  # Cas d'une matrice valeurs
-  else if (is.matrix(values)) {
-    
-    # Extraction des valeurs correpondant à la classe
-    # et retrait des NA (lorsque des noms associés à la classe ne font pas partie des valeurs)
-    indices = match(items_in_class, rownames(values))
-    values_class = values[indices[!is.na(indices)], ]
-    
-    if (!is.null(references)) references_class = references[indices[!is.na(indices)]]
-    
-    # Reconversion en matrice s'il n'y avait qu'une seule ligne
-    if (is.vector(values_class)) {
-      values_class = t(values_class)
-      rownames(values_class) = rownames(values)[indices[!is.na(indices)]]
-    }
-  }
-  
-  if (is.null(references)) return(values_class)
-  return(list(values = values_class, references = references_class))
-}
-
-
 #' MCR approach scatter plot by class
 #' 
 #' Create charts of \mjeqn{log_{10}(HI)}{log10(HI)} versus \mjeqn{log_{10}(MCR - 1)}{log10(MCR - 1)}
@@ -2932,7 +2786,153 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 
 
 
-#### Reduction of sets ####
+#### Subsets and reduction of sets ####
+
+#' Subsets of values and references by class
+#' 
+#' Extract from values and references those corresponding to one specific class.
+#' 
+#' @details
+#' If `values` is a matrix, it must have one reference value for each row.
+#' 
+#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
+#'  if `references` is a vector, there must be one reference for each name present in `values`.
+#'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
+#'  so that `values` and `references` can be matched.
+#' 
+#' @param values Numeric named matrix or list of numeric named vectors. Values from which to extract a
+#'  subset according to one specific class.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`. See 'Details' to know the way it is associated with `values`.
+#' @param classes List or logical matrix associating the `values` names with classes.
+#'  If list, its names are those present in `values` and the elements are vectors of associated classes.
+#'  If logical matrix, its columns are named according to the classes and the row names
+#'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
+#'  is part of a specific class.
+#' @param class_name Name of the class of interest, the one for which to extract the corresponding
+#'  subsets of `values` and `references`.
+#' @return
+#' If `references` is `NULL`, subset of values that correspond to the class of interest.\cr
+#' If not, list containing:
+#' \describe{
+#'  \item{`values`}{Subset of values that correspond to the class of interest.}
+#'  \item{`references`}{Subset of references that correspond to the class of interest.}
+#' }
+#' 
+#' @author Gauthier Magnin
+#' @seealso 
+#' Generic function to apply the MCR approach according to classes: [`mcr_approach_by_class`].
+#' 
+#' Specific functions of the MCR approach applying according to classes: [`mcr_summary_by_class`],
+#'  [`mcr_chart_by_class`], [`thq_pairs_by_class`], [`thq_by_group_by_class`].
+#' 
+#' @examples
+#' ## Association of classes (C1 to C8) with elements A, B, C, D and E
+#' classes <- list(A = c("C5", "C6", "C8"),
+#'                 B = "C8",
+#'                 C = c("C3", "C8"),
+#'                 D = c("C1", "C3", "C4", "C6"),
+#'                 E = c("C2", "C4", "C5", "C7", "C8"))
+#' 
+#' ## Subsets with values as a matrix
+#' subset_from_class(values = matrix(c(0.1,0.2,0.3,0.4,0.5,
+#'                                     0.6,0.7,0.8,0.9,1.),
+#'                                   ncol = 2,
+#'                                   dimnames = list(LETTERS[1:5], c("V1", "V2"))),
+#'                   references = c(1,2,3,4,5),
+#'                   classes = classes,
+#'                   class_name = "C8")
+#' 
+#' ## Subsets with values as a list
+#' v <- list(V1 = c(A = 0.1, D = 0.5),
+#'           V2 = c(D = 0.2),
+#'           V3 = c(A = 0.3, C = 0.4))
+#' 
+#' subset_from_class(values = v,
+#'                   classes = classes,
+#'                   class_name = "C8")
+#' 
+#' subset_from_class(values = v,
+#'                   references = c(A = 1, C = 3, D = 4),
+#'                   classes = classes,
+#'                   class_name = "C8")
+#' 
+#' subset_from_class(values = v,
+#'                   references = list(c(1, 4),
+#'                                     4,
+#'                                     c(1, 3)),
+#'                   classes = classes,
+#'                   class_name = "C8")
+#' 
+#' @md
+#' @export
+subset_from_class = function(values, references = NULL, classes, class_name) {
+  
+  # Vérification que les structures de données sont nommées
+  check_data_for_mcr_by_class(values, references, vector = FALSE)
+  
+  # Utilisation des classes sous forme de matrice binaire
+  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
+  else if (!is.matrix(classes) || typeof(classes) != "logical")
+    stop("classes must be a list or a logical matrix.")
+  
+  # Noms des éléments qui correspondent à la classe
+  items_in_class = rownames(classes)[classes[, class_name]]
+  
+  
+  # Cas d'une liste de valeurs
+  if (is.list(values)) {
+    
+    # Sous-ensembles de values et references correspondant aux éléments de la classe
+    values_class = list()
+    if (!is.null(references)) {
+      if (is.list(references)) {
+        references_class = list()
+      } else {
+        # Si references est un unique vecteur, création immédiate du sous-ensemble
+        references_class = references[items_in_class]
+        # Retrait des NA (lorsque des noms associés à la classe ne font pas partie des références)
+        references_class = references_class[!is.na(references_class)]
+      }
+    }
+    nb_elements = 0
+    
+    # Ajout aux nouveaux ensembles de chaque élément qui fait partie de la classe
+    for (i in seq_along(values)) {
+      indices = names(values[[i]]) %in% items_in_class
+      
+      if (sum(indices) != 0) {
+        nb_elements = nb_elements + 1
+        name_element = if (is.null(names(values))) nb_elements else names(values)[i]
+        
+        values_class[[name_element]] = values[[i]][indices]
+        
+        if (!is.null(references) && is.list(references))
+          references_class[[name_element]] = references[[i]][indices]
+      }
+    }
+  }
+  # Cas d'une matrice valeurs
+  else if (is.matrix(values)) {
+    
+    # Extraction des valeurs correpondant à la classe
+    # et retrait des NA (lorsque des noms associés à la classe ne font pas partie des valeurs)
+    indices = match(items_in_class, rownames(values))
+    values_class = values[indices[!is.na(indices)], ]
+    
+    if (!is.null(references)) references_class = references[indices[!is.na(indices)]]
+    
+    # Reconversion en matrice s'il n'y avait qu'une seule ligne
+    if (is.vector(values_class)) {
+      values_class = t(values_class)
+      rownames(values_class) = rownames(values)[indices[!is.na(indices)]]
+    }
+  }
+  
+  if (is.null(references)) return(values_class)
+  return(list(values = values_class, references = references_class))
+}
+
 
 #' Reduce sets according to the names of their components
 #' 
