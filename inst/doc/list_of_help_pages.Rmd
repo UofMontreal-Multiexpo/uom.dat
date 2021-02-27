@@ -159,13 +159,18 @@ Summarising indicators:
 * [thq_pairs](../html/thq_pairs.html)
 * [thq_by_group](../html/thq_by_group.html)
 
-Application of the approach according to a classification
+Application of the approach according to a classification:
 
 * [mcr_approach_by_class](../html/mcr_approach_by_class.html)
 * [mcr_summary_by_class](../html/mcr_summary_by_class.html)
 * [mcr_chart_by_class](../html/mcr_chart_by_class.html)
 * [thq_pairs_by_class](../html/thq_pairs_by_class.html)
 * [thq_by_group_by_class](../html/thq_by_group_by_class.html)
+
+Subsets and reduction of sets:
+
+* [reduce_sets](../html/reduce_sets.html)
+* [subset_from_class](../html/subset_from_class.html)
 
 
 
