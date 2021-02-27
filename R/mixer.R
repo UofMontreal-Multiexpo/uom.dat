@@ -2930,3 +2930,125 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 }
 
 
+
+#### Reduction of sets ####
+
+#' Reduce sets according to the names of their components
+#' 
+#' For each set of values, apply a function to merge the ones having the same names or choose one
+#'  of them, for each different name found in the set of values. This results in sets of values having
+#'  only one value per different name found in the original sets, instead of several ones.
+#' 
+#' @details
+#' If `values` and `references` are two lists, `references` must be a list of vectors having the same
+#'  lengths as those present in `values` so that `values` and `references` can be matched.
+#' 
+#' If `references` is not a list, it is not processed and is returned as is. Otherwise, it is assumed
+#'  that the same reference values are given for same value names in one set of values of the argument
+#'  `values`.
+#' 
+#' The components of each resulting set of values are ordered in the order in which the names are found
+#'  in the original set.
+#'  
+#' @param values Numeric named vector or matrix, or list of numeric named vectors.
+#'  Sets of values to reduce.
+#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
+#'  `values`.
+#' @param FUN Function to apply on each subset of values corresponding to each different name to reduce
+#'  it to a single value.
+#' @param ... Further arguments to the function `FUN`.
+#' @return 
+#' If `references` is `NULL`, sets of values resulting from the application of the function given as
+#'  argument on each subset corresponding to each different name associated with the values.\cr
+#' If not, list containing:
+#' \describe{
+#'  \item{`values`}{Sets of values resulting from the application of the function given as argument
+#'                  on each subset corresponding to each different name associated with the values.}
+#'  \item{`references`}{Subset of references corresponding to the resulting values.}
+#' }
+#' 
+#' @author Gauthier Magnin
+#' @examples
+#' ## Reduce a set of values given as a vector
+#' reduce_sets(values = c(A = 1, A = 3, B = 2, C = 1, C = 5, C = 4),
+#'             FUN = max)
+#' reduce_sets(values = c(C = 1, C = 5, C = 4, B = 2, A = 1, A = 3),
+#'             FUN = function(x) min(x) + 0.5)
+#' 
+#' ## Reduce sets of values given as a matrix
+#' v <- matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
+#'             ncol = 10, dimnames = list(c("A", "B", "A", "C", "C")))
+#' reduce_sets(values = v, FUN = mean)
+#' 
+#' ## Reduce sets of values and associated reference values given as lists
+#' reduce_sets(values = list(c(A = 0.1, A = 0.3, B = 0.5),
+#'                           c(A = 0.2),
+#'                           c(B = 0.3, B = 0.4, B = 0.7, C = 0.4, C = 0.1)),
+#'             references = list(c(1, 1, 2),
+#'                               1,
+#'                               c(2, 2, 2, 3, 3)),
+#'             FUN = median)
+#' 
+#' @md
+#' @export
+reduce_sets = function(values, references = NULL, FUN, ...) {
+  
+  # Vérification que la structure de données de values est nommée
+  if (is.list(values)) {
+    # (Décomposition du if en 2 à cause du suivant : une liste est aussi un vecteur)
+    if (!is_named(values)[2]) stop("If values is a list, it must contain vectors of named numeric values.")
+  }
+  else if (is.vector(values) && !is_named(values)) stop("If values is a vector, it must have named numeric values.")
+  else if (is.matrix(values) && !is_named(values)[1]) stop("If values is a matrix, its rows must be named.")
+  
+  # Vérifications relatives aux références
+  if (!is.null(references)) {
+    if (!is.list(values)) stop("If references is a list, values must also be a list.")
+    
+    if (length(values) != length(references)
+        || any(sapply(values, length) != sapply(references, length)))
+      stop("If values and references are two lists, their lengths and the ones of their elements must match.")
+  }
+  
+  
+  # Nouveaux ensembles de valeurs ; cas différent en fonction de list/vector/matrix
+  if (is.list(values)) {
+    # Récursivité pour chaque élément de la liste (chaque ensemble de valeurs)
+    new_values = lapply(values, function(v) {
+      stats::setNames(reduce_sets(v, FUN = FUN, ...), unique(names(v)))
+    })
+  }
+  else if (is.vector(values)) {
+    # Applique la fonction à chaque sous-ensemble du vecteur correspondant à chaque nom
+    new_values = sapply(unique(names(values)), function(name) {
+      FUN(values[which(names(values) == name)], ...)
+    })
+  }
+  else if (is.matrix(values)) {
+    # Pour chaque sous-ensemble de la matrice correspondant à chaque nom
+    new_values = t(sapply(unique(rownames(values)), function(name) {
+      # Application de la fonction à chaque colonne
+      rows = which(rownames(values) == name)
+      if (length(rows) == 1) return(sapply(values[rows, ], FUN, ...))
+      return(apply(values[rows, ], 2, FUN, ...))
+    }))
+  }
+  
+  # Retour si references non renseigné
+  if (is.null(references)) return(new_values)
+  
+  # Nouvelles références
+  if (!is.list(references)) new_references = references
+  else {
+    # Pour chaque ensemble de valeurs
+    new_references = lapply(values, function(v) {
+      # Recherche des indices des premiers éléments associés à chaque nom
+      indices = sapply(unique(names(v)), function(name) which(names(v) == name)[1])
+      # Conservation des références associées à ces indices uniquement
+      return(references[[parent.frame()$i[]]][indices])
+    })
+  }
+  return(list(values = new_values, references = new_references))
+}
+
+
