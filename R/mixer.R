@@ -2243,8 +2243,9 @@ mcr_summary_by_class = function(values, references, classes) {
 #'  is part of a specific class.
 #' @param class_name Name of the class of interest, the one for which to extract the corresponding
 #'  subsets of `values` and `references`.
-#' @return If `references = NULL`, subset of values that correspond to the class of interest. If not,
-#' list containing:
+#' @return
+#' If `references` is `NULL`, subset of values that correspond to the class of interest.\cr
+#' If not, list containing:
 #' \describe{
 #'  \item{`values`}{Subset of values that correspond to the class of interest.}
 #'  \item{`references`}{Subset of references that correspond to the class of interest.}

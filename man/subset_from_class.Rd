@@ -23,8 +23,8 @@ is part of a specific class.}
 subsets of \code{values} and \code{references}.}
 }
 \value{
-If \code{references = NULL}, subset of values that correspond to the class of interest. If not,
-list containing:
+If \code{references} is \code{NULL}, subset of values that correspond to the class of interest.\cr
+If not, list containing:
 \describe{
 \item{\code{values}}{Subset of values that correspond to the class of interest.}
 \item{\code{references}}{Subset of references that correspond to the class of interest.}
