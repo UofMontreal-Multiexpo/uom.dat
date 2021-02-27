@@ -47,7 +47,7 @@ library(uom.dat)
 
 Foremost, we will create a list of transactions as presented in the document [Transaction sets](./transaction_sets.html) using the dataset `oedb_sample`. For short, these transactions will simply group data from this dataset accessible in the package.
 
-Note that this step is not necessary. The `TransactionSet` structure will only be used as an intermediary to get concentration values for the examples.
+Note that this step is not necessary. The `TransactionSet` structure will only be used as an intermediary to get values to analyse for the examples.
 
 ```{r}
 # Creation of specific transactions
@@ -84,7 +84,9 @@ concentration_values <- lapply(transactions["data"],
 concentration_values[[2]]
 ```
 
-The analysis will be carried out on this set of concentration values.
+The analysis will be carried out on these sets of concentration values.
+
+Note that several values can correspond to the same component name. As we can see from the printed set of values, two values correspond to a chemical substance named "Formaldéhyde" and the last value corresponds to another one named "Benzène". In such a case, if we want to perform the analysis considering a single value for each different name, we need to format the data. One way to do so is presented further in section [4.2.2. Reduction of sets of values](#reduction-of-sets-of-values).
 
 
 
@@ -116,8 +118,7 @@ The dataset `substances_information` also contains the reference value of each s
 # First, let's check that the value we are going to assign will be unique to substances
 # that have no limit
 cat("Number of substances having the limit 35:",
-    sum(substances_information$LIMIT == 35, na.rm = TRUE),
-    "\n")
+    sum(substances_information$LIMIT == 35, na.rm = TRUE))
 ```
 
 ```{r}
@@ -751,7 +752,7 @@ names(concentration_values) <- paste0("S", 1:14)
 ```
 
 
-### 4.2.1. Components of values
+### 4.2.1. Components of the sets
 
 Having our list of values which are concentration values for specific substances, we can call `coerce_list` to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one set of values and each column refers to one name found in the values of the list.
 ```{r}
@@ -764,7 +765,26 @@ coerce_list(concentration_values,
 The argument `by_name` allows to construct the matrix on the names of the values instead of the values themselves.
 
 
-### 4.2.2. Subset corresponding to a specific class
+### 4.2.2 Reduction of sets of values
+
+In the list of sets of values, some of these sets contains several values for the same component name, like in the following:
+```{r}
+# Let's look at the 2nd and 4th sets of values
+concentration_values[c(2,4)]
+```
+
+We can use the function `reduce_sets` to apply a specific function on each subset of value corresponding to each name in order to keep only one value for each name in each set of values. This specific function is given as argument `FUN` and can be any function taking a numeric vector as input and returning one single value. It can be a custom function or a base function like `min`, `max`, `median`, etc.
+```{r}
+# Reduce the sets of values by taking the minimum value associated with each name
+new_values <- reduce_sets(concentration_values,
+                          FUN = min)
+
+# Let's look at the new 2nd and 4th sets of values
+new_values[c(2,4)]
+```
+
+
+### 4.2.3. Subset corresponding to a specific class
 
 It is possible to extract from the sets of values those which are related to a specific class. For that, we will use the function `subset_from_class` and choose one from the set of class names (defined in section [1.2. Classification](#classification)):
 ```{r}

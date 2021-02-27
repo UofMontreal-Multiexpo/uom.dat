@@ -48,8 +48,7 @@ class_names
 # First, let's check that the value we are going to assign will be unique to substances
 # that have no limit
 cat("Number of substances having the limit 35:",
-    sum(substances_information$LIMIT == 35, na.rm = TRUE),
-    "\n")
+    sum(substances_information$LIMIT == 35, na.rm = TRUE))
 
 ## -----------------------------------------------------------------------------
 # We could also keep a vector defining whether a substance had a limit
@@ -436,6 +435,18 @@ names(concentration_values) <- paste0("S", 1:14)
 coerce_list(concentration_values,
             to = "logical matrix",
             by_name = TRUE)[, c(4:5,8,12:14,23:25)]
+
+## -----------------------------------------------------------------------------
+# Let's look at the 2nd and 4th sets of values
+concentration_values[c(2,4)]
+
+## -----------------------------------------------------------------------------
+# Reduce the sets of values by taking the minimum value associated with each name
+new_values <- reduce_sets(concentration_values,
+                          FUN = min)
+
+# Let's look at the new 2nd and 4th sets of values
+new_values[c(2,4)]
 
 ## -----------------------------------------------------------------------------
 # Extraction of the subsets for the ninth class

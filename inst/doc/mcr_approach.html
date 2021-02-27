@@ -175,8 +175,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li><a href="#value-management">4.2. Value management</a>
 <ul>
-<li><a href="#components-of-values">4.2.1. Components of values</a></li>
-<li><a href="#subset-corresponding-to-a-specific-class">4.2.2. Subset corresponding to a specific class</a></li>
+<li><a href="#components-of-the-sets">4.2.1. Components of the sets</a></li>
+<li><a href="#reduction-of-sets-of-values">4.2.2 Reduction of sets of values</a></li>
+<li><a href="#subset-corresponding-to-a-specific-class">4.2.3. Subset corresponding to a specific class</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#references">References</a></li>
@@ -203,7 +204,7 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <div id="effective-values" class="section level2">
 <h2>1.1. Effective values</h2>
 <p>Foremost, we will create a list of transactions as presented in the document <a href="./transaction_sets.html">Transaction sets</a> using the dataset <code>oedb_sample</code>. For short, these transactions will simply group data from this dataset accessible in the package.</p>
-<p>Note that this step is not necessary. The <code>TransactionSet</code> structure will only be used as an intermediary to get concentration values for the examples.</p>
+<p>Note that this step is not necessary. The <code>TransactionSet</code> structure will only be used as an intermediary to get values to analyse for the examples.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creation of specific transactions</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>transactions <span class="ot">&lt;-</span> <span class="fu">make_OE_transactions</span>(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  oedb_sample,</span>
@@ -259,7 +260,8 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>concentration_values[[<span class="dv">2</span>]]</span></code></pre></div>
 <pre><code>## Formaldéhyde Formaldéhyde      Benzène 
 ##        0.007        0.004        0.050</code></pre>
-<p>The analysis will be carried out on this set of concentration values.</p>
+<p>The analysis will be carried out on these sets of concentration values.</p>
+<p>Note that several values can correspond to the same component name. As we can see from the printed set of values, two values correspond to a chemical substance named “Formaldéhyde” and the last value corresponds to another one named “Benzène”. In such a case, if we want to perform the analysis considering a single value for each different name, we need to format the data. One way to do so is presented further in section <a href="#reduction-of-sets-of-values">4.2.2. Reduction of sets of values</a>.</p>
 </div>
 <div id="classification" class="section level2">
 <h2>1.2. Classification</h2>
@@ -350,8 +352,7 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First, let&#39;s check that the value we are going to assign will be unique to substances</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># that have no limit</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of substances having the limit 35:&quot;</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(substances_information<span class="sc">$</span>LIMIT <span class="sc">==</span> <span class="dv">35</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(substances_information<span class="sc">$</span>LIMIT <span class="sc">==</span> <span class="dv">35</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <pre><code>## Number of substances having the limit 35: 0</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We could also keep a vector defining whether a substance had a limit</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>no_limit <span class="ot">&lt;-</span> <span class="fu">is.na</span>(substances_information<span class="sc">$</span>LIMIT)</span>
@@ -1635,8 +1636,8 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <p>Before starting this section, we will name the sets of concentration values to better identify them:</p>
 <div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Naming the sets of concentration values: S1 to S14</span></span>
 <span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(concentration_values) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;S&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>)</span></code></pre></div>
-<div id="components-of-values" class="section level3">
-<h3>4.2.1. Components of values</h3>
+<div id="components-of-the-sets" class="section level3">
+<h3>4.2.1. Components of the sets</h3>
 <p>Having our list of values which are concentration values for specific substances, we can call <code>coerce_list</code> to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one set of values and each column refers to one name found in the values of the list.</p>
 <div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just look at some columns</span></span>
 <span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coerce_list</span>(concentration_values,</span>
@@ -1659,21 +1660,54 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 ## S14   FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE</code></pre>
 <p>The argument <code>by_name</code> allows to construct the matrix on the names of the values instead of the values themselves.</p>
 </div>
+<div id="reduction-of-sets-of-values" class="section level3">
+<h3>4.2.2 Reduction of sets of values</h3>
+<p>In the list of sets of values, some of these sets contains several values for the same component name, like in the following:</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the 2nd and 4th sets of values</span></span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>concentration_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
+<pre><code>## $S2
+## Formaldéhyde Formaldéhyde      Benzène 
+##        0.007        0.004        0.050 
+## 
+## $S4
+## Hydrocarbures aliphatiques et alicycliques 
+##                                         10 
+## Hydrocarbures aliphatiques et alicycliques 
+##                                         42 
+## Hydrocarbures aliphatiques et alicycliques 
+##                                         26 
+## Hydrocarbures aliphatiques et alicycliques 
+##                                          8</code></pre>
+<p>We can use the function <code>reduce_sets</code> to apply a specific function on each subset of value corresponding to each name in order to keep only one value for each name in each set of values. This specific function is given as argument <code>FUN</code> and can be any function taking a numeric vector as input and returning one single value. It can be a custom function or a base function like <code>min</code>, <code>max</code>, <code>median</code>, etc.</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reduce the sets of values by taking the minimum value associated with each name</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>new_values <span class="ot">&lt;-</span> <span class="fu">reduce_sets</span>(concentration_values,</span>
+<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">FUN =</span> min)</span>
+<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the new 2nd and 4th sets of values</span></span>
+<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>new_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
+<pre><code>## $S2
+## Formaldéhyde      Benzène 
+##        0.004        0.050 
+## 
+## $S4
+## Hydrocarbures aliphatiques et alicycliques 
+##                                          8</code></pre>
+</div>
 <div id="subset-corresponding-to-a-specific-class" class="section level3">
-<h3>4.2.2. Subset corresponding to a specific class</h3>
+<h3>4.2.3. Subset corresponding to a specific class</h3>
 <p>It is possible to extract from the sets of values those which are related to a specific class. For that, we will use the function <code>subset_from_class</code> and choose one from the set of class names (defined in section <a href="#classification">1.2. Classification</a>):</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction of the subsets for the ninth class</span></span>
-<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>subsets <span class="ot">&lt;-</span> <span class="fu">subset_from_class</span>(<span class="at">values =</span> concentration_values,</span>
-<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">references =</span> reference_values,</span>
-<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">classes =</span> classification,</span>
-<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">class_name =</span> class_names[<span class="dv">9</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction of the subsets for the ninth class</span></span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a>subsets <span class="ot">&lt;-</span> <span class="fu">subset_from_class</span>(<span class="at">values =</span> concentration_values,</span>
+<span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">references =</span> reference_values,</span>
+<span id="cb124-4"><a href="#cb124-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">classes =</span> classification,</span>
+<span id="cb124-5"><a href="#cb124-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">class_name =</span> class_names[<span class="dv">9</span>])</span></code></pre></div>
 <p>The output of this function is a list containing two subsets: <code>values</code>, the subset of <code>concentration_values</code> corresponding to the class <code>class_name</code>; <code>references</code>, the subset of <code>reference_values</code> corresponding to this same class.</p>
 <p>Before looking at the subsets, we can compare the length of the all set of values and the subset related to the chosen class.</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of values of each set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(concentration_values, length)</span>
-<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Number of values related to the ninth class :</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(subsets[[<span class="st">&quot;values&quot;</span>]], length)</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of values of each set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(concentration_values, length)</span>
+<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Number of values related to the ninth class :</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(subsets[[<span class="st">&quot;values&quot;</span>]], length)</span></code></pre></div>
 <pre><code>## Number of values of each set of concentration values:
 ##  S1  S2  S3  S4  S5  S6  S7  S8  S9 S10 S11 S12 S13 S14 
 ##  24   3  21   4   1   3  10  15  30   6   6   5   2   1 
@@ -1683,11 +1717,11 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 ##   8  21   2   2   1  30   1   1</code></pre>
 <p>We can see that only 8 sets of concentration values contain substances related to the class of interest.</p>
 <p>Let’s take a look at the values from the 6th set, in which only two of the three values were kept:</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Values of the sixth set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>concentration_values<span class="sc">$</span>S6</span>
-<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Values of the sixth set of concentration values related to the ninth class:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;values&quot;</span>]]<span class="sc">$</span>S6</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Values of the sixth set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a>concentration_values<span class="sc">$</span>S6</span>
+<span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb127-4"><a href="#cb127-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Values of the sixth set of concentration values related to the ninth class:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb127-5"><a href="#cb127-5" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;values&quot;</span>]]<span class="sc">$</span>S6</span></code></pre></div>
 <pre><code>## Values of the sixth set of concentration values:
 ##                                    Acétone 
 ##                                         44 
@@ -1700,7 +1734,7 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 ## Acétone Toluène 
 ##      44       4</code></pre>
 <p>To finish, we can look at the subset of references, which will also give the set of substances related to the class:</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;references&quot;</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;references&quot;</span>]]</span></code></pre></div>
 <pre><code>##               Ethanol               Acétone              Butanone 
 ##                1900.0                1210.0                 600.0 
 ## 1-Méthoxypropane-2-ol               Styrène               Toluène 
