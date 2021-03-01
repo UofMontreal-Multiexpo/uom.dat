@@ -6,3 +6,4 @@
 ^doc$
 ^Meta$
 ^man-roxygen$
+^data-raw$

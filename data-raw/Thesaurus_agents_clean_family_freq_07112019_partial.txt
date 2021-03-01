@@ -1,0 +1,106 @@
+Code	Substance	Short	Family
+1591	Lead Inorganic (as Pb) (PEL)	Lead	metal
+1520	Iron Oxide Fume	Iron	metal
+731	Copper Fume (as Cu)	Copper	metal
+2610	Zinc Oxide Fume	Zinc	metal
+1620	Manganese Fume (as Mn)	Manganese	metal
+685	Chromium	Chromium	metal
+1840	Nickel Metal and Insoluble compounds (as Ni)	Nickel	metal
+490	Cadmium Dust (as Cd)	Cadmium	metal
+2587	Welding Fumes (Total Particulate)	Welding fumes	metal
+720	Cobalt Metal Dust & Fume (as Co)	Cobalt	metal
+360	Beryllium and Beryllium Compounds (as Be)	Beryllium	metal
+260	Arsenic Inorganic (PEL)	Arsenic	metal
+1790	Molydbenum (as Mo) Insoluble Compounds (Total Dust)	Molybdenum	metal
+2571	Vanadium fume (as V2O5)	Vanadium	metal
+A100	Aluminum (as Al) Metal (Total Dust)	Aluminum	metal
+230	Antimony & Compounds (as Sb)	Antimony	metal
+1631	Mercury (Vapor) (as Hg)	Mercury	metal
+2240	Silver Metal & Soluble Compounds (as Ag)	Silver	metal
+1610	Magnesium Oxide Fume (Total Particulate)	Magnesium	metal
+2430	Tin inorganic compounds (except oxides) (as Sn)	Tin	metal
+2440	Titanium Dioxide (Total Dust)	Titanium dioxide	metal
+310	Barium Soluble Compounds (as Ba)	Barium	metal
+2460	Toluene	Toluene	solvent
+2590	Xylene	Xylene	solvent
+430	2-Butanone	2-Butanone	solvent
+40	Acetone	Acetone	solvent
+1730	Methylene Chloride	Methylene chloride	solvent
+V109	VM & P Naphtha	VM P Naphtha	solvent
+1560	Isopropyl Alcohol	Isopropyl alcohol	solvent
+440	n-Butyl Acetate	N-Butyl acetate	solvent
+2270	Stoddard Solvent	Stoddard solvent	solvent
+1080	Ethyl Benzene	Ethyl benzene	solvent
+1385	Hexone	Hexone	solvent
+2020	Perchloroethylene	Tetrachloroethylene	solvent
+1720	Methyl Chloroform	Methyl chloroform	solvent
+1380	Hexane	Hexane	solvent
+2490	Trichloroethylene	Trichloroethylene	solvent
+320	Benzene	Benzene	solvent
+435	2-Butoxyethanol	2-Butoxyethanol	solvent
+2040	Phenol	Phenol	solvent
+1040	Ethyl Acetate	Ethyl acetate	solvent
+1660	Methyl Alcohol	Methyl alcohol	solvent
+1060	Ethyl Alcohol	Ethyl alcohol	solvent
+460	n-Butyl Alcohol	N-Butyl alcohol	solvent
+2485	112-Trichloro-122-Trifluoroethane	F-113	solvent
+830	Cyclohexanone	Cyclohexanone	solvent
+1675	Methyl (n-amyl) ketone	Methyl (n-amyl) ketone	solvent
+1371	Heptane	Heptane	solvent
+1534	Isobutyl Acetate	Isobutyl acetate	solvent
+2390	Tetrahydrofuran	Tetrahydrofuran	solvent
+1540	Isopropyl Acetate	Isopropyl acetate	solvent
+2480	Triethylamine	Triethylamine	solvent
+1037	2-Ethoxyethyl Acetate	2-Ethoxyethyl acetate	solvent
+2180	n-Propyl Acetate	n-Propyl acetate	solvent
+1536	Isobutyl Alcohol	Isobutyl alcohol	solvent
+930	Dimethylformamide	Dimethylformamide	solvent
+2505	Trimethylbenzene	Trimethylbenzene	solvent
+2170	Propyl Alcohol	Propyl alcohol	solvent
+540	Carbon Disulfide	Carbon disulfide	solvent
+874	Ethylene Dichloride	Ethylene dichloride	solvent
+1033	2-Ethoxyethanol	2-Ethoxyethanol	solvent
+860	Diacetone Alcohol	Diacetone alcohol	solvent
+2310	Sulfuric Acid	Sulfuric acid	acid or base
+2260	Sodium & compounds	Sodium hydroxide	acid or base
+1860	Nitric Acid	Nitric acid	acid or base
+20	Acetic Acid	Acetic acid	acid or base
+2085	Phosphoric Acid	Phosphoric acid	acid or base
+520	Calcium Oxide	Calcium oxide	acid or base
+9010	Silica Crystalline Quartz (as Quartz) Respirable Dust	Silica	dust
+9020	Asbestos (all forms)	Asbestos	dust
+W103	Wood Dust Hardwood	Wood dust	dust
+527	Carbon Black	Carbon black	dust
+1280	Fluorides (as F)	Fluorides	dust
+735	Cotton Dust (Raw)	Cotton dust	dust
+9040	Coal Dust (<5% SiO2 Respirable Fraction)	Coal dust	dust
+1300	Fibrous Glass Dust	Fibrous glass dust	dust
+560	Carbon Monoxide	Carbon monoxide	gas
+1290	Formaldehyde	Formaldehyde	gas
+170	Ammonia	Ammonia	gas
+2290	Sulfur Dioxide	Sulfur dioxide	gas
+1430	Hydrogen Chloride	Hydrogen chloride	gas
+530	Carbon Dioxide	Carbon dioxide	gas
+1190	Ethylene Oxide (PEL)	Ethylene oxide	gas
+1903	Nitrogen Dioxide	Nitrogen dioxide	gas
+1460	Hydrogen Fluoride	Hydrogen fluoride	gas
+1980	Ozone	Ozone	gas
+640	Chlorine	Chlorine	gas
+1953	Nitrous Oxide	Nitrous oxide	gas
+2580	Vinyl Chloride (PEL)	Vinyl chloride	gas
+1890	Nitric Oxide	Nitric oxide	gas
+1480	Hydrogen Sulfide	Hydrogen sulfide	gas
+1073	Methylene bisphenyl isocyanate	4,4'-MDI	isocyanate
+2470	Toluene-24-Diisocyanate (TDI)	2,4'-TDI	isocyanate
+H130	16-Hexamethylene Diisocyanate Homopolymer	HDI Homopolymer	isocyanate
+1539	Isophorone Diisocyanate	Isophorone diisocyanate	isocyanate
+700	Coal Tar Pitch Volatiles (benzene soluble fraction)	Coal tar pitch vol	PAH
+710	Naphtha (Coal Tar)	Naphtha (Coal Tar)	PAH
+1810	Naphthalene	Naphthalene	PAH
+2280	Styrene	Styrene	styrene
+5010	Oil Mist Mineral	Oil mist	oil mist
+1774	Methyl Methacrylate	Methyl methacrylate	methyl methacrylate
+1440	Hydrogen Cyanide	Hydrogen cyanide	hydrogen cyanide
+1750	Methyl Ethyl Ketone Peroxide	MEKP	MEKP
+120	Acrylonitrile (PEL)	Acrylonitrile	acrylonitrile
+290	Asphalt Fumes (Petroleum)	Asphalt fumes	asphalt fumes

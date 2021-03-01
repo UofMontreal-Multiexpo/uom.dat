@@ -1,0 +1,1154 @@
+CODE;NOM;VLEPCT;VLEP8H
+5;Acide oléique;;
+7;Agent détergent cationique;;
+10;Calcaire;;10.0
+11;Carbonate de sodium;;
+12;Chlorocrésol;6.0;3.0
+13;Acide perborique, sel de sodium;;
+14;Lauryléthersulfate de sodium;;
+16;Chlorure de sodium;;
+17;Colophane;;100.0
+18;Eau;;
+19;Acétate de n-butyle;940.0;710.0
+20;Acétate d'éthyle;;1400.0
+21;Acétate de 2-butoxyéthyle;333.0;66.5
+22;Acétate de 2-éthoxyéthyle;;11.0
+23;Acétate d'isopropyle;1140.0;950.0
+24;Acétate de 2-méthoxyéthyle;;5.0
+25;Acétone;2420.0;1210.0
+26;Acétonitrile;140.0;70.0
+27;Toluène;384.0;76.8
+28;Acide acétique;25.0;25.0
+29;Acide acrylique;30.0;6.0
+30;Acide nitrique;2.6;
+31;Acide chlorhydrique;7.6;7.6
+32;Acide chloroacétique;;
+34;Acide cyanhydrique;10.0;2.0
+35;Fluorure d'hydrogène;2.5;1.5
+36;Acide formique;;9.0
+37;Décane;;
+38;Acide oxalique;2.0;1.0
+39;Acide peracétique;;
+41;Acide phosphorique;2.0;1.0
+42;Acide propionique;62.0;31.0
+43;Acide sulfurique (fraction thoracique);3.0;0.05
+45;Acide trichloroacétique;;5.0
+46;Acrylonitrile;32.5;4.5
+47;Alcool allylique;4.8;0.48
+48;Alcool benzylique;;
+49;Ethanol;9500.0;1900.0
+50;Alcool furfurylique;60.0;40.0
+51;Hexane-1-ol;;
+52;Alcool isopropylique;980.0;490.0
+53;Alcool propylique;614.0;500.0
+54;Méthanol;1300.0;260.0
+55;Acétaldéhyde;180.0;180.0
+56;Benzaldéhyde;;
+57;Formaldéhyde;1.23;0.61
+60;Aniline;;10.0
+61;Ammoniac, anhydre;14.0;7.0
+62;Ammoniaque, solution aqueuse;;
+63;Hydrogénodifluorure d'ammonium;;
+68;Anhydride maléique;1.0;1.0
+69;Anhydride phtalique;6.0;6.1
+70;Acide chromique;;1.0
+71;Aluminium;;5.0
+75;Polybutène;;
+76;Alcool tert-amylique;;
+77;Benzène;3.25;3.25
+78;Benzidine;;8.0
+82;Polychloroprène;;
+83;Dichromate de sodium;15.0;5.0
+85;Biphényl-1,1', dérivés chloro;;1.0
+86;Butane;;1900.0
+87;Butanone;900.0;600.0
+88;Butylamine;15.0;
+90;2-Butoxyéthanol;246.0;49.0
+91;1,2-Dichloroéthane;;40.0
+92;1,1-Dichloroéthane;;412.0
+93;Dichloroéthane;;
+94;Solvant pétrolier;;
+95;Dichlorométhane;356.0;178.0
+96;Crésol;;22.0
+97;Résine d'hydrocarbure;;
+99;M-crésol;;22.0
+100;P-cresol;10.0;10.0
+101;Propylbenzène;;
+102;Cumène;250.0;100.0
+103;Acétate de pentyle;540.0;270.0
+105;Acétate d'isopentyle;540.0;270.0
+106;Acétate d'isobutyle;940.0;710.0
+107;Acétate de méthyle;760.0;610.0
+108;Acétate de propyle;1050.0;840.0
+109;Acide borique;6.0;2.0
+110;Amiante;;0.01
+111;Chrysotile;;
+112;Benzo[a]pyrène;;150
+113;Dioxyde de manganèse;;
+114;Chlorodifluoro-méthane;;3600.0
+115;Chlorométhane;210.0;105.0
+116;Cyclohexane;1300.0;700.0
+117;Cyclohexanol;300.0;200.0
+118;Cyclohexanone;81.6;40.8
+119;4-Hydroxy-4-méthylpentan-2-one;;240.0
+120;Acétate de sec-butyle;;950.0
+121;Acétate de tert-butyle;;950.0
+122;Alcool butylique;150.0;
+123;2,4-Dinitrophénol;;
+124;1,2-Dichloroéthylène;990.0;790.0
+126;Dichloroéthylène;;
+127;Butane-2-ol;;300.0
+128;2-Méthylpropane-1-ol;;150.0
+129;Alcool tert-butylique;;300.0
+133;1,2-Dichlorobenzène;306.0;122.0
+134;Dichlorodifluorométhane;;4950.0
+135;1,2-Dichloropropane;508.0;350.0
+139;2,2'-Iminodiethanol;;15.0
+140;Hydroquinone;;2.0
+141;2-Ethoxyéthanol;;8.0
+142;Ethylène-glycol;104.0;52.0
+143;Oxyde de diéthyle;616.0;308.0
+144;2-Furaldéhyde;8.0;7.9
+145;Glutaral;0.8;0.4
+146;Diéthylamine;30.0;15.0
+147;2,2'-Iminodi(éthylamine);;4.0
+148;4,4'-Diisocyanate de diphénylméthane;200.0;100.0
+149;Diisocyanate d'hexaméthylène;150.0;75.0
+150;Diisocyanate d'isophorone;180.0;90.0
+151;2,4 TDI;160.0;80.0
+152;2,6 TDI;160.0;80.0
+153;Diisocyanate de m-tolylidène;160.0;80.0
+154;Ethyldiméthylamine;75.0;15.0
+155;N,N-Diméthylformamide;30.0;15.0
+156;Diméthylsulfoxyde;;
+157;1,4-Dioxanne;140.0;73.0
+158;Essence de térébenthine;;560.0
+159;n-heptane;2085.0;1668.0
+160;2-Méthylpentane-2,4-diol;125.0;25.0
+161;Isophorone;25.0;
+162;Isopropylamine;24.0;12.0
+163;Méthacrylate de méthyle;410.0;205.0
+164;Hexane-2-one;35.0;20.0
+165;2-Méthoxyéthanol;;3.2
+166;4-Méthylpentane-2-one;208.0;83.0
+167;Nitrite de sodium;;
+168;Lindane;;0.5
+169;Hexachlorocyclohexane;1.0;0.5
+170;n-Hexane;;72.0
+171;Xylène;442.0;221.0
+172;2,2'-Oxydiethanol;176.0;44.0
+173;o-Xylène;442.0;221.0
+174;Chlorobenzène;70.0;23.0
+175;2-Aminoéthanol;7.6;2.5
+176;Ethylamine;28.2;9.4
+179;Pentachlorophénol;;0.5
+180;Pentachlorophénolate de sodium;;
+181;Tétrachloroéthylène;275.0;138.0
+182;Peroxyde de dibenzoyle;;5.0
+183;Eau oxygénée;;1.5
+187;Phénol;15.6;7.8
+188;Phtalate de dibutyle;;5.0
+189;Phtalate de bis(2-éthylhexyle);5.0;5.0
+190;Hydroxyde de sodium;;2.0
+191;Hydroxyde de potassium;2.0;
+192;Styrène;200.0;100.0
+193;Disulfure de carbone;75.0;15.0
+194;Tétrachlorure de carbone;60.0;12.0
+195;Tétrahydrofuranne;300.0;150.0
+196;1,1,1-Trichloroéthane;1110.0;555.0
+197;Trichloroéthylène;1080.0;405.0
+198;Trichlorofluorométhane;5600.0;5620.0
+199;1,1,2-Trichlorotrifluoroéthane;9500.0;7600.0
+200;2,2',2''-Nitrilotriéthanol;10.0;3.1
+201;Triéthylamine;12.6;4.2
+203;Pyrophosphate de tétrapotassium;;
+204;Etain;;2.0
+205;Polyol;;
+207;Résine époxydique modifiée;;
+208;Amidon;;10.0
+210;Sulfate de sodium;;
+212;Métasilicate de disodium;;
+214;1,4-bis(2,3-époxypropoxy)butane;;
+216;Caoutchouc synthétique;;
+217;Résine vinylique;;
+218;Dihydrogénoorthophosphate d'ammonium;;
+222;Fuel-oil;;
+224;Dioxyde de titane;;10.0
+225;Noir de carbone;;3.5
+226;Résine glycérophtalique;;
+227;Sulfate de calcium;;10.0
+228;Sulfate de baryum;;10.0
+229;Talc;;2.0
+230;Ethylbenzène;442.0;88.4
+231;Ethyltoluène;;
+232;White spirit;;525.0
+234;Carbonate de magnésium;;10.0
+236;Oxyde de zinc;;5.0
+237;Chlorure de zinc;2.0;1.0
+240;Chromate de zinc;;10.0
+241;Carbonate de potassium;;
+242;Polyamide;;
+243;2,4,6-tris(diméthylaminométhyl)phénol;;
+244;Acide silicique, sel de sodium;;
+245;Brai de houille;;200.0
+248;Aluminosilicate;;
+252;Hydrocarbures aliphatiques et alicycliques;;
+253;Résine phénolique;;
+254;Lactate d'éthyle;;
+256;N-1-Naphtylaniline;;
+257;Orthophosphate de trisodium;;
+259;Formiate de méthyle;375.0;250.0
+260;Résine acrylique;;
+261;Chlorure de potassium;;
+262;Cyanoguanidine;;
+263;Nitrate de potassium;;
+264;Nitrate de sodium;;
+265;Chlorure d'ammonium;20.0;10.0
+268;Disulfure de molybdène;;10.0
+270;Oxyde de magnésium;;10.0
+271;Oxydipropanol;;
+273;Ethylènediaminetétraacétate de tétrasodium;;
+274;Dioxyde de silicium;;
+275;Essence spéciale;;
+276;Essence spéciale  - aromatiques <= 5 %;;
+277;Résine alkyde;;
+278;Polyuréthanne;;
+279;Acide silicique, sel de calcium;;1.0
+280;Acide maléique;;
+281;Polyéthylène glycol;;
+282;Benzotriazole;;
+283;Sulfate de potassium;;
+284;2,6-di-tert-butyl-p-crésol;;10.0
+285;Hydrazine;;100.0
+287;Polytétrafluoroéthylène;;
+288;Propane;;
+289;Sulfate de sodium et de dodécyle;;
+290;Dolomite;;
+291;White-spirit  - aromatiques > 5 %;;
+293;Tétrafluoroborate de potassium;;
+295;Hexachloroéthane;98.0;9.8
+298;Caoutchouc;;
+301;Acide sulfamidique;;
+305;Acides naphténiques, sels de cobalt;;
+306;Bis(diéthyldithiocarbamate) de zinc;;
+308;Dihydroxyde de calcium;;5.0
+310;Dérivé de la colophane;;100.0
+312;Graphite;;2.0
+313;Essence E - aromatiques <= 5 %;;
+314;Essence F - aromatiques <= 5 %;;
+318;Acide stéarique;;
+319;Gomme arabique;;
+320;5-Méthylhexane-2-one;475.0;95.0
+321;Acide méthacrylique;;70.0
+323;Sulfate d'ammonium;;
+324;Phosphate diammonique;;
+326;Polyester;;
+327;Polyisocyanate;;
+328;1-Méthoxypropane-2-ol;375.0;188.0
+329;2-(2-Ethoxyéthoxy)éthanol;;
+330;1,4-Dichlorobenzène;306.0;4.5
+331;Résine mélamine-formol;;
+332;Phosphate de tris(méthylphényle);;
+333;Polyisobutène;;
+335;Fer (trioxyde de di-,fumées), en Fe;;5.0
+336;Résine époxydique;;
+337;Anhydride cyclohexane-1,2-dicarboxylique;;
+338;Anhydride 1,2,3,6-tétrahydrophtalique;;
+339;Pétrole lampant désaromatisé;;
+342;Polyméthacrylate de méthyl;;
+343;Hydrogénocarbonate de sodium;;
+345;Paraformaldéhyde;;
+346;Méthanolate de sodium;;
+347;Résine époxydique - pm <= 700;;
+349;Résine terpènephénolique;;
+350;Polyacétate de vinyle;;
+351;Nitrate de cellulose;;
+353;Solvant naphta;;
+354;Glycerol;;10.0
+355;White-spirit  - aromatiques <=5 %;;
+356;Dodecylbenzènesulfonate de triéthanolamine;;
+357;Acétate de 2-hydroxyéthyle;;
+359;Résine phénol-formol;;
+360;Hydrocarbures saturés;;
+362;Acide édétique;;
+363;Urée;;
+364;Résorcinol;90.0;45.0
+366;Peroxodisulfate de dipotassium;;100.0
+367;Thiocyanate de potassium;;
+372;Distéarate de zinc;;10.0
+375;Chlorure de benzododécinium;;
+377;Alkylbenzènesulfonate de sodium;;
+378;Sulfate de magnésium;;
+379;Nonylphénol;;
+383;Thiourée;;
+385;Polychlorure de vinyle;;
+388;Acide toluène-4-sulfonique;;
+389;Acide benzènesulfonique;;
+390;Oxyde de fer;;
+398;Essence F;;
+402;Zinc;;
+403;Biphényle-2-ol;;
+405;Silicone;;
+411;Phosphate d'aryle;;
+413;Dodécane;;
+414;Essence C;;
+415;Gasoil;;
+416;Hydrocarbures aromatiques monocycliques (HAM);;
+417;Hydrocarbures terpéniques;;
+418;Nonane;;1050.0
+419;Octane;1800.0;1450.0
+420;Pentadécane;;
+421;n-Pentane;;3000.0
+422;Pétrole lampant;;
+423;Solvant aromatique;;
+425;Solvant pétrolier dont plus de 5 % du volume;;
+426;Undecane;;
+427;Tétradécane;;
+428;Tridécane;;
+429;Résine urée/formol;;
+430;Résine fluorée;;
+432;Résine cellulosique;;
+435;Polyvinylpyrrolidone;;
+436;Polypropylène;;
+437;Polyoléfine;;
+438;Polyéthylène;;
+440;Polyester insaturé;;
+441;Polybutyral de vinyle;;
+442;Polyalcool vinylique;;
+444;Copolymère styrène - butadiène - styrène;;
+445;Copolymère styrène - isoprène - styrène;;
+446;Copolymère éthylène - acétate de vinyle;;
+447;Copolymère chlorure de vinyle/acétate;;
+448;Copolymère acrylonitrile - butadiène - styrène;;
+449;Copolymère à base d'acrylonitrile;;
+451;Caoutchouc styrène - butadiène;;
+452;Caoutchouc nitrile;;
+453;Caoutchouc naturel;;
+454;Acétate de cellulose;;
+455;Acétobutyrate de cellulose;;
+458;Essence E;;
+459;Acrylaldéhyde;250.0;230.0
+460;Acrylamide;;300.0
+461;Acrylate d'éthyle;42.0;21.0
+462;Acrylate de méthyle;36.0;18.0
+463;Trioxyde de diarsenic;;200.0
+464;Dioxyde de soufre;10.0;5.0
+465;Anhydride trimellitique;;40.0
+466;Baryum;;0.5
+467;Béryllium;;2.0
+468;Brome;;0.7
+469;Bromoforme;;5.0
+471;Bromure de méthyle;;20.0
+472;Oxyde de cadmium;50.0;
+473;Chlore;1.5;1.5
+474;Chloroforme;250.0;10.0
+475;Chloronaphtalène;;
+476;a-Chlorotoluène;11.0;5.0
+477;Chlorure de vinyle monomère;;2.59
+479;Cobalt;;20.0
+482;Cyanure de potassium;;
+483;N,N-Diméthylisopropylamine;;
+486;1-Chloro-2,3-époxypropane;10.0;1.9
+489;Méthenamine;;
+490;Hydrogène arsénié;0.8;0.2
+492;Sulfure d'hydrogène;14.0;7.0
+494;Lithium;;
+495;Mercure;;20.0
+496;Diméthoxyméthane;;3100.0
+497;Nickel;;1.0
+498;Nitrobenzène;;1.0
+500;Monoxyde de carbone;;55.0
+501;Oxyde d'éthylène;9.0;1.8
+505;Phosgène;400.0;80.0
+506;Phosphore blanc;300.0;100.0
+508;Plomb;;100.0
+511;Pyridine;30.0;15.0
+512;Sélénium;200.0;200.0
+513;Sulfate de diméthyle;;0.5
+515;1,2,3,4-Tétrahydronaphtalène;;
+519;Persulfate alcalin;;
+521;Ammonium quaternaire;;
+522;Antimoine;;0.5
+538;Sulfate de zinc;;
+541;1,3,5-Trioxanne;;
+545;Cadmium;;50.0
+550;Diiodure de plomb;;
+552;Potassium;;
+557;Amitrole;;200.0
+567;Chromate de plomb;;
+579;Carbofuran;;100.0
+592;Chlorpyriphos-méthyl;;
+593;Chlorpyriphos;;200.0
+606;Cyperméthrine cis/trans +/- 40/60;;
+619;Diazinon;;100.0
+636;Nitrométhane;;250.0
+637;e-Caprolactame (poudre et vapeur);40.0;10.0
+639;1-Naphtol;;
+641;Buta-1,3-diène;33.0;2.2
+642;2-Chlorotoluène;375.0;250.0
+644;Chlorotoluène;;
+645;Chlorure de benzoyle;2.8;0.0
+647;Cyclohexylamine;;40.0
+651;Propane-1,2-diol;;
+655;Chromate de sodium;;
+658;Deltaméthrine (ISO);;
+660;Hydroxyde d'aluminium;;
+665;4-Tert-butylpyrocatéchol;;
+669;3-Chloropropène;6.0;3.0
+673;2-Chloroéthanol;3.0;
+676;Isocyanate de p-toluenesulfonyle;;
+678;Alkylsulfonate de sodium;;
+681;Dipentène;;
+683;Glycolate de butyle;;
+684;Distéarate de magnésium;;
+685;Mécrilate;18.0;8.0
+693;Acétate de potassium;;
+695;Diisocyanate de 4,4'-méthylènedicyclohexyle;110.0;54.0
+696;4,4'-Méthylènedianiline;0.8;0.08
+697;Isopentane;;3000.0
+698;Méthidathion;;
+711;2-Diméthylaminoéthanol;;
+712;Cyclohexyldiméthylamine;;
+717;Thirame;;5.0
+720;Xylénol;;
+731;Acide mercaptoacétique;;5.0
+734;Acrylate;;
+735;Morpholine;72.0;36.0
+736;Amine aromatique;;
+738;6-Chloro-m-cresol;;
+739;2-Nitropropane;;36.0
+740;Cyclopentane;;1720.0
+741;Triisocyanate de méthylidynetri-p-phénylène;;
+742;Thiophosphate de tris(p-isocyanatophényle);;
+745;Glyoxal;;
+746;Malathion;;10.0
+747;Nitrate d'ammonium;;
+748;2-(2-butoxyéthoxy)Ethanol;101.2;67.5
+750;Piperonyl butoxide;;
+753;Acide 2-éthylhexanoïque;;
+754;Mercaptoacétate d'ammonium;;
+755;2-Mercaptopropionate d'ammonium;;
+757;p-Pphénylenediamine;;100.0
+760;Acide citrique;;
+766;Butanone-oxime;;
+768;Méthylcyclohexane;;1600.0
+771;Alcool tétrahydrofurfurylique;;
+774;Aziridine;1.8;0.88
+777;Tétraoxyde d'osmium;4.7;2.0
+779;Hydrogène;;
+788;Diuron;;10.0
+803;Fluor;3.16;1.58
+805;Nitrite de dicyclohexylammonium;;
+812;Sodium;;
+820;Orthosilicate de tétraéthyle;;85.0
+825;Phosphate de tributyle;;2.5
+831;Jaune de sulfochromate de plomb;;
+846;Phosphate de 2-éthylhexyle et de diphényle;;
+850;Acide 4,4'-bis(3-phényluréido)-2,2'-stilbènedisulfo;;
+852;Butyrolactone;;
+854;Thymol;;
+864;Méthacrylate de 2-hydroxyéthyle;;
+867;Mica;;3.0
+869;Cyanoacrylate d'éthyle;;
+870;Acide lactique;;
+874;Sulfure de zinc;;
+876;Melamine;;
+881;Arsenic;50.0;10.0
+884;Méthanethiol;;1.0
+887;Dieldrine;;250.0
+891;Alkylarylsulfonate de sodium;;
+894;Acide silicique, sel de magnésium;;
+895;Dioxyde de carbone;;9000.0
+896;4-Méthylpentane-2-ol;165.0;100.0
+898;Atrazine;;5.0
+899;Simazine;;
+901;Dioxyde d'aluminium et de sodium;;
+905;Trioléate de 1,2,3-propanetriyle;;
+907;2,2'-(éthylenedioxy)Diéthanol;;
+911;Disulfure de di(benzothiazole-2-yle);;
+912;Enzyme protéolytique;;
+917;Palmitate d'isopropyle;;
+920;2-Nitrotoluène;;
+922;1,2-Epoxybutane;;
+923;2-Méthylbut-3-yne-2-ol;;
+925;Pentaoxyde de divanadium;;50.0
+926;C,C'-azodi(formamide);;
+927;Chlorure de didécyldiméthylammonium;;
+928;4-Nitrotoluène;;
+929;Argent métallique;;0.1
+930;Cuivre;;200.0
+931;Fer;;
+932;Bismuth;;
+933;Or;;
+936;1,4-Diazabicyclooctane;;
+940;Acétate de 2-(2-butoxyéthoxy)éthyle;;
+944;Di(acétate) d'éthylène;;
+949;Peroxyde de dicumyle;;
+953;Oxygène;;
+956;Dithiophosphate de zinc;;
+958;Cellulose;;10.0
+959;Dinitrotoluène;300.0;200.0
+960;Phtalocyanine contenant du cuivre, polychloro;;
+964;Bleu de phtalocyanine;;
+966;Permanganate de potassium;;
+967;5-Chloro-2-méthyl-2H-isothiazole-3-one;;
+979;Phtalate de dicyclohexyle;;
+980;Oxyde d'aluminium;;10.0
+987;N-méthyl-2-Pyrrolidone;80.0;40.0
+989;Benzothiazole-2-thiol;;
+999;Oxyde d'antimoine;;0.5
+1000;Hexadécane-1-ol;;
+1001;Résine furannique;;
+1005;Lactate de butyle;;25.0
+1006;Trichlorobenzène (All isomers);;
+1007;2,2'-[Ethylènebis(oxyméthylène)]bisoxiranne;;
+1012;Diméthacrylate d'éthylène;;
+1013;Pentane-2,4-dione;;
+1017;Amine aliphatique;;
+1018;Oxyde de fer (III) hydraté;;5.0
+1025;N,N-diméthylaniline;50.0;25.0
+1026;Vaseline;;
+1027;Lanoline;;
+1028;Kaolin;;10.0
+1036;Acrylate de n-butyle;53.0;11.0
+1037;Acrylate de cyclohexyle;;
+1039;Acrylate de 2-éthylhexyle;;
+1040;Acrylate de 2-hydroxyéthyle;;
+1041;Acide acrylique, monoester avec propane-1,2-diol;;
+1042;Acrylate d'isobutyle;;
+1045;Butyraldéhyde;;
+1051;2-Amino-4,6-dinitrophénol;;
+1056;Anhydride succinique;;
+1062;Bisphénol A (poussières inhalables);;10.0
+1065;1-(2-Méthoxy-1-méthylethoxy)propane-2-ol;;
+1067;2-Phényléthanol;;
+1069;Benzoate de benzyle;;
+1081;CI Pigment yellow 13;;
+1082;CI pigment red 57:1;;
+1083;Chrome (III) oxyde;;0.5
+1085;Benzophénone;;
+1087;Triacrylate de triméthylolpropane;;
+1088;Oxyde de diazote;360.0;46.0
+1089;Chlorure de calcium;;
+1092;Phtalate de benzyle et de butyle;;
+1093;Triméthylbenzène;200.0;100.0
+1095;Nitroéthane;;310.0
+1100;Polypropylène glycol;;
+1101;Hydrogénophosphate de bis(2-éthylhexyle);;
+1102;Acetylène;;
+1103;Ethylène;;
+1105;Acide adipique;;5.0
+1107;Acide succinique;;
+1110;Diacrylate d'hexaméthylène;;
+1111;Diisopropylbenzène;;
+1116;Camphre;19.0;12.0
+1118;Vanadium;;50.0
+1121;Phtalate de diéthyle;;5.0
+1124;Soufre;;
+1125;Indane;;
+1126;Indène;;45.0
+1127;Naphtalène;79.0;50.0
+1129;1-Méthylnaphtalène;;
+1131;2-Ethylnaphtalène;;
+1132;Diméthylnaphtalène;;
+1133;Acénaphtène;;
+1134;Dibenzofuranne;;
+1135;Fluorène;;
+1139;Phénanthrène;;
+1140;Anthracène;;
+1142;Fluoranthène;;
+1143;Pyrène;;
+1144;Chrysène;;
+1147;Ethylènediamine;35.0;25.0
+1154;Acide bromhydrique;6.7;10.0
+1156;Résine de pétrole;;
+1164;Phtalate de diméthyle;;5.0
+1168;Hexafluoroaluminate de trisodium;;
+1169;Hexafluorosilicate de disodium;;
+1173;Huile de pin;;
+1174;Salicylate de phényle;;
+1175;Menthol;;
+1178;Terpinéol;;
+1179;Huile de lin;;
+1186;1-Vinyl-2-pyrrolidone;;450.0
+1196;Polystyrène;;
+1197;Huile de ricin;;
+1199;Polyacrylate de sodium;;
+1209;Dodécylbenzènesulfonate de sodium;;
+1215;2,6-Dimethylheptane-4-one;;250.0
+1216;Hydrocarbures aromatiques en C9-C17;;
+1228;1,2-Benzisothiazole-3(2H)-one;;
+1230;Toluène-4-sulfonamide;;
+1231;Trientine;;
+1235;3-Aminométhyl-3,5,5-triméthylcyclohexylamine;;
+1236;4,4'-Diamino-3,3'-diméthyldicyclohexylme;;
+1238;2,2,4,6,6-Pentaméthylheptane;;
+1239;2-Ethylhexane-1-ol;;
+1240;Anhydride 1,2,3,6-tétrahydrométhylphtalique;;
+1242;Iodure de potassium;;
+1245;Huile de soja époxydée;;
+1246;5-Méthylheptane-3-one;107.0;53.0
+1247;Perméthrine (ISO);;
+1248;2-Isopropoxyéthanol;;105.0
+1250;Cires de paraffine et cires d'hydrocarbures;;2.0
+1253;Oxyde de bis(pentabromophényle);;
+1259;Diméthylamine;3.8;1.9
+1261;Octadécène-9- ol cis;;
+1264;2-Aminophénol;;
+1273;N,N-bis(2-hydroxyéthyl)oleamide;;
+1283;Huile de colza;;
+1303;Silane;;7.0
+1304;Di(acétate) de dibutylétain;200.0;100.0
+1306;Essence de lavandin abrialis;;
+1325;Carbonate de propylène;;
+1330;4,4'-Méthylènebis[2-chloroaniline];;220.0
+1331;(2-Méthoxyméthylethoxy)propanol;600.0;308.0
+1344;Isocyanurate de triglycidyle;;50.0
+1347;Chromate de strontium;;0.5
+1352;Cérium;;
+1353;Dioxyde de cérium;;
+1354;Lanthane;;
+1355;Oxyde de lanthane;;
+1356;Oxyde de néodyme;;
+1357;Praséodyme;;
+1370;Prop-2-yne-1-ol;;2.0
+1382;Sulfure et sulfate de baryum et de zinc;;
+1383;Huile de lin polymérisée;;
+1384;Cire de carnauba;;
+1387;Caféine;;
+1393;Lactate de méthyle;;
+1394;2-Phénylpropène;492.0;123.0
+1401;Pentane-3-one;;705.0
+1402;3-Méthylbutanone;;705.0
+1403;4-Méthylpent-3-ène-2-one;100.0;60.0
+1411;2-Méthylnonane;;
+1425;N,N-Diméthylacétamide;36.0;7.2
+1452;Nicotine;;0.5
+1460;Dioxyde d'azote;6.0;5.6
+1479;Fenthion;400.0;200.0
+1526;Chlorate de sodium;;
+1530;Calcium;;
+1541;Méthane;;
+1548;m-Xylène;442.0;221.0
+1549;p-Xylène;442.0;221.0
+1552;2-Méthylstyrène;;
+1554;Dibromométhane;;
+1555;Iodométhane;;12.0
+1557;1,1,2-Trichloroéthane;110.0;45.0
+1563;1-Bromopropane;;
+1564;1,2-Dibromo-3-chloropropane;;
+1568;1,3-Dichloropropène;10.0;4.5
+1575;2-Chlorobuta-1,3-diène;;36.0
+1581;Heptane-2-one;475.0;238.0
+1588;Formiate d'éthyle;;300.0
+1591;Formiate de butyle;;
+1593;Formiate d'isobutyle;;
+1597;Acétate de vinyle;35.2;17.6
+1600;Propionate de butyle;;
+1601;Propionate d'isobutyle;;
+1603;Méthacrylate de butyle;;
+1609;Sel de dichlorprop;;
+1614;Diacrylate de  tripropylène glycol;;
+1619;Diisocyanate de 1,5-naphtylène;190.0;95.0
+1622;Thiocyanate;;
+1628;Pipéridine;;3.5
+1659;Thallium;;100.0
+1663;Oxyde de glycidyle et de tolyle;;
+1664;Oxyde de dibutyle;;
+1665;2-Ethylbutane-1-ol;;
+1666;n-1,3-Diméthylbutyl-N'-phényl-p-phénylènediamine;;
+1677;1,2,3-Trichloropropane;;60.0
+1678;6-Méthylbenzotriazole;;
+1687;Acide nicotinique;;
+1691;Penthrite;;
+1692;Trinitrate de glycérol;;1.0
+1694;Dinitrate d'éthylène;;1.0
+1695;1,2-Diméthoxyéthane;;
+1699;Oxyde de diméthyle;;1920.0
+1722;Anthraquinone;;
+1738;Méthacrylate d'éthyle;;
+1740;Phtalate de diallyle;;
+1758;Acide butyrique;;
+1761;2,4,4-Triméthylpentène;;
+1765;Tétrasulfure de bis(pipéridinothiocarbonyle);;
+1766;Imidazolidine-2-thione;;
+1771;Cire tirée du lignite par extraction;;
+1784;Oxyde de cuivre;;
+1790;Polyacrylamide;;
+1814;Octane-1-ol;;
+1815;Dihydrogénophosphate de butyle;;
+1816;Magnétite;;
+1830;Isobutane;;
+1836;Benzofuranne;;
+1839;Tosylchloramide sodique;;
+1844;Oxyde de calcium;;2.0
+1845;Glutarate de diméthyle;;
+1846;Acide téréphtalique;10.0;10.0
+1857;Résine cétonique;;
+1858;Imidazole;;
+1861;Butoxypropanol;;
+1863;Iode;1.0;
+1869;Isocyanate aliphatique;;
+1871;Zircon;;
+1876;2-(2-(2-Butoxyéthoxy)éthoxyéthanol;;
+1878;2-(2-(2-Méthoxyéthoxy)éthoxy)éthanol;;
+1882;Acide oléique, monoester avec glycérol;;
+1883;Acétate de benzyle;122.0;61.0
+1889;Bis(dibutyldithiocarbamate) de zinc;;
+1891;Acide p-tert-butylbenzoïque, composé avec 2,2',2'';;
+1898;Enflurane;1200.0;150.0
+1899;Trihydrure d'antimoine;;0.5
+1902;Sel de sodium de la carboxyméthylcellulose;;
+1903;Stéarate de sodium;;
+1905;Huiles de paraffine;10.0;5.0
+1906;Alcanes, chloro;;
+1909;Hexafluorosilicate de dipotassium;;
+1911;Zirconium;10.0;5.0
+1919;a,a,a-Trichlorotoluène;;
+1924;Oxyde de Butyle et de 2,3-époxypropyle;;135.0
+1926;Oxyde de diisopropyle;1300.0;1050.0
+1929;1-Butoxypropane-2-ol;;
+1932;Ether diglycidique du bisphénol A;;
+1936;2,4,6-Triméthyl-1,3,5-trioxanne;;
+1937;1,1-Diméthoxyéthane;;
+1938;(E)-Crotonaldéhyde;;6.0
+1942;Propionaldéhyde;;
+1943;1,3-Dioxolanne;;
+1950;Anhydride chlorendique;;
+1954;Triacrylate de pentaérythritol;;
+1956;Méthacrylate d'isobutyle;;
+1965;Méthacrylate de 2-diméthylaminoéthyle;;
+1971;1-Nitropropane;;90.0
+1994;Méthylamine;12.0;6.4
+1995;Triméthylamine;25.0;4.9
+1997;Dichloroaniline;;
+2006;Toluidine;;9.0
+2008;Diphénylamine;;10.0
+2009;M-Phénylènediamine, dichlorhydrate;;
+2017;3,3'-Diméthoxybenzidine;;
+2023;4,4'-bi-o-toluidine;;
+2028;3-Aminopropyldiméthylamine;;
+2029;Dibutylamine;;
+2034;Composé organique du mercure;;
+2041;Dodécane-1-ol;;
+2043;Heptanal;;
+2046;Diamant;;
+2051;Sulfate de nickel;;100.0
+2081;2-Phénoxyéthanol;;
+2086;Sulfamidate d'ammonium;;10.0
+2191;CI pigment red 2;;
+2198;CI pigment red 112;;
+2213;2-(2-Méthoxyéthoxy)éthanol;;50.1
+2219;Dioxyde de zirconium;10.0;
+2224;Hexane -mélange d'isomères contenant un;3600.0;1800.0
+2225;Hexane -mélange d'isomères contenant plu;3600.0;1800.0
+2235;Acide silicique, sel de potassium;;
+2264;Oxyde de fer;;
+2286;Peroxodisulfate de diammonium;;100.0
+2320;Bis(4-octylphényl)amine;;
+2328;Carbure de silicium;;10.0
+2362;Acide silicique, sel d'aluminium et de magnésium;;
+2373;Hexafluorosilicate métallique;;
+2382;Acide silicique, sel d'aluminium et de sodium;;
+2403;Hydroxyde de magnésium;;
+2404;Polyacrylate de butyle;;
+2416;Alcool amylique;;
+2418;2-Méthylbutane-1-ol;;
+2419;3-Méthylbutane-1-ol;450.0;360.0
+2421;Pentane-3-ol;;
+2429;Acétophénone;;49.0
+2457;Oxyde de dibutyletain;;
+2531;Platine;;1.0
+2533;Chlorure de tributylétain;200.0;100.0
+2542;Polyéthylèneterephtalate;;
+2545;Polyoxyphenylène;;
+2546;Polycarbonate;;
+2552;1-Phénoxypropane-2-ol;;
+2557;Anhydride hexahydrométhylphtalique;;
+2634;Oxyde de dicuivre;;
+2641;Acétate de 2-méthoxy-1-méthyléthyle;550.0;275.0
+2646;Sulfate de fer;;
+2677;Trisulfate de dirhodium;;
+2678;Acide glyoxylique;;
+2694;Acétate de 3-méthoxybutyle;;
+2720;Propiconazole;;
+2786;Azélate de bis(2-éthylhexyle);;
+2789;Ether monoéthylique du propylène-glycol;;
+2794;Cryofluorane;;7000.0
+2797;Acide phtalique;;
+3001;Copolymère acrylique;;
+3002;Copolymère acrylique - butadiène;;
+3003;Copolymère acrylique - méthylstyrène;;
+3004;Copolymère acrylique - styrène;;
+3005;Copolymère acrylique - styrène - vinylchlorure;;
+3006;Copolymère acrylique - vinylchlorure;;
+3007;Copolymère acrylique - vinylidènechlorure;;
+3008;Copolymère butadiène - vinyltoluène;;
+3009;Copolymère éthylène - vinylacétate - vinylchlorure;;
+3010;Copolymère vinylchlorure - vinylidènechlorure;;
+3011;Copolymère divers;;
+3012;Huiles végétales;;10.0
+3013;Hydrate de carbone;;
+3014;Bitume;;
+3015;Brai de pétrole;;
+3016;Polyisoprène;;
+3017;Polybutadiène;;
+3018;Chlorure de polyvinyle chloré;;
+3019;Polyhydrocarbures halogénés (divers);;
+3020;Polyisophtalate ester;;
+3021;Polyterephtalate ester;;
+3022;Polyvinyle propionate ester;;
+3023;Polyacrylate ester;;
+3024;Polyméthacrylate ester;;
+3025;Polyacide;;
+3026;Polyéthers (divers);;
+3027;Polyamine;;
+3028;Polyamido-amine;;
+3029;Polyesterimide (polyester modifié);;
+3030;Isocyanate aromatique;;
+3031;Uréthane - isocyanate (adduct);;
+3032;Polysilicate;;
+3033;Polymères (divers);;
+3034;Savon d'acide gras;;
+3035;Alkyl sulfate alcalin;;
+3036;Tensio actif anionique (divers);;
+3037;Ester d'acide gras et de polyol;;
+3038;Amide d'acide gras et d'éthanolamine;;
+3039;Ester d'acide gras oxyéthylène;;
+3040;Alkyl phénol oxyéthylène;;
+3041;Tensio actif oxyéthylène;;
+3042;Jaune de zinc;;
+3043;Phosphate de triphényle;;3.0
+3044;Alcool gras oxyéthylène;;
+3045;3-Ethyltoluène;;
+3046;4-Ethyltoluène;;
+3047;2-Ethyltoluène;;
+3048;1,2,3-Triméthylbenzène;250.0;100.0
+3049;1,2,4-Triméthylbenzène;250.0;100.0
+3050;Mésitylène;250.0;100.0
+3051;Acide gras;;
+3053;Décahydronaphtalène;;
+3054;Ozone;400.0;200.0
+3055;Halothane;328.0;41.0
+3056;Phénylènediamine;;
+3057;Polyisocyanate type Desmodur N75;;
+3058;Polyisocyanate de type Desmodur N3390;;
+3059;Polyisocyanate de type Desmodur L;;
+3060;Polyisocyanate de type Desmodur HL;;
+3061;Desmodur IL;;
+3062;Isoflurane;;
+3063;Diméthyl(propyl)amine;;
+3064;2-Méthoxypropanol;;
+3065;Acétate de 2-Méthoxypropyle;;
+3066;Acétate de 2-(1-méthylethoxy)Ethyle;;
+3067;Pin-2(3)-ène;;
+3068;Pin-2(10)-ène;;
+3069;3,7,7-Triméthylbicyclo[4.1.0]hept-3-ène;;
+3071;Chloroacétate de méthyle;;
+3072;3-Ethoxypropionate d'éthyle;;
+3073;N,N-Diméthyl-p-toluidine;;
+3074;Isothiocyanate d'allyle;;
+3075;Acétate de 2-éthoxy-1-méthyléthyle;;
+3076;Acétate de 1-éthoxy-3-propanol;;
+3077;Benzo[a]anthracène;;
+3078;Dibenzo[a,h]anthracène;;
+3079;Oxyde de bis(2-méthoxyéthyle);;
+3080;Benzo(e)acéphénanthrylène;;
+3081;Benzo[k]fluoranthène;;
+3082;Benzo[ghi]perylène;;
+3083;Indéno[1,2,3-cd]pyrène;;
+3084;Formamide;;30.0
+3085;Sec-pentylbenzène;;
+3086;Diéthylbenzène;;
+3087;Vinyltoluène;483.0;240.0
+3088;Tétraméthylbenzènes mélange de durène, isodurène;;
+3089;Lycopode;;
+3091;Diéthylnitrosoamine;;
+3092;N-Isopropyl-N'-phényl-p-phénylènediamine;;
+3093;2-Méthylpentane;;
+3094;3-Méthylpentane;;
+3095;2,2,4,4-Tétraméthylpentane-3-one;;
+3096;N-Nitrisodi-iso-propylamine;;
+3097;N-Nitrosodibutylamine;;
+3099;1-Nitrosopipéridine;;
+3100;Nitrosamines totales;;
+3101;Oxyde de tert-butyle et de méthyle;367.0;183.5
+3102;Acétoïne;;
+3103;Hydrocarbures C6 à C12;1500.0;1000.0
+3104;Hydrocarbures benzéniques C9 à C12;;150.0
+3105;Isobutyraldéhyde;;
+3106;Adipate de diméthyle;;
+3107;Succinate de diméthyle;;
+3108;1,3-Dichlorobenzène;;
+3109;Divinylbenzène;100.0;50.0
+3110;o-Chlorobenzylidène malononitrile;400.0;
+3111;Ethylstyrène;;
+3113;Dichlorvos;;1.0
+3114;1,1-Dichloro-1-fluoroéthane;;
+3115;Esters méthyliques d'acides gras;;
+3116;Polyalkylbenzènes;;
+3117;Acide benzoïque;;
+3118;Desflurane ou suprane;;
+3119;Sévoflurane;;
+3120;Nitrosodipropylamine;;
+3121;1-Nitrosopyrrolidine;;
+3122;Dicyclopentadiène;;30.0
+3123;3-Méthoxybutane-1-ol;;
+3124;1-Ethoxypropane-2-ol;;
+3125;Perhydro-1,3,5-trinitro-1,3,5-triazine;;1.5
+3126;Octogène;;
+3127;Diisocyanate de 3,3'-diméthylbiphényle-4,4'-diyle;;
+3128;2-6-Dinitrotoluène;200.0;50.0
+3129;2,4-Dinitrotoluène;;
+3130;2-pyrrolidone;;
+3131;Fluorures inorganiques;;2.5
+3132;Cyanures (en CN);;5.0
+3133;Chlorures;;
+3134;Nitrates;;
+3135;Fibres de verre;;
+3136;Fibres céramiques réfractaires;;0.1
+3137;Fibres de cellulose;;
+3138;Granulométrie : diamètre médian nombre;;
+3139;Granulométrie: diamètre médian volume;;
+3140;Cristobalite;;0.05
+3141;Crocidolite;;
+3142;Amosite;;
+3144;Poussières totales;;10.0
+3145;Poussières alvéolaires;;5.0
+3146;Poussières inhalables;;10.0
+3147;Poussières thoraciques;;
+3148;Bois (poussières de);;1.0
+3149;Sulfates;;
+3150;Fibres non identifiées par la méthode d'analyse;;
+3151;Silice amorphe;;
+3152;Fraction soluble CH2 CL2;;1.0
+3153;Tridymite;;0.05
+3154;Quartz;;0.1
+3155;Phosphates;;
+3156;Chrome (métal, composés de chrome inorganiques (II) et composés de chrome inorganiques (insolubles) (III));;2.0
+3157;Chrome VI et ses composés;5.0;1.0
+3158;Chrome VI soluble;;
+3159;Zinc soluble;;
+3160;Zinc insoluble;;
+3161;Bore;;
+3162;Silicium;;10.0
+3163;Magnésium;;
+3164;Titane;;
+3165;Nickel soluble;;100.0
+3166;Gallium;;
+3167;Strontium;;
+3168;Yttrium;;1.0
+3169;Niobium;;
+3170;Molybdène;;
+3171;Palladium;;
+3172;Tellure;;100.0
+3173;Hafnium;;0.5
+3174;Baryum (composés solubles);;0.5
+3175;Tantale;;5.0
+3176;Tungstène;3.0;1.0
+3177;Plomb soluble;;
+3178;Néodyme;;
+3179;Samarium;;
+3180;Manganèse;3.0;1.0
+3181;Chrome soluble;;1.0
+3182;Fraction soluble C6H6;;
+3183;2,2'-(nitrosoimino)Biséthanol;;
+3184;NMOR;;
+3185;Diméthylnitrosoamine;;
+3188;Nitrites;;
+3189;Acide chloreux;;
+3190;Fibres (L>5um D<3um);;
+3191;Fibres (L>5um D>3um);;
+3192;Fluorures particulaires;;
+3193;Fluorures gazeux;;
+3194;Chlorures particulaires;;
+3195;Chlorures gazeux;;
+3196;Fibres d'amiante (L>5um 0.2< D <3um);;
+3197;Nitrates particulaires;;
+3198;Sulfates particulaires solubles;;
+3199;Dioxyde de chlore;0.8;0.3
+3200;Ammonium (ion);;
+3201;Nitrites gazeux;;
+3202;Nitrites particulaires;;
+3203;Nitrates gazeux;;
+3204;Bromures gazeux;;
+3205;Bromures particulaires;;
+3206;Hydroxydes totaux;;
+3207;Chrome VI insoluble;;
+3208;Aluminium soluble;;2.0
+3209;Aluminium insoluble;;
+3210;Titane soluble;;
+3211;Fluorures solubles;;2.5
+3212;Fluorures insolubles;;2.5
+3213;Phosphates gazeux;;
+3214;Phosphates particulaires solubles;;
+3215;Fibres minérales;;
+3216;Fibres organiques;;
+3217;Baryum insoluble;;
+3218;Fibres minérales (L>5um D<3um);;
+3219;Fibres minérales (L>5um D>3um);;
+3220;Indium;;100.0
+3221;Fibres céramiques  réfractaires (L>5um D<3um);;0.1
+3222;Fibres céramiques  réfractaires (L>5um D>3um);;
+3223;Fibres de verre (L>5um D<3um);;
+3224;Fibres de verre (L>5um D>3um);;
+3225;Fibres de chrysotile (L>5um D<3um);;
+3226;Fibres d'amiante (L>5um D<3um);;
+3227;Fibres d'amosite (L>5um D<3um);;
+3228;Fibres de crocidolite (L>5um D<3um);;
+3229;Fraction soluble cyclohexane;0.6;
+3230;Carbone;;
+3231;Phosphore;;
+3232;Fer soluble;;
+3233;Fibres silicate de calcium (L>5um D<3um);;
+3234;Oxydes d'azote;;
+3235;Sulfites;;
+3236;Granulométrie : écart type géométrique;;
+3237;Fibres de gypse (L>5um D<3um);;
+3238;Fibres métalliques (L>5um D<3um);;
+3239;Equivalent NCl3;;
+3240;Poussières;;
+3241;Thorium;;
+3242;Monoxyde d'azote;;30.0
+3243;Trichlorure d'azote;;0.3
+3244;Particules diesel, carbone organique;;
+3245;Particules diesel, carbone élémentaire;;
+3246;Particules diesel, carbone total;;
+3247;Fraction soluble tétrachloroéthylène;;1.0
+3248;Dibromodifluorométhane;;860.0
+3249;Anthophyllite;;
+3250;Fibres de roche (L>5um D<3um);;
+3251;Fibres de roche;;
+3252;Trémolite (amiante);;
+3253;Fibres minérales artificielles;;
+3254;Actinolite;;
+3255;N-Nitrosométhyléthylamine;;
+3256;Fibres de silice;;
+3257;Fibres de gypse;;
+3259;Fibres organiques (L>5µm D<3µm);;
+3260;Fibres minérales artificielles (L>5µm D<3µm);;
+3261;Ethoxy-benzène;;
+3262;Nitrite d'isopropyle;;
+3263;Amitriptyline;;
+3264;Fibres d'actinolite (L>5µm  D<3µm);;
+3265;[2-(2-Méthoxyméthylethoxy)méthylethoxy]propanol;;
+3266;2-Ethoxy-2-méthylpropane;;
+3267;2-Méthoxy-2-méthylbutane;;
+3268;Fibres d'octatitanate de potassium L> 5µm , D< 3µm;;
+3269;Fibres d'octatitanate de potassium L> 5µm;f /c³;
+3270;Parathion-méthyle;;0.2
+3271;Equivalent Cl2;;
+3272;Sulfates gazeux;;
+3273;Ether diglycidylique du Bis-phénol F (DGBEF);;
+3274;Carbaryl;;5.0
+3275;Fraction soluble de fluides d'usinage;;0.5
+3276;Aérosol inhalable de fluides d'usinage;;
+3277;O-Toluidine;;9.0
+3278;1-Vinylhexahydro-2-H-azépinne-2-one;;
+3279;Azide de sodium;0.3;0.1
+3280;Heptane-3-one;;95.0
+3281;Phosphine;0.28;0.14
+3282;Iridium;;
+3283;Pyrocatéchol;;20.0
+3284;Carbendazine;;
+3285;Dianhydride pyromellitique;;
+3286;2-Méthylpropène;;
+3287;Nano : DMPP diamètre moyen particules primaires;;
+3288;Nano : ETDPP écart type particules primaires;;
+3289;Nano : D1n diamètre médian en nombre;;
+3290;Nano : E1n écart type en nombre;;
+3291;Nano : D1v diamètre médian en volume;;
+3292;Nano : E1v écart type en volume;;
+3293;Nano : D2n diamètre médian en nombre;;
+3294;Nano : E2n écart type en nombre;;
+3295;Nano : D2v diamètre médian en volume;;
+3296;Nano : E2v écart type en volume;;
+3297;Nano : Kn coeff. de proportionalité en nombre;;
+3298;Nano : Kv coeff. de proportionalité en volume;;
+3299;Strychnine;;0.15
+3300;Ytterbium;;
+3301;Europium;;
+3302;Gadolinium;;
+3303;Erbium;;
+3306;Octaméthylcyclotétrasiloxane;;
+3307;Décaméthylcyclopentasiloxane;;
+3308;Terbium;;
+3309;Oxyde de sodium;;
+3310;Oxyde de potassium;;
+3311;Pentaoxyde de disphosphore;;1.0
+3312;Oxyde de Baryum;;
+3313;Hexanaldéhyde;;
+3314;Phtalate de di n-octyle;;
+3315;Carbonate de calcium;;
+3316;Fumarate de diméthyle;;
+3317;Fumarate de diéthyle;;
+3318;Acétate de 1-méthylbutyle;540.0;270.0
+3319;Pentachlorure de phosphore;;1.0
+3320;Sulfotep;;0.1
+3321;1,2,4 Trichlorobenzène;37.8;15.1
+3322;1-Ethyl-2-pyrrolidinone;;
+3323;Trichloronitrométhane;;0.7
+3324;Rhodium;0.2;1.0
+3325;Cuivre soluble;;1.0
+3326;Molybdène soluble;10.0;5.0
+3327;Isocyanate de méthyle;0.047;0.024
+3328;N-Methylacetamide;;
+3330;Agents chimiques identifiés par screening;;
+3331;Bisphénol A;;10.0
+3332;Pentasulfure de disphosphore;;1.0
+3333;Néopentane;;3000.0
+3334;Pipérazine (poudre et vapeur);0.3;0.1
+3335;Cyanamide;;1.0
+3336;Chloroéthane;;268.0
+3337;Acétate de 3-pentyle;540.0;270.0
+3338;Amylacétate,tert;540.0;270.0
+3339;Séléniure de dihydrogène;0.17;0.07
+3340;Phtalate de diisononyle;6.0;5.0
+3341;Argent (composés solubles en Ag);;0.01
+3342;Pyrèthre (après suppression des lactones sensibilisantes);;1.0
+3343;Mercure et composés inorganiques bivalents du mercure, y compris l'oxyde de mercure et le chlorure mercurique;;20.0
+3344;Diisodecyl phthalate (DIDP);;
+3345;Chrome total;;1.0
+3346;Acide sulfurique;3.0;0.05
+3347;Fumées de bitume;;
+3348;Trans-1,2-dichloroéthylène;990.0;790.0
+3349;L-limonène;;
+3350;Fumées de soudage;;5.0
+3351;2-Méthyl-2H-isothiazolin-3-one;;
+3352;Poussières submicroniques;;
+3353;Poussières submicroniques - Diamètre;;
+3354;D-Limonène;110.0;28.0
+3355;PMA_I Actinolite;;
+3356;PMA_I Anthophyllite;;
+3357;PMA_I Trémolite;;
+3358;PMA_I Grunerite;;
+3359;PMA_I Riébeckite;;
+3360;PMA_I Fluoroedenite;;
+3361;PMA_I Winchite;;
+3362;PMA_I Richtérite;;
+3363;PMA_I Erionite;;
+AFLA;Aflatoxines totales (Aflatoxines G1, G2, B1 et B2);;
+AFLAB1;Aflatoxine B1;;
+AFLAB2;Aflatoxine B2;;
+AFLAG1;Aflatoxine G1;;
+AFLAG2;Aflatoxine G2;;
+BCULT1;Bactéries cultivables mésophiles;;
+BCULT2;Bactéries cultivables thermophiles;;
+BCULT3;Bactéries cultivables à 25°C;;
+BCULT4;Bactéries cultivables à 56°C;;
+BPDT01;Ergostérol;;
+BPDT02;(1-3)-béta-D-Glucanes;;
+BTOT01;Bactéries totales par épifluorescence;;
+BTOX01;Endotoxines;;
+DON004;4-Désoxynivalénol;;
+FUMOB1;Fumonisine B1;;
+FUMOB2;Fumonisine B2;;
+HT2TOX;HT2 toxine;;
+MCULT1;Moisissures cultivables mésophiles;;
+MCULT2;Moisissures cultivables thermophiles;;
+MCULT3;Moisissures cultivables à 25°C;;
+MCULT4;Moisissures cultivables à 47°C;;
+NIV001;Nivalénol;;
+OTA001;Ochratoxine A;;
+T2TOX;T2 toxine;;
+ZEARAL;Zéaralénone;;
