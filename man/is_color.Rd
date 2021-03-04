@@ -7,7 +7,7 @@
 is_color(x, int = TRUE)
 }
 \arguments{
-\item{x}{Character vector.}
+\item{x}{Character or numeric vector.}
 
 \item{int}{Logical indicating whether to consider integer values as valid representations.}
 }
@@ -15,7 +15,7 @@ is_color(x, int = TRUE)
 Logical vector giving for each value of \code{x} whether it is a valid color representation.
 }
 \description{
-Check if a character value is a valid color representation.
+Check if a value is a valid color representation.
 The three kinds of R color specifications are considered as valid representations (color name,
 hexadecimal string and positive integer).
 }

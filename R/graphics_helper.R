@@ -38,13 +38,13 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 
 #' Check color representation
 #' 
-#' Check if a character value is a valid color representation.
+#' Check if a value is a valid color representation.
 #' The three kinds of R color specifications are considered as valid representations (color name,
 #'  hexadecimal string and positive integer).
 #' 
 #' @template function_not_exported
 #' 
-#' @param x Character vector.
+#' @param x Character or numeric vector.
 #' @param int Logical indicating whether to consider integer values as valid representations.
 #' @return Logical vector giving for each value of `x` whether it is a valid color representation.
 #' 
