@@ -19,8 +19,4 @@ Examples of the format of the returned string: 1d 02h 25m 47s; 01m 05s; 19s.
 \note{
 This function is not exported from the package.
 }
-\references{
-Stack Overflow topic:
- \href{https://stackoverflow.com/questions/27312292/convert-seconds-to-days-hoursminutesseconds}{Convert seconds to days:hours:minutes:seconds}
-}
 \keyword{internal}
