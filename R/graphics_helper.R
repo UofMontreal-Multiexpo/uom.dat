@@ -29,7 +29,7 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
   
   # Draw background text with small shift in x and y in background colour
   for (i in theta) {
-    graphics::text(xy$x + cos(i)*xo, xy$y + sin(i)*yo, labels, col = bg, ...)
+    graphics::text(xy$x + cos(i) * xo, xy$y + sin(i) * yo, labels, col = bg, ...)
   }
   # Draw actual text in exact xy position in foreground colour
   graphics::text(xy$x, xy$y, labels, col = col, ...)

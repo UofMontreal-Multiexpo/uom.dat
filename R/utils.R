@@ -16,15 +16,15 @@
 #' @keywords internal
 dhms = function(t){
   t = round(t)
-  d = t %/% (60*60*24)
-  h = t %/% (60*60) %% 24
+  d = t %/% (60 * 60 * 24)
+  h = t %/% (60 * 60) %% 24
   m = t %/% 60 %% 60
   s = t %% 60
   
   to_return = paste0(formatC(s, width = 2, format = "d", flag = "0"), "s")
   if (t %/% 60 > 0) {
     to_return = paste0(formatC(m, width = 2, format = "d", flag = "0"), "m ", to_return)
-    if (t %/% (60*60)) {
+    if (t %/% (60 * 60)) {
       to_return = paste0(formatC(h, width = 2, format = "d", flag = "0"), "h ", to_return)
       if (d > 0) to_return = paste0(d, "d ", to_return)
     }
