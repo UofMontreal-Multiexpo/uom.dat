@@ -48,8 +48,6 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' @param int Logical indicating whether to consider integer values as valid representations.
 #' @return Logical vector giving for each value of `x` whether it is a valid color representation.
 #' 
-#' @references Josh O'Brien. Stack Overflow topic:
-#'  [Check if character string is a valid color representation](https://stackoverflow.com/questions/13289009/check-if-character-string-is-a-valid-color-representation).
 #' @seealso Color names: [`grDevices::colors`], hexadecimal values: [`grDevices::rgb`],
 #'  graphics palette: [`grDevices::palette`].
 #' 
@@ -57,8 +55,9 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' @md
 #' @keywords internal
 is_color = function(x, int = TRUE) {
-  is_valid_R_color = sapply(x, function(col) tryCatch(is.matrix(grDevices::col2rgb(col)),
-                                                      error = function(e) FALSE))
+  is_valid_R_color = vapply(x, function(col) tryCatch(is.matrix(grDevices::col2rgb(col)),
+                                                      error = function(e) FALSE),
+                            logical(1))
   
   if (!int) {
     is_not_int = suppressWarnings(is.na(sapply(x, as.numeric)))
