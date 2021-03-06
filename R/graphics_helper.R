@@ -2,40 +2,6 @@
 NULL
 
 
-#' Text shading
-#' 
-#' Draw text with an outline on a plot.
-#' The outline is created by first drawing the text with the second color serveral times
-#'  and with slight offsets.
-#' 
-#' @template function_not_exported
-#' 
-#' @param x,y Coordinates where the text \code{labels} should be written.
-#' @param labels Text to be written.
-#' @param col Text color.
-#' @param bg Outline color.
-#' @param theta Angles to be used to create the outline.
-#' @param r Outline size.
-#' 
-#' @references Greg Snow. R-help mailing list:
-#'  \href{https://stat.ethz.ch/pipermail/r-help/2009-April/389216.html}{Text Contrast in a Plot}.
-#' @keywords internal
-shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
-                      theta = seq(0, 2 * pi, length.out = 32), r = 0.1, ...) {
-  
-  xy = grDevices::xy.coords(x,y)
-  xo = r * graphics::strwidth('A')
-  yo = r * graphics::strheight('A')
-  
-  # Draw background text with small shift in x and y in background colour
-  for (i in theta) {
-    graphics::text(xy$x + cos(i) * xo, xy$y + sin(i) * yo, labels, col = bg, ...)
-  }
-  # Draw actual text in exact xy position in foreground colour
-  graphics::text(xy$x, xy$y, labels, col = col, ...)
-}
-
-
 #' Check color representation
 #' 
 #' Check if a value is a valid color representation.

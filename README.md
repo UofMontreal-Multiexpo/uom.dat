@@ -40,7 +40,7 @@ devtools::install_github("UofMontreal-Multiexpo/uom.dat",
    ```r
    install.packages(c("arules", "ggplot2", "ggraph", "ggsci", "graphics",
                       "grDevices", "igraph", "mathjaxr", "methods", "network",
-                      "sna", "stats", "utils"))
+                      "sna", "stats", "TeachingDemos", "utils"))
    ```
 
 If using the RStudio IDE:

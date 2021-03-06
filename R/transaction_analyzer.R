@@ -2524,8 +2524,9 @@ function(object, pc, frequencies, title = "Spectrum of patterns") {
   ## Texte relatif aux tailles des motifs (par-dessus la ligne)
   # Changement du système de coordonnées du au changement de graphique (bar -> line)
   new_y = pc$frequency * 1 / max(pc$frequency)
-  shadowtext(bar_plot, new_y, utils::as.roman(pc$length),
-             col = "black", bg = "white", cex = cex_length, pos = 3, offset = cex_length, xpd = TRUE)
+  TeachingDemos::shadowtext(bar_plot, new_y, utils::as.roman(pc$length),
+                            col = "black", bg = "white", cex = cex_length,
+                            pos = 3, offset = cex_length, xpd = TRUE)
   
   
   ## Légendes et titre
@@ -3373,9 +3374,9 @@ function(object, graph, links, display = Inf, highlight = 3, use_names = TRUE, c
       coords$LABEL = get_item_names(object, coords$LABEL)
       if (!is.null(cutoff)) coords$LABEL = substr(coords$LABEL, 1, cutoff)
     }
-    shadowtext(coords$MOY.X, coords$MOY.Y, coords$LABEL, r = 0.3,
-               col = "black", bg = "white", cex = 0.9,
-               font = ifelse(coords$LABEL %in% coords$LABEL[seq_len(highlight)], 2, 1))
+    TeachingDemos::shadowtext(coords$MOY.X, coords$MOY.Y, coords$LABEL, r = 0.3,
+                              col = "black", bg = "white", cex = 0.9,
+                              font = ifelse(coords$LABEL %in% coords$LABEL[seq_len(highlight)], 2, 1))
   }
 })
 

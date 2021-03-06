@@ -29,6 +29,7 @@ Imports:
     network,
     sna,
     stats,
+    TeachingDemos,
     utils
 Suggests:
     corrplot,
