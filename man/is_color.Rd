@@ -28,4 +28,7 @@ graphics palette: \code{\link[grDevices:palette]{grDevices::palette}}.
 
 Color to RGB conversion: \code{\link[grDevices:col2rgb]{grDevices::col2rgb}}.
 }
+\author{
+Gauthier Magnin
+}
 \keyword{internal}

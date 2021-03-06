@@ -11,6 +11,7 @@
 #' @param t numeric. Time to convert, in seconds.
 #' @return Character string corresponding to the converted time.
 #' 
+#' @author Gauthier Magnin
 #' @keywords internal
 dhms = function(t){
   t = round(t)

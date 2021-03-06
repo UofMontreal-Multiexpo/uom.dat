@@ -17,8 +17,8 @@ NULL
 #' @param theta Angles to be used to create the outline.
 #' @param r Outline size.
 #' 
-#' @references Greg Snow. Stack Overflow topic:
-#'  \href{https://stackoverflow.com/questions/25631216/r-plots-is-there-any-way-to-draw-border-shadow-or-buffer-around-text-labels}{Any way to draw border, shadow or buffer around text labels}.
+#' @references Greg Snow. R-help mailing list:
+#'  \href{https://stat.ethz.ch/pipermail/r-help/2009-April/389216.html}{Text Contrast in a Plot}.
 #' @keywords internal
 shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
                       theta = seq(0, 2 * pi, length.out = 32), r = 0.1, ...) {
@@ -48,6 +48,7 @@ shadowtext = function(x, y = NULL, labels, col = "black", bg = "white",
 #' @param int Logical indicating whether to consider integer values as valid representations.
 #' @return Logical vector giving for each value of `x` whether it is a valid color representation.
 #' 
+#' @author Gauthier Magnin
 #' @seealso Color names: [`grDevices::colors`], hexadecimal values: [`grDevices::rgb`],
 #'  graphics palette: [`grDevices::palette`].
 #' 
