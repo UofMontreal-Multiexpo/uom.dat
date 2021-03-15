@@ -63,7 +63,7 @@ If not using the RStudio IDE:
 
 ## Documentation
 
-In addition to the manuals of the package, data, classes and functions (accessible by the `help` function), the **doc** directory contains:
+In addition to the manuals of the package, data, classes and functions (accessible by the `help` function), the **inst/doc** directory contains:
 
 * An organized list of the datasets, functions, classes and methods, in the file `list_of_help_pages.html`.
 

@@ -1,6 +1,11 @@
 ## Add prepared data to the package
+## Output files: - oedb_sample.RData
+##               - substances_information.RData
+##               - TS_instance.RData
+##               - TA_instance.RData
+##               - sysdata.rda
 
-#### Required functions ####
+#### Required function ####
 
 #' Resave data with the best compression method
 #' 
