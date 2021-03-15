@@ -62,8 +62,8 @@ resave_with_best_compression = function(paths){
 
 save(oedb_sample,               file = "./data/oedb_sample.RData")
 save(substances_information,    file = "./data/substances_information.RData")
-save(TA_instance,               file = "./data/TA_instance.RData")
 save(TS_instance,               file = "./data/TS_instance.RData")
+save(TA_instance,               file = "./data/TA_instance.RData")
 
 resave_with_best_compression(c("./data/oedb_sample.RData",
                                "./data/substances_information.RData",
