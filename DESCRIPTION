@@ -11,8 +11,8 @@ Author: Gauthier Magnin [aut, cre],
 Maintainer: Gauthier Magnin <gauthier.magnin@gmail.com>
 Description: R processing, analysis and visualization tools initially designed for processing data from
     occupational exposure databases, especially for the concept of multiexposure.
-    Main analytical approaches are Frequent Itemset Mining, Spectrosome, Association Rules, Clustering
-    and Maximum Cumulative Ratio.
+    Main analytical approaches are Frequent Itemset Mining, Spectrosome, Association Rules and Maximum
+    Cumulative Ratio.
 License: Undefined
 Encoding: UTF-8
 LazyData: true

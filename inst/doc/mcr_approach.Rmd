@@ -765,7 +765,7 @@ coerce_list(concentration_values,
 The argument `by_name` allows to construct the matrix on the names of the values instead of the values themselves.
 
 
-### 4.2.2 Reduction of sets of values
+### 4.2.2. Reduction of sets of values
 
 In the list of sets of values, some of these sets contains several values for the same component name, like in the following:
 ```{r}

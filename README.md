@@ -7,7 +7,7 @@ The development of these tools is part of a research study led by **Jérôme Lav
 
 This package is about **R processing, analysis and visualization tools** initially designed for processing data from occupational exposure databases, especially for the concept of multiexposure.
 
-Main analytical approaches are **Frequent Itemset Mining**, **Spectrosome**, **Association Rules**, **Clustering** and **Maximum Cumulative Ratio**.
+Main analytical approaches are **Frequent Itemset Mining**, **Spectrosome**, **Association Rules** and **Maximum Cumulative Ratio**.
 
 
 ## Installation
@@ -18,7 +18,7 @@ There are two ways to install the package **uom.dat**.
 
 The function `install_github` from the `devtools` package can be used to install the present one. However, as this repository is private, you need a personal access token for this function to work.
 
-A personal access token provides access to the GitHub API. To have one if you don't already have one:
+A personal access token provides access to the GitHub API. To get one if you don't already have one:
 
 * Go to <https://github.com/settings/tokens>.
 * Click on button "Generate new token".
