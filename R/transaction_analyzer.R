@@ -5565,8 +5565,8 @@ function(object, items) {
 #'  corresponding to the transactions, the nodes or the patterns contained in `object`.
 #' @param as_character If `FALSE`, category values are returned as factor, in a list.
 #'  If `TRUE`, they are returned as character, in a data frame.
-#' @param unique If `TRUE`, sorted unique values are returned for each itemsets. If `FALSE`,
-#'  duplicated values are not removed and there is correspondance between the return values and the
+#' @param unique If `TRUE`, sorted unique values are returned for each itemset. If `FALSE`,
+#'  duplicated values are not removed and there is correspondence between the return values and the
 #'  items forming the given itemsets.
 #' @return List or data frame (depending on the value of `as_character`) contaning for each category
 #'  (associated with the items in `object["items_categories"]`) the values regarding each itemset.

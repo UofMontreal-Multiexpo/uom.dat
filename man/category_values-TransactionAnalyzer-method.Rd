@@ -18,8 +18,8 @@ corresponding to the transactions, the nodes or the patterns contained in \code{
 \item{as_character}{If \code{FALSE}, category values are returned as factor, in a list.
 If \code{TRUE}, they are returned as character, in a data frame.}
 
-\item{unique}{If \code{TRUE}, sorted unique values are returned for each itemsets. If \code{FALSE},
-duplicated values are not removed and there is correspondance between the return values and the
+\item{unique}{If \code{TRUE}, sorted unique values are returned for each itemset. If \code{FALSE},
+duplicated values are not removed and there is correspondence between the return values and the
 items forming the given itemsets.}
 }
 \value{

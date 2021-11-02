@@ -508,7 +508,7 @@ category_values(TA_instance,
 The method has two more arguments.
 
 * `as_character` specifies if category values must be returned as character in a data frame rather than as factor in a list.
-* `unique` specifies whether to return only unique values for each given itemsets. If duplicated values are removed, the result of each itemset is sorted. If they are removed, the correspondance between the returned values and the items forming the given itemsets is preserved.
+* `unique` specifies whether to return only unique values for each given itemsets. If duplicated values are removed, the result of each itemset is sorted. If they are not removed, the correspondence between the returned values and the items forming the given itemsets is preserved.
 
 ```{r}
 # Category values associated with the previously defined list of itemsets
@@ -1357,7 +1357,7 @@ The patterns are sorted according to their specificities (by descending order), 
 
 The returned data frame corresponds to the given one, with three additional column.
 
-* `ID` make the correspondance between the rows and the bars on the chart.
+* `ID` make the correspondence between the rows and the bars on the chart.
 * `f.complex` corresponds to pattern frequencies in complex transactions (i.e. transactions having more than 1 item).
 * `f.simple` corresponds to pattern frequencies in simple transactions (i.e. transactions having only 1 item).
 

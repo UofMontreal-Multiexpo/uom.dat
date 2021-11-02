@@ -8,8 +8,8 @@
 \description{
 R processing, analysis and visualization tools initially designed for processing data from
     occupational exposure databases, especially for the concept of multiexposure.
-    Main analytical approaches are Frequent Itemset Mining, Spectrosome, Association Rules, Clustering
-    and Maximum Cumulative Ratio.
+    Main analytical approaches are Frequent Itemset Mining, Spectrosome, Association Rules and Maximum
+    Cumulative Ratio.
 }
 \details{
 For an organized list of datasets, functions, classes and methods, use

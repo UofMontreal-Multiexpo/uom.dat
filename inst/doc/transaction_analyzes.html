@@ -133,7 +133,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Transaction analyzes</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2021-03-06</h4>
+<h4 class="date">Last update: 2021-11-02</h4>
 
 
 <div id="TOC">
@@ -1209,7 +1209,7 @@ RI_{l,p} &amp; = RI_p(t_1, t_1 - l + 1)
 <p>The method has two more arguments.</p>
 <ul>
 <li><code>as_character</code> specifies if category values must be returned as character in a data frame rather than as factor in a list.</li>
-<li><code>unique</code> specifies whether to return only unique values for each given itemsets. If duplicated values are removed, the result of each itemset is sorted. If they are removed, the correspondance between the returned values and the items forming the given itemsets is preserved.</li>
+<li><code>unique</code> specifies whether to return only unique values for each given itemsets. If duplicated values are removed, the result of each itemset is sorted. If they are not removed, the correspondence between the returned values and the items forming the given itemsets is preserved.</li>
 </ul>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Category values associated with the previously defined list of itemsets</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>itemset_category_values <span class="ot">&lt;-</span> <span class="fu">category_values</span>(TA_instance,</span>
@@ -4741,7 +4741,7 @@ RI_{l,p} &amp; = RI_p(t_1, t_1 - l + 1)
 <p>The patterns are sorted according to their specificities (by descending order), status (in the order given by the attribute <code>status_colors</code> of the <code>TransactionAnalyzer</code> object, visible by the legend), frequencies (by descending order), lengths (by ascending order) and finally to their original order.</p>
 <p>The returned data frame corresponds to the given one, with three additional column.</p>
 <ul>
-<li><code>ID</code> make the correspondance between the rows and the bars on the chart.</li>
+<li><code>ID</code> make the correspondence between the rows and the bars on the chart.</li>
 <li><code>f.complex</code> corresponds to pattern frequencies in complex transactions (i.e. transactions having more than 1 item).</li>
 <li><code>f.simple</code> corresponds to pattern frequencies in simple transactions (i.e. transactions having only 1 item).</li>
 </ul>
