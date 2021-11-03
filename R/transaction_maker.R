@@ -58,48 +58,34 @@ NULL
 make_transactions = function(data, by, additional = NULL, unique_values = TRUE,
                              item_key = NA, year_key = NA) {
   
-  # Regroupement des valeurs des variables "additional" selon les combinaisons possibles de celles de "by"
-  # Si unique_values vaut TRUE, aggrégation par la fonction unique() ; c() sinon
+  # Typecast factor variables to character
+  factor_cols = which(sapply(data, class) == "factor")
+  for (col in factor_cols) {
+    data[, col] = as.character(data[, col])
+  }
+  
+  # Grouping the values of the "additional" variables according to possible combinations of those of "by"
   trx = stats::aggregate(data[, additional],
                          by = lapply(by, function(x) data[, x]),
-                         FUN = ifelse(is.logical(unique_values) && unique_values, unique, c))
+                         FUN = c)
   colnames(trx) = c(by, additional)
   
-  # Nommage des lignes selon les combinaisons (valeurs des variables "by" concaténées par ".")
+  # Naming the rows according to the combinations (values of variables of "by", concatenated by ".")
   rownames(trx) = if (length(by) == 1) trx[, by] else apply(trx[, by], 1, paste, collapse = ".")
   
-  # Suppression des doublons pour les variables spécifiques
+  # Removal of duplicates for specific predefined variables
+  if (is.logical(unique_values) && unique_values) unique_values = additional
   if (!is.logical(unique_values)) {
     for (var in unique_values) {
-      # L'attribution d'une liste à une variable d'une data frame ne fonctionne que via $
       # trx$var <- lapply(trx[, var], unique)
       eval(parse(text = paste0("trx$", var, " <- lapply(trx[, var], unique)")))
     }
   }
   
-  # Conversion en character les variables de type factor
-  factor_cols = which(sapply(trx, class) == "factor")
-  for (col in factor_cols) {
-    trx[, col] = as.character(trx[, col])
-  }
-  
-  # Conversion en list de character les variables de type list de factor
-  list_cols = names(which(sapply(trx, class) == "list"))
-  if (length(list_cols > 0)) {
-    if (length(list_cols) == 1) {
-      factor_cols = if (class(trx[, list_cols][[1]]) == "factor") list_cols else NULL
-    } else {
-      factor_cols = list_cols[which(sapply(trx[, list_cols], function(x) class(x[[1]])) == "factor")]
-    }
-    for (col in factor_cols) {
-      # trx$col <- lapply(trx[, col], as.character)
-      eval(parse(text = paste0("trx$", col, " <- lapply(trx[, col], as.character)")))
-    }
-  }
-  
-  return(if (is.na(item_key)) as.list(as.data.frame(t(trx), stringsAsFactors = FALSE))
-         else transaction.set(as.list(as.data.frame(t(trx), stringsAsFactors = FALSE)),
-                              item_key = item_key, year_key = year_key))
+  # Convert the data frame into a list of lists before returning it or the equivalent TransactionSet
+  to_return = apply(as.data.frame(t(trx), stringsAsFactors = FALSE), 2, as.list)
+  if (is.na(item_key)) return(to_return)
+  return(transaction.set(to_return, item_key = item_key, year_key = year_key))
 }
 
 
