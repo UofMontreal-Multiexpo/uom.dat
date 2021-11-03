@@ -75,7 +75,7 @@ exposure domain.
 A transaction corresponds to a set of substances found in the same work situation during the same
 inspection.
 Specific situations are defined by the argument \code{work_situations}.
-Non-specific situations are described by existing combinations of variables whose names are defnied
+Non-specific situations are described by existing combinations of variables whose names are defined
 by the argument \code{variable_names}.
 }
 \examples{

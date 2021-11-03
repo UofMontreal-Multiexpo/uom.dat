@@ -47,7 +47,7 @@ library(uom.dat)
 
 Foremost, we will create a list of transactions as presented in the document [Transaction sets](./transaction_sets.html) using the dataset `oedb_sample`. For short, these transactions will simply group data from this dataset accessible in the package.
 
-Note that this step is not necessary. The `TransactionSet` structure will only be used as an intermediary to get values to analyse for the examples.
+Note that this step is not necessary. The `TransactionSet` structure will only be used as an intermediary to get values to analyze for the examples.
 
 ```{r}
 # Creation of specific transactions

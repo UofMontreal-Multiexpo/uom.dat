@@ -99,7 +99,7 @@ make_transactions = function(data, by, additional = NULL, unique_values = TRUE,
 #' A transaction corresponds to a set of substances found in the same work situation during the same
 #'  inspection.
 #' Specific situations are defined by the argument `work_situations`.
-#' Non-specific situations are described by existing combinations of variables whose names are defnied
+#' Non-specific situations are described by existing combinations of variables whose names are defined
 #'  by the argument `variable_names`.
 #' 
 #' @param measures Set of sampling measures. Data frame that must contain at least three variables for:
