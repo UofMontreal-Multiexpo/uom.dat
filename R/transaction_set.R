@@ -271,6 +271,7 @@ setReplaceMethod(f = "[",
                  definition = function(x, i, j, value) {
                    
                    if (is.numeric(i)) {
+                     # Replace one or several transactions
                      if (length(i) == 1) x@data[[i]] = value
                      else                x@data[i] = value
                      
@@ -278,11 +279,13 @@ setReplaceMethod(f = "[",
                      if (!is.element(i, methods::slotNames("TransactionSet")))
                        stop("Unknown attribute.")
                      
+                     # Modification relating to the attribute "names" (i.e., transaction variable names)
                      if (i == "names") {
                        if (length(value) > length(x@names))
                          stop("Replacing names need value to be the same length or smaller.")
                        
                        if (length(value) < length(x@names)) {
+                         # Remove transaction variables
                          to_remove = x@names[which(!is.element(x@names, value))]
                          for (t in seq_along(x@data)) for (name in to_remove) x@data[[t]][name] = NULL
                          
@@ -291,11 +294,13 @@ setReplaceMethod(f = "[",
                        } else { # length(value) == length(x@names)
                          
                          if (all(value %in% x@names)) {
+                           # Reorder transaction variables
                            for (t in seq_along(x@data)) {
                              x@data[[t]] = x@data[[t]][value]
                            }
                            
                          } else {
+                           # Rename transaction variables
                            to_rename = which(value != x@names)
                            for (t in seq_along(x@data)) {
                              for (n in to_rename) {
@@ -312,6 +317,7 @@ setReplaceMethod(f = "[",
                          }
                        }
                      }
+                     # Replace an attribute
                      eval(parse(text = paste0("x@", i, " = value")))
                    }
                    methods::validObject(x)
