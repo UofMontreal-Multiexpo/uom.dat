@@ -272,9 +272,9 @@ setReplaceMethod(f = "[",
                    
                    if (is.numeric(i)) {
                      if (length(i) == 1) x@data[[i]] = value
-                     else x@data[i] = value
-                   }
-                   else {
+                     else                x@data[i] = value
+                     
+                   } else {
                      if (!is.element(i, methods::slotNames("TransactionSet")))
                        stop("Unknown attribute.")
                      
@@ -287,21 +287,28 @@ setReplaceMethod(f = "[",
                          for (t in seq_along(x@data)) for (name in to_remove) x@data[[t]][name] = NULL
                          
                          if (x@year_key %in% to_remove) x@year_key = NA
-                       }
-                       else { # length(value) == length(x@names)
+                       
+                       } else { # length(value) == length(x@names)
                          
                          if (all(value %in% x@names)) {
-                           for (t in seq_along(x@data)) x@data[[t]] = x@data[[t]][value]
-                         }
-                         else {
+                           for (t in seq_along(x@data)) {
+                             x@data[[t]] = x@data[[t]][value]
+                           }
+                           
+                         } else {
                            to_rename = which(value != x@names)
-                           for (t in seq_along(x@data)) for (j in to_rename) names(x@data[[t]])[j] = value[j]
+                           for (t in seq_along(x@data)) {
+                             for (j in to_rename) {
+                               names(x@data[[t]])[j] = value[j]
+                             }
+                           }
                            
-                           if (x@item_key %in% x@names[to_rename])
+                           if (x@item_key %in% x@names[to_rename]) {
                              x@item_key = value[x@item_key == x@names]
-                           
-                           if (!is.na(x@year_key) && x@year_key %in% x@names[to_rename])
+                           }
+                           if (!is.na(x@year_key) && x@year_key %in% x@names[to_rename]) {
                              x@year_key = value[x@year_key == x@names]
+                           }
                          }
                        }
                      }
