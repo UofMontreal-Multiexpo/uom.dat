@@ -20,9 +20,11 @@ NULL
 #'  * If `TRUE`, simplification of the values associated with the variables defined in `additional`
 #'    in order to remove duplicates.
 #'  * If `FALSE`, keep the duplicates and the correspondence between the values of these variables for
-#'    the same line in `data` (as many values as there are rows grouped).
-#'  * Otherwise, vector of variable names included in `colnames(data)` for which the removal of
-#'    duplicates must be performed.
+#'    the same row in `data` (as many values as there are rows grouped).
+#'  * Otherwise, vector of variable names included in `additional` for which the removal of duplicates
+#'    must be performed.
+#'  
+#'  Duplicates in the variables specified in `by` are necessarily removed in all cases.
 #' @param item_key,year_key If the output have to be a `TransactionSet`, names of the variables of
 #'  `data` containing the items of the transactions and the year in which the transactions were made.
 #' @return List of transactions identified or S4 object of class `TransactionSet` containing this list
