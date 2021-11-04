@@ -42,6 +42,10 @@ setClassUnion("characterOrNA", c("character", "logical"))
 #' 
 #' An example object of class `TransactionSet`: [`TS_instance`].
 #' 
+#' Selector and mutator to access the attributes of a `TransactionSet` object:
+#'  \code{\link[=[,TransactionSet-method]{[}},
+#'  \code{\link[=[,TransactionSet-method]{[<-}}.
+#' 
 #' @aliases TransactionSet print,TransactionSet-method length,TransactionSet-method
 #' @md
 #' @export
@@ -117,6 +121,10 @@ setMethod(f = "initialize",
 #' @author Gauthier Magnin
 #' @seealso
 #' The class: [`TransactionSet`].
+#' 
+#' Selector and mutator to access the attributes:
+#'  \code{\link[=[,TransactionSet-method]{[}},
+#'  \code{\link[=[,TransactionSet-method]{[<-}}.
 #' 
 #' @examples
 #' ## Creating a list of transactions then a TransactionSet
