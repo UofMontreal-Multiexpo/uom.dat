@@ -298,8 +298,8 @@ setReplaceMethod(f = "[",
                          } else {
                            to_rename = which(value != x@names)
                            for (t in seq_along(x@data)) {
-                             for (j in to_rename) {
-                               names(x@data[[t]])[j] = value[j]
+                             for (n in to_rename) {
+                               names(x@data[[t]])[n] = value[n]
                              }
                            }
                            
