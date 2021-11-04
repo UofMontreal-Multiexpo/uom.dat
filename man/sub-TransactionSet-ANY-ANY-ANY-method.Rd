@@ -79,14 +79,18 @@ Extraction and replacement can be done by using an attribute name.
 Sub-elements of the attribute \code{data} can be accessed this way as well.
 
 Numeric values can be used to access elements of the attribute \code{data}. Replacing one element of
-\code{data} will not replace its name.
+\code{data} will not change its name.
 
-Replacing the attribute \code{names} renames the elements contained in each transaction if \code{value} is the
-same length as \code{names}. In this case, the attributes \code{item_key} and \code{year_key} are updated (unless
-\code{year_key} is \code{NA}).
-
-Replacing the attribute \code{names} removes missing elements of \code{value} in each transaction if it is
-smaller than \code{names}.
+Replacing the attribute \code{names}:
+\itemize{
+\item reorders the elements contained in each transaction if \code{value} is a
+reordered equivalent of \code{names};
+\item renames the elements contained in each transaction if \code{value} is the same
+length as \code{names} but is not equivalent. In this case, the attributes
+\code{item_key} and \code{year_key} are updated (unless \code{year_key} is \code{NA});
+\item removes missing elements of \code{value} in each transaction if it is smaller
+than \code{names}.
+}
 }
 \examples{
 TS_instance["data"]

@@ -230,9 +230,11 @@ The opertors `[` and `[<-` allow access to the attributes of an object of class 
 
 * Attributes can be accessed by character values.
 * Sub-elements of the attribute `data` can be accessed by character values as well.
-* Transactions (elements of the attribute `data`) can be accessed by numeric values.
-* Replacing the attribute `names` renames the elements contained in each transaction if the given value is the same length as this attribute.
-* Replacing the attribute `names` removes missing elements of the given value if it is smaller than this attribute.
+* Transactions (i.e., elements of the attribute `data`) can be accessed by numeric values.
+* Replacing the attribute `names`:
+  * reorders the elements contained in each transaction if the given value is a reordered equivalent of this attribute;
+  * renames the elements contained in each transaction if the given value is the same length as this attribute but is not equivalent;
+  * removes missing elements of the given value if it is smaller than this attribute.
 
 Here are some examples.
 ```{r}

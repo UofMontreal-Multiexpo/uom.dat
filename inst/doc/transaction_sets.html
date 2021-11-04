@@ -133,7 +133,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Transaction sets</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2021-02-27</h4>
+<h4 class="date">Last update: 2021-11-04</h4>
 
 
 <div id="TOC">
@@ -529,9 +529,13 @@ This document presents basic processing of transactions (more complex analyzes o
 <ul>
 <li>Attributes can be accessed by character values.</li>
 <li>Sub-elements of the attribute <code>data</code> can be accessed by character values as well.</li>
-<li>Transactions (elements of the attribute <code>data</code>) can be accessed by numeric values.</li>
-<li>Replacing the attribute <code>names</code> renames the elements contained in each transaction if the given value is the same length as this attribute.</li>
-<li>Replacing the attribute <code>names</code> removes missing elements of the given value if it is smaller than this attribute.</li>
+<li>Transactions (i.e., elements of the attribute <code>data</code>) can be accessed by numeric values.</li>
+<li>Replacing the attribute <code>names</code>:
+<ul>
+<li>reorders the elements contained in each transaction if the given value is a reordered equivalent of this attribute;</li>
+<li>renames the elements contained in each transaction if the given value is the same length as this attribute but is not equivalent;</li>
+<li>removes missing elements of the given value if it is smaller than this attribute.</li>
+</ul></li>
 </ul>
 <p>Here are some examples.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access an attribute</span></span>

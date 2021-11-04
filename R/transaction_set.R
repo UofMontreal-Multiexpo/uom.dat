@@ -195,7 +195,7 @@ setMethod(f = "length",
 #' Sub-elements of the attribute `data` can be accessed this way as well.
 #' 
 #' Numeric values can be used to access elements of the attribute `data`. Replacing one element of
-#'  `data` will not replace its name.
+#'  `data` will not change its name.
 #' 
 #' @inheritParams base::Extract
 #' 
@@ -237,12 +237,14 @@ setMethod(f = "[",
 #' @rdname sub-TransactionSet-ANY-ANY-ANY-method
 #' 
 #' @details
-#' Replacing the attribute `names` renames the elements contained in each transaction if `value` is the
-#'  same length as `names`. In this case, the attributes `item_key` and `year_key` are updated (unless
-#'  `year_key` is `NA`).
-#'  
-#' Replacing the attribute `names` removes missing elements of `value` in each transaction if it is
-#'  smaller than `names`.
+#' Replacing the attribute `names`:
+#'  * reorders the elements contained in each transaction if `value` is a
+#'    reordered equivalent of `names`;
+#'  * renames the elements contained in each transaction if `value` is the same
+#'    length as `names` but is not equivalent. In this case, the attributes
+#'    `item_key` and `year_key` are updated (unless `year_key` is `NA`);
+#'  * removes missing elements of `value` in each transaction if it is smaller
+#'    than `names`.
 #' 
 #' @examples
 #' TS_instance["year_key"] <- NA
@@ -278,15 +280,21 @@ setReplaceMethod(f = "[",
                          
                          if (x@year_key %in% to_remove) x@year_key = NA
                        }
-                       else { # length(value) = length(x@names)
-                         to_rename = which(value != x@names)
-                         for (t in seq_along(x@data)) for (j in to_rename) names(x@data[[t]])[j] = value[j]
+                       else { # length(value) == length(x@names)
                          
-                         if (x@item_key %in% x@names[to_rename])
-                           x@item_key = value[x@item_key == x@names]
-                         
-                         if (!is.na(x@year_key) && x@year_key %in% x@names[to_rename])
-                           x@year_key = value[x@year_key == x@names]
+                         if (all(value %in% x@names)) {
+                           for (t in seq_along(x@data)) x@data[[t]] = x@data[[t]][value]
+                         }
+                         else {
+                           to_rename = which(value != x@names)
+                           for (t in seq_along(x@data)) for (j in to_rename) names(x@data[[t]])[j] = value[j]
+                           
+                           if (x@item_key %in% x@names[to_rename])
+                             x@item_key = value[x@item_key == x@names]
+                           
+                           if (!is.na(x@year_key) && x@year_key %in% x@names[to_rename])
+                             x@year_key = value[x@year_key == x@names]
+                         }
                        }
                      }
                      eval(parse(text = paste0("x@", i, " = value")))
