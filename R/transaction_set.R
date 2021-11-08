@@ -927,15 +927,20 @@ function(object, items = NULL) {
   if (is.null(items)) items = get_all_items(object)
   existing_items = stats::setNames(items %in% get_all_items(object), items)
   
-  # Pour chaque item, nombre de transactions complexes contenant l'item / nombre de trx contenant l'item
+  # Itemsets of the transactions and indices of the complex transactions
+  itemsets = get_itemsets(object)
+  trx_complex = get_complex_trx(object, as_indices = TRUE)
+  
+  # For each item, size of the intersection between complex transactions and those
+  # containing the item, then divide by the number of transactions containing the item
   to_return = sapply(items,
                      function(item) {
                        if (!existing_items[as.character(item)]) return(NA)
                        
-                       trx_item = get_trx_from_items(object, item)
-                       return(length(get_complex_trx(trx_item)) / length(trx_item))
+                       trx_item = which(sapply(itemsets, function(itemset) item %in% itemset))
+                       return(length(intersect(trx_complex, trx_item)) / length(trx_item))
                      })
-  # Le vecteur résultant est un vecteur nommé si les items sont des characters et non des numerics
+  # The resulting vector is named if items are character values (hence the use of [[ to unname)
   
   if (length(items) == 1) return(to_return[[1]])
   return(stats::setNames(to_return, items))
@@ -973,13 +978,19 @@ function(object, items = NULL) {
   if (is.null(items)) items = get_all_items(object)
   existing_items = stats::setNames(items %in% get_all_items(object), items)
   
-  # Pour chaque item, nombre de transactions complexes parmi les transactions contenant l'item
+  # Itemsets of the transactions and indices of the complex transactions
+  itemsets = get_itemsets(object)
+  trx_complex = get_complex_trx(object, as_indices = TRUE)
+  
+  # For each item, size of the intersection between complex transactions and those containing the item
   to_return = sapply(items,
                      function(item) {
                        if (!existing_items[as.character(item)]) return(NA)
-                       return(length(get_complex_trx(get_trx_from_items(object, item))))
+                       
+                       trx_item = which(sapply(itemsets, function(itemset) item %in% itemset))
+                       return(length(intersect(trx_complex, trx_item)))
                      })
-  # Le vecteur résultant est un vecteur nommé si les items sont des characters et non des numerics
+  # The resulting vector is named if items are character values (hence the use of [[ to unname)
   
   if (length(items) == 1) return(to_return[[1]])
   return(stats::setNames(to_return, items))
