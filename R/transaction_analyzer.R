@@ -793,7 +793,7 @@ setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NU
 
 # setGeneric(name = "export", def = function(object, ...){ standardGeneric("export") })
 
-setGeneric(name = "get_trx_from_category", def = function(object, trx, category, value){ standardGeneric("get_trx_from_category") })
+setGeneric(name = "get_trx_from_category", def = function(object, trx, category, value, as_indices = FALSE){ standardGeneric("get_trx_from_category") })
 
 setGeneric(name = "get_nodes", def = function(object, nc, element, value, condition = "default"){ standardGeneric("get_nodes") })
 
@@ -4521,7 +4521,13 @@ function(object, nporc, ...) {
 #'  of the columns of `object["items_categories"]`.
 #' @param value Sought value(s) for the category specified by the argument `category`. If several values
 #'  are given, transactions related to any one of them are extracted.
-#' @return Subset of the transaction set that match the search criteria.
+#' @param as_indices `TRUE` or `FALSE` whether to return transactions or only
+#'  their indices.
+#' @return S4 object of class `TransactionSet` containing the subset of
+#'  transactions that match the search criteria, or indices of these
+#'  transactions (according to the argument `as_indices`). If the given
+#'  transactions are named (and `as_indices` is `TRUE`), the returned indices
+#'  are named as well.
 #' 
 #' @author Gauthier Magnin
 #' @seealso
@@ -4532,7 +4538,10 @@ function(object, nporc, ...) {
 #'  [`get_non_isolates`].
 #' 
 #' @examples
-#' get_trx_from_category(TA_instance, TA_instance["transactions"], "family", "Chrome")
+#' get_trx_from_category(TA_instance, TA_instance["transactions"],
+#'                       category = "family", value = "Chrome")
+#' get_trx_from_category(TA_instance, TA_instance["transactions"],
+#'                       category = "family", value = "Chrome", as_indices = TRUE)
 #' 
 #' @aliases get_trx_from_category
 #' @md
@@ -4540,11 +4549,12 @@ function(object, nporc, ...) {
 setMethod(f = "get_trx_from_category",
           signature = "TransactionAnalyzer",
           definition =
-function(object, trx, category, value) {
-  # Items correspondant à la valeur de catégorie recherchée puis transactions contenant ces items
+function(object, trx, category, value, as_indices = FALSE) {
+  # Items corresponding to the sought category value then transactions containing these items
   return(get_trx_from_items(get_tnp(object, trx, TRANSACTIONS),
                             get_items_from_category(object, category, value),
-                            presence = "any"))
+                            presence = "any",
+                            as_indices = as_indices))
 })
 
 

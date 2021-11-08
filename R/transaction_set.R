@@ -387,8 +387,8 @@ setGeneric(name = "get_items_from_info", def = function(object, ...){ standardGe
 setGeneric(name = "get_info_from_items", def = function(object, ...){ standardGeneric("get_info_from_items") })
 
 # Methods for search for transactions
-setGeneric(name = "get_complex_trx",     def = function(object){ standardGeneric("get_complex_trx") })
-setGeneric(name = "get_simple_trx",      def = function(object){ standardGeneric("get_simple_trx") })
+setGeneric(name = "get_complex_trx",     def = function(object, ...){ standardGeneric("get_complex_trx") })
+setGeneric(name = "get_simple_trx",      def = function(object, ...){ standardGeneric("get_simple_trx") })
 setGeneric(name = "get_trx_from_items",  def = function(object, ...){ standardGeneric("get_trx_from_items") })
 setGeneric(name = "get_trx_from_info",   def = function(object, ...){ standardGeneric("get_trx_from_info") })
 
@@ -693,14 +693,20 @@ function(object, items, info_names, presence = "all") {
 #' Extract the transactions containing more than one item.
 #' 
 #' @param object S4 object of class `TransactionSet`.
-#' @return S4 object of class `TransactionSet` containing the subset of transactions that contain more
-#'  than one item.
+#' @param as_indices `TRUE` or `FALSE` whether to return transactions or only
+#'  their indices.
+#' @return S4 object of class `TransactionSet` containing the subset of
+#'  transactions that contain more than one item, or indices of these
+#'  transactions (according to the argument `as_indices`). If the given
+#'  transactions are named (and `as_indices` is `TRUE`), the returned indices
+#'  are named as well.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`get_simple_trx`], [`get_trx_from_items`], [`get_trx_from_info`].
 #' 
 #' @examples
 #' get_complex_trx(TS_instance)
+#' get_complex_trx(TS_instance, as_indices = TRUE)
 #' 
 #' @aliases get_complex_trx
 #' @md
@@ -708,9 +714,11 @@ function(object, items, info_names, presence = "all") {
 setMethod(f = "get_complex_trx",
           signature = "TransactionSet",
           definition =
-function(object) {
+function(object, as_indices = FALSE) {
   index = sapply(get_itemsets(object),
                  function (x) length(x) > 1)
+  
+  if (as_indices) return(which(index))
   return(subset(object, index))
 })
 
@@ -720,14 +728,20 @@ function(object) {
 #' Extract the transactions containing exactly one item.
 #' 
 #' @param object S4 object of class `TransactionSet`.
-#' @return S4 object of class `TransactionSet` containing the subset of transactions that contain exactly
-#'  one item.
+#' @param as_indices `TRUE` or `FALSE` whether to return transactions or only
+#'  their indices.
+#' @return S4 object of class `TransactionSet` containing the subset of
+#'  transactions that contain exactly one item, or indices of these
+#'  transactions (according to the argument `as_indices`). If the given
+#'  transactions are named (and `as_indices` is `TRUE`), the returned indices
+#'  are named as well.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`get_complex_trx`], [`get_trx_from_items`], [`get_trx_from_info`].
 #' 
 #' @examples
 #' get_simple_trx(TS_instance)
+#' get_simple_trx(TS_instance, as_indices = TRUE)
 #' 
 #' @aliases get_simple_trx
 #' @md
@@ -735,9 +749,11 @@ function(object) {
 setMethod(f = "get_simple_trx",
           signature = "TransactionSet",
           definition =
-function(object) {
+function(object, as_indices = FALSE) {
   index = sapply(get_itemsets(object),
                  function (x) length(x) == 1)
+  
+  if (as_indices) return(which(index))
   return(subset(object, index))
 })
 
@@ -758,8 +774,13 @@ function(object) {
 #'    \item{`"exact"`}{The item set contained in a transaction must be exactly the same as the sought
 #'                     item set for this transaction to be extracted.}
 #'  }
-#' @return S4 object of class `TransactionSet` containing the subset of transactions that match the search
-#'  criteria.
+#' @param as_indices `TRUE` or `FALSE` whether to return transactions or only
+#'  their indices.
+#' @return S4 object of class `TransactionSet` containing the subset of
+#'  transactions that match the search criteria, or indices of these
+#'  transactions (according to the argument `as_indices`). If the given
+#'  transactions are named (and `as_indices` is `TRUE`), the returned indices
+#'  are named as well.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`get_complex_trx`], [`get_simple_trx`], [`get_trx_from_info`].
@@ -769,13 +790,18 @@ function(object) {
 #' get_trx_from_items(TS_instance, items = c(25, 192), presence = "any")
 #' get_trx_from_items(TS_instance, items = c(25, 192), presence = "exact")
 #' 
+#' get_trx_from_items(TS_instance,
+#'                    items = c(25, 192),
+#'                    presence = "any",
+#'                    as_indices = TRUE)
+#' 
 #' @aliases get_trx_from_items
 #' @md
 #' @export
 setMethod(f = "get_trx_from_items",
           signature = "TransactionSet",
           definition =
-function(object, items, presence = "all") {
+function(object, items, presence = "all", as_indices = FALSE) {
   
   check_param(presence, values = c("all", "any", "exact"))
   
@@ -789,26 +815,35 @@ function(object, items, presence = "all") {
                    function(x) func(items %in% x))
   }
   
+  if (as_indices) return(which(index))
   return(subset(object, index))
 })
 
 
 #' Search for transactions by specific information
 #' 
-#' Extract the transactions whose information matches to one or more sought information.
+#' Extract the transactions whose information matches to one or more sought
+#'  information.
 #' 
 #' @param object S4 object of class `TransactionSet`.
-#' @param info Named list of sought information. Element names must refer to the names of variables
-#'  contained in the transactions and values must correspond to the sought values for these variables.
-#' @param presence Information presence condition for a transaction to be extracted.
-#'  One of `"all"`, `"any"`.
+#' @param info Named list of sought information. Element names must refer to the
+#'  names of variables contained in the transactions and values must correspond
+#'  to the sought values for these variables.
+#' @param presence Information presence condition for a transaction to be
+#'  extracted. One of `"all"`, `"any"`.
 #'  \describe{
-#'   \item{`"all"`}{All the sought information must be part of a transaction for this transaction to
-#'                  be extracted.}
-#'   \item{`"any"`}{At least one of the sought information must be part of a transaction for this
-#'                  transaction to be extracted.}
+#'   \item{`"all"`}{All the sought information must be part of a transaction for
+#'                  this transaction to be extracted.}
+#'   \item{`"any"`}{At least one of the sought information must be part of a
+#'                  transaction for this transaction to be extracted.}
 #'  }
-#' @return `TransactionSet` containing the subset of transactions that match the search criteria.
+#' @param as_indices `TRUE` or `FALSE` whether to return transactions or only
+#'  their indices.
+#' @return S4 object of class `TransactionSet` containing the subset of
+#'  transactions that match the search criteria, or indices of these
+#'  transactions (according to the argument `as_indices`). If the given
+#'  transactions are named (and `as_indices` is `TRUE`), the returned indices
+#'  are named as well.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`get_complex_trx`], [`get_simple_trx`], [`get_trx_from_items`].
@@ -816,6 +851,10 @@ function(object, items, presence = "all") {
 #' @examples
 #' get_trx_from_info(TS_instance, info = list(JOB.TITLE = 44132001,
 #'                                            JOB.TASK = "A8310"))
+#' get_trx_from_info(TS_instance,
+#'                   info = list(JOB.TITLE = 44132001,
+#'                               JOB.TASK = "A8310"),
+#'                   as_indices = TRUE)
 #' 
 #' @aliases get_trx_from_info
 #' @md
@@ -823,7 +862,7 @@ function(object, items, presence = "all") {
 setMethod(f = "get_trx_from_info",
           signature = "TransactionSet",
           definition =
-function(object, info, presence = "all") {
+function(object, info, presence = "all", as_indices = FALSE) {
   
   check_param(presence, values = c("all", "any"))
   func = if (presence == "all") all else any
@@ -846,6 +885,7 @@ function(object, info, presence = "all") {
     index = apply(t(apply(correspondence, 1, unlist)), 1, func)
   }
   
+  if (as_indices) return(which(index))
   return(subset(object, index))
 })
 

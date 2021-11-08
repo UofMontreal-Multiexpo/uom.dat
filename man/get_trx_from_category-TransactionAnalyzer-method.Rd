@@ -5,7 +5,7 @@
 \alias{get_trx_from_category}
 \title{Search for transactions by category}
 \usage{
-\S4method{get_trx_from_category}{TransactionAnalyzer}(object, trx, category, value)
+\S4method{get_trx_from_category}{TransactionAnalyzer}(object, trx, category, value, as_indices = FALSE)
 }
 \arguments{
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
@@ -19,15 +19,25 @@ of the columns of \code{object["items_categories"]}.}
 
 \item{value}{Sought value(s) for the category specified by the argument \code{category}. If several values
 are given, transactions related to any one of them are extracted.}
+
+\item{as_indices}{\code{TRUE} or \code{FALSE} whether to return transactions or only
+their indices.}
 }
 \value{
-Subset of the transaction set that match the search criteria.
+S4 object of class \code{TransactionSet} containing the subset of
+transactions that match the search criteria, or indices of these
+transactions (according to the argument \code{as_indices}). If the given
+transactions are named (and \code{as_indices} is \code{TRUE}), the returned indices
+are named as well.
 }
 \description{
 Extract the transactions corresponding to a sought category value.
 }
 \examples{
-get_trx_from_category(TA_instance, TA_instance["transactions"], "family", "Chrome")
+get_trx_from_category(TA_instance, TA_instance["transactions"],
+                      category = "family", value = "Chrome")
+get_trx_from_category(TA_instance, TA_instance["transactions"],
+                      category = "family", value = "Chrome", as_indices = TRUE)
 
 }
 \seealso{

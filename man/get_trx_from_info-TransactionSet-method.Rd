@@ -5,32 +5,45 @@
 \alias{get_trx_from_info}
 \title{Search for transactions by specific information}
 \usage{
-\S4method{get_trx_from_info}{TransactionSet}(object, info, presence = "all")
+\S4method{get_trx_from_info}{TransactionSet}(object, info, presence = "all", as_indices = FALSE)
 }
 \arguments{
 \item{object}{S4 object of class \code{TransactionSet}.}
 
-\item{info}{Named list of sought information. Element names must refer to the names of variables
-contained in the transactions and values must correspond to the sought values for these variables.}
+\item{info}{Named list of sought information. Element names must refer to the
+names of variables contained in the transactions and values must correspond
+to the sought values for these variables.}
 
-\item{presence}{Information presence condition for a transaction to be extracted.
-One of \code{"all"}, \code{"any"}.
+\item{presence}{Information presence condition for a transaction to be
+extracted. One of \code{"all"}, \code{"any"}.
 \describe{
-\item{\code{"all"}}{All the sought information must be part of a transaction for this transaction to
-be extracted.}
-\item{\code{"any"}}{At least one of the sought information must be part of a transaction for this
-transaction to be extracted.}
+\item{\code{"all"}}{All the sought information must be part of a transaction for
+this transaction to be extracted.}
+\item{\code{"any"}}{At least one of the sought information must be part of a
+transaction for this transaction to be extracted.}
 }}
+
+\item{as_indices}{\code{TRUE} or \code{FALSE} whether to return transactions or only
+their indices.}
 }
 \value{
-\code{TransactionSet} containing the subset of transactions that match the search criteria.
+S4 object of class \code{TransactionSet} containing the subset of
+transactions that match the search criteria, or indices of these
+transactions (according to the argument \code{as_indices}). If the given
+transactions are named (and \code{as_indices} is \code{TRUE}), the returned indices
+are named as well.
 }
 \description{
-Extract the transactions whose information matches to one or more sought information.
+Extract the transactions whose information matches to one or more sought
+information.
 }
 \examples{
 get_trx_from_info(TS_instance, info = list(JOB.TITLE = 44132001,
                                            JOB.TASK = "A8310"))
+get_trx_from_info(TS_instance,
+                  info = list(JOB.TITLE = 44132001,
+                              JOB.TASK = "A8310"),
+                  as_indices = TRUE)
 
 }
 \seealso{

@@ -5,20 +5,27 @@
 \alias{get_complex_trx}
 \title{Search for complex transactions}
 \usage{
-\S4method{get_complex_trx}{TransactionSet}(object)
+\S4method{get_complex_trx}{TransactionSet}(object, as_indices = FALSE)
 }
 \arguments{
 \item{object}{S4 object of class \code{TransactionSet}.}
+
+\item{as_indices}{\code{TRUE} or \code{FALSE} whether to return transactions or only
+their indices.}
 }
 \value{
-S4 object of class \code{TransactionSet} containing the subset of transactions that contain more
-than one item.
+S4 object of class \code{TransactionSet} containing the subset of
+transactions that contain more than one item, or indices of these
+transactions (according to the argument \code{as_indices}). If the given
+transactions are named (and \code{as_indices} is \code{TRUE}), the returned indices
+are named as well.
 }
 \description{
 Extract the transactions containing more than one item.
 }
 \examples{
 get_complex_trx(TS_instance)
+get_complex_trx(TS_instance, as_indices = TRUE)
 
 }
 \seealso{

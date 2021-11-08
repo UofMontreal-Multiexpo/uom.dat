@@ -5,7 +5,7 @@
 \alias{get_trx_from_items}
 \title{Search for transactions by item}
 \usage{
-\S4method{get_trx_from_items}{TransactionSet}(object, items, presence = "all")
+\S4method{get_trx_from_items}{TransactionSet}(object, items, presence = "all", as_indices = FALSE)
 }
 \arguments{
 \item{object}{S4 object of class \code{TransactionSet}.}
@@ -22,10 +22,16 @@ to be extracted.}
 \item{\code{"exact"}}{The item set contained in a transaction must be exactly the same as the sought
 item set for this transaction to be extracted.}
 }}
+
+\item{as_indices}{\code{TRUE} or \code{FALSE} whether to return transactions or only
+their indices.}
 }
 \value{
-S4 object of class \code{TransactionSet} containing the subset of transactions that match the search
-criteria.
+S4 object of class \code{TransactionSet} containing the subset of
+transactions that match the search criteria, or indices of these
+transactions (according to the argument \code{as_indices}). If the given
+transactions are named (and \code{as_indices} is \code{TRUE}), the returned indices
+are named as well.
 }
 \description{
 Extract the transactions containing one or more sought items.
@@ -34,6 +40,11 @@ Extract the transactions containing one or more sought items.
 get_trx_from_items(TS_instance, items = c(25, 192), presence = "all")
 get_trx_from_items(TS_instance, items = c(25, 192), presence = "any")
 get_trx_from_items(TS_instance, items = c(25, 192), presence = "exact")
+
+get_trx_from_items(TS_instance,
+                   items = c(25, 192),
+                   presence = "any",
+                   as_indices = TRUE)
 
 }
 \seealso{
