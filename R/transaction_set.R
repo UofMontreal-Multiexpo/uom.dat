@@ -905,7 +905,7 @@ function(object, info, presence = "all", as_indices = FALSE) {
 #' @return Complexity ratios: for each item, the proportion of complex transactions containing it among
 #'  all transactions containing it.
 #'  Named vector if `items` contains more than one item. Single value otherwise.
-#'  `NA` values are assigned to given items that do not exist in the transations.
+#'  `NA` values are assigned to given items that do not exist in the transactions.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_index`], [`co_occurrence_matrix`],
@@ -951,7 +951,7 @@ function(object, items = NULL) {
 #'  it for each existing item.
 #' @return Complexity indexes: for each item, the number of complex transactions containing it.
 #'  Named vector if `items` contains more than one item. Single value otherwise.
-#'  `NA` values are assigned to given items that do not exist in the transations.
+#'  `NA` values are assigned to given items that do not exist in the transactions.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_ratio`], [`co_occurrence_matrix`],

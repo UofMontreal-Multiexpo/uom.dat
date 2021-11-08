@@ -17,7 +17,7 @@ it for each existing item.}
 Complexity ratios: for each item, the proportion of complex transactions containing it among
 all transactions containing it.
 Named vector if \code{items} contains more than one item. Single value otherwise.
-\code{NA} values are assigned to given items that do not exist in the transations.
+\code{NA} values are assigned to given items that do not exist in the transactions.
 }
 \description{
 For each item, compute the ratio between the number of complex transactions containing the item and

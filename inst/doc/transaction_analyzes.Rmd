@@ -548,7 +548,7 @@ trx_subset <- get_trx_from_category(TA_instance,
 print(trx_subset)
 ```
 
-The argumet `category` must be the name or number of one category associated with the items. The numbering is according to the order of the categories in the attributes `items_categories` linking the items to the categories. The argument `value` must be one of the levels of the related category.
+The argumet `category` must be the name or number of one category associated with the items. The numbering is according to the order of the categories in the attribute `items_categories` linking the items to the categories. The argument `value` must be one of the levels of the related category.
 
 
 ## 2.3. Search for nodes or patterns
