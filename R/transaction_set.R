@@ -416,10 +416,10 @@ setGeneric(name = "get_items",           def = function(object, ...){ standardGe
 #' 
 #' @details
 #' If the transactions from `x` are not named and `keep_names = TRUE`, the transactions of the resulting
-#'  object are named according to the indexes of the initial transactions.
+#'  object are named according to the indices of the initial transactions.
 #' 
 #' @param x Object of class `TransactionSet` to be subsetted.
-#' @param indexes Numeric vector indicating which transactions from `x["data"]` to keep,
+#' @param indices Numeric vector indicating which transactions from `x["data"]` to keep,
 #'  or logical vector indicating for each transaction whether to keep it.
 #' @param keep_names If `TRUE`, transactions of the returned object keep the names from the initial
 #'  object `x`. If `FALSE`, they are not named.
@@ -437,20 +437,20 @@ setGeneric(name = "get_items",           def = function(object, ...){ standardGe
 setMethod(f = "subset",
           signature = "TransactionSet",
           definition =
-function(x, indexes, keep_names = TRUE) {
+function(x, indices, keep_names = TRUE) {
   
-  if (is.logical(indexes)) indexes = which(indexes)
+  if (is.logical(indices)) indices = which(indices)
   
   if (keep_names) {
     if (!is.null(names(x@data))) {
-      return(transaction.set(x@data[indexes],
+      return(transaction.set(x@data[indices],
                              x@item_key, x@year_key, x@names))
     }
-    return(transaction.set(stats::setNames(x@data[indexes], indexes),
+    return(transaction.set(stats::setNames(x@data[indices], indices),
                            x@item_key, x@year_key, x@names))
   }
   # if (!keep_names)
-  return(transaction.set(unname(x@data[indexes]),
+  return(transaction.set(unname(x@data[indices]),
                          x@item_key, x@year_key, x@names))
 })
 

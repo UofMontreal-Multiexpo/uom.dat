@@ -5,12 +5,12 @@
 \alias{subset}
 \title{Subsetting Transaction Set}
 \usage{
-\S4method{subset}{TransactionSet}(x, indexes, keep_names = TRUE)
+\S4method{subset}{TransactionSet}(x, indices, keep_names = TRUE)
 }
 \arguments{
 \item{x}{Object of class \code{TransactionSet} to be subsetted.}
 
-\item{indexes}{Numeric vector indicating which transactions from \code{x["data"]} to keep,
+\item{indices}{Numeric vector indicating which transactions from \code{x["data"]} to keep,
 or logical vector indicating for each transaction whether to keep it.}
 
 \item{keep_names}{If \code{TRUE}, transactions of the returned object keep the names from the initial
@@ -25,7 +25,7 @@ Return a \code{TransactionSet} in which transactions are a subset of the ones of
 }
 \details{
 If the transactions from \code{x} are not named and \code{keep_names = TRUE}, the transactions of the resulting
-object are named according to the indexes of the initial transactions.
+object are named according to the indices of the initial transactions.
 }
 \examples{
 subset(TS_instance, c(1, 7, 8, 9))
