@@ -1028,11 +1028,14 @@ function(object, items = NULL) {
   if (is.null(items)) items = get_all_items(object)
   
   # Find the transactions containing each item then count the number in which each pair appears
-  occ = stats::setNames(lapply(items,
-                               function(item) get_trx_from_items(object, item, as_indices = TRUE)),
-                        items)
+  itemsets = get_itemsets(object)
+  trx_items = stats::setNames(
+    lapply(items, function(item) which(sapply(itemsets,
+                                              function(itemset) item %in% itemset))),
+    items
+  )
   pairs = utils::combn(items, 2)
-  co = apply(pairs, 2, function(pair) length(intersect(occ[[pair[1]]], occ[[pair[2]]])))
+  co = apply(pairs, 2, function(pair) length(intersect(trx_items[[pair[1]]], trx_items[[pair[2]]])))
   
   # Creation of a matrix that will be the contingeny table
   co_table = matrix(nrow = length(items), ncol = length(items))
