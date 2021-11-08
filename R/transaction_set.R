@@ -1016,18 +1016,21 @@ function(object, items = NULL) {
   
   if (is.null(items)) items = get_all_items(object)
   
-  # Pour chaque pair d'items, recherche du nombre de transactions dans lesquelles la paire apparaît
+  # Find the transactions containing each item then count the number in which each pair appears
+  occ = stats::setNames(lapply(items,
+                               function(item) get_trx_from_items(object, item, as_indices = TRUE)),
+                        items)
   pairs = utils::combn(items, 2)
-  co = apply(pairs, 2, function(pair) length(get_trx_from_items(object, pair)))
+  co = apply(pairs, 2, function(pair) length(intersect(occ[[pair[1]]], occ[[pair[2]]])))
   
-  # Création d'une matrice qui correspondra à la table de contingence
+  # Creation of a matrix that will be the contingeny table
   co_table = matrix(nrow = length(items), ncol = length(items))
   rownames(co_table) = colnames(co_table) = items
   
-  # Conversion en caractère des identifiants des items pour accès à la matrice
+  # Conversion of item identifiers into character for access to the matrix
   pairs = apply(pairs, c(1,2), as.character)
   
-  # Remplissage de la matrice
+  # Filling of the matrix
   for (c in seq_len(ncol(pairs))) {
     co_table[pairs[1, c], pairs[2, c]] = co[c]
     co_table[pairs[2, c], pairs[1, c]] = co[c]
