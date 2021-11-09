@@ -1034,7 +1034,7 @@ function(object, items = NULL) {
                                               function(itemset) item %in% itemset))),
     items
   )
-  pairs = utils::combn(items, 2)
+  pairs = utils::combn(as.character(items), 2)
   co = apply(pairs, 2, function(pair) length(intersect(trx_items[[pair[1]]], trx_items[[pair[2]]])))
   
   # Creation of a matrix that will be the contingeny table
