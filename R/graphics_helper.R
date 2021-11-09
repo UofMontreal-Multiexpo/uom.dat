@@ -205,7 +205,7 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
                                                     colors = edges[, 3]),
                              ggplot2::aes(color = colors),
                              tension = edge_looseness, alpha = edge_alpha) +
-    ggraph::scale_edge_color_distiller("Co-occurrence", palette = palette, direction = palette_direction,
+    ggraph::scale_edge_color_distiller("Co-occurrences", palette = palette, direction = palette_direction,
                                        # Définition de l'échelle (pour n'avoir que des entiers)
                                        limits = limits,
                                        breaks = unique(floor(pretty(seq(limits[1], limits[2])))),
