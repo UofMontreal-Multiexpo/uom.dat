@@ -1217,6 +1217,8 @@ function(object, identifiers, length_one, under, over) {
 #' @param object S4 object of class `TransactionSet`.
 #' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
 #'  The default `NULL` means to consider each existing item.
+#' @param co_occ Matrix containing the co-occurrences for at least the items specified by the
+#'  argument `items`. Is computed if `NULL`.
 #' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
 #' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
 #' @inheritParams plot_heb_chart
@@ -1241,26 +1243,31 @@ function(object, identifiers, length_one, under, over) {
 setMethod(f = "co_occurrence_chart",
           signature = "TransactionSet",
           definition =
-function(object, items = NULL, min_occ = 1, max_occ = Inf,
+function(object, items = NULL, co_occ = NULL,
+         min_occ = 1, max_occ = Inf,
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,
          edge_looseness = 0.8, edge_alpha = 1,
          palette = "Blues", palette_direction = 1) {
   
-  # Validation des items fournis
+  # Validation of the given items
   if (is.null(items)) items = get_all_items(object)
   else if (!all(items %in% get_all_items(object)))
     stop("items must be NULL or a subset of the items contained in object.")
   
-  # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
+  # Creation of the hierarchy (tree depths and edges between vertices)
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
   
-  # Sommets du graphe
+  # Vertices of the graph
   vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
   vertices$label = items[match(vertices$name, items)]
   
-  # Liens à tracer entre les sommets (différent des arêtes de l'arbre)
-  co_occ = as.data.frame(as.table(co_occurrence_matrix(object, items)), stringsAsFactors = FALSE)
+  # Compute or subset the co-occurrence matrix
+  if (is.null(co_occ)) co_occ = co_occurrence_matrix(object, items)
+  else co_occ = co_occ[as.character(items), as.character(items)]
+  
+  # Links to be drawn between the vertices (different from the edges of the tree)
+  co_occ = as.data.frame(as.table(co_occ), stringsAsFactors = FALSE)
   co_occ = co_occ[co_occ$Var1 != co_occ$Var2 & !duplicated(t(apply(co_occ[, c(1,2)], 1, sort))), ]
   connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
   

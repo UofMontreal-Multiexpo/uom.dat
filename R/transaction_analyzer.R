@@ -3820,6 +3820,8 @@ function(object, category = NULL, items = object["items"],
 #'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param category Name or number of the category to represent on the graph (numbering according to
 #'  the order of the columns of `object["items_categories"]`).
+#' @param co_occ Matrix containing the co-occurrences for at least the items specified by the
+#'  argument `items`. Is computed if `NULL`.
 #' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
 #' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
 #' @param use_names If `TRUE`, display item names if they are defined. Display their identification
@@ -3851,29 +3853,30 @@ function(object, category = NULL, items = object["items"],
 setMethod(f = "co_occurrence_chart",
           signature = "TransactionAnalyzer",
           definition =
-function(object, items = object["items"], category = NULL, min_occ = 1, max_occ = Inf,
+function(object, items = object["items"], category = NULL,
+         co_occ = NULL, min_occ = 1, max_occ = Inf,
          use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category",
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,
          edge_looseness = 0.8, edge_alpha = 1,
          palette = "Blues", palette_direction = 1) {
   
-  # Validation du paramètre d'accès à la catégorie et des items fournis
+  # Validation of the parameters
   check_access_for_category(object, category, NA)
   check_param(sort_by, values = c("category", "item"))
   if (is.null(category) && sort_by == "category") sort_by = "item"
   items = get_items(object, items)
   
-  # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
+  # Creation of the hierarchy (tree depths and edges between vertices) 
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
   
-  # Tri par nom, par identifiant ou selon les valeurs de la catégorie (puis nom ou code)
+  # Sort by name, by identifer or according to the values of the category (then name or code)
   if (use_names && sort_by == "item") hierarchy = hierarchy[order(names(items)), ]
   else if (sort_by == "item") hierarchy = hierarchy[order(items), ]
   else hierarchy = hierarchy[order(object@items_categories[as.character(items), category],
                                    if (has_item_names(object) && use_names) names(items) else items), ]
   
-  # Sommets du graphe
+  # Vertices of the graph
   vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
   if (use_names) {
     vertices$label = substr2(names(items[match(vertices$name, items)]), stop = n.cutoff)
@@ -3881,7 +3884,7 @@ function(object, items = object["items"], category = NULL, min_occ = 1, max_occ 
     vertices$label = items[match(vertices$name, items)]
   }
   
-  # Gestion de la catégorie et de sa légende
+  # treatment of the category and its legend
   if (!is.null(category)) {
     vertices$group = object@items_categories[vertices$name, category]
     category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA
@@ -3890,14 +3893,17 @@ function(object, items = object["items"], category = NULL, min_occ = 1, max_occ 
     vertices$group = substr2(vertices$group, stop = c.cutoff)
   }
   
-  # Liens à tracer entre les sommets (différent des arêtes de l'arbre)
-  co_occ = as.data.frame(as.table(co_occurrence_matrix(object@transactions, items)),
-                         stringsAsFactors = FALSE)
+  # Compute or subset the co-occurrence matrix
+  if (is.null(co_occ)) co_occ = co_occurrence_matrix(object@transactions, items)
+  else co_occ = co_occ[as.character(items), as.character(items)]
+  
+  # Links to be drawn between the vertices (different from the edges of the tree) 
+  co_occ = as.data.frame(as.table(co_occ), stringsAsFactors = FALSE)
   co_occ = co_occ[co_occ$Var1 != co_occ$Var2 & !duplicated(t(apply(co_occ[, c(1,2)], 1, sort))), ]
   connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
   
   
-  # Préparation de la liste d'argument et appel de la fonction de traçage
+  # Preparation of the list of arguments and call of the plot function
   args = list(hierarchy = hierarchy, vertices = vertices, edges = connections,
               limits = c(1, max(co_occ$Freq)),
               vertex_size = vertex_size, vertex_alpha = vertex_alpha, vertex_margin = vertex_margin,

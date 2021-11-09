@@ -9,6 +9,7 @@
 \S4method{co_occurrence_chart}{TransactionSet}(
   object,
   items = NULL,
+  co_occ = NULL,
   min_occ = 1,
   max_occ = Inf,
   vertex_size = 3,
@@ -27,6 +28,9 @@
 
 \item{items}{Items for which to count co-occurrences between pairs and to plot on the graph.
 The default \code{NULL} means to consider each existing item.}
+
+\item{co_occ}{Matrix containing the co-occurrences for at least the items specified by the
+argument \code{items}. Is computed if \code{NULL}.}
 
 \item{min_occ}{Minimum number of co-occurrences to consider to plot a link between two items.}
 

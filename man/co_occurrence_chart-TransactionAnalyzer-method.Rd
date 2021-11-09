@@ -10,6 +10,7 @@
   object,
   items = object["items"],
   category = NULL,
+  co_occ = NULL,
   min_occ = 1,
   max_occ = Inf,
   use_names = TRUE,
@@ -37,6 +38,9 @@ Any subset of \code{object["items"]}.
 
 \item{category}{Name or number of the category to represent on the graph (numbering according to
 the order of the columns of \code{object["items_categories"]}).}
+
+\item{co_occ}{Matrix containing the co-occurrences for at least the items specified by the
+argument \code{items}. Is computed if \code{NULL}.}
 
 \item{min_occ}{Minimum number of co-occurrences to consider to plot a link between two items.}
 
