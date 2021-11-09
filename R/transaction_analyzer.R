@@ -3610,13 +3610,13 @@ function(object, tnpc, identifiers = "original",
   else items$label = items$item
   
   # Tri des items
-  if (use_names && sort_by == "item") { # Par nom
-    items = items[order(get_item_names(object, items$item)), ]
-  }
-  else if (sort_by == "item") {         # Par code
-    items = items[order(match(items$item, object@items)), ]
-  }
-  else {                                # Selon la catégorie (puis nom ou code)
+  if (sort_by == "item") { # Par nom ou par code
+    if (has_item_names(object) && use_names) {
+      items = items[order(get_item_names(object, items$item)), ]
+    } else {
+      items = items[order(match(items$item, object@items)), ]
+    }
+  } else {                 # Selon la catégorie (puis nom ou code)
     items = items[order(items[[category]],
                         if (has_item_names(object) && use_names) get_item_names(object, items$item)
                         else match(items$item, object@items)), ]
@@ -3730,7 +3730,8 @@ function(object, category = NULL, items = object["items"],
     hierarchy = rbind(depth_1, depth_2[order(depth_2$parent), ]) # Ordonnés par catégorie
   } else {
     hierarchy = data.frame(parent = "root",
-                           child = items[order(if (use_names) names(items) else items)],
+                           child = items[order(if (has_item_names(object) && use_names) names(items)
+                                               else items)],
                            stringsAsFactors = FALSE)
   }
   
@@ -3871,10 +3872,13 @@ function(object, items = object["items"], category = NULL,
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
   
   # Sort by name, by identifer or according to the values of the category (then name or code)
-  if (use_names && sort_by == "item") hierarchy = hierarchy[order(names(items)), ]
-  else if (sort_by == "item") hierarchy = hierarchy[order(items), ]
-  else hierarchy = hierarchy[order(object@items_categories[as.character(items), category],
-                                   if (has_item_names(object) && use_names) names(items) else items), ]
+  if (sort_by == "item") {
+    if (has_item_names(object) && use_names) hierarchy = hierarchy[order(names(items)), ]
+    else hierarchy = hierarchy[order(items), ]
+  } else {
+    hierarchy = hierarchy[order(object@items_categories[as.character(items), category],
+                                if (has_item_names(object) && use_names) names(items) else items), ]
+  }
   
   # Vertices of the graph
   vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
@@ -4374,10 +4378,13 @@ function(object, rules = NULL, items = NULL,
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
   
   # Tri par nom, par identifiant ou selon les valeurs de la catégorie (puis nom ou code)
-  if (use_names && sort_by == "item") hierarchy = hierarchy[order(names(items)), ]
-  else if (sort_by == "item") hierarchy = hierarchy[order(items), ]
-  else hierarchy = hierarchy[order(object@items_categories[as.character(items), category],
-                                   if (has_item_names(object) && use_names) names(items) else items), ]
+  if (sort_by == "item") {
+    if (has_item_names(object) && use_names) hierarchy = hierarchy[order(names(items)), ]
+    else hierarchy = hierarchy[order(items), ]
+  } else {
+    hierarchy = hierarchy[order(object@items_categories[as.character(items), category],
+                                if (has_item_names(object) && use_names) names(items) else items), ]
+  }
   
   # Sommets du graphe
   vertices = data.frame(name = unique(unlist(hierarchy)), stringsAsFactors = FALSE)
