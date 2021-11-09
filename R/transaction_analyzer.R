@@ -3888,10 +3888,10 @@ function(object, items = object["items"], category = NULL,
     vertices$label = items[match(vertices$name, items)]
   }
   
-  # treatment of the category and its legend
+  # Treatment of the category and its legend
   if (!is.null(category)) {
     vertices$group = object@items_categories[vertices$name, category]
-    category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA
+    category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1st is NA
     
     names(category_legend) = substr2(names(category_legend), stop = c.cutoff)
     vertices$group = substr2(vertices$group, stop = c.cutoff)
