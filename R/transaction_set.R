@@ -403,8 +403,8 @@ setGeneric(name = "prepare_itemset_chart", def = function(object, ...){ standard
 setGeneric(name = "co_occurrence_chart",   def = function(object, ...){ standardGeneric("co_occurrence_chart") })
 
 # Other specific methods
-setGeneric(name = "has_temporal_data",   def = function(object){ standardGeneric("has_temporal_data") })
-setGeneric(name = "get_items",           def = function(object, ...){ standardGeneric("get_items") })
+setGeneric(name = "has_temporal_data", def = function(object){ standardGeneric("has_temporal_data") })
+setGeneric(name = "get_items",         def = function(object, ...){ standardGeneric("get_items") })
 
 
 
