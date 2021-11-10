@@ -3892,6 +3892,7 @@ function(object, items = object["items"], category = NULL,
   if (!is.null(category)) {
     vertices$group = object@items_categories[vertices$name, category]
     category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1st is NA
+    category_legend = category_legend[order(names(category_legend))]
     
     names(category_legend) = substr2(names(category_legend), stop = c.cutoff)
     vertices$group = substr2(vertices$group, stop = c.cutoff)
@@ -4400,6 +4401,7 @@ function(object, rules = NULL, items = NULL,
   if (!is.null(category)) {
     vertices$group = object@items_categories[vertices$name, category]
     category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA
+    category_legend = category_legend[order(names(category_legend))]
     
     names(category_legend) = substr2(names(category_legend), stop = c.cutoff)
     vertices$group = substr2(vertices$group, stop = c.cutoff)
