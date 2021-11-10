@@ -133,7 +133,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Transaction analyzes</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2021-11-02</h4>
+<h4 class="date">Last update: 2021-11-10</h4>
 
 
 <div id="TOC">
@@ -623,16 +623,17 @@ Set of links between the patterns and characteristics of these links. Isolated p
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;SUBFAMILY&quot;</span>]</span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">item =</span> items_ids,</span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> names,</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">family =</span> category_1)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Creation of a TransactionAnalyzer object</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>ta_object_1 <span class="ot">&lt;-</span> <span class="fu">transaction.analyzer</span>(trx_object,</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>                                    items,</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">target =</span> <span class="st">&quot;closed frequent itemsets&quot;</span>,</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">count =</span> <span class="dv">1</span>,</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">min_length =</span> <span class="dv">1</span>,</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">max_length =</span> <span class="cn">Inf</span>,</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">status_limit =</span> <span class="dv">2</span>)</span></code></pre></div>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">family =</span> <span class="fu">as.factor</span>(category_1),</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Creation of a TransactionAnalyzer object</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>ta_object_1 <span class="ot">&lt;-</span> <span class="fu">transaction.analyzer</span>(trx_object,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>                                    items,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">target =</span> <span class="st">&quot;closed frequent itemsets&quot;</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">count =</span> <span class="dv">1</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">min_length =</span> <span class="dv">1</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">max_length =</span> <span class="cn">Inf</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">status_limit =</span> <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## Warning in arules::eclat(transact, parameter = params, control = list(verbose = FALSE)): You chose a very low absolute support count of 1. You might run out of memory! Increase minimum support.</code></pre>
 <pre><code>## *** Step 01/10: Enumeration of the transactions per year... [00s]
 ## *** Step 02/10: Enumeration of the nodes and calculation of the number of occurrences... [00s]

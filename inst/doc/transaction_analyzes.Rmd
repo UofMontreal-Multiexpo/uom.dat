@@ -277,7 +277,8 @@ category_1 <- substances_information[match(items_ids,
                                      "SUBFAMILY"]
 items <- data.frame(item = items_ids,
                     name = names,
-                    family = category_1)
+                    family = as.factor(category_1),
+                    stringsAsFactors = FALSE)
 
 # Creation of a TransactionAnalyzer object
 ta_object_1 <- transaction.analyzer(trx_object,
