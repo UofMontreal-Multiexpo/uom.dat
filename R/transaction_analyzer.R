@@ -3244,7 +3244,9 @@ function(object, nopc, identifiers = "original",
           vertex.sides = vertices_shapes,
           vertex.cex = vertices_sizes,
           vertex.col = if (vertex_col[1] == "categories") vertices_colors[[j]] else vertices_colors,
-          edge.col = links_colors[[j]]
+          edge.col = links_colors[[j]][links_colors[[j]] != "white"]
+          # [links_colors[[j]] != "white"] nécessaire suite à une mise-à-jour de sna et/ou de network
+          # => A simplifier si cela n'entraine pas d'erreur par ailleurs
         ), args))
       },
       error = function(e) {
