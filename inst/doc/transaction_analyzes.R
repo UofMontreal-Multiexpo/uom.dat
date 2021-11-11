@@ -1153,5 +1153,7 @@ library(arulesViz)
 
 ## ----echo=FALSE---------------------------------------------------------------
 ## Hidden chunk: plot the chart with warning messages
+# Set a seed to have the same graph at each vignette generation
+set.seed(123468)
 plot(arules_rules)
 

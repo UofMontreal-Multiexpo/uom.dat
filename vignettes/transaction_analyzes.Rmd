@@ -1040,7 +1040,6 @@ category_tree_chart(TA_instance,
                     items = c(19, 25, 27, 77, 87, 163, 192, 1603, 3146, 3350))
 ```
 
-
 #### Vertices and leaves
 
 Two arguments are relating to the vertices at depth $1$. They correspond to their size and transparency: `vertex_size` and `vertex_alpha`. Similarly, three arguments are relating to the vertices at depth $2$. They correspond to their size, their transparency and the space between them and the edges: `leaf_size`, `leaf_alpha`, `leaf_margin`.
@@ -2227,6 +2226,8 @@ library(arulesViz)
 ```
 ```{r echo=FALSE}
 ## Hidden chunk: plot the chart with warning messages
+# Set a seed to have the same graph at each vignette generation
+set.seed(123468)
 plot(arules_rules)
 ```
 
