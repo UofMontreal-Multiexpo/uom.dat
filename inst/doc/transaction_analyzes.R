@@ -427,6 +427,16 @@ category_tree_chart(TA_instance,
                     leaf_margin = 0.08)
 
 ## -----------------------------------------------------------------------------
+# Use of the complexity ratio as leaf size
+ratio <- complexity_ratio(TA_instance["transactions"])
+print(ratio)
+
+category_tree_chart(TA_instance,
+                    category = "family",
+                    use_names = FALSE,
+                    leaf_size = ratio * 4)
+
+## -----------------------------------------------------------------------------
 category_tree_chart(TA_instance,
                     category = "family",
                     use_names = FALSE,

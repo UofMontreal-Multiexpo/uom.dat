@@ -3679,12 +3679,30 @@ function(object, tnpc, identifiers = "original",
 #'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param use_names  If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
-#' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
+#' @param n.cutoff If `use_names` is `TRUE`, limit number of characters to display concerning the names
 #'  of the represented items.
 #' @param c.cutoff Limit number of characters to display in the legend for the category represented.
-#' @param vertex_size Size of vertices at depth 1, representing the category values.
+#' @param vertex_size Size of vertices at depth 1, representing the category values. One of the
+#'  following.
+#'  \describe{
+#'    \item{A single numeric value}{All vertices have the size defined by this value.}
+#'    \item{A named numeric vector}{The sizes are assigned to the category values identified by
+#'          the names of the vector.}
+#'    \item{An unnamed numeric vector}{Must be of length equal to the number of category values
+#'          represented on the tree. The sizes are directly assigned to these category values
+#'          in alphanumeric order.}
+#'  }
 #' @param vertex_alpha Opacity of vertices at depth 1 (from 0 to 1).
-#' @param leaf_size Size of the leaves (vertices at depth 2), representing the items.
+#' @param leaf_size Size of the leaves (i.e., vertices at depth 2), representing the items.
+#'  One of the following.
+#'  \describe{
+#'    \item{A single numeric value}{All leaves have the size defined by this value.}
+#'    \item{A named numeric vector}{The sizes are assigned to the items identified by the names of
+#'          the vector.}
+#'    \item{An unnamed numeric vector}{Must be of length equal to the number of items specified
+#'          by the argument `items`. The sizes are directly assigned to these items in the order
+#'          they are given.}
+#'  }
 #' @param leaf_alpha Opacity of the leaves (from 0 to 1).
 #' @param leaf_margin Margin before the leaves (i.e. distance between the ends of the edges and the
 #'  centers of the leaves).
@@ -3702,6 +3720,13 @@ function(object, tnpc, identifiers = "original",
 #'                     items = c(19, 25, 27, 77, 87, 163, 192, 1603, 3146, 3350))
 #' category_tree_chart(TA_instance, 1, items = TA_instance["items"][2:11]) +
 #'   ggplot2::expand_limits(x = c(-1.3, 1.3), y = c(-1.3, 1.3))
+#' 
+#' ## Use of an indicator as leaf size
+#' ratio <- complexity_ratio(TA_instance["transactions"])
+#' category_tree_chart(TA_instance, "family",
+#'                     items = names(ratio),
+#'                     use_names = FALSE,
+#'                     leaf_size = ratio * 4)
 #' 
 #' @aliases category_tree_chart
 #' @md
@@ -3745,12 +3770,35 @@ function(object, category = NULL, items = object["items"],
     vertices$label = items[match(vertices$name, items)]
   }
   
-  # Position, tailles et opacités des sommets en fonction de sommet interne ou feuille
+  # Positions et opacités des sommets en fonction de sommet interne ou feuille
   vertices$is.leaf = is.na(match(vertices$name, hierarchy$parent))
   vertices$leaf_coord_multiplier = ifelse(vertices$is.leaf, 1 + leaf_margin, 1)
   vertices$label_coord_multiplier = ifelse(vertices$is.leaf, 1 + leaf_margin + label_margin, 1)
-  vertices$size = ifelse(vertices$is.leaf, leaf_size, vertex_size)
+  vertices$size = NA_real_
   vertices$alpha = ifelse(vertices$is.leaf, leaf_alpha, vertex_alpha)
+  
+  # Validation des paramètres définissant les tailles des sommets
+  if (length(leaf_size) != 1 && !is_named(leaf_size) && length(leaf_size) != length(items))
+    stop("If leaf_size has multiple values, it must be named or have the same length as items.")
+  if (length(vertex_size) != 1 && !is_named(vertex_size) && length(vertex_size) != length(depth_1$child))
+    stop("If vertex_size has multiple values, it must be named or have the same",
+         " length as the number of represented category values.")
+  
+  # Tailles des sommets feuilles
+  if (length(leaf_size) == 1) vertices$size[vertices$is.leaf] = leaf_size
+  else {
+    vertices$size[match(if (is_named(leaf_size)) names(leaf_size) else items,
+                        vertices$name)] = leaf_size
+    vertices$size[vertices$is.leaf & is.na(vertices$size)] = 0
+  }
+  
+  # Tailles des sommets internes
+  if (length(vertex_size) == 1) vertices$size[!vertices$is.leaf] = vertex_size
+  else {
+    vertices$size[match(if (is_named(vertex_size)) names(vertex_size) else depth_1$child,
+                        vertices$name)] = vertex_size
+    vertices$size[!vertices$is.leaf & is.na(vertices$size)] = 0
+  }
   
   # Gestion de la catégorie et de sa légende
   if (!is.null(category)) {

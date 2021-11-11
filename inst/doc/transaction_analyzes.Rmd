@@ -1054,6 +1054,19 @@ category_tree_chart(TA_instance,
                     leaf_margin = 0.08)
 ```
 
+Sizes can also be defined individually for each item or each category value by using named vectors.
+
+```{r}
+# Use of the complexity ratio as leaf size
+ratio <- complexity_ratio(TA_instance["transactions"])
+print(ratio)
+
+category_tree_chart(TA_instance,
+                    category = "family",
+                    use_names = FALSE,
+                    leaf_size = ratio * 4)
+```
+
 #### Labels
 
 Two arguments are relating to the labels next to the vertices. They correspond to their size and the space between them and the related vertices: `label_size` and `label_margin`.

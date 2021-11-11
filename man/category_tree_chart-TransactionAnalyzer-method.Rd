@@ -34,16 +34,34 @@ the order of the columns of \code{object["items_categories"]}).}
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}
 
-\item{n.cutoff}{If \code{use_names = TRUE}, limit number of characters to display concerning the names
+\item{n.cutoff}{If \code{use_names} is \code{TRUE}, limit number of characters to display concerning the names
 of the represented items.}
 
 \item{c.cutoff}{Limit number of characters to display in the legend for the category represented.}
 
-\item{vertex_size}{Size of vertices at depth 1, representing the category values.}
+\item{vertex_size}{Size of vertices at depth 1, representing the category values. One of the
+following.
+\describe{
+\item{A single numeric value}{All vertices have the size defined by this value.}
+\item{A named numeric vector}{The sizes are assigned to the category values identified by
+the names of the vector.}
+\item{An unnamed numeric vector}{Must be of length equal to the number of category values
+represented on the tree. The sizes are directly assigned to these category values
+in alphanumeric order.}
+}}
 
 \item{vertex_alpha}{Opacity of vertices at depth 1 (from 0 to 1).}
 
-\item{leaf_size}{Size of the leaves (vertices at depth 2), representing the items.}
+\item{leaf_size}{Size of the leaves (i.e., vertices at depth 2), representing the items.
+One of the following.
+\describe{
+\item{A single numeric value}{All leaves have the size defined by this value.}
+\item{A named numeric vector}{The sizes are assigned to the items identified by the names of
+the vector.}
+\item{An unnamed numeric vector}{Must be of length equal to the number of items specified
+by the argument \code{items}. The sizes are directly assigned to these items in the order
+they are given.}
+}}
 
 \item{leaf_alpha}{Opacity of the leaves (from 0 to 1).}
 
@@ -82,6 +100,13 @@ category_tree_chart(TA_instance, 1,
                     items = c(19, 25, 27, 77, 87, 163, 192, 1603, 3146, 3350))
 category_tree_chart(TA_instance, 1, items = TA_instance["items"][2:11]) +
   ggplot2::expand_limits(x = c(-1.3, 1.3), y = c(-1.3, 1.3))
+
+## Use of an indicator as leaf size
+ratio <- complexity_ratio(TA_instance["transactions"])
+category_tree_chart(TA_instance, "family",
+                    items = names(ratio),
+                    use_names = FALSE,
+                    leaf_size = ratio * 4)
 
 }
 \seealso{
