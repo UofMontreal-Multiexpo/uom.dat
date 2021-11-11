@@ -4097,8 +4097,9 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
   if (arules) return(rules)
   
   
-  # Conversion en data frame
+  # Conversion en data frame (et suppression d'une colonne spécifique à arules::apriori)
   rules_df = arules::DATAFRAME(rules)
+  rules_df = rules_df[, colnames(rules_df) != "coverage"]
   
   # Changement de notation
   if (!as_sets) {
