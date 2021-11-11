@@ -622,7 +622,7 @@ co_occurrence_chart(TS_instance,
 ### 3.2.2. Package corrplot
 
 The package `corrplot` can be applied to co-occurrence matrices to plot extra charts using the parameter `is.corr = FALSE`. 
-```{r warning=FALSE, message=FALSE}
+```{r collapse=TRUE, warning=FALSE}
 # Loading the package
 library(corrplot)
 
@@ -633,15 +633,20 @@ co_occ_matrix <- co_occurrence_matrix(TS_instance)
 Here are two examples. See the [corrplot documentation](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html) for more possibilities.
 ```{r fig.width=5}
 corrplot(co_occ_matrix,
-         is.corr = FALSE)
+         is.corr = FALSE,
+         col = COL1("Blues"))
 ```
 
 ```{r fig.width=5}
 corrplot.mixed(co_occ_matrix,
                is.corr = FALSE,
+               order = "hclust",
                upper = "color",
+               number.digits = 0,
+               upper.col = COL1("Blues"),
+               lower.col = COL1("Blues"),
                tl.col = "black",
-               order = "hclust")
+               tl.cex = 0.5)
 ```
 
 

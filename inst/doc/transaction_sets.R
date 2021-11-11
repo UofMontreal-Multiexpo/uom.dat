@@ -349,7 +349,7 @@ co_occurrence_chart(TS_instance,
                     palette = "OrRd",
                     palette_direction = -1)
 
-## ----warning=FALSE, message=FALSE---------------------------------------------
+## ----collapse=TRUE, warning=FALSE---------------------------------------------
 # Loading the package
 library(corrplot)
 
@@ -358,14 +358,19 @@ co_occ_matrix <- co_occurrence_matrix(TS_instance)
 
 ## ----fig.width=5--------------------------------------------------------------
 corrplot(co_occ_matrix,
-         is.corr = FALSE)
+         is.corr = FALSE,
+         col = COL1("Blues"))
 
 ## ----fig.width=5--------------------------------------------------------------
 corrplot.mixed(co_occ_matrix,
                is.corr = FALSE,
+               order = "hclust",
                upper = "color",
+               number.digits = 0,
+               upper.col = COL1("Blues"),
+               lower.col = COL1("Blues"),
                tl.col = "black",
-               order = "hclust")
+               tl.cex = 0.5)
 
 ## -----------------------------------------------------------------------------
 # Itemset chart on the TransactionSet 'trx_object_1'
