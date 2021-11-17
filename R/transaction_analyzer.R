@@ -587,14 +587,20 @@ function(object, ...) {
 
 #' Extract or replace parts of an object of class TransactionAnalyzer
 #' 
-#' General selector and mutator to access the attributes of an object of class \code{TransactionAnalyzer}.
-#' Extraction and replacement can be done by using an attribute name or its numeric value in the order
-#'  of the attributes.
+#' General selector and mutator to access the attributes of an object of class
+#'  \code{TransactionAnalyzer}.
 #' 
 #' @details
-#' Elements of the attribute \code{parameters} can be accessed this way as well.
+#' Character values can be used to access attributes as well as elements of the
+#'  attribute \code{parameters}.
 #' 
-#' @inheritParams base::Extract
+#' Numeric values can also be used to access attributes considering their order.
+#' 
+#' @param x Object from which to extract element(s) or in which to replace
+#'  element(s).
+#' @param i Numeric or character values. Indices specifying elements to extract
+#'  or replace. See 'Details' section.
+#' @param j,drop Unused.
 #' 
 #' @author Gauthier Magnin
 #' 
@@ -637,6 +643,8 @@ setMethod(f = "[",
           })
 
 #' @rdname sub-TransactionAnalyzer-ANY-ANY-ANY-method
+#' 
+#' @param value Value of type similar to the element to be replaced.
 #' 
 #' @examples
 #' TA_instance["target"] <- "maximally frequent itemsets"

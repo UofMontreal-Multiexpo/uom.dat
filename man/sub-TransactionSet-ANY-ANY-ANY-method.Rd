@@ -12,74 +12,26 @@
 \S4method{[}{TransactionSet,ANY,ANY,ANY}(x, i, j) <- value
 }
 \arguments{
-\item{x}{
-    object from which to extract element(s) or in which to replace element(s).
-  }
+\item{x}{Object from which to extract element(s) or in which to replace
+element(s).}
 
-\item{i}{
-    indices specifying elements to extract or replace.  Indices are
-    \code{numeric} or \code{character} vectors or empty (missing) or
-    \code{NULL}.  Numeric values are coerced to integer as by
-    \code{\link[base]{as.integer}} (and hence truncated towards zero).
-    Character vectors will be matched to the \code{\link[base]{names}} of the
-    object (or for matrices/arrays, the \code{\link[base]{dimnames}}):
-    see \sQuote{Character indices} below for further details.
+\item{i}{Numeric or character values. Indices specifying elements to extract
+or replace. See 'Details' section.}
 
-    For \code{[}-indexing only: \code{i}, \code{j}, \code{\dots} can be
-    logical vectors, indicating elements/slices to select.  Such vectors
-    are recycled if necessary to match the corresponding extent.
-    \code{i}, \code{j}, \code{\dots} can also be negative integers,
-    indicating elements/slices to leave out of the selection.
+\item{j, drop}{Unused.}
 
-    When indexing arrays by \code{[} a single argument \code{i} can be a
-    matrix with as many columns as there are dimensions of \code{x}; the
-    result is then a vector with elements corresponding to the sets of
-    indices in each row of \code{i}.
-
-    An index value of \code{NULL} is treated as if it were \code{integer(0)}.
-  }
-
-\item{j}{
-    indices specifying elements to extract or replace.  Indices are
-    \code{numeric} or \code{character} vectors or empty (missing) or
-    \code{NULL}.  Numeric values are coerced to integer as by
-    \code{\link[base]{as.integer}} (and hence truncated towards zero).
-    Character vectors will be matched to the \code{\link[base]{names}} of the
-    object (or for matrices/arrays, the \code{\link[base]{dimnames}}):
-    see \sQuote{Character indices} below for further details.
-
-    For \code{[}-indexing only: \code{i}, \code{j}, \code{\dots} can be
-    logical vectors, indicating elements/slices to select.  Such vectors
-    are recycled if necessary to match the corresponding extent.
-    \code{i}, \code{j}, \code{\dots} can also be negative integers,
-    indicating elements/slices to leave out of the selection.
-
-    When indexing arrays by \code{[} a single argument \code{i} can be a
-    matrix with as many columns as there are dimensions of \code{x}; the
-    result is then a vector with elements corresponding to the sets of
-    indices in each row of \code{i}.
-
-    An index value of \code{NULL} is treated as if it were \code{integer(0)}.
-  }
-
-\item{drop}{For matrices and arrays.  If \code{TRUE} the result is
-    coerced to the lowest possible dimension (see the examples).  This
-    only works for extracting elements, not for the replacement.  See
-    \code{\link[base]{drop}} for further details.
-  }
-
-\item{value}{typically an array-like \R object of a similar class as
-    \code{x}.}
+\item{value}{Value of type similar to the element to be replaced.}
 }
 \description{
-General selector and mutator to access the attributes of an object of class \code{TransactionSet}.
-Extraction and replacement can be done by using an attribute name.
+General selector and mutator to access the attributes of an object of class
+\code{TransactionSet}.
 }
 \details{
-Sub-elements of the attribute \code{data} can be accessed this way as well.
+Character values can be used to access attributes as well as sub-elements of
+the attribute \code{data}.
 
-Numeric values can be used to access elements of the attribute \code{data}. Replacing one element of
-\code{data} will not change its name.
+Numeric values can be used to access elements of the attribute \code{data}.
+Replacing one element of \code{data} this way will not change its name.
 
 Replacing the attribute \code{names}:
 \itemize{

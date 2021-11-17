@@ -196,16 +196,21 @@ setMethod(f = "length",
 
 #' Extract or replace parts of an object of class TransactionSet
 #' 
-#' General selector and mutator to access the attributes of an object of class `TransactionSet`.
-#' Extraction and replacement can be done by using an attribute name.
+#' General selector and mutator to access the attributes of an object of class
+#'  `TransactionSet`.
 #' 
 #' @details
-#' Sub-elements of the attribute `data` can be accessed this way as well.
+#' Character values can be used to access attributes as well as sub-elements of
+#'  the attribute `data`.
 #' 
-#' Numeric values can be used to access elements of the attribute `data`. Replacing one element of
-#'  `data` will not change its name.
+#' Numeric values can be used to access elements of the attribute `data`.
+#'  Replacing one element of `data` this way will not change its name.
 #' 
-#' @inheritParams base::Extract
+#' @param x Object from which to extract element(s) or in which to replace
+#'  element(s).
+#' @param i Numeric or character values. Indices specifying elements to extract
+#'  or replace. See 'Details' section.
+#' @param j,drop Unused.
 #' 
 #' @author Gauthier Magnin
 #' 
@@ -253,6 +258,8 @@ setMethod(f = "[",
 #'    `item_key` and `year_key` are updated (unless `year_key` is `NA`);
 #'  * removes missing elements of `value` in each transaction if it is smaller
 #'    than `names`.
+#' 
+#' @param value Value of type similar to the element to be replaced.
 #' 
 #' @examples
 #' TS_instance["year_key"] <- NA
