@@ -600,7 +600,6 @@ function(object, ...) {
 #'  element(s).
 #' @param i Numeric or character values. Indices specifying elements to extract
 #'  or replace. See 'Details' section.
-#' @param j,drop Unused.
 #' 
 #' @author Gauthier Magnin
 #' 
@@ -614,7 +613,7 @@ function(object, ...) {
 #' @export
 setMethod(f = "[",
           signature = "TransactionAnalyzer",
-          definition = function(x, i, j, drop) {
+          definition = function(x, i) {
             switch(EXPR = i,
                    "transactions"      = { return(x@transactions) },
                    "items"             = { return(x@items) },
@@ -655,7 +654,7 @@ setMethod(f = "[",
 #' @export
 setReplaceMethod(f = "[",
                  signature = "TransactionAnalyzer",
-                 definition = function(x, i, j, value) {
+                 definition = function(x, i, value) {
                    switch(EXPR = i,
                           "transactions"      = { x@transactions = value },
                           "items"             = { x@items = value },

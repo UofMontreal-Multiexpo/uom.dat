@@ -7,9 +7,9 @@
 \alias{[<-,TransactionAnalyzer-method}
 \title{Extract or replace parts of an object of class TransactionAnalyzer}
 \usage{
-\S4method{[}{TransactionAnalyzer,ANY,ANY,ANY}(x, i, j, drop)
+\S4method{[}{TransactionAnalyzer,ANY,ANY,ANY}(x, i)
 
-\S4method{[}{TransactionAnalyzer,ANY,ANY,ANY}(x, i, j) <- value
+\S4method{[}{TransactionAnalyzer,ANY,ANY,ANY}(x, i) <- value
 }
 \arguments{
 \item{x}{Object from which to extract element(s) or in which to replace
@@ -17,8 +17,6 @@ element(s).}
 
 \item{i}{Numeric or character values. Indices specifying elements to extract
 or replace. See 'Details' section.}
-
-\item{j, drop}{Unused.}
 
 \item{value}{Value of type similar to the element to be replaced.}
 }
