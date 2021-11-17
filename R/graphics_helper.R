@@ -182,21 +182,21 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
                           edge_looseness = 0.8, edge_alpha = 1,
                           palette = "Blues", palette_direction = 1) {
   
-  # Décalages qui seront appliquées aux sommets et labels
+  # Offsets that will be applied to vertices and labels
   vertices$vertex_coord_multiplier = 1 + vertex_margin
   vertices$label_coord_multiplier = 1 + vertex_margin + label_margin
   
-  # Recherche des numéros des sommets à lier
+  # Finding the numbers of the vertices to link
   from = match(edges[, 2], vertices$name)
   to = match(edges[, 1], vertices$name)
   
-  # Tri des liens selon l'ordre des sommets pour que les couleurs soient appliquées correctement
-  the_order = order(from, to)
+  # Sorting links so that the darkers ones are above the lighter ones
+  the_order = order(if (palette_direction == 1) edges[, 3] else -edges[, 3], from, to)
   from = from[the_order]
   to = to[the_order]
   edges = edges[the_order, ]
   
-  # Graphe
+  # Graph
   tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
   
   graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
@@ -206,10 +206,10 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
                              ggplot2::aes(color = colors),
                              tension = edge_looseness, alpha = edge_alpha) +
     ggraph::scale_edge_color_distiller("Co-occurrences", palette = palette, direction = palette_direction,
-                                       # Définition de l'échelle (pour n'avoir que des entiers)
+                                       # Definition of the scale (to have only integers)
                                        limits = limits,
                                        breaks = unique(floor(pretty(seq(limits[1], limits[2])))),
-                                       # Paramètre nécessaire si non-chargement de ggraph
+                                       # Parameter required if ggraph is not loaded
                                        guide = ggraph::guide_edge_colorbar(order = 1)) +
     
     ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
@@ -222,7 +222,7 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
                                         y = y * label_coord_multiplier,
                                         filter = leaf,
                                         label = label,
-                                        angle = atan(y / x) * 180 / pi, # Angle en degré
+                                        angle = atan(y / x) * 180 / pi, # Angle in degrees
                                         hjust = ifelse(x < 0, 1, 0),
                                         color = if (!is.null(legend_name)) group),
                            size = label_size, show.legend = FALSE) +

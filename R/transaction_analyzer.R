@@ -4462,8 +4462,9 @@ function(object, rules = NULL, items = NULL,
   from = match(rules[to_keep, "antecedent"], vertices$name)
   to = match(rules[to_keep, "consequent"], vertices$name)
   
-  # Tri des liens selon l'ordre des sommets pour que les couleurs soient appliquées correctement
-  the_order = order(from, to)
+  # Tri des liens pour que les plus foncés soient au-dessus des plus clairs
+  if (palette_direction == 1) the_order = order( rules[to_keep, col_to_display], from, to)
+  else                        the_order = order(-rules[to_keep, col_to_display], from, to)
   from = from[the_order]
   to = to[the_order]
   rules_to_plot = rules[to_keep, ][the_order, ]
