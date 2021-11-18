@@ -42,9 +42,10 @@ setClassUnion("characterOrNA", c("character", "logical"))
 #' 
 #' An example object of class `TransactionSet`: [`TS_instance`].
 #' 
-#' Selector and mutator to access the attributes of a `TransactionSet` object:
+#' Selectors and mutators to access the attributes of a `TransactionSet` object:
 #'  \code{\link[=[,TransactionSet-method]{[}},
-#'  \code{\link[=[,TransactionSet-method]{[<-}}.
+#'  \code{\link[=[,TransactionSet-method]{[[}},
+#'  \code{\link[=[,TransactionSet-method]{$}}.
 #' 
 #' @aliases TransactionSet print,TransactionSet-method length,TransactionSet-method
 #' @md
@@ -122,9 +123,10 @@ setMethod(f = "initialize",
 #' @seealso
 #' The class: [`TransactionSet`].
 #' 
-#' Selector and mutator to access the attributes:
+#' Selectors and mutators to access the attributes:
 #'  \code{\link[=[,TransactionSet-method]{[}},
-#'  \code{\link[=[,TransactionSet-method]{[<-}}.
+#'  \code{\link[=[,TransactionSet-method]{[[}},
+#'  \code{\link[=[,TransactionSet-method]{$}}.
 #' 
 #' @examples
 #' ## Creating a list of transactions then a TransactionSet
@@ -192,64 +194,27 @@ setMethod(f = "length",
 
 
 
-#### Selector and mutator ####
+#### Selectors and mutators ####
 
 #' Extract or replace parts of an object of class TransactionSet
 #' 
-#' General selector and mutator to access the attributes of an object of class
+#' General selectors and mutators to access the attributes of an object of class
 #'  `TransactionSet`.
 #' 
 #' @details
-#' Character values can be used to access attributes as well as sub-elements of
-#'  the attribute `data`.
+#' Character values can be used with `[` to access:
+#'  1. attributes of `x`
+#'  2. elements of the attribute `data` (i.e., specific transactions), or
+#'  3. sub-elements of the attribute `data`.
 #' 
-#' Numeric values can be used to access elements of the attribute `data`.
-#'  Replacing one element of `data` this way will not change its name.
+#' Numeric values can be used with all operators to access elements of the
+#'  attribute `data`.
 #' 
-#' @param x Object from which to extract element(s) or in which to replace
-#'  element(s).
-#' @param i Numeric or character values. Indices specifying elements to extract
-#'  or replace. See 'Details' section.
-#' @param j,drop Unused.
+#' `[[` and `$` can only be used to access a single element of the attribute
+#'  `data`, using a numeric or a character value.
 #' 
-#' @author Gauthier Magnin
+#' Replacing elements of `data` do not change its names.
 #' 
-#' @examples
-#' TS_instance["data"]
-#' 
-#' TS_instance["item_key"]
-#' TS_instance["CODE"]
-#' 
-#' TS_instance[3]
-#' TS_instance[3:5]
-#' 
-#' @aliases [,TransactionSet-method
-#' @md
-#' @export
-setMethod(f = "[",
-          signature = "TransactionSet",
-          definition = function(x, i, j, drop) {
-            
-            # Accès à un sous-ensemble de transactions
-            if (is.numeric(i)) {
-              if (length(i) == 1) return(x@data[[i]])
-              return(x@data[i])
-            }
-            
-            # Accès à un attribut
-            if (i %in% methods::slotNames("TransactionSet"))
-              return(eval(parse(text = paste0("x@", i))))
-            
-            # Accès à un sous-élément de la liste de transactions
-            if (i %in% x@names)
-              return(lapply(x@data, "[[", i))
-            
-            stop("Unknown attribute.")
-          })
-
-#' @rdname sub-TransactionSet-ANY-ANY-ANY-method
-#' 
-#' @details
 #' Replacing the attribute `names`:
 #'  * reorders the elements contained in each transaction if `value` is a
 #'    reordered equivalent of `names`;
@@ -259,28 +224,91 @@ setMethod(f = "[",
 #'  * removes missing elements of `value` in each transaction if it is smaller
 #'    than `names`.
 #' 
-#' @param value Value of type similar to the element to be replaced.
+#' @param x Object from which to extract element(s) or in which to replace
+#'  element(s).
+#' @param i Numeric or character value(s). Indice(s) specifying element(s) to
+#'  extract or replace. See 'Details' section.
+#' @param name A single character value corresponding to one of the names of the
+#'  attribute `data` (i.e., the name of one transaction).
+#' @param drop Only if `i` refers to one or more transactions. `TRUE` or `FALSE`
+#'  whether to return a list or a TransactionSet object.
+#' @param value Value of type similar to the element(s) to be replaced.
+#' 
+#' @author Gauthier Magnin
 #' 
 #' @examples
-#' TS_instance["year_key"] <- NA
-#' TS_instance[3] <- list(CODE = 1,
-#'                        YEAR = 2000,
-#'                        JOB.TITLE = 45454545,
-#'                        JOB.TASK = "A3000",
-#'                        SAMPLE.ID = c(1, 3, 5, 8))
-#' TS_instance["names"] <- c("CODE", "YEAR")
+#' ## Extracting attributes
+#' TS_instance["data"]
+#' TS_instance["item_key"]
 #' 
-#' @aliases [<-,TransactionSet-method
+#' ## Extracting a specific element of the transactions
+#' TS_instance["CODE"]
+#' 
+#' ## Extracting specific transactions
+#' names(TS_instance["data"])
+#' TS_instance[["2014-B-1"]]
+#' TS_instance[[4]]
+#' TS_instance$`2015-D-4`
+#' TS_instance[3:5]
+#' 
+#' ## Replacing attributes or transactions
+#' TS_instance["year_key"] <- NA
+#' TS_instance[[3]] <- list(CODE = 1,
+#'                          YEAR = 2000,
+#'                          JOB.TITLE = 45454545,
+#'                          JOB.TASK = "A3000",
+#'                          SAMPLE.ID = c(1, 3, 5, 8))
+#' TS_instance$`2015-D-4` <- TS_instance[[3]]
+#' TS_instance["names"] <- c("CODE", "YEAR")
+#' ## Remove the local copy to recover the original object
+#' rm(TS_instance)
+#' 
+#' @name sub-TransactionSet-ANY-ANY-ANY-method
 #' @md
+NULL
+
+#' @rdname sub-TransactionSet-ANY-ANY-ANY-method
+#' @aliases [,TransactionSet-method
+#' @export
+setMethod(f = "[",
+          signature = "TransactionSet",
+          definition = function(x, i, drop = TRUE) {
+            
+            # Access to a subset of transactions, using numeric values
+            if (is.numeric(i)) {
+              if (!drop) return(subset(x, i))
+              return(x@data[i])
+            }
+            
+            # Access to an attribute
+            if (length(i) == 1 && i %in% methods::slotNames("TransactionSet"))
+              return(eval(parse(text = paste0("x@", i))))
+            
+            # Access to a subset of transactions, using character values
+            if (all(i %in% names(x@data))) {
+              i_logical = names(x@data) %in% i
+              
+              if (!drop) return(subset(x, i_logical))
+              return(x@data[i_logical])
+            }
+            
+            # Access to a sub-element of the transaction list
+            if (i %in% x@names)
+              return(lapply(x@data, "[[", i))
+            
+            stop("Unknown attribute.")
+          })
+
+#' @rdname sub-TransactionSet-ANY-ANY-ANY-method
+#' @aliases [<-,TransactionSet-method
 #' @export
 setReplaceMethod(f = "[",
                  signature = "TransactionSet",
-                 definition = function(x, i, j, value) {
+                 definition = function(x, i, value) {
                    
                    if (is.numeric(i)) {
                      # Replace one or several transactions
-                     if (length(i) == 1) x@data[[i]] = value
-                     else                x@data[i] = value
+                     x@data[i] = value
                      
                    } else {
                      if (!is.element(i, methods::slotNames("TransactionSet")))
@@ -324,9 +352,52 @@ setReplaceMethod(f = "[",
                          }
                        }
                      }
+                     
                      # Replace an attribute
                      eval(parse(text = paste0("x@", i, " = value")))
                    }
+                   methods::validObject(x)
+                   return(x)
+                 })
+
+#' @rdname sub-TransactionSet-ANY-ANY-ANY-method
+#' @aliases [[,TransactionSet-method
+#' @export
+setMethod(f = "[[",
+          signature = "TransactionSet",
+          definition = function(x, i) {
+            return(x@data[[i]])
+          })
+
+#' @rdname sub-TransactionSet-ANY-ANY-ANY-method
+#' @aliases [[<-,TransactionSet-method
+#' @export
+setReplaceMethod(f = "[[",
+                 signature = "TransactionSet",
+                 definition = function(x, i, value) {
+                   
+                   x@data[[i]] = value
+                   methods::validObject(x)
+                   return(x)
+                 })
+
+#' @rdname sub-TransactionSet-ANY-ANY-ANY-method
+#' @aliases $,TransactionSet-method
+#' @export
+setMethod(f = "$",
+          signature = "TransactionSet",
+          definition = function(x, name) {
+            return(x@data[[name]])
+          })
+
+#' @rdname sub-TransactionSet-ANY-ANY-ANY-method
+#' @aliases $<-,TransactionSet-method
+#' @export
+setReplaceMethod(f = "$",
+                 signature = "TransactionSet",
+                 definition = function(x, name, value) {
+                   
+                   x@data[[name]] = value
                    methods::validObject(x)
                    return(x)
                  })

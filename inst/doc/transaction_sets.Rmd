@@ -229,8 +229,8 @@ print(trx_object_5)
 The opertors `[` and `[<-` allow access to the attributes of an object of class `TransactionSet`.
 
 * Attributes can be accessed by character values.
+* Transactions (i.e., elements of the attribute `data`) can be accessed by numeric values or by their names (according to `data`).
 * Sub-elements of the attribute `data` can be accessed by character values as well.
-* Transactions (i.e., elements of the attribute `data`) can be accessed by numeric values.
 * Replacing the attribute `names`:
   * reorders the elements contained in each transaction if the given value is a reordered equivalent of this attribute;
   * renames the elements contained in each transaction if the given value is the same length as this attribute but is not equivalent;

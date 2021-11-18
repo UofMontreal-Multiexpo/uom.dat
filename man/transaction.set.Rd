@@ -55,9 +55,10 @@ print(trx_object)
 \seealso{
 The class: \code{\link{TransactionSet}}.
 
-Selector and mutator to access the attributes:
+Selectors and mutators to access the attributes:
 \code{\link[=[,TransactionSet-method]{[}},
-\code{\link[=[,TransactionSet-method]{[<-}}.
+\code{\link[=[,TransactionSet-method]{[[}},
+\code{\link[=[,TransactionSet-method]{$}}.
 }
 \author{
 Gauthier Magnin

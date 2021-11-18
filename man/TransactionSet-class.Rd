@@ -48,9 +48,10 @@ The \code{TransactionSet} constructor: \code{\link{transaction.set}}.
 
 An example object of class \code{TransactionSet}: \code{\link{TS_instance}}.
 
-Selector and mutator to access the attributes of a \code{TransactionSet} object:
+Selectors and mutators to access the attributes of a \code{TransactionSet} object:
 \code{\link[=[,TransactionSet-method]{[}},
-\code{\link[=[,TransactionSet-method]{[<-}}.
+\code{\link[=[,TransactionSet-method]{[[}},
+\code{\link[=[,TransactionSet-method]{$}}.
 }
 \author{
 Gauthier Magnin
