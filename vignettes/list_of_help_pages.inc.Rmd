@@ -22,7 +22,7 @@ Making *TransactionSet* objects:
 * [transaction.set](../html/transaction.set.html)
 * [make_transactions](../html/make_transactions.html)
 * [make_OE_transactions](../html/make_OE_transactions.html)
-* [\[](../html/sub-TransactionSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-TransactionSet-ANY-ANY-ANY-method.html)
+* [\[](../html/sub-TransactionSet-ANY-ANY-ANY-method.html), [\[\[](../html/sub-TransactionSet-ANY-ANY-ANY-method.html), [$](../html/sub-TransactionSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-TransactionSet-ANY-ANY-ANY-method.html), [\[\[<-](../html/sub-TransactionSet-ANY-ANY-ANY-method.html), [$<-](../html/sub-TransactionSet-ANY-ANY-ANY-method.html)
 * [subset](../html/subset-TransactionSet-method.html)
 * [reorder](../html/reorder-TransactionSet-method.html)
 
