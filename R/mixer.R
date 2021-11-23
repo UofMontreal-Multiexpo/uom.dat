@@ -2883,34 +2883,44 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
   # Cas d'une liste de valeurs
   if (is.list(values)) {
     
-    # Sous-ensembles de values et references correspondant aux éléments de la classe
-    values_class = list()
+    # Sous-ensembles de references correspondant aux éléments de la classe
     if (!is.null(references)) {
+      
       if (is.list(references)) {
         references_class = list()
+        
+        # Ajout à la nouvelle liste des références de chaque élément faisant partie de la classe
+        for (i in seq_along(values)) {
+          indices = names(values[[i]]) %in% items_in_class
+          
+          # Ne considère pas les ensembles ne contenant aucun élément de la classe
+          if (sum(indices) != 0) {
+            name_element = if (is.null(names(values))) length(references_class) + 1 else names(values)[i]
+            references_class[[name_element]] = references[[i]][indices]
+          }
+        }
       } else {
-        # Si references est un unique vecteur, création immédiate du sous-ensemble
+        # Si references est un unique vecteur
         references_class = references[items_in_class]
         # Retrait des NA (lorsque des noms associés à la classe ne font pas partie des références)
         references_class = references_class[!is.na(references_class)]
       }
     }
-    nb_elements = 0
     
-    # Ajout aux nouveaux ensembles de chaque élément qui fait partie de la classe
-    for (i in seq_along(values)) {
-      indices = names(values[[i]]) %in% items_in_class
-      
-      if (sum(indices) != 0) {
-        nb_elements = nb_elements + 1
-        name_element = if (is.null(names(values))) nb_elements else names(values)[i]
-        
-        values_class[[name_element]] = values[[i]][indices]
-        
-        if (!is.null(references) && is.list(references))
-          references_class[[name_element]] = references[[i]][indices]
-      }
-    }
+    # Sous-ensembles de values correspondant aux éléments de la classe
+    values_items = turn_list_into_logical_matrix(lapply(values, names))
+    values_class = apply(
+      values_items[, items_in_class[items_in_class %in% colnames(values_items)],
+                   drop = FALSE],
+      1,
+      function(row) {
+        values[[parent.frame()$i[]]][
+          names(values[[parent.frame()$i[]]]) %in% names(row)[row]
+          # Use this instead of names(row)[row] because values can have duplicate names
+        ]
+      })
+    # Retrait des ensembles vides, ne contenant aucun élément de la classe
+    values_class = values_class[lengths(values_class) != 0]
   }
   # Cas d'une matrice valeurs
   else if (is.matrix(values)) {
