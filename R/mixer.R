@@ -1499,6 +1499,14 @@ thq_pairs = function(values = NULL, references = NULL,
     stop("One of values or hq must not be NULL.")
   }
   
+  # Si prise en compte des éléments seuls et qu'il y en a effectivement
+  if (alone && sum(freq_table["NULL", ]) != 0) {
+    # Déplacement des colonne et ligne NULL en fin de table
+    index_null = which(colnames(freq_table) == "NULL")
+    indices_reordered = c(seq_len(nrow(freq_table))[-index_null], index_null)
+    freq_table = freq_table[indices_reordered, indices_reordered]
+  } # Sinon, NULL est déjà placé à la fin ou n'existe pas
+  
   # Retrait des noms de dimension "" qui génèrent un retour à la ligne en output
   dimnames(freq_table) = unname(dimnames(freq_table))
   return(freq_table)
