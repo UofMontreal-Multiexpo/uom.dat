@@ -27,11 +27,19 @@
     </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -133,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Maximum cumulative ratio approach and classification management</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2021-11-19</h4>
+<h4 class="date">Last update: 2021-11-24</h4>
 
 
 <div id="TOC">
@@ -226,7 +234,7 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 ##   item_key: &quot;CODE&quot;
 ##   year_key: &quot;YEAR&quot;</code></pre>
 <p>A transaction contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession for which the environment has been sampled. A transaction looks like that:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>transactions[<span class="dv">2</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>transactions[[<span class="dv">2</span>]]</span></code></pre></div>
 <pre><code>## $CODE
 ## [1] 57 77
 ## 
@@ -801,9 +809,9 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 ## Méthacrylate de méthyle                    0  1    0    0
 ## Poussières inhalables                      0  4    0    0
 ## Styrène                                    2  0    0    0</code></pre>
-<p>For both functions, a <code>levels</code> parameter can be used to have the complete table, i.e. with component names that don’t produce any top hazard quotient:</p>
+<p>For both functions, a <code>levels</code> parameter can be used to get the complete table, i.e. with component names that do not produce any top hazard quotient:</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>table_levels <span class="ot">&lt;-</span> <span class="fu">names</span>(reference_values)[<span class="sc">-</span><span class="dv">19</span>]</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># For readability of the example, intentionnaly removal of the 19th name which is quite long</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># For readability of the example, intentional removal of the 19th name which is quite long</span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">thq_by_group</span>(<span class="at">values =</span> concentration_values,</span>
 <span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">references =</span> reference_values,</span>
@@ -839,8 +847,8 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <li><code>alone</code>, to also consider single top hazard quotients (i.e. top hazard quotients from sets of one single value). The resulting top hazard quotients are associated with a level named <code>&quot;NULL&quot;</code>.</li>
 </ul>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency of the pairs that produced the top two hazard quotients without condition</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># over the hazard indexes or over the lengths of the sets of values (i.e. all sets of</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># values are considered)</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># over the hazard indexes and over the lengths of the sets of values (i.e. all sets</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># of values are considered)</span></span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">thq_pairs</span>(<span class="at">values =</span> concentration_values,</span>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">references =</span> reference_values,</span>
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">threshold =</span> <span class="cn">FALSE</span>, <span class="at">alone =</span> <span class="cn">TRUE</span>)</span></code></pre></div>

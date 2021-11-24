@@ -69,7 +69,7 @@ print(transactions)
 
 A transaction contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession for which the environment has been sampled. A transaction looks like that:
 ```{r}
-transactions[2]
+transactions[[2]]
 ```
 
 Here we can see a transaction composed by 3 samples having the `SAMPLE.ID`s 18, 1 and 21 corresponding to the substances having the `CODE`s 57 and 77. The concentration values for these samples are respectively 0.007, 0.004 and 0.05.
@@ -394,10 +394,10 @@ thq_by_group(values = concentration_values,
              references = reference_values)
 ```
 
-For both functions, a `levels` parameter can be used to have the complete table, i.e. with component names that don't produce any top hazard quotient:
+For both functions, a `levels` parameter can be used to get the complete table, i.e. with component names that do not produce any top hazard quotient:
 ```{r}
 table_levels <- names(reference_values)[-19]
-# For readability of the example, intentionnaly removal of the 19th name which is quite long
+# For readability of the example, intentional removal of the 19th name which is quite long
 
 thq_by_group(values = concentration_values,
              references = reference_values,
@@ -411,8 +411,8 @@ For the first of the two functions (`thq_pairs`), two other parameters exists:
 
 ```{r}
 # Frequency of the pairs that produced the top two hazard quotients without condition
-# over the hazard indexes or over the lengths of the sets of values (i.e. all sets of
-# values are considered)
+# over the hazard indexes and over the lengths of the sets of values (i.e. all sets
+# of values are considered)
 thq_pairs(values = concentration_values,
           references = reference_values,
           threshold = FALSE, alone = TRUE)

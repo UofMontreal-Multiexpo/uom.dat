@@ -23,7 +23,7 @@ transactions <- make_OE_transactions(
 print(transactions)
 
 ## -----------------------------------------------------------------------------
-transactions[2]
+transactions[[2]]
 
 ## -----------------------------------------------------------------------------
 concentration_values <- lapply(transactions["data"],
@@ -188,7 +188,7 @@ thq_by_group(values = concentration_values,
 
 ## -----------------------------------------------------------------------------
 table_levels <- names(reference_values)[-19]
-# For readability of the example, intentionnaly removal of the 19th name which is quite long
+# For readability of the example, intentional removal of the 19th name which is quite long
 
 thq_by_group(values = concentration_values,
              references = reference_values,
@@ -196,8 +196,8 @@ thq_by_group(values = concentration_values,
 
 ## -----------------------------------------------------------------------------
 # Frequency of the pairs that produced the top two hazard quotients without condition
-# over the hazard indexes or over the lengths of the sets of values (i.e. all sets of
-# values are considered)
+# over the hazard indexes and over the lengths of the sets of values (i.e. all sets
+# of values are considered)
 thq_pairs(values = concentration_values,
           references = reference_values,
           threshold = FALSE, alone = TRUE)
