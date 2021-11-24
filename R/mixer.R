@@ -1486,9 +1486,6 @@ thq_pairs = function(values = NULL, references = NULL,
                      hq = NULL, hi = NULL,
                      levels = NULL, threshold = TRUE, alone = FALSE) {
   
-  # Si des levels sont définis et que l'on prend en compte les éléments seuls, ajout d'un facteur "NULL"
-  if (!is.null(levels) && alone) levels = c(levels, "NULL")
-  
   # Différence si values ou hq est une liste ou une matrice
   if (is.list(values) || is.list(hq)) {
     freq_table = thq_pairs_for_list(values, references, hq, hi, levels, threshold, alone)
@@ -1618,6 +1615,7 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
   }
   
+  
   # Sélection des HQ à utiliser, selon les critères sur HI et sur la taille des ensembles de valeurs
   hq_to_use = hq[(!threshold | hi > 1) & (alone | sapply(hq, length) != 1)]
   
@@ -1630,33 +1628,37 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
     hq_to_use[index_alone] = lapply(hq_to_use[index_alone], c, "NULL" = 0)
   }
   
-  # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
+  # Recherche des 2 Top HQ
   if (length(hq_to_use) == 1) {
+    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
     thq = names(top_hazard_quotient(hq = hq_to_use[[1]], k = 2))
-    
-    if (!is.null(levels)) {
-      # Création d'une table en utilisant les levels prédéfinis
-      freq_table = table(factor(thq[1], levels = levels),
-                         factor(thq[2], levels = levels))
-      # Application de la symétrie
-      freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
-      return(freq_table)
-    }
-    return(table(thq[1], thq[2]))
+  } else {
+    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
+    thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
   }
   
-  # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
-  thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
   
-  if (!is.null(levels)) {
-    # Création d'une table en utilisant les levels prédéfinis
+  # Définition des modalités à considérer dans la table
+  if (is.null(levels)) levels = sort(unique(c(thq)))
+  # Si prise en compte les éléments seuls, ajout d'une modalité "NULL"
+  if (alone && !is.element("NULL", levels)) levels = c(levels, "NULL")
+  
+  # Création d'une table et application de la symétrie
+  if (length(hq_to_use) == 1) {
+    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
+    freq_table = table(factor(thq[1], levels = levels),
+                       factor(thq[2], levels = levels))
+    
+    freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
+  } else {
+    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
     freq_table = table(factor(thq[1, ], levels = levels),
                        factor(thq[2, ], levels = levels))
-    # Application de la symétrie
+    
     freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
-    return(freq_table)
   }
-  return(table(thq[1, ], thq[2, ])) 
+  
+  return(freq_table)
 }
 
 
@@ -1739,6 +1741,7 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
   if (is.null(hq)) hq = hazard_quotient(values, references)
   if (is.null(hi)) hi = hazard_index(hq = hq)
   
+  
   # Si une seule ligne (un seul élément) ou aucun HI n'est supérieur à 1
   if ((!alone && nrow(hq) == 1) || (threshold && all(hi <= 1))) return(NULL)
   
@@ -1748,33 +1751,37 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
   # Sélection des HQ à utiliser, selon l'utilisation ou non du critère HI > 1
   hq_to_use = if (threshold) hq[, hi > 1] else hq
   
-  # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
+  # Recherche des 2 Top HQ
   if (is.vector(hq_to_use)) {
+    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
     thq = names(top_hazard_quotient(hq = hq_to_use, k = 2))
-    
-    if (!is.null(levels)) {
-      # Création d'une table en utilisant les levels prédéfinis
-      freq_table = table(factor(thq[1], levels = levels),
-                         factor(thq[2], levels = levels))
-      # Application de la symétrie
-      freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
-      return(freq_table)
-    }
-    return(table(thq[1], thq[2]))
+  } else {
+    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
+    thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
   }
   
-  # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
-  thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
   
-  if (!is.null(levels)) {
-    # Création d'une table en utilisant les levels prédéfinis
+  # Définition des modalités à considérer dans la table
+  if (is.null(levels)) levels = sort(unique(c(thq)))
+  # Si prise en compte les éléments seuls, ajout d'une modalité "NULL"
+  if (alone && !is.element("NULL", levels)) levels = c(levels, "NULL")
+  
+  # Création d'une table et application de la symétrie
+  if (is.vector(hq_to_use)) {
+    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
+    freq_table = table(factor(thq[1], levels = levels),
+                       factor(thq[2], levels = levels))
+    
+    freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
+  } else {
+    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
     freq_table = table(factor(thq[1, ], levels = levels),
                        factor(thq[2, ], levels = levels))
-    # Application de la symétrie
+    
     freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
-    return(freq_table)
   }
-  return(table(thq[1, ], thq[2, ]))
+  
+  return(freq_table)
 }
 
 

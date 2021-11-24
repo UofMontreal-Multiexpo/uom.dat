@@ -783,21 +783,34 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># is greater than 1</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">thq_pairs</span>(<span class="at">values =</span> concentration_values,</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">references =</span> reference_values)</span></code></pre></div>
-<pre><code>##                                            Chrome VI et ses composés
+<pre><code>##                                            Butanone Chrome total
+## Butanone                                          0            0
+## Chrome total                                      0            0
+## Chrome VI et ses composés                         0            1
+## Hydrocarbures aliphatiques et alicycliques        1            0
+## Styrène                                           0            0
+## Toluène                                           0            0
+##                                            Chrome VI et ses composés
 ## Butanone                                                           0
 ## Chrome total                                                       1
+## Chrome VI et ses composés                                          0
 ## Hydrocarbures aliphatiques et alicycliques                         0
 ## Styrène                                                            0
+## Toluène                                                            0
 ##                                            Hydrocarbures aliphatiques et alicycliques
 ## Butanone                                                                            1
 ## Chrome total                                                                        0
+## Chrome VI et ses composés                                                           0
 ## Hydrocarbures aliphatiques et alicycliques                                          1
 ## Styrène                                                                             0
+## Toluène                                                                             1
 ##                                            Styrène Toluène
 ## Butanone                                         0       0
 ## Chrome total                                     0       0
+## Chrome VI et ses composés                        0       0
 ## Hydrocarbures aliphatiques et alicycliques       0       1
-## Styrène                                          2       0</code></pre>
+## Styrène                                          2       0
+## Toluène                                          0       0</code></pre>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency of element that produced the top hazard quotient with its associated group</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">thq_by_group</span>(<span class="at">values =</span> concentration_values,</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">references =</span> reference_values)</span></code></pre></div>
@@ -858,84 +871,144 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 ## Butanone                                                                      0
 ## Chrome total                                                                  0
 ## Chrome VI et ses composés                                                     0
+## Formaldéhyde                                                                  0
+## Fumées de soudage                                                             0
 ## Hydrocarbures aliphatiques et alicycliques                                    0
 ## Manganèse                                                                     0
 ## Méthacrylate de butyle                                                        0
+## Méthacrylate de méthyle                                                       0
 ## NULL                                                                          0
 ## Poussières inhalables                                                         0
 ## Styrène                                                                       0
+## Toluène                                                                       0
+##                                            Benzène Butanone Chrome total
+## 4,4&#39;-Diisocyanate de diphénylméthane             0        0            0
+## Benzène                                          0        0            0
+## Butanone                                         0        0            0
+## Chrome total                                     0        0            0
+## Chrome VI et ses composés                        0        0            1
+## Formaldéhyde                                     1        0            0
+## Fumées de soudage                                0        0            0
+## Hydrocarbures aliphatiques et alicycliques       0        1            0
+## Manganèse                                        0        0            0
+## Méthacrylate de butyle                           0        0            0
+## Méthacrylate de méthyle                          0        0            0
+## NULL                                             0        0            0
+## Poussières inhalables                            0        0            0
+## Styrène                                          0        0            0
+## Toluène                                          0        0            0
 ##                                            Chrome VI et ses composés
 ## 4,4&#39;-Diisocyanate de diphénylméthane                               0
 ## Benzène                                                            0
 ## Butanone                                                           0
 ## Chrome total                                                       1
 ## Chrome VI et ses composés                                          0
+## Formaldéhyde                                                       0
+## Fumées de soudage                                                  1
 ## Hydrocarbures aliphatiques et alicycliques                         0
 ## Manganèse                                                          0
 ## Méthacrylate de butyle                                             0
+## Méthacrylate de méthyle                                            0
 ## NULL                                                               0
 ## Poussières inhalables                                              0
 ## Styrène                                                            0
+## Toluène                                                            0
 ##                                            Formaldéhyde Fumées de soudage
 ## 4,4&#39;-Diisocyanate de diphénylméthane                  0                 0
 ## Benzène                                               1                 0
 ## Butanone                                              0                 0
 ## Chrome total                                          0                 0
 ## Chrome VI et ses composés                             0                 1
+## Formaldéhyde                                          0                 0
+## Fumées de soudage                                     0                 0
 ## Hydrocarbures aliphatiques et alicycliques            0                 0
 ## Manganèse                                             0                 0
 ## Méthacrylate de butyle                                0                 0
+## Méthacrylate de méthyle                               0                 0
 ## NULL                                                  0                 0
 ## Poussières inhalables                                 0                 0
 ## Styrène                                               0                 0
+## Toluène                                               0                 0
 ##                                            Hydrocarbures aliphatiques et alicycliques
 ## 4,4&#39;-Diisocyanate de diphénylméthane                                                0
 ## Benzène                                                                             0
 ## Butanone                                                                            1
 ## Chrome total                                                                        0
 ## Chrome VI et ses composés                                                           0
+## Formaldéhyde                                                                        0
+## Fumées de soudage                                                                   0
 ## Hydrocarbures aliphatiques et alicycliques                                          1
 ## Manganèse                                                                           0
 ## Méthacrylate de butyle                                                              0
+## Méthacrylate de méthyle                                                             0
 ## NULL                                                                                0
 ## Poussières inhalables                                                               0
 ## Styrène                                                                             0
-##                                            Méthacrylate de méthyle
-## 4,4&#39;-Diisocyanate de diphénylméthane                             0
-## Benzène                                                          0
-## Butanone                                                         0
-## Chrome total                                                     0
-## Chrome VI et ses composés                                        0
-## Hydrocarbures aliphatiques et alicycliques                       0
-## Manganèse                                                        0
-## Méthacrylate de butyle                                           1
-## NULL                                                             0
-## Poussières inhalables                                            0
-## Styrène                                                          0
+## Toluène                                                                             1
+##                                            Manganèse Méthacrylate de butyle
+## 4,4&#39;-Diisocyanate de diphénylméthane               0                      0
+## Benzène                                            0                      0
+## Butanone                                           0                      0
+## Chrome total                                       0                      0
+## Chrome VI et ses composés                          0                      0
+## Formaldéhyde                                       0                      0
+## Fumées de soudage                                  0                      0
+## Hydrocarbures aliphatiques et alicycliques         0                      0
+## Manganèse                                          0                      0
+## Méthacrylate de butyle                             0                      0
+## Méthacrylate de méthyle                            0                      1
+## NULL                                               0                      0
+## Poussières inhalables                              1                      0
+## Styrène                                            0                      0
+## Toluène                                            0                      0
+##                                            Méthacrylate de méthyle NULL
+## 4,4&#39;-Diisocyanate de diphénylméthane                             0    0
+## Benzène                                                          0    0
+## Butanone                                                         0    0
+## Chrome total                                                     0    0
+## Chrome VI et ses composés                                        0    0
+## Formaldéhyde                                                     0    0
+## Fumées de soudage                                                0    0
+## Hydrocarbures aliphatiques et alicycliques                       0    0
+## Manganèse                                                        0    0
+## Méthacrylate de butyle                                           1    0
+## Méthacrylate de méthyle                                          0    0
+## NULL                                                             0    0
+## Poussières inhalables                                            0    2
+## Styrène                                                          0    0
+## Toluène                                                          0    0
 ##                                            Poussières inhalables Styrène
 ## 4,4&#39;-Diisocyanate de diphénylméthane                           0       0
 ## Benzène                                                        0       0
 ## Butanone                                                       0       0
 ## Chrome total                                                   0       0
 ## Chrome VI et ses composés                                      0       0
+## Formaldéhyde                                                   0       0
+## Fumées de soudage                                              0       0
 ## Hydrocarbures aliphatiques et alicycliques                     0       0
 ## Manganèse                                                      1       0
 ## Méthacrylate de butyle                                         0       0
+## Méthacrylate de méthyle                                        0       0
 ## NULL                                                           2       0
 ## Poussières inhalables                                          1       0
 ## Styrène                                                        0       2
+## Toluène                                                        0       0
 ##                                            Toluène
 ## 4,4&#39;-Diisocyanate de diphénylméthane             0
 ## Benzène                                          0
 ## Butanone                                         0
 ## Chrome total                                     0
 ## Chrome VI et ses composés                        0
+## Formaldéhyde                                     0
+## Fumées de soudage                                0
 ## Hydrocarbures aliphatiques et alicycliques       1
 ## Manganèse                                        0
 ## Méthacrylate de butyle                           0
+## Méthacrylate de méthyle                          0
 ## NULL                                             0
 ## Poussières inhalables                            0
-## Styrène                                          0</code></pre>
+## Styrène                                          0
+## Toluène                                          0</code></pre>
 </div>
 <div id="additional-analysis" class="section level2">
 <h2>2.4. Additional analysis</h2>
@@ -1341,10 +1414,11 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 ## NULL
 ## 
 ## $`Atteintes oculaires`
-##                           Chrome VI et ses composés Cuivre Styrène
-## Butanone                                          0      1       0
-## Chrome VI et ses composés                         1      0       0
-## Styrène                                           0      0       2
+##                           Butanone Chrome VI et ses composés Cuivre Styrène
+## Butanone                         0                         0      1       0
+## Chrome VI et ses composés        0                         1      0       0
+## Cuivre                           1                         0      0       0
+## Styrène                          0                         0      0       2
 ## 
 ## $`Atteintes sur le développement du fœtus, de l’embryon et/ou de l’enfant`
 ##                           Chrome VI et ses composés Styrène
