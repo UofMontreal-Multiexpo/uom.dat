@@ -29,18 +29,19 @@ identified.}
 pairs.}
 
 \item{threshold}{If \code{TRUE}, only values or hazard quotients associated with hazard indexes greater
-than 1 are considered. If \code{FALSE}, all values or hazard quotients are considered.}
+than 1 are considered.}
 
 \item{alone}{If \code{TRUE}, take into account single top hazard quotients (i.e. sets of values of length
 1). If so, a level named \code{"NULL"} is added as combination with such top hazard quotients.}
 }
 \value{
-\code{NULL} if (1) \code{alone = FALSE} and \code{values} have only one line
-or (2) \code{threshold = TRUE} and no hazard index is greater than 1.
+\code{NULL} if (1) \code{alone = FALSE} and no set of \code{values} (or \code{hq}) has more than one element different
+from 0
+or (2) \code{threshold = TRUE} and no related hazard index is greater than 1
 or (3) \code{threshold = TRUE}, \code{alone = FALSE} and no set of values meets the two conditions.
 
-Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients considering
-all values or only those related to hazard indexes greater than 1 (accordingly to \code{threshold}).
+Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients,
+considering all sets of values or not (accordingly to the arguments \code{threshold} and \code{alone}).
 }
 \description{
 Build a contingency table of the counts of each combination of the top two hazard quotients pairs for
@@ -49,6 +50,8 @@ which the associated hazard index is greater than 1.
 \details{
 The reference values are applied once on each column (i.e. it must have one reference value for each
 row of the matrix).
+
+Values and hazard quotients equal to 0 are ignored.
 
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
 before identifying the highest hazard quotients then building the contingency table. Thus, call the

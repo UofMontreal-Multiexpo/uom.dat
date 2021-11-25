@@ -1375,7 +1375,9 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
-#'  
+#' 
+#' Values and hazard quotients equal to 0 are ignored.
+#' 
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
@@ -1412,17 +1414,17 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
 #'  pairs.
 #' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
-#'  than 1 are considered. If `FALSE`, all values or hazard quotients are considered.
+#'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added as combination with such top hazard quotients.
 #' @return
-#' `NULL` if (1) `alone = FALSE` and `values` is a matrix having only one line
-#'        or (2) `alone = FALSE` and `values` is a list in which no vector has more than 1 value
-#'        or (3) `threshold = TRUE` and no hazard index is greater than 1.
-#'        or (4) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
+#' `NULL` if (1) `alone = FALSE` and no set of `values` (or `hq`) has more than one element different
+#'   from 0
+#'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
+#'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
 #' 
-#' Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients considering
-#'  all values or only those related to hazard indexes greater than 1 (accordingly to `threshold`).
+#' Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients,
+#'  considering all sets of values or not (accordingly to the arguments `threshold` and `alone`).
 #' 
 #' @author Gauthier Magnin
 #' @references Reyes JM, Price PS (2018).
@@ -1523,6 +1525,8 @@ thq_pairs = function(values = NULL, references = NULL,
 #'  If `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
+#' 
+#' Values and hazard quotients equal to 0 are ignored.
 #'  
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
@@ -1562,16 +1566,17 @@ thq_pairs = function(values = NULL, references = NULL,
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
 #'  pairs.
 #' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
-#'  than 1 are considered. If `FALSE`, all values or hazard quotients are considered.
+#'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added as combination with such top hazard quotients.
 #' @return
-#' `NULL` if (1) `alone = FALSE` and `values` has no vector having more than 1 value
-#'        or (2) `threshold = TRUE` and no hazard index is greater than 1.
-#'        or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
+#' `NULL` if (1) `alone = FALSE` and no set of `values` (or `hq`) has more than one element different
+#'   from 0
+#'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
+#'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
 #' 
-#' Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients considering
-#'  all values or only those related to hazard indexes greater than 1 (accordingly to `threshold`).
+#' Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients,
+#'  considering all sets of values or not (accordingly to the arguments `threshold` and `alone`).
 #' 
 #' @author Gauthier Magnin
 #' @references Reyes JM, Price PS (2018).
@@ -1623,6 +1628,9 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
   }
   
+  
+  # Ignore HQ equal to 0
+  hq = lapply(hq, function(x) x[x != 0])
   
   # Sélection des HQ à utiliser, selon les critères sur HI et sur la taille des ensembles de valeurs
   hq_to_use = hq[(!threshold | hi > 1) & (alone | sapply(hq, length) != 1)]
@@ -1679,6 +1687,8 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' The reference values are applied once on each column (i.e. it must have one reference value for each
 #'  row of the matrix).
 #' 
+#' Values and hazard quotients equal to 0 are ignored.
+#' 
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
@@ -1717,16 +1727,17 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
 #'  pairs.
 #' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
-#'  than 1 are considered. If `FALSE`, all values or hazard quotients are considered.
+#'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added as combination with such top hazard quotients.
 #' @return
-#' `NULL` if (1) `alone = FALSE` and `values` have only one line
-#'        or (2) `threshold = TRUE` and no hazard index is greater than 1.
-#'        or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
+#' `NULL` if (1) `alone = FALSE` and no set of `values` (or `hq`) has more than one element different
+#'   from 0
+#'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
+#'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
 #' 
-#' Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients considering
-#'  all values or only those related to hazard indexes greater than 1 (accordingly to `threshold`).
+#' Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients,
+#'  considering all sets of values or not (accordingly to the arguments `threshold` and `alone`).
 #' 
 #' @author Gauthier Magnin
 #' @references Reyes JM, Price PS (2018).
@@ -1750,19 +1761,23 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
   if (is.null(hi)) hi = hazard_index(hq = hq)
   
   
-  # Si une seule ligne (un seul élément) ou aucun HI n'est supérieur à 1
-  if ((!alone && nrow(hq) == 1) || (threshold && all(hi <= 1))) return(NULL)
+  # Sélection des HQ à utiliser, selon les critères sur HI et sur la taille des ensembles de valeurs
+  hq_to_use = hq[, (!threshold | hi > 1) & (alone | apply(hq, 2, function(x) sum(x != 0) != 1)),
+                 drop = FALSE]
+  
+  # Si aucun HI n'est supérieur à 1 ou qu'aucun vecteur ne contient plus d'une valeur
+  if (ncol(hq_to_use) == 0) return(NULL)
   
   # Quand une seule valeur, paire avec "NULL"
-  if (alone && nrow(hq) == 1) hq = rbind(hq, "NULL" = 0)
-  
-  # Sélection des HQ à utiliser, selon l'utilisation ou non du critère HI > 1
-  hq_to_use = if (threshold) hq[, hi > 1] else hq
+  if (alone) {
+    index_alone = apply(hq_to_use, 2, function(x) sum(x != 0) == 1)
+    hq_to_use = rbind(hq_to_use, "NULL" = ifelse(index_alone, 1, 0))
+  }
   
   # Recherche des 2 Top HQ
-  if (is.vector(hq_to_use)) {
+  if (ncol(hq_to_use) == 1) {
     # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
-    thq = names(top_hazard_quotient(hq = hq_to_use, k = 2))
+    thq = names(top_hazard_quotient(hq = hq_to_use[, 1], k = 2))
   } else {
     # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
     thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
@@ -1775,7 +1790,7 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
   if (alone && !is.element("NULL", levels)) levels = c(levels, "NULL")
   
   # Création d'une table et application de la symétrie
-  if (is.vector(hq_to_use)) {
+  if (ncol(hq_to_use) == 1) {
     # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
     freq_table = table(factor(thq[1], levels = levels),
                        factor(thq[2], levels = levels))
@@ -2434,6 +2449,8 @@ mcr_chart_by_class = function(values, references, classes,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
+#' 
+#' Values equal to 0 are ignored.
 #'  
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
 #'  function with such a matrix is faster.
@@ -2459,13 +2476,13 @@ mcr_chart_by_class = function(values, references, classes,
 #' @param levels Levels to consider in the output tables. If `NULL`, only use of those that appear in the
 #'  pairs.
 #' @param threshold If `TRUE`, only values associated with hazard indexes greater than 1 are considered.
-#'  If `FALSE`, all values are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added for such top hazard quotients.
-#' @return List whose length corresponds to the number of classes encountered, containing:
-#' * `NULL` if among the values corresponding to the class, no one has more than 1 value or a hazard
-#'   index greater than 1 (accordingly to `alone` and `threshold`).
-#' * Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients.
+#' @return List whose length corresponds to the number of classes encountered, containing for each class:
+#' * `NULL` if among the subsets of values corresponding to the class, no one has more than one element
+#'   different from 0 or a hazard index greater than 1 (accordingly to the arguments `threshold` and
+#'   `alone`).
+#' * Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients.
 #' 
 #' @author Gauthier Magnin
 #' @inherit thq_pairs references

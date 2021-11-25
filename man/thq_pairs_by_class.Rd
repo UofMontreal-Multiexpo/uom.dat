@@ -29,18 +29,18 @@ is part of a specific class.}
 \item{levels}{Levels to consider in the output tables. If \code{NULL}, only use of those that appear in the
 pairs.}
 
-\item{threshold}{If \code{TRUE}, only values associated with hazard indexes greater than 1 are considered.
-If \code{FALSE}, all values are considered.}
+\item{threshold}{If \code{TRUE}, only values associated with hazard indexes greater than 1 are considered.}
 
 \item{alone}{If \code{TRUE}, take into account single top hazard quotients (i.e. sets of values of length
 1). If so, a level named \code{"NULL"} is added for such top hazard quotients.}
 }
 \value{
-List whose length corresponds to the number of classes encountered, containing:
+List whose length corresponds to the number of classes encountered, containing for each class:
 \itemize{
-\item \code{NULL} if among the values corresponding to the class, no one has more than 1 value or a hazard
-index greater than 1 (accordingly to \code{alone} and \code{threshold}).
-\item Contingency table otherwise. Frequency of pairs that produced the top two hazard quotients.
+\item \code{NULL} if among the subsets of values corresponding to the class, no one has more than one element
+different from 0 or a hazard index greater than 1 (accordingly to the arguments \code{threshold} and
+\code{alone}).
+\item Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients.
 }
 }
 \description{
@@ -56,6 +56,8 @@ If \code{values} is a list, the reference values can be a vector of named values
 if \code{references} is a vector, there must be one reference for each name present in \code{values}.
 Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
 so that \code{values} and \code{references} can be matched.
+
+Values equal to 0 are ignored.
 
 If \code{classes} is a list, it will be turned into a logical matrix before processing. Thus, call the
 function with such a matrix is faster.
