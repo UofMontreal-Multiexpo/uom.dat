@@ -1860,8 +1860,8 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #'  top hazard quotients `thq`.
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
 #'  top hazard quotients.
-#' @return Contingency table. Frequency of element that produced the top hazard quotient with its
-#'  associated group.
+#' @return Contingency table. Frequencies of elements that produce the top hazard quotient with their
+#'  associated groups.
 #' 
 #' @author Gauthier Magnin
 #' @references Reyes JM, Price PS (2018).
@@ -2620,8 +2620,8 @@ thq_pairs_by_class = function(values, references, classes,
 #'  is part of a specific class.
 #' @param levels Levels to consider in the output tables. If `NULL`, only use of those that appear in the
 #'  top hazard quotients.
-#' @return List of contingency tables: frequency of element that produced the top hazard quotient with
-#'  its associated group. The length of the list corresponds to the number of classes encountered.
+#' @return List of contingency tables: frequencies of elements that produce the top hazard quotient with
+#'  their associated groups. The length of the list corresponds to the number of classes encountered.
 #' 
 #' @author Gauthier Magnin
 #' @inherit thq_by_group references
@@ -2705,7 +2705,7 @@ thq_by_group_by_class = function(values, references, classes,
 #' MCR approach by class
 #' 
 #' Perform the MCR approach according to classes, given values and references. Wrapper of the four
-#'  functions allowing to perform the MCR pproach according to classes: `mcr_summary_by_class`,
+#'  functions allowing to perform the MCR approach according to classes: `mcr_summary_by_class`,
 #'  `mcr_chart_by_class`, `thq_pairs_by_class`, `thq_by_group_by_class`.
 #' 
 #' @details

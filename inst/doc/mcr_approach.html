@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Maximum cumulative ratio approach and classification management</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2021-11-24</h4>
+<h4 class="date">Last update: 2021-11-25</h4>
 
 
 <div id="TOC">
@@ -776,10 +776,10 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <h2>2.3. Contingency tables</h2>
 <p>Two types of contingency tables can be built on the indicators of the MCR approach:</p>
 <ul>
-<li>The counts of each combination of the top two hazard quotients pairs for which the associated hazard index is greater than <span class="math inline">\(1\)</span>, using the function <code>thq_pairs</code>.</li>
+<li>The counts of each combination of the top two hazard quotients for which the associated hazard index is greater than <span class="math inline">\(1\)</span>, using the function <code>thq_pairs</code>.</li>
 <li>The counts of each combination of the top hazard quotient with the associated MIAT group, using the function <code>thq_by_group</code>.</li>
 </ul>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency of the pairs that produced the top two hazard quotients while hazard index</span></span>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequencies of the pairs that produce the top two hazard quotients while hazard index</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># is greater than 1</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">thq_pairs</span>(<span class="at">values =</span> concentration_values,</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">references =</span> reference_values)</span></code></pre></div>
@@ -811,7 +811,7 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 ## Hydrocarbures aliphatiques et alicycliques       0       1
 ## Styrène                                          2       0
 ## Toluène                                          0       0</code></pre>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency of element that produced the top hazard quotient with its associated group</span></span>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequencies of elements that produce the top hazard quotient with their associated groups</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">thq_by_group</span>(<span class="at">values =</span> concentration_values,</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">references =</span> reference_values)</span></code></pre></div>
 <pre><code>##                                            I II IIIA IIIB
@@ -859,7 +859,7 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <li><code>threshold</code>, allowing to disable the condition over the hazard index so that top hazard quotients associated with hazard index less than or equal to <span class="math inline">\(1\)</span> are taken into account.</li>
 <li><code>alone</code>, to also consider single top hazard quotients (i.e. top hazard quotients from sets of one single value). The resulting top hazard quotients are associated with a level named <code>&quot;NULL&quot;</code>.</li>
 </ul>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency of the pairs that produced the top two hazard quotients without condition</span></span>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequencies of the pairs that produce the top two hazard quotients without condition</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># over the hazard indexes and over the lengths of the sets of values (i.e. all sets</span></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># of values are considered)</span></span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">thq_pairs</span>(<span class="at">values =</span> concentration_values,</span>

@@ -28,8 +28,8 @@ top hazard quotients \code{thq}.}
 top hazard quotients.}
 }
 \value{
-Contingency table. Frequency of element that produced the top hazard quotient with its
-associated group.
+Contingency table. Frequencies of elements that produce the top hazard quotient with their
+associated groups.
 }
 \description{
 Build a contingency table of the counts of each combination of name of the element producing the

@@ -35,7 +35,7 @@ See 'Value' of the corresponding help page:
 }
 \description{
 Perform the MCR approach according to classes, given values and references. Wrapper of the four
-functions allowing to perform the MCR pproach according to classes: \code{mcr_summary_by_class},
+functions allowing to perform the MCR approach according to classes: \code{mcr_summary_by_class},
 \code{mcr_chart_by_class}, \code{thq_pairs_by_class}, \code{thq_by_group_by_class}.
 }
 \details{

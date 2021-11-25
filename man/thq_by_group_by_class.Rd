@@ -23,8 +23,8 @@ is part of a specific class.}
 top hazard quotients.}
 }
 \value{
-List of contingency tables: frequency of element that produced the top hazard quotient with
-its associated group. The length of the list corresponds to the number of classes encountered.
+List of contingency tables: frequencies of elements that produce the top hazard quotient with
+their associated groups. The length of the list corresponds to the number of classes encountered.
 }
 \description{
 Build contingency tables of the counts of each combination of name of the element producing the

@@ -176,13 +176,13 @@ mcr_chart(values = concentration_values,
           regression = TRUE)
 
 ## -----------------------------------------------------------------------------
-# Frequency of the pairs that produced the top two hazard quotients while hazard index
+# Frequencies of the pairs that produce the top two hazard quotients while hazard index
 # is greater than 1
 thq_pairs(values = concentration_values,
           references = reference_values)
 
 ## -----------------------------------------------------------------------------
-# Frequency of element that produced the top hazard quotient with its associated group
+# Frequencies of elements that produce the top hazard quotient with their associated groups
 thq_by_group(values = concentration_values,
              references = reference_values)
 
@@ -195,7 +195,7 @@ thq_by_group(values = concentration_values,
              levels = sort(table_levels))
 
 ## -----------------------------------------------------------------------------
-# Frequency of the pairs that produced the top two hazard quotients without condition
+# Frequencies of the pairs that produce the top two hazard quotients without condition
 # over the hazard indexes and over the lengths of the sets of values (i.e. all sets
 # of values are considered)
 thq_pairs(values = concentration_values,
