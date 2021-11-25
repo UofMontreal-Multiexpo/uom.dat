@@ -1490,15 +1490,38 @@ thq_pairs = function(values = NULL, references = NULL,
   
   # Différence si values ou hq est une liste ou une matrice
   if (is.list(values) || is.list(hq)) {
-    freq_table = thq_pairs_for_list(values, references, hq, hi, levels, threshold, alone)
+    thq = thq_pairs_for_list(values, references, hq, hi, threshold, alone)
     
   } else if (is.matrix(values) || is.matrix(hq)) {
-    freq_table = thq_pairs_for_matrix(values, references, hq, hi, levels, threshold, alone)
+    thq = thq_pairs_for_matrix(values, references, hq, hi, threshold, alone)
     
   } else {
     if (!is.null(hq)) stop("hq must be a numeric named matrix or list of numeric named vectors.")
     if (!is.null(values)) stop("values must be a numeric named matrix or list of numeric named vectors.")
     stop("One of values or hq must not be NULL.")
+  }
+  
+  if (is.null(thq)) return(NULL)
+  
+  
+  # Définition des modalités à considérer dans la table
+  if (is.null(levels)) levels = sort(unique(c(thq)))
+  # Si prise en compte des éléments seuls, ajout d'une modalité "NULL"
+  if (alone && !is.element("NULL", levels)) levels = c(levels, "NULL")
+  
+  # Création d'une table et application de la symétrie
+  if (is.vector(thq) == 1) {
+    # Si paire de THQ pour un seul ensemble valeurs
+    freq_table = table(factor(thq[1], levels = levels),
+                       factor(thq[2], levels = levels))
+    
+    freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
+  } else {
+    # Si paires de THQ pour plusieurs ensembles de valeurs
+    freq_table = table(factor(thq[1, ], levels = levels),
+                       factor(thq[2, ], levels = levels))
+    # Fonctionne car les THQ dans chaque paire ont été triés
+    freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
   }
   
   # Si prise en compte des éléments seuls et qu'il y en a effectivement
@@ -1509,16 +1532,16 @@ thq_pairs = function(values = NULL, references = NULL,
     freq_table = freq_table[indices_reordered, indices_reordered]
   } # Sinon, NULL est déjà placé à la fin ou n'existe pas
   
-  # Retrait des noms de dimension "" qui génèrent un retour à la ligne en output
+  # Retrait des noms de dimension "" (non utiles et génèrent un retour à la ligne en output)
   dimnames(freq_table) = unname(dimnames(freq_table))
   return(freq_table)
 }
 
 
-#' Top Hazard Quotient pairs frequency, for list
+#' Top Hazard Quotient pairs, in list
 #' 
-#' Build a contingency table of the counts of each combination of the top two hazard quotients pairs for
-#'  which the associated hazard index is greater than 1.
+#' Identify the top two hazard quotients pairs for which the associated hazard
+#'  indexes are greater than 1.
 #' 
 #' @details
 #' The reference values can be a vector of named values or a list.
@@ -1549,11 +1572,9 @@ thq_pairs = function(values = NULL, references = NULL,
 #' 
 #' @usage
 #' thq_pairs_for_list(values, references,
-#'                    levels = NULL,
 #'                    threshold = TRUE,
 #'                    alone = FALSE)
 #' thq_pairs_for_list(hq, hi,
-#'                    levels = NULL,
 #'                    threshold = TRUE,
 #'                    alone = FALSE)
 #' @param values List of numeric named vectors. Vectors of values for which the top two hazard
@@ -1563,8 +1584,6 @@ thq_pairs = function(values = NULL, references = NULL,
 #' @param hq List of numeric named vectors. **H**azard **q**uotients for which the top two pairs are
 #'  to be identified.
 #' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
-#' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
-#'  pairs.
 #' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
 #'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
@@ -1575,21 +1594,18 @@ thq_pairs = function(values = NULL, references = NULL,
 #'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
 #'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
 #' 
-#' Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients,
-#'  considering all sets of values or not (accordingly to the arguments `threshold` and `alone`).
+#' Pairs that produce the top two hazard quotients in the sets of values selected accordingly to the
+#'  arguments `threshold` and `alone`. Vector if only one pair; two-row matrix otherwise.
 #' 
 #' @author Gauthier Magnin
-#' @references Reyes JM, Price PS (2018).
-#'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
-#'             *Environment International*, 112, 77-84.
-#'             <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' @inherit thq_pairs references
 #' @seealso [`thq_pairs`], [`thq_pairs_for_matrix`].
 #' 
 #' @md
 #' @keywords internal
 thq_pairs_for_list = function(values = NULL, references = NULL,
                               hq = NULL, hi = NULL,
-                              levels = NULL, threshold = TRUE, alone = FALSE) {
+                              threshold = TRUE, alone = FALSE) {
   
   # Si HI et/ou HQ n'est pas renseigné
   if (is.null(hi) || is.null(hq)) {
@@ -1603,7 +1619,7 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
     # Différence si references est une liste ou un vecteur
     if (is.list(references)) {
       
-      # Vérification que les ensembles de valeurs des listes ont les mêmes longueures
+      # Vérification que les ensembles de valeurs des listes ont les mêmes longueurs
       if (length(values) != length(references) ||
           any(sapply(values, length) != sapply(references, length)))
         stop("If values and references are two lists, their lengths and the ones of their elements must match.")
@@ -1653,35 +1669,14 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
     thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
   }
   
-  
-  # Définition des modalités à considérer dans la table
-  if (is.null(levels)) levels = sort(unique(c(thq)))
-  # Si prise en compte les éléments seuls, ajout d'une modalité "NULL"
-  if (alone && !is.element("NULL", levels)) levels = c(levels, "NULL")
-  
-  # Création d'une table et application de la symétrie
-  if (length(hq_to_use) == 1) {
-    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
-    freq_table = table(factor(thq[1], levels = levels),
-                       factor(thq[2], levels = levels))
-    
-    freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
-  } else {
-    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
-    freq_table = table(factor(thq[1, ], levels = levels),
-                       factor(thq[2, ], levels = levels))
-    
-    freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
-  }
-  
-  return(freq_table)
+  return(thq)
 }
 
 
-#' Top Hazard Quotient pairs frequency, for matrix
+#' Top Hazard Quotient pairs, in matrix
 #' 
-#' Build a contingency table of the counts of each combination of the top two hazard quotients pairs for
-#'  which the associated hazard index is greater than 1.
+#' Identify the top two hazard quotients pairs for which the associated hazard
+#'  indexes are greater than 1.
 #' 
 #' @details
 #' The reference values are applied once on each column (i.e. it must have one reference value for each
@@ -1710,11 +1705,9 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' 
 #' @usage
 #' thq_pairs_for_matrix(values, references,
-#'                      levels = NULL,
 #'                      threshold = TRUE,
 #'                      alone = FALSE)
 #' thq_pairs_for_matrix(hq, hi,
-#'                      levels = NULL,
 #'                      threshold = TRUE,
 #'                      alone = FALSE)
 #' @param values Numeric named matrix. Vectors of values for which the top two hazard quotients are to
@@ -1724,8 +1717,6 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' @param hq Numeric named matrix. **H**azard **q**uotients for which the top two pairs are to be
 #'  identified.
 #' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
-#' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
-#'  pairs.
 #' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
 #'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
@@ -1736,21 +1727,18 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
 #'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
 #' 
-#' Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients,
-#'  considering all sets of values or not (accordingly to the arguments `threshold` and `alone`).
+#' Pairs that produce the top two hazard quotients in the sets of values selected accordingly to the
+#'  arguments `threshold` and `alone`. Vector if only one pair; two-row matrix otherwise.
 #' 
 #' @author Gauthier Magnin
-#' @references Reyes JM, Price PS (2018).
-#'             An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
-#'             *Environment International*, 112, 77-84.
-#'             <https://doi.org/10.1016/j.envint.2017.12.008>.
+#' @inherit thq_pairs references
 #' @seealso [`thq_pairs`], [`thq_pairs_for_list`].
 #' 
 #' @md
 #' @keywords internal
 thq_pairs_for_matrix = function(values = NULL, references = NULL,
                                 hq = NULL, hi = NULL,
-                                levels = NULL, threshold = TRUE, alone = FALSE) {
+                                threshold = TRUE, alone = FALSE) {
   
   # Vérification que les structures de données sont nommées
   if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
@@ -1759,7 +1747,6 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
   # Calcul des données manquantes
   if (is.null(hq)) hq = hazard_quotient(values, references)
   if (is.null(hi)) hi = hazard_index(hq = hq)
-  
   
   # Sélection des HQ à utiliser, selon les critères sur HI et sur la taille des ensembles de valeurs
   hq_to_use = hq[, (!threshold | hi > 1) & (alone | apply(hq, 2, function(x) sum(x != 0) != 1)),
@@ -1783,28 +1770,7 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
     thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
   }
   
-  
-  # Définition des modalités à considérer dans la table
-  if (is.null(levels)) levels = sort(unique(c(thq)))
-  # Si prise en compte les éléments seuls, ajout d'une modalité "NULL"
-  if (alone && !is.element("NULL", levels)) levels = c(levels, "NULL")
-  
-  # Création d'une table et application de la symétrie
-  if (ncol(hq_to_use) == 1) {
-    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
-    freq_table = table(factor(thq[1], levels = levels),
-                       factor(thq[2], levels = levels))
-    
-    freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
-  } else {
-    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
-    freq_table = table(factor(thq[1, ], levels = levels),
-                       factor(thq[2, ], levels = levels))
-    
-    freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
-  }
-  
-  return(freq_table)
+  return(thq)
 }
 
 

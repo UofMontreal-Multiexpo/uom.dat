@@ -2,14 +2,12 @@
 % Please edit documentation in R/mixer.R
 \name{thq_pairs_for_list}
 \alias{thq_pairs_for_list}
-\title{Top Hazard Quotient pairs frequency, for list}
+\title{Top Hazard Quotient pairs, in list}
 \usage{
 thq_pairs_for_list(values, references,
-                   levels = NULL,
                    threshold = TRUE,
                    alone = FALSE)
 thq_pairs_for_list(hq, hi,
-                   levels = NULL,
                    threshold = TRUE,
                    alone = FALSE)
 }
@@ -25,9 +23,6 @@ to be identified.}
 
 \item{hi}{Numeric vector. \strong{H}azard \strong{i}ndexes associated with the hazard quotients \code{hq}.}
 
-\item{levels}{Levels to consider in the output table. If \code{NULL}, only use of those that appear in the
-pairs.}
-
 \item{threshold}{If \code{TRUE}, only values or hazard quotients associated with hazard indexes greater
 than 1 are considered.}
 
@@ -40,12 +35,12 @@ from 0
 or (2) \code{threshold = TRUE} and no related hazard index is greater than 1
 or (3) \code{threshold = TRUE}, \code{alone = FALSE} and no set of values meets the two conditions.
 
-Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients,
-considering all sets of values or not (accordingly to the arguments \code{threshold} and \code{alone}).
+Pairs that produce the top two hazard quotients in the sets of values selected accordingly to the
+arguments \code{threshold} and \code{alone}. Vector if only one pair; two-row matrix otherwise.
 }
 \description{
-Build a contingency table of the counts of each combination of the top two hazard quotients pairs for
-which the associated hazard index is greater than 1.
+Identify the top two hazard quotients pairs for which the associated hazard
+indexes are greater than 1.
 }
 \details{
 The reference values can be a vector of named values or a list.
