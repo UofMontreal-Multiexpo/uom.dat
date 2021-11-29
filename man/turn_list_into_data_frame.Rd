@@ -7,7 +7,7 @@
 turn_list_into_data_frame(
   x,
   by_name = FALSE,
-  stringsAsFactors = default.stringsAsFactors()
+  stringsAsFactors = getOption("stringsAsFactors")
 )
 }
 \arguments{

@@ -266,7 +266,7 @@ invert_list = function(x, by_name = FALSE) {
 #' @md
 #' @export
 coerce_list = function(x, to, by_name = FALSE,
-                       stringsAsFactors = default.stringsAsFactors()) {
+                       stringsAsFactors = getOption("stringsAsFactors")) {
   
   # Unification des termes possibles
   if (to == "logical matrix") to = "lm"
@@ -399,7 +399,7 @@ turn_list_into_char_matrix = function(x, by_name = FALSE, inline = TRUE) {
 #' @md
 #' @keywords internal
 turn_list_into_data_frame = function(x, by_name = FALSE,
-                                     stringsAsFactors = default.stringsAsFactors()) {
+                                     stringsAsFactors = getOption("stringsAsFactors")) {
   
   if (by_name && !is_named(x)[2]) stop("Values of the elements of x must be named.")
   

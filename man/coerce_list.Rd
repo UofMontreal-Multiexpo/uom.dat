@@ -8,7 +8,7 @@ coerce_list(
   x,
   to,
   by_name = FALSE,
-  stringsAsFactors = default.stringsAsFactors()
+  stringsAsFactors = getOption("stringsAsFactors")
 )
 }
 \arguments{
