@@ -15,8 +15,7 @@ turn_list_into_data_frame(
 
 \item{by_name}{If \code{FALSE}, use the values of the list. If \code{TRUE}, use the names of these values.}
 
-\item{stringsAsFactors}{logical: should the character vector be converted
-    to a factor?}
+\item{stringsAsFactors}{\code{TRUE} or \code{FALSE} whether to convert character vectors to factors.}
 }
 \value{
 Data frame in which the first column contains the names of the list and the second one

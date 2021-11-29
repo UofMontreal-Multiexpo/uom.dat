@@ -234,7 +234,7 @@ invert_list = function(x, by_name = FALSE) {
 #' @param to Data structure into which to transform the list. One of `"logical matrix"` (or `"lm"` for
 #'  short), `"character matrix"` (or `"cm"`), `"data.frame"` (or `"df"`).
 #' @param by_name If `FALSE`, use the values of the list. If `TRUE`, use the names of these values.
-#' @param stringsAsFactors logical: should the character vectors be converted to factors?
+#' @param stringsAsFactors `TRUE` or `FALSE` whether to convert character vectors to factors.
 #'  Ignored if `to` doesn't refer to data frame.
 #' @return 
 #' If `to` refers to logical matrix, logical matrix in which row names are the names of the list and
@@ -378,7 +378,7 @@ turn_list_into_char_matrix = function(x, by_name = FALSE, inline = TRUE) {
 #' 
 #' @param x List of vectors to turn into a data frame.
 #' @param by_name If `FALSE`, use the values of the list. If `TRUE`, use the names of these values.
-#' @inheritParams base::as.data.frame
+#' @param stringsAsFactors `TRUE` or `FALSE` whether to convert character vectors to factors.
 #' @return Data frame in which the first column contains the names of the list and the second one
 #'  contains the related values or the names of these values (according to `by_name`).
 #' 

@@ -19,7 +19,7 @@ short), \code{"character matrix"} (or \code{"cm"}), \code{"data.frame"} (or \cod
 
 \item{by_name}{If \code{FALSE}, use the values of the list. If \code{TRUE}, use the names of these values.}
 
-\item{stringsAsFactors}{logical: should the character vectors be converted to factors?
+\item{stringsAsFactors}{\code{TRUE} or \code{FALSE} whether to convert character vectors to factors.
 Ignored if \code{to} doesn't refer to data frame.}
 }
 \value{
