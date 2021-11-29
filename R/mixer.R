@@ -504,6 +504,8 @@ top_hazard_quotient = function(values = NULL, references = NULL,
   } else if (k > length(hq)) {
     k = length(hq)
   }
+  
+  if (k == 1) return(hq[which.max(hq)])
   return(sort(hq, decreasing = TRUE)[seq_len(k)])
 }
 
@@ -663,15 +665,16 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  Values whose indicators of the MCR approach are to be computed.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @return Data frame containing the main indicators of the MCR approach, computed on the given `values`:
-#' * **n**: number of values.
-#' * **HI**: Hazard Index.
-#' * **MCR**: Maximum Cumulative Ratio.
-#' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
-#' * **Group**: MIAT group.
-#' * **THQ**: Top Hazard Quotient.
-#' * **MHQ**: Maximum Hazard Quotient.
-#' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
+#' @return List if `values` is a vector or a list of a single set of values; data frame otherwise.
+#'  Contains the main indicators of the MCR approach computed on the given `values`:
+#'  * **n**: number of values.
+#'  * **HI**: Hazard Index.
+#'  * **MCR**: Maximum Cumulative Ratio.
+#'  * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
+#'  * **Group**: MIAT group.
+#'  * **THQ**: Top Hazard Quotient.
+#'  * **MHQ**: Maximum Hazard Quotient.
+#'  * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
 #' 
 #' @author Gauthier Magnin
 #' @references 
@@ -735,11 +738,10 @@ mcr_summary = function(values, references) {
   
   # Différence vector/matrix
   if (is.vector(values)) {
-    return(data.frame(n = length(values),
-                      HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
-                      THQ = names(top_hazard_quotient(hq = hq, k = 1)),
-                      MHQ = mhq, Missed = mt,
-                      row.names = NULL))
+    return(list(n = length(values),
+                HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+                THQ = names(top_hazard_quotient(hq = hq, k = 1)),
+                MHQ = mhq, Missed = mt))
   }
   return(data.frame(n = apply(values, 2, length),
                     HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
@@ -790,15 +792,16 @@ mcr_summary = function(values, references) {
 #'  computed.
 #' @param references Numeric named vector or list of numeric vectors. Reference values associated with
 #'  the `values`. See 'Details' to know the way it is associated with `values`.
-#' @return Data frame containing the main indicators of the MCR approach, computed on the given `values`:
-#' * **n**: number of values.
-#' * **HI**: Hazard Index.
-#' * **MCR**: Maximum Cumulative Ratio.
-#' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
-#' * **Group**: MIAT group.
-#' * **THQ**: Top Hazard Quotient.
-#' * **MHQ**: Maximum Hazard Quotient.
-#' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
+#' @return List if `values` contains a single set of values; data frame otherwise. Contains the main
+#'  indicators of the MCR approach computed on the given `values`:
+#'  * **n**: number of values.
+#'  * **HI**: Hazard Index.
+#'  * **MCR**: Maximum Cumulative Ratio.
+#'  * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
+#'  * **Group**: MIAT group.
+#'  * **THQ**: Top Hazard Quotient.
+#'  * **MHQ**: Maximum Hazard Quotient.
+#'  * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
 #' 
 #' @author Gauthier Magnin
 #' @inherit mcr_summary references
@@ -808,7 +811,7 @@ mcr_summary = function(values, references) {
 #' @keywords internal
 mcr_summary_for_list = function(values, references) {
   
-  # Différence si references est une liste ou un vecteur
+  # Different case if references is a list or a vector
   if (is.list(references)) {
     if (length(values) != length(references) ||
         any(sapply(values, length) != sapply(references, length)))
@@ -827,7 +830,10 @@ mcr_summary_for_list = function(values, references) {
     
   } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
   
-  # Unlist en deux temps sinon les facteurs sont transformés en numeric
+  # If a single set of values, return of a list
+  if (nrow(summary) == 1) return(summary[1, ])
+  
+  # Unlist in two steps otherwise the factors are transformed into numeric
   to_return = as.data.frame(apply(summary[, c("n","HI","MCR","Reciprocal","MHQ","Missed")], 2, unlist))
   to_return[, "Group"] = unlist(summary[, "Group"])
   to_return[, "THQ"] = unlist(summary[, "THQ"])

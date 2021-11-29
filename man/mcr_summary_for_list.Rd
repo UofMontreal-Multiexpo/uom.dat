@@ -14,7 +14,8 @@ computed.}
 the \code{values}. See 'Details' to know the way it is associated with \code{values}.}
 }
 \value{
-Data frame containing the main indicators of the MCR approach, computed on the given \code{values}:
+List if \code{values} contains a single set of values; data frame otherwise. Contains the main
+indicators of the MCR approach computed on the given \code{values}:
 \itemize{
 \item \strong{n}: number of values.
 \item \strong{HI}: Hazard Index.
