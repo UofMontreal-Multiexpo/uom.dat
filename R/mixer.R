@@ -455,8 +455,8 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #'  function call.
 #' 
 #' @usage
-#' top_hazard_quotient(values, references, k)
-#' top_hazard_quotient(hq, k)
+#' top_hazard_quotient(values, references, k = NULL)
+#' top_hazard_quotient(hq, k = NULL)
 #' @param values Numeric named vector or matrix. Values for which the top hazard quotients are to be
 #'  identify.
 #' @param references Numeric vector. Reference values associated with the `values`.
@@ -498,7 +498,7 @@ top_hazard_quotient = function(values = NULL, references = NULL,
   }
   
   if (is.null(k)) {
-    # Valeur par défaut
+    # Default value: integer part of the maximum cumulative ratio
     k = trunc(maximum_cumulative_ratio(hi = hazard_index(hq = hq),
                                        mhq = maximum_hazard_quotient(hq = hq)))
   } else if (k > length(hq)) {
@@ -801,21 +801,7 @@ mcr_summary = function(values, references) {
 #' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
 #' 
 #' @author Gauthier Magnin
-#' @references 
-#' Price PS, Han X (2011).
-#' Maximum cumulative ratio (MCR) as a tool for assessing the value of performing a cumulative risk assessment.
-#' *International Journal of Environmental Research and Public Health*. 8(6): 2212-2225.
-#' <https://doi.org/10.3390/ijerph8062212>.
-#'             
-#' Reyes JM, Price PS (2018).
-#' An analysis of cumulative risks based on biomonitoring data for six phthalates using the Maximum Cumulative Ratio.
-#' *Environment International*, 112, 77-84.
-#' <https://doi.org/10.1016/j.envint.2017.12.008>.
-#' 
-#' De Brouwere K, et al. (2014).
-#' Application of the maximum cumulative ratio (MCR) as a screening tool for the evaluation of mixtures in residential indoor air.
-#' *The Science of the Total Environment*, 479-480, 267-276.
-#' <https://doi.org/10.1016/j.scitotenv.2014.01.083>.
+#' @inherit mcr_summary references
 #' @seealso [`mcr_summary`].
 #' 
 #' @md

@@ -4,8 +4,8 @@
 \alias{top_hazard_quotient}
 \title{Top Hazard Quotients (THQ)}
 \usage{
-top_hazard_quotient(values, references, k)
-top_hazard_quotient(hq, k)
+top_hazard_quotient(values, references, k = NULL)
+top_hazard_quotient(hq, k = NULL)
 }
 \arguments{
 \item{values}{Numeric named vector or matrix. Values for which the top hazard quotients are to be
