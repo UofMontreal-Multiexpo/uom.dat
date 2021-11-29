@@ -746,7 +746,8 @@ mcr_summary = function(values, references) {
   return(data.frame(n = apply(values, 2, length),
                     HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
                     THQ = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1)))),
-                    MHQ = mhq, Missed = mt))
+                    MHQ = mhq, Missed = mt,
+                    stringsAsFactors = FALSE))
 }
 
 
@@ -834,7 +835,8 @@ mcr_summary_for_list = function(values, references) {
   if (nrow(summary) == 1) return(summary[1, ])
   
   # Unlist in two steps otherwise the factors are transformed into numeric
-  to_return = as.data.frame(apply(summary[, c("n","HI","MCR","Reciprocal","MHQ","Missed")], 2, unlist))
+  to_return = as.data.frame(apply(summary[, c("n","HI","MCR","Reciprocal","MHQ","Missed")], 2, unlist),
+                            stringsAsFactors = FALSE)
   to_return[, "Group"] = unlist(summary[, "Group"])
   to_return[, "THQ"] = unlist(summary[, "THQ"])
   
@@ -1068,7 +1070,7 @@ mcr_chart = function(values = NULL, references = NULL,
   
   # Préparation des données et limites du graphique
   if (log_transform) {
-    data = data.frame(x = log10(hi), y = log10(mcr - 1), thq = thq)
+    data = data.frame(x = log10(hi), y = log10(mcr - 1), thq = thq, stringsAsFactors = FALSE)
     
     if (-Inf %in% data$y) {
       nb_inf = sum(data$y == -Inf)
@@ -1085,7 +1087,7 @@ mcr_chart = function(values = NULL, references = NULL,
       data = data[data$y != -Inf, ]
     }
   } else {
-    data = data.frame(x = hi, y = mcr, thq = thq)
+    data = data.frame(x = hi, y = mcr, thq = thq, stringsAsFactors = FALSE)
   }
   xlim = c(floor(min(data$x)), ceiling(max(data$x)))
   ylim = c(floor(min(data$y)), ceiling(max(data$y)))
@@ -2197,7 +2199,8 @@ mcr_summary_by_class = function(values, references, classes) {
     if (length(summary) == 0) return(NULL)
     
     # Conversion en deux temps car les facteurs sont transformés en numeric
-    to_return = data.frame(matrix(unlist(summary), nrow = length(summary), byrow = TRUE))
+    to_return = data.frame(matrix(unlist(summary), nrow = length(summary), byrow = TRUE),
+                           stringsAsFactors = FALSE)
     rownames(to_return) = names(summary)
     colnames(to_return) = names(summary[[1]])
     to_return[, "Group"] = sapply(summary, "[[", "Group")

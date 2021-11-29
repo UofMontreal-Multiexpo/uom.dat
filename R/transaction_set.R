@@ -1269,7 +1269,8 @@ function(object, identifiers, length_one, under, over) {
   return(list(transactions = to_plot,
               itemsets = trx_df[, object@item_key],
               items = data.frame(item = get_all_items(to_plot),
-                                 label = get_all_items(to_plot)),
+                                 label = get_all_items(to_plot),
+                                 stringsAsFactors = FALSE),
               under = under_text,
               over = over_text))
 })

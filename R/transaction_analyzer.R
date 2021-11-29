@@ -3296,7 +3296,7 @@ function(object, nopc, identifiers = "original",
   }
   
   # Noeuds ou motifs, caractéristiques, identifiants sur le graphique et degrés dans le graphe
-  return(list(vertices = data.frame(ID = vertices_id, nopc, degree = degrees),
+  return(list(vertices = data.frame(ID = vertices_id, nopc, degree = degrees, stringsAsFactors = FALSE),
               edges = nop_links,
               coords = coords_list))
 })
