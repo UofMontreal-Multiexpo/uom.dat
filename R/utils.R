@@ -204,31 +204,33 @@ interval = function(x1, x2, inc1 = TRUE, inc2 = TRUE) {
 #' Turn a table, a matrix or a vector into a data frame.
 #' 
 #' @details
-#' If `x` is a vector, the output is a one-line data frame.
+#' If `x` is a vector, the output is a one-row data frame.
 #' Otherwise, the output has the same dimensions as `x`.
 #' 
 #' @template function_not_exported
 #' 
 #' @param x Table, matrix or vector to turn into a data frame.
+#' @param stringsAsFactors `TRUE` or `FALSE` whether to convert character
+#'  vectors to factors.
 #' @return Data frame corresponding to the input variable.
 #' 
 #' @author Gauthier Magnin
 #' @md
 #' @keywords internal
-turn_into_data_frame = function(x) {
+turn_into_data_frame = function(x, stringsAsFactors = getOption("stringsAsFactors")) {
   
   if (is.table(x)) {
-    df_x = as.data.frame(matrix(x, ncol = ncol(x)))
+    df_x = as.data.frame(matrix(x, ncol = ncol(x)), stringsAsFactors = stringsAsFactors)
     rownames(df_x) = rownames(x)
     colnames(df_x) = colnames(x)
     
   } else if (is.matrix(x)) {
-    df_x = as.data.frame(x)
+    df_x = as.data.frame(x, stringsAsFactors = stringsAsFactors)
     rownames(df_x) = rownames(x)
     colnames(df_x) = colnames(x)
     
   } else if (is.vector(x)) {
-    df_x = as.data.frame(t(x))
+    df_x = as.data.frame(t(x), stringsAsFactors = stringsAsFactors)
   }
   
   return(df_x)

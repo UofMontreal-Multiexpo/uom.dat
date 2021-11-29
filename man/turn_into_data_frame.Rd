@@ -4,10 +4,13 @@
 \alias{turn_into_data_frame}
 \title{Turn into data frame}
 \usage{
-turn_into_data_frame(x)
+turn_into_data_frame(x, stringsAsFactors = getOption("stringsAsFactors"))
 }
 \arguments{
 \item{x}{Table, matrix or vector to turn into a data frame.}
+
+\item{stringsAsFactors}{\code{TRUE} or \code{FALSE} whether to convert character
+vectors to factors.}
 }
 \value{
 Data frame corresponding to the input variable.
@@ -16,7 +19,7 @@ Data frame corresponding to the input variable.
 Turn a table, a matrix or a vector into a data frame.
 }
 \details{
-If \code{x} is a vector, the output is a one-line data frame.
+If \code{x} is a vector, the output is a one-row data frame.
 Otherwise, the output has the same dimensions as \code{x}.
 }
 \note{
