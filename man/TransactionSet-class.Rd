@@ -36,7 +36,7 @@ the list corresponding to a transaction).}
 
 \describe{
 \item{\code{as(object, Class = "data.frame")}}{Convert a \code{TransactionSet} object to \code{data.frame}
-(considering the parameter \code{stringAsFactors} as \code{FALSE}).}
+(considering the parameter \code{stringsAsFactors} as \code{FALSE}).}
 \item{\code{as(object, Class = "transactions")}}{Convert a \code{TransactionSet} object to a set of
 \code{\link[arules:transactions-class]{transactions}} from the package \code{arules}. Only the items of
 the transactions are considered. Other data are ignored.}

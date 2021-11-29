@@ -126,7 +126,10 @@ names <- substances_information[match(items_ids,
                                       substances_information$CODE),
                                 "NAME"]
 
-items <- data.frame(item = items_ids, name = names, family = category_1)
+items <- data.frame(item = items_ids,
+                    name = names,
+                    family = as.factor(category_1),
+                    stringsAsFactors = FALSE)
 ta_object_2 <- transaction.analyzer(trx_object, items)
 
 }

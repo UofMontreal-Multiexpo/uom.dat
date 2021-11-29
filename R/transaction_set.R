@@ -30,7 +30,7 @@ setClassUnion("characterOrNA", c("character", "logical"))
 #' @section Coercion:
 #' \describe{
 #'   \item{`as(object, Class = "data.frame")`}{Convert a `TransactionSet` object to `data.frame`
-#'         (considering the parameter `stringAsFactors` as `FALSE`).}
+#'         (considering the parameter `stringsAsFactors` as `FALSE`).}
 #'   \item{`as(object, Class = "transactions")`}{Convert a `TransactionSet` object to a set of
 #'         [`transactions`][arules::transactions-class] from the package `arules`. Only the items of
 #'         the transactions are considered. Other data are ignored.}
@@ -407,7 +407,7 @@ setReplaceMethod(f = "$",
 #### Type conversions ####
 
 # Turn a TransactionSet into a data.frame.
-# Parameter `stringAsFactors` is FALSE.
+# Parameter `stringsAsFactors` is FALSE.
 # Documented in TransactionSet-class manual (section "Coercion").
 setAs(from = "TransactionSet",
       to = "data.frame",
