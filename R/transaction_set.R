@@ -913,7 +913,7 @@ function(object, items, presence = "all", as_indices = FALSE) {
                 all     = { function(x) all(items %in% x) },
                 any     = { function(x) any(items %in% x) },
                 exactly = { function(x) setequal(items, x) },
-                only    = { function(x) any(items %in% x) && all(x %in% items) })
+                only    = { function(x) all(x %in% items) })
   
   index = sapply(get_itemsets(object), func)
   

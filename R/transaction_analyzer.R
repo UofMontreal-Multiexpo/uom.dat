@@ -4801,7 +4801,7 @@ function(object, nc, items, condition = "all") {
                 all     = { function(x) all(items %in% x) },
                 any     = { function(x) any(items %in% x) },
                 exactly = { function(x) setequal(items, x) },
-                only    = { function(x) any(items %in% x) && all(x %in% items) })
+                only    = { function(x) all(x %in% items) })
   
   return(subset(nc, sapply(nc$node, func)))
 })
@@ -5159,7 +5159,7 @@ function(object, pc, items, condition = "all") {
                 all     = { function(x) all(items %in% x) },
                 any     = { function(x) any(items %in% x) },
                 exactly = { function(x) setequal(items, x) },
-                only    = { function(x) any(items %in% x) && all(x %in% items) })
+                only    = { function(x) all(x %in% items) })
   
   return(subset(pc, sapply(pc$pattern, func)))
 })
