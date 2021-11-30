@@ -348,7 +348,7 @@ get_items_from_info(TS_instance,
                     additional = "SAMPLE.ID")
 ```
 
-The method `get_info_from_items` is the opposite of the previous one: it finds data associated with specified items. The argument `presence` allows to specify if the transactions to focus on must contain all the sought items, any of them, or exactly the same itemset.
+The method `get_info_from_items` is the opposite of the previous one: it finds data associated with specified items. The argument `presence` allows to specify if the transactions to focus on must contain all the sought items, any of them, exactly the same itemset, or only items from those given.
 ```{r}
 # Data associated with one specific item
 cat("SAMPLE.ID values from the transactions having the item '3146':\n")
@@ -370,9 +370,17 @@ get_info_from_items(TS_instance,
                     items = c(19, 25),
                     info_names = c("JOB.TITLE", "JOB.TASK"),
                     presence = "exact")
+
+# Data associated with only items from those specified
+cat("\nJOB.TITLE and JOB.TASK values from the transactions having the item '192' or '3146'",
+    "and no unspecified item:\n")
+get_info_from_items(TS_instance,
+                    items = c(192, 3146),
+                    info_names = c("JOB.TITLE", "JOB.TASK"),
+                    presence = "only")
 ```
 
-Obviously, if no transaction contains the sought items, no related data can be found. Hence the `NULL` results in the last example.
+Obviously, if no transaction contains the sought items, no related data can be found. Hence the `NULL` results in the penultimate example.
 
 
 ## 2.2. Search for transactions
@@ -386,7 +394,7 @@ In addition to the method `subset`, four methods allow to extract transactions f
 
 ### 2.2.1. Search by item or other data
 
-Like for the method `get_info_from_items`, the method `get_trx_from_items` has an argument `presence` allowing to specify if the transactions to extract must contain all the sought items, any of them, or exactly the same itemset.
+Like for the method `get_info_from_items`, the method `get_trx_from_items` has an argument `presence` allowing to specify if the transactions to extract must contain all the sought items, any of them, exactly the same itemset, or only items from those given.
 ```{r}
 # Transactions containing at least two specific items
 trx_subset_4 <- get_trx_from_items(TS_instance,
@@ -408,27 +416,34 @@ trx_subset_6 <- get_trx_from_items(TS_instance,
                                    presence = "exact")
 cat("\nTransactions with itemsets composed exactly of the items '25' and '192':\n")
 print(trx_subset_6)
+
+# Transactions containing only the sought items
+trx_subset_7 <- get_trx_from_items(TS_instance,
+                                   items = c(192, 3146),
+                                   presence = "only")
+cat("\nTransactions with itemsets composed only of the items '192' and '3146':\n")
+print(trx_subset_7)
 ```
 
-As we can see with the last example, a `TransactionSet` can be composed of 0 transaction; the other attributes may still have interest.
+As we can see with the second last example, a `TransactionSet` can be composed of 0 transaction; the other attributes may still have interest.
 
 The method `get_trx_from_info` works like `get_items_from_info`: the argument `presence` allows to specify if the transactions to extract must be associated with all the sought values or any of them.
 ```{r}
 # Transactions associated with one of the specific values of certain variables
-trx_subset_7 <- get_trx_from_info(TS_instance,
+trx_subset_8 <- get_trx_from_info(TS_instance,
                                   info = list(JOB.TITLE = 44132017,
                                               JOB.TASK = "A5310"),
                                   presence = "any")
 cat("Transactions containing the JOB.TITLE value '44132017' or the JOB.TASK value 'A5310':\n")
-print(trx_subset_7)
+print(trx_subset_8)
 
 # Items associated with all specified values of certain variables
-trx_subset_8 <- get_trx_from_info(TS_instance,
+trx_subset_9 <- get_trx_from_info(TS_instance,
                                   info = list(JOB.TITLE = 44132017,
                                               JOB.TASK = "A5310"),
                                   presence = "all")
 cat("\nTransactions containing both JOB.TITLE value '44132017' and JOB.TASK value 'A5310':\n")
-print(trx_subset_8)
+print(trx_subset_9)
 ```
 
 ### 2.2.2. Search by complexity
@@ -436,24 +451,24 @@ print(trx_subset_8)
 The methods `get_complex_trx` and `get_simple_trx` are relating to the itemset lengths. In other words, they are relating to the number of items forming the transactions. Complex transactions are transactions having more than one item. Simple transactions are transactions having only one item.
 ```{r}
 # Complex transactions
-trx_subset_9 <- get_complex_trx(TS_instance)
+trx_subset_10 <- get_complex_trx(TS_instance)
 cat("Transactions with itemsets larger than 1:\n")
-print(trx_subset_9)
-
-# Length of each extracted transaction
-cat("\nNumber of items of each transaction:\n")
-sapply(trx_subset_9["CODE"], length)
-```
-
-```{r}
-# Simple transactions
-trx_subset_10 <- get_simple_trx(TS_instance)
-cat("Transactions with itemsets of length 1:\n")
 print(trx_subset_10)
 
 # Length of each extracted transaction
 cat("\nNumber of items of each transaction:\n")
 sapply(trx_subset_10["CODE"], length)
+```
+
+```{r}
+# Simple transactions
+trx_subset_11 <- get_simple_trx(TS_instance)
+cat("Transactions with itemsets of length 1:\n")
+print(trx_subset_11)
+
+# Length of each extracted transaction
+cat("\nNumber of items of each transaction:\n")
+sapply(trx_subset_11["CODE"], length)
 ```
 
 

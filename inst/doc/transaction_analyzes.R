@@ -189,6 +189,14 @@ get_nodes(TA_instance,
           condition = "exact")
 
 ## -----------------------------------------------------------------------------
+# Subset of nodes having only the items '3146' and '3180'
+get_nodes(TA_instance,
+          TA_instance["nodes"],
+          element = "items",
+          value = c("3146", "3180"),
+          condition = "only")
+
+## -----------------------------------------------------------------------------
 cat("Possibles values for the argument `element` if referring to a node characteristic:\n")
 print(colnames(TA_instance["nodes"])[-1])
 

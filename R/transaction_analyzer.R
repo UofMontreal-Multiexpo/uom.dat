@@ -4642,10 +4642,11 @@ function(object, trx, category, value, as_indices = FALSE) {
 #' @details
 #' If `element = "items"` one or more items can be sought. The condition for a node to be extracted
 #'  is the presence of the sought items (argument `value`). The argument `condition` must be `"all"`,
-#'  `"any"` or `"exact"` (default is `"all"`):
+#'  `"any"`, `"exact"` or `"only"` (default is `"all"`):
 #'  * `"all"`: all the sought items must be part of the node.
 #'  * `"any"`: at least one of the sought items must be part of the node.
 #'  * `"exact"`: the item set contained in the node must be exactly the same as the sought item set.
+#'  * `"only"`: the node must contain only the sought items (any of them).
 #' 
 #' If `element` refers to a characteristic (i.e. is `"length"` or `"frequency"`), the condition for a
 #'  node to be extracted is a comparison of the `value` according to one of the comparison operators
@@ -4694,6 +4695,8 @@ function(object, trx, category, value, as_indices = FALSE) {
 #'           element = "items", value = c(3146, 3180), condition = "any")
 #' get_nodes(TA_instance, "nodes",
 #'           element = "items", value = c(3146, 3180), condition = "exact")
+#' get_nodes(TA_instance, "nodes",
+#'           element = "items", value = c(3146, 3180), condition = "only")
 #' 
 #' ## Search on characteristics
 #' get_nodes(TA_instance, TA_instance["nodes"], element = "frequency", value = 2)
@@ -4754,13 +4757,15 @@ function(object, nc, element, value, condition = "default") {
 #'  `"nodes"` and `"n"` are special values for `object["nodes"]`.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a node to be extracted.
-#'  One of `"all"`, `"any"`, `"exact"`.
+#'  One of `"all"`, `"any"`, `"exact"`, `"only"`.
 #'  \describe{
 #'    \item{`"all"`}{All the sought items must be part of a node for this node to be extracted.}
 #'    \item{`"any"`}{At least one of the sought items must be part of a node for this node to be
 #'                  extracted.}
 #'    \item{`"exact"`}{The item set contained in a node must be exactly the same as the
 #'                     sought item set for this node to be extracted.}
+#'    \item{`"only"`}{A node must contain only the sought items (any of them) for this node
+#'                    to be extracted.}
 #'  }
 #' @return Subset of the data frame of nodes that match the search criteria.
 #' 
@@ -4775,6 +4780,8 @@ function(object, nc, element, value, condition = "default") {
 #'                      items = c(3146, 3180), condition = "any")
 #' get_nodes_from_items(TA_instance, TA_instance["nodes"],
 #'                      items = c(3146, 3180), condition = "exact")
+#' get_nodes_from_items(TA_instance, TA_instance["nodes"],
+#'                      items = c(3146, 3180), condition = "only")
 #' 
 #' @aliases get_nodes_from_items
 #' @md
@@ -4788,13 +4795,15 @@ function(object, nc, items, condition = "all") {
   check_init(object, NODES)
   nc = get_tnp(object, nc, NODES)
   
-  if (!(condition %in% c("all", "any", "exact")))
-    stop("condition must be \"all\", \"any\" or \"exact\".")
+  check_param(condition, values = c("all", "any", "exact", "only"))
   
-  if (condition == "exact") return(subset(nc, sapply(nc$node, function(x) setequal(items, x))))
+  func = switch(condition,
+                all   = { function(x) all(items %in% x) },
+                any   = { function(x) any(items %in% x) },
+                exact = { function(x) setequal(items, x) },
+                only  = { function(x) any(items %in% x) && all(x %in% items) })
   
-  func = if (condition == "all") all else any
-  return(subset(nc, sapply(nc$node, function(x) func(items %in% x))))
+  return(subset(nc, sapply(nc$node, func)))
 })
 
 
@@ -4964,10 +4973,11 @@ function(object, nc, category, value, condition) {
 #' @details
 #' If `element = "items"` one or more items can be sought. The condition for a pattern to be extracted
 #'  is the presence of the sought items (argument `value`). The argument `condition` must be `"all"`,
-#'  `"any"` or `"exact"` (default is `"all"`):
+#'  `"any"`, `"exact"` or `"only"` (default is `"all"`):
 #'  * `"all"`: all the sought items must be part of the pattern.
 #'  * `"any"`: at least one of the sought items must be part of the pattern.
 #'  * `"exact"`: the item set contained in the pattern must be exactly the same as the sought item set.
+#'  * `"only"`: the pattern must contain only the sought items (any of them).
 #' 
 #' If `element` refers to a characteristic other than status (i.e. is one of `"year"`, `"length"`,
 #'  `"frequency"`, `"weight"`, `"specificity"`), the condition for a pattern to be extracted is a
@@ -5027,6 +5037,8 @@ function(object, nc, category, value, condition) {
 #'              element = "items", value = c(3146, 3180), condition = "any")
 #' get_patterns(TA_instance, "patterns",
 #'              element = "items", value = c(3146, 3180), condition = "exact")
+#' get_patterns(TA_instance, "patterns",
+#'              element = "items", value = c(3146, 3180), condition = "only")
 #' 
 #' ## Search on characteristics
 #' get_patterns(TA_instance, TA_instance["patterns"],
@@ -5102,7 +5114,7 @@ function(object, pc, element, value, condition = "default") {
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param items Sought items (one or more).
 #' @param condition Item presence condition for a pattern to be extracted.
-#'  One of \code{"all"}, \code{"any"}, \code{"exact"}.
+#'  One of \code{"all"}, \code{"any"}, \code{"exact"}, \code{"only"}.
 #'  \describe{
 #'    \item{\code{"all"}}{All the sought items must be part of a pattern for this pattern to be
 #'                        extracted.}
@@ -5110,6 +5122,8 @@ function(object, pc, element, value, condition = "default") {
 #'                        to be extracted.}
 #'    \item{\code{"exact"}}{The item set contained in a pattern must be exactly the same as the
 #'                          sought item set for this pattern to be extracted.}
+#'    \item{\code{"only"}}{A pattern must contain only the sought items (any of them) for this pattern
+#'                         to be extracted.}
 #'  }
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
@@ -5125,6 +5139,8 @@ function(object, pc, element, value, condition = "default") {
 #'                         items = c(3146, 3180), condition = "any")
 #' get_patterns_from_items(TA_instance, TA_instance["patterns"],
 #'                         items = c(3146, 3180), condition = "exact")
+#' get_patterns_from_items(TA_instance, TA_instance["patterns"],
+#'                         items = c(3146, 3180), condition = "only")
 #' 
 #' @aliases get_patterns_from_items
 #' @keywords internal
@@ -5137,13 +5153,15 @@ function(object, pc, items, condition = "all") {
   check_init(object, PATTERNS)
   pc = get_tnp(object, pc, PATTERNS)
   
-  if (!(condition %in% c("all", "any", "exact")))
-    stop("condition must be \"all\", \"any\" or \"exact\".")
+  check_param(condition, values = c("all", "any", "exact", "only"))
   
-  if (condition == "exact") return(subset(pc, sapply(pc$pattern, function(x) setequal(items, x))))
+  func = switch(condition,
+                all   = { function(x) all(items %in% x) },
+                any   = { function(x) any(items %in% x) },
+                exact = { function(x) setequal(items, x) },
+                only  = { function(x) any(items %in% x) && all(x %in% items) })
   
-  func = if (condition == "all") all else any
-  return(subset(pc, sapply(pc$pattern, function(x) func(items %in% x))))
+  return(subset(pc, sapply(pc$pattern, func)))
 })
 
 

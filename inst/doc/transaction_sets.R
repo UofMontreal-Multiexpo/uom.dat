@@ -206,6 +206,14 @@ get_info_from_items(TS_instance,
                     info_names = c("JOB.TITLE", "JOB.TASK"),
                     presence = "exact")
 
+# Data associated with only items from those specified
+cat("\nJOB.TITLE and JOB.TASK values from the transactions having the item '192' or '3146'",
+    "and no unspecified item:\n")
+get_info_from_items(TS_instance,
+                    items = c(192, 3146),
+                    info_names = c("JOB.TITLE", "JOB.TASK"),
+                    presence = "only")
+
 ## -----------------------------------------------------------------------------
 # Transactions containing at least two specific items
 trx_subset_4 <- get_trx_from_items(TS_instance,
@@ -228,42 +236,49 @@ trx_subset_6 <- get_trx_from_items(TS_instance,
 cat("\nTransactions with itemsets composed exactly of the items '25' and '192':\n")
 print(trx_subset_6)
 
+# Transactions containing only the sought items
+trx_subset_7 <- get_trx_from_items(TS_instance,
+                                   items = c(192, 3146),
+                                   presence = "only")
+cat("\nTransactions with itemsets composed only of the items '192' and '3146':\n")
+print(trx_subset_7)
+
 ## -----------------------------------------------------------------------------
 # Transactions associated with one of the specific values of certain variables
-trx_subset_7 <- get_trx_from_info(TS_instance,
+trx_subset_8 <- get_trx_from_info(TS_instance,
                                   info = list(JOB.TITLE = 44132017,
                                               JOB.TASK = "A5310"),
                                   presence = "any")
 cat("Transactions containing the JOB.TITLE value '44132017' or the JOB.TASK value 'A5310':\n")
-print(trx_subset_7)
+print(trx_subset_8)
 
 # Items associated with all specified values of certain variables
-trx_subset_8 <- get_trx_from_info(TS_instance,
+trx_subset_9 <- get_trx_from_info(TS_instance,
                                   info = list(JOB.TITLE = 44132017,
                                               JOB.TASK = "A5310"),
                                   presence = "all")
 cat("\nTransactions containing both JOB.TITLE value '44132017' and JOB.TASK value 'A5310':\n")
-print(trx_subset_8)
+print(trx_subset_9)
 
 ## -----------------------------------------------------------------------------
 # Complex transactions
-trx_subset_9 <- get_complex_trx(TS_instance)
+trx_subset_10 <- get_complex_trx(TS_instance)
 cat("Transactions with itemsets larger than 1:\n")
-print(trx_subset_9)
-
-# Length of each extracted transaction
-cat("\nNumber of items of each transaction:\n")
-sapply(trx_subset_9["CODE"], length)
-
-## -----------------------------------------------------------------------------
-# Simple transactions
-trx_subset_10 <- get_simple_trx(TS_instance)
-cat("Transactions with itemsets of length 1:\n")
 print(trx_subset_10)
 
 # Length of each extracted transaction
 cat("\nNumber of items of each transaction:\n")
 sapply(trx_subset_10["CODE"], length)
+
+## -----------------------------------------------------------------------------
+# Simple transactions
+trx_subset_11 <- get_simple_trx(TS_instance)
+cat("Transactions with itemsets of length 1:\n")
+print(trx_subset_11)
+
+# Length of each extracted transaction
+cat("\nNumber of items of each transaction:\n")
+sapply(trx_subset_11["CODE"], length)
 
 ## -----------------------------------------------------------------------------
 cat("Transaction itemsets of 'trx_object_1':\n")

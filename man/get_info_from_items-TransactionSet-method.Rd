@@ -15,14 +15,16 @@
 \item{info_names}{Names of information to extract from transactions.}
 
 \item{presence}{Item presence condition for information to be extracted from a transaction.
-One of \code{"all"}, \code{"any"}, \code{"exact"}.
+One of \code{"all"}, \code{"any"}, \code{"exact"}, \code{"only"}.
 \describe{
 \item{\code{"all"}}{All the sought items must be part of a transaction for its information to be
 extracted.}
 \item{\code{"any"}}{At least one of the sought items must be part of a transaction for its information
 to be extracted.}
 \item{\code{"exact"}}{The item set contained in a transaction must be exactly the same as the sought
-item set for this transaction to be extracted.}
+item set for its information to be extracted.}
+\item{\code{"only"}}{A transaction must contain only the sought items (any of them) for its
+information to be extracted.}
 }}
 }
 \value{
@@ -33,8 +35,27 @@ Vector if only one type of information is to be extracted. List otherwise.
 Retrieve information associated with transactions that contain a set of sought items.
 }
 \examples{
-get_info_from_items(TS_instance, items = 3146,
-                                 info_names = c("JOB.TITLE", "JOB.TASK"))
+get_info_from_items(TS_instance,
+                    items = 3146,
+                    info_names = "SAMPLE.ID")
+
+get_info_from_items(TS_instance,
+                    items = c(19, 25),
+                    info_names = c("JOB.TITLE", "JOB.TASK"),
+                    presence = "any")
+get_info_from_items(TS_instance,
+                    items = c(19, 25),
+                    info_names = c("JOB.TITLE", "JOB.TASK"),
+                    presence = "exact")
+
+get_info_from_items(TS_instance,
+                    items = c(192, 3146),
+                    info_names = c("JOB.TITLE", "JOB.TASK"),
+                    presence = "any")
+get_info_from_items(TS_instance,
+                    items = c(192, 3146),
+                    info_names = c("JOB.TITLE", "JOB.TASK"),
+                    presence = "only")
 
 }
 \seealso{

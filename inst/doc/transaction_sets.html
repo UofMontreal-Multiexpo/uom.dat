@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Transaction sets</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2021-11-19</h4>
+<h4 class="date">Last update: 2021-11-30</h4>
 
 
 <div id="TOC">
@@ -722,7 +722,7 @@ This document presents basic processing of transactions (more complex analyzes o
 ## 
 ## $SAMPLE.ID
 ## [1]  32  56  58  98  99 107</code></pre>
-<p>The method <code>get_info_from_items</code> is the opposite of the previous one: it finds data associated with specified items. The argument <code>presence</code> allows to specify if the transactions to focus on must contain all the sought items, any of them, or exactly the same itemset.</p>
+<p>The method <code>get_info_from_items</code> is the opposite of the previous one: it finds data associated with specified items. The argument <code>presence</code> allows to specify if the transactions to focus on must contain all the sought items, any of them, exactly the same itemset, or only items from those given.</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data associated with one specific item</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;SAMPLE.ID values from the transactions having the item &#39;3146&#39;:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">get_info_from_items</span>(TS_instance,</span>
@@ -742,7 +742,15 @@ This document presents basic processing of transactions (more complex analyzes o
 <span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="fu">get_info_from_items</span>(TS_instance,</span>
 <span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">items =</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="dv">25</span>),</span>
 <span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">info_names =</span> <span class="fu">c</span>(<span class="st">&quot;JOB.TITLE&quot;</span>, <span class="st">&quot;JOB.TASK&quot;</span>),</span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">presence =</span> <span class="st">&quot;exact&quot;</span>)</span></code></pre></div>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">presence =</span> <span class="st">&quot;exact&quot;</span>)</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Data associated with only items from those specified</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">JOB.TITLE and JOB.TASK values from the transactions having the item &#39;192&#39; or &#39;3146&#39;&quot;</span>,</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;and no unspecified item:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a><span class="fu">get_info_from_items</span>(TS_instance,</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>                    <span class="at">items =</span> <span class="fu">c</span>(<span class="dv">192</span>, <span class="dv">3146</span>),</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>                    <span class="at">info_names =</span> <span class="fu">c</span>(<span class="st">&quot;JOB.TITLE&quot;</span>, <span class="st">&quot;JOB.TASK&quot;</span>),</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>                    <span class="at">presence =</span> <span class="st">&quot;only&quot;</span>)</span></code></pre></div>
 <pre><code>## SAMPLE.ID values from the transactions having the item &#39;3146&#39;:
 ##  [1]   3   5   6   7  11  14  17  19  26  29  30  32  56  57  58  62  70  80  86
 ## [20]  91  96  98  99 105 106 107 109 112 115 117 126 129
@@ -760,8 +768,16 @@ This document presents basic processing of transactions (more complex analyzes o
 ## NULL
 ## 
 ## $JOB.TASK
-## NULL</code></pre>
-<p>Obviously, if no transaction contains the sought items, no related data can be found. Hence the <code>NULL</code> results in the last example.</p>
+## NULL
+## 
+## 
+## JOB.TITLE and JOB.TASK values from the transactions having the item &#39;192&#39; or &#39;3146&#39; and no unspecified item:
+## $JOB.TITLE
+## [1] 44132017 44311007
+## 
+## $JOB.TASK
+## [1] &quot;A5250&quot; &quot;A5510&quot;</code></pre>
+<p>Obviously, if no transaction contains the sought items, no related data can be found. Hence the <code>NULL</code> results in the penultimate example.</p>
 </div>
 <div id="search-for-transactions" class="section level2">
 <h2>2.2. Search for transactions</h2>
@@ -774,7 +790,7 @@ This document presents basic processing of transactions (more complex analyzes o
 </ul>
 <div id="search-by-item-or-other-data" class="section level3">
 <h3>2.2.1. Search by item or other data</h3>
-<p>Like for the method <code>get_info_from_items</code>, the method <code>get_trx_from_items</code> has an argument <code>presence</code> allowing to specify if the transactions to extract must contain all the sought items, any of them, or exactly the same itemset.</p>
+<p>Like for the method <code>get_info_from_items</code>, the method <code>get_trx_from_items</code> has an argument <code>presence</code> allowing to specify if the transactions to extract must contain all the sought items, any of them, exactly the same itemset, or only items from those given.</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transactions containing at least two specific items</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>trx_subset_4 <span class="ot">&lt;-</span> <span class="fu">get_trx_from_items</span>(TS_instance,</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">items =</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">192</span>),</span>
@@ -794,7 +810,14 @@ This document presents basic processing of transactions (more complex analyzes o
 <span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">items =</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">192</span>),</span>
 <span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">presence =</span> <span class="st">&quot;exact&quot;</span>)</span>
 <span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Transactions with itemsets composed exactly of the items &#39;25&#39; and &#39;192&#39;:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_6)</span></code></pre></div>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_6)</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Transactions containing only the sought items</span></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>trx_subset_7 <span class="ot">&lt;-</span> <span class="fu">get_trx_from_items</span>(TS_instance,</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">items =</span> <span class="fu">c</span>(<span class="dv">192</span>, <span class="dv">3146</span>),</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">presence =</span> <span class="st">&quot;only&quot;</span>)</span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Transactions with itemsets composed only of the items &#39;192&#39; and &#39;3146&#39;:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_7)</span></code></pre></div>
 <pre><code>## Transactions with itemsets composed at least of the items &#39;25&#39; and &#39;192&#39;:
 ## TransactionSet
 ##   data:     2 transactions
@@ -814,24 +837,31 @@ This document presents basic processing of transactions (more complex analyzes o
 ##   data:     0 transaction
 ##   names:    &quot;CODE&quot;, &quot;YEAR&quot;, &quot;JOB.TITLE&quot;, &quot;JOB.TASK&quot;, &quot;SAMPLE.ID&quot;
 ##   item_key: &quot;CODE&quot;
+##   year_key: &quot;YEAR&quot;
+## 
+## Transactions with itemsets composed only of the items &#39;192&#39; and &#39;3146&#39;:
+## TransactionSet
+##   data:     2 transactions
+##   names:    &quot;CODE&quot;, &quot;YEAR&quot;, &quot;JOB.TITLE&quot;, &quot;JOB.TASK&quot;, &quot;SAMPLE.ID&quot;
+##   item_key: &quot;CODE&quot;
 ##   year_key: &quot;YEAR&quot;</code></pre>
-<p>As we can see with the last example, a <code>TransactionSet</code> can be composed of 0 transaction; the other attributes may still have interest.</p>
+<p>As we can see with the second last example, a <code>TransactionSet</code> can be composed of 0 transaction; the other attributes may still have interest.</p>
 <p>The method <code>get_trx_from_info</code> works like <code>get_items_from_info</code>: the argument <code>presence</code> allows to specify if the transactions to extract must be associated with all the sought values or any of them.</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transactions associated with one of the specific values of certain variables</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>trx_subset_7 <span class="ot">&lt;-</span> <span class="fu">get_trx_from_info</span>(TS_instance,</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>trx_subset_8 <span class="ot">&lt;-</span> <span class="fu">get_trx_from_info</span>(TS_instance,</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">info =</span> <span class="fu">list</span>(<span class="at">JOB.TITLE =</span> <span class="dv">44132017</span>,</span>
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">JOB.TASK =</span> <span class="st">&quot;A5310&quot;</span>),</span>
 <span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">presence =</span> <span class="st">&quot;any&quot;</span>)</span>
 <span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Transactions containing the JOB.TITLE value &#39;44132017&#39; or the JOB.TASK value &#39;A5310&#39;:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_7)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_8)</span>
 <span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Items associated with all specified values of certain variables</span></span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>trx_subset_8 <span class="ot">&lt;-</span> <span class="fu">get_trx_from_info</span>(TS_instance,</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>trx_subset_9 <span class="ot">&lt;-</span> <span class="fu">get_trx_from_info</span>(TS_instance,</span>
 <span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">info =</span> <span class="fu">list</span>(<span class="at">JOB.TITLE =</span> <span class="dv">44132017</span>,</span>
 <span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">JOB.TASK =</span> <span class="st">&quot;A5310&quot;</span>),</span>
 <span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">presence =</span> <span class="st">&quot;all&quot;</span>)</span>
 <span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Transactions containing both JOB.TITLE value &#39;44132017&#39; and JOB.TASK value &#39;A5310&#39;:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_8)</span></code></pre></div>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_9)</span></code></pre></div>
 <pre><code>## Transactions containing the JOB.TITLE value &#39;44132017&#39; or the JOB.TASK value &#39;A5310&#39;:
 ## TransactionSet
 ##   data:     3 transactions
@@ -850,13 +880,13 @@ This document presents basic processing of transactions (more complex analyzes o
 <h3>2.2.2. Search by complexity</h3>
 <p>The methods <code>get_complex_trx</code> and <code>get_simple_trx</code> are relating to the itemset lengths. In other words, they are relating to the number of items forming the transactions. Complex transactions are transactions having more than one item. Simple transactions are transactions having only one item.</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Complex transactions</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>trx_subset_9 <span class="ot">&lt;-</span> <span class="fu">get_complex_trx</span>(TS_instance)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>trx_subset_10 <span class="ot">&lt;-</span> <span class="fu">get_complex_trx</span>(TS_instance)</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Transactions with itemsets larger than 1:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_9)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_10)</span>
 <span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Length of each extracted transaction</span></span>
 <span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Number of items of each transaction:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(trx_subset_9[<span class="st">&quot;CODE&quot;</span>], length)</span></code></pre></div>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(trx_subset_10[<span class="st">&quot;CODE&quot;</span>], length)</span></code></pre></div>
 <pre><code>## Transactions with itemsets larger than 1:
 ## TransactionSet
 ##   data:     10 transactions
@@ -870,13 +900,13 @@ This document presents basic processing of transactions (more complex analyzes o
 ##  2018-A-8 2018-C-14 
 ##         3         2</code></pre>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple transactions</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>trx_subset_10 <span class="ot">&lt;-</span> <span class="fu">get_simple_trx</span>(TS_instance)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>trx_subset_11 <span class="ot">&lt;-</span> <span class="fu">get_simple_trx</span>(TS_instance)</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Transactions with itemsets of length 1:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_10)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_11)</span>
 <span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Length of each extracted transaction</span></span>
 <span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Number of items of each transaction:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(trx_subset_10[<span class="st">&quot;CODE&quot;</span>], length)</span></code></pre></div>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(trx_subset_11[<span class="st">&quot;CODE&quot;</span>], length)</span></code></pre></div>
 <pre><code>## Transactions with itemsets of length 1:
 ## TransactionSet
 ##   data:     4 transactions

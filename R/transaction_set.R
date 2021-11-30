@@ -724,14 +724,16 @@ function(object, info, presence = "all", additional = NULL) {
 #' @param items Sought items.
 #' @param info_names Names of information to extract from transactions.
 #' @param presence Item presence condition for information to be extracted from a transaction.
-#' One of `"all"`, `"any"`, `"exact"`.
+#'  One of `"all"`, `"any"`, `"exact"`, `"only"`.
 #'  \describe{
-#'   \item{`"all"`}{All the sought items must be part of a transaction for its information to be
-#'                  extracted.}
-#'   \item{`"any"`}{At least one of the sought items must be part of a transaction for its information
-#'                  to be extracted.}
+#'    \item{`"all"`}{All the sought items must be part of a transaction for its information to be
+#'                   extracted.}
+#'    \item{`"any"`}{At least one of the sought items must be part of a transaction for its information
+#'                   to be extracted.}
 #'    \item{`"exact"`}{The item set contained in a transaction must be exactly the same as the sought
-#'                     item set for this transaction to be extracted.}
+#'                     item set for its information to be extracted.}
+#'    \item{`"only"`}{A transaction must contain only the sought items (any of them) for its
+#'                    information to be extracted.}
 #'  }
 #' @return Vector or list of information corresponding to the search.
 #'  Vector if only one type of information is to be extracted. List otherwise.
@@ -740,8 +742,27 @@ function(object, info, presence = "all", additional = NULL) {
 #' @seealso [`get_items_from_info`], [`get_all_items`].
 #' 
 #' @examples
-#' get_info_from_items(TS_instance, items = 3146,
-#'                                  info_names = c("JOB.TITLE", "JOB.TASK"))
+#' get_info_from_items(TS_instance,
+#'                     items = 3146,
+#'                     info_names = "SAMPLE.ID")
+#' 
+#' get_info_from_items(TS_instance,
+#'                     items = c(19, 25),
+#'                     info_names = c("JOB.TITLE", "JOB.TASK"),
+#'                     presence = "any")
+#' get_info_from_items(TS_instance,
+#'                     items = c(19, 25),
+#'                     info_names = c("JOB.TITLE", "JOB.TASK"),
+#'                     presence = "exact")
+#' 
+#' get_info_from_items(TS_instance,
+#'                     items = c(192, 3146),
+#'                     info_names = c("JOB.TITLE", "JOB.TASK"),
+#'                     presence = "any")
+#' get_info_from_items(TS_instance,
+#'                     items = c(192, 3146),
+#'                     info_names = c("JOB.TITLE", "JOB.TASK"),
+#'                     presence = "only")
 #' 
 #' @aliases get_info_from_items
 #' @md
@@ -843,7 +864,7 @@ function(object, as_indices = FALSE) {
 #' @param object S4 object of class `TransactionSet`.
 #' @param items Sought items.
 #' @param presence Item presence condition for a transaction to be extracted.
-#'  One of `"all"`, `"any"`, `"exact"`.
+#'  One of `"all"`, `"any"`, `"exact"`, `"only"`.
 #'  \describe{
 #'    \item{`"all"`}{All the sought items must be part of a transaction for this transaction to be
 #'                   extracted.}
@@ -851,6 +872,8 @@ function(object, as_indices = FALSE) {
 #'                   to be extracted.}
 #'    \item{`"exact"`}{The item set contained in a transaction must be exactly the same as the sought
 #'                     item set for this transaction to be extracted.}
+#'    \item{`"only"`}{A transaction must contain only the sought items (any of them) for this
+#'                    transaction to be extracted.}
 #'  }
 #' @param as_indices `TRUE` or `FALSE` whether to return transactions or only
 #'  their indices.
@@ -868,6 +891,9 @@ function(object, as_indices = FALSE) {
 #' get_trx_from_items(TS_instance, items = c(25, 192), presence = "any")
 #' get_trx_from_items(TS_instance, items = c(25, 192), presence = "exact")
 #' 
+#' get_trx_from_items(TS_instance, items = c(192, 3146), presence = "any")
+#' get_trx_from_items(TS_instance, items = c(192, 3146), presence = "only")
+#' 
 #' get_trx_from_items(TS_instance,
 #'                    items = c(25, 192),
 #'                    presence = "any",
@@ -881,17 +907,15 @@ setMethod(f = "get_trx_from_items",
           definition =
 function(object, items, presence = "all", as_indices = FALSE) {
   
-  check_param(presence, values = c("all", "any", "exact"))
+  check_param(presence, values = c("all", "any", "exact", "only"))
   
-  if (presence == "exact") {
-    index = sapply(get_itemsets(object),
-                   function(x) setequal(items, x))
-  }
-  else {
-    func = if (presence == "all") all else any
-    index = sapply(get_itemsets(object),
-                   function(x) func(items %in% x))
-  }
+  func = switch(presence,
+                all   = { function(x) all(items %in% x) },
+                any   = { function(x) any(items %in% x) },
+                exact = { function(x) setequal(items, x) },
+                only  = { function(x) any(items %in% x) && all(x %in% items) })
+  
+  index = sapply(get_itemsets(object), func)
   
   if (as_indices) return(which(index))
   return(subset(object, index))
