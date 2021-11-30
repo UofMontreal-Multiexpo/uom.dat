@@ -579,7 +579,7 @@ If the given value for the argument `element` is `"items"`, one or more items ca
 
 * `"all"` (default): all the sought items must be part of the node or the pattern.
 * `"any"`: at least one of the sought items must be part of the node or the pattern.
-* `"exact"`: the itemset corresponding to the node or the pattern must be exactly the same as the sought itemset.
+* `"exactly"`: the itemset corresponding to the node or the pattern must be exactly the same as the sought itemset.
 * `"only"`: the node or the pattern must contain only the sought items (any of them).
 
 Here are some examples.
@@ -607,7 +607,7 @@ get_nodes(TA_instance,
           TA_instance["nodes"],
           element = "items",
           value = c("3146", "3180"),
-          condition = "exact")
+          condition = "exactly")
 ```
 
 ```{r}

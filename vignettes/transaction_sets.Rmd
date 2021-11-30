@@ -369,7 +369,7 @@ cat("\nJOB.TITLE and JOB.TASK values from the transactions having exactly the it
 get_info_from_items(TS_instance,
                     items = c(19, 25),
                     info_names = c("JOB.TITLE", "JOB.TASK"),
-                    presence = "exact")
+                    presence = "exactly")
 
 # Data associated with only items from those specified
 cat("\nJOB.TITLE and JOB.TASK values from the transactions having the item '192' or '3146'",
@@ -413,7 +413,7 @@ print(trx_subset_5)
 # Transactions corresponding exactly to a specific itemset
 trx_subset_6 <- get_trx_from_items(TS_instance,
                                    items = c(25, 192),
-                                   presence = "exact")
+                                   presence = "exactly")
 cat("\nTransactions with itemsets composed exactly of the items '25' and '192':\n")
 print(trx_subset_6)
 

@@ -31,11 +31,11 @@ Extract the nodes satisfying search criteria according to items, characteristics
 \details{
 If \code{element = "items"} one or more items can be sought. The condition for a node to be extracted
 is the presence of the sought items (argument \code{value}). The argument \code{condition} must be \code{"all"},
-\code{"any"}, \code{"exact"} or \code{"only"} (default is \code{"all"}):
+\code{"any"}, \code{"exactly"} or \code{"only"} (default is \code{"all"}):
 \itemize{
 \item \code{"all"}: all the sought items must be part of the node.
 \item \code{"any"}: at least one of the sought items must be part of the node.
-\item \code{"exact"}: the item set contained in the node must be exactly the same as the sought item set.
+\item \code{"exactly"}: the item set contained in the node must be exactly the same as the sought item set.
 \item \code{"only"}: the node must contain only the sought items (any of them).
 }
 
@@ -75,7 +75,7 @@ get_nodes(TA_instance, TA_instance["nodes"],
 get_nodes(TA_instance, "nodes",
           element = "items", value = c(3146, 3180), condition = "any")
 get_nodes(TA_instance, "nodes",
-          element = "items", value = c(3146, 3180), condition = "exact")
+          element = "items", value = c(3146, 3180), condition = "exactly")
 get_nodes(TA_instance, "nodes",
           element = "items", value = c(3146, 3180), condition = "only")
 

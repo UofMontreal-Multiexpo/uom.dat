@@ -13,13 +13,13 @@
 \item{items}{Sought items.}
 
 \item{presence}{Item presence condition for a transaction to be extracted.
-One of \code{"all"}, \code{"any"}, \code{"exact"}, \code{"only"}.
+One of \code{"all"}, \code{"any"}, \code{"exactly"}, \code{"only"}.
 \describe{
 \item{\code{"all"}}{All the sought items must be part of a transaction for this transaction to be
 extracted.}
 \item{\code{"any"}}{At least one of the sought items must be part of a transaction for this transaction
 to be extracted.}
-\item{\code{"exact"}}{The item set contained in a transaction must be exactly the same as the sought
+\item{\code{"exactly"}}{The item set contained in a transaction must be exactly the same as the sought
 item set for this transaction to be extracted.}
 \item{\code{"only"}}{A transaction must contain only the sought items (any of them) for this
 transaction to be extracted.}
@@ -41,7 +41,7 @@ Extract the transactions containing one or more sought items.
 \examples{
 get_trx_from_items(TS_instance, items = c(25, 192), presence = "all")
 get_trx_from_items(TS_instance, items = c(25, 192), presence = "any")
-get_trx_from_items(TS_instance, items = c(25, 192), presence = "exact")
+get_trx_from_items(TS_instance, items = c(25, 192), presence = "exactly")
 
 get_trx_from_items(TS_instance, items = c(192, 3146), presence = "any")
 get_trx_from_items(TS_instance, items = c(192, 3146), presence = "only")

@@ -742,7 +742,7 @@ This document presents basic processing of transactions (more complex analyzes o
 <span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="fu">get_info_from_items</span>(TS_instance,</span>
 <span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">items =</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="dv">25</span>),</span>
 <span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">info_names =</span> <span class="fu">c</span>(<span class="st">&quot;JOB.TITLE&quot;</span>, <span class="st">&quot;JOB.TASK&quot;</span>),</span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">presence =</span> <span class="st">&quot;exact&quot;</span>)</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">presence =</span> <span class="st">&quot;exactly&quot;</span>)</span>
 <span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Data associated with only items from those specified</span></span>
 <span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">JOB.TITLE and JOB.TASK values from the transactions having the item &#39;192&#39; or &#39;3146&#39;&quot;</span>,</span>
@@ -808,7 +808,7 @@ This document presents basic processing of transactions (more complex analyzes o
 <span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Transactions corresponding exactly to a specific itemset</span></span>
 <span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>trx_subset_6 <span class="ot">&lt;-</span> <span class="fu">get_trx_from_items</span>(TS_instance,</span>
 <span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">items =</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">192</span>),</span>
-<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">presence =</span> <span class="st">&quot;exact&quot;</span>)</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">presence =</span> <span class="st">&quot;exactly&quot;</span>)</span>
 <span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Transactions with itemsets composed exactly of the items &#39;25&#39; and &#39;192&#39;:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(trx_subset_6)</span>
 <span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a></span>

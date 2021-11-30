@@ -15,13 +15,13 @@
 \item{info_names}{Names of information to extract from transactions.}
 
 \item{presence}{Item presence condition for information to be extracted from a transaction.
-One of \code{"all"}, \code{"any"}, \code{"exact"}, \code{"only"}.
+One of \code{"all"}, \code{"any"}, \code{"exactly"}, \code{"only"}.
 \describe{
 \item{\code{"all"}}{All the sought items must be part of a transaction for its information to be
 extracted.}
 \item{\code{"any"}}{At least one of the sought items must be part of a transaction for its information
 to be extracted.}
-\item{\code{"exact"}}{The item set contained in a transaction must be exactly the same as the sought
+\item{\code{"exactly"}}{The item set contained in a transaction must be exactly the same as the sought
 item set for its information to be extracted.}
 \item{\code{"only"}}{A transaction must contain only the sought items (any of them) for its
 information to be extracted.}
@@ -46,7 +46,7 @@ get_info_from_items(TS_instance,
 get_info_from_items(TS_instance,
                     items = c(19, 25),
                     info_names = c("JOB.TITLE", "JOB.TASK"),
-                    presence = "exact")
+                    presence = "exactly")
 
 get_info_from_items(TS_instance,
                     items = c(192, 3146),

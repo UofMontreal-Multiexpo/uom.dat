@@ -18,14 +18,14 @@
 \item{items}{Sought items (one or more).}
 
 \item{condition}{Item presence condition for a pattern to be extracted.
-One of \code{"all"}, \code{"any"}, \code{"exact"}, \code{"only"}.
+One of \code{"all"}, \code{"any"}, \code{"exactly"}, \code{"only"}.
 \describe{
   \item{\code{"all"}}{All the sought items must be part of a pattern for this pattern to be
                       extracted.}
   \item{\code{"any"}}{At least one of the sought items must be part of a pattern for this pattern
                       to be extracted.}
-  \item{\code{"exact"}}{The item set contained in a pattern must be exactly the same as the
-                        sought item set for this pattern to be extracted.}
+  \item{\code{"exactly"}}{The item set contained in a pattern must be exactly the same as the
+                          sought item set for this pattern to be extracted.}
   \item{\code{"only"}}{A pattern must contain only the sought items (any of them) for this pattern
                        to be extracted.}
 }}
@@ -46,7 +46,7 @@ get_patterns_from_items(TA_instance, TA_instance["patterns"],
 get_patterns_from_items(TA_instance, TA_instance["patterns"],
                         items = c(3146, 3180), condition = "any")
 get_patterns_from_items(TA_instance, TA_instance["patterns"],
-                        items = c(3146, 3180), condition = "exact")
+                        items = c(3146, 3180), condition = "exactly")
 get_patterns_from_items(TA_instance, TA_instance["patterns"],
                         items = c(3146, 3180), condition = "only")
 

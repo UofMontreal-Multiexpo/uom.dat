@@ -33,11 +33,11 @@ Extract the patterns satisfying search criteria according to items, characterist
 \details{
 If \code{element = "items"} one or more items can be sought. The condition for a pattern to be extracted
 is the presence of the sought items (argument \code{value}). The argument \code{condition} must be \code{"all"},
-\code{"any"}, \code{"exact"} or \code{"only"} (default is \code{"all"}):
+\code{"any"}, \code{"exactly"} or \code{"only"} (default is \code{"all"}):
 \itemize{
 \item \code{"all"}: all the sought items must be part of the pattern.
 \item \code{"any"}: at least one of the sought items must be part of the pattern.
-\item \code{"exact"}: the item set contained in the pattern must be exactly the same as the sought item set.
+\item \code{"exactly"}: the item set contained in the pattern must be exactly the same as the sought item set.
 \item \code{"only"}: the pattern must contain only the sought items (any of them).
 }
 
@@ -88,7 +88,7 @@ get_patterns(TA_instance, TA_instance["patterns"],
 get_patterns(TA_instance, "patterns",
              element = "items", value = c(3146, 3180), condition = "any")
 get_patterns(TA_instance, "patterns",
-             element = "items", value = c(3146, 3180), condition = "exact")
+             element = "items", value = c(3146, 3180), condition = "exactly")
 get_patterns(TA_instance, "patterns",
              element = "items", value = c(3146, 3180), condition = "only")
 

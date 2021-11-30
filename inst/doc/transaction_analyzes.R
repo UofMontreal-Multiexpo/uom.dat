@@ -186,7 +186,7 @@ get_nodes(TA_instance,
           TA_instance["nodes"],
           element = "items",
           value = c("3146", "3180"),
-          condition = "exact")
+          condition = "exactly")
 
 ## -----------------------------------------------------------------------------
 # Subset of nodes having only the items '3146' and '3180'

@@ -17,12 +17,12 @@
 \item{items}{Sought items (one or more).}
 
 \item{condition}{Item presence condition for a node to be extracted.
-One of \code{"all"}, \code{"any"}, \code{"exact"}, \code{"only"}.
+One of \code{"all"}, \code{"any"}, \code{"exactly"}, \code{"only"}.
 \describe{
 \item{\code{"all"}}{All the sought items must be part of a node for this node to be extracted.}
 \item{\code{"any"}}{At least one of the sought items must be part of a node for this node to be
 extracted.}
-\item{\code{"exact"}}{The item set contained in a node must be exactly the same as the
+\item{\code{"exactly"}}{The item set contained in a node must be exactly the same as the
 sought item set for this node to be extracted.}
 \item{\code{"only"}}{A node must contain only the sought items (any of them) for this node
 to be extracted.}
@@ -44,7 +44,7 @@ get_nodes_from_items(TA_instance, TA_instance["nodes"],
 get_nodes_from_items(TA_instance, TA_instance["nodes"],
                      items = c(3146, 3180), condition = "any")
 get_nodes_from_items(TA_instance, TA_instance["nodes"],
-                     items = c(3146, 3180), condition = "exact")
+                     items = c(3146, 3180), condition = "exactly")
 get_nodes_from_items(TA_instance, TA_instance["nodes"],
                      items = c(3146, 3180), condition = "only")
 

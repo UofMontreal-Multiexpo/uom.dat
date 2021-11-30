@@ -724,14 +724,14 @@ function(object, info, presence = "all", additional = NULL) {
 #' @param items Sought items.
 #' @param info_names Names of information to extract from transactions.
 #' @param presence Item presence condition for information to be extracted from a transaction.
-#'  One of `"all"`, `"any"`, `"exact"`, `"only"`.
+#'  One of `"all"`, `"any"`, `"exactly"`, `"only"`.
 #'  \describe{
 #'    \item{`"all"`}{All the sought items must be part of a transaction for its information to be
 #'                   extracted.}
 #'    \item{`"any"`}{At least one of the sought items must be part of a transaction for its information
 #'                   to be extracted.}
-#'    \item{`"exact"`}{The item set contained in a transaction must be exactly the same as the sought
-#'                     item set for its information to be extracted.}
+#'    \item{`"exactly"`}{The item set contained in a transaction must be exactly the same as the sought
+#'                       item set for its information to be extracted.}
 #'    \item{`"only"`}{A transaction must contain only the sought items (any of them) for its
 #'                    information to be extracted.}
 #'  }
@@ -753,7 +753,7 @@ function(object, info, presence = "all", additional = NULL) {
 #' get_info_from_items(TS_instance,
 #'                     items = c(19, 25),
 #'                     info_names = c("JOB.TITLE", "JOB.TASK"),
-#'                     presence = "exact")
+#'                     presence = "exactly")
 #' 
 #' get_info_from_items(TS_instance,
 #'                     items = c(192, 3146),
@@ -864,14 +864,14 @@ function(object, as_indices = FALSE) {
 #' @param object S4 object of class `TransactionSet`.
 #' @param items Sought items.
 #' @param presence Item presence condition for a transaction to be extracted.
-#'  One of `"all"`, `"any"`, `"exact"`, `"only"`.
+#'  One of `"all"`, `"any"`, `"exactly"`, `"only"`.
 #'  \describe{
 #'    \item{`"all"`}{All the sought items must be part of a transaction for this transaction to be
 #'                   extracted.}
 #'    \item{`"any"`}{At least one of the sought items must be part of a transaction for this transaction
 #'                   to be extracted.}
-#'    \item{`"exact"`}{The item set contained in a transaction must be exactly the same as the sought
-#'                     item set for this transaction to be extracted.}
+#'    \item{`"exactly"`}{The item set contained in a transaction must be exactly the same as the sought
+#'                       item set for this transaction to be extracted.}
 #'    \item{`"only"`}{A transaction must contain only the sought items (any of them) for this
 #'                    transaction to be extracted.}
 #'  }
@@ -889,7 +889,7 @@ function(object, as_indices = FALSE) {
 #' @examples
 #' get_trx_from_items(TS_instance, items = c(25, 192), presence = "all")
 #' get_trx_from_items(TS_instance, items = c(25, 192), presence = "any")
-#' get_trx_from_items(TS_instance, items = c(25, 192), presence = "exact")
+#' get_trx_from_items(TS_instance, items = c(25, 192), presence = "exactly")
 #' 
 #' get_trx_from_items(TS_instance, items = c(192, 3146), presence = "any")
 #' get_trx_from_items(TS_instance, items = c(192, 3146), presence = "only")
@@ -907,13 +907,13 @@ setMethod(f = "get_trx_from_items",
           definition =
 function(object, items, presence = "all", as_indices = FALSE) {
   
-  check_param(presence, values = c("all", "any", "exact", "only"))
+  check_param(presence, values = c("all", "any", "exactly", "only"))
   
   func = switch(presence,
-                all   = { function(x) all(items %in% x) },
-                any   = { function(x) any(items %in% x) },
-                exact = { function(x) setequal(items, x) },
-                only  = { function(x) any(items %in% x) && all(x %in% items) })
+                all     = { function(x) all(items %in% x) },
+                any     = { function(x) any(items %in% x) },
+                exactly = { function(x) setequal(items, x) },
+                only    = { function(x) any(items %in% x) && all(x %in% items) })
   
   index = sapply(get_itemsets(object), func)
   
