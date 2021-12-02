@@ -1108,8 +1108,12 @@ function(object, items = NULL) {
 #' @param object S4 object of class `TransactionSet`.
 #' @param items Items for which to count co-occurrences between pairs. The default `NULL` means to count
 #'  them considering each existing item.
-#' @return Co-occurrence matrix between each pair of items.
-#'  `NA` values are assigned to given items that do not exist in the transations.
+#' @param proportions If `TRUE`, proportions are computed instead of numbers of co-occurrences:
+#'  ratio between the number of transactions containing a pair of items and the number of transactions
+#'  containing at least one of them.
+#' @return Matrix of co-occurrences (or of proportions of co-occurrences, according to `proportions`)
+#'  between each pair of items.
+#'  `NA` values are assigned in the diagonal to given items that do not exist in the transactions.
 #' 
 #' @author Gauthier Magnin
 #' @seealso [`complexity_ratio`], [`complexity_index`],
@@ -1117,7 +1121,9 @@ function(object, items = NULL) {
 #' 
 #' @examples
 #' co_occurrence_matrix(TS_instance)
-#' co_occurrence_matrix(TS_instance, items = c(19, 25, 148, 3146))
+#' co_occurrence_matrix(TS_instance, items = c(497, 931, 3157, 3350))
+#' co_occurrence_matrix(TS_instance, items = c(497, 931, 3157, 3350),
+#'                      proportions = TRUE)
 #' 
 #' @aliases co_occurrence_matrix
 #' @md
@@ -1125,11 +1131,11 @@ function(object, items = NULL) {
 setMethod(f = "co_occurrence_matrix",
           signature = "TransactionSet",
           definition =
-function(object, items = NULL) {
+function(object, items = NULL, proportions = FALSE) {
   
   if (is.null(items)) items = get_all_items(object)
   
-  # Find the transactions containing each item then count the number in which each pair appears
+  # Find the transactions containing each item an generate all combinations of pairs
   itemsets = get_itemsets(object)
   trx_items = stats::setNames(
     lapply(items, function(item) which(sapply(itemsets,
@@ -1137,7 +1143,19 @@ function(object, items = NULL) {
     items
   )
   pairs = utils::combn(as.character(items), 2)
-  co = apply(pairs, 2, function(pair) length(intersect(trx_items[[pair[1]]], trx_items[[pair[2]]])))
+  
+  if (!proportions) {
+    # Count the number of transactions in which each pair appears
+    co = apply(pairs, 2, function(pair) length(intersect(trx_items[[pair[1]]], trx_items[[pair[2]]])))
+  } else {
+    # Compute the proportion of co-occurrences (intersection / union of transactions containing the pairs)
+    co = apply(pairs, 2, function(pair) {
+      len_intersect = length(intersect(trx_items[[pair[1]]], trx_items[[pair[2]]]))
+      if (len_intersect == 0) return(0)
+      return(len_intersect / (length(trx_items[[pair[1]]]) + length(trx_items[[pair[2]]]) - len_intersect))
+      # return(len_intersect / length(union(trx_items[[pair[1]]], trx_items[[pair[2]]])))
+    })
+  }
   
   # Creation of a matrix that will be the contingeny table
   co_table = matrix(nrow = length(items), ncol = length(items))
@@ -1151,7 +1169,11 @@ function(object, items = NULL) {
     co_table[pairs[1, c], pairs[2, c]] = co[c]
     co_table[pairs[2, c], pairs[1, c]] = co[c]
   }
-  diag(co_table) = table_on_list(get_itemsets(object))[as.character(items)]
+  if (proportions) {
+    diag(co_table)[is.element(items, get_all_items(object))] = 1
+  } else {
+    diag(co_table) = table_on_list(get_itemsets(object))[as.character(items)]
+  }
   
   return(co_table)
 })
@@ -1303,13 +1325,15 @@ function(object, identifiers, length_one, under, over) {
 #' Co-occurrence chart, for TransactionSet
 #' 
 #' Plot a graph in which vertices are items and edges are their co-occurences in transactions (i.e. for
-#'  each pair of items, the number of transactions containing it).
+#'  each pair of items, the number of transactions containing it). Edges can also represent the
+#'  proportions of these co-occurrences (i.e., the ratio between the number of transactions containing a
+#'  pair of items and the number of transactions containing at least one of them).
 #' 
 #' @details
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
 #' 
-#' Items are ordered according to the order they are given. If one of the special values is given,
+#' Items are ordered according to the order they are given. If the default value is given,
 #'  they are ordered alphanumerically.
 #' 
 #' @note
@@ -1318,11 +1342,15 @@ function(object, identifiers, length_one, under, over) {
 #'  window; while exporting the plot; or by using another graphics device.
 #' 
 #' @param object S4 object of class `TransactionSet`.
-#' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
+#' @param items Items for which to plot co-occurrences between pairs.
 #'  The default `NULL` means to consider each existing item.
-#' @param co_occ Matrix containing the co-occurrences for at least the items specified by the
-#'  argument `items`. Is computed if `NULL`.
+#' @param co_occ Matrix containing the co-occurrences (or their proportions) for at least the items
+#'  specified by the argument `items`. Is computed if `NULL`.
+#' @param proportions `TRUE` if the proportions of co-occurrences are to be plotted (and computed, if
+#'  `co_occ` is `NULL`) instead of the co-occurrences themselves.
 #' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
+#'  Default value depends on the argument `proportions` and allows not to plot links between items
+#'  that never co-occur.
 #' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
 #' @inheritParams plot_heb_chart
 #' @return Graph created with the packages `ggraph` and `ggplot2`.
@@ -1338,7 +1366,10 @@ function(object, identifiers, length_one, under, over) {
 #' co_occurrence_chart(TS_instance) +
 #'   ggplot2::expand_limits(x = c(-1.2, 1.2), y = c(-1.2, 1.2))
 #' co_occurrence_chart(TS_instance, min_occ = 2, palette = "OrRd")
-#' co_occurrence_chart(TS_instance, items = c(25, 27, 49, 87, 148, 192, 252, 328))
+#' 
+#' co_occurrence_chart(TS_instance, items = c(497, 931, 3157, 3350))
+#' co_occurrence_chart(TS_instance, items = c(497, 931, 3157, 3350),
+#'                     proportions = TRUE)
 #' 
 #' @aliases co_occurrence_chart co_occurrence_chart,TransactionSet
 #' @md
@@ -1346,8 +1377,8 @@ function(object, identifiers, length_one, under, over) {
 setMethod(f = "co_occurrence_chart",
           signature = "TransactionSet",
           definition =
-function(object, items = NULL, co_occ = NULL,
-         min_occ = 1, max_occ = Inf,
+function(object, items = NULL, co_occ = NULL, proportions = FALSE,
+         min_occ = if (proportions) .Machine$double.xmin else 1, max_occ = Inf,
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,
          edge_looseness = 0.8, edge_alpha = 1,
@@ -1366,7 +1397,7 @@ function(object, items = NULL, co_occ = NULL,
   vertices$label = items[match(vertices$name, items)]
   
   # Compute or subset the co-occurrence matrix
-  if (is.null(co_occ)) co_occ = co_occurrence_matrix(object, items)
+  if (is.null(co_occ)) co_occ = co_occurrence_matrix(object, items, proportions)
   else co_occ = co_occ[as.character(items), as.character(items)]
   
   # Links to be drawn between the vertices (different from the edges of the tree)
@@ -1374,7 +1405,19 @@ function(object, items = NULL, co_occ = NULL,
   co_occ = co_occ[co_occ$Var1 != co_occ$Var2 & !duplicated(t(apply(co_occ[, c(1,2)], 1, sort))), ]
   connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
   
-  return(plot_heb_chart(hierarchy, vertices, connections, limits = c(1, max(co_occ$Freq)),
+  # Scale limits, breakpoints and name
+  if (proportions) {
+    scale_name = "Co-occurrence proportions"
+    limits = c(0, 1)
+    breaks = "default"
+  } else {
+    scale_name = "Co-occurrences"
+    limits = c(1, max(co_occ$Freq))
+    breaks = unique(floor(pretty(seq(limits[1], limits[2]))))
+  }
+  
+  return(plot_heb_chart(hierarchy, vertices, connections,
+                        scale_name = scale_name, limits = limits, breaks = breaks,
                         vertex_size = vertex_size, vertex_alpha = vertex_alpha, vertex_margin = vertex_margin,
                         label_size = label_size, label_margin = label_margin,
                         edge_looseness = edge_looseness, edge_alpha = edge_alpha,

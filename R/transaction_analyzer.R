@@ -3857,7 +3857,9 @@ function(object, category = NULL, items = object["items"],
 #' Co-occurrence chart, for TransactionAnalyzer
 #' 
 #' Plot a graph in which vertices are items and edges are their co-occurences in transactions (i.e. for
-#'  each pair of items, the number of transactions containing it).
+#'  each pair of items, the number of transactions containing it). Edges can also represent the
+#'  proportions of these co-occurrences (i.e., the ratio between the number of transactions containing a
+#'  pair of items and the number of transactions containing at least one of them).
 #' 
 #' @details
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
@@ -3875,15 +3877,19 @@ function(object, category = NULL, items = object["items"],
 #'  window; while exporting the plot; or by using another graphics device.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
-#' @param items Items for which to count co-occurrences between pairs and to plot on the graph.
+#' @param items Items for which to plot co-occurrences between pairs.
 #'  Any subset of `object["items"]`.
 #'  
 #'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param category Name or number of the category to represent on the graph (numbering according to
 #'  the order of the columns of `object["items_categories"]`).
-#' @param co_occ Matrix containing the co-occurrences for at least the items specified by the
-#'  argument `items`. Is computed if `NULL`.
+#' @param co_occ Matrix containing the co-occurrences (or their proportions) for at least the items
+#'  specified by the argument `items`. Is computed if `NULL`.
+#' @param proportions `TRUE` if the proportions of co-occurrences are to be plotted (and computed, if
+#'  `co_occ` is `NULL`) instead of the co-occurrences themselves.
 #' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
+#'  Default value depends on the argument `proportions` and allows not to plot links between items
+#'  that never co-occur.
 #' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
 #' @param use_names If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
@@ -3906,7 +3912,10 @@ function(object, category = NULL, items = object["items"],
 #'   ggplot2::expand_limits(x = c(-1.5, 1.5), y = c(-1.5, 1.5))
 #' co_occurrence_chart(TA_instance, category = "family",
 #'                     min_occ = 2, palette = "OrRd")
+#' 
 #' co_occurrence_chart(TA_instance, TA_instance["items"][2:13], "family")
+#' co_occurrence_chart(TA_instance, TA_instance["items"][2:13], "family",
+#'                     proportions = TRUE)
 #' 
 #' @aliases co_occurrence_chart co_occurrence_chart,TransactionAnalyzer
 #' @md
@@ -3915,7 +3924,8 @@ setMethod(f = "co_occurrence_chart",
           signature = "TransactionAnalyzer",
           definition =
 function(object, items = object["items"], category = NULL,
-         co_occ = NULL, min_occ = 1, max_occ = Inf,
+         co_occ = NULL, proportions = FALSE,
+         min_occ = if (proportions) .Machine$double.xmin else 1, max_occ = Inf,
          use_names = TRUE, n.cutoff = NULL, c.cutoff = NULL, sort_by = "category",
          vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
          label_size = 3, label_margin = 0.05,
@@ -3959,7 +3969,7 @@ function(object, items = object["items"], category = NULL,
   }
   
   # Compute or subset the co-occurrence matrix
-  if (is.null(co_occ)) co_occ = co_occurrence_matrix(object@transactions, items)
+  if (is.null(co_occ)) co_occ = co_occurrence_matrix(object@transactions, items, proportions)
   else co_occ = co_occ[as.character(items), as.character(items)]
   
   # Links to be drawn between the vertices (different from the edges of the tree) 
@@ -3968,20 +3978,32 @@ function(object, items = object["items"], category = NULL,
   connections = co_occ[co_occ$Freq >= min_occ & co_occ$Freq <= max_occ, ]
   
   
-  # Preparation of the list of arguments and call of the plot function
+  # Preparation of the list of arguments
   args = list(hierarchy = hierarchy, vertices = vertices, edges = connections,
-              limits = c(1, max(co_occ$Freq)),
               vertex_size = vertex_size, vertex_alpha = vertex_alpha, vertex_margin = vertex_margin,
               label_size = label_size, label_margin = label_margin,
               edge_looseness = edge_looseness, edge_alpha = edge_alpha,
               palette = palette, palette_direction = palette_direction)
   
+  # Scale limits, breakpoints and name
+  if (proportions) {
+    args$scale_name = "Co-occurrence proportions"
+    args$limits = c(0, 1)
+    args$breaks = "default"
+  } else {
+    args$scale_name = "Co-occurrences"
+    args$limits = c(1, max(co_occ$Freq))
+    args$breaks = unique(floor(pretty(seq(args$limits[1], args$limits[2]))))
+  }
+  
+  # Name and values of the legend relating to the category
   if (!is.null(category)) {
     category_name = if (is.numeric(category)) colnames(object@items_categories)[category] else category
     args$legend_name = cap(category_name)
     args$legend_values = category_legend
   }
   
+  # Call of the plot function
   return(do.call(plot_heb_chart, args))
 })
 

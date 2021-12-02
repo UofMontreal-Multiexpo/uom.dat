@@ -534,6 +534,13 @@ In addition, the number of occurrences of each item can be counted using the fun
 table_on_list(trx_object_1["items"])
 ```
 
+Finally, proportions of the co-occurrences can be computed by setting the argument `proportions` to `TRUE`. The resulting matrix contains, for each pair of items, the ratio between the numbers of transactions containing the two items (i.e., the number of co-occurrences) and the numbers of transactions containing at least one of them.
+```{r}
+# Compute the proportions of the co-occurrences
+co_occurrence_matrix(trx_object_1, proportions = TRUE)
+```
+
+
 
 ## 3.2. Plots about transactions
 
@@ -544,7 +551,7 @@ Two main kinds of charts can be plotted from a set of transaction.
 
 ### 3.2.1. Co-occurrence charts
 
-Co-occurrence charts are graphs in which vertices are items and edges are their co-occurrences in transactions (i.e. for each pair of items, the number of transactions containing it). The method to use to plot such graphs is `co_occurrence_chart`.
+Co-occurrence charts are graphs in which vertices are items and edges are their co-occurrences in transactions (i.e. for each pair of items, the number of transactions containing it). Edges can also represent the proportions of these co-occurrences (i.e., the ratio between the number of transactions containing a pair of items and the number of transactions containing at least one of them). The method to use to plot such graphs is `co_occurrence_chart`.
 
 Here are two examples.
 ```{r}
@@ -563,6 +570,15 @@ The argument `items` allows to refine the graph by specifying the items to consi
 ```{r}
 co_occurrence_chart(TS_instance,
                     items = c(25, 27, 49, 87, 148, 192, 252, 328))
+```
+
+#### Proportions
+
+The argument `proportions` allows to plot the proportions of the co-occurrences instead of the co-occurrences.
+```{r}
+co_occurrence_chart(TS_instance,
+                    items = c(25, 27, 49, 87, 148, 192, 252, 328),
+                    proportions = TRUE)
 ```
 
 

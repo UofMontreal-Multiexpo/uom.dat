@@ -314,6 +314,10 @@ co_occurrence_matrix(trx_object_1, c("A", "C", "D"))
 table_on_list(trx_object_1["items"])
 
 ## -----------------------------------------------------------------------------
+# Compute the proportions of the co-occurrences
+co_occurrence_matrix(trx_object_1, proportions = TRUE)
+
+## -----------------------------------------------------------------------------
 # Co-occurrence chart on the TransactionSet 'trx_object_1' and all existing items
 co_occurrence_chart(trx_object_1)
 
@@ -324,6 +328,11 @@ co_occurrence_chart(TS_instance)
 ## -----------------------------------------------------------------------------
 co_occurrence_chart(TS_instance,
                     items = c(25, 27, 49, 87, 148, 192, 252, 328))
+
+## -----------------------------------------------------------------------------
+co_occurrence_chart(TS_instance,
+                    items = c(25, 27, 49, 87, 148, 192, 252, 328),
+                    proportions = TRUE)
 
 ## -----------------------------------------------------------------------------
 co_occurrence_chart(TS_instance,

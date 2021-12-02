@@ -11,7 +11,8 @@
   items = object["items"],
   category = NULL,
   co_occ = NULL,
-  min_occ = 1,
+  proportions = FALSE,
+  min_occ = if (proportions) .Machine$double.xmin else 1,
   max_occ = Inf,
   use_names = TRUE,
   n.cutoff = NULL,
@@ -31,7 +32,7 @@
 \arguments{
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
-\item{items}{Items for which to count co-occurrences between pairs and to plot on the graph.
+\item{items}{Items for which to plot co-occurrences between pairs.
 Any subset of \code{object["items"]}.
 
 \code{"items"} and \code{"i"} are special values for \code{object["items"]}.}
@@ -39,10 +40,15 @@ Any subset of \code{object["items"]}.
 \item{category}{Name or number of the category to represent on the graph (numbering according to
 the order of the columns of \code{object["items_categories"]}).}
 
-\item{co_occ}{Matrix containing the co-occurrences for at least the items specified by the
-argument \code{items}. Is computed if \code{NULL}.}
+\item{co_occ}{Matrix containing the co-occurrences (or their proportions) for at least the items
+specified by the argument \code{items}. Is computed if \code{NULL}.}
 
-\item{min_occ}{Minimum number of co-occurrences to consider to plot a link between two items.}
+\item{proportions}{\code{TRUE} if the proportions of co-occurrences are to be plotted (and computed, if
+\code{co_occ} is \code{NULL}) instead of the co-occurrences themselves.}
+
+\item{min_occ}{Minimum number of co-occurrences to consider to plot a link between two items.
+Default value depends on the argument \code{proportions} and allows not to plot links between items
+that never co-occur.}
 
 \item{max_occ}{Maximum number of co-occurrences to consider to plot a link between two items.}
 
@@ -88,7 +94,9 @@ Graph created with the packages \code{ggraph} and \code{ggplot2}.
 }
 \description{
 Plot a graph in which vertices are items and edges are their co-occurences in transactions (i.e. for
-each pair of items, the number of transactions containing it).
+each pair of items, the number of transactions containing it). Edges can also represent the
+proportions of these co-occurrences (i.e., the ratio between the number of transactions containing a
+pair of items and the number of transactions containing at least one of them).
 }
 \details{
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
@@ -116,7 +124,10 @@ co_occurrence_chart(TA_instance, category = 1, n.cutoff = 20) +
   ggplot2::expand_limits(x = c(-1.5, 1.5), y = c(-1.5, 1.5))
 co_occurrence_chart(TA_instance, category = "family",
                     min_occ = 2, palette = "OrRd")
+
 co_occurrence_chart(TA_instance, TA_instance["items"][2:13], "family")
+co_occurrence_chart(TA_instance, TA_instance["items"][2:13], "family",
+                    proportions = TRUE)
 
 }
 \seealso{

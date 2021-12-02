@@ -10,7 +10,8 @@
   object,
   items = NULL,
   co_occ = NULL,
-  min_occ = 1,
+  proportions = FALSE,
+  min_occ = if (proportions) .Machine$double.xmin else 1,
   max_occ = Inf,
   vertex_size = 3,
   vertex_alpha = 1,
@@ -26,13 +27,18 @@
 \arguments{
 \item{object}{S4 object of class \code{TransactionSet}.}
 
-\item{items}{Items for which to count co-occurrences between pairs and to plot on the graph.
+\item{items}{Items for which to plot co-occurrences between pairs.
 The default \code{NULL} means to consider each existing item.}
 
-\item{co_occ}{Matrix containing the co-occurrences for at least the items specified by the
-argument \code{items}. Is computed if \code{NULL}.}
+\item{co_occ}{Matrix containing the co-occurrences (or their proportions) for at least the items
+specified by the argument \code{items}. Is computed if \code{NULL}.}
 
-\item{min_occ}{Minimum number of co-occurrences to consider to plot a link between two items.}
+\item{proportions}{\code{TRUE} if the proportions of co-occurrences are to be plotted (and computed, if
+\code{co_occ} is \code{NULL}) instead of the co-occurrences themselves.}
+
+\item{min_occ}{Minimum number of co-occurrences to consider to plot a link between two items.
+Default value depends on the argument \code{proportions} and allows not to plot links between items
+that never co-occur.}
 
 \item{max_occ}{Maximum number of co-occurrences to consider to plot a link between two items.}
 
@@ -68,13 +74,15 @@ Graph created with the packages \code{ggraph} and \code{ggplot2}.
 }
 \description{
 Plot a graph in which vertices are items and edges are their co-occurences in transactions (i.e. for
-each pair of items, the number of transactions containing it).
+each pair of items, the number of transactions containing it). Edges can also represent the
+proportions of these co-occurrences (i.e., the ratio between the number of transactions containing a
+pair of items and the number of transactions containing at least one of them).
 }
 \details{
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 
-Items are ordered according to the order they are given. If one of the special values is given,
+Items are ordered according to the order they are given. If the default value is given,
 they are ordered alphanumerically.
 }
 \note{
@@ -87,7 +95,10 @@ co_occurrence_chart(TS_instance)
 co_occurrence_chart(TS_instance) +
   ggplot2::expand_limits(x = c(-1.2, 1.2), y = c(-1.2, 1.2))
 co_occurrence_chart(TS_instance, min_occ = 2, palette = "OrRd")
-co_occurrence_chart(TS_instance, items = c(25, 27, 49, 87, 148, 192, 252, 328))
+
+co_occurrence_chart(TS_instance, items = c(497, 931, 3157, 3350))
+co_occurrence_chart(TS_instance, items = c(497, 931, 3157, 3350),
+                    proportions = TRUE)
 
 }
 \seealso{

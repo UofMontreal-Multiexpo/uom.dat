@@ -8,7 +8,9 @@ plot_heb_chart(
   hierarchy,
   vertices,
   edges,
+  scale_name,
   limits,
+  breaks = "default",
   legend_name = NULL,
   legend_values = NULL,
   vertex_size = 3,
@@ -38,7 +40,13 @@ representation). Must contain the columns:
 between the leaves of the tree representation). Must contain two columns contaning the names of the
 vertices to connect and a third one giving the intensities of the connections.}
 
-\item{limits}{The scale limits (related to the third column of \code{edges}).}
+\item{scale_name}{Name of the scale relating to the intensities of the connections (i.e., the third
+column of \code{edges}).}
+
+\item{limits}{Scale limits (relating to the third column of \code{edges}).}
+
+\item{breaks}{Scale breaks (relating to the third column of \code{edges}). See
+\code{\link[ggraph:scale_edge_colour]{ggraph::scale_edge_color_distiller}} and \code{\link[ggplot2:waiver]{ggplot2::waiver}} to know about the default behavior.}
 
 \item{legend_name, legend_values}{Name and values of the additional legend related to the column
 \code{group} of the data frame \code{vertices}.

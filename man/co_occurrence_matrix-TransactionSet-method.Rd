@@ -5,17 +5,22 @@
 \alias{co_occurrence_matrix}
 \title{Co-occurrence matrix}
 \usage{
-\S4method{co_occurrence_matrix}{TransactionSet}(object, items = NULL)
+\S4method{co_occurrence_matrix}{TransactionSet}(object, items = NULL, proportions = FALSE)
 }
 \arguments{
 \item{object}{S4 object of class \code{TransactionSet}.}
 
 \item{items}{Items for which to count co-occurrences between pairs. The default \code{NULL} means to count
 them considering each existing item.}
+
+\item{proportions}{If \code{TRUE}, proportions are computed instead of numbers of co-occurrences:
+ratio between the number of transactions containing a pair of items and the number of transactions
+containing at least one of them.}
 }
 \value{
-Co-occurrence matrix between each pair of items.
-\code{NA} values are assigned to given items that do not exist in the transations.
+Matrix of co-occurrences (or of proportions of co-occurrences, according to \code{proportions})
+between each pair of items.
+\code{NA} values are assigned in the diagonal to given items that do not exist in the transactions.
 }
 \description{
 Build the co-occurrence matrix: the matrix of the number of transactions containing a specific pair of
@@ -24,7 +29,9 @@ item.
 }
 \examples{
 co_occurrence_matrix(TS_instance)
-co_occurrence_matrix(TS_instance, items = c(19, 25, 148, 3146))
+co_occurrence_matrix(TS_instance, items = c(497, 931, 3157, 3350))
+co_occurrence_matrix(TS_instance, items = c(497, 931, 3157, 3350),
+                     proportions = TRUE)
 
 }
 \seealso{

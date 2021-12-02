@@ -1094,7 +1094,7 @@ category_tree_chart(TA_instance,
 
 ## 4.2. Co-occurrence charts
 
-Co-occurrence charts are graphs in which vertices are items and edges are their number of co-occurrences in the transactions (i.e. for each pair of items, the number of transactions containig it). The method to use to plot such graphs is `co_occurrence_chart`. It works the same way as the one for objects of class `TransactionSet`, taking into account the item names and the values of one category.
+Co-occurrence charts are graphs in which vertices are items and edges are their number of co-occurrences in transactions (i.e. for each pair of items, the number of transactions containing it). Edges can also represent the proportions of these co-occurrences (i.e., the ratio between the number of transactions containing a pair of items and the number of transactions containing at least one of them). The method to use to plot such graphs is `co_occurrence_chart`. It works the same way as the one for objects of class `TransactionSet`, taking into account the item names and the values of one category.
 
 ```{r fig.height=6}
 # Co-occurrence chart of 'TA_instance' using the category 'family'
@@ -1102,9 +1102,16 @@ co_occurrence_chart(TA_instance,
                     category = "family")
 ```
 
+```{r fig.height=6}
+# Chart of the co-occurrence proportions of 'TA_instance' using the category 'family'
+co_occurrence_chart(TA_instance,
+                    category = "family",
+                    proportions = TRUE)
+```
+
 #### Item names and category values
 
-By default, if the items were associated to names at initialization of the `TransactionAnalyzer`, these names are displayed. If they were not, their identifiers are displayed. The argument `use_names` specifies whether to display the names (if they exist) or the identifiers.
+By default, if the items were associated with names at initialization of the `TransactionAnalyzer`, these names are displayed. If they were not, their identifiers are displayed. The argument `use_names` specifies whether to display the names (if they exist) or the identifiers.
 
 ```{r fig.height=6}
 co_occurrence_chart(TA_instance,

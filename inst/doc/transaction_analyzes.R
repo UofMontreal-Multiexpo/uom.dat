@@ -459,6 +459,12 @@ co_occurrence_chart(TA_instance,
                     category = "family")
 
 ## ----fig.height=6-------------------------------------------------------------
+# Chart of the co-occurrence proportions of 'TA_instance' using the category 'family'
+co_occurrence_chart(TA_instance,
+                    category = "family",
+                    proportions = TRUE)
+
+## ----fig.height=6-------------------------------------------------------------
 co_occurrence_chart(TA_instance,
                     category = "family",
                     use_names = FALSE)

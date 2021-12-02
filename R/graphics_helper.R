@@ -146,7 +146,11 @@ fig_in_usr_coords = function(n = 1:4) {
 #' @param edges A three-column data frame representing the edges of the graph (i.e. the connections
 #'  between the leaves of the tree representation). Must contain two columns contaning the names of the
 #'  vertices to connect and a third one giving the intensities of the connections.
-#' @param limits The scale limits (related to the third column of `edges`).
+#' @param scale_name Name of the scale relating to the intensities of the connections (i.e., the third
+#'  column of `edges`).
+#' @param limits Scale limits (relating to the third column of `edges`).
+#' @param breaks Scale breaks (relating to the third column of `edges`). See
+#'  [`ggraph::scale_edge_color_distiller`] and [`ggplot2::waiver`] to know about the default behavior.
 #' @param legend_name,legend_values Name and values of the additional legend related to the column
 #'  `group` of the data frame `vertices`.
 #'  
@@ -175,7 +179,8 @@ fig_in_usr_coords = function(n = 1:4) {
 #' @author Gauthier Magnin
 #' @md
 #' @keywords internal
-plot_heb_chart = function(hierarchy, vertices, edges, limits,
+plot_heb_chart = function(hierarchy, vertices, edges,
+                          scale_name, limits, breaks = "default",
                           legend_name = NULL, legend_values = NULL,
                           vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05,
                           label_size = 3, label_margin = 0.05,
@@ -196,6 +201,9 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
   to = to[the_order]
   edges = edges[the_order, ]
   
+  # Setting default breaks
+  if (length(breaks) == 1 && breaks == "default") breaks = ggplot2::waiver()
+  
   # Graph
   tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
   
@@ -205,10 +213,9 @@ plot_heb_chart = function(hierarchy, vertices, edges, limits,
                                                     colors = edges[, 3]),
                              ggplot2::aes(color = colors),
                              tension = edge_looseness, alpha = edge_alpha) +
-    ggraph::scale_edge_color_distiller("Co-occurrences", palette = palette, direction = palette_direction,
-                                       # Definition of the scale (to have only integers)
+    ggraph::scale_edge_color_distiller(scale_name, palette = palette, direction = palette_direction,
                                        limits = limits,
-                                       breaks = unique(floor(pretty(seq(limits[1], limits[2])))),
+                                       breaks = breaks,
                                        # Parameter required if ggraph is not loaded
                                        guide = ggraph::guide_edge_colorbar(order = 1)) +
     
