@@ -1348,10 +1348,12 @@ function(object, identifiers, length_one, under, over) {
 #'  specified by the argument `items`. Is computed if `NULL`.
 #' @param proportions `TRUE` if the proportions of co-occurrences are to be plotted (and computed, if
 #'  `co_occ` is `NULL`) instead of the co-occurrences themselves.
-#' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
+#' @param min_occ Minimum number of co-occurrences (or minimum proportion) to consider to plot a link
+#'  between two items.
 #'  Default value depends on the argument `proportions` and allows not to plot links between items
 #'  that never co-occur.
-#' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
+#' @param max_occ Maximum number of co-occurrences (or maximum proportion) to consider to plot a link
+#'  between two items.
 #' @inheritParams plot_heb_chart
 #' @return Graph created with the packages `ggraph` and `ggplot2`.
 #' 

@@ -36,11 +36,13 @@ specified by the argument \code{items}. Is computed if \code{NULL}.}
 \item{proportions}{\code{TRUE} if the proportions of co-occurrences are to be plotted (and computed, if
 \code{co_occ} is \code{NULL}) instead of the co-occurrences themselves.}
 
-\item{min_occ}{Minimum number of co-occurrences to consider to plot a link between two items.
+\item{min_occ}{Minimum number of co-occurrences (or minimum proportion) to consider to plot a link
+between two items.
 Default value depends on the argument \code{proportions} and allows not to plot links between items
 that never co-occur.}
 
-\item{max_occ}{Maximum number of co-occurrences to consider to plot a link between two items.}
+\item{max_occ}{Maximum number of co-occurrences (or maximum proportion) to consider to plot a link
+between two items.}
 
 \item{vertex_size}{Size of the vertices.}
 

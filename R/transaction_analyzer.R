@@ -3887,10 +3887,12 @@ function(object, category = NULL, items = object["items"],
 #'  specified by the argument `items`. Is computed if `NULL`.
 #' @param proportions `TRUE` if the proportions of co-occurrences are to be plotted (and computed, if
 #'  `co_occ` is `NULL`) instead of the co-occurrences themselves.
-#' @param min_occ Minimum number of co-occurrences to consider to plot a link between two items.
+#' @param min_occ Minimum number of co-occurrences (or minimum proportion) to consider to plot a link
+#'  between two items.
 #'  Default value depends on the argument `proportions` and allows not to plot links between items
 #'  that never co-occur.
-#' @param max_occ Maximum number of co-occurrences to consider to plot a link between two items.
+#' @param max_occ Maximum number of co-occurrences (or maximum proportion) to consider to plot a link
+#'  between two items.
 #' @param use_names If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
