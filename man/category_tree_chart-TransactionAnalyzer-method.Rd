@@ -82,7 +82,9 @@ represent the values of the chosen category and vertices at depth 2 represent it
 specific category value.
 }
 \details{
-Items are sorted according to the values of the category then alphanumerically by their identifiers.
+If \code{category} is \code{NULL}, items are sorted alphanumerically.
+If \code{category} is not \code{NULL}, items are sorted according to the values of the category then in the
+order they are given.
 
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
