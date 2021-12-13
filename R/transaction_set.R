@@ -1169,11 +1169,8 @@ function(object, items = NULL, proportions = FALSE) {
     co_table[pairs[1, c], pairs[2, c]] = co[c]
     co_table[pairs[2, c], pairs[1, c]] = co[c]
   }
-  if (proportions) {
-    diag(co_table)[is.element(items, get_all_items(object))] = 1
-  } else {
-    diag(co_table) = table_on_list(get_itemsets(object))[as.character(items)]
-  }
+  items_are_in_trx = is.element(items, get_all_items(object))
+  diag(co_table)[items_are_in_trx] = if (proportions) 1 else lengths(trx_items)[items_are_in_trx]
   
   return(co_table)
 })
