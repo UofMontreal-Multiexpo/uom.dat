@@ -597,7 +597,7 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 #' @md
 #' @export
 classify_mixture = function(values = NULL, references = NULL,
-                             hi = NULL, mhq = NULL, mcr = NULL) {
+                            hi = NULL, mhq = NULL, mcr = NULL) {
   
   if (is.null(hi)) hi = hazard_index(values, references)
   if (is.null(mhq)) mhq = maximum_hazard_quotient(values, references)
