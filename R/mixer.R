@@ -55,7 +55,7 @@ hazard_quotient = function(values, references) {
       rownames(hq) = rownames(values)
     }
     
-    colnames(hq) = paste0("V", seq_len(ncol(values)))
+    colnames(hq) = colnames(values)
     return(hq)
   }
 }
