@@ -44,12 +44,12 @@ hazard_quotient = function(values, references) {
   if (is.matrix(values) && nrow(values) != length(references))
     stop("Length of references must be equal to the number of rows of values.")
   
-  # Distinction vector et matrix
+  # Distinction between vector and matrix cases
   if (is.vector(values)) return(values / references)
   if (is.matrix(values)) {
     hq = apply(values, 2, function(column) column / references)
     
-    # Cas où la matrice ne possède qu'une seule ligne, le résultat de apply est un vecteur
+    # Case where the matrix contains only one set of values, the result of apply is a vector
     if (is.vector(hq)) {
       hq = matrix(hq, nrow = 1)
       rownames(hq) = rownames(values)
@@ -115,7 +115,7 @@ hazard_index = function(values = NULL, references = NULL,
   
   if (is.null(hq)) hq = hazard_quotient(values, references)
   
-  # Distinction vector et matrix
+  # Distinction between vector and matrix cases
   if (is.vector(hq)) return(sum(hq))
   if (is.matrix(hq)) return(colSums(hq))
 }
@@ -176,7 +176,7 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
   
   if (is.null(hq)) hq = hazard_quotient(values, references)
   
-  # Distinction vector et matrix
+  # Distinction between vector and matrix cases
   if (is.vector(hq)) return(max(hq))
   if (is.matrix(hq)) return(apply(hq, 2, "max"))
 }
