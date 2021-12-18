@@ -258,7 +258,7 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
   if (is.null(hi)) hi = hazard_index(values, references)
   if (is.null(mhq)) mhq = maximum_hazard_quotient(values, references)
   
-  return(hi/mhq)
+  return(hi / mhq)
 }
 
 
