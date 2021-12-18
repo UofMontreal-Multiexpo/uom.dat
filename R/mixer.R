@@ -427,7 +427,7 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 }
 
 
-#' Top Hazard Quotients (THQ)
+#' Top Hazard Quotient (THQ)
 #' 
 #' Identify the top `k` hazard quotients, i.e. the named values which produce the `k` highest hazard
 #'  quotients.
@@ -463,7 +463,7 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' @param hq Numeric named vector or matrix. **H**azard **q**uotients whose highest values are to be
 #'  identify.
 #' @param k Number of hazard quotients to highlight. Default is the integer part of the maximum cumulative
-#'  ratio computed from `values` and `references`.
+#'  ratio computed from `values` and `references` or from `hq`.
 #' @return Vector or list of vectors (according to `values` or `hq`) of the `k` highest hazard quotients.
 #' 
 #' @author Gauthier Magnin
@@ -530,7 +530,7 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 #'  reference value for each row of the matrix).
 #' 
 #' If `values` is a matrix (or `hi`, `mhq` and `mcr` are vectors larger than 1), one class is assigned
-#'  for each column (or value, respectively).
+#'  for each column (or each value, respectively).
 #' 
 #' \loadmathjax
 #' The mixtures are assigned to the groups according the following conditions:

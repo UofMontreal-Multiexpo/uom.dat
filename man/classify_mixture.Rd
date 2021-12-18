@@ -46,7 +46,7 @@ If \code{values} is a matrix, the reference values are applied once on each colu
 reference value for each row of the matrix).
 
 If \code{values} is a matrix (or \code{hi}, \code{mhq} and \code{mcr} are vectors larger than 1), one class is assigned
-for each column (or value, respectively).
+for each column (or each value, respectively).
 
 \loadmathjax
 The mixtures are assigned to the groups according the following conditions:

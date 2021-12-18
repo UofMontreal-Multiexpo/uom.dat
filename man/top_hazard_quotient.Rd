@@ -2,7 +2,7 @@
 % Please edit documentation in R/mixer.R
 \name{top_hazard_quotient}
 \alias{top_hazard_quotient}
-\title{Top Hazard Quotients (THQ)}
+\title{Top Hazard Quotient (THQ)}
 \usage{
 top_hazard_quotient(values, references, k = NULL)
 top_hazard_quotient(hq, k = NULL)
@@ -17,7 +17,7 @@ identify.}
 identify.}
 
 \item{k}{Number of hazard quotients to highlight. Default is the integer part of the maximum cumulative
-ratio computed from \code{values} and \code{references}.}
+ratio computed from \code{values} and \code{references} or from \code{hq}.}
 }
 \value{
 Vector or list of vectors (according to \code{values} or \code{hq}) of the \code{k} highest hazard quotients.
