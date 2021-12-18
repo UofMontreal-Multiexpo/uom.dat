@@ -612,6 +612,7 @@ classify_mixture = function(values = NULL, references = NULL,
   groups[groups == "" & mcr < 2] = "IIIA"
   groups[groups == ""] = "IIIB"
   
+  names(groups) = names(eval(expression(hi, mhq, mcr)[which.max(sapply(list(hi, mhq, mcr), is_named))]))
   return(groups)
 }
 
