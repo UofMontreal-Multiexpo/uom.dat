@@ -666,7 +666,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  Values whose indicators of the MCR approach are to be computed.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
-#' @return List if `values` is a vector or a list of a single set of values; data frame otherwise.
+#' @return List if `values` is a vector; data frame otherwise.
 #'  Contains the main indicators of the MCR approach computed on the given `values`:
 #'  * **n**: number of values.
 #'  * **HI**: Hazard Index.
@@ -789,8 +789,7 @@ mcr_summary = function(values, references) {
 #'  computed.
 #' @param references Numeric named vector or list of numeric vectors. Reference values associated with
 #'  the `values`. See 'Details' to know the way it is associated with `values`.
-#' @return List if `values` contains a single set of values; data frame otherwise. Contains the main
-#'  indicators of the MCR approach computed on the given `values`:
+#' @return Data frame containing the main indicators of the MCR approach computed on the given `values`:
 #'  * **n**: number of values.
 #'  * **HI**: Hazard Index.
 #'  * **MCR**: Maximum Cumulative Ratio.
@@ -825,8 +824,8 @@ mcr_summary_for_list = function(values, references) {
     
   } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
   
-  # If a single set of values, return of a list
-  if (nrow(summary) == 1) return(summary[1, ])
+  # If a single set of values
+  if (nrow(summary) == 1) return(as.data.frame(summary[1, ], stringsAsFactors = FALSE))
   
   # Convert the matrix to a data.frame (requires to unlist)
   # Unlist in two steps otherwise the factors are transformed into numeric
