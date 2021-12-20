@@ -583,7 +583,7 @@ test_that("top_hazard_quotient find the top hazard quotients", {
   expect_equal(top_hazard_quotient(c(a=1, b=2, c=3, d=4, e=5), c(1,1,1,1,1)),
                c(e=5, d=4, c=3))
   
-  # # 'values' as a matrix
+  # 'values' as a matrix
   expect_equal(top_hazard_quotient(matrix(1:10, ncol = 2, dimnames = list(letters[1:5], c("o1", "o2"))), c(1,1,1,1,1)),
                list(o1 = c(e=5, d=4, c=3),
                     o2 = c(e=10, d=9, c=8, b=7)))
@@ -596,7 +596,7 @@ test_that("top_hazard_quotient find the top hazard quotients", {
   expect_equal(top_hazard_quotient(hq = c(a=1, b=2, c=3, d=4, e=5)),
                c(e=5, d=4, c=3))
   
-  # # 'hq' as a matrix
+  # 'hq' as a matrix
   expect_equal(top_hazard_quotient(hq = matrix(1:10, ncol = 2, dimnames = list(letters[1:5], c("o1", "o2")))),
                list(o1 = c(e=5, d=4, c=3),
                     o2 = c(e=10, d=9, c=8, b=7)))
@@ -757,6 +757,150 @@ test_that("classify_mixture returns an identical result whatever the chosen usag
                    classify_mixture(hi  = hazard_index(values_matrix, references),
                                     mhq = maximum_hazard_quotient(values_matrix, references),
                                     mcr = maximum_cumulative_ratio(values_matrix, references)))
+})
+
+
+
+#### Maximum Cumulative Ratio approach - summary functions ####
+
+##### mcr_summary #####
+
+test_that("mcr_summary requires that references have the same sizes as values if they are two lists", {
+  expect_error(mcr_summary(list(o1 = c(1, 2), o2 = c(2), o3 = c(3, 4)),
+                           list(1, 2, 3)))
+  expect_silent(mcr_summary(list(o1 = c(1, 2), o2 = c(2), o3 = c(3, 4)),
+                           list(c(1, 2), 1, c(2, 3))))
+})
+
+test_that("mcr_summary requires values and references to have named values if they are a list and a vector", {
+  expect_error(mcr_summary(list(o1 = c(1, 2), o2 = c(2), o3 = c(3, 4)),
+                           c(a = 1, b = 2, c = 3)))
+  expect_error(mcr_summary(list(o1 = c(a=1, b=2), o2 = c(a=2), o3 = c(b=3, c=4)),
+                           c(1, 2, 3)))
+  expect_silent(mcr_summary(list(o1 = c(a=1, b=2), o2 = c(a=2), o3 = c(b=3, c=4)),
+                            c(a = 1, b = 2, c = 3)))
+})
+
+test_that("mcr_summary returns the right data structure", {
+  # Vector -> List
+  expect_true(is.list(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5)))
+  
+  # Matrix (several or a singlet set of values) -> Data frame
+  expect_true(is.data.frame(mcr_summary(matrix(1:15, ncol = 3,
+                                               dimnames = list(letters[1:5], c("o1", "o2", "o3"))), 1:5)))
+  expect_true(is.data.frame(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "o1")), 1:5)))
+  
+  # List (several or a single set of values) -> Data frame
+  expect_true(is.data.frame(mcr_summary(list(o1 = c(a=1, b=2), o2 = c(a=2), o3 = c(b=3, c=4)),
+                                        c(a = 1, b = 2, c = 3))))
+  expect_true(is.data.frame(mcr_summary(list(o1 = c(a=1, b=2, c=3)),
+                                        c(a = 1, b = 2, c = 3))))
+})
+
+test_that("mcr_summary returns a named object", {
+  colnames = c("n", "HI", "MCR", "Reciprocal", "Group", "THQ", "MHQ", "Missed")
+  
+  # 'values' as a vector
+  expect_named(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5), colnames)
+  
+  # 'values' as a matrix
+  expect_equal(colnames(mcr_summary(matrix(1:15, ncol = 3,
+                                           dimnames = list(letters[1:5], c("o1", "o2", "o3"))), 1:5)),
+               colnames)
+  expect_equal(colnames(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "o1")), 1:5)),
+               colnames)
+  
+  # 'values' as a list
+  expect_equal(colnames(mcr_summary(list(o1 = c(a=1, b=2), o2 = c(a=2), o3 = c(b=3, c=4)),
+                                    c(a = 1, b = 2, c = 3))),
+               colnames)
+  expect_equal(colnames(mcr_summary(list(o1 = c(a=1, b=2, c=3)), c(a = 1, b = 2, c = 3))),
+               colnames)
+})
+
+test_that("mcr_summary returns an object whose rows are named if the given sets of values are named", {
+  # 'values' as a matrix
+  expect_equal(rownames(mcr_summary(matrix(1:15, ncol = 3,
+                                           dimnames = list(letters[1:5], c("o1", "o2", "o3"))), 1:5)),
+               c("o1", "o2", "o3"))
+  expect_equal(rownames(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "o1")), 1:5)),
+               "o1")
+  
+  # 'values' as a list
+  expect_equal(rownames(mcr_summary(list(o1 = c(a=1, b=2), o2 = c(a=2), o3 = c(b=3, c=4)),
+                                    c(a = 1, b = 2, c = 3))),
+               c("o1", "o2", "o3"))
+  expect_equal(rownames(mcr_summary(list(o1 = c(a=1, b=2, c=3)), c(a = 1, b = 2, c = 3))),
+               "o1")
+})
+
+test_that("mcr_summary returns NA THQ if the given values are unnamed", {
+  all_na = function(x) all(is.na(x))
+  
+  # 'values' as a vector
+  expect_true(is.na(mcr_summary(c(1, 2, 3, 4, 5), 1:5)$THQ))
+  expect_false(is.na(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5)$THQ))
+
+  # 'values' as a matrix
+  expect_true(all_na(mcr_summary(matrix(1:15, ncol = 3,
+                                        dimnames = list(NULL, c("o1", "o2", "o3"))), 1:5)$THQ))
+  expect_false(all_na(mcr_summary(matrix(1:15, ncol = 3,
+                                         dimnames = list(letters[1:5], c("o1", "o2", "o3"))), 1:5)$THQ))
+  expect_true(all_na(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(NULL, "o1")), 1:5)$THQ))
+  expect_false(all_na(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "o1")), 1:5)$THQ))
+
+  # 'values' as a list
+  expect_true(all_na(mcr_summary(list(o1 = c(1, 2), o2 = c(2), o3 = c(3, 4)),
+                                 list(c(1, 2), 1, c(2, 3)))$THQ))
+  expect_false(all_na(mcr_summary(list(o1 = c(a=1, b=2), o2 = c(a=2), o3 = c(b=3, c=4)),
+                                  list(c(1, 2), 1, c(2, 3)))$THQ))
+  expect_true(all_na(mcr_summary(list(o1 = c(1, 2, 3)), list(c(1, 2, 3)))$THQ))
+  expect_false(all_na(mcr_summary(list(o1 = c(a=1, b=2, c=3)), list(c(1, 2, 3)))$THQ))
+})
+
+test_that("mcr_summary computes the indicators of the MCR approach", {
+  # 'values' as a vector
+  expect_equal(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5),
+               list(n = 5, HI = 5, MCR = 5, Reciprocal = 0.2,
+                    Group = "I", THQ = "a", MHQ = 1, Missed = 0.8))
+  
+  # 'values' as a matrix
+  expect_equal(mcr_summary(matrix(c(1,2,3,4,5, 2,4,6,8,10, 3,6,9,12,15), ncol = 3,
+                                  dimnames = list(letters[1:5])), 1:5),
+               data.frame(n = c(5,5,5),
+                          HI = c(5, 10, 15),
+                          MCR = c(5, 5, 5),
+                          Reciprocal = c(0.2, 0.2, 0.2),
+                          Group = c("I", "I", "I"),
+                          THQ = c("a", "a", "a"),
+                          MHQ = c(1, 2, 3),
+                          Missed = c(0.8, 0.8, 0.8)))
+  expect_equal(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5])), 1:5),
+               data.frame(n = 5, HI = 5, MCR = 5, Reciprocal = 0.2,
+                          Group = "I", THQ = "a", MHQ = 1, Missed = 0.8))
+
+  # 'values' as a list
+  expect_equal(mcr_summary(list(c(a=1, b=2), c(a=2), c(b=4, c=6)), c(a = 1, b = 2, c = 3)),
+               data.frame(n = c(2, 1, 2),
+                          HI = c(2, 2, 4),
+                          MCR = c(2, 1, 2),
+                          Reciprocal = c(0.5, 1, 0.5),
+                          Group = c("I", "I", "I"),
+                          THQ = c("a", "a", "b"),
+                          MHQ = c(1, 2, 2),
+                          Missed = c(0.5, 0, 0.5)))
+  expect_equal(mcr_summary(list(c(a=1, b=2, c=3)), c(a = 1, b = 2, c = 3)),
+               data.frame(n = 3, HI = 3, MCR = 3, Reciprocal = 1/3,
+                          Group = "I", THQ = "a", MHQ = 1, Missed = 2/3))
+})
+
+test_that("mcr_summary returns an identical result whatever the structure of references", {
+  values = list(o1 = c(a=1, b=2), o2 = c(a=2), o3 = c(b=3, c=4))
+  references_vector = c(a=1, b=2, c=3)
+  references_list = list(c(1,2), 1, c(2,3))
+
+  expect_identical(mcr_summary(values, references_vector),
+                   mcr_summary(values, references_list))
 })
 
 
