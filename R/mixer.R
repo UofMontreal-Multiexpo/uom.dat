@@ -662,7 +662,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
 #' 
-#' @param values Numeric named vector or matrix, or list of numeric named vectors.
+#' @param values Numeric vector or matrix, or list of numeric vectors.
 #'  Values whose indicators of the MCR approach are to be computed.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
@@ -722,11 +722,6 @@ mcr_summary = function(values, references) {
   # Cas spécifique dans lequel values est une liste
   if (is.list(values)) return(mcr_summary_for_list(values, references))
   
-  
-  # Vérification que la structure de données est nommée
-  if (is.matrix(values) && !is_named(values)[1]) stop("If values is a matrix, its rows must be named.")
-  else if (is.vector(values) && !is_named(values)) stop("If values is a vector, it must have named numeric values.")
-  
   # Calcul des indicateurs
   hq = hazard_quotient(values, references)
   hi = hazard_index(hq = hq)
@@ -739,15 +734,15 @@ mcr_summary = function(values, references) {
   
   # Différence vector/matrix
   if (is.vector(values)) {
+    thq = if (is_named(values)) names(top_hazard_quotient(hq = hq, k = 1)) else NA
     return(list(n = length(values),
                 HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
-                THQ = names(top_hazard_quotient(hq = hq, k = 1)),
-                MHQ = mhq, Missed = mt))
+                THQ = thq, MHQ = mhq, Missed = mt))
   }
+  thq = if (is_named(values)[1]) names(unlist(unname(top_hazard_quotient(hq = hq, k = 1)))) else NA
   return(data.frame(n = apply(values, 2, length),
                     HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
-                    THQ = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1)))),
-                    MHQ = mhq, Missed = mt,
+                    THQ = thq, MHQ = mhq, Missed = mt,
                     stringsAsFactors = FALSE))
 }
 
@@ -790,7 +785,7 @@ mcr_summary = function(values, references) {
 #' 
 #' @template function_not_exported
 #' 
-#' @param values List of numeric named vectors. Values whose indicators of the MCR approach are to be
+#' @param values List of numeric vectors. Values whose indicators of the MCR approach are to be
 #'  computed.
 #' @param references Numeric named vector or list of numeric vectors. Reference values associated with
 #'  the `values`. See 'Details' to know the way it is associated with `values`.
@@ -818,8 +813,6 @@ mcr_summary_for_list = function(values, references) {
     if (length(values) != length(references) ||
         any(sapply(values, length) != sapply(references, length)))
       stop("If values and references are two lists, their lengths and the ones of their elements must match.")
-    if (!is_named(values)[2])
-      stop("If values is a list, it must contain vectors of named numeric values.")
     
     summary = t(sapply(seq_len(length(values)), function (i) mcr_summary(values[[i]], references[[i]])))
     

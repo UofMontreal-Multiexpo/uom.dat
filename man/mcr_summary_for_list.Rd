@@ -7,7 +7,7 @@
 mcr_summary_for_list(values, references)
 }
 \arguments{
-\item{values}{List of numeric named vectors. Values whose indicators of the MCR approach are to be
+\item{values}{List of numeric vectors. Values whose indicators of the MCR approach are to be
 computed.}
 
 \item{references}{Numeric named vector or list of numeric vectors. Reference values associated with
