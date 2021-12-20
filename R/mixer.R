@@ -719,10 +719,10 @@ classify_mixture = function(values = NULL, references = NULL,
 #' @export
 mcr_summary = function(values, references) {
   
-  # Cas spécifique dans lequel values est une liste
+  # Specific case in which values is a list
   if (is.list(values)) return(mcr_summary_for_list(values, references))
   
-  # Calcul des indicateurs
+  # Computations of the indicators
   hq = hazard_quotient(values, references)
   hi = hazard_index(hq = hq)
   mhq = maximum_hazard_quotient(hq = hq)
@@ -732,7 +732,7 @@ mcr_summary = function(values, references) {
   rmcr = reciprocal_of_mcr(mcr = mcr)
   groups = classify_mixture(hi = hi, mhq = mhq, mcr = mcr)
   
-  # Différence vector/matrix
+  # Distinction between vector and matrix cases
   if (is.vector(values)) {
     thq = if (is_named(values)) names(top_hazard_quotient(hq = hq, k = 1)) else NA
     return(list(n = length(values),
@@ -828,6 +828,7 @@ mcr_summary_for_list = function(values, references) {
   # If a single set of values, return of a list
   if (nrow(summary) == 1) return(summary[1, ])
   
+  # Convert the matrix to a data.frame (requires to unlist)
   # Unlist in two steps otherwise the factors are transformed into numeric
   to_return = as.data.frame(apply(summary[, c("n","HI","MCR","Reciprocal","MHQ","Missed")], 2, unlist),
                             stringsAsFactors = FALSE)
