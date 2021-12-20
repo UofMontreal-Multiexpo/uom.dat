@@ -825,12 +825,13 @@ mcr_summary_for_list = function(values, references) {
   } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
   
   # If a single set of values
-  if (nrow(summary) == 1) return(as.data.frame(summary[1, ], stringsAsFactors = FALSE))
+  if (nrow(summary) == 1)
+    return(as.data.frame(summary[1, ], row.names = names(values), stringsAsFactors = FALSE))
   
   # Convert the matrix to a data.frame (requires to unlist)
   # Unlist in two steps otherwise the factors are transformed into numeric
   to_return = as.data.frame(apply(summary[, c("n","HI","MCR","Reciprocal","MHQ","Missed")], 2, unlist),
-                            stringsAsFactors = FALSE)
+                            row.names = names(values), stringsAsFactors = FALSE)
   to_return[, "Group"] = unlist(summary[, "Group"])
   to_return[, "THQ"] = unlist(summary[, "THQ"])
   
