@@ -576,7 +576,7 @@ test_that("top_hazard_quotient returns decreasing values", {
   expect_true(are_all_desc_sorted(top_hazard_quotient(hq = matrix(1:5,  ncol = 1, dimnames = list(letters[1:5])))))
 })
 
-test_that("top_hazard_quotient find the top hazard quotients", {
+test_that("top_hazard_quotient finds the top hazard quotients", {
   # 'values' as a vector
   expect_equal(top_hazard_quotient(c(a=1, b=2, c=3, d=4, e=5), 1:5),
                c(a=1, b=1, c=1, d=1, e=1))
