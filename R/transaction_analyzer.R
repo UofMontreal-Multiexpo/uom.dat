@@ -2118,11 +2118,13 @@ function(object, patterns, end = NULL, period = Inf) {
   t0 = t1 - params$period + 1
   
   # Fréquence du motif sur la période / somme des fréquences de tous les motifs sur la période
-  p_frequencies = unname(apply(as.data.frame( # as.data.frame nécessaire au cas où une seule colonne
-    object@patterns_per_year[match(as.character(patterns), rownames(object@patterns_per_year)),
-                             (as.numeric(colnames(object@patterns_per_year)) <= t1)
-                             & (as.numeric(colnames(object@patterns_per_year)) >= t0)]
-    ), 1, sum))
+  p_frequencies = unname(apply(
+    object@patterns_per_year[
+      match(as.character(patterns), rownames(object@patterns_per_year)),
+      (as.numeric(colnames(object@patterns_per_year)) <= t1)
+        & (as.numeric(colnames(object@patterns_per_year)) >= t0),
+      drop = FALSE],
+    1, sum))
   return(p_frequencies / sum(p_frequencies))
 })
 
