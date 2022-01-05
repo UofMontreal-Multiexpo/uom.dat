@@ -438,10 +438,10 @@ setAs(from = "TransactionSet",
       def = function(from) {
         
         # Liste des items retrouvés pour chaque transaction et vecteurs des identifiants des items
-        data = sapply(sapply(from@data, "[", from@item_key), as.character)
+        data = lapply(get_itemsets(from), as.character)
         labels = as.character(get_all_items(from))
         
-        # Transformation en objet arules::itemMatrix puis en objet arules::transaction :
+        # Transformation en objet arules::itemMatrix puis en objet arules::transactions :
         # une ligne par transaction, une colonne par item
         return(methods::as(arules::encode(data, labels), "transactions"))
       })
