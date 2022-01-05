@@ -49,7 +49,8 @@ to the total period of transactions (number of years).}
 between patterns are initialized.
 If \code{FALSE}, only attributes relating to transactions, items and categories are initialized.}
 
-\item{verbose}{Logical value indicating whether to report progress.}
+\item{verbose}{Logical value indicating whether to report progress.
+Ignored if \code{init} is \code{FALSE}.}
 }
 \value{
 New object of class \code{TransactionAnalyzer}.

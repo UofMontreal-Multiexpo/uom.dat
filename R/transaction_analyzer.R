@@ -374,6 +374,7 @@ setMethod(f = "initialize",
 #'  between patterns are initialized.
 #'  If \code{FALSE}, only attributes relating to transactions, items and categories are initialized.
 #' @param verbose Logical value indicating whether to report progress.
+#'  Ignored if \code{init} is \code{FALSE}.
 #' @return New object of class \code{TransactionAnalyzer}.
 #' 
 #' @author Gauthier Magnin
