@@ -1882,8 +1882,9 @@ function(object) {
   })
   
   # Matrice des fréquences des motifs par année
-  ppy = do.call(rbind, frequencies)
+  ppy = t(sapply(frequencies, as.integer))
   rownames(ppy) = object@patterns$pattern
+  colnames(ppy) = colnames(object@nodes_per_year)
   
   # Définition de l'attribut et retour
   object@patterns_per_year = ppy
