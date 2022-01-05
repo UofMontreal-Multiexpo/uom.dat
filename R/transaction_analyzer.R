@@ -1790,7 +1790,7 @@ function(object, target, count = 1, min_length = 1, max_length = Inf, arules = F
   
   # Rassemblement des motifs dans une data.frame
   patterns_df = data.frame(pattern = numeric(length(patterns)))
-  patterns_df$pattern = sapply(patterns, c)
+  patterns_df$pattern = patterns
   patterns_df$frequency = res$count
   
   # Tri et renommage des lignes selon le nouvel ordre de la data.frame
