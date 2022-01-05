@@ -56,7 +56,9 @@ resave_with_best_compression = function(paths){
     if (p != paths[length(paths)]) cat("\n")
     
     # Compress again using the best method
-    tools::resaveRdaFiles(p, compress = best, compression_level = 9)
+    if (best != methods[3]) {
+      tools::resaveRdaFiles(p, compress = best, compression_level = 9)
+    }
   }
 }
 
