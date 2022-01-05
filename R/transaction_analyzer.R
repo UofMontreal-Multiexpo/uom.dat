@@ -277,12 +277,17 @@ setMethod(f = "initialize",
             names(.Object@status_colors) = c(STATUS_PERSISTENT, STATUS_DECLINING,
                                              STATUS_EMERGENT, STATUS_LATENT)
             
-            # Descripteurs de la recherche de motifs
+            # Descripteurs de la recherche et de la caractérisation de motifs
             .Object@parameters = list(target = target,
                                       count = count,
                                       min_length = min_length,
                                       max_length = max_length,
                                       status_limit = status_limit)
+            if (status_limit != 1 && length(unique(unlist(transactions[transactions@year_key]))) == 1) {
+              .Object@parameters$status_limit = 1
+              warning("The temporal data of the transactions are all equal. ",
+                      "Parameter status_limit has been set to 1.")
+            }
             
             # Vérification des premiers attributs
             methods::validObject(.Object)
@@ -1501,7 +1506,7 @@ function(object) {
                     rowSums(nodes_mat),
                     order(order(rownames(nodes_mat), decreasing = TRUE)),
                     decreasing = TRUE)
-  nodes_mat = nodes_mat[the_order, ]
+  nodes_mat = nodes_mat[the_order, , drop = FALSE]
   rownames(nodes_mat) = nodes[the_order]
   
   # Définition de l'attribut et retour
@@ -1865,11 +1870,10 @@ function(object) {
   frequencies = lapply(seq_along(object@patterns$pattern), function(p) {
     # Sélection des noeuds associées au motif
     nodes_names = object@nodes_patterns[, p]
-    nodes = nodes_per_year[rownames(nodes_per_year) %in% names(nodes_names[nodes_names]), ]
+    nodes = nodes_per_year[rownames(nodes_per_year) %in% names(nodes_names[nodes_names]), , drop = FALSE]
     
     # Somme des poids selon l'année
-    if (is.matrix(nodes)) { return(colSums(nodes)) }
-    return(nodes)
+    return(colSums(nodes))
   })
   
   # Matrice des fréquences des motifs par année
