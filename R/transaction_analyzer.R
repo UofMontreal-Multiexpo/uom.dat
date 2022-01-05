@@ -1660,33 +1660,40 @@ function(object, entities) {
   linked_indexes = which(apply(entities_links, 1, function(x) sum(x) != x[parent.frame()$i[]]))
   names(linked_indexes) = NULL
   
-  # Utilisation de la propriété de symétrie de la matrice pour compter le nombre de liens
-  nb_links = (sum(entities_links != 0) - nrow(entities_links)) / 2
-  links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == PATTERNS, 5, 4))
-  
-  link_counter = 0
-  loop_index = 0
-  
-  # Recherche des liens entre chaque paire d'éléments à lier
-  for(i in linked_indexes[1:(length(linked_indexes) - 1)]) {
-    loop_index = loop_index + 1
+  # Matrice des paires d'éléments liés
+  if (length(linked_indexes) != 0) {
     
-    for(j in linked_indexes[(loop_index + 1):length(linked_indexes)]) {
-      if (entities_links[i, j] != 0) {
-        # Nouveau lien identifié
-        link_counter = link_counter + 1
-        intersection = to_link[[j]][to_link[[j]] %in% to_link[[i]]]
-        
-        # Élément i, élément j, items en communs, nb items en communs (, année d'apparition du lien)
-        if (entities == PATTERNS) {
-          links[link_counter, ] = c(i, j,
-                                    paste(intersection, collapse = "/"), entities_links[i, j],
-                                    max(object@patterns[i, "year"], object@patterns[j, "year"]))
-        } else {
-          links[link_counter, ] = c(i, j, paste(intersection, collapse = "/"), entities_links[i, j])
+    # Utilisation de la propriété de symétrie de la matrice pour compter le nombre de liens
+    nb_links = (sum(entities_links != 0) - nrow(entities_links)) / 2
+    links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == PATTERNS, 5, 4))
+    
+    link_counter = 0
+    loop_index = 0
+    
+    # Recherche des liens entre chaque paire d'éléments à lier
+    for(i in linked_indexes[1:(length(linked_indexes) - 1)]) {
+      loop_index = loop_index + 1
+      
+      for(j in linked_indexes[(loop_index + 1):length(linked_indexes)]) {
+        if (entities_links[i, j] != 0) {
+          # Nouveau lien identifié
+          link_counter = link_counter + 1
+          intersection = to_link[[j]][to_link[[j]] %in% to_link[[i]]]
+          
+          # Élément i, élément j, items en communs, nb items en communs (, année d'apparition du lien)
+          if (entities == PATTERNS) {
+            links[link_counter, ] = c(i, j,
+                                      paste(intersection, collapse = "/"), entities_links[i, j],
+                                      max(object@patterns[i, "year"], object@patterns[j, "year"]))
+          } else {
+            links[link_counter, ] = c(i, j, paste(intersection, collapse = "/"), entities_links[i, j])
+          }
         }
       }
     }
+  } else {
+    # Matrice vide pour la fusion qui suit (sans avoir à tester aucune des deux)
+    links = matrix(NA, nrow = 0, ncol = ifelse(entities == PATTERNS, 5, 4))
   }
   
   
@@ -1695,7 +1702,7 @@ function(object, entities) {
                                  function(x) sum(x) == x[parent.frame()$i[]]))
   names(isolated_indexes) = NULL
   
-  # Matrice des éléments isolés qui complète celle des paires de éléments liés
+  # Matrice des éléments isolés qui complète celle des paires d'éléments liés
   if (length(isolated_indexes) != 0) {
     no_links = t(sapply(isolated_indexes, entity = entities,
                         function(x, entity) {
