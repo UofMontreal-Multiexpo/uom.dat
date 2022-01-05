@@ -1,6 +1,7 @@
-## Preparation of the 'TS_instance' dataset
-## The associated help page need to be updated if the code here is updated
-## Required datasets: - oedb_sample
+## Preparation of the 'TS_instance' dataset.
+## The associated help page need to be updated if the code here is updated.
+## 
+## Required dataset: oedb_sample
 
 #### Creation of TS_instance ####
 
@@ -17,11 +18,6 @@ TS_instance["names"] <- TS_instance["names"][-1]
 
 
 #### Add prepared data to package ####
-
-# save(TS_instance,     file = "./data/TS_instance.RData")
-# resave_with_best_compression("./data/TS_instance.RData")
-
-# usethis::use_data(TA_instance, overwrite = TRUE)
 
 #! See file "data-raw/add_prepared_data_to_package.R"
 

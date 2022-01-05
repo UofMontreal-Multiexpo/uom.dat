@@ -1,4 +1,5 @@
-## Add prepared data to the package
+## Add prepared data to the package.
+## 
 ## Output files: - oedb_sample.RData
 ##               - substances_information.RData
 ##               - TS_instance.RData
@@ -65,6 +66,10 @@ resave_with_best_compression = function(paths){
 
 #### Save and compress data ####
 
+# The following instruction could have been used for exported datesets,
+# but the compression is not optimized.
+# usethis::use_data(dataset_name, overwrite = TRUE)
+
 save(oedb_sample,               file = "./data/oedb_sample.RData")
 save(substances_information,    file = "./data/substances_information.RData")
 save(TS_instance,               file = "./data/TS_instance.RData")
@@ -76,7 +81,5 @@ resave_with_best_compression(c("./data/oedb_sample.RData",
                                "./data/TA_instance.RData"))
 
 usethis::use_data(another_ta_object, internal = TRUE) # R/sysdata.rda
-# save(another_ta_object,       file = "./data/another_ta_object.RData")
-# resave_with_best_compression("./data/another_ta_object.RData")
 
 

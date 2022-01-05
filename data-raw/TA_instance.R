@@ -1,5 +1,6 @@
-## Preparation of the 'TA_instance' dataset
-## The associated help page need to be updated if the code here is updated
+## Preparation of the 'TA_instance' dataset.
+## The associated help page need to be updated if the code here is updated.
+## 
 ## Required datasets: - oedb_sample
 ##                    - substances_information
 
@@ -42,11 +43,6 @@ TA_instance <- transaction.analyzer(trx, items)
 
 
 #### Add prepared data to package ####
-
-# save(TA_instance,     file = "./data/TA_instance.RData")
-# resave_with_best_compression("./data/TA_instance.RData")
-
-# usethis::use_data(TA_instance, overwrite = TRUE)
 
 #! See file "data-raw/add_prepared_data_to_package.R"
 

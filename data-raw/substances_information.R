@@ -1,4 +1,5 @@
-## Preparation of the 'substances_information' dataset
+## Preparation of the 'substances_information' dataset.
+## 
 ## Input files: - famille_agent.csv
 ##              - agent_vlep.csv
 ##              - Mixie_data_avec_codes_20200408_partial.xlsx
@@ -82,11 +83,6 @@ substances_information = substances_information[, c("CODE", "NAME", "FAMILY", "S
 
 
 #### Add prepared data to package ####
-
-# save(substances_information, file = "./data/substances_information.RData")
-# resave_with_best_compression("./data/oedb_sample.RData")
-
-# usethis::use_data(substances_information, overwrite = TRUE)
 
 #! See file "data-raw/add_prepared_data_to_package.R"
 

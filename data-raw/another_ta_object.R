@@ -1,4 +1,5 @@
-## Preparation of the 'another_ta_object' dataset
+## Preparation of the 'another_ta_object' dataset.
+## 
 ## Input files: - IMIS_clean_20191107_partial.RDS
 ##              - Thesaurus_agents_clean_family_freq_07112019_partial.txt
 
@@ -55,11 +56,6 @@ another_ta_object@p_links = matrix()
 
 
 #### Add prepared data to package ####
-
-# usethis::use_data(another_ta_object, internal = TRUE) # R/sysdata.rda
-
-# save(another_ta_object, file = "./data/another_ta_object.RData")
-# resave_with_best_compression("./data/another_ta_object.RData")
 
 #! See file "data-raw/add_prepared_data_to_package.R"
 
