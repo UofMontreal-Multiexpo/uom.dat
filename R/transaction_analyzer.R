@@ -1836,6 +1836,11 @@ function(object) {
                                    return(all(pattern %in% node))
                                  })
                         })
+  if (!is.matrix(associations)) {
+    associations = matrix(associations,
+                          nrow = length(object@nodes$node),
+                          ncol = length(object@patterns$pattern))
+  }
   
   # Renommage des lignes et colonnes
   rownames(associations) = object@nodes$node
@@ -1876,8 +1881,8 @@ function(object) {
   # Calcul des fréquences par année pour chaque motif
   frequencies = lapply(seq_along(object@patterns$pattern), function(p) {
     # Sélection des noeuds associées au motif
-    nodes_names = object@nodes_patterns[, p]
-    nodes = nodes_per_year[rownames(nodes_per_year) %in% names(nodes_names[nodes_names]), , drop = FALSE]
+    nodes_names = rownames(object@nodes_patterns)[object@nodes_patterns[, p]]
+    nodes = nodes_per_year[rownames(nodes_per_year) %in% nodes_names, , drop = FALSE]
     
     # Somme des poids selon l'année
     return(colSums(nodes))
