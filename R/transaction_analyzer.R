@@ -1875,17 +1875,10 @@ function(object) {
   # Nom de l'objet pour modification interne dans l'environnement parent
   object_name = deparse(substitute(object))
   
-  # Fréquences des noeuds par année
-  nodes_per_year = object@nodes_per_year
-  
-  # Calcul des fréquences par année pour chaque motif
+  # Pour chaque motif, sélection des noeuds associés puis somme de leurs fréquences par année
   frequencies = lapply(seq_along(object@patterns$pattern), function(p) {
-    # Sélection des noeuds associées au motif
     nodes_names = rownames(object@nodes_patterns)[object@nodes_patterns[, p]]
-    nodes = nodes_per_year[rownames(nodes_per_year) %in% nodes_names, , drop = FALSE]
-    
-    # Somme des poids selon l'année
-    return(colSums(nodes))
+    return(colSums(object@nodes_per_year[nodes_names, , drop = FALSE]))
   })
   
   # Matrice des fréquences des motifs par année
