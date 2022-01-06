@@ -1883,6 +1883,7 @@ function(object) {
   
   # Matrice des fréquences des motifs par année
   ppy = t(sapply(frequencies, as.integer))
+  if (ncol(object@nodes_per_year) == 1) ppy = t(ppy)
   rownames(ppy) = object@patterns$pattern
   colnames(ppy) = colnames(object@nodes_per_year)
   
