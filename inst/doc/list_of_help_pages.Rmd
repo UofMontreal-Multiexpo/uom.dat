@@ -48,6 +48,7 @@ Making *TransactionSet* objects:
 Search in transactions:
 
 * [get_all_items](../html/get_all_items-TransactionSet-method.html)
+* [get_all_years](../html/get_all_years-TransactionSet-method.html)
 * [get_itemsets](../html/get_itemsets-TransactionSet-method.html)
 * [get_items_from_info](../html/get_items_from_info-TransactionSet-method.html)
 * [get_info_from_items](../html/get_info_from_items-TransactionSet-method.html)

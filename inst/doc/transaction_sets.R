@@ -156,6 +156,10 @@ cat("Items contained in the transactions of 'trx_object_1':\n")
 get_all_items(trx_object_1)
 
 ## -----------------------------------------------------------------------------
+cat("Years associated with the transactions of 'trx_object_1':\n")
+get_all_years(trx_object_1)
+
+## -----------------------------------------------------------------------------
 cat("List of the itemsets corresponding to the transactions of 'trx_object_1':\n")
 get_itemsets(trx_object_1)
 

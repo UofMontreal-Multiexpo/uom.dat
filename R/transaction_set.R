@@ -460,6 +460,7 @@ setGeneric(name = "export", def = function(object, ...){ standardGeneric("export
 
 # Methods for search in transactions
 setGeneric(name = "get_all_items",       def = function(object){ standardGeneric("get_all_items") })
+setGeneric(name = "get_all_years",       def = function(object){ standardGeneric("get_all_years") })
 setGeneric(name = "get_itemsets",        def = function(object){ standardGeneric("get_itemsets") })
 setGeneric(name = "get_items_from_info", def = function(object, ...){ standardGeneric("get_items_from_info") })
 setGeneric(name = "get_info_from_items", def = function(object, ...){ standardGeneric("get_info_from_items") })
@@ -624,7 +625,7 @@ function(object, ...) {
 #' @return Vector of all unique items.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_itemsets`], [`get_items_from_info`].
+#' @seealso [`get_all_years`], [`get_itemsets`], [`get_items_from_info`].
 #' 
 #' @examples
 #' get_all_items(TS_instance)
@@ -640,6 +641,30 @@ function(object) {
 })
 
 
+#' Search all years
+#' 
+#' Extract all the years associated with the transactions.
+#' 
+#' @param object S4 object of class `TransactionSet`.
+#' @return Vector of all unique temporal data.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`get_all_items`], [`get_itemsets`].
+#' 
+#' @examples
+#' get_all_years(TS_instance)
+#' 
+#' @aliases get_all_years
+#' @md
+#' @export
+setMethod(f = "get_all_years",
+          signature = "TransactionSet",
+          definition =
+function(object) {
+  return(sort(unique(unlist(lapply(object@data, "[[", object@year_key)))))
+})
+
+
 #' Extract the item sets
 #' 
 #' Extract the item sets corresponding to the transactions.
@@ -648,7 +673,7 @@ function(object) {
 #' @return List of the item sets of the transactions.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_all_items`].
+#' @seealso [`get_all_items`], [`get_all_years`].
 #' 
 #' @examples
 #' get_itemsets(TS_instance)

@@ -50,7 +50,7 @@ Let's begin by describing `TS_instance`, the example object of class `Transactio
 print(TS_instance)
 ```
 
-This transaction set is composed of 14 transactions. These transactions are lists in which the itemsets are stored in the element list named `"CODE"` referred as the **item key** and temporal data are stored in the element list named `"YEAR"` referred as the **year key**. These temporal data indicate when the transaction were made. Further data are associated with a transaction, accessible by the names `JOB.TITLE`, `JOB.TASK` and `SAMPLE.ID`.
+This transaction set is composed of 14 transactions. These transactions are lists in which the itemsets are stored in the element list named `"CODE"` referred as the **item key** and temporal data are stored in the element list named `"YEAR"` referred as the **year key**. These temporal data indicate when the transactions were made. Further data are associated with a transaction, accessible by the names `JOB.TITLE`, `JOB.TASK` and `SAMPLE.ID`.
 
 Actually, these names will correspond to the dataset used and the data selected when calling the function in charge of the construction of the transaction set. To give some context, since the example data come from an occupational exposure database:
 
@@ -303,17 +303,23 @@ print(names(reordered_trx_object["data"]))
 
 ## 2.1. Search in transactions
 
-Four methods allow to extract data from an object of class `TransactionSet`.
+Five methods allow to extract data from an object of class `TransactionSet`.
 
 * `get_all_items` extracts the different items contained in the transactions.
+* `get_all_years` extracts the different years associated with the transactions.
 * `get_itemsets` extracts the itemsets corresponding to the transactions.
 * `get_items_from_info` searches for items associated with transactions whose data matches one or more sought values.
 * `get_info_from_items` searches for values of data from transactions that contain a set of sought items.
 
-Here are examples of the first two methods.
+Here are examples of the first three methods.
 ```{r}
 cat("Items contained in the transactions of 'trx_object_1':\n")
 get_all_items(trx_object_1)
+```
+
+```{r}
+cat("Years associated with the transactions of 'trx_object_1':\n")
+get_all_years(trx_object_1)
 ```
 
 ```{r}
