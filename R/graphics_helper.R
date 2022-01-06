@@ -206,13 +206,16 @@ plot_heb_chart = function(hierarchy, vertices, edges,
   
   # Graph
   tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
+  graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE)
   
-  graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
-    
-    ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
-                                                    colors = edges[, 3]),
-                             ggplot2::aes(color = colors),
-                             tension = edge_looseness, alpha = edge_alpha) +
+  if (nrow(edges) != 0) {
+    graph = graph + ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
+                                                                    colors = edges[, 3]),
+                                             ggplot2::aes(color = colors),
+                                             tension = edge_looseness, alpha = edge_alpha)
+  }
+  
+  graph = graph +
     ggraph::scale_edge_color_distiller(scale_name, palette = palette, direction = palette_direction,
                                        limits = limits,
                                        breaks = breaks,
