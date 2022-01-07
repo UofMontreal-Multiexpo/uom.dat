@@ -1353,3 +1353,245 @@ test_that("thq_pairs returns an identical result whatever the chosen usage", {
 })
 
 
+##### thq_by_group #####
+
+test_that("thq_by_group requires that references have the same sizes as values if they are two lists", {
+  expect_error(thq_by_group(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                            list(1, 2, 3)))
+  expect_error(thq_by_group(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                            list(c(1, 2), 1, c(2, 3))),
+               NA)
+})
+
+test_that("thq_by_group requires references to have named values if they are a vector and values are a list", {
+  expect_error(thq_by_group(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                            c(1, 2, 3)))
+  expect_error(thq_by_group(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                            c(a = 1, b = 2, c = 3)),
+               NA)
+})
+
+test_that("thq_by_group requires values to be named", {
+  # 'values' as a matrix
+  expect_error(thq_by_group(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+                            references = c(a = 1, b = 1)))
+  expect_error(thq_by_group(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+                            references = c(a = 1, b = 1)),
+               NA)
+  
+  # 'values' as a list
+  expect_error(thq_by_group(values = list(c(1, 1),
+                                          c(1, 1),
+                                          c(1, 1)),
+                            references = c(a = 1, b = 1)))
+  expect_error(thq_by_group(values = list(c(a = 1, a = 1),
+                                          c(b = 1, b = 1),
+                                          c(a = 1, b = 1)),
+                            references = c(a = 1, b = 1)),
+               NA)
+  
+  # 'hq' as a matrix
+  expect_error(thq_by_group(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+                            groups = c("I", "I", "I")))
+  expect_error(thq_by_group(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+                            groups = c("I", "I", "I")),
+               NA)
+  
+  # 'hq' as a list
+  expect_error(thq_by_group(hq = list(c(1, 1),
+                                      c(1, 1),
+                                      c(1, 1)),
+                            groups = c("I", "I", "I")))
+  expect_error(thq_by_group(hq = list(c(a = 1, a = 1),
+                                      c(b = 1, b = 1),
+                                      c(a = 1, b = 1)),
+                            groups = c("I", "I", "I")),
+               NA)
+  
+  # 'thq' as a vector
+  expect_error(thq_by_group(thq = c(1, 1, 1),
+                            groups = c("I", "I", "I")))
+  expect_error(thq_by_group(thq = c(a = 1, b = 1, a = 1),
+                            groups = c("I", "I", "I")),
+               NA)
+  
+  # 'thq' as a list
+  expect_error(thq_by_group(thq = list(c(2, 1, 0.5),
+                                       c(2, 1),
+                                       c(1)),
+                            groups = c("I", "I", "I")))
+  expect_error(thq_by_group(thq = list(c(b = 2, a = 1, c = 0.5),
+                                       c(a = 2, b = 1),
+                                       c(a = 1)),
+                            groups = c("I", "I", "I")),
+               NA)
+})
+
+test_that("thq_by_group ignores or considers value names according to the argument levels", {
+  values_matrix = matrix(c(1,1,0, 1,0,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3]))
+  values_list = list(c(a = 1, b = 1),
+                     c(a = 1),
+                     c(c = 1))
+  references = c(a = 1, b = 1, c = 1)
+  
+  # 'values' as a matrix
+  expect_equal(
+    rownames(thq_by_group(values = values_matrix,
+                         references = references,
+                         levels = NULL)),
+    c("a", "c")
+  )
+  expect_equal(
+    rownames(thq_by_group(values = values_matrix,
+                          references = references,
+                          levels = c("a", "b", "c"))),
+    c("a", "b", "c")
+  )
+  
+  # 'values' as a list
+  expect_equal(
+    rownames(thq_by_group(values = values_list,
+                          references = references,
+                          levels = NULL)),
+    c("a", "c")
+  )
+  expect_equal(
+    rownames(thq_by_group(values = values_list,
+                          references = references,
+                          levels = c("a", "b", "c"))),
+    c("a", "b", "c")
+  )
+})
+
+test_that("thq_by_group counts the top hazard quotients by group", {
+  
+  values_matrix = matrix(c(1,2,0,0, 0,1,0,2, 0.5,0,0,3.2, 0.9,1.8,0,0),
+                         ncol = 4, dimnames = list(letters[1:4]))
+  values_list = list(c(a=1, b=2, c=0.1), c(b=1, d=2), c(a=0.5, d=3.2), c(a=0.9, a=0.9))
+  references = c(a=1, b=2, c=10, d=4)
+  
+  expect_equal(
+    thq_by_group(values = values_matrix,
+                 references = references),
+    as.table(matrix(c(1,0,0, 0,1,0, 0,0,1, 1,0,0), ncol = 4,
+                    dimnames = list(c("a","b","d"), c("I","II","IIIA","IIIB"))))
+  )
+  expect_equal(
+    thq_by_group(values = values_list,
+                 references = references),
+    as.table(matrix(c(1,0,0, 0,1,0, 0,0,1, 1,0,0), ncol = 4,
+                    dimnames = list(c("a","b","d"), c("I","II","IIIA","IIIB"))))
+  )
+  
+  
+  # Argument levels
+  values_matrix = matrix(c(1,1,0, 1,0,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3]))
+  values_list = list(c(a = 1, b = 1),
+                     c(a = 1),
+                     c(c = 1))
+  references = c(a = 1, b = 1, c = 1)
+  
+  expect_equal(
+    thq_by_group(values = values_matrix,
+                 references = references,
+                 levels = NULL),
+    as.table(matrix(c(2,1, 0,0, 0,0, 0,0), ncol = 4,
+                    dimnames = list(c("a","c"), c("I","II","IIIA","IIIB"))))
+  )
+  expect_equal(
+    thq_by_group(values = values_matrix,
+                 references = references,
+                 levels = c("a", "b", "c")),
+    as.table(matrix(c(2,0,1, 0,0,0, 0,0,0, 0,0,0), ncol = 4,
+                    dimnames = list(c("a","b","c"), c("I","II","IIIA","IIIB"))))
+  )
+  
+  expect_equal(
+    thq_by_group(values = values_list,
+                 references = references,
+                 levels = NULL),
+    as.table(matrix(c(2,1, 0,0, 0,0, 0,0), ncol = 4,
+                    dimnames = list(c("a","c"), c("I","II","IIIA","IIIB"))))
+  )
+  expect_equal(
+    thq_by_group(values = values_list,
+                 references = references,
+                 levels = c("a", "b", "c")),
+    as.table(matrix(c(2,0,1, 0,0,0, 0,0,0, 0,0,0), ncol = 4,
+                    dimnames = list(c("a","b","c"), c("I","II","IIIA","IIIB"))))
+  )
+  
+  
+  # Matrix having only one value per set
+  expect_equal(
+    thq_by_group(values = matrix(c(1,1,1,1,1), ncol = 5, dimnames = list("a")),
+                 references = c(a = 1)),
+    as.table(matrix(c(5,0,0,0), ncol = 4, dimnames = list("a", c("I","II","IIIA","IIIB"))))
+  )
+  
+  # Matrix having only one set of values
+  expect_equal(
+    thq_by_group(values = matrix(c(1, 1), ncol = 1, dimnames = list(letters[1:2])),
+              references = c(a = 1, b = 1)),
+    as.table(matrix(c(1,0,0,0), ncol = 4, dimnames = list("a", c("I","II","IIIA","IIIB"))))
+  )
+  
+  
+  # List having only one value per set
+  expect_equal(
+    thq_by_group(values = list(c(a = 1), c(b = 1), c(c = 1)),
+                references = c(a = 1, b = 1, c = 1)),
+    as.table(matrix(c(1,1,1, 0,0,0, 0,0,0, 0,0,0), ncol = 4,
+                    dimnames = list(letters[1:3], c("I","II","IIIA","IIIB"))))
+  )
+  
+  # List having only one set of values
+  expect_equal(
+    thq_by_group(values = list(c(a = 1, b = 1)),
+                 references = c(a = 1, b = 1)),
+    as.table(matrix(c(1,0,0,0), ncol = 4, dimnames = list("a", c("I","II","IIIA","IIIB"))))
+  )
+})
+
+test_that("thq_by_group returns an identical result whatever the structure of references", {
+  # 'values' as a list: 'references' as a vector or a list
+  values = list(s1 = c(a=1, b=2), s2 = c(b=1, c=2), s3 = c(a=0.5, c=3.2), s4 = c(a=0.9, a=0.9))
+  references_vector = c(a=1, b=2, c=4)
+  references_list = list(c(1,2), c(2,4), c(1,4), c(1,1))
+  
+  expect_identical(thq_by_group(values, references_vector),
+                   thq_by_group(values, references_list))
+})
+
+test_that("thq_by_group returns an identical result whatever the chosen usage", {
+  values_matrix = matrix(c(1,2,0, 0,1,2, 0.5,0,3.2, 0.9,1.8,0),
+                         ncol = 4, dimnames = list(letters[1:3]))
+  values_list = list(s1 = c(a=1, b=2), s2 = c(b=1, c=2), s3 = c(a=0.5, c=3.2), s4 = c(a=0.9, a=0.9))
+  references_vector = c(a=1, b=2, c=4)
+  references_list = list(c(1,2), c(2,4), c(1,4), c(1,1))
+  
+  # 'values' as a matrix
+  expect_identical(thq_by_group(values_matrix, references_vector),
+                   thq_by_group(hq     = hazard_quotient(values_matrix, references_vector),
+                                groups = classify_mixture(values_matrix, references_vector)))
+  expect_identical(thq_by_group(values_matrix, references_vector),
+                   thq_by_group(thq    = top_hazard_quotient(values_matrix, references_vector),
+                                groups = classify_mixture(values_matrix, references_vector)))
+  
+  # 'values' as a list
+  expect_identical(
+    thq_by_group(values_list, references_list),
+    thq_by_group(hq = lapply(seq_along(values_list),
+                             function(v) hazard_quotient(values_list[[v]], references_list[[v]])),
+                 groups = sapply(seq_along(values_list),
+                                 function(v) classify_mixture(values_list[[v]], references_list[[v]])))
+  )
+  expect_identical(
+    thq_by_group(values_list, references_list),
+    thq_by_group(thq = lapply(seq_along(values_list),
+                              function(v) top_hazard_quotient(values_list[[v]], references_list[[v]])),
+                 groups = sapply(seq_along(values_list),
+                                 function(v) classify_mixture(values_list[[v]], references_list[[v]])))
+  )
+})
+
