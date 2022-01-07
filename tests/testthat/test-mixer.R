@@ -477,10 +477,10 @@ test_that("top_hazard_quotient returns, by default, as many top hazard quotients
 })
 
 test_that("top_hazard_quotient does not allow to find less than 1 top hazard quotient", {
-  expect_error(top_hazard_quotient(1:5, 1:5,                    k = 0))
-  expect_error(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5, k = -1))
-  expect_error(top_hazard_quotient(hq = 1:5,                    k = -50))
-  expect_error(top_hazard_quotient(hq = matrix(1:10, ncol = 2), k = -Inf))
+  expect_error(top_hazard_quotient(1:5, 1:5,                    k = 0), "greater")
+  expect_error(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5, k = -1), "greater")
+  expect_error(top_hazard_quotient(hq = 1:5,                    k = -50), "greater")
+  expect_error(top_hazard_quotient(hq = matrix(1:10, ncol = 2), k = -Inf), "greater")
 })
 
 test_that("top_hazard_quotient returns as many top hazard quotients as requested", {
@@ -769,7 +769,8 @@ test_that("classify_mixture returns an identical result whatever the chosen usag
 
 test_that("mcr_summary requires that references have the same sizes as values if they are two lists", {
   expect_error(mcr_summary(list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
-                           list(1, 2, 3)))
+                           list(1, 2, 3)),
+               "length")
   expect_error(mcr_summary(list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
                            list(c(1, 2), 1, c(2, 3))),
                NA)
@@ -777,9 +778,11 @@ test_that("mcr_summary requires that references have the same sizes as values if
 
 test_that("mcr_summary requires values and references to have named values if they are a list and a vector", {
   expect_error(mcr_summary(list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
-                           c(a = 1, b = 2, c = 3)))
+                           c(a = 1, b = 2, c = 3)),
+               "name")
   expect_error(mcr_summary(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
-                           c(1, 2, 3)))
+                           c(1, 2, 3)),
+               "name")
   expect_error(mcr_summary(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
                            c(a = 1, b = 2, c = 3)),
                NA)
@@ -913,7 +916,8 @@ test_that("mcr_summary returns an identical result whatever the structure of ref
 
 test_that("thq_pairs requires that references have the same sizes as values if they are two lists", {
   expect_error(thq_pairs(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
-                         list(1, 2, 3)))
+                         list(1, 2, 3)),
+               "length")
   expect_error(thq_pairs(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
                          list(c(1, 2), 1, c(2, 3))),
                NA)
@@ -921,7 +925,8 @@ test_that("thq_pairs requires that references have the same sizes as values if t
 
 test_that("thq_pairs requires references to have named values if they are a vector and values are a list", {
   expect_error(thq_pairs(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
-                         c(1, 2, 3)))
+                         c(1, 2, 3)),
+               "name")
   expect_error(thq_pairs(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
                          c(a = 1, b = 2, c = 3)),
                NA)
@@ -930,7 +935,8 @@ test_that("thq_pairs requires references to have named values if they are a vect
 test_that("thq_pairs requires values to be named", {
   # 'values' as a matrix
   expect_error(thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
-                         references = c(a = 1, b = 1)))
+                         references = c(a = 1, b = 1)),
+               "name")
   expect_error(thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
                          references = c(a = 1, b = 1)),
                NA)
@@ -939,7 +945,8 @@ test_that("thq_pairs requires values to be named", {
   expect_error(thq_pairs(values = list(c(1, 1),
                                        c(1, 1),
                                        c(1, 1)),
-                         references = c(a = 1, b = 1)))
+                         references = c(a = 1, b = 1)),
+               "name")
   expect_error(thq_pairs(values = list(c(a = 1, a = 1),
                                        c(b = 1, b = 1),
                                        c(a = 1, b = 1)),
@@ -948,7 +955,8 @@ test_that("thq_pairs requires values to be named", {
   
   # 'hq' as a matrix
   expect_error(thq_pairs(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3),
-                         hi = c(1, 2, 1)))
+                         hi = c(1, 2, 1)),
+               "name")
   expect_error(thq_pairs(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
                          hi = c(1, 2, 1)),
                NA)
@@ -957,7 +965,8 @@ test_that("thq_pairs requires values to be named", {
   expect_error(thq_pairs(hq = list(c(1, 1),
                                    c(1, 1),
                                    c(1, 1)),
-                         hi = c(2, 2, 2)))
+                         hi = c(2, 2, 2)),
+               "name")
   expect_error(thq_pairs(hq = list(c(a = 1, a = 1),
                                    c(b = 1, b = 1),
                                    c(a = 1, b = 1)),
@@ -1359,7 +1368,8 @@ test_that("thq_pairs returns an identical result whatever the chosen usage", {
 
 test_that("thq_by_group requires that references have the same sizes as values if they are two lists", {
   expect_error(thq_by_group(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
-                            list(1, 2, 3)))
+                            list(1, 2, 3)),
+               "length")
   expect_error(thq_by_group(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
                             list(c(1, 2), 1, c(2, 3))),
                NA)
@@ -1367,7 +1377,8 @@ test_that("thq_by_group requires that references have the same sizes as values i
 
 test_that("thq_by_group requires references to have named values if they are a vector and values are a list", {
   expect_error(thq_by_group(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
-                            c(1, 2, 3)))
+                            c(1, 2, 3)),
+               "name")
   expect_error(thq_by_group(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
                             c(a = 1, b = 2, c = 3)),
                NA)
@@ -1376,7 +1387,8 @@ test_that("thq_by_group requires references to have named values if they are a v
 test_that("thq_by_group requires values to be named", {
   # 'values' as a matrix
   expect_error(thq_by_group(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
-                            references = c(a = 1, b = 1)))
+                            references = c(a = 1, b = 1)),
+               "name")
   expect_error(thq_by_group(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
                             references = c(a = 1, b = 1)),
                NA)
@@ -1385,7 +1397,8 @@ test_that("thq_by_group requires values to be named", {
   expect_error(thq_by_group(values = list(c(1, 1),
                                           c(1, 1),
                                           c(1, 1)),
-                            references = c(a = 1, b = 1)))
+                            references = c(a = 1, b = 1)),
+               "name")
   expect_error(thq_by_group(values = list(c(a = 1, a = 1),
                                           c(b = 1, b = 1),
                                           c(a = 1, b = 1)),
@@ -1394,7 +1407,8 @@ test_that("thq_by_group requires values to be named", {
   
   # 'hq' as a matrix
   expect_error(thq_by_group(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3),
-                            groups = c("I", "I", "I")))
+                            groups = c("I", "I", "I")),
+               "name")
   expect_error(thq_by_group(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
                             groups = c("I", "I", "I")),
                NA)
@@ -1403,7 +1417,8 @@ test_that("thq_by_group requires values to be named", {
   expect_error(thq_by_group(hq = list(c(1, 1),
                                       c(1, 1),
                                       c(1, 1)),
-                            groups = c("I", "I", "I")))
+                            groups = c("I", "I", "I")),
+               "name")
   expect_error(thq_by_group(hq = list(c(a = 1, a = 1),
                                       c(b = 1, b = 1),
                                       c(a = 1, b = 1)),
@@ -1412,7 +1427,8 @@ test_that("thq_by_group requires values to be named", {
   
   # 'thq' as a vector
   expect_error(thq_by_group(thq = c(1, 1, 1),
-                            groups = c("I", "I", "I")))
+                            groups = c("I", "I", "I")),
+               "name")
   expect_error(thq_by_group(thq = c(a = 1, b = 1, a = 1),
                             groups = c("I", "I", "I")),
                NA)
@@ -1421,7 +1437,8 @@ test_that("thq_by_group requires values to be named", {
   expect_error(thq_by_group(thq = list(c(2, 1, 0.5),
                                        c(2, 1),
                                        c(1)),
-                            groups = c("I", "I", "I")))
+                            groups = c("I", "I", "I")),
+               "name")
   expect_error(thq_by_group(thq = list(c(b = 2, a = 1, c = 0.5),
                                        c(a = 2, b = 1),
                                        c(a = 1)),
