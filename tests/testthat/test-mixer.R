@@ -718,6 +718,7 @@ test_that("classify_mixture returns an identical result whatever the chosen usag
                            0.9, 0.9), nrow = 2)
   references = c(1,1)
   
+  # 'values' as a vector
   expect_identical(classify_mixture(values_matrix[, 1], references),
                    classify_mixture(hi  = hazard_index(values_matrix[, 1], references),
                                     mhq = maximum_hazard_quotient(values_matrix[, 1], references)))
@@ -750,6 +751,7 @@ test_that("classify_mixture returns an identical result whatever the chosen usag
                                     mhq = maximum_hazard_quotient(values_matrix[, 4], references),
                                     mcr = maximum_cumulative_ratio(values_matrix[, 4], references)))
   
+  # 'values' as a matrix
   expect_identical(classify_mixture(values_matrix, references),
                    classify_mixture(hi  = hazard_index(values_matrix, references),
                                     mhq = maximum_hazard_quotient(values_matrix, references)))
@@ -897,7 +899,7 @@ test_that("mcr_summary computes the indicators of the MCR approach", {
 })
 
 test_that("mcr_summary returns an identical result whatever the structure of references", {
-  # 'values' as a list: references as vector or list
+  # 'values' as a list: 'references' as a vector or a list
   values = list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4))
   references_vector = c(a=1, b=2, c=3)
   references_list = list(c(1,2), 1, c(2,3))
@@ -1326,7 +1328,7 @@ test_that("thq_pairs counts the top hazard quotients pairs", {
 })
 
 test_that("thq_pairs returns an identical result whatever the structure of references", {
-  # 'values' as a list: references as vector or list
+  # 'values' as a list: 'references' as a vector or a list
   values = list(s1 = c(a=1, b=2, c=3), s2 = c(a=2, b=1, c=3), s3 = c(b=3, c=4))
   references_vector = c(a=1, b=2, c=3)
   references_list = list(c(1,2,3), c(1,2,3), c(2,3))
