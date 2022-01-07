@@ -904,3 +904,433 @@ test_that("mcr_summary returns an identical result whatever the structure of ref
 })
 
 
+##### thq_pairs #####
+
+test_that("thq_pairs requires values to be named", {
+  # 'values' as a matrix
+  expect_error(thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+                         references = c(a = 1, b = 1)))
+  expect_error(thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+                         references = c(a = 1, b = 1)),
+               NA)
+  
+  # 'values' as a list
+  expect_error(thq_pairs(values = list(c(1, 1),
+                                       c(1, 1),
+                                       c(1, 1)),
+                         references = c(a = 1, b = 1)))
+  expect_error(thq_pairs(values = list(c(a = 1, a = 1),
+                                       c(b = 1, b = 1),
+                                       c(a = 1, b = 1)),
+                         references = c(a = 1, b = 1)),
+               NA)
+  
+  # 'hq' as a matrix
+  expect_error(thq_pairs(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+                         hi = c(1, 2, 1)))
+  expect_error(thq_pairs(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+                         hi = c(1, 2, 1)),
+               NA)
+  
+  # 'hq' as a list
+  expect_error(thq_pairs(hq = list(c(1, 1),
+                                   c(1, 1),
+                                   c(1, 1)),
+                         hi = c(2, 2, 2)))
+  expect_error(thq_pairs(hq = list(c(a = 1, a = 1),
+                                   c(b = 1, b = 1),
+                                   c(a = 1, b = 1)),
+                         hi = c(2, 2, 2)),
+               NA)
+})
+
+test_that("thq_pairs returns a symmetric matrix", {
+  # 'values' as a matrix
+  expect_true(isSymmetric.matrix(
+    thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+              references = c(a = 1, b = 1))
+  ))
+  
+  # 'values' as a list
+  expect_true(isSymmetric.matrix(
+    thq_pairs(values = list(c(a = 1),
+                            c(b = 1, b = 1),
+                            c(a = 1, b = 1)),
+              references = c(a = 1, b = 1))
+  ))
+})
+
+test_that("thq_pairs returns NULL in 3 cases", {
+  # Three cases:
+  # 1. alone is FALSE and no set of values has more than one element different from 0
+  # 2. threshold is TRUE and no related hazard index is greater than 1
+  # 3. treshold is TRUE, alone is FALSE and no set of values meets the two conditions
+  
+  # 'values' as a matrix
+  # Case 1
+  expect_null(thq_pairs(values = matrix(c(1,0, 1,0, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+                        references = c(a = 1, b = 1),
+                        threshold = FALSE, alone = FALSE))
+  expect_false(is.null(
+    thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+              references = c(a = 1, b = 1),
+              threshold = FALSE, alone = FALSE)
+  ))
+  
+  # Case 2
+  expect_null(thq_pairs(values = matrix(c(1,0, 1,0, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+                        references = c(a = 1, b = 1),
+                        threshold = TRUE, alone = TRUE))
+  expect_false(is.null(
+    thq_pairs(values = matrix(c(2,0, 1,1, 0,2), ncol = 3, dimnames = list(letters[1:2])),
+              references = c(a = 1, b = 1),
+              threshold = TRUE, alone = TRUE)
+  ))
+  
+  # Case 3
+  expect_null(thq_pairs(values = matrix(c(2,0, 0.5,0.5, 0,2), ncol = 3, dimnames = list(letters[1:2])),
+                        references = c(a = 1, b = 1),
+                        threshold = TRUE, alone = FALSE))
+  expect_false(is.null(
+    thq_pairs(values = matrix(c(2,0, 1,1, 0,2), ncol = 3, dimnames = list(letters[1:2])),
+              references = c(a = 1, b = 1),
+              threshold = TRUE, alone = FALSE)
+  ))
+  
+  # 'values' as a list
+  # Case 1
+  expect_null(thq_pairs(values = list(c(a = 1, b = 0),
+                                      c(b = 1, c = 0),
+                                      c(c = 1)),
+                        references = c(a = 1, b = 1, c = 1),
+                        threshold = FALSE, alone = FALSE))
+  expect_false(is.null(
+    thq_pairs(values = list(c(a = 1, b = 1),
+                            c(b = 1, c = 1),
+                            c(c = 1)),
+              references = c(a = 1, b = 1, c = 1),
+              threshold = FALSE, alone = FALSE)
+  ))
+  
+  # Case 2
+  expect_null(thq_pairs(values = list(c(a = 1, b = 0),
+                                      c(b = 1, c = 0),
+                                      c(c = 1)),
+                        references = c(a = 1, b = 1, c = 1),
+                        threshold = TRUE, alone = TRUE))
+  expect_false(is.null(
+    thq_pairs(values = list(c(a = 1, b = 1),
+                            c(b = 1, c = 1),
+                            c(c = 1)),
+              references = c(a = 1, b = 1, c = 1),
+              threshold = TRUE, alone = TRUE)
+  ))
+  
+  # Case 3
+  expect_null(thq_pairs(values = list(c(a = 2),
+                                      c(b = 0.5, c = 0.5),
+                                      c(c = 1)),
+                        references = c(a = 1, b = 1, c = 1),
+                        threshold = TRUE, alone = FALSE))
+  expect_false(is.null(
+    thq_pairs(values = list(c(a = 2),
+                            c(b = 1, c = 1),
+                            c(c = 1)),
+              references = c(a = 1, b = 1, c = 1),
+              threshold = TRUE, alone = FALSE)
+  ))
+})
+
+test_that("thq_pairs ignore values equal to 0", {
+  # 'values' as a matrix
+  expect_equal(
+    thq_pairs(values = matrix(c(1,0,1, 0,1,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3])),
+              references = c(a = 1, b = 1, c = 1),
+              threshold = FALSE, alone = TRUE),
+    as.table(matrix(c(0,0,1,0, 0,0,0,1, 1,0,0,1, 0,1,1,0), ncol = 4,
+                    dimnames = list(c(letters[1:3], "NULL"), c(letters[1:3], "NULL"))))
+  )
+  
+  # 'values' as a list
+  expect_equal(
+    thq_pairs(values = list(c(a = 1, c = 1),
+                            c(b = 1),
+                            c(c = 1, d = 0)),
+              references = c(a = 1, b = 1, c = 1, d = 1),
+              threshold = FALSE, alone = TRUE),
+    as.table(matrix(c(0,0,1,0, 0,0,0,1, 1,0,0,1, 0,1,1,0), ncol = 4,
+                    dimnames = list(c(letters[1:3], "NULL"), c(letters[1:3], "NULL"))))
+  )
+})
+
+test_that("thq_pairs return has one additional ending row and column if alone is TRUE", {
+  # Two cases:
+  # 1. alone is TRUE and one value name is alphabetically after NULL, there are elements that are alone
+  # 2. alone is TRUE and one value name is alphabetically after NULL, but no element is alone
+  
+  # 'values' as a matrix
+  # Case 1
+  expect_equal(
+    unique(nth_values(dimnames(
+      thq_pairs(values = matrix(c(1,0,0, 1,0,1, 0,1,0), ncol = 3, dimnames = list(c("a","b","z"))),
+                references = c(a = 1, b = 1, z = 1),
+                threshold = FALSE, alone = TRUE)
+    ), n = "last")),
+    "NULL")
+  
+  # Case 2
+  expect_equal(
+    unique(nth_values(dimnames(
+      thq_pairs(values = matrix(c(1,1,0, 1,0,1, 0,1,1), ncol = 3, dimnames = list(c("a","b","z"))),
+                references = c(a = 1, b = 1, z = 1),
+                threshold = FALSE, alone = TRUE)
+      ), n = "last")),
+    "NULL")
+  
+  # 'values' as a list
+  # Case 1
+  expect_equal(
+    unique(nth_values(dimnames(
+      thq_pairs(values = list(c(a = 1, b = 1),
+                              c(b = 1, z = 1),
+                              c(c = 1)),
+                references = c(a = 1, b = 1, c = 1, z = 1),
+                threshold = FALSE, alone = TRUE)
+      ), n = "last")),
+    "NULL")
+  
+  # Case 2
+  expect_equal(
+    unique(nth_values(dimnames(
+      thq_pairs(values = list(c(a = 1, b = 1),
+                              c(b = 1, z = 1),
+                              c(c = 1)),
+                references = c(a = 1, b = 1, c = 1, z = 1),
+                threshold = FALSE, alone = TRUE)
+    ), n = "last")),
+    "NULL")
+})
+
+test_that("thq_pairs ignores or considers value names according to the argument levels", {
+  values_matrix = matrix(c(1,0,1, 1,0,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3]))
+  values_list = list(c(a = 1, b = 0.5, c = 1),
+                     c(a = 2),
+                     c(c = 2))
+  references = c(a = 1, b = 1, c = 1)
+  
+  # 'values' as a matrix
+  expect_equal(
+    rownames(thq_pairs(values = values_matrix,
+                       references = references,
+                       levels = NULL)),
+    c("a", "c")
+  )
+  expect_equal(
+    rownames(thq_pairs(values = values_matrix,
+            references = references,
+            levels = c("a", "b", "c"))),
+    c("a", "b", "c")
+  )
+  
+  # 'values' as a list
+  expect_equal(
+    rownames(thq_pairs(values = values_list,
+                       references = references,
+                       levels = NULL)),
+    c("a", "c")
+  )
+  expect_equal(
+    rownames(thq_pairs(values = values_list,
+                       references = references,
+                       levels = c("a", "b", "c"))),
+    c("a", "b", "c")
+  )
+})
+
+test_that("thq_pairs counts the top hazard quotients pairs", {
+  
+  # Argument levels
+  values_matrix = matrix(c(1,0,1, 1,0,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3]))
+  values_list = list(c(a = 1, b = 0.5, c = 1),
+                     c(a = 2),
+                     c(c = 2))
+  references = c(a = 1, b = 1, c = 1)
+  
+  expect_equal(
+    thq_pairs(values = values_matrix,
+              references = references,
+              levels = NULL),
+    as.table(matrix(c(0,1, 1,0), ncol = 2,
+                    dimnames = list(c("a","c"), c("a","c"))))
+  )
+  expect_equal(
+    thq_pairs(values = values_matrix,
+              references = references,
+              levels = c("a", "b", "c")),
+    as.table(matrix(c(0,0,1, 0,0,0, 1,0,0), ncol = 3,
+                    dimnames = list(letters[1:3], letters[1:3])))
+  )
+  
+  expect_equal(
+    thq_pairs(values = values_list,
+              references = references,
+              levels = NULL),
+    as.table(matrix(c(0,1, 1,0), ncol = 2,
+                    dimnames = list(c("a","c"), c("a","c"))))
+  )
+  expect_equal(
+    thq_pairs(values = values_list,
+              references = references,
+              levels = c("a", "b", "c")),
+    as.table(matrix(c(0,0,1, 0,0,0, 1,0,0), ncol = 3,
+                    dimnames = list(letters[1:3], letters[1:3])))
+  )
+  
+  
+  # Arguments threshold and alone, on the following matrix (and an equivalent list):
+  #    s1 s2 s3
+  # a 0.5  0  2
+  # b 0.5  2  0
+  # If threshold = T and alone = F: NULL
+  # If threshold = F and alone = F: set 1 si considered (ab = 1)
+  # If threshold = T and alone = T: sets 2 and 3 are considered (aNULL = 1, bNULL = 1)
+  # If threshold = F and alone = T: sets 1, 2 and 3 are considered (ab = 1, aNULL = 1, bNULL = 1)
+  values_matrix = matrix(c(0.5,0.5,
+                           0,  2,
+                           2,  0),
+                           ncol = 3, dimnames = list(letters[1:2], c("s1", "s2", "s3")))
+  values_list = list(c(a = 0.5, b = 0.5),
+                     c(b = 2),
+                     c(a = 2))
+  references = c(a = 1, b = 1)
+  
+  expect_identical(
+    thq_pairs(values = values_matrix, references = references,
+              threshold = TRUE, alone = FALSE),
+    NULL
+  )
+  expect_equal(
+    thq_pairs(values = values_matrix, references = references,
+              threshold = FALSE, alone = FALSE),
+    as.table(matrix(c(0,1, 1,0), ncol = 2,
+                    dimnames = list(letters[1:2], letters[1:2])))
+  )
+  expect_equal(
+    thq_pairs(values = values_matrix, references = references,
+              threshold = TRUE, alone = TRUE),
+    as.table(matrix(c(0,0,1, 0,0,1, 1,1,0), ncol = 3,
+                    dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
+  )
+  expect_equal(
+    thq_pairs(values = values_matrix, references = references,
+              threshold = FALSE, alone = TRUE),
+    as.table(matrix(c(0,1,1, 1,0,1, 1,1,0), ncol = 3,
+                    dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
+  )
+  
+  expect_identical(
+    thq_pairs(values = values_list, references = references,
+              threshold = TRUE, alone = FALSE),
+    NULL
+  )
+  expect_equal(
+    thq_pairs(values = values_list, references = references,
+              threshold = FALSE, alone = FALSE),
+    as.table(matrix(c(0,1, 1,0), ncol = 2,
+                    dimnames = list(letters[1:2], letters[1:2])))
+  )
+  expect_equal(
+    thq_pairs(values = values_list, references = references,
+              threshold = TRUE, alone = TRUE),
+    as.table(matrix(c(0,0,1, 0,0,1, 1,1,0), ncol = 3,
+                    dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
+  )
+  expect_equal(
+    thq_pairs(values = values_list, references = references,
+              threshold = FALSE, alone = TRUE),
+    as.table(matrix(c(0,1,1, 1,0,1, 1,1,0), ncol = 3,
+                    dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
+  )
+  
+  
+  # Matrix having only one value per set
+  expect_equal(
+    thq_pairs(values = matrix(c(1,1,1,1,1),
+                              ncol = 5, dimnames = list("a")),
+              references = c(a = 1),
+              threshold = FALSE, alone = TRUE),
+    as.table(matrix(c(0,5, 5,0), ncol = 2,
+                    dimnames = list(c("a", "NULL"), c("a", "NULL"))))
+  )
+  
+  # Matrix having only one set of values
+  expect_equal(
+    thq_pairs(values = matrix(c(1, 1),
+                              ncol = 1, dimnames = list(letters[1:2])),
+              references = c(a = 1, b = 1),
+              threshold = FALSE, alone = TRUE),
+    as.table(matrix(c(0,1,0, 1,0,0, 0,0,0), ncol = 3,
+                    dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
+  )
+  
+  
+  # List having only one value per set
+  expect_equal(
+    thq_pairs(values = list(c(a = 1),
+                            c(b = 1),
+                            c(c = 1)),
+              references = c(a = 1, b = 1, c = 1),
+              threshold = FALSE, alone = TRUE),
+    as.table(matrix(c(0,0,0,1, 0,0,0,1, 0,0,0,1, 1,1,1,0), ncol = 4,
+                    dimnames = list(c(letters[1:3], "NULL"), c(letters[1:3], "NULL"))))
+  )
+  
+  # List having only one set of values
+  expect_equal(
+    thq_pairs(values = list(c(a = 1, b = 1)),
+              references = c(a = 1, b = 1),
+              threshold = FALSE, alone = TRUE),
+    as.table(matrix(c(0,1,0, 1,0,0, 0,0,0), ncol = 3,
+                    dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
+  )
+  
+  
+  # Diagonal
+  expect_equal(
+    diag(thq_pairs(values = list(c(a = 1, a = 1),
+                                 c(a = 1),
+                                 c(b = 1, b = 1),
+                                 c(b = 1, c = 1)),
+                   references = c(a = 1, b = 1, c = 1))),
+    c(a = 1, b = 1, c = 0)
+  )
+})
+
+test_that("thq_pairs returns an identical result whatever the structure of references", {
+  # 'values' as a list: references as vector or list
+  values = list(o1 = c(a=1, b=2, c=3), o2 = c(a=2, b=1, c=3), o3 = c(b=3, c=4))
+  references_vector = c(a=1, b=2, c=3)
+  references_list = list(c(1,2,3), c(1,2,3), c(2,3))
+
+  expect_identical(thq_pairs(values, references_vector),
+                   thq_pairs(values, references_list))
+})
+
+test_that("thq_pairs returns an identical result whatever the chosen usage", {
+  values_matrix = matrix(c(1,2,1,2,1,
+                           2,1,1,1,2,
+                           0,1,2,1,1), ncol = 3, dimnames = list(letters[1:5], c("o1", "o2", "o3")))
+  values_list = list(o1 = c(a=1, b=2, c=1, d=2, e=1),
+                     o2 = c(a=2, b=1, c=1, d=1, e=2),
+                     o3 = c(a=0, b=1, c=2, d=1, e=1))
+  references = c(a=1, b=1, c=1, d=1, e=1)
+
+  expect_identical(thq_pairs(values_matrix, references),
+                   thq_pairs(hq = hazard_quotient(values_matrix, references),
+                             hi = hazard_index(values_matrix, references)))
+  expect_identical(thq_pairs(values_list, references),
+                   thq_pairs(hq = sapply(values_list, hazard_quotient, references),
+                             hi = sapply(values_list, hazard_index, references)))
+})
+
+
