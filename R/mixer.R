@@ -1596,14 +1596,14 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
                               hq = NULL, hi = NULL,
                               threshold = TRUE, alone = FALSE) {
   
+  # Vérification que les structures de données sont nommées
+  if (!is.null(values) && !is_named(values)[2])
+    stop("If values is a list, it must contain vectors of named numeric values.")
+  if (!is.null(hq) && !is_named(hq)[2])
+    stop("If hq is a list, it must contain vectors of named numeric values.")
+  
   # Si HI et/ou HQ n'est pas renseigné
   if (is.null(hi) || is.null(hq)) {
-    
-    # Vérification que les structures de données sont nommées
-    if (!is.null(values) && !is_named(values)[2])
-      stop("If values is a list, it must contain vector of named numeric values.")
-    if (!is.null(hq) && !is_named(hq)[2])
-      stop("If hq is a list, it must contain vector of named numeric values.")
     
     # Différence si references est une liste ou un vecteur
     if (is.list(references)) {
@@ -1889,7 +1889,7 @@ thq_by_group = function(values = NULL, references = NULL,
       if (!is.null(values) && !is_named(values)[2])
         stop("If values is a list, it must contain vectors of named numeric values.")
       if (!is.null(hq) && !is_named(hq)[2])
-        stop("If hq is a list, it must contain vector of named numeric values.")
+        stop("If hq is a list, it must contain vectors of named numeric values.")
       
       # Si ni HQ ni THQ n'est renseigné
       if (is.null(thq) && is.null(hq)) {
