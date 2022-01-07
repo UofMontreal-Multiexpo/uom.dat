@@ -476,11 +476,16 @@ test_that("top_hazard_quotient returns, by default, as many top hazard quotients
   expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  ncol = 1))), 3)
 })
 
-test_that("top_hazard_quotient does not allow to find less than 1 top hazard quotient", {
+test_that("top_hazard_quotient only allows to find at least 1 top hazard quotient", {
   expect_error(top_hazard_quotient(1:5, 1:5,                    k = 0), "greater")
   expect_error(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5, k = -1), "greater")
   expect_error(top_hazard_quotient(hq = 1:5,                    k = -50), "greater")
   expect_error(top_hazard_quotient(hq = matrix(1:10, ncol = 2), k = -Inf), "greater")
+  
+  expect_error(top_hazard_quotient(1:5, 1:5,                    k = 1), NA)
+  expect_error(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5, k = 10), NA)
+  expect_error(top_hazard_quotient(hq = 1:5,                    k = 100), NA)
+  expect_error(top_hazard_quotient(hq = matrix(1:10, ncol = 2), k = Inf), NA)
 })
 
 test_that("top_hazard_quotient returns as many top hazard quotients as requested", {
