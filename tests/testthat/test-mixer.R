@@ -768,8 +768,9 @@ test_that("classify_mixture returns an identical result whatever the chosen usag
 test_that("mcr_summary requires that references have the same sizes as values if they are two lists", {
   expect_error(mcr_summary(list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
                            list(1, 2, 3)))
-  expect_silent(mcr_summary(list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
-                           list(c(1, 2), 1, c(2, 3))))
+  expect_error(mcr_summary(list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
+                           list(c(1, 2), 1, c(2, 3))),
+               NA)
 })
 
 test_that("mcr_summary requires values and references to have named values if they are a list and a vector", {
@@ -777,8 +778,9 @@ test_that("mcr_summary requires values and references to have named values if th
                            c(a = 1, b = 2, c = 3)))
   expect_error(mcr_summary(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
                            c(1, 2, 3)))
-  expect_silent(mcr_summary(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
-                            c(a = 1, b = 2, c = 3)))
+  expect_error(mcr_summary(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                           c(a = 1, b = 2, c = 3)),
+               NA)
 })
 
 test_that("mcr_summary returns the right data structure", {
