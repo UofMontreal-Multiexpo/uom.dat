@@ -909,6 +909,22 @@ test_that("mcr_summary returns an identical result whatever the structure of ref
 
 ##### thq_pairs #####
 
+test_that("thq_pairs requires that references have the same sizes as values if they are two lists", {
+  expect_error(thq_pairs(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                         list(1, 2, 3)))
+  expect_error(thq_pairs(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                         list(c(1, 2), 1, c(2, 3))),
+               NA)
+})
+
+test_that("thq_pairs requires references to have named values if they are a vector and values are a list", {
+  expect_error(thq_pairs(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                         c(1, 2, 3)))
+  expect_error(thq_pairs(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                         c(a = 1, b = 2, c = 3)),
+               NA)
+})
+
 test_that("thq_pairs requires values to be named", {
   # 'values' as a matrix
   expect_error(thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
