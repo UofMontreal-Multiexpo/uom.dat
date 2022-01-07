@@ -499,7 +499,7 @@ test_that("top_hazard_quotient returns as many top hazard quotients as requested
   expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  ncol = 1))), 3)
 })
 
-test_that("hazard_quotient returns the right data structure", {
+test_that("top_hazard_quotient returns the right data structure", {
   # 'values' as a vector
   expect_true(is.vector(top_hazard_quotient(1:5, 1:5)))
   expect_false(is.list(top_hazard_quotient(1:5, 1:5)))
@@ -895,6 +895,7 @@ test_that("mcr_summary computes the indicators of the MCR approach", {
 })
 
 test_that("mcr_summary returns an identical result whatever the structure of references", {
+  # 'values' as a list: references as vector or list
   values = list(o1 = c(a=1, b=2), o2 = c(a=2), o3 = c(b=3, c=4))
   references_vector = c(a=1, b=2, c=3)
   references_list = list(c(1,2), 1, c(2,3))
