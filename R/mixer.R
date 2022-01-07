@@ -1876,7 +1876,7 @@ thq_by_group = function(values = NULL, references = NULL,
                         thq = NULL,
                         groups = NULL, levels = NULL) {
   
-  if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || !is_named(thq)))
+  if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || (!is.list(thq) && !is_named(thq))))
     stop("thq must be a vector of named numeric values or a list of such vectors.")
   
   # Si thq et/ou groups n'est pas renseigné
