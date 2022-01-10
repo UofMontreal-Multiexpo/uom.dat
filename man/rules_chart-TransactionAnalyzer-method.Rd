@@ -43,7 +43,7 @@ those present in the given or extracted rules. Any subset of \code{object["items
 
 \item{parameter}{List of mining parameters specifying minimum support and minimum confidence of
 association rules to extract. Ignored if \code{rules} is not \code{NULL}. See
-\link[arules:ASparameter-class]{APparameter} for more.}
+\link[arules:ASparameter-classes]{APparameter} for more.}
 
 \item{display}{Rule characteristic to visualize or to use to choose between one rule and its reciprocal.
 One of \code{"support"}, \code{"lift"}, \code{"highest confidence"}, \code{"lowest confidence"}, \code{"confidence"},
