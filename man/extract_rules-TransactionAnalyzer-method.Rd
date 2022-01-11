@@ -97,9 +97,10 @@ If \code{itemsets = NULL}, additional arguments are \code{parameter}, \code{appe
  \code{0.8}), minimum length (default \code{1}), maximum length (default \code{10}), specific items
  in antecedent or consequent, and some operating parameters of the rule extraction algorithm.
 
-If \code{itemsets} is \code{"patterns"} or a list, additional arguments are \code{confidence} and
- \code{control} of function \code{\link[arules:ruleInduction]{ruleInduction}} from the package
- \code{arules}. These arguments allow to specify minimum confidence (default \code{0.8}) and some
+If \code{itemsets} is \code{"patterns"} or a list, additional arguments are \code{confidence},
+ \code{method}, \code{reduce} and \code{verbose} of function
+ \code{\link[arules:ruleInduction]{ruleInduction}} from the package \code{arules}.
+ These arguments allow to specify minimum confidence (default \code{0.8}) and some
  operating parameters of the rule extraction algorithm.
 
 Defining minimum support \eqn{s} and confidence \eqn{c} means that the union of items in the
