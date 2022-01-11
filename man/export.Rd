@@ -36,7 +36,7 @@ spectrosome <- spectrosome_chart(TA_instance, "patterns")
 export(TA_instance, spectrosome[["vertices"]],
        file = "spectrosome_vertices.csv", row.names = FALSE)
 
-rules <- extract_rules(TA_instance, from = "transactions")
+rules <- extract_rules(TA_instance)
 export(TA_instance, rules,
        file = "rules.csv", row.names = FALSE)
 

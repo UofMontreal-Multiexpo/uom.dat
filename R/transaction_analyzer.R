@@ -5737,7 +5737,7 @@ function(object, items) {
 #' category_values(TA_instance, TA_instance["patterns"]$pattern[17:18])
 #' 
 #' ## Values associated with itemsets from association rules
-#' rules <- extract_rules(TA_instance, from = "transactions")
+#' rules <- extract_rules(TA_instance)
 #' category_values(TA_instance, rules$antecedent)
 #' category_values(TA_instance, rules$consequent)
 #' 
