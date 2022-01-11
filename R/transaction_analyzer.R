@@ -1777,12 +1777,8 @@ function(object, target, count = 1, min_length = 1, max_length = Inf, arules = F
   # Conversion des transactions en transactions : une ligne par transaction, une colonne par item
   transact = methods::as(object@transactions, "transactions")
   
-  # Contournement (potentielle disfonctionnement du package arules :
-  # s'il n'y a qu'une seule transaction et que le support minimal est de 1, aucun motif n'est trouvé)
-  support = if (dim(transact)[1] == 1 && count == 1) 0 else count / dim(transact)[1]
-  
   # Énumération des motifs recherchés
-  params = list(supp   = support,
+  params = list(supp   = count / dim(transact)[1],
                 minlen = min_length,
                 maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length),
                 target = target)
