@@ -888,7 +888,7 @@ The `NULL` result means that no association rule exists between the items `328` 
 
 ### 3.2.2. Rules corresponding to specific itemsets
 
-If the argument `itemsets` is `"patterns"` or a list of itemsets, the additional argument is `confidence`, defining the minimum confidence rules must have to be extracted (default `0.8`). No minimum support can be specify.
+If the argument `itemsets` is `"patterns"` or a list of itemsets, the additional argument is `confidence`, defining the minimum confidence rules must have to be extracted (default `0.8`). No minimum support can be specified.
 
 Here are two examples of rule extraction from specific itemsets.
 ```{r}
