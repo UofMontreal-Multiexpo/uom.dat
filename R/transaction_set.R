@@ -518,6 +518,15 @@ setMethod(f = "subset",
           definition =
 function(x, indices, keep_names = TRUE) {
   
+  # Validation of the parameter
+  if (is.logical(indices) && length(indices) != length(x) && length(indices) != 1)
+    stop("If indices is a logical vector, ",
+         "its length must be equal to the initial number of transactions.")
+  if (is.numeric(indices) && any(indices > length(x)))
+    stop("If indices is a numeric vector, ",
+         "its values must not be greater than the initial number of transactions.")
+  
+  
   if (is.logical(indices)) indices = which(indices)
   
   if (keep_names) {
@@ -556,6 +565,14 @@ setMethod(f = "reorder",
           signature = "TransactionSet",
           definition =
 function(x, permutation) {
+  
+  # Validation of the parameter
+  if (is.numeric(permutation) && any(permutation > length(x)))
+    stop("If permutation is a numeric vector, ",
+         "its values must not be greater than the number of transactions.")
+  if (is.character(permutation) && any(!is.element(permutation, names(x@data))))
+    stop("If permutation is a character vector, all values must be transaction names.")
+  
   return(subset(x, permutation, keep_names = is_named(x@data)[1]))
 })
 
