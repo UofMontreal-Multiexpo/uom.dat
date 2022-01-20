@@ -35,7 +35,7 @@ is part of a specific class.}
 elements.}
 
 \item{regions}{If \code{TRUE}, the regions corresponding to the MIAT groups are filled with the colors
-defining by \code{regions_col}.}
+defined by \code{regions_col}.}
 
 \item{regions_col}{Character vector of length 4. Define the colors for the regions of the MIAT groups
 (in order: I, II, IIIA and IIIB).}

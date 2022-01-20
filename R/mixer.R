@@ -933,7 +933,7 @@ mcr_summary_for_list = function(values, references) {
 #' @param thq_col Character named vector. Colors to assign to the **t**op **h**azard **q**uotients
 #'  elements.
 #' @param regions If `TRUE`, the regions corresponding to the MIAT groups are filled with the colors
-#'  defining by `regions_col`.
+#'  defined by `regions_col`.
 #' @param regions_col Character vector of length 4. Define the colors for the regions of the MIAT groups
 #'  (in order: I, II, IIIA and IIIB).
 #' @param regions_alpha Value between 0 and 1. Transparency of the regions filled with `regions_col`.
