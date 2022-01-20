@@ -1161,10 +1161,12 @@ plot_mcr_log_part = function(chart, xlim, ylim,
   # Texte relatif aux groupes
   if (any(regions_lab)) {
     # Vérification des zones affichées (non-affichage du texte des zones qui ne sont pas affichées)
-    regions_lab = regions_lab & c(xlim[2] > 0 && ylim[1] < fun.mhq_1(xlim[2]), # Coin bas-droite en-dessous de la courbe f
-                                  xlim[1] < 0,
-                                  ylim[1] < 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[1] > fun.mhq_1(xlim[1])), # Coin bas-gauche au dessus de f
-                                  ylim[2] > 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[2] > fun.mhq_1(xlim[1]))) # Coin haut-gauche au dessus de f
+    regions_lab = regions_lab & c(
+      xlim[2] > 0 && ylim[1] < fun.mhq_1(xlim[2]), # Coin bas-droite en-dessous de la courbe f
+      xlim[1] < 0,
+      ylim[1] < 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[1] > fun.mhq_1(xlim[1])), # Coin bas-gauche au dessus de f
+      ylim[2] > 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[2] > fun.mhq_1(xlim[1])) # Coin haut-gauche au dessus de f
+    )
     
     chart = chart + ggplot2::annotate(geom = "text",
                                       x = c(xlim[2], xlim[1], root_fun / 2, x_groupIIIB)[regions_lab],
