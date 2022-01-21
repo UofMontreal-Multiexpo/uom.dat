@@ -207,6 +207,7 @@ setValidity(Class = "TransactionAnalyzer",
               if (any(grepl("/", object@items))) return("Item codes must not contain the character \"/\".")
               
               # Validation du set de transactions
+              if (length(object@transactions) == 0) return("Transactions must contain itemsets.")
               if (!has_temporal_data(object@transactions)) return("Transactions must contain temporal data.")
               
               # Vérification des paramètres d'initialisation
