@@ -188,30 +188,30 @@ make_OE_transactions = function(measures, keys, mode,
   if ((mode == 1 || mode == 3) & is.null(variable_names))
     stop("variable_names must be defined for this mode.")
   
-  # Liste qui contiendra les transactions construites
+  # List that will contained the constructed transactions
   transactions = list()
-  # Identifiants des interventions associés aux prélèvements
+  # Identifiers of the inspections associated with the samples
   id_interv = unique(measures[, keys[1]])
   
-  # Spécification d'ajout des identifiants dans les transactions
+  # Specification of adding the identifiers in the transactions
   additional = c(keys[1], additional)
   if (is.logical(unique_values) && !unique_values) unique_values = keys[1]
   else if (!is.logical(unique_values)) unique_values = c(keys[1], unique_values)
   
-  # Pour chaque intervention
+  # For each inspection
   for (id_i in id_interv) {
-    # Extraction des prélèvements associés à l'intervention en cours de traitement
+    # Extraction of the samples associated with the inspection being currently processed
     intervention = subset(measures, measures[, keys[1]] == id_i)
     
     if (mode == 1 || mode == 2) {
-      # Regroupement des prélèvements correspondant à des situations de travail décrites
+      # Grouping of the samples corresponding to the work situations described
       result_mofws = make_trx_from_ws(intervention, keys[-1], work_situations,
                                       additional, unique_values)
       transactions = c(transactions, result_mofws$transactions)
     }
     
     if (mode == 1) {
-      # Construction de transactions pour les prélèvements restants
+      # Construction of transactions for the remaining samples
       if (!all(result_mofws$processed)) {
         intervention = subset(intervention, !result_mofws$processed)
         transactions = c(transactions,
@@ -219,7 +219,7 @@ make_OE_transactions = function(measures, keys, mode,
                                                       additional, unique_values))
       }
     } else if (mode == 3) {
-      # Regroupement des prélèvements pour chaque combinaisons des variables décrites
+      # Grouping samples for each combination of the described variables
       transactions = c(transactions,
                        make_trx_from_unspecified_ws(intervention, keys[-1], variable_names,
                                                     additional, unique_values))
@@ -264,15 +264,15 @@ make_OE_transactions = function(measures, keys, mode,
 make_trx_from_ws = function(measures, keys, work_situations,
                             additional = NULL, unique_values = TRUE) {
   
-  # Vecteur spécifiant pour chaque prélèvement s'il a été traité ou non
+  # Vector specifying for each sample whether or not it has been processed
   processed = rep_len(FALSE, nrow(measures))
   
-  # Noms des varibles servant à la définition d'une situation de travail
+  # Names of the variables used to define a work situation
   ID_index = which(colnames(work_situations) == "WS.ID")
   if (length(ID_index) == 0) ID_index = 1
   variable_names = colnames(work_situations)[-ID_index]
   
-  # Noms des variables à regrouper avec unique() et des variables à regrouper avec c()
+  # Names of the variables to group using unique() and of the variables to group with c()
   if (is.logical(unique_values)){
     var_unique = if (unique_values) additional else NULL
   } else {
@@ -280,11 +280,11 @@ make_trx_from_ws = function(measures, keys, work_situations,
   }
   var_c = setdiff(additional, var_unique)
   
-  # Liste qui contiendra les transactions construites
+  # List that will contain the constructed transactions
   transactions = list()
   n_trx = 0
   
-  # Pour chaque situation de travail
+  # For each work situation
   for (id_s in unique(work_situations[, ID_index])) {
     situation = subset(work_situations, work_situations[, ID_index] == id_s)
     
@@ -293,11 +293,11 @@ make_trx_from_ws = function(measures, keys, work_situations,
     informations = rep(list(NULL), length(additional))
     names(informations) = additional
     
-    # Pour chaque ensemble de valeurs définissant une situation de travail
+    # For each set of values defining a work situation
     for (s in seq_len(nrow(situation))) {
       variable_values = situation[s, -ID_index]
       
-      # Sélection des prélèvements correspondant
+      # Selection of the corresponding samples
       to_select = apply(measures, 1,
                         function(measure) {
                           all(measure[variable_names] == variable_values)
@@ -305,21 +305,21 @@ make_trx_from_ws = function(measures, keys, work_situations,
       sub = subset(measures, to_select)
       
       if (nrow(sub) != 0) {
-        # Combinaison des substances aux précédentes
+        # Combination of the substances to the previous ones
         codes = unique(c(codes, sub[, keys[1]]))
         years = unique(c(years, sub[, keys[2]]))
         
-        # Gestion des données supplémentaires
+        # Consideration of the additional data
         for (var in var_unique) informations[[var]] = unique(c(informations[[var]], sub[, var]))
         for (var in var_c) informations[[var]] = c(informations[[var]], sub[, var])
         
-        # Confirmation de correspondance entre ces prélèvements et les situations de travail décrites
+        # Confirmation of the correpondence between these samples and the work situations described
         processed[to_select] = TRUE
       }
     }
     
     if (length(codes) != 0) {
-      # Une transaction supplémentaire
+      # One additional transaction
       n_trx = n_trx + 1
       transactions[[n_trx]] = c(list(codes, years), informations)
       names(transactions[[n_trx]])[c(1,2)] = keys
@@ -355,10 +355,10 @@ make_trx_from_ws = function(measures, keys, work_situations,
 make_trx_from_unspecified_ws = function(measures, keys, variable_names,
                                         additional = NULL, unique_values = TRUE) {
   
-  # Ensemble des situations de travail effectives
+  # All actual work situations
   situations = unique(measures[, variable_names])
   
-  # Ajout d'un identifiant quelconque à chacune
+  # Adding an identifier to each one
   if (length(variable_names) == 1) {
     ws = data.frame(WS.ID = seq_along(situations))
     ws[, variable_names] = situations
@@ -366,7 +366,7 @@ make_trx_from_unspecified_ws = function(measures, keys, variable_names,
     ws = cbind(WS.ID = seq_len(nrow(situations)), situations)
   }
   
-  # Transactions associées aux situations de travail
+  # Transactions associated with the work situations
   return(make_trx_from_ws(measures, keys, ws, additional, unique_values)$transactions)
 }
 

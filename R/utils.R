@@ -394,10 +394,10 @@ check_param = function(x, types = NULL, values = NULL, range = NULL,
                        quotes = TRUE, stop = TRUE,
                        prefix = "", suffix = "") {
   
-  # Nom de la variable dans l'appel de fonction
+  # Name of the variable in the function call
   var_name = deparse(substitute(x))
   
-  # Vérification du type associé à la variable
+  # Validation of the variable type
   if (!is.null(types) && !is.element(mode(x), types)) {
     if (length(types) == 1) {
       error_msg = paste0("of type ", types)
@@ -410,7 +410,7 @@ check_param = function(x, types = NULL, values = NULL, range = NULL,
     return(FALSE)
   }
   
-  # Vérification de l'appartenance à un ensemble de valeurs
+  # Validation of the value (among a set of values)
   if (!is.null(values) && !is.element(x, values)) {
     if (length(values) == 2) {
       if (!quotes) error_msg = paste0(values[1], " or ", values[2])
@@ -420,7 +420,7 @@ check_param = function(x, types = NULL, values = NULL, range = NULL,
       else error_msg = paste0("one of ", paste0("\"", values, "\"", collapse = ", "))
     }
   }
-  # Vérification de l'appartenance à une étendue
+  # Validation of the value (among a range of values)
   else if (!is.null(range) && (x < range[1] || x > range[2])) {
     error_msg = paste0("in range [", range[1], ",", range[2], "]")
   }

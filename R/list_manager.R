@@ -137,22 +137,22 @@ union_on_list = function(list, indices = seq_along(list)) {
 #' @export
 table_on_list = function(list, indices = seq_along(list), with_zero = FALSE) {
   
-  # Ensemble des valeurs existantes
+  # All existing values
   if (with_zero) levels = sort(unique(unlist(list)))
   
-  # Cas d'une liste d'indices
+  # Case of a list of indices
   if (is.list(indices)) {
     if (with_zero) return(t(sapply(indices, function(i) table(factor(unlist(list[i]), levels)) )))
     return(lapply(indices, function(i) table(unlist(list[i]), dnn = NULL) ))
   }
   
-  # Cas d'un unique vecteur d'indices
+  # Case of a single vector of indices
   if (is.vector(indices)) {
     if (with_zero) return(table(factor(unlist(list[indices]), levels), dnn = NULL))
     return(table(unlist(list[indices]), dnn = NULL))
   }
   
-  # Cas d'une matrice d'indices
+  # Case of a matrix of indices
   if (is.matrix(indices)) {
     if (with_zero) return(t(apply(indices, 1, function(set) table(factor(unlist(list[set]), levels)) )))
     return(apply(indices, 1, function(set) table(unlist(list[set]), dnn = NULL) ))
@@ -178,15 +178,15 @@ table_on_list = function(list, indices = seq_along(list), with_zero = FALSE) {
 #' @keywords internal
 turn_list_into_char = function(x) {
   
-  # Conversion des éléments de la liste en chaînes de caractères
+  # Conversion of the list elements to character strings
   x = as.character(x)
   
-  # Suppression des caractères "c()" liés aux vecteurs
+  # Removal of characters "c()" related to vectors
   y = ifelse(substring(x, 1, 1) == "c",
              substr(x, start = 3, stop = nchar(x) - 1),
              x)
   
-  # Suppression des guillemets liés aux vecteurs
+  # Removal of quotation marks related to vectors
   return(gsub("\"", "", y))
 }
 
@@ -268,12 +268,12 @@ invert_list = function(x, by_name = FALSE) {
 coerce_list = function(x, to, by_name = FALSE,
                        stringsAsFactors = getOption("stringsAsFactors")) {
   
-  # Unification des termes possibles
+  # Unification of possible terms
   if (to == "logical matrix") to = "lm"
   else if (to == "character matrix") to = "cm"
   else if (to == "data.frame") to = "df"
   
-  # Appel de la fonction adéquate
+  # Call to the appropriate function
   if (to == "lm") return(turn_list_into_logical_matrix(x, by_name))
   else if (to == "cm") return(turn_list_into_char_matrix(x, by_name))
   else if (to == "df") return(turn_list_into_data_frame(x, by_name, stringsAsFactors))
@@ -615,7 +615,7 @@ turn_data_frame_into_list = function(x, indices = c(1, 2)) {
   to_return = sapply(unique(x[, indices[1]]),
                      function(name) unname(x[x[, indices[1]] == name, indices[2]]))
   
-  # Les noms ne sont pas définis automatiquement dans le cas où la colonne 1 est factor
+  # Names are not automatically defined in the case column 1 is factor
   if (is.factor(x[, indices[1]])) names(to_return) = unique(x[, indices[1]])
   return(to_return)
 }

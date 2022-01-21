@@ -413,13 +413,13 @@ setAs(from = "TransactionSet",
       to = "data.frame",
       def = function(from) {
         
-        # Définition d'une colonne temporaire pour pouvoir définir le nombre de lignes
+        # Definition of a temporary column to be able to set the number of rows
         df = data.frame(tmp_col = numeric(length(from)), stringsAsFactors = FALSE)
         if (!is.null(names(from@data))) rownames(df) = names(from@data)
         df$tmp_col = NULL
         
         for (var_name in from@names) {
-          # Vecteur si une seule valeur par transaction ; liste sinon
+          # Vector if only one value per transaction; list otherwise
           if (all(sapply(from[var_name], length) == 1))
             df[[var_name]] = unname(unlist(from[var_name]))
           else
@@ -437,12 +437,12 @@ setAs(from = "TransactionSet",
       to = "transactions",
       def = function(from) {
         
-        # Liste des items retrouvés pour chaque transaction et vecteurs des identifiants des items
+        # List of the items found for each transaction and vectors of the item identifiers
         data = lapply(get_itemsets(from), as.character)
         labels = as.character(get_all_items(from))
         
-        # Transformation en objet arules::itemMatrix puis en objet arules::transactions :
-        # une ligne par transaction, une colonne par item
+        # Transformation into an object arules::itemMatrix then into an object arules::transactions
+        # (one row per transaction, one column per item)
         return(methods::as(arules::encode(data, labels), "transactions"))
       })
 
@@ -619,16 +619,16 @@ setMethod(f = "export",
           definition =
 function(object, ...) {
   
-  # Conversion en data frame
+  # Conversion to data frame
   df = methods::as(object, "data.frame")
   
-  # Conversion des listes en chaînes de charactères
+  # Conversion of the lists to character strings
   if (nrow(df) != 0) {
     columns = colnames(df)[sapply(df, is.list)]
     df[, columns] = apply(df[columns], 2, turn_list_into_char)
   }
   
-  # Enregistrement des données
+  # Saving the data
   utils::write.csv2(x = df, ...)
 })
 
@@ -748,16 +748,16 @@ setMethod(f = "get_items_from_info",
           definition =
 function(object, info, presence = "all", additional = NULL) {
   
-  # Transactions correspondant aux critères
+  # Transactions matching the criteria
   trx = get_trx_from_info(object, info, presence = presence)
   
-  # Vecteur des items
+  # Vector of the items
   if (is.null(additional)) {
     items = unique(unlist(lapply(trx@data, "[", object@item_key)))
     return(sort(items))
   }
   
-  # Liste des items et données demandées
+  # List of the items and data requested
   items = c(list(CODE = sort(unique(unlist(lapply(trx@data, "[[", object@item_key))))),
             lapply(additional, function(a) sort(unique(unlist(lapply(trx@data, "[[", a))))))
   return(stats::setNames(items, c(object@item_key, additional)))
@@ -820,13 +820,13 @@ setMethod(f = "get_info_from_items",
           definition =
 function(object, items, info_names, presence = "all") {
   
-  # Transactions contenant le ou les items recherchés
+  # Transactions containing the item(s) sought
   trx = get_trx_from_items(object, items, presence)
   
-  # Vecteur de la variable demandée
+  # Vector of the requested variable
   if (length(info_names) == 1) return(sort(unique(unlist(sapply(trx@data, "[", info_names)))))
   
-  # Liste des variables demandées
+  # List of the requested variables
   to_return = lapply(info_names, function(var) sort(unique(unlist(lapply(trx@data, "[[", var)))))
   return(stats::setNames(to_return, info_names))
 })
@@ -1022,19 +1022,19 @@ function(object, info, presence = "all", as_indices = FALSE) {
   
   if (length(info) == 0) return(object)
   
-  # Vérification de la correspondance de chaque argument dans chaque transaction
+  # Verification of the correspondence between each argument in each transaction
   correspondence = sapply(info,
                           function(arg) {
                             lapply(sapply(object@data, "[[", names(info)[parent.frame()$i[]]),
                                    function(o) arg %in% o)
                           })
   
-  # Indices des transactions correspondant aux critères
+  # Indices of the transactions matching the criteria
   if (length(info) == 1 && length(info[[1]]) == 1) {
     index = unlist(correspondence)
   } else {
-    # Unlist indépendant pour chaque argument, nécessaire car certaines transactions regroupent
-    # plusieurs valeurs pour une même variable
+    # Independant unlist for each argument, necessary because some transactions group several
+    # values for the same variable
     index = apply(t(apply(correspondence, 1, unlist)), 1, func)
   }
   if (length(index) == 0) index = FALSE
@@ -1292,21 +1292,21 @@ function(object, identifiers = "original",
          under = "ID", over = NULL,
          title = "Transaction itemsets", path = NULL, name = NULL) {
   
-  # Validation des paramètres
+  # Parameter validation
   if (length(object) == 0) stop("No items to plot (object does not contain any transactions).")
   check_param(identifiers, values = c("original", "new"))
   
-  # Préparation des variables pour la fonction de traçage du graphique
+  # Preparation of the variables to the graph plotting function
   vars = prepare_itemset_chart(object, identifiers, length_one, under, over)
   
-  # Traçage du graphique (dans le device actif ou dans un fichier PDF)
+  # Plotting of the graph (in the active device or in a PDF file)
   if (!is.null(name)) grDevices::pdf(paste0(turn_into_path(path), check_extension(name, "pdf")),
                                      14, 10, paper = "a4r", pointsize = 11)
   plot_itemset_chart(vars$itemsets, vars$items, category = NULL,
                      jitter, vars$under, vars$over, over_legend = NULL, title)
   if (!is.null(name)) grDevices::dev.off()
   
-  # Transactions tracées
+  # Plotted transactions
   return(vars$transactions)
 })
 
@@ -1351,20 +1351,20 @@ setMethod(f = "prepare_itemset_chart",
           definition =
 function(object, identifiers, length_one, under, over) {
   
-  # Itemsets de taille > 1 inclus ou exclus
+  # Itemsets of size > 1 included or excluded
   to_plot = if (length_one) object else get_complex_trx(object)
   
-  # Si pas de nom et affichage des identifiants d'origine : attribution de noms correspondant aux index 
-  # (nécessaire avant le tri par taille)
+  # If no name and display of the original identifiers: assignment of names corresponding to tbe indices
+  # (necessary before the sorting by size)
   if (identifiers == "original" && !is_named(to_plot@data)) names(to_plot@data) = seq_along(to_plot@data)
   to_plot = reorder(to_plot, order(sapply(get_itemsets(to_plot), length)))
   if (identifiers == "new") names(to_plot@data) = seq_along(to_plot@data)
   
-  # Conversion en data frame
+  # Conversion to data frame
   trx_df = methods::as(to_plot, "data.frame")
   trx_df$ID = rownames(trx_df)
   
-  # Texte à afficher
+  # Text to display
   under_text = if (is.null(under)) NULL else trx_df[, under]
   over_text = if (is.null(over)) NULL else trx_df[, over]
   if (is.list(under_text)) under_text = turn_list_into_char(under_text)
@@ -1548,11 +1548,11 @@ setMethod(f = "get_items",
           definition =
 function(object, items) {
   
-  # Valeur spécifique faisant référence à l'intégralité des items
+  # Specific value referring to all items
   if (length(items) == 1 && is.character(items) && (items == "items" || items == "i"))
     return(get_all_items(object))
   
-  # Vecteur d'items (sous-ensemble de get_all_items(object))
+  # Vector of items (subset of get_all_items(object))
   if (all(items %in% get_all_items(object)))
     return(items)
   
