@@ -318,7 +318,7 @@ make_trx_from_ws = function(measures, keys, work_situations,
       }
     }
     
-    if(length(codes) != 0) {
+    if (length(codes) != 0) {
       # Une transaction supplémentaire
       n_trx = n_trx + 1
       transactions[[n_trx]] = c(list(codes, years), informations)

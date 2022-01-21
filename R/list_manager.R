@@ -310,6 +310,7 @@ coerce_list = function(x, to, by_name = FALSE,
 #' @md
 #' @keywords internal
 turn_list_into_logical_matrix = function(x, by_name = FALSE) {
+  
   if (by_name) {
     if (!is_named(x)[2]) stop("Values of the elements of x must be named.")
     columns = sort(unique(unlist(sapply(x, names))))
@@ -509,6 +510,7 @@ coerce_to_list = function(x, by_row = TRUE) {
 #' @md
 #' @keywords internal
 turn_logical_matrix_into_list = function(x, by_row = TRUE) {
+  
   if (by_row && !is_named(x)[2]) stop("Columns of x must be named.")
   if (!by_row && !is_named(x)[1]) stop("Rows of x must be named.")
   

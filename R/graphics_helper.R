@@ -22,6 +22,7 @@ NULL
 #' @md
 #' @keywords internal
 is_color = function(x, int = TRUE) {
+  
   is_valid_R_color = vapply(x, function(col) tryCatch(is.matrix(grDevices::col2rgb(col)),
                                                       error = function(e) FALSE),
                             logical(1))
