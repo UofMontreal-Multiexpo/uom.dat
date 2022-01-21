@@ -112,9 +112,10 @@ Extracting association rules and switching between mathematical notation and vec
 * [vector_notation](../html/vector_notation.html)
 * [set_notation](../html/set_notation.html)
 
-Find item names associated with item identifiers and category values associated with itemsets:
+Find item names and colors associated with item identifiers and category values associated with itemsets:
 
 * [get_item_names](../html/get_item_names-TransactionAnalyzer-method.html)
+* [get_item_colors](../html/get_item_colors-TransactionAnalyzer-method.html)
 * [category_values](../html/category_values-TransactionAnalyzer-method.html)
 
 Making charts:

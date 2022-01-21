@@ -840,6 +840,8 @@ setGeneric(name = "get_complexes", def = function(object, nopc, category = NULL,
 
 setGeneric(name = "get_item_names", def = function(object, items){ standardGeneric("get_item_names") })
 
+setGeneric(name = "get_item_colors", def = function(object, category, items = object["items"]){ standardGeneric("get_item_colors") })
+
 setGeneric(name = "category_values", def = function(object, itemsets, as_character = FALSE, unique = TRUE){ standardGeneric("category_values") })
 
 
@@ -5698,6 +5700,42 @@ setMethod(f = "get_item_names",
           definition =
 function(object, items) {
   return(names(object@items)[match(items, object@items)])
+})
+
+
+#' Get item colors
+#' 
+#' Find the colors associated with the values of a category that are associated with items.
+#' 
+#' @param object S4 object of class `TransactionAnalyzer`.
+#' @param category Name or number of the category whose associated colors are to be found
+#'  (numbering according to the order of the columns of `object["items_categories"]`).
+#' @param items Items for which to find the colors associated with their values in the given category.
+#'  Any subset of `object["items"]`.
+#'  
+#'  `"items"` and `"i"` are special values for `object["items"]`.
+#' @return Colors associated with the values of the category `category` that are
+#'  associated with the `items`.
+#' 
+#' @author Gauthier Magnin
+#' @examples
+#' get_item_colors(TA_instance, category = "family", items = c(19, 25, 27))
+#' 
+#' @aliases get_item_colors
+#' @md
+#' @export
+setMethod(f = "get_item_colors",
+          signature = "TransactionAnalyzer",
+          definition =
+function(object, category, items = object["items"]) {
+  
+  # Validation of the parameter
+  check_access_for_category(object, category, NA)
+  
+  return(stats::setNames(
+    object["categories_colors"][[category]][object["items_categories"][as.character(items), 1]],
+    get_item_names(object, items)
+  ))
 })
 
 
