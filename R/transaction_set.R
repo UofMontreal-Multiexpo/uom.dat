@@ -623,8 +623,10 @@ function(object, ...) {
   df = methods::as(object, "data.frame")
   
   # Conversion des listes en chaînes de charactères
-  columns = colnames(df)[sapply(df, is.list)]
-  df[, columns] = apply(df[columns], 2, turn_list_into_char)
+  if (nrow(df) != 0) {
+    columns = colnames(df)[sapply(df, is.list)]
+    df[, columns] = apply(df[columns], 2, turn_list_into_char)
+  }
   
   # Enregistrement des données
   utils::write.csv2(x = df, ...)
@@ -654,7 +656,9 @@ setMethod(f = "get_all_items",
           signature = "TransactionSet",
           definition =
 function(object) {
-  return(sort(unique(unlist(sapply(object@data, "[", object@item_key)))))
+  all_items = sort(unique(unlist(sapply(object@data, "[", object@item_key))))
+  if (is.null(all_items)) return(character(0))
+  return(all_items)
 })
 
 
@@ -678,7 +682,9 @@ setMethod(f = "get_all_years",
           signature = "TransactionSet",
           definition =
 function(object) {
-  return(sort(unique(unlist(lapply(object@data, "[[", object@year_key)))))
+  all_years = sort(unique(unlist(lapply(object@data, "[[", object@year_key))))
+  if (is.null(all_years)) return(numeric(0))
+  return(all_years)
 })
 
 
@@ -858,6 +864,7 @@ setMethod(f = "get_complex_trx",
 function(object, as_indices = FALSE) {
   index = sapply(get_itemsets(object),
                  function (x) length(x) > 1)
+  if (length(index) == 0) index = FALSE
   
   if (as_indices) return(which(index))
   return(subset(object, index))
@@ -893,6 +900,7 @@ setMethod(f = "get_simple_trx",
 function(object, as_indices = FALSE) {
   index = sapply(get_itemsets(object),
                  function (x) length(x) == 1)
+  if (length(index) == 0) index = FALSE
   
   if (as_indices) return(which(index))
   return(subset(object, index))
@@ -958,6 +966,7 @@ function(object, items, presence = "all", as_indices = FALSE) {
                 only    = { function(x) all(x %in% items) })
   
   index = sapply(get_itemsets(object), func)
+  if (length(index) == 0) index = FALSE
   
   if (as_indices) return(which(index))
   return(subset(object, index))
@@ -1028,6 +1037,7 @@ function(object, info, presence = "all", as_indices = FALSE) {
     # plusieurs valeurs pour une même variable
     index = apply(t(apply(correspondence, 1, unlist)), 1, func)
   }
+  if (length(index) == 0) index = FALSE
   
   if (as_indices) return(which(index))
   return(subset(object, index))
@@ -1069,6 +1079,8 @@ setMethod(f = "complexity_ratio",
 function(object, items = NULL) {
   
   if (is.null(items)) items = get_all_items(object)
+  if (length(items) == 0) return(stats::setNames(numeric(0), character(0)))
+  
   existing_items = stats::setNames(items %in% get_all_items(object), items)
   
   # Itemsets of the transactions and indices of the complex transactions
@@ -1120,6 +1132,8 @@ setMethod(f = "complexity_index",
 function(object, items = NULL) {
   
   if (is.null(items)) items = get_all_items(object)
+  if (length(items) == 0) return(stats::setNames(integer(0), character(0)))
+  
   existing_items = stats::setNames(items %in% get_all_items(object), items)
   
   # Itemsets of the transactions and indices of the complex transactions
@@ -1176,6 +1190,10 @@ setMethod(f = "co_occurrence_matrix",
 function(object, items = NULL, proportions = FALSE) {
   
   if (is.null(items)) items = get_all_items(object)
+  if (length(items) == 0) {
+    if (proportions) return(matrix(numeric(0), ncol = 0, nrow = 0))
+    return(matrix(integer(0), ncol = 0, nrow = 0))
+  }
   
   # Find the transactions containing each item an generate all combinations of pairs
   itemsets = get_itemsets(object)
@@ -1275,6 +1293,7 @@ function(object, identifiers = "original",
          title = "Transaction itemsets", path = NULL, name = NULL) {
   
   # Validation des paramètres
+  if (length(object) == 0) stop("No items to plot (object does not contain any transactions).")
   check_param(identifiers, values = c("original", "new"))
   
   # Préparation des variables pour la fonction de traçage du graphique
@@ -1426,6 +1445,7 @@ function(object, items = NULL, co_occ = NULL, proportions = FALSE,
          palette = "Blues", palette_direction = 1) {
   
   # Validation of the given items
+  if (length(object) == 0) stop("No items to plot (object does not contain any transactions).")
   if (is.null(items)) items = get_all_items(object)
   else if (!all(items %in% get_all_items(object)))
     stop("items must be NULL or a subset of the items contained in object.")
