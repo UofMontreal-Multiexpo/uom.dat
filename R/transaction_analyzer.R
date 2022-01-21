@@ -5690,7 +5690,7 @@ function(object, nopc, category = NULL, condition = NULL, min_nb_values = 2) {
 #' 
 #' @author Gauthier Magnin
 #' @examples
-#' get_item_names(TA_instance, items = c("19", "163", "1603"))
+#' get_item_names(TA_instance, items = c(19, 163, 1603))
 #' 
 #' @aliases get_item_names
 #' @md

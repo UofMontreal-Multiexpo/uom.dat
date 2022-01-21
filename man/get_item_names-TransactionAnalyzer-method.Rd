@@ -19,7 +19,7 @@ Names of the \code{items} in \code{object["items"]}.
 Find the names associated with items given their identification codes.
 }
 \examples{
-get_item_names(TA_instance, items = c("19", "163", "1603"))
+get_item_names(TA_instance, items = c(19, 163, 1603))
 
 }
 \author{
