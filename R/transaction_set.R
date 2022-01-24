@@ -1023,21 +1023,16 @@ function(object, info, presence = "all", as_indices = FALSE) {
   if (length(info) == 0) return(object)
   
   # Verification of the correspondence between each argument in each transaction
-  correspondence = sapply(info,
-                          function(arg) {
-                            lapply(sapply(object@data, "[[", names(info)[parent.frame()$i[]]),
-                                   function(o) arg %in% o)
-                          })
+  correspondence = sapply(
+    info,
+    function(arg) {
+      sapply(lapply(object@data, "[[", names(info)[parent.frame()$i[]]),
+             function(t) func(arg %in% t))
+    }
+  )
   
   # Indices of the transactions matching the criteria
-  if (length(info) == 1 && length(info[[1]]) == 1) {
-    index = unlist(correspondence)
-  } else {
-    # Independant unlist for each argument, necessary because some transactions group several
-    # values for the same variable
-    index = apply(t(apply(correspondence, 1, unlist)), 1, func)
-  }
-  if (length(index) == 0) index = FALSE
+  index = if (is.list(correspondence)) FALSE else apply(correspondence, 1, func)
   
   if (as_indices) return(which(index))
   return(subset(object, index))
