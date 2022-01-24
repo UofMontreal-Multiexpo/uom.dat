@@ -4457,6 +4457,10 @@ function(object, rules = NULL, items = NULL,
   # Application du seuil sur la caractéristique à afficher
   rules = rules[rules[, col_to_display] > threshold, ]
   
+  # Return NULL si aucune règle ne satisfait les différents critères
+  if (nrow(rules) == 0) return(NULL)
+  
+  
   # Simplification de la structure (listes -> vecteurs)
   rules[, "antecedent"] = unlist(rules[, "antecedent"])
   rules[, "consequent"] = unlist(rules[, "consequent"])
@@ -4528,9 +4532,6 @@ function(object, rules = NULL, items = NULL,
   from = from[the_order]
   to = to[the_order]
   rules_to_plot = rules[to_keep, ][the_order, ]
-  
-  # Return NULL si aucune règle ne satisfait les différents critères
-  if (nrow(rules_to_plot) == 0) return(NULL)
   
   # Discrétisation de la confiance des règles (pour mieux distinguer les éventuelles double coloration)
   if (col_to_display == "confidence") {
