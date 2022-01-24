@@ -7124,8 +7124,8 @@ RI_{l,p} &amp; = RI_p(t_1, t_1 - l + 1)
 </div>
 <div id="threshold" class="section level4">
 <h4>Threshold</h4>
-<p>The argument <code>threshold</code> allows to specify a threshold above which the characteristic referred by the argument <code>display</code> must be for a rule to be considered.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the previous rules having a lift greater than 4</span></span>
+<p>The argument <code>threshold</code> allows to specify a threshold from which the characteristic referred by the argument <code>display</code> must be for a rule to be considered.</p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the previous rules having a lift greater than or equal to 4</span></span>
 <span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a>rules_4b <span class="ot">&lt;-</span> <span class="fu">rules_chart</span>(TA_instance,</span>
 <span id="cb140-3"><a href="#cb140-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">category =</span> <span class="st">&quot;family&quot;</span>,</span>
 <span id="cb140-4"><a href="#cb140-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rules =</span> rules_4a<span class="sc">$</span>rules,</span>

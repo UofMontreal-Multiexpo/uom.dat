@@ -899,7 +899,7 @@ plot(rules_4a$graph)
 rules_4a$rules
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  # Plot the previous rules having a lift greater than 4
+#  # Plot the previous rules having a lift greater than or equal to 4
 #  rules_4b <- rules_chart(TA_instance,
 #                          category = "family",
 #                          rules = rules_4a$rules,
@@ -914,7 +914,7 @@ rules_4a$rules
 ## Same chunk as the precedent because option results="hold" doesn't work with
 ## plots
 
-# Plot the previous rules having a lift greater than 4
+# Plot the previous rules having a lift greater than or equal to 4
 rules_4b <- rules_chart(TA_instance,
                         category = "family",
                         rules = rules_4a$rules,

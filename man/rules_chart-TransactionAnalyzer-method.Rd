@@ -60,7 +60,7 @@ between the two rules existing between two items is represented.}
 items are both represented.}
 }}
 
-\item{threshold}{Threshold above which the characteristic referred by \code{display} must be for a rule to
+\item{threshold}{Threshold from which the characteristic referred by \code{display} must be for a rule to
 be considered.}
 
 \item{direction}{Ignored if \code{display} does not refer to the highest or lowest confidence.

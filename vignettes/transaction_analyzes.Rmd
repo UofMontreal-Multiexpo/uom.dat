@@ -1836,10 +1836,10 @@ rules_4a$rules
 
 #### Threshold
 
-The argument `threshold` allows to specify a threshold above which the characteristic referred by the argument `display` must be for a rule to be considered.
+The argument `threshold` allows to specify a threshold from which the characteristic referred by the argument `display` must be for a rule to be considered.
 
 ```{r eval=FALSE}
-# Plot the previous rules having a lift greater than 4
+# Plot the previous rules having a lift greater than or equal to 4
 rules_4b <- rules_chart(TA_instance,
                         category = "family",
                         rules = rules_4a$rules,
@@ -1854,7 +1854,7 @@ rules_4b$rules
 ## Same chunk as the precedent because option results="hold" doesn't work with
 ## plots
 
-# Plot the previous rules having a lift greater than 4
+# Plot the previous rules having a lift greater than or equal to 4
 rules_4b <- rules_chart(TA_instance,
                         category = "family",
                         rules = rules_4a$rules,

@@ -4276,7 +4276,7 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #'    \item{`"confidence"`, `"conf"`}{The two confidence values of the two rules existing between two
 #'          items are both represented.}
 #'  }
-#' @param threshold Threshold above which the characteristic referred by `display` must be for a rule to
+#' @param threshold Threshold from which the characteristic referred by `display` must be for a rule to
 #'  be considered.
 #' @param direction Ignored if `display` does not refer to the highest or lowest confidence.
 #'  If `FALSE`, the opacity of the edges representing the rules is set by the argument `edge_alpha`.
@@ -4455,7 +4455,7 @@ function(object, rules = NULL, items = NULL,
   if (is.null(items)) items = get_items(object, unique(unlist(rules[, c("antecedent", "consequent")])))
   
   # Application du seuil sur la caractéristique à afficher
-  rules = rules[rules[, col_to_display] > threshold, ]
+  rules = rules[rules[, col_to_display] >= threshold, ]
   
   # Return NULL si aucune règle ne satisfait les différents critères
   if (is.null(rules) || nrow(rules) == 0) return(NULL)
