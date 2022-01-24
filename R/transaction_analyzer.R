@@ -803,7 +803,7 @@ setGeneric(name = "category_tree_chart", def = function(object, category = NULL,
 
 setGeneric(name = "extract_rules", def = function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
 
-setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameter = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1, plot = FALSE){ standardGeneric("rules_chart") })
+setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameter = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, direction = FALSE, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1, plot = FALSE){ standardGeneric("rules_chart") })
 
 
 # Methods for search and save
@@ -4246,9 +4246,10 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' @template default_category_values_colors
 #' 
 #' @note
-#' If using the RStudio IDE and the argument `display` refers to the characteristic confidence,
-#'  edges may not be displayed in the RStudio "Plots" pane. However, they will be actually displayed
-#'  in the "Plot Zoom" window; while exporting the plot; or by using another graphics device.
+#' If using the RStudio IDE and if the arguments `display` refers to the characteristic confidence and
+#'  `direction` is `TRUE`, edges may not be displayed in the RStudio "Plots" pane. However, they will
+#'  be actually displayed in the "Plot Zoom" window; while exporting the plot; or by using another
+#'  graphics device.
 #' Moreover, such plotting may take a while.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
@@ -4277,6 +4278,11 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #'  }
 #' @param threshold Threshold above which the characteristic referred by `display` must be for a rule to
 #'  be considered.
+#' @param direction Ignored if `display` does not refer to the highest or lowest confidence.
+#'  If `FALSE`, the opacity of the edges representing the rules is set by the argument `edge_alpha`.
+#'  If `TRUE`, the opacity increases gradually according to the direction of the rule represented.
+#'  Always `FALSE` if `display` refers to the support or the lift. Always `TRUE` if
+#'  `display = "confidence"` (or `"conf"`).
 #' @param use_names If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
@@ -4296,7 +4302,7 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #'  The closer the value is to 0, the straighter the lines will be.
 #'  The closer the value is to 1, the more the lines will be curved.
 #' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
-#'  Ignored if `display` refers to the confidence.
+#'  Ignored if `display` refers to the confidence and `direction` is `TRUE`.
 #' @param palette
 #'  Name of the palette to use for coloring the edges.
 #'  
@@ -4325,7 +4331,7 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #' @seealso [`extract_rules`].
 #' 
 #' @examples
-#' ## All rules of length 2 (plotting may take a while)
+#' ## All rules of length 2
 #' result <- rules_chart(TA_instance, category = "family")
 #' plot(result$graph)
 #' result$rules
@@ -4360,7 +4366,7 @@ setMethod(f = "rules_chart",
           definition =
 function(object, rules = NULL, items = NULL,
          parameter = list(supp = 0.001, conf = 0),
-         display = "highest confidence", threshold = 0,
+         display = "highest confidence", threshold = 0, direction = FALSE,
          use_names = TRUE, n.cutoff = NULL,
          category = NULL, c.cutoff = NULL,
          sort_by = "category",
@@ -4532,16 +4538,20 @@ function(object, rules = NULL, items = NULL,
                                    breaks = seq(0, 1, 0.1), include.lowest = TRUE)
   }
   
+  
   # Graphe
   tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
   
   graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
     
-    ggraph::geom_conn_bundle(data = ggraph::get_con(from = from, to = to,
-                                                    colors = rules_to_plot[, col_to_display]),
-                             ggplot2::aes(color = colors,
-                                          alpha = if (col_to_display == "confidence") ggplot2::after_stat(index) else edge_alpha),
-                             tension = edge_looseness) +
+    ggraph::geom_conn_bundle(
+      data = ggraph::get_con(from = from, to = to, colors = rules_to_plot[, col_to_display]),
+      ggplot2::aes(
+        color = colors,
+        alpha = if (col_to_display == "confidence" && (is.null(operator) || direction))
+          ggplot2::after_stat(index) else edge_alpha
+        ),
+      tension = edge_looseness) +
     
     ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
                                          y = y * vertex_coord_multiplier,
@@ -4560,9 +4570,13 @@ function(object, rules = NULL, items = NULL,
     ggplot2::coord_fixed()
   
   if (col_to_display == "confidence") {
-    graph = graph + ggraph::scale_edge_alpha("Rule direction",
-                                             guide = ggraph::guide_edge_direction(order = 2)) +
-      
+    
+    if (is.null(operator) || direction) {
+      graph = graph + ggraph::scale_edge_alpha("Rule direction",
+                                               guide = ggraph::guide_edge_direction(order = 2))
+    }
+    
+    graph = graph +
       ggraph::scale_edge_color_manual("Confidence",
                                       values = stats::setNames(
                                         if (palette == "category10") ggsci::pal_d3("category10")(10)

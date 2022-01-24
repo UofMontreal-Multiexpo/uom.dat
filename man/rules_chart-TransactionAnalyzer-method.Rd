@@ -12,6 +12,7 @@
   parameter = list(supp = 0.001, conf = 0),
   display = "highest confidence",
   threshold = 0,
+  direction = FALSE,
   use_names = TRUE,
   n.cutoff = NULL,
   category = NULL,
@@ -62,6 +63,12 @@ items are both represented.}
 \item{threshold}{Threshold above which the characteristic referred by \code{display} must be for a rule to
 be considered.}
 
+\item{direction}{Ignored if \code{display} does not refer to the highest or lowest confidence.
+If \code{FALSE}, the opacity of the edges representing the rules is set by the argument \code{edge_alpha}.
+If \code{TRUE}, the opacity increases gradually according to the direction of the rule represented.
+Always \code{FALSE} if \code{display} refers to the support or the lift. Always \code{TRUE} if
+\code{display = "confidence"} (or \code{"conf"}).}
+
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}
 
@@ -92,7 +99,7 @@ The closer the value is to 0, the straighter the lines will be.
 The closer the value is to 1, the more the lines will be curved.}
 
 \item{edge_alpha}{Opacity of the lines connecting vertices (from 0 to 1).
-Ignored if \code{display} refers to the confidence.}
+Ignored if \code{display} refers to the confidence and \code{direction} is \code{TRUE}.}
 
 \item{palette}{Name of the palette to use for coloring the edges.
 
@@ -155,13 +162,14 @@ See attribute \code{categories_colors} of the \code{TransactionAnalyzer} object 
 category values.
 }
 \note{
-If using the RStudio IDE and the argument \code{display} refers to the characteristic confidence,
-edges may not be displayed in the RStudio "Plots" pane. However, they will be actually displayed
-in the "Plot Zoom" window; while exporting the plot; or by using another graphics device.
+If using the RStudio IDE and if the arguments \code{display} refers to the characteristic confidence and
+\code{direction} is \code{TRUE}, edges may not be displayed in the RStudio "Plots" pane. However, they will
+be actually displayed in the "Plot Zoom" window; while exporting the plot; or by using another
+graphics device.
 Moreover, such plotting may take a while.
 }
 \examples{
-## All rules of length 2 (plotting may take a while)
+## All rules of length 2
 result <- rules_chart(TA_instance, category = "family")
 plot(result$graph)
 result$rules

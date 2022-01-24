@@ -868,6 +868,7 @@ rules_3$rules[95:104, ]
 rules_chart(TA_instance,
             category = "family",
             display = "highest confidence",
+            direction = TRUE,
             rules = rules_3$rules[95:104, ])
 
 ## ----eval=FALSE---------------------------------------------------------------

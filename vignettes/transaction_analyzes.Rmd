@@ -1759,6 +1759,8 @@ The argument `display` defines which characteristic of the rules to represent on
 * `"highest confidence"` specifies to represent the confidences of the rules. Only the one having the highest confidence is represented between a rule and its reciprocal, unless they have the same confidence value.
 * `"lowest confidence"` specifies to represent the confidences of the rules. Only the one having the lowest confidence is represented between a rule and its reciprocal, unless they have the same confidence value.
 
+In the last two cases, the argument `direction` allows to set a gradual opacity to the edges to represent the direction of the displayed rules.
+
 All rules of length $2$ are automatically extracted from the transactions of the given `TransactionAnalyzer` object. Finally, like other charts, the values of one category can be taken into account using the argument `category`.
 
 Here is an example. Further examples using different values of the argument `display` are proposed in the next sections.
@@ -1800,6 +1802,7 @@ Specific rules extracted beforehand can be plotted using the argument `rules`. O
 rules_chart(TA_instance,
             category = "family",
             display = "highest confidence",
+            direction = TRUE,
             rules = rules_3$rules[95:104, ])
 ```
 
