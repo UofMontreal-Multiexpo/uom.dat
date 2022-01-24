@@ -4458,7 +4458,7 @@ function(object, rules = NULL, items = NULL,
   rules = rules[rules[, col_to_display] > threshold, ]
   
   # Return NULL si aucune règle ne satisfait les différents critères
-  if (nrow(rules) == 0) return(NULL)
+  if (is.null(rules) || nrow(rules) == 0) return(NULL)
   
   
   # Simplification de la structure (listes -> vecteurs)
