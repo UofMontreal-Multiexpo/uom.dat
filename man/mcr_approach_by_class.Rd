@@ -22,7 +22,7 @@ is part of a specific class.}
 \item{FUN}{Either a function or a non-empty character string naming the function to apply on each
 class, among \code{mcr_summary}, \code{mcr_chart}, \code{thq_pairs}, \code{thq_by_group}.}
 
-\item{...}{Further arguments to the function \code{FUN}.}
+\item{...}{Further arguments to the function to which \code{FUN} refers.}
 }
 \value{
 See 'Value' of the corresponding help page:

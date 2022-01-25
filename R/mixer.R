@@ -2077,8 +2077,11 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
 #'  If logical matrix, its columns are named according to the classes and the row names
 #'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
 #'  is part of a specific class.
+#' @param all_classes Logical indicating whether all classes must be considered for each set of values
+#'  or only those that are actually associated with the set of values.
 #' @return Data frame or list of data frames (according to `values`) containing the main indicators of
-#'  the MCR approach, computed on the given `values` and for each class encountered:
+#'  the MCR approach, computed on the given `values` and for each class encountered (or for all classes,
+#'  if `all_classes` is `TRUE`):
 #' * **n**: number of values.
 #' * **HI**: Hazard Index.
 #' * **MCR**: Maximum Cumulative Ratio.
@@ -2147,7 +2150,7 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
 #' 
 #' @md
 #' @export
-mcr_summary_by_class = function(values, references, classes) {
+mcr_summary_by_class = function(values, references, classes, all_classes = FALSE) {
   
   # Utilisation des classes sous forme de matrice binaire
   if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
@@ -2164,16 +2167,17 @@ mcr_summary_by_class = function(values, references, classes) {
     # Différence si references est une liste ou un vecteur
     if (is.list(references)) {
       to_return = lapply(seq_along(values),
-                         function(i) mcr_summary_by_class(values[[i]], references[[i]], classes))
+                         function(i) mcr_summary_by_class(values[[i]], references[[i]],
+                                                          classes, all_classes))
       return(stats::setNames(to_return, names(values)))
     }
-    return(lapply(values, function(v) mcr_summary_by_class(v, references[names(v)], classes)))
+    return(lapply(values, function(v) mcr_summary_by_class(v, references[names(v)], classes, all_classes)))
   }
   
   # Cas d'une matrice valeurs
   if (is.matrix(values)) {
     # Pour chaque colonne de valeurs, calcul des indicateurs MCR pour chaque classe
-    return(apply(values, 2, function(v) mcr_summary_by_class(v, references, classes)))
+    return(apply(values, 2, function(v) mcr_summary_by_class(v, references, classes, all_classes)))
   }
   
   # Cas d'un unique vecteur de valeurs
@@ -2187,13 +2191,18 @@ mcr_summary_by_class = function(values, references, classes) {
       
       # Retrait des NA (lorsque des noms associés à la classe en cours ne font pas partie des valeurs)
       v = v[!is.na(v)]
-      if (length(v) == 0) return(NA)
+      if (length(v) == 0) return(list(n = 0, HI = NA_real_, MCR = NA_real_, Reciprocal = NA_real_,
+                                      Group = NA_character_, THQ = NA_character_,
+                                      MHQ = NA_real_, Missed = NA_real_))
       return(mcr_summary(v, r[!is.na(r)]))
     })
-    # Retrait des classes pour lesquelles il n'y a aucune valeur
-    summary = summary[!is.na(summary)]
-    # NULL si les valeurs ne sont associées à aucune classe
-    if (length(summary) == 0) return(NULL)
+    
+    if (!all_classes) {
+      # Retrait des classes pour lesquelles il n'y a aucune valeur
+      summary = summary[sapply(summary, "[[", "n") != 0]
+      # NULL si les valeurs ne sont associées à aucune classe
+      if (length(summary) == 0) return(NULL)
+    }
     
     # Conversion en deux temps car les facteurs sont transformés en numeric
     to_return = data.frame(matrix(unlist(summary), nrow = length(summary), byrow = TRUE),
@@ -2708,7 +2717,7 @@ thq_by_group_by_class = function(values, references, classes,
 #'  is part of a specific class.
 #' @param FUN Either a function or a non-empty character string naming the function to apply on each
 #'  class, among `mcr_summary`, `mcr_chart`, `thq_pairs`, `thq_by_group`.
-#' @param ... Further arguments to the function `FUN`.
+#' @param ... Further arguments to the function to which `FUN` refers.
 #' @return See 'Value' of the corresponding help page:
 #'  * [`mcr_summary_by_class`] if `FUN` is `mcr_summary`.
 #'  * [`mcr_chart_by_class`] if `FUN` is `mcr_chart`.

@@ -4,7 +4,7 @@
 \alias{mcr_summary_by_class}
 \title{Summary by class of indicators of the MCR approach}
 \usage{
-mcr_summary_by_class(values, references, classes)
+mcr_summary_by_class(values, references, classes, all_classes = FALSE)
 }
 \arguments{
 \item{values}{Numeric named vector or matrix, or list of numeric named vectors.
@@ -18,10 +18,14 @@ If list, its names are those present in \code{values} and the elements are vecto
 If logical matrix, its columns are named according to the classes and the row names
 contain the names associated with the \code{values}. A \code{TRUE} value indicates that a specific name
 is part of a specific class.}
+
+\item{all_classes}{Logical indicating whether all classes must be considered for each set of values
+or only those that are actually associated with the set of values.}
 }
 \value{
 Data frame or list of data frames (according to \code{values}) containing the main indicators of
-the MCR approach, computed on the given \code{values} and for each class encountered:
+the MCR approach, computed on the given \code{values} and for each class encountered (or for all classes,
+if \code{all_classes} is \code{TRUE}):
 \itemize{
 \item \strong{n}: number of values.
 \item \strong{HI}: Hazard Index.
