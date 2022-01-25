@@ -4278,7 +4278,7 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #'  }
 #' @param threshold Threshold from which the characteristic referred by `display` must be for a rule to
 #'  be considered.
-#' @param direction Ignored if `display` does not refer to the highest or lowest confidence.
+#' @param direction Ignored if `display` does not refer to highest or lowest confidence.
 #'  If `FALSE`, the opacity of the edges representing the rules is set by the argument `edge_alpha`.
 #'  If `TRUE`, the opacity increases gradually according to the direction of the rule represented.
 #'  Always `FALSE` if `display` refers to the support or the lift. Always `TRUE` if
@@ -4318,13 +4318,11 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
 #'  If `1`, colors are in original order: from the lightest to the darkest.
 #'  If `-1`, color order is reversed: from the darkest to the lightest.
 #' @param plot If `TRUE`, the chart is plotted in the active graphics device before the return.
-#' @return `NULL` if no association rule meets the criteria defined by `items`, `parameter` and
-#'  `threshold`.\cr
-#'  Otherwise:
+#' @return 
 #'  \describe{
 #'    \item{`graph`}{Graph created with the packages `ggraph` and `ggplot2`.}
 #'    \item{`rules`}{Association rules represented on the graph (i.e. of length 2 and considering
-#'                   `items`, `parameter` and `threshold`).}
+#'                   the arguments `items`, `parameter` and `threshold`).}
 #'  }
 #' 
 #' @author Gauthier Magnin
@@ -4445,7 +4443,18 @@ function(object, rules = NULL, items = NULL,
     } else {
       rules = extract_rules(object, parameter = parameter, appearance = list(both = items))
     }
+    
+    if (is.null(rules)) {
+      rules = data.frame(character(0), character(0), character(0),
+                         numeric(0), numeric(0), numeric(0), integer(0))
+      colnames(rules) = c("antecedent", " ", "consequent", "support", "confidence", "lift", "count")
+    }
   } else {
+    # Items présents dans les règles données avant retrait de celles de taille 2
+    if (is.null(items)) {
+      items_tmp = get_items(object, unique(unlist(rules[, c("antecedent", "consequent")])))
+    }
+    
     # Retrait des règles qui ne sont pas de taille 2
     rules = rules[sapply(rules[, "antecedent"], length) == 1
                   & sapply(rules[, "consequent"], length) == 1, ]
@@ -4457,43 +4466,54 @@ function(object, rules = NULL, items = NULL,
     }
   }
   # Récupération des items correspondant aux règles extraites ou données
-  if (is.null(items)) items = get_items(object, unique(unlist(rules[, c("antecedent", "consequent")])))
+  if (is.null(items)) {
+    if (nrow(rules) != 0) {
+      items = get_items(object, unique(unlist(rules[, c("antecedent", "consequent")])))
+    } else {
+      if (exists("items_tmp")) items = items_tmp
+      else items = get_items(object, "items")
+    }
+  }
   
   # Application du seuil sur la caractéristique à afficher
   rules = rules[rules[, col_to_display] >= threshold, ]
   
-  # Return NULL si aucune règle ne satisfait les différents critères
-  if (is.null(rules) || nrow(rules) == 0) return(NULL)
-  
   
   ## Simplification des règles à considérer
   
-  # Simplification de la structure (listes -> vecteurs)
-  rules[, "antecedent"] = unlist(rules[, "antecedent"])
-  rules[, "consequent"] = unlist(rules[, "consequent"])
-  
-  # Recherche des règles réciproques (A -> B ; B -> A)
-  to_keep = rep(TRUE, nrow(rules))
-  dup_from_first = duplicated(t(apply(rules[, c("antecedent", "consequent")], 1, sort)))
-  
-  # Conservation des règles réciproques ayant une confiance plus faible ou plus haute (et équivalente)
-  if (!is.null(operator)) {
-    dup_from_last = duplicated(t(apply(rules[, c("antecedent", "consequent")], 1, sort)), fromLast = TRUE)
+  if (nrow(rules) != 0) {
     
-    # Pour chaque règle en double, recherche de son double et comparaison de la confiance
-    for (i1 in which(dup_from_first)) {
+    # Simplification de la structure (listes -> vecteurs)
+    rules[, "antecedent"] = unlist(rules[, "antecedent"])
+    rules[, "consequent"] = unlist(rules[, "consequent"])
+    
+    # Recherche des règles réciproques (A -> B ; B -> A)
+    to_keep = rep(TRUE, nrow(rules))
+    dup_from_first = duplicated(t(apply(rules[, c("antecedent", "consequent")], 1, sort)))
+    
+    # Conservation des règles réciproques ayant une confiance plus faible ou plus haute (et équivalente)
+    if (!is.null(operator)) {
+      dup_from_last = duplicated(t(apply(rules[, c("antecedent", "consequent")], 1, sort)), fromLast = TRUE)
       
-      for (i2 in which(dup_from_last)) {
-        if (all(rules[i2, c("antecedent", "consequent")] == rules[i1, c("consequent", "antecedent")]))
-          break
+      # Pour chaque règle en double, recherche de son double et comparaison de la confiance
+      for (i1 in which(dup_from_first)) {
+        
+        for (i2 in which(dup_from_last)) {
+          if (all(rules[i2, c("antecedent", "consequent")] == rules[i1, c("consequent", "antecedent")]))
+            break
+        }
+        
+        if_2.0(rules[i1, "confidence"], operator, rules[i2, "confidence"], expression(to_keep[i2] <- FALSE))
+        if_2.0(rules[i2, "confidence"], operator, rules[i1, "confidence"], expression(to_keep[i1] <- FALSE))
       }
-      
-      if_2.0(rules[i1, "confidence"], operator, rules[i2, "confidence"], expression(to_keep[i2] <- FALSE))
-      if_2.0(rules[i2, "confidence"], operator, rules[i1, "confidence"], expression(to_keep[i1] <- FALSE))
+    } else if (col_to_display == "support" || col_to_display == "lift") {
+      # Suppression des règles réciproques car correspondent à des doublons
+      to_keep[dup_from_first] = FALSE
     }
-  } else if (col_to_display == "support" || col_to_display == "lift") {
-    # Suppression des règles réciproques car correspondent à des doublons
-    to_keep[dup_from_first] = FALSE
+  } else {
+    rules$antecedent = character(0)
+    rules$consequent = character(0)
+    to_keep = rep(TRUE, nrow(rules))
   }
   
   
@@ -4552,17 +4572,21 @@ function(object, rules = NULL, items = NULL,
   ## Traçage du graphique
   
   tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
-  graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
-    
-    ggraph::geom_conn_bundle(
-      data = ggraph::get_con(from = from, to = to, colors = rules_to_plot[, col_to_display]),
-      ggplot2::aes(
-        color = colors,
-        alpha = if (col_to_display == "confidence" && (is.null(operator) || direction))
-          ggplot2::after_stat(index) else edge_alpha
-        ),
-      tension = edge_looseness) +
-    
+  graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE)
+  
+  if (nrow(rules_to_plot) != 0) {
+    graph = graph +
+      ggraph::geom_conn_bundle(
+        data = ggraph::get_con(from = from, to = to, colors = rules_to_plot[, col_to_display]),
+        ggplot2::aes(
+          color = colors,
+          alpha = if (col_to_display == "confidence" && (is.null(operator) || direction))
+            ggplot2::after_stat(index) else edge_alpha
+          ),
+        tension = edge_looseness)
+  }
+  
+  graph = graph +
     ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
                                          y = y * vertex_coord_multiplier,
                                          filter = leaf,

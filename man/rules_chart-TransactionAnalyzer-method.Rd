@@ -63,7 +63,7 @@ items are both represented.}
 \item{threshold}{Threshold from which the characteristic referred by \code{display} must be for a rule to
 be considered.}
 
-\item{direction}{Ignored if \code{display} does not refer to the highest or lowest confidence.
+\item{direction}{Ignored if \code{display} does not refer to highest or lowest confidence.
 If \code{FALSE}, the opacity of the edges representing the rules is set by the argument \code{edge_alpha}.
 If \code{TRUE}, the opacity increases gradually according to the direction of the rule represented.
 Always \code{FALSE} if \code{display} refers to the support or the lift. Always \code{TRUE} if
@@ -119,13 +119,10 @@ If \code{-1}, color order is reversed: from the darkest to the lightest.}
 \item{plot}{If \code{TRUE}, the chart is plotted in the active graphics device before the return.}
 }
 \value{
-\code{NULL} if no association rule meets the criteria defined by \code{items}, \code{parameter} and
-\code{threshold}.\cr
-Otherwise:
 \describe{
 \item{\code{graph}}{Graph created with the packages \code{ggraph} and \code{ggplot2}.}
 \item{\code{rules}}{Association rules represented on the graph (i.e. of length 2 and considering
-\code{items}, \code{parameter} and \code{threshold}).}
+the arguments \code{items}, \code{parameter} and \code{threshold}).}
 }
 }
 \description{
