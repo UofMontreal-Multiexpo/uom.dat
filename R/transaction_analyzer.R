@@ -4390,10 +4390,13 @@ function(object, rules = NULL, items = NULL,
     }
   }
   
+  
+  ## Validation des paramètres
+  
   # Validation des items fournis
   if (!is.null(items)) items = get_items(object, items)
   
-  # Validation des paramètres de recherche RA fournis
+  # Validation des paramètres de recherche de règles fournis
   if (is.null(rules)) {
     if (is.null(parameter)) parameter = list(minlen = 2, maxlen = 2)
     else parameter$minlen = parameter$maxlen = 2
@@ -4432,6 +4435,8 @@ function(object, rules = NULL, items = NULL,
   }
   
   
+  ## Extraction des règles et items à considérer
+  
   # Calcul des règles ou retrait des règles inappropriées
   if (is.null(rules)) {
     # Calcul des règles sans ou avec spécification des items
@@ -4461,6 +4466,8 @@ function(object, rules = NULL, items = NULL,
   if (is.null(rules) || nrow(rules) == 0) return(NULL)
   
   
+  ## Simplification des règles à considérer
+  
   # Simplification de la structure (listes -> vecteurs)
   rules[, "antecedent"] = unlist(rules[, "antecedent"])
   rules[, "consequent"] = unlist(rules[, "consequent"])
@@ -4489,6 +4496,8 @@ function(object, rules = NULL, items = NULL,
     to_keep[dup_from_first] = FALSE
   }
   
+  
+  ## Préparation du graphique
   
   # Création de la hiérarchie (profondeurs de l'arbre et arêtes entre les sommets)
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
@@ -4540,9 +4549,9 @@ function(object, rules = NULL, items = NULL,
   }
   
   
-  # Graphe
-  tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
+  ## Traçage du graphique
   
+  tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
   graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE) +
     
     ggraph::geom_conn_bundle(
@@ -4601,6 +4610,7 @@ function(object, rules = NULL, items = NULL,
                                                   order = 3,
                                                   override.aes = list(size = 1.5, alpha = 1)))
   }
+  
   
   # Reconversion des règles en factor si elles ont été données ainsi
   if (a_factor) rules$antecedent = set_notation(rules$antecedent)
