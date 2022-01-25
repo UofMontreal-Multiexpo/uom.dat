@@ -2204,15 +2204,8 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
       if (length(summary) == 0) return(NULL)
     }
     
-    # Conversion en deux temps car les facteurs sont transformés en numeric
-    to_return = data.frame(matrix(unlist(summary), nrow = length(summary), byrow = TRUE),
-                           stringsAsFactors = FALSE)
-    rownames(to_return) = names(summary)
-    colnames(to_return) = names(summary[[1]])
-    to_return[, "Group"] = sapply(summary, "[[", "Group")
-    to_return[, "THQ"] = sapply(summary, "[[", "THQ")
-    
-    return(to_return)
+    # Turn the list into a data frame
+    return(do.call(rbind.data.frame, summary))
   }
 }
 
