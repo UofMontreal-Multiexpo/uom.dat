@@ -1020,8 +1020,6 @@ function(object, info, presence = "all", as_indices = FALSE) {
   check_param(presence, values = c("all", "any"))
   func = if (presence == "all") all else any
   
-  if (length(info) == 0) return(object)
-  
   # Verification of the correspondence between each argument in each transaction
   correspondence = sapply(
     info,
