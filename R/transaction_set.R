@@ -1026,8 +1026,17 @@ function(object, info, presence = "all", as_indices = FALSE) {
   correspondence = sapply(
     info,
     function(arg) {
-      sapply(lapply(object@data, "[[", names(info)[parent.frame()$i[]]),
-             function(t) func(arg %in% t))
+      # Extract data related to the argument
+      data_arg = lapply(object@data, "[[", names(info)[parent.frame()$i[]])
+      
+      # Several cases according to the numbers of actual values in the data and of given values
+      if (all(lengths(data_arg) == 1)) {
+        if (length(arg) == 1) return(unlist(data_arg) == arg)
+        if (presence == "all") return(rep(FALSE, length(data_arg)))
+        return(apply(sapply(arg, function(value) unlist(data_arg) == value), 1, any))
+      } else {
+        return(sapply(data_arg, function(t) func(arg %in% t)))
+      }
     }
   )
   
