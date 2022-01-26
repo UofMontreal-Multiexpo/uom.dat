@@ -1784,7 +1784,7 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <span id="cb124-4"><a href="#cb124-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">classes =</span> classification,</span>
 <span id="cb124-5"><a href="#cb124-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">class_name =</span> class_names[<span class="dv">9</span>])</span></code></pre></div>
 <p>The output of this function is a list containing two subsets: <code>values</code>, the subset of <code>concentration_values</code> corresponding to the class <code>class_name</code>; <code>references</code>, the subset of <code>reference_values</code> corresponding to this same class.</p>
-<p>Before looking at the subsets, we can compare the length of the all set of values and the subset related to the chosen class.</p>
+<p>Before looking at the subsets related to the chosen class, we can compare their lengths to those of the complete sets of values.</p>
 <div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of values of each set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(concentration_values, length)</span>
 <span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a></span>

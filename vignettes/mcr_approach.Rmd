@@ -796,7 +796,7 @@ subsets <- subset_from_class(values = concentration_values,
 ```
 The output of this function is a list containing two subsets: `values`, the subset of `concentration_values` corresponding to the class `class_name`; `references`, the subset of `reference_values` corresponding to this same class.
 
-Before looking at the subsets, we can compare the length of the all set of values and the subset related to the chosen class.
+Before looking at the subsets related to the chosen class, we can compare their lengths to those of the complete sets of values.
 ```{r results="hold"}
 cat("Number of values of each set of concentration values:\n")
 sapply(concentration_values, length)
