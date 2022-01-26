@@ -3050,6 +3050,7 @@ reduce_sets = function(values, references = NULL, FUN, ...) {
       # Conservation des références associées à ces indices uniquement
       return(references[[parent.frame()$i[]]][indices])
     })
+    names(new_references) = names(references)
   }
   return(list(values = new_values, references = new_references))
 }
