@@ -1619,3 +1619,181 @@ test_that("thq_by_group returns an identical result whatever the chosen usage", 
   )
 })
 
+
+
+#### Subsets and reduction of sets ####
+
+##### reduce_sets #####
+
+test_that("reduce_sets requires that references have the same sizes as values if they are two lists", {
+  expect_error(reduce_sets(values = list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                           references = list(1, 2, 3),
+                           FUN = max),
+               "length")
+  expect_error(reduce_sets(values = list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                           references = list(c(1, 2), 1, c(2, 3)),
+                           FUN = max),
+               NA)
+})
+
+test_that("reduce_sets requires values to be named", {
+  # 'values' as a vector
+  expect_error(reduce_sets(values = c(1,2,3,4,5),
+                           references = 1:5,
+                           FUN = max),
+               "name")
+  expect_error(reduce_sets(values = c(a=1, b=2, c=3, d=4, e=5),
+                           references = 1:5,
+                           FUN = max),
+               NA)
+  
+  # 'values' as a matrix
+  expect_error(reduce_sets(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+                           references = c(a = 1, b = 1),
+                           FUN = max),
+               "name")
+  expect_error(reduce_sets(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+                           references = c(a = 1, b = 1),
+                           FUN = max),
+               NA)
+  
+  # 'values' as a list
+  expect_error(reduce_sets(values = list(c(1, 1), c(1, 1), c(1, 1)),
+                           references = c(a = 1, b = 1),
+                           FUN = max),
+               "name")
+  expect_error(reduce_sets(values = list(c(a = 1, a = 1), c(b = 1, b = 1), c(a = 1, b = 1)),
+                           references = c(a = 1, b = 1),
+                           FUN = max),
+               NA)
+})
+
+test_that("reduce_sets returns an additional variable if references are given", {
+  values_vector = c(a = 1, b = 1)
+  values_list = list(c(a = 1, a = 1), c(b = 1, b = 1), c(a = 1, b = 1))
+  
+  # 'references' as NULL
+  expect_true(is.vector(reduce_sets(values = values_vector, references = NULL, FUN = max)))
+  
+  # 'references' as a vector
+  expect_type(reduce_sets(values = values_vector,
+                          references = c(a=1, b=1),
+                          FUN = max),
+              "list")
+  expect_length(reduce_sets(values = values_vector,
+                            references = c(a=1, b=1),
+                            FUN = max),
+                2)
+  expect_named(reduce_sets(values = values_vector,
+                           references = c(a=1, b=1),
+                           FUN = max),
+               c("values", "references"))
+  
+  # 'references' as a list
+  expect_type(reduce_sets(values = values_list,
+                          references = list(c(1,1), c(1,1), c(1,1)),
+                          FUN = max),
+              "list")
+  expect_length(reduce_sets(values = values_list,
+                            references = list(c(1,1), c(1,1), c(1,1)),
+                            FUN = max),
+                2)
+  expect_named(reduce_sets(values = values_list,
+                           references = list(c(1,1), c(1,1), c(1,1)),
+                           FUN = max),
+               c("values", "references"))
+})
+
+test_that("reduce_sets ignores values equal to 0 according to the argument ignore_zero", {
+  values_vector = c(b = 2, a = 2, b = 3, a = 1, a = 0)
+  values_matrix = matrix(c(2,2,1,0, 1,1,3,2, 0,1,1,0),
+                         ncol = 3, dimnames = list(c("a","b","a","c")))
+  values_list = list(s1 = c(b = 1, a = 1, a = 3, b = 0),
+                     s2 = c(a = 2, c = 0),
+                     s3 = c(b = 3, b = 7, b = 1, c = 1, c = 4))
+  
+  fun_b = function(x, b) { min(x) + max(x) + b }
+  
+  # 'values' as a vector
+  expect_equal(reduce_sets(values = values_vector, FUN = min, ignore_zero = TRUE),
+               c(b = 2, a = 1))
+  expect_equal(reduce_sets(values = values_vector, FUN = min, ignore_zero = FALSE),
+               c(b = 2, a = 0))
+  
+  # 'values' as a matrix
+  expect_equal(reduce_sets(values = values_matrix, FUN = min, ignore_zero = TRUE),
+               matrix(c(1,2,0, 1,1,2, 1,1,0),
+                      ncol = 3, dimnames = list(c("a","b","c"))))
+  expect_equal(reduce_sets(values = values_matrix, FUN = min, ignore_zero = FALSE),
+               matrix(c(1,2,0, 1,1,2, 0,1,0),
+                      ncol = 3, dimnames = list(c("a","b","c"))))
+  
+  # 'values' as a list
+  expect_equal(reduce_sets(values = values_list, FUN = min, ignore_zero = TRUE),
+               list(s1 = c(b = 1, a = 1),
+                    s2 = c(a = 2),
+                    s3 = c(b = 1, c = 1)))
+  expect_equal(reduce_sets(values = values_list, FUN = min, ignore_zero = FALSE),
+               list(s1 = c(b = 0, a = 1),
+                    s2 = c(a = 2, c = 0),
+                    s3 = c(b = 1, c = 1)))
+  
+})
+
+test_that("reduce_sets reduces sets of values", {
+  values_vector = c(b = 2, a = 2, b = 3, a = 1)
+  values_matrix = matrix(c(2,2,1,0, 1,1,3,2, 0,1,1,0),
+                         ncol = 3, dimnames = list(c("a","b","a","c")))
+  values_list = list(s1 = c(b = 1, a = 1, a = 3),
+                     s2 = c(a = 2),
+                     s3 = c(b = 3, b = 7, b = 1, c = 1, c = 4))
+  
+  fun_b = function(x, b) { min(x) + max(x) + b }
+  
+  # 'values' as a vector
+  expect_equal(reduce_sets(values = values_vector, FUN = max),
+               c(b = 3, a = 2))
+  expect_equal(reduce_sets(values = values_vector, FUN = fun_b, b = 1),
+               c(b = 6, a = 4))
+  
+  # 'values' as a matrix
+  expect_equal(reduce_sets(values = values_matrix, FUN = max),
+               matrix(c(2,2,0, 3,1,2, 1,1,0),
+                      ncol = 3, dimnames = list(c("a","b","c"))))
+  expect_equal(reduce_sets(values = values_matrix, FUN = fun_b, b = 1),
+               matrix(c(4,5,0, 5,3,5, 3,3,0),
+                      ncol = 3, dimnames = list(c("a","b","c"))))
+  
+  # 'values' as a list
+  expect_equal(reduce_sets(values = values_list, FUN = max),
+               list(s1 = c(b = 1, a = 3),
+                    s2 = c(a = 2),
+                    s3 = c(b = 7, c = 4)))
+  expect_equal(reduce_sets(values = values_list, FUN = fun_b, b = 1),
+               list(s1 = c(b = 3, a = 5),
+                    s2 = c(a = 5),
+                    s3 = c(b = 9, c = 6)))
+})
+
+test_that("reduce_sets reduces sets of references", {
+  values = list(s1 = c(b = 1, a = 1, a = 3),
+                s2 = c(a = 2),
+                s3 = c(b = 3, b = 7, b = 1, c = 1, c = 4))
+  references_vector = c(a = 3, b = 1, c = 2)
+  
+  # 'references' as a vector
+  expect_identical(reduce_sets(values = values,
+                               references = references_vector,
+                               FUN = max)$references,
+                   references_vector)
+  
+  # 'references' as a list
+  expect_equal(reduce_sets(values = values,
+                           references = list(c(1, 3, 3),
+                                             c(3),
+                                             c(1, 1, 1, 2, 2)),
+                           FUN = max)$references,
+               list(c(1, 3),
+                    c(3),
+                    c(1, 2)))
+})
