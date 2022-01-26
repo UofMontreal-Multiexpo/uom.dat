@@ -1797,3 +1797,241 @@ test_that("reduce_sets reduces sets of references", {
                     c(3),
                     c(1, 2)))
 })
+
+
+##### subset_from_class #####
+
+test_that("subset_from_class requires that references have the same sizes as values if they are two lists", {
+  values_list = list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4))
+  classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"))
+  
+  expect_error(subset_from_class(values = values_list,
+                                 references = list(1, 2, 3),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               "length")
+  expect_error(subset_from_class(values = values_list,
+                                 references = list(c(1, 2), 1, c(2, 3)),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               NA)
+})
+
+test_that("subset_from_class requires references to be named if they are a vector and values are a list", {
+  values_list = list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4))
+  classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"))
+  
+  expect_error(subset_from_class(values = values_list,
+                                 references = c(1, 2, 3),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               "name")
+  expect_error(subset_from_class(values = values_list,
+                                 references = c(a = 1, b = 2, c = 3),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               NA)
+})
+
+test_that("subset_from_class requires values to be named", {
+  classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"))
+  
+  # 'values' as a matrix
+  expect_error(subset_from_class(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+                                 references = c(a = 1, b = 1),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               "name")
+  expect_error(subset_from_class(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+                                 references = c(a = 1, b = 1),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               NA)
+  
+  # 'values' as a list
+  expect_error(subset_from_class(values = list(c(1, 1), c(1, 1), c(1, 1)),
+                                 references = c(a = 1, b = 1),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               "name")
+  expect_error(subset_from_class(values = list(c(a = 1, a = 1), c(b = 1, b = 1), c(a = 1, b = 1)),
+                                 references = c(a = 1, b = 1),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               NA)
+})
+
+test_that("subset_from_class returns an additional variable if references are given", {
+  values_matrix = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2]))
+  values_list = list(c(a = 1, a = 1), c(b = 1, b = 1), c(a = 1, b = 1))
+  classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"))
+  
+  # 'references' as NULL
+  expect_false(is.list(subset_from_class(values = values_matrix,
+                                         references = NULL,
+                                         classes = classes_list,
+                                         class_name = "C3")))
+  
+  # 'references' as a vector
+  expect_type(subset_from_class(values = values_matrix,
+                                references = c(a = 1, b = 1),
+                                classes = classes_list,
+                                class_name = "C3"), 
+              "list")
+  expect_length(subset_from_class(values = values_matrix,
+                                  references = c(a = 1, b = 1),
+                                  classes = classes_list,
+                                  class_name = "C3"), 
+                2)
+  expect_named(subset_from_class(values = values_matrix,
+                                 references = c(a = 1, b = 1),
+                                 classes = classes_list,
+                           class_name = "C3"),
+               c("values", "references"))
+  
+  # 'references' as a list
+  expect_type(subset_from_class(values = values_list,
+                                references = list(c(1, 1), c(1, 1), c(1, 1)),
+                                classes = classes_list,
+                                class_name = "C3"), 
+              "list")
+  expect_length(subset_from_class(values = values_list,
+                                  references = list(c(1, 1), c(1, 1), c(1, 1)),
+                                  classes = classes_list,
+                                  class_name = "C3"), 
+                2)
+  expect_named(subset_from_class(values = values_list,
+                                 references = list(c(1, 1), c(1, 1), c(1, 1)),
+                                 classes = classes_list,
+                                 class_name = "C3"), 
+               c("values", "references"))
+})
+
+test_that("subset_from_class extracts the subset of values corresponding to the given class", {
+  classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"), d = "C5")
+  values_matrix = matrix(c(1,1,1, 1,0,0, 1,1,0),
+                         ncol = 3, dimnames = list(letters[1:3], c("s1", "s2", "s3")))
+  values_list = list(s1 = c(a = 1, b = 1, c = 1),
+                     s2 = c(a = 1),
+                     s3 = c(a = 1, b = 1))
+  
+  # 'values' as a matrix
+  expect_equal(subset_from_class(values = values_matrix,
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               matrix(c(1,1, 0,0, 1,0),
+                      ncol = 3, dimnames = list(c("b", "c"), c("s1", "s2", "s3"))))
+  expect_equal(subset_from_class(values = values_matrix,
+                                 classes = classes_list,
+                                 class_name = "C4"),
+               matrix(c(1,0,0),
+                      ncol = 3, dimnames = list("c", c("s1", "s2", "s3"))))
+  expect_equal(subset_from_class(values = values_matrix,
+                                 classes = classes_list,
+                                 class_name = "C5"),
+               matrix(numeric(0),
+                      nrow = 0, ncol = ncol(values_matrix), dimnames = list(NULL, c("s1", "s2", "s3"))))
+  
+  # 'values' as a list
+  expect_equal(subset_from_class(values = values_list,
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               list(s1 = c(b = 1, c = 1),
+                    s3 = c(b = 1)))
+  expect_equal(subset_from_class(values = values_list,
+                                 classes = classes_list,
+                                 class_name = "C4"),
+               list(s1 = c(c = 1)))
+  expect_equal(subset_from_class(values = values_list,
+                                 classes = classes_list,
+                                 class_name = "C5"),
+               stats::setNames(list(), character(0)))
+})
+
+test_that("subset_from_class extracts the subset of referenes corresponding to the given class", {
+  classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"), d = "C5")
+  values_list = list(s1 = c(a = 1, b = 1, c = 1),
+                     s2 = c(a = 1),
+                     s3 = c(a = 1, b = 1))
+  references_vector = c(a = 1, b = 2, c = 3, d = 4)
+  references_list = list(c(1, 2, 3),
+                         1,
+                         c(1, 2))
+  
+  # 'references' as a vector
+  expect_equal(subset_from_class(values = values_list,
+                                 references = references_vector,
+                                 classes = classes_list,
+                                 class_name = "C3")$references,
+               c(b = 2, c = 3))
+  expect_equal(subset_from_class(values = values_list,
+                                 references = references_vector,
+                                 classes = classes_list,
+                                 class_name = "C4")$references,
+               c(c = 3))
+  expect_equal(subset_from_class(values = values_list,
+                                 references = references_vector,
+                                 classes = classes_list,
+                                 class_name = "C5")$references,
+               c(d = 4))
+  
+  # 'references' as a list
+  expect_equal(subset_from_class(values = values_list,
+                                 references = references_list,
+                                 classes = classes_list,
+                                 class_name = "C3")$references,
+               list(c(2, 3),
+                    2))
+  expect_equal(subset_from_class(values = values_list,
+                                 references = references_list,
+                                 classes = classes_list,
+                                 class_name = "C4")$references,
+               list(3))
+  expect_equal(subset_from_class(values = values_list,
+                                 references = references_list,
+                                 classes = classes_list,
+                                 class_name = "C5")$references,
+               list())
+})
+
+test_that("subset_from_class returns an identical result whatever the structure of classes", {
+  # 'classes' as a list or a matrix
+  classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"), d = "C5")
+  classes_matrix = matrix(c(TRUE, TRUE, FALSE, FALSE, FALSE,
+                            FALSE, TRUE, TRUE, FALSE, FALSE,
+                            FALSE, FALSE, TRUE, TRUE, FALSE,
+                            FALSE, FALSE, FALSE, FALSE, TRUE),
+                          ncol = 5, byrow = TRUE, dimnames = list(letters[1:4], paste0("C", 1:5)))
+  
+  values_list = list(s1 = c(a = 1, b = 1, c = 1),
+                     s2 = c(a = 1, b = 1),
+                     s3 = c(a = 1))
+  references_vector = c(a = 1, b = 1, c = 1)
+  
+  expect_identical(subset_from_class(values = values_list,
+                                     references = references_vector,
+                                     classes = classes_list,
+                                     class_name = "C3"),
+                   subset_from_class(values = values_list,
+                                     references = references_vector,
+                                     classes = classes_matrix,
+                                     class_name = "C3"))
+  
+  expect_identical(subset_from_class(values = values_list,
+                                     references = references_vector,
+                                     classes = classes_list,
+                                     class_name = "C4"),
+                   subset_from_class(values = values_list,
+                                     references = references_vector,
+                                     classes = classes_matrix,
+                                     class_name = "C4"))
+  
+  expect_identical(subset_from_class(values = values_list,
+                                     references = references_vector,
+                                     classes = classes_list,
+                                     class_name = "C5"),
+                   subset_from_class(values = values_list,
+                                     references = references_vector,
+                                     classes = classes_matrix,
+                                     class_name = "C5"))
+})
