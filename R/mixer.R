@@ -2959,6 +2959,7 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
 #'  `values`.
 #' @param FUN Function to apply on each subset of values corresponding to each different name to reduce
 #'  it to a single value.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @param ... Further arguments to the function `FUN`.
 #' @return 
 #' If `references` is `NULL`, sets of values resulting from the application of the function given as
@@ -2994,7 +2995,7 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
 #' 
 #' @md
 #' @export
-reduce_sets = function(values, references = NULL, FUN, ...) {
+reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) {
   
   # Vérification que la structure de données de values est nommée
   if (is.list(values)) {
@@ -3018,22 +3019,39 @@ reduce_sets = function(values, references = NULL, FUN, ...) {
   if (is.list(values)) {
     # Récursivité pour chaque élément de la liste (chaque ensemble de valeurs)
     new_values = lapply(values, function(v) {
-      stats::setNames(reduce_sets(v, FUN = FUN, ...), unique(names(v)))
+      to_return = stats::setNames(reduce_sets(v, FUN = FUN, ignore_zero = ignore_zero, ...),
+                                  unique(names(v)))
+      if (ignore_zero) return(unlist(to_return))
+      return(to_return)
     })
   }
   else if (is.vector(values)) {
     # Applique la fonction à chaque sous-ensemble du vecteur correspondant à chaque nom
     new_values = sapply(unique(names(values)), function(name) {
-      FUN(values[which(names(values) == name)], ...)
+      vn = values[which(names(values) == name)]
+      if (ignore_zero) {
+        vn = vn[vn != 0]
+        if (length(vn) == 0) return(vn)
+      }
+      return(FUN(vn, ...))
     })
   }
   else if (is.matrix(values)) {
+    # Définition d'un wrapper à la fonction donnée pour ignorer les 0
+    if (ignore_zero) {
+      FUN_to_apply = function(x, ...) {
+        x = x[x != 0]
+        if (length(x) == 0) return(0)
+        return(FUN(x, ...))
+      }
+    } else FUN_to_apply = FUN
+    
     # Pour chaque sous-ensemble de la matrice correspondant à chaque nom
     new_values = t(sapply(unique(rownames(values)), function(name) {
       # Application de la fonction à chaque colonne
       rows = which(rownames(values) == name)
-      if (length(rows) == 1) return(sapply(values[rows, ], FUN, ...))
-      return(apply(values[rows, ], 2, FUN, ...))
+      if (length(rows) == 1) return(sapply(values[rows, ], FUN_to_apply, ...))
+      return(apply(values[rows, ], 2, FUN_to_apply, ...))
     }))
   }
   

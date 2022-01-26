@@ -4,7 +4,7 @@
 \alias{reduce_sets}
 \title{Reduce sets according to the names of their components}
 \usage{
-reduce_sets(values, references = NULL, FUN, ...)
+reduce_sets(values, references = NULL, FUN, ignore_zero = TRUE, ...)
 }
 \arguments{
 \item{values}{Numeric named vector or matrix, or list of numeric named vectors.
@@ -15,6 +15,8 @@ Sets of values to reduce.}
 
 \item{FUN}{Function to apply on each subset of values corresponding to each different name to reduce
 it to a single value.}
+
+\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.}
 
 \item{...}{Further arguments to the function \code{FUN}.}
 }
