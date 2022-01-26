@@ -2891,6 +2891,7 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
             references_class[[name_element]] = references[[i]][indices]
           }
         }
+        names(references_class) = names(references)[which(names(values) %in% names(references_class))]
       } else {
         # Si references est un unique vecteur
         references_class = references[items_in_class]
