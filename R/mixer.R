@@ -3005,7 +3005,7 @@ reduce_sets = function(values, references = NULL, FUN, ...) {
   else if (is.matrix(values) && !is_named(values)[1]) stop("If values is a matrix, its rows must be named.")
   
   # Vérifications relatives aux références
-  if (!is.null(references)) {
+  if (is.list(references)) {
     if (!is.list(values)) stop("If references is a list, values must also be a list.")
     
     if (length(values) != length(references)
