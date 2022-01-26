@@ -2039,7 +2039,7 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
 #'  so that `values` and `references` can be matched.
 #' 
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
-#'  function with such a matrix is faster.
+#'  function with such a matrix is slightly faster.
 #'  
 #' \loadmathjax
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
@@ -2227,7 +2227,7 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
 #'  so that `values` and `references` can be matched.
 #'  
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
-#'  function with such a matrix is faster.
+#'  function with such a matrix is slightly faster.
 #' 
 #' The charts being created with the `ggplot2` package, they can be modified or completed afterwards
 #'  using the returned object.
@@ -2413,7 +2413,7 @@ mcr_chart_by_class = function(values, references, classes,
 #' Values equal to 0 are ignored.
 #'  
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
-#'  function with such a matrix is faster.
+#'  function with such a matrix is slightly faster.
 #'  
 #' \loadmathjax
 #' The hazard index of the vector \eqn{i} is given by:
@@ -2561,7 +2561,7 @@ thq_pairs_by_class = function(values, references, classes,
 #'  so that `values` and `references` can be matched.
 #'  
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
-#'  function with such a matrix is faster.
+#'  function with such a matrix is slightly faster.
 #' 
 #' \loadmathjax
 #' The mixtures are assigned to the groups according the following conditions:
@@ -2697,7 +2697,7 @@ thq_by_group_by_class = function(values, references, classes,
 #'  so that `values` and `references` can be matched.
 #' 
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
-#'  function with such a matrix is faster.
+#'  function with such a matrix is slightly faster.
 #' 
 #' @param values Numeric named vector or matrix, or list of numeric named vectors.
 #'  Values on which to perform the MCR approach according to classes.
@@ -2791,6 +2791,9 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
+#' 
+#' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
+#'  function with such a matrix is slightly faster.
 #' 
 #' @param values Numeric named matrix or list of numeric named vectors. Values from which to extract a
 #'  subset according to one specific class.

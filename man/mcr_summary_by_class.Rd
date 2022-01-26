@@ -54,7 +54,7 @@ Otherwise, \code{references} is a list of vectors having the same lengths as tho
 so that \code{values} and \code{references} can be matched.
 
 If \code{classes} is a list, it will be turned into a logical matrix before processing. Thus, call the
-function with such a matrix is faster.
+function with such a matrix is slightly faster.
 
 \loadmathjax
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:

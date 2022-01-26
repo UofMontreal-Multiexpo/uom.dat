@@ -60,7 +60,7 @@ so that \code{values} and \code{references} can be matched.
 Values equal to 0 are ignored.
 
 If \code{classes} is a list, it will be turned into a logical matrix before processing. Thus, call the
-function with such a matrix is faster.
+function with such a matrix is slightly faster.
 
 \loadmathjax
 The hazard index of the vector \eqn{i} is given by:
