@@ -1989,8 +1989,7 @@ thq_by_group = function(values = NULL, references = NULL,
 #' @param list Should be `TRUE` if `values` can be a list.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`mcr_summary_by_class`] [`mcr_chart_by_class`], [`thq_pairs_by_class`],
-#'          [`thq_by_group_by_class`].
+#' @seealso [`validate_classes`].
 #' @md
 #' @keywords internal
 check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE, matrix = TRUE, list = TRUE) {
@@ -2018,6 +2017,33 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
   }
   else if (matrix && is.matrix(values) && !is_named(values)[1]) stop("If values is a matrix, its rows must be named.")
   else if (vector && is.vector(values) && !is_named(values)) stop("If values is a vector, it must have named numeric values.")
+}
+
+
+#' Validate classes for the MCR approach
+#' 
+#' Check that the classes are given as a list or as a logical matrix. Stop the execution and print an
+#' error message if not. If they are given as a list, they are converted into a logical matrix.
+#' 
+#' @template function_not_exported
+#' 
+#' @param classes List or logical matrix associating value names with classes.
+#'  If list, its names are the value names and the elements are vectors of associated classes.
+#'  If logical matrix, its columns are named according to the classes and the row names contain the
+#'  value names. A `TRUE` value indicates that a specific name is part of a specific class.
+#' @return Classes, as a logical matrix.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`check_data_for_mcr_by_class`].
+#' @md
+#' @keywords internal
+validate_classes = function(classes) {
+  
+  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
+  else if (!is.matrix(classes) || typeof(classes) != "logical")
+    stop("classes must be a list or a logical matrix.")
+  
+  return(classes)
 }
 
 
@@ -2152,13 +2178,9 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
 #' @export
 mcr_summary_by_class = function(values, references, classes, all_classes = FALSE) {
   
-  # Utilisation des classes sous forme de matrice binaire
-  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
-  else if (!is.matrix(classes) || typeof(classes) != "logical")
-    stop("classes must be a list or a logical matrix.")
-  
-  # Vérification que les structures de données sont nommées
+  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
   check_data_for_mcr_by_class(values, references)
+  classes = validate_classes(classes)
   
   
   # Cas d'une liste de valeurs
@@ -2350,13 +2372,9 @@ mcr_chart_by_class = function(values, references, classes,
                               regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
                               regions_lab = !regions, regression = FALSE, log_transform = TRUE, plot = FALSE) {
   
-  # Utilisation des classes sous forme de matrice binaire
-  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
-  else if (!is.matrix(classes) || typeof(classes) != "logical")
-    stop("classes must be a list or a logical matrix.")
-  
-  # Vérification que les structures de données sont nommées
+  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
   check_data_for_mcr_by_class(values, references, vector = FALSE)
+  classes = validate_classes(classes)
   
   # Booléens sur l'ensemble des noms des classes pour expliciter les warnings des appels à mcr_chart
   class_warnings = stats::setNames(logical(ncol(classes)), colnames(classes))
@@ -2509,13 +2527,9 @@ mcr_chart_by_class = function(values, references, classes,
 thq_pairs_by_class = function(values, references, classes,
                               levels = NULL, threshold = TRUE, alone = FALSE) {
   
-  # Utilisation des classes sous forme de matrice binaire
-  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
-  else if (!is.matrix(classes) || typeof(classes) != "logical")
-    stop("classes must be a list or a logical matrix.")
-  
-  # Vérification que les structures de données sont nommées
+  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
   check_data_for_mcr_by_class(values, references, vector = FALSE)
+  classes = validate_classes(classes)
   
   
   # Pour chaque classe, une table concernant les valeurs et références correspondantes
@@ -2649,13 +2663,9 @@ thq_pairs_by_class = function(values, references, classes,
 thq_by_group_by_class = function(values, references, classes,
                                  levels = NULL) {
   
-  # Utilisation des classes sous forme de matrice binaire
-  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
-  else if (!is.matrix(classes) || typeof(classes) != "logical")
-    stop("classes must be a list or a logical matrix.")
-  
-  # Vérification que les structures de données sont nommées
+  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
   check_data_for_mcr_by_class(values, references, vector = FALSE)
+  classes = validate_classes(classes)
   
   
   # Pour chaque classe, une table concernant les valeurs et références correspondantes
@@ -2863,13 +2873,9 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 #' @export
 subset_from_class = function(values, references = NULL, classes, class_name) {
   
-  # Vérification que les structures de données sont nommées
+  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
   check_data_for_mcr_by_class(values, references, vector = FALSE)
-  
-  # Utilisation des classes sous forme de matrice binaire
-  if (is.list(classes)) classes = turn_list_into_logical_matrix(classes)
-  else if (!is.matrix(classes) || typeof(classes) != "logical")
-    stop("classes must be a list or a logical matrix.")
+  classes = validate_classes(classes)
   
   # Noms des éléments qui correspondent à la classe
   items_in_class = rownames(classes)[classes[, class_name]]
