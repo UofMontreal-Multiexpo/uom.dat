@@ -1673,7 +1673,7 @@ test_that("reduce_sets returns an additional variable if references are given", 
   values_list = list(c(a = 1, a = 1), c(b = 1, b = 1), c(a = 1, b = 1))
   
   # 'references' as NULL
-  expect_true(is.vector(reduce_sets(values = values_vector, references = NULL, FUN = max)))
+  expect_false(is.list(reduce_sets(values = values_vector, references = NULL, FUN = max)))
   
   # 'references' as a vector
   expect_type(reduce_sets(values = values_vector,
