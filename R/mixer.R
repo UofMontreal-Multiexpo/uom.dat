@@ -2914,6 +2914,7 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
       })
     # Retrait des ensembles vides, ne contenant aucun élément de la classe
     values_class = values_class[lengths(values_class) != 0]
+    if (length(values_class) == 0) values_class = stats::setNames(list(), character(0))
   }
   # Cas d'une matrice valeurs
   else if (is.matrix(values)) {
