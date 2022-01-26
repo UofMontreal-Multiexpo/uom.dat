@@ -1076,7 +1076,7 @@ test_that("thq_pairs returns NULL in 3 cases", {
   ))
 })
 
-test_that("thq_pairs ignore values equal to 0", {
+test_that("thq_pairs ignores values equal to 0", {
   # 'values' as a matrix
   expect_equal(
     thq_pairs(values = matrix(c(1,0,1, 0,1,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3])),
