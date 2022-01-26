@@ -2938,7 +2938,7 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
 
 #' Reduce sets according to the names of their components
 #' 
-#' For each set of values, apply a function to merge the ones having the same names or choose one
+#' For each set of values, apply a function to merge the ones having the same names or to choose one
 #'  of them, for each different name found in the set of values. This results in sets of values having
 #'  only one value per different name found in the original sets, instead of several ones.
 #' 
