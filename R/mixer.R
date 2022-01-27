@@ -1050,7 +1050,7 @@ mcr_chart = function(values = NULL, references = NULL,
     
     # Vérification que les structures de données sont nommées
     if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
-    if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || !is_named(thq)))
+    if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || (!is.list(thq) && !is_named(thq))))
       stop("thq must be a vector of named numeric values or a list of such vectors.")
     
     # Calcul des données manquantes
