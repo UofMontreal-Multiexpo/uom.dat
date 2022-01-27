@@ -40,7 +40,7 @@ defined by \code{regions_col}.}
 \item{regions_col}{Character vector of length 4. Define the colors for the regions of the MIAT groups
 (in order: I, II, IIIA and IIIB).}
 
-\item{regions_alpha}{Value between 0 and 1. Transparency of the regions filled with \code{regions_col}.}
+\item{regions_alpha}{Value between 0 and 1. Opacity of the regions filled with \code{regions_col}.}
 
 \item{regions_lab}{Logical value or vector of length 4. Define if labels for the MIAT groups should
 be displayed (in order: I, II, IIIA, IIIB). \code{TRUE} and \code{FALSE} are special values for all \code{TRUE} or

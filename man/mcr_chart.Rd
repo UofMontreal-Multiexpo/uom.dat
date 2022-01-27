@@ -48,7 +48,7 @@ defined by \code{regions_col}.}
 \item{regions_col}{Character vector of length 4. Define the colors for the regions of the MIAT groups
 (in order: I, II, IIIA and IIIB).}
 
-\item{regions_alpha}{Value between 0 and 1. Transparency of the regions filled with \code{regions_col}.}
+\item{regions_alpha}{Value between 0 and 1. Opacity of the regions filled with \code{regions_col}.}
 
 \item{regions_lab}{Logical value or vector of length 4. Define if labels for the MIAT groups should
 be displayed (in order: I, II, IIIA, IIIB). \code{TRUE} and \code{FALSE} are special values for all \code{TRUE} or
@@ -95,7 +95,7 @@ therefore cannot be plotted and generate a warning message.
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
 before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios
 then plot the chart. Thus, call the function with the arguments \code{hi}, \code{mcr} and \code{thq} is faster
-(if they are already computed). This is true only if \code{values} is not a list.
+(if they are already computed).
 
 \loadmathjax
 The mixtures are assigned to the groups according the following conditions:
@@ -165,7 +165,7 @@ mcr_chart(values = list(c(A = 0.1, B = 0.5),
                         c(A = 0.2),
                         c(B = 0.3, C = 0.4)),
           references = c(A = 1, B = 2, C = 3),
-          log_transform = FALSE)
+          log_transform = TRUE)
 mcr_chart(values = list(c(A = 0.1, B = 0.5),
                         c(A = 0.2),
                         c(B = 0.3, C = 0.4)),
