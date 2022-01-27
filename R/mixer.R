@@ -1099,7 +1099,7 @@ mcr_chart = function(values = NULL, references = NULL,
   # Default region colors are colorblind safe and print friendly
   
   # Si des couleurs spécifiques doivent être associés aux THQ
-  if (!is.null(thq_col)) chart = chart + ggplot2::scale_color_manual(values = thq_col)
+  if (!is.null(thq_col)) chart = chart + ggplot2::scale_color_manual(values = thq_col[sort(unique(thq))])
   
   # Régression linéaire
   if (regression) chart = chart + ggplot2::geom_smooth(method = "lm", formula = y ~ x)
