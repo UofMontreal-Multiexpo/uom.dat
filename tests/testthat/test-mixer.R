@@ -917,6 +917,111 @@ test_that("mcr_summary returns an identical result whatever the structure of ref
 })
 
 
+##### mcr_chart #####
+
+test_that("mcr_chart requires that references have the same sizes as values if they are two lists", {
+  pdf(NULL)
+  values_list = list(s1 = c(a = 1, b = 1),     s2 = c(a = 0.5, c = 0.5),
+                     s3 = c(b = 0.5, c = 0.8), s4 = c(a = 0.9, c = 0.9))
+  
+  expect_error(mcr_chart(values_list, list(1, 2, 3, 4)),
+               "length")
+  expect_error(mcr_chart(values_list, list(c(1, 2), c(1, 3), c(2, 3), c(1,3))),
+               NA)
+  dev.off()
+})
+
+test_that("mcr_chart requires references to have named values if they are a vector and values are a list", {
+  pdf(NULL)
+  values_list = list(s1 = c(a = 1, b = 1),     s2 = c(a = 0.5, c = 0.5),
+                     s3 = c(b = 0.5, c = 0.8), s4 = c(a = 0.9, c = 0.9))
+  
+  expect_error(mcr_chart(values_list, c(1, 1, 1)),
+               "name")
+  expect_error(mcr_chart(values_list, c(a = 1, b = 1, c = 1)),
+               NA)
+  dev.off()
+})
+
+test_that("mcr_chart requires values to be named", {
+  pdf(NULL)
+  references_1 = c(a = 1, b = 1)
+  references_2 = c(a = 1, b = 1, c = 1)
+  hi = c(2, 1, 1.3, 1.8)
+  mcr = c(2, 2, 1.625, 2)
+  
+  # 'values' as a matrix
+  expect_error(mcr_chart(values = matrix(c(1,1, 0.5,0.5, 0.5,0.8, 0.9,0.9), nrow = 2),
+                         references = references_1),
+               "name")
+  expect_error(mcr_chart(values = matrix(c(1,1, 0.5,0.5, 0.5,0.8, 0.9,0.9), nrow = 2,
+                                         dimnames = list(letters[1:2])),
+                         references = references_1),
+               NA)
+  
+  # 'values' as a list
+  expect_error(mcr_chart(values = list(c(1, 1), c(0.5, 0.5), c(0.5, 0.8), c(0.9, 0.9)),
+                         references = references_2),
+               "name")
+  expect_error(mcr_chart(values = list(c(a = 1, b = 1),     c(a = 0.5, c = 0.5),
+                                       c(b = 0.5, c = 0.8), c(a = 0.9, c = 0.9)),
+                         references = references_2),
+               NA)
+  
+  # 'thq' as a vector
+  expect_error(mcr_chart(hi = hi, mcr = mcr, thq = c(1, 0.5, 0.8, 0.9)),
+               "name")
+  expect_error(mcr_chart(hi = hi, mcr = mcr, thq = c(a = 1, a = 0.5, c = 0.8, a = 0.9)),
+               NA)
+  
+  # 'thq' as a list
+  expect_error(mcr_chart(hi = hi, mcr = mcr,
+                         thq = list(c(1, 1), c(0.5, 0.5), c(0.8), c(0.9, 0.9))),
+               "name")
+  expect_error(mcr_chart(hi = hi, mcr = mcr,
+                         thq = list(c(a=1, b=1), c(a=0.5, c=0.5), c(c=0.8), c(a=0.9, c=0.9))),
+               NA)
+  dev.off()
+})
+
+test_that("mcr_chart generates a warning if some points cannot be plotted", {
+  pdf(NULL)
+  hi = c(1,1,2,2)
+  thq = c(a = 1, b = 1, c = 1, a = 1)
+  
+  expect_warning(mcr_chart(hi = hi, mcr = c(1, 1, 2, 2), thq = thq),
+                 "all points")
+  expect_warning(mcr_chart(hi = hi, mcr = c(1.5, 1.5, 2, 2), thq = thq),
+                 NA)
+  
+  dev.off()
+})
+
+test_that("mcr_chart returns NULL with a warning if no points can be plotted", {
+  pdf(NULL)
+  hi = c(1,1,2,2)
+  thq = c(a = 1, b = 1, c = 2, a = 2)
+  
+  expect_null(suppressWarnings(mcr_chart(hi = hi, mcr = c(1, 1, 1, 1), thq = thq)))
+  expect_false(is.null(mcr_chart(hi = hi, mcr = c(1.5, 1.5, 2, 2), thq = thq)))
+  
+  expect_warning(mcr_chart(hi = hi, mcr = c(1, 1, 1, 1), thq = thq),
+                 "No point")
+  expect_warning(mcr_chart(hi = hi, mcr = c(1.5, 1.5, 2, 2), thq = thq),
+                 NA)
+  dev.off()
+})
+
+test_that("mcr_chart returns a ggplot object", {
+  pdf(NULL)
+  expect_s3_class(mcr_chart(values = list(s1 = c(a = 1, b = 1),     s2 = c(a = 0.5, c = 0.5),
+                                          s3 = c(b = 0.5, c = 0.8), s4 = c(a = 0.9, c = 0.9)),
+                            references = c(a=1, b=1, c=1)),
+                  "ggplot")
+  dev.off()
+})
+
+
 ##### thq_pairs #####
 
 test_that("thq_pairs requires that references have the same sizes as values if they are two lists", {
