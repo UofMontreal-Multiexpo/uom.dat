@@ -1105,6 +1105,7 @@ mcr_chart = function(values = NULL, references = NULL,
   
   # Si des couleurs spécifiques doivent être associés aux THQ
   if (!is.null(thq_col)) chart = chart + ggplot2::scale_color_manual(values = thq_col[sort(unique(thq))])
+  chart = chart + ggplot2::guides(color = ggplot2::guide_legend(order = 1))
   
   # Régression linéaire
   if (regression) chart = chart + ggplot2::geom_smooth(method = "lm", formula = y ~ x)
