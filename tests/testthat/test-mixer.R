@@ -797,7 +797,7 @@ test_that("mcr_summary returns the right data structure", {
   # Vector -> List
   expect_true(is.list(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5)))
   
-  # Matrix (several or a singlet set of values) -> Data frame
+  # Matrix (several or a single set of values) -> Data frame
   expect_true(is.data.frame(mcr_summary(matrix(1:15, ncol = 3,
                                                dimnames = list(letters[1:5], c("s1", "s2", "s3"))), 1:5)))
   expect_true(is.data.frame(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "s1")), 1:5)))

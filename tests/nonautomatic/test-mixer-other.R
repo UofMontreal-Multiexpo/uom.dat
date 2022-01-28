@@ -200,7 +200,6 @@ library(uom.dat)
             regression = FALSE)
   mcr_chart(values_matrix, references_vector,
             regression = TRUE)
-  
 }
 
 
