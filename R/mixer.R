@@ -863,7 +863,12 @@ mcr_summary_for_list = function(values, references) {
 #'  plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does not exist.
 #'  However, in the latter, points having \eqn{MCR} equal to 1 have an ordinate equal to `-Inf` and
 #'  therefore cannot be plotted and generate a warning message.
-#'  
+#' 
+#' Points that are on the boundaries of the region of the group I belong to this group.
+#'  Points that are on the boundaries of the region of the group II belong to this group.
+#'  Points that are on the boundary between the regions of the groups IIIA and IIIB belong to the
+#'  group IIIB.
+#' 
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
 #'  before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios
 #'  then plot the chart. Thus, call the function with the arguments `hi`, `mcr` and `thq` is faster
@@ -1178,6 +1183,8 @@ plot_mcr_log_part = function(chart, xlim, ylim,
   
   # Coloration des régions
   if (regions) {
+    # L'ordre de superposition des polygones n'est pas paramétrable aux frontières
+    # (en bas et à droite, un polygone n'atteint pas la limite renseignée)
     chart = chart +
       # A gauche, groupe II
       ggplot2::geom_polygon(data = data.frame(x = c(-Inf, -Inf, 0, 0),
@@ -1296,6 +1303,8 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
   
   # Coloration des régions
   if (regions) {
+    # L'ordre de superposition des polygones n'est pas paramétrable aux frontières
+    # (en bas et à droite, un polygone n'atteint pas la limite renseignée)
     chart = chart +
       # A gauche, groupe II
       ggplot2::geom_polygon(data = data.frame(x = c(-Inf, -Inf, 1, 1),

@@ -92,6 +92,11 @@ plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a reg
 However, in the latter, points having \eqn{MCR} equal to 1 have an ordinate equal to \code{-Inf} and
 therefore cannot be plotted and generate a warning message.
 
+Points that are on the boundaries of the region of the group I belong to this group.
+Points that are on the boundaries of the region of the group II belong to this group.
+Points that are on the boundary between the regions of the groups IIIA and IIIB belong to the
+group IIIB.
+
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
 before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios
 then plot the chart. Thus, call the function with the arguments \code{hi}, \code{mcr} and \code{thq} is faster
