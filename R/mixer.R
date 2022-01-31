@@ -2970,16 +2970,16 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
     
     # Sous-ensembles de values correspondant aux éléments de la classe
     values_items = turn_list_into_logical_matrix(lapply(values, names))
-    values_class = apply(
-      values_items[, items_in_class[items_in_class %in% colnames(values_items)],
-                   drop = FALSE],
-      1,
-      function(row) {
-        values[[parent.frame()$i[]]][
-          names(values[[parent.frame()$i[]]]) %in% names(row)[row]
-          # Use this instead of names(row)[row] because values can have duplicate names
-        ]
-      })
+    values_items_class = values_items[, items_in_class[items_in_class %in% colnames(values_items)],
+                                      drop = FALSE]
+    values_class = lapply(seq_len(nrow(values_items_class)), function(r) {
+      row = values_items_class[r, ]
+      if (ncol(values_items_class) == 1) names(row) = colnames(values_items_class)
+      return(values[[r]][names(values[[r]]) %in% names(row)[row]])
+      # Use this instead of values[[r]][names(row)[row]] because values can have duplicate names
+    })
+    names(values_class) = names(values)
+    
     # Retrait des ensembles vides, ne contenant aucun élément de la classe
     values_class = values_class[lengths(values_class) != 0]
     if (length(values_class) == 0) values_class = stats::setNames(list(), character(0))

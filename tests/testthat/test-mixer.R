@@ -2415,7 +2415,7 @@ test_that("subset_from_class extracts the subset of values corresponding to the 
                stats::setNames(list(), character(0)))
 })
 
-test_that("subset_from_class extracts the subset of referenes corresponding to the given class", {
+test_that("subset_from_class extracts the subset of references corresponding to the given class", {
   classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"), d = "C5")
   values_list = list(s1 = c(a = 1, b = 1, c = 1),
                      s2 = c(a = 1),
@@ -2501,4 +2501,23 @@ test_that("subset_from_class returns an identical result whatever the structure 
                                      references = references_vector,
                                      classes = classes_matrix,
                                      class_name = "C5"))
+})
+
+test_that("subset_from_class returns a list if values are a list", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  values_list = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4))
+  
+  expect_equal(subset_from_class(values = values_list,
+                                 classes = classes,
+                                 class_name = "C1"),
+               list(s3 = c(D = 4)))
+  expect_equal(subset_from_class(values = values_list,
+                                 classes = classes,
+                                 class_name = "C2"),
+               list(s1 = c(A = 1),
+                    s2 = c(A = 2),
+                    s3 = c(D = 4)))
 })
