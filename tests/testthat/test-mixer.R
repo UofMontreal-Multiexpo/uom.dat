@@ -2087,6 +2087,177 @@ test_that("mcr_summary_by_class returns named objects", {
 })
 
 
+##### mcr_chart_by_class #####
+
+test_that("mcr_chart_by_class requires that references have the same sizes as values if they are two lists", {
+  pdf(NULL)
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  values_list = list(s1 = c(A = 1, B = 2), s2 = c(C = 2), s3 = c(B = 3, D = 4))
+  
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = values_list,
+                       references = list(1, 2, 3),
+                       classes = classes))),
+    "length")
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = values_list,
+                       references = list(c(1, 2), 1, c(2, 3)),
+                       classes = classes))),
+    NA)
+  dev.off()
+})
+
+test_that("mcr_chart_by_class requires references to have named values if they are a vector and values are a list", {
+  pdf(NULL)
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  values_list = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, C=4))
+  
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = values_list,
+                       references = c(1, 2, 3),
+                       classes = classes))),
+    "name")
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = values_list,
+                       references = c(A = 1, B = 2, C = 3),
+                       classes = classes))),
+    NA)
+  dev.off()
+})
+
+test_that("mcr_chart_by_class requires values to be named", {
+  pdf(NULL)
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  # 'values' as a matrix
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
+                                       dimnames = list(NULL, c("s1", "s2"))),
+                       references = references,
+                       classes = classes))),
+    "name")
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
+                                       dimnames = list(letters[1:4], c("s1", "s2"))),
+                       references = references,
+                       classes = classes))),
+    NA)
+  
+  # 'values' as a list
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
+                       references = references,
+                       classes = classes))),
+    "name")
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                       references = references,
+                       classes = classes))),
+    NA)
+  dev.off()
+})
+
+test_that("mcr_chart_by_class returns as many objects as there are classes in the values", {
+  pdf(NULL)
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  expect_length(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                       references = references,
+                       classes = classes))),
+    5)
+  
+  expect_length(suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, C=4)),
+                       references = references,
+                       classes = classes))),
+    4)
+  dev.off()
+})
+
+test_that("mcr_chart_by_class returns a named list", {
+  pdf(NULL)
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  results = suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                       references = references,
+                       classes = classes)
+  ))
+  
+  expect_type(results, "list")
+  expect_named(results, c("C1", "C2", "C3", "C4", "C5"))
+  
+  dev.off()
+})
+
+test_that("mcr_chart_by_class returns ggplots objects or NULL objects", {
+  pdf(NULL)
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  results = suppressMessages(suppressWarnings(
+    mcr_chart_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                       references = references,
+                       classes = classes)
+  ))
+  
+  expect_null(results[[1]])
+  expect_null(results[[2]])
+  expect_s3_class(results[[3]], "ggplot")
+  expect_s3_class(results[[4]], "ggplot")
+  expect_s3_class(results[[5]], "ggplot")
+  
+  dev.off()
+})
+
+test_that("mcr_chart_by_class generates a message if some points cannot be plotted in a chart", {
+  pdf(NULL)
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C1", "C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  expect_message(suppressWarnings(
+    mcr_chart_by_class(values = list(s1 = c(A=1, B=2),
+                                     s2 = c(A=2),
+                                     s3 = c(B=3, D=4)),
+                       references = references,
+                       classes = classes)),
+    "classes")
+  expect_message(suppressWarnings(
+    mcr_chart_by_class(values = list(s1 = c(A=1, B=2, C=3, D=4),
+                                     s2 = c(A=2, B=3, C=4, D=5)),
+                       references = references,
+                       classes = classes)),
+    NA)
+  
+  dev.off()
+})
+
+
 
 #### Subsets and reduction of sets ####
 
