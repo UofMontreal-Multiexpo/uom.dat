@@ -737,14 +737,22 @@ mcr_summary = function(values, references) {
   
   # Distinction between vector and matrix cases
   if (is.vector(values)) {
-    thq = if (is_named(values)) names(top_hazard_quotient(hq = hq, k = 1)) else NA_character_
+    if (is_named(values) && !all(values == 0)) thq = names(top_hazard_quotient(hq = hq, k = 1))
+    else thq = NA_character_
+    
     return(list(n = sum(values != 0),
                 HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
                 THQ = thq, MHQ = mhq, Missed = mt))
   }
-  thq = if (is_named(values)[1]) names(unlist(unname(top_hazard_quotient(hq = hq, k = 1)))) else NA_character_
-  return(data.frame(n = apply(values, 2, function(v) sum(v != 0)),
-                    HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+  
+  # Matrix case
+  n = apply(values, 2, function(v) sum(v != 0))
+  if (is_named(values)[1]) {
+    thq = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1))))
+    thq[n == 0] = NA_character_
+  } else thq = NA_character_
+  
+  return(data.frame(n = n, HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
                     THQ = thq, MHQ = mhq, Missed = mt,
                     stringsAsFactors = FALSE))
 }

@@ -846,12 +846,13 @@ test_that("mcr_summary returns an object whose rows are named if the given sets 
                "s1")
 })
 
-test_that("mcr_summary returns NA THQ if the given values are unnamed", {
+test_that("mcr_summary returns NA THQ if the given values are unnamed or all equal to 0", {
   all_na = function(x) all(is.na(x))
   
   # 'values' as a vector
   expect_true(is.na(mcr_summary(c(1, 2, 3, 4, 5), 1:5)$THQ))
   expect_false(is.na(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5)$THQ))
+  expect_true(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5)$THQ))
 
   # 'values' as a matrix
   expect_true(all_na(mcr_summary(matrix(1:15, ncol = 3,
@@ -860,6 +861,10 @@ test_that("mcr_summary returns NA THQ if the given values are unnamed", {
                                          dimnames = list(letters[1:5], c("s1", "s2", "s3"))), 1:5)$THQ))
   expect_true(all_na(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(NULL, "s1")), 1:5)$THQ))
   expect_false(all_na(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "s1")), 1:5)$THQ))
+  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,10, 0,0,0,0,0), ncol = 2,
+                                           dimnames = list(letters[1:5], c("s1", "s2"))),
+                           references = 1:5)$THQ,
+               c("e", NA_character_))
 
   # 'values' as a list
   expect_true(all_na(mcr_summary(list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
@@ -868,6 +873,9 @@ test_that("mcr_summary returns NA THQ if the given values are unnamed", {
                                   list(c(1, 2), 1, c(2, 3)))$THQ))
   expect_true(all_na(mcr_summary(list(s1 = c(1, 2, 3)), list(c(1, 2, 3)))$THQ))
   expect_false(all_na(mcr_summary(list(s1 = c(a=1, b=2, c=3)), list(c(1, 2, 3)))$THQ))
+  expect_equal(mcr_summary(values = list(s1 = c(a=1, b=2, c=6), s2 = c(a=0, c=0)),
+                           references = c(a = 1, b = 2, c = 3))$THQ,
+               c("c", NA_character_))
 })
 
 test_that("mcr_summary does not count values equal to 0", {
