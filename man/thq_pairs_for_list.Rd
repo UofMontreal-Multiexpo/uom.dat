@@ -62,6 +62,11 @@ where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of ha
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
+
+If the number of hazard quotients that are greater than or equal to the second greater hazard
+quotient is greater than 2, only the first two values are considered and in the order given.
+For example, if the hazard quotients are \code{D = 5}, \code{B = 1}, \code{C = 3} and \code{A = 3}, the top two hazard
+quotients considered are \code{D} and \code{C}.
 }
 \note{
 Due to the multiple possible usages, all arguments except \code{values} and \code{references} must be explicitly

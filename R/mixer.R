@@ -662,6 +662,9 @@ classify_mixture = function(values = NULL, references = NULL,
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
 #' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
+#' 
 #' @param values Numeric vector or matrix, or list of numeric vectors.
 #'  Values whose indicators of the MCR approach are to be computed.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -783,6 +786,9 @@ mcr_summary = function(values, references) {
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
 #' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
+#' 
 #' @template function_not_exported
 #' 
 #' @param values List of numeric vectors. Values whose indicators of the MCR approach are to be
@@ -901,6 +907,9 @@ mcr_summary_for_list = function(values, references) {
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
 #' 
 #' @note
 #' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
@@ -1392,6 +1401,11 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
+#' If the number of hazard quotients that are greater than or equal to the second greater hazard
+#'  quotient is greater than 2, only the first two values are considered and in the order given.
+#'  For example, if the hazard quotients are `D = 5`, `B = 1`, `C = 3` and `A = 3`, the top two hazard
+#'  quotients considered are `D` and `C`.
+#' 
 #' @note
 #' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
 #'  named in the function call.
@@ -1565,6 +1579,11 @@ thq_pairs = function(values = NULL, references = NULL,
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
+#' If the number of hazard quotients that are greater than or equal to the second greater hazard
+#'  quotient is greater than 2, only the first two values are considered and in the order given.
+#'  For example, if the hazard quotients are `D = 5`, `B = 1`, `C = 3` and `A = 3`, the top two hazard
+#'  quotients considered are `D` and `C`.
+#' 
 #' @note
 #' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
 #'  named in the function call.
@@ -1698,6 +1717,11 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
+#' If the number of hazard quotients that are greater than or equal to the second greater hazard
+#'  quotient is greater than 2, only the first two values are considered and in the order given.
+#'  For example, if the hazard quotients are `D = 5`, `B = 1`, `C = 3` and `A = 3`, the top two hazard
+#'  quotients considered are `D` and `C`.
+#' 
 #' @note
 #' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
 #'  named in the function call.
@@ -1821,6 +1845,9 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
 #' 
 #' @note
 #' Due to the multiple possible usages, the arguments `hq`, `thq`, `groups` and `levels` must be
@@ -2104,6 +2131,9 @@ validate_classes = function(classes) {
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
 #' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
+#' 
 #' @param values Numeric named vector or matrix, or list of numeric named vectors.
 #'  Values whose indicators of the MCR approach are to be computed according to classes.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -2299,6 +2329,9 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
+#' 
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  chart are to be created, according to classes.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -2451,6 +2484,11 @@ mcr_chart_by_class = function(values, references, classes,
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' If the number of hazard quotients that are greater than or equal to the second greater hazard
+#'  quotient is greater than 2, only the first two values are considered and in the order given.
+#'  For example, if the hazard quotients are `D = 5`, `B = 1`, `C = 3` and `A = 3`, the top two hazard
+#'  quotients considered are `D` and `C`.
 #' 
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  top two hazard quotients are to be identified, according to classes.
@@ -2609,6 +2647,9 @@ thq_pairs_by_class = function(values, references, classes,
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
 #' 
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  tables are to be built, according to classes.
