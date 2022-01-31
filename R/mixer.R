@@ -2355,7 +2355,7 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
 #'  the standard version of the charts are created (i.e. \eqn{HI} versus \eqn{MCR}).
 #' @param plot If `FALSE` and the returned list is assigned, the charts are not plotted.
 #'  Otherwise, the charts are all plotted in the active graphics device.
-#'  If `TRUE` and the returned list is not assigned, the charts are plotted twice.
+#'  But if `TRUE` and the returned list is not assigned, the charts are plotted twice.
 #' @return List of charts created with the `ggplot2` package or `NULL` if no points can be plotted
 #'  (see 'Details'). The length of the list corresponds to the number of classes encountered.
 #' 

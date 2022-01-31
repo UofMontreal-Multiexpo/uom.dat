@@ -55,7 +55,7 @@ the standard version of the charts are created (i.e. \eqn{HI} versus \eqn{MCR}).
 
 \item{plot}{If \code{FALSE} and the returned list is assigned, the charts are not plotted.
 Otherwise, the charts are all plotted in the active graphics device.
-If \code{TRUE} and the returned list is not assigned, the charts are plotted twice.}
+But if \code{TRUE} and the returned list is not assigned, the charts are plotted twice.}
 }
 \value{
 List of charts created with the \code{ggplot2} package or \code{NULL} if no points can be plotted
