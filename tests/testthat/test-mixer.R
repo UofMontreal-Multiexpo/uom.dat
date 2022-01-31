@@ -870,6 +870,25 @@ test_that("mcr_summary returns NA THQ if the given values are unnamed", {
   expect_false(all_na(mcr_summary(list(s1 = c(a=1, b=2, c=3)), list(c(1, 2, 3)))$THQ))
 })
 
+test_that("mcr_summary does not count values equal to 0", {
+  # 'values' as a vector
+  expect_equal(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5)$n,
+               5)
+  expect_equal(mcr_summary(c(a=1, b=2, c=0, d=4, e=5), 1:5)$n,
+               4)
+  
+  # 'values' as a matrix
+  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,5, 0,4,0,8,10, 3,6,9,12,15), ncol = 3,
+                                           dimnames = list(letters[1:5], c("s1", "s2", "s3"))),
+                           references = 1:5)$n,
+               c(4, 3, 5))
+  
+  # 'values' as a list
+  expect_equal(mcr_summary(values = list(s1 = c(a=1, b=2), s2 = c(a=2, c=0), s3 = c(a=0, b=4, c=6)),
+                           references = c(a = 1, b = 2, c = 3))$n,
+               c(2, 1, 2))
+})
+
 test_that("mcr_summary computes the indicators of the MCR approach", {
   # 'values' as a vector
   expect_equal(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5),
