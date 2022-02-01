@@ -1,4 +1,4 @@
-# University of Montreal Data Analysis Tools
+# University of Montreal - Data Analysis Tools
 
 
 ## Purpose

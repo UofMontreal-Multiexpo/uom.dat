@@ -4,7 +4,7 @@
 \name{uom.dat-package}
 \alias{uom.dat}
 \alias{uom.dat-package}
-\title{uom.dat: University of Montreal Data Analysis Tools}
+\title{uom.dat: University of Montreal - Data Analysis Tools}
 \description{
 R processing, analysis and visualization tools initially designed for processing data from
     occupational exposure databases, especially for the concept of multiexposure.
