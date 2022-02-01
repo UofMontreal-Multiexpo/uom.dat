@@ -2258,6 +2258,313 @@ test_that("mcr_chart_by_class generates a message if some points cannot be plott
 })
 
 
+##### thq_pairs_by_class #####
+
+test_that("thq_pairs_by_class requires that references have the same sizes as values if they are two lists", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  values_list = list(s1 = c(A = 1, B = 2), s2 = c(C = 2), s3 = c(B = 3, D = 4))
+  
+  expect_error(thq_pairs_by_class(values = values_list,
+                                  references = list(1, 2, 3),
+                                  classes = classes),
+               "length")
+  expect_error(thq_pairs_by_class(values = values_list,
+                                  references = list(c(1, 2), 1, c(2, 3)),
+                                  classes = classes),
+               NA)
+})
+
+test_that("thq_pairs_by_class requires references to have named values if they are a vector and values are a list", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  values_list = list(s1 = c(A = 1, B = 2), s2 = c(A = 2), s3 = c(B = 3, C = 4))
+  
+  expect_error(thq_pairs_by_class(values = values_list,
+                                  references = c(1, 2, 3),
+                                  classes = classes),
+               "name")
+  expect_error(thq_pairs_by_class(values = values_list,
+                                  references = c(A = 1, B = 2, C = 3),
+                                  classes = classes),
+               NA)
+})
+
+test_that("thq_pairs_by_class requires values to be named", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  # 'values' as a matrix
+  expect_error(thq_pairs_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
+                                                  dimnames = list(NULL, c("s1", "s2"))),
+                                  references = references,
+                                  classes = classes),
+               "name")
+  expect_error(thq_pairs_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
+                                                  dimnames = list(letters[1:4], c("s1", "s2"))),
+                                  references = references,
+                                  classes = classes),
+               NA)
+  
+  # 'values' as a list
+  expect_error(thq_pairs_by_class(values = list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
+                                  references = references,
+                                  classes = classes),
+               "name")
+  expect_error(thq_pairs_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                                  references = references,
+                                  classes = classes),
+               NA)
+})
+
+test_that("thq_pairs_by_class returns as many objects as there are classes in the values", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  expect_length(thq_pairs_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                                   references = references,
+                                   classes = classes),
+                5)
+  
+  expect_length(thq_pairs_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, C=4)),
+                                   references = references,
+                                   classes = classes),
+                4)
+})
+
+test_that("thq_pairs_by_class returns a named list", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  results = thq_pairs_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                               references = references,
+                               classes = classes)
+  
+  expect_type(results, "list")
+  expect_named(results, c("C1", "C2", "C3", "C4", "C5"))
+})
+
+test_that("thq_pairs_by_class returns matrices or NULL objects", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  results = thq_pairs_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                               references = references,
+                               classes = classes)
+  
+  expect_null(results[[1]])
+  expect_null(results[[2]])
+  expect_true(is.matrix(results[[3]]))
+  expect_true(is.matrix(results[[4]]))
+  expect_true(is.matrix(results[[5]]))
+})
+
+
+##### thq_by_group_by_class #####
+
+test_that("thq_by_group_by_class requires that references have the same sizes as values if they are two lists", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  values_list = list(s1 = c(A = 1, B = 2), s2 = c(C = 2), s3 = c(B = 3, D = 4))
+  
+  expect_error(thq_by_group_by_class(values = values_list,
+                                     references = list(1, 2, 3),
+                                     classes = classes),
+               "length")
+  expect_error(thq_by_group_by_class(values = values_list,
+                                     references = list(c(1, 2), 1, c(2, 3)),
+                                     classes = classes),
+               NA)
+})
+
+test_that("thq_by_group_by_class requires references to have named values if they are a vector and values are a list", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  values_list = list(s1 = c(A = 1, B = 2), s2 = c(A = 2), s3 = c(B = 3, C = 4))
+  
+  expect_error(thq_by_group_by_class(values = values_list,
+                                     references = c(1, 2, 3),
+                                     classes = classes),
+               "name")
+  expect_error(thq_by_group_by_class(values = values_list,
+                                     references = c(A = 1, B = 2, C = 3),
+                                     classes = classes),
+               NA)
+})
+
+test_that("thq_by_group_by_class requires values to be named", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  # 'values' as a matrix
+  expect_error(thq_by_group_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
+                                                     dimnames = list(NULL, c("s1", "s2"))),
+                                     references = references,
+                                     classes = classes),
+               "name")
+  expect_error(thq_by_group_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
+                                                     dimnames = list(letters[1:4], c("s1", "s2"))),
+                                     references = references,
+                                     classes = classes),
+               NA)
+  
+  # 'values' as a list
+  expect_error(thq_by_group_by_class(values = list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
+                                     references = references,
+                                     classes = classes),
+               "name")
+  expect_error(thq_by_group_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                                     references = references,
+                                     classes = classes),
+               NA)
+})
+
+test_that("thq_by_group_by_class returns as many objects as there are classes in the values", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  expect_length(thq_by_group_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                                      references = references,
+                                      classes = classes),
+                5)
+  
+  expect_length(thq_by_group_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, C=4)),
+                                      references = references,
+                                      classes = classes),
+                4)
+})
+
+test_that("thq_by_group_by_class returns a named list", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  results = thq_by_group_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                                  references = references,
+                                  classes = classes)
+  
+  expect_type(results, "list")
+  expect_named(results, c("C1", "C2", "C3", "C4", "C5"))
+})
+
+test_that("thq_by_group_by_class returns matrices", {
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  results = thq_by_group_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
+                                  references = references,
+                                  classes = classes)
+  
+  expect_true(is.matrix(results[[1]]))
+  expect_true(is.matrix(results[[2]]))
+  expect_true(is.matrix(results[[3]]))
+  expect_true(is.matrix(results[[4]]))
+  expect_true(is.matrix(results[[5]]))
+})
+
+
+##### mcr_approach_by_class #####
+
+test_that("mcr_approach_by_class accepts functions and characters as argument FUN", {
+  pdf(NULL)
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  values_list = list(s1 = c(A = 1, B = 2), s2 = c(C = 2), s3 = c(B = 3, D = 4))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  expect_error(mcr_approach_by_class(values_list, references, classes,
+                                     FUN = mcr_summary),
+               NA)
+  expect_error(mcr_approach_by_class(values_list, references, classes,
+                                     FUN = "mcr_summary"),
+               NA)
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_approach_by_class(values_list, references, classes,
+                          FUN = mcr_chart))),
+    NA)
+  expect_error(suppressMessages(suppressWarnings(
+    mcr_approach_by_class(values_list, references, classes,
+                          FUN = "mcr_chart"))),
+    NA)
+  expect_error(mcr_approach_by_class(values_list, references, classes,
+                                     FUN = thq_pairs),
+               NA)
+  expect_error(mcr_approach_by_class(values_list, references, classes,
+                                     FUN = "thq_pairs"),
+               NA)
+  expect_error(mcr_approach_by_class(values_list, references, classes,
+                                     FUN = thq_by_group),
+               NA)
+  expect_error(mcr_approach_by_class(values_list, references, classes,
+                                     FUN = "thq_by_group"),
+               NA)
+  dev.off()
+})
+
+test_that("mcr_approach_by_class returns the same results as calling the specific functions", {
+  pdf(NULL)
+  classes = list(A = c("C2", "C4", "C5"),
+                 B = c("C3", "C4", "C5"),
+                 C = c("C5"),
+                 D = c("C1", "C2", "C3", "C4", "C5"))
+  values_list = list(s1 = c(A = 1, B = 2), s2 = c(C = 2), s3 = c(B = 3, D = 4))
+  references = c(A = 1, B = 2, C = 3, D = 4)
+  
+  expect_identical(mcr_approach_by_class(values_list, references, classes,
+                                         FUN = mcr_summary),
+                   mcr_summary_by_class(values_list, references, classes))
+  expect_true(all.equal(
+    suppressMessages(suppressWarnings(
+      mcr_approach_by_class(values_list, references, classes,
+                            FUN = mcr_chart)
+    )),
+    suppressMessages(suppressWarnings(
+      mcr_chart_by_class(values_list, references, classes)
+    ))
+  ))
+  expect_identical(mcr_approach_by_class(values_list, references, classes,
+                                         FUN = thq_pairs),
+                   thq_pairs_by_class(values_list, references, classes))
+  expect_identical(mcr_approach_by_class(values_list, references, classes,
+                                         FUN = thq_by_group),
+                   thq_by_group_by_class(values_list, references, classes))
+  dev.off()
+})
+
+
 
 #### Subsets and reduction of sets ####
 
@@ -2692,3 +2999,5 @@ test_that("subset_from_class returns a list if values are a list", {
                     s2 = c(A = 2),
                     s3 = c(D = 4)))
 })
+
+
