@@ -1037,55 +1037,55 @@ mcr_chart = function(values = NULL, references = NULL,
                      regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
                      regions_lab = !regions, regression = FALSE, log_transform = TRUE, plot = TRUE) {
   
-  # Cas spécifiques dans lequel values est une liste et non une matrice
+  # Specific case in which values is a list and not a matrix
   if (is.list(values)) {
     
-    # Différence si references est une liste ou un vecteur
+    # Different case if references is a list or a vector
     if (is.list(references)) {
       
-      # Vérification que les structures de données sont nommées
+      # Checking that data structures are named
       if (length(values) != length(references) ||
           any(sapply(values, length) != sapply(references, length)))
         stop("If values and references are two lists, their lengths and the ones of their elements must match.")
       if (!is_named(values)[2])
         stop("If values is a list, it must contain vectors of named numeric values.")
       
-      # Calcul des indicateurs nécessaires
+      # Computation of the indicators needed
       hi = sapply(seq_len(length(values)), function(i) hazard_index(values[[i]], references[[i]]))
       mcr = sapply(seq_len(length(values)), function(i) maximum_cumulative_ratio(values[[i]], references[[i]]))
       thq = sapply(seq_len(length(values)), function(i) top_hazard_quotient(values[[i]], references[[i]], k = 1))
       
     } else if (is.vector(references)) {
       
-      # Vérification que les structures de données sont nommées
+      # Checking that data structures are named
       if (!is_named(references) || !is_named(values)[2])
         stop("If values is a list and references is a vector. Both must contained named values.")
       
-      # Calcul des indicateurs nécessaires
+      # Computation of the indicators needed
       hi = sapply(values, function(v) hazard_index(v, references[names(v)]))
       mcr = sapply(values, function(v) maximum_cumulative_ratio(v, references[names(v)]))
       thq = sapply(unname(values), function(v) top_hazard_quotient(v, references[names(v)], k = 1))
       
     } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
     
-  } else { # Cas où values est une matrice ou n'est pas renseigné
+  } else { # Case where values is a matrix or is not given
     
-    # Vérification que les structures de données sont nommées
+    # Checking that data structures are named
     if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
     if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || (!is.list(thq) && !is_named(thq))))
       stop("thq must be a vector of named numeric values or a list of such vectors.")
     
-    # Calcul des données manquantes
+    # Computation of the indicators needed
     if (is.null(hi)) hi = hazard_index(values, references)
     if (is.null(mcr)) mcr = maximum_cumulative_ratio(values, references, hi = hi)
     if (is.null(thq)) thq = top_hazard_quotient(values, references, k = 1)
   }
   
   
-  # Récupération des noms des top
+  # Extracting names of top hazard quotients
   thq = if (is.list(thq)) sapply(unname(thq), function(v) names(v)[1]) else names(thq)
   
-  # Préparation des données et limites du graphique
+  # Preparation of the data and of the limits of the graph
   if (log_transform) {
     data = data.frame(x = log10(hi), y = log10(mcr - 1), thq = thq, stringsAsFactors = FALSE)
     
@@ -1110,21 +1110,21 @@ mcr_chart = function(values = NULL, references = NULL,
   ylim = c(floor(min(data$y)), ceiling(max(data$y)))
   if (ylim[1] == ylim[2]) ylim = ylim + c(-0.05, 0.05)
   
-  # Initialisation du graphique (valeurs, thème et cadre)
+  # Graph initialization (values, theme and fram)
   chart = ggplot2::ggplot(data = data, ggplot2::aes(x = x, y = y)) +
     ggplot2::theme_bw() +
     ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
   
-  # Partie du graphique spécifique au type log ou normal
+  # Part of the graph specific to the type log or normal
   fun.chart = if (log_transform) plot_mcr_log_part else plot_mcr_standard_part
   chart = fun.chart(chart, xlim, ylim, regions, regions_col, regions_alpha, regions_lab)
   # Default region colors are colorblind safe and print friendly
   
-  # Si des couleurs spécifiques doivent être associés aux THQ
+  # If specific colors have to be associated with the THQ
   if (!is.null(thq_col)) chart = chart + ggplot2::scale_color_manual(values = thq_col[sort(unique(thq))])
   chart = chart + ggplot2::guides(color = ggplot2::guide_legend(order = 1))
   
-  # Régression linéaire
+  # Linear regression
   if (regression) chart = chart + ggplot2::geom_smooth(method = "lm", formula = y ~ x)
   
   if (plot) return(graphics::plot(chart))
@@ -1169,26 +1169,26 @@ mcr_chart = function(values = NULL, references = NULL,
 plot_mcr_log_part = function(chart, xlim, ylim,
                              regions, regions_col, regions_alpha, regions_lab) {
   
-  # Fonction de délimitation du groupe I
+  # Fonction delimiting group I
   fun.mhq_1 = function(x) log10(10^x - 1)
   xmin_fun = 0.001
   xmax_fun = max(xmin_fun, xlim[2]) + 1
   root_fun = stats::uniroot(fun.mhq_1, c(0, 1))$root   # fun.mhq_1(log10(2)) = 0
   
-  # Pour placement du label "Group IIIB" : abscisse maximale de la courbe fun.mhq_1 selon la limite
-  # fixée par ylim (fonction inverse de fun.mhq_1 := log10(10^y + 1))
+  # For placement of the label "Group IIIB": maximum abscissa of the curve fun.mhq_1 according to the
+  # limit set by ylim (inverse function of fun.mhq_1 := log10(10^y + 1))
   xmax_fun.mhq_1_visible = log10(10^ylim[2] + 1)
   x_to_use = if (xlim[2] <= xmax_fun.mhq_1_visible) xlim[2] else xmax_fun.mhq_1_visible
   x_groupIIIB = if (xlim[1] > 0) (x_to_use + xlim[1]) / 2 else x_to_use / 2
   
-  # Texte relatif aux groupes
+  # Text relating to the groups
   if (any(regions_lab)) {
-    # Vérification des zones affichées (non-affichage du texte des zones qui ne sont pas affichées)
+    # Verification of displayed areas (non-display of the text of the areas that are not displayed)
     regions_lab = regions_lab & c(
-      xlim[2] > 0 && ylim[1] < fun.mhq_1(xlim[2]), # Coin bas-droite en-dessous de la courbe f
+      xlim[2] > 0 && ylim[1] < fun.mhq_1(xlim[2]), # Bottom-right corner below curve f
       xlim[1] < 0,
-      ylim[1] < 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[1] > fun.mhq_1(xlim[1])), # Coin bas-gauche au dessus de f
-      ylim[2] > 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[2] > fun.mhq_1(xlim[1])) # Coin haut-gauche au dessus de f
+      ylim[1] < 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[1] > fun.mhq_1(xlim[1])), # Bottom-left corner above f
+      ylim[2] > 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[2] > fun.mhq_1(xlim[1])) # Top-left corner above f
     )
     
     chart = chart + ggplot2::annotate(geom = "text",
@@ -1199,57 +1199,57 @@ plot_mcr_log_part = function(chart, xlim, ylim,
                                       label = c("Group I", "Group II", "Group IIIA", "Group IIIB")[regions_lab])
   }
   
-  # Coloration des régions
+  # Coloring of the regions
   if (regions) {
-    # L'ordre de superposition des polygones n'est pas paramétrable aux frontières
-    # (en bas et à droite, un polygone n'atteint pas la limite renseignée)
+    # The overlapping order of the polygons is not configurable at the edges
+    # (at the bottom and on the right, a polygon does not reach the provided limit)
     chart = chart +
-      # A gauche, groupe II
+      # On the left, group II
       ggplot2::geom_polygon(data = data.frame(x = c(-Inf, -Inf, 0, 0),
                                               y = c(-Inf, Inf, Inf, -Inf)),
                             ggplot2::aes(fill = "II"),
                             alpha = regions_alpha) +
-      # A droite, groupe I
+      # On the right, group I
       ggplot2::geom_polygon(data = data.frame(x = c(seq(0, xmax_fun, by = 0.001), xmax_fun),
                                               y = c(-Inf, fun.mhq_1(seq(xmin_fun, xmax_fun, by = 0.001)), -Inf)),
                             ggplot2::aes(fill = "I"),
                             alpha = regions_alpha) +
-      # Au centre, groupe IIIA
+      # In the center, group IIIA
       ggplot2::geom_polygon(data = data.frame(x = c(0, seq(0, root_fun, by = 0.001)),
                                               y = c(0, -Inf, fun.mhq_1(seq(xmin_fun, root_fun, by = 0.001)))),
                             ggplot2::aes(fill = "IIIA"),
                             alpha = regions_alpha) +
-      # En haut, groupe IIIB
+      # At the top, group IIIB
       ggplot2::geom_polygon(data = data.frame(x = c(0, 0, seq(root_fun, xmax_fun, by = 0.001), xmax_fun, xmax_fun),
                                               y = c(Inf, 0, fun.mhq_1(seq(root_fun, xmax_fun, by = 0.001)), fun.mhq_1(xmax_fun), Inf)),
                             ggplot2::aes(fill = "IIIB"),
                             alpha = regions_alpha) +
-      # Légende associée
+      # Associated legend
       ggplot2::scale_fill_manual(values = stats::setNames(regions_col, c("I", "II", "IIIA", "IIIB")),
                                  name = "MIAT groups",
                                  guide = ggplot2::guide_legend(override.aes = list(color = "black",
                                                                                    linetype = "longdash")))
   }
   
-  # Suite du graphique (points, délimitations, légende, labels axe Y)
+  # Continuation of the graph (points, boundaries, legend, Y axis labels)
   chart = chart +  ggplot2::geom_point(ggplot2::aes(color = factor(thq))) +
-    # Segment horizontal séparant IIIA et IIIB
+    # Horizontal segment separating IIIA and IIIB
     ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, xend = root_fun, yend = 0),
                           color = "black", linetype = "longdash") +
-    # Droite vertical séparant le groupe II du reste
+    # Vertical line separating the group II
     ggplot2::geom_vline(xintercept = 0, color = "black", linetype = "longdash") +
-    # Courbe séparant le groupe I du reste
+    # Curve separating the group I
     ggplot2::stat_function(fun = fun.mhq_1, xlim = c(xmin_fun, xmax_fun),
                            color = "black", linetype = "longdash") +
-    # Titres des axes et légende
+    # Axis titles and legend
     ggplot2::labs(x = bquote(log[10]*"(HI)"),
                   y = bquote(atop(log[10]*"(MCR - 1)", "MHQ / HI")),
                   col = "Top Hazard Quotients") +
-    # Ajout de la réciproque de MCR aux labels de l'axe Y
+    # Adding the reciprocal of MCR to the Y axis labels
     ggplot2::scale_y_continuous(labels = function(y) {
       return(paste0(format(round(y, 1), nsmall = 1), "\n",
                     format(round(reciprocal_of_mcr(mcr = 10^y + 1) * 100, 1), nsmall = 1), "%"))
-      # 10^y + 1 => valeur de mcr à partir de y = log10(mcr - 1)
+      # 10^y + 1 => MCR value from y = log10(mcr - 1)
     })
   
   return(chart)
@@ -1295,9 +1295,9 @@ plot_mcr_log_part = function(chart, xlim, ylim,
 plot_mcr_standard_part = function(chart, xlim, ylim,
                                   regions, regions_col, regions_alpha, regions_lab) {
   
-  # Texte relatif aux groupes
+  # Text relating to the groups
   if (any(regions_lab)) {
-    # Vérification des zones affichées (non-affichage du texte des zones qui ne sont pas affichées)
+    # Verification of displayed areas (non-display of the text of the areas that are not displayed)
     regions_lab = regions_lab & c(xlim[2] > 1 && xlim[2] > ylim[1],
                                   xlim[1] < 1,
                                   ylim[1] < 2 && xlim[1] < 2 && xlim[2] > 1,
@@ -1316,62 +1316,62 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
                                       label = c("Group I", "Group II", "Group IIIA", "Group IIIB")[regions_lab])
   }
   
-  # Nécessité d'utiliser cette limite au lieu de Inf pour tracer correctement les délimitations
+  # Need to use this limit instead of Inf to correctly plot the boundaries
   xmax = xlim[2] + 1
   
-  # Coloration des régions
+  # Coloring of the regions
   if (regions) {
-    # L'ordre de superposition des polygones n'est pas paramétrable aux frontières
-    # (en bas et à droite, un polygone n'atteint pas la limite renseignée)
+    # The overlapping order of the polygons is not configurable at the edges
+    # (at the bottom and on the right, a polygon does not reach the provided limit)
     chart = chart +
-      # A gauche, groupe II
+      # On the left, group II
       ggplot2::geom_polygon(data = data.frame(x = c(-Inf, -Inf, 1, 1),
                                               y = c(1, Inf, Inf, 1)),
                             ggplot2::aes(fill = "II"),
                             alpha = regions_alpha) +
-      # A droite, groupe I
+      # On the right, group I
       ggplot2::geom_polygon(data = data.frame(x = c(Inf, 1, xmax),
                                               y = c(1, 1, xmax)),
                             ggplot2::aes(fill = "I"),
                             alpha = regions_alpha) +
-      # Au centre, groupe IIIA
+      # In the center, group IIIA
       ggplot2::geom_polygon(data = data.frame(x = c(1, 1, 2),
                                               y = c(1, 2, 2)),
                             ggplot2::aes(fill = "IIIA"),
                             alpha = regions_alpha) +
-      # En haut, groupe IIIB
+      # At the top, group IIIB
       ggplot2::geom_polygon(data = data.frame(x = c(1, 1, Inf, xmax, 2),
                                               y = c(2, Inf, Inf, xmax, 2)),
                             ggplot2::aes(fill = "IIIB"),
                             alpha = regions_alpha) +
-      # Légende associée
+      # Associated legend
       ggplot2::scale_fill_manual(values = stats::setNames(regions_col, c("I", "II", "IIIA", "IIIB")),
                                  name = "MIAT groups",
                                  guide = ggplot2::guide_legend(override.aes = list(color = "black",
                                                                                    linetype = "longdash")))
   }
   
-  # Suite du graphique (points, délimitations, légende, labels axe Y)
+  # Continuation of the graph (points, boundaries, legend, Y axis labels)
   chart = chart + ggplot2::geom_point(ggplot2::aes(color = factor(thq))) +
-    # Mise en évidence de la zone impossible
+    # Highlighting the impossible area
     ggplot2::geom_polygon(data = data.frame(x = c(-Inf, -Inf, Inf ,Inf),
                                             y = c(-Inf, 1, 1, -Inf)),
                           fill = "lightgrey", alpha = regions_alpha) +
-    # Délimitation du groupe IIIA
+    # Delimitation of the group I
     ggplot2::geom_polygon(data = data.frame(x = c(1, 1, 2),
                                             y = c(1, 2, 2)),
                           color = "black", linetype = "longdash", alpha = 0) +
-    # Droite vertical séparant le groupe II du reste
+    # Vertical line separating the group II
     ggplot2::geom_segment(ggplot2::aes(x = 1, y = 2, xend = 1, yend = Inf),
                           color = "black", linetype = "longdash") +
-    # Droite séparant le groupe I du reste
+    # Line separating the group I
     ggplot2::geom_segment(ggplot2::aes(x = 2, y = 2, xend = xmax, yend = xmax),
                           color = "black", linetype = "longdash") +
-    # Titres des axes et légende
+    # Axis titles and legend
     ggplot2::labs(x = "HI",
                   y = bquote(atop("MCR", "MHQ / HI")),
                   col = "Top Hazard Quotients") +
-    # Ajout de la réciproque de MCR aux labels de l'axe Y
+    # Adding the reciprocal of MCR to the Y axis labels
     ggplot2::scale_y_continuous(labels = function(y) {
       return(paste0(y, "\n", format(round(reciprocal_of_mcr(mcr = y) * 100, 1), nsmall = 1), "%"))
     })
@@ -1511,7 +1511,7 @@ thq_pairs = function(values = NULL, references = NULL,
                      hq = NULL, hi = NULL,
                      levels = NULL, threshold = TRUE, alone = FALSE) {
   
-  # Différence si values ou hq est une liste ou une matrice
+  # Different case if values or hq is a list or a matrix
   if (is.list(values) || is.list(hq)) {
     thq = thq_pairs_for_list(values, references, hq, hi, threshold, alone)
     
@@ -1527,35 +1527,35 @@ thq_pairs = function(values = NULL, references = NULL,
   if (is.null(thq)) return(NULL)
   
   
-  # Définition des modalités à considérer dans la table
+  # Definition of the levels to consider in the table
   if (is.null(levels)) levels = sort(unique(c(thq)))
-  # Si prise en compte des éléments seuls, ajout d'une modalité "NULL"
+  # If taking into account elements that are alone, adding a "NULL" level
   if (alone && !is.element("NULL", levels)) levels = c(levels, "NULL")
   
-  # Création d'une table et application de la symétrie
+  # Creation of a table and application of symmetry
   if (is.vector(thq) == 1) {
-    # Si paire de THQ pour un seul ensemble valeurs
+    # If pair of THQ for a single set of values
     freq_table = table(factor(thq[1], levels = levels),
                        factor(thq[2], levels = levels))
     
     freq_table[thq[2], thq[1]] = freq_table[thq[1], thq[2]]
   } else {
-    # Si paires de THQ pour plusieurs ensembles de valeurs
+    # If pairs of THQ for several sets of values
     freq_table = table(factor(thq[1, ], levels = levels),
                        factor(thq[2, ], levels = levels))
-    # Fonctionne car les THQ dans chaque paire ont été triés
     freq_table[lower.tri(freq_table)] = t(freq_table)[lower.tri(freq_table)]
+    # Works because THQ in each pairs are sorted
   }
   
-  # Si prise en compte des éléments seuls et qu'il y en a effectivement
+  # If taking into account elements that are alone and there are some such elements
   if (alone && sum(freq_table["NULL", ]) != 0) {
-    # Déplacement des colonne et ligne NULL en fin de table
+    # Moving NULL column and row at the end of the table
     index_null = which(colnames(freq_table) == "NULL")
     indices_reordered = c(seq_len(nrow(freq_table))[-index_null], index_null)
     freq_table = freq_table[indices_reordered, indices_reordered]
-  } # Sinon, NULL est déjà placé à la fin ou n'existe pas
+  } # Else, NULL is already placed at the end or doesn't exist
   
-  # Retrait des noms de dimension "" (non utiles et génèrent un retour à la ligne en output)
+  # Removal of the dimension names "" (not useful and generate a new line in the output)
   dimnames(freq_table) = unname(dimnames(freq_table))
   return(freq_table)
 }
@@ -1635,24 +1635,24 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
                               hq = NULL, hi = NULL,
                               threshold = TRUE, alone = FALSE) {
   
-  # Vérification que les structures de données sont nommées
+  # Checking that data structures are named
   if (!is.null(values) && !is_named(values)[2])
     stop("If values is a list, it must contain vectors of named numeric values.")
   if (!is.null(hq) && !is_named(hq)[2])
     stop("If hq is a list, it must contain vectors of named numeric values.")
   
-  # Si HI et/ou HQ n'est pas renseigné
+  # If HI and/or HQ is not given
   if (is.null(hi) || is.null(hq)) {
     
-    # Différence si references est une liste ou un vecteur
+    # Different case if references is a list or a vector
     if (is.list(references)) {
       
-      # Vérification que les ensembles de valeurs des listes ont les mêmes longueurs
+      # Checking that the sets of elements in the lists have the same sizes
       if (length(values) != length(references) ||
           any(sapply(values, length) != sapply(references, length)))
         stop("If values and references are two lists, their lengths and the ones of their elements must match.")
       
-      # Calcul des indicateurs manquants
+      # Computation of the indicators needed
       if (is.null(hq)) hq = lapply(seq_along(values),
                                    function(i) hazard_quotient(values[[i]], references[[i]]))
       if (is.null(hi)) hi = sapply(seq_along(values),
@@ -1660,10 +1660,10 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
       
     } else if (is.vector(references)) {
       
-      # Vérification que references contient des données nommées
+      # Checking that references contain named data
       if (!is_named(references)) stop("If values is a list and references is a vector, references must contained named values.")
       
-      # Calcul des indicateurs manquants
+      # Computation of the indicators needed
       if (is.null(hq)) hq = lapply(seq_along(values),
                                    function(i) hazard_quotient(values[[i]], references[names(values[[i]])]))
       if (is.null(hi)) hi = sapply(values,
@@ -1676,24 +1676,24 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
   # Ignore HQ equal to 0
   hq = lapply(hq, function(x) x[x != 0])
   
-  # Sélection des HQ à utiliser, selon les critères sur HI et sur la taille des ensembles de valeurs
+  # Extraction of the HQ to use, according to the criteria on HI and on the length of the sets of values
   hq_to_use = hq[(!threshold | hi > 1) & (alone | sapply(hq, length) != 1)]
   
-  # Si aucun HI n'est supérieur à 1 ou qu'aucun vecteur ne contient plus d'une valeur
+  # If no HI is greater than 1 or no vector contain more than one value
   if (length(hq_to_use) == 0) return(NULL)
   
-  # Quand une seule valeur, paire avec "NULL"
+  # When a single value, pair with "NULL"
   if (alone) {
     index_alone = which(sapply(hq_to_use, length) == 1)
     hq_to_use[index_alone] = lapply(hq_to_use[index_alone], c, "NULL" = 0)
   }
   
-  # Recherche des 2 Top HQ
+  # Searching for the Top 2 HQ
   if (length(hq_to_use) == 1) {
-    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
+    # If a single set of values meets the criteria (HI > 1 and/or length > 1)
     thq = names(top_hazard_quotient(hq = hq_to_use[[1]], k = 2))
   } else {
-    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
+    # If several sets of values meet the criteria (HI > 1 and/or length > 1)
     thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
   }
   
@@ -1773,33 +1773,33 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
                                 hq = NULL, hi = NULL,
                                 threshold = TRUE, alone = FALSE) {
   
-  # Vérification que les structures de données sont nommées
+  # Checking that data structures are named
   if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
   if (!is.null(hq) && !is_named(hq)[1]) stop("Rows of hq must be named.")
   
-  # Calcul des données manquantes
+  # Computation of the indicators needed
   if (is.null(hq)) hq = hazard_quotient(values, references)
   if (is.null(hi)) hi = hazard_index(hq = hq)
   
-  # Sélection des HQ à utiliser, selon les critères sur HI et sur la taille des ensembles de valeurs
+  # Exctraction of the HQ to use, according to the criteria on HI and on length of the sets of values
   hq_to_use = hq[, (!threshold | hi > 1) & (alone | apply(hq, 2, function(x) sum(x != 0) != 1)),
                  drop = FALSE]
   
-  # Si aucun HI n'est supérieur à 1 ou qu'aucun vecteur ne contient plus d'une valeur
+  # If no HI is greater than 2 or no vector contain more than one value
   if (ncol(hq_to_use) == 0) return(NULL)
   
-  # Quand une seule valeur, paire avec "NULL"
+  # When a single value, pair with "NULL"
   if (alone) {
     index_alone = apply(hq_to_use, 2, function(x) sum(x != 0) == 1)
     hq_to_use = rbind(hq_to_use, "NULL" = ifelse(index_alone, 1, 0))
   }
   
-  # Recherche des 2 Top HQ
+  # Searching for the Top 2 HQ
   if (ncol(hq_to_use) == 1) {
-    # Si un seul ensemble de valeurs satisfait les critères (HI > 1 et/ou length > 1)
+    # If a single set of values meets the criteria (HI > 1 and/or length > 1)
     thq = names(top_hazard_quotient(hq = hq_to_use[, 1], k = 2))
   } else {
-    # Si plusieurs ensembles de valeurs satisfont les critères (HI > 1 et/ou length > 1)
+    # If several sets of values meet the criteria (HI > 1 and/or length > 1)
     thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
   }
   
@@ -1926,30 +1926,30 @@ thq_by_group = function(values = NULL, references = NULL,
   if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || (!is.list(thq) && !is_named(thq))))
     stop("thq must be a vector of named numeric values or a list of such vectors.")
   
-  # Si thq et/ou groups n'est pas renseigné
+  # If thq and/or groups is not given
   if (is.null(thq) || is.null(groups)) {
-  
-    # Cas spécifique dans lequel values ou hq est une liste et non une matrice
+    
+    # Specific case in which values or hq is a list and not a matrix
     if (is.list(values) || is.list(hq)) {
       
-      # Vérification que les structures de données sont nommées
+      # Checking that data structures are named
       if (!is.null(values) && !is_named(values)[2])
         stop("If values is a list, it must contain vectors of named numeric values.")
       if (!is.null(hq) && !is_named(hq)[2])
         stop("If hq is a list, it must contain vectors of named numeric values.")
       
-      # Si ni HQ ni THQ n'est renseigné
+      # If neither HQ nor THQ is given
       if (is.null(thq) && is.null(hq)) {
-      
-        # Différence si references est une liste ou un vecteur
+        
+        # Different case if references is a list or a vector
         if (is.list(references)) {
           
-          # Vérification que les structures de données sont nommées
+          # Checking that data structures have the same lengths
           if (length(values) != length(references) ||
               any(sapply(values, length) != sapply(references, length)))
             stop("If values and references are two lists, their lengths and the ones of their elements must match.")
           
-          # Calcul des indicateurs manquants
+          # Computation of the indicators needed
           if (is.null(thq)) thq = sapply(seq_len(length(values)),
                                          function(i) top_hazard_quotient(values[[i]], references[[i]], k = 1))
           if (is.null(groups)) groups = sapply(seq_len(length(values)),
@@ -1957,10 +1957,10 @@ thq_by_group = function(values = NULL, references = NULL,
           
         } else if (is.vector(references)) {
           
-          # Vérification que les structures de données sont nommées
+          # Checking that data structures are named
           if (!is_named(references)) stop("If values is a list and references is a vector. Both must contained named values.")
           
-          # Calcul des indicateurs manquants
+          # Computation of the indicators needed
           if (is.null(thq)) thq = sapply(unname(values),
                                          function(v) top_hazard_quotient(v, references[names(v)], k = 1))
           if (is.null(groups)) groups = sapply(values,
@@ -1968,19 +1968,19 @@ thq_by_group = function(values = NULL, references = NULL,
           
         } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
         
-      } else if (!is.null(hq)) { # Si HQ est renseigné
-        # Calcul des indicateurs manquants
+      } else if (!is.null(hq)) { # If HQ is given
+        # Computation of the indicators needed
         if (is.null(thq)) thq = sapply(unname(hq), function(hqs) top_hazard_quotient(hq = hqs, k = 1))
         if (is.null(groups)) groups = sapply(hq, function(hqs) classify_mixture(hi = hazard_index(hq = hqs),
                                                                                 mhq = maximum_hazard_quotient(hq = hqs)))
       }
-    } else { # Cas où values ou hq est une matrice, ou aucun des deux n'est renseigné
-    
-      # Vérification que les structures de données sont nommées
+    } else { # Case where values or hq is a matrix, or neither of the two is given
+      
+      # Checking that data structures are named
       if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
       if (!is.null(hq) && !is_named(hq)[1]) stop("Rows of hq must be named.")
       
-      # Calcul des données manquantes
+      # Computation of the indicators needed
       if (is.null(thq)) {
         if (is.null(hq)) hq = hazard_quotient(values, references)
         thq = top_hazard_quotient(hq = hq, k = 1)
@@ -1993,12 +1993,12 @@ thq_by_group = function(values = NULL, references = NULL,
     }
   }
   
-  # Soit thq est une list (hq ou values est une liste) soit thq est un vecteur (hq ou values est une matrice)
+  # thq is either a list (hq or values is a list) or a vector (hq or values is a matrix)
   thq_names = if (is.list(thq)) sapply(unname(thq), function(v) names(v)[1]) else names(thq)
   if (!is.null(levels)) thq_names = factor(thq_names, levels = levels)
   freq_table = table(thq_names, factor(groups, levels = c("I", "II", "IIIA", "IIIB")))
   
-  # Retrait du nom de dimension "thq_names" et retour
+  # Removal of the dimension name "thq_names" and return
   dimnames(freq_table) = unname(dimnames(freq_table))
   return(freq_table)
 }
@@ -2039,7 +2039,7 @@ thq_by_group = function(values = NULL, references = NULL,
 #' @keywords internal
 check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE, matrix = TRUE, list = TRUE) {
   
-  # Vérification du nommage de values et references si values peut être une liste, une matrice, un vecteur
+  # Checking the naming of values and references if values can be a list, a matrix, a vector
   if (list && is.list(values)) {
     
     if (is.null(references)){
@@ -2226,15 +2226,15 @@ validate_classes = function(classes) {
 #' @export
 mcr_summary_by_class = function(values, references, classes, all_classes = FALSE) {
   
-  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
+  # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references)
   classes = validate_classes(classes)
   
   
-  # Cas d'une liste de valeurs
+  # Case of a list of values
   if (is.list(values)) {
-    # Pour chaque ensemble de valeurs, calcul des indicateurs MCR pour chaque classe
-    # Différence si references est une liste ou un vecteur
+    # For each set of values, computation of the MCR indicators for each class
+    # Different case if references is a list or a vector
     if (is.list(references)) {
       to_return = lapply(seq_along(values),
                          function(i) mcr_summary_by_class(values[[i]], references[[i]],
@@ -2244,22 +2244,22 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
     return(lapply(values, function(v) mcr_summary_by_class(v, references[names(v)], classes, all_classes)))
   }
   
-  # Cas d'une matrice valeurs
+  # Case of a matrix of values
   if (is.matrix(values)) {
-    # Pour chaque colonne de valeurs, calcul des indicateurs MCR pour chaque classe
+    # For each set of values, computation of the MCR indicators for each class
     return(apply(values, 2, function(v) mcr_summary_by_class(v, references, classes, all_classes)))
   }
   
-  # Cas d'un unique vecteur de valeurs
+  # Case of a single vector of values
   if (is.vector(values)) {
-    # Pour chaque classe, calcul des indicateurs MCR des valeurs et références correspondantes
+    # For each class, computation of the MCR indicators of the corresponding values and references
     summary = apply(classes, 2, function(column) {
-      # Extraction des valeurs correpondant à la classe
+      # Extraction of the values corresponding to the class
       indices = match(rownames(classes)[column], names(values))
       v = values[indices]
       r = references[indices]
       
-      # Retrait des NA (lorsque des noms associés à la classe en cours ne font pas partie des valeurs)
+      # Removal of NA (when names associated with the current class are not part of the values)
       v = v[!is.na(v)]
       if (length(v) == 0) return(list(n = 0, HI = NA_real_, MCR = NA_real_, Reciprocal = NA_real_,
                                       Group = NA_character_, THQ = NA_character_,
@@ -2268,9 +2268,9 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
     })
     
     if (!all_classes) {
-      # Retrait des classes pour lesquelles il n'y a aucune valeur
+      # Removal of classes for which there is no value
       summary = summary[sapply(summary, "[[", "n") != 0]
-      # NULL si les valeurs ne sont associées à aucune classe
+      # NULL if the values are not associated with any class
       if (length(summary) == 0) return(NULL)
     }
     
@@ -2423,26 +2423,26 @@ mcr_chart_by_class = function(values, references, classes,
                               regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
                               regions_lab = !regions, regression = FALSE, log_transform = TRUE, plot = FALSE) {
   
-  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
+  # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references, vector = FALSE)
   classes = validate_classes(classes)
   
-  # Booléens sur l'ensemble des noms des classes pour expliciter les warnings des appels à mcr_chart
+  # Booleans on all the class names to make explicit the warnings of the calls to mcr_chart
   class_warnings = stats::setNames(logical(ncol(classes)), colnames(classes))
   
   
-  # Pour chaque classe, un graphique des indicateurs MCR des valeurs et références correspondantes
+  # For each class, one graph of the MCR indicators of the corresponding values and references
   charts = apply(classes, 2, function(column) {
     
-    # Extraction des valeurs et références correpondant à la classe
+    # Extraction of the values and references corresponding to the class
     class = colnames(classes)[parent.frame()$i[]]
     new_vr = subset_from_class(values, references, classes, class)
     
-    # NA si la classe n'est pas représentée (cas différent si values est une liste ou une matrice)
+    # NA if the class is not represented (different case if values is a list or a matrix)
     if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
         (is.matrix(values) && nrow(new_vr[["values"]]) == 0)) return(NA)
     
-    # Catch warning sans interrompre l'exécution de l'instruction
+    # Catch warning without interrupting the execution of the instruction
     withCallingHandlers(return(mcr_chart(new_vr[["values"]], new_vr[["references"]],
                                          thq_col = thq_col, regions = regions,
                                          regions_col = regions_col, regions_alpha = regions_alpha,
@@ -2452,7 +2452,7 @@ mcr_chart_by_class = function(values, references, classes,
     
   })
   
-  # Affichage d'un message en fonction des warnings rencontrés
+  # Display of a message according to the warnings encountered
   if (any(class_warnings)) {
     if (sum(class_warnings) == 1) message("One warning message in chart plotting for class \"",
                                           names(class_warnings)[class_warnings], "\":")
@@ -2583,28 +2583,28 @@ mcr_chart_by_class = function(values, references, classes,
 thq_pairs_by_class = function(values, references, classes,
                               levels = NULL, threshold = TRUE, alone = FALSE) {
   
-  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
+  # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references, vector = FALSE)
   classes = validate_classes(classes)
   
   
-  # Pour chaque classe, une table concernant les valeurs et références correspondantes
+  # For each class, one table concerning the corresponding values and references
   tables = apply(classes, 2, function(column) {
     
-    # Extraction des valeurs et références correpondant à la classe
+    # Extraction of the values and references corresponding to the class
     new_vr = subset_from_class(values, references, classes, colnames(classes)[parent.frame()$i[]])
     
-    # NA si la classe n'est pas représentée (cas différent si values est une liste ou une matrice)
+    # NA if the class is not represented (different case if values is a list or a matrix)
     if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
         (is.matrix(values) && nrow(new_vr[["values"]]) == 0)) return(NA)
     
-    # Retour d'une liste pour éviter que les tables ne fusionnent en une unique matrice
-    # (si levels est utilisé et qu'il n'y a aucun NA)
+    # Return of a list to prevent tables from merging into a single matrix
+    # (if levels is used and there is no NA)
     return(list(thq_pairs(new_vr[["values"]], new_vr[["references"]],
                           levels = levels, threshold = threshold, alone = alone)))
   })
   
-  # Le délistage n'est pas toujours à effectuer
+  # Unlisting is not always to be done
   if ("list" %in% sapply(tables, class)) tables = lapply(tables, "[[", 1)
   return(tables[!is.na(tables)])
 }
@@ -2722,27 +2722,27 @@ thq_pairs_by_class = function(values, references, classes,
 thq_by_group_by_class = function(values, references, classes,
                                  levels = NULL) {
   
-  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
+  # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references, vector = FALSE)
   classes = validate_classes(classes)
   
   
-  # Pour chaque classe, une table concernant les valeurs et références correspondantes
+  # For each class, one table concerning the corresponding values and references
   tables = apply(classes, 2, function(column) {
     
-    # Extraction des valeurs et références correpondant à la classe
+    # Extraction of the values and references corresopnding to the class
     new_vr = subset_from_class(values, references, classes, colnames(classes)[parent.frame()$i[]])
     
-    # NA si la classe n'est pas représentée (cas différent si values est une liste ou une matrice)
+    # NA if the class is not represented (different case if values is a list or a matrix)
     if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
         (is.matrix(values) && nrow(new_vr[["values"]]) == 0)) return(NA)
     
-    # Retour d'une liste pour éviter que les tables ne fusionnent en une unique matrice
-    # (si levels est utilisé et qu'il n'y a aucun NA)
+    # Return of a list to prevent tables from merging into a single matrix
+    # (if levels is used and there is no NA)
     return(list(thq_by_group(new_vr[["values"]], new_vr[["references"]], levels = levels)))
   })
   
-  # Le délistage n'est pas toujours à effectuer
+  # Unlisting is not always to be done
   if ("list" %in% sapply(tables, class)) tables = lapply(tables, "[[", 1)
   return(tables[!is.na(tables)])
 }
@@ -2834,13 +2834,13 @@ thq_by_group_by_class = function(values, references, classes,
 #' @export
 mcr_approach_by_class = function(values, references, classes, FUN, ...) {
   
-  # Vérification du choix de la fonction (conversion en chaîne de caractères)
+  # Verification of the choice of the function (conversion to a character string)
   functions = c("mcr_summary", "mcr_chart", "thq_pairs", "thq_by_group")
   if (class(FUN) == "function") FUN = deparse(substitute(FUN))
   if (!(FUN %in% functions))
     stop("FUN must refer to one of the following functions: ", paste(functions, collapse = ", "), ".")
   
-  # Appel à la fonction concernée
+  # Call to the relevant function
   return(do.call(paste0(FUN, "_by_class"),
                  list(values, references, classes, ...)))
 }
@@ -2932,28 +2932,28 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 #' @export
 subset_from_class = function(values, references = NULL, classes, class_name) {
   
-  # Vérification du nommage des données et utilisation de classes sous forme de matrice binaire
+  # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references, vector = FALSE)
   classes = validate_classes(classes)
   
-  # Noms des éléments qui correspondent à la classe
+  # Names of the elements corresponding to the class
   items_in_class = rownames(classes)[classes[, class_name]]
   
   
-  # Cas d'une liste de valeurs
+  # Case of a list of values
   if (is.list(values)) {
     
-    # Sous-ensembles de references correspondant aux éléments de la classe
+    # Subsets of references corresponding to the elements of the class
     if (!is.null(references)) {
       
       if (is.list(references)) {
         references_class = list()
         
-        # Ajout à la nouvelle liste des références de chaque élément faisant partie de la classe
+        # Adding to the new list of references of each element that is part of the class
         for (i in seq_along(values)) {
           indices = names(values[[i]]) %in% items_in_class
           
-          # Ne considère pas les ensembles ne contenant aucun élément de la classe
+          # Does not consider sets containing no element of the class
           if (sum(indices) != 0) {
             name_element = if (is.null(names(values))) length(references_class) + 1 else names(values)[i]
             references_class[[name_element]] = references[[i]][indices]
@@ -2961,14 +2961,14 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
         }
         names(references_class) = names(references)[which(names(values) %in% names(references_class))]
       } else {
-        # Si references est un unique vecteur
+        # If references is a single vector
         references_class = references[items_in_class]
-        # Retrait des NA (lorsque des noms associés à la classe ne font pas partie des références)
+        # Removal of NA values (when names associated with the class are not part of the references)
         references_class = references_class[!is.na(references_class)]
       }
     }
     
-    # Sous-ensembles de values correspondant aux éléments de la classe
+    # Subsets of values corresponding to the elements of the class
     values_items = turn_list_into_logical_matrix(lapply(values, names))
     values_items_class = values_items[, items_in_class[items_in_class %in% colnames(values_items)],
                                       drop = FALSE]
@@ -2980,21 +2980,21 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
     })
     names(values_class) = names(values)
     
-    # Retrait des ensembles vides, ne contenant aucun élément de la classe
+    # Removal of empty sets, containing no element of the class
     values_class = values_class[lengths(values_class) != 0]
     if (length(values_class) == 0) values_class = stats::setNames(list(), character(0))
   }
-  # Cas d'une matrice valeurs
+  # Case of a matrix of values
   else if (is.matrix(values)) {
     
-    # Extraction des valeurs correpondant à la classe
-    # et retrait des NA (lorsque des noms associés à la classe ne font pas partie des valeurs)
+    # Extraction of the values corresponding to the class
+    # and removal of the NA values (when names assocaited with the class are not part of the values)
     indices = match(items_in_class, rownames(values))
     values_class = values[indices[!is.na(indices)], ]
     
     if (!is.null(references)) references_class = references[indices[!is.na(indices)]]
     
-    # Reconversion en matrice s'il n'y avait qu'une seule ligne
+    # Convert back to matrix if there was only one row
     if (is.vector(values_class)) {
       values_class = t(values_class)
       rownames(values_class) = rownames(values)[indices[!is.na(indices)]]
@@ -3067,15 +3067,14 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
 #' @export
 reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) {
   
-  # Vérification que la structure de données de values est nommée
+  # Checking that the values data structure is named
   if (is.list(values)) {
-    # (Décomposition du if en 2 à cause du suivant : une liste est aussi un vecteur)
     if (!is_named(values)[2]) stop("If values is a list, it must contain vectors of named numeric values.")
   }
   else if (is.vector(values) && !is_named(values)) stop("If values is a vector, it must have named numeric values.")
   else if (is.matrix(values) && !is_named(values)[1]) stop("If values is a matrix, its rows must be named.")
   
-  # Vérifications relatives aux références
+  # Verifications relating to the references
   if (is.list(references)) {
     if (!is.list(values)) stop("If references is a list, values must also be a list.")
     
@@ -3085,9 +3084,9 @@ reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) 
   }
   
   
-  # Nouveaux ensembles de valeurs ; cas différent en fonction de list/vector/matrix
+  # New sets of values; different case depending on list/vector/matrix
   if (is.list(values)) {
-    # Récursivité pour chaque élément de la liste (chaque ensemble de valeurs)
+    # Recursion for each element of the list (each set of values)
     new_values = lapply(values, function(v) {
       to_return = stats::setNames(reduce_sets(v, FUN = FUN, ignore_zero = ignore_zero, ...),
                                   unique(names(v)))
@@ -3096,7 +3095,7 @@ reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) 
     })
   }
   else if (is.vector(values)) {
-    # Applique la fonction à chaque sous-ensemble du vecteur correspondant à chaque nom
+    # Apply the function to each subset of vector corresponding to each name
     new_values = sapply(unique(names(values)), function(name) {
       vn = values[which(names(values) == name)]
       if (ignore_zero) {
@@ -3107,7 +3106,7 @@ reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) 
     })
   }
   else if (is.matrix(values)) {
-    # Définition d'un wrapper à la fonction donnée pour ignorer les 0
+    # Setting a wrapper to the given function to ignore zeros
     if (ignore_zero) {
       FUN_to_apply = function(x, ...) {
         x = x[x != 0]
@@ -3116,26 +3115,26 @@ reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) 
       }
     } else FUN_to_apply = FUN
     
-    # Pour chaque sous-ensemble de la matrice correspondant à chaque nom
+    # For each subset of the matrix corresponding to each name
     new_values = t(sapply(unique(rownames(values)), function(name) {
-      # Application de la fonction à chaque colonne
+      # Application of the function to each column
       rows = which(rownames(values) == name)
       if (length(rows) == 1) return(sapply(values[rows, ], FUN_to_apply, ...))
       return(apply(values[rows, ], 2, FUN_to_apply, ...))
     }))
   }
   
-  # Retour si references non renseigné
+  # Return if references is not given
   if (is.null(references)) return(new_values)
   
-  # Nouvelles références
+  # New references
   if (!is.list(references)) new_references = references
   else {
-    # Pour chaque ensemble de valeurs
+    # For each set of values
     new_references = lapply(values, function(v) {
-      # Recherche des indices des premiers éléments associés à chaque nom
+      # Finding the indices of the first elements associated with each name
       indices = sapply(unique(names(v)), function(name) which(names(v) == name)[1])
-      # Conservation des références associées à ces indices uniquement
+      # Keep the references associated with these indices only
       return(references[[parent.frame()$i[]]][indices])
     })
     names(new_references) = names(references)
