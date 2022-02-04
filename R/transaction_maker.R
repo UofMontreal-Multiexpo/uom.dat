@@ -18,7 +18,7 @@ NULL
 #'  `colnames(data)`.
 #' @param unique_values logical or character.
 #'  * If `TRUE`, simplification of the values associated with the variables defined in `additional`
-#'    in order to remove duplicates.
+#'    in order to remove duplicates within each resulting transaction.
 #'  * If `FALSE`, keep the duplicates and the correspondence between the values of these variables for
 #'    the same row in `data` (as many values as there are rows grouped).
 #'  * Otherwise, vector of variable names included in `additional` for which the removal of duplicates
@@ -27,6 +27,9 @@ NULL
 #'  Duplicates in the variables specified in `by` are necessarily removed in all cases.
 #' @param item_key,year_key If the output have to be a `TransactionSet`, names of the variables of
 #'  `data` containing the items of the transactions and the year in which the transactions were made.
+#'  Must be included in one of the arguments `additional` or `by`.
+#'  
+#'  `year_key` is optional.
 #' @return List of transactions identified or S4 object of class `TransactionSet` containing this list
 #'  (depending on whether `item_key` is `NA` or not).
 #'  
@@ -133,7 +136,7 @@ make_transactions = function(data, by, additional = NULL, unique_values = TRUE,
 #'  by `keys`): vector included in `colnames(measures)`.
 #' @param unique_values logical or character.
 #'  * If `TRUE`, simplification of the values associated with the variables defined in
-#'    `additional` in order to remove duplicates.
+#'    `additional` in order to remove duplicates within each resulting transaction.
 #'  * If `FALSE`, keep the duplicates and the correspondence between the values of these variables
 #'    for the same sample (as many values as there are samples).
 #'  * Otherwise, vector of variable names included in `colnames(measures)` for which the removal of

@@ -53,7 +53,7 @@ by \code{keys}): vector included in \code{colnames(measures)}.}
 \item{unique_values}{logical or character.
 \itemize{
 \item If \code{TRUE}, simplification of the values associated with the variables defined in
-\code{additional} in order to remove duplicates.
+\code{additional} in order to remove duplicates within each resulting transaction.
 \item If \code{FALSE}, keep the duplicates and the correspondence between the values of these variables
 for the same sample (as many values as there are samples).
 \item Otherwise, vector of variable names included in \code{colnames(measures)} for which the removal of

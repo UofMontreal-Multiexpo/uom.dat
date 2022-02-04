@@ -25,7 +25,7 @@ Each combination of values of these variables generates one transaction.}
 \item{unique_values}{logical or character.
 \itemize{
 \item If \code{TRUE}, simplification of the values associated with the variables defined in \code{additional}
-in order to remove duplicates.
+in order to remove duplicates within each resulting transaction.
 \item If \code{FALSE}, keep the duplicates and the correspondence between the values of these variables for
 the same row in \code{data} (as many values as there are rows grouped).
 \item Otherwise, vector of variable names included in \code{additional} for which the removal of duplicates
@@ -35,7 +35,10 @@ must be performed.
 Duplicates in the variables specified in \code{by} are necessarily removed in all cases.}
 
 \item{item_key, year_key}{If the output have to be a \code{TransactionSet}, names of the variables of
-\code{data} containing the items of the transactions and the year in which the transactions were made.}
+\code{data} containing the items of the transactions and the year in which the transactions were made.
+Must be included in one of the arguments \code{additional} or \code{by}.
+
+\code{year_key} is optional.}
 }
 \value{
 List of transactions identified or S4 object of class \code{TransactionSet} containing this list
