@@ -205,6 +205,8 @@ setValidity(Class = "TransactionAnalyzer",
               
               # Validation du système de codage des items
               if (any(grepl("/|,", object@items))) return("Item identification codes must not contain the characters \"/\" and \",\".")
+              if (length(setdiff(get_all_items(object@transactions), object@items)) != 0)
+                return("Given item identification codes must contain all those existing in the given transactions.")
               
               # Validation du set de transactions
               if (length(object@transactions) == 0) return("Transactions must contain itemsets.")
