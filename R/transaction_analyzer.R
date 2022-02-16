@@ -204,7 +204,7 @@ setValidity(Class = "TransactionAnalyzer",
             method = function(object) {
               
               # Validation du système de codage des items
-              if (any(grepl("/", object@items))) return("Item codes must not contain the character \"/\".")
+              if (any(grepl("/|,", object@items))) return("Item identification codes must not contain the characters \"/\" and \",\".")
               
               # Validation du set de transactions
               if (length(object@transactions) == 0) return("Transactions must contain itemsets.")
@@ -360,7 +360,8 @@ setMethod(f = "initialize",
 #'  representing items and temporal data. It can contain any additional information but such data will
 #'  be ignored.
 #'  
-#'  Items must be character or numeric values and must not contain the character \code{"/"}.
+#'  Items must be character or numeric values and must not contain the characters \code{"/"} and
+#'  \code{","}.
 #'  Temporal data must correspond to the years in which the transactions were made and must be numeric
 #'  values.
 #' @param items Data frame associating a name (column \code{name}) and possibly one or more categories

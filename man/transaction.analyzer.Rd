@@ -22,7 +22,8 @@ items corresponding to each one. Each transaction is itself a list containing at
 representing items and temporal data. It can contain any additional information but such data will
 be ignored.
 
-Items must be character or numeric values and must not contain the character \code{"/"}.
+Items must be character or numeric values and must not contain the characters \code{"/"} and
+\code{","}.
 Temporal data must correspond to the years in which the transactions were made and must be numeric
 values.}
 
