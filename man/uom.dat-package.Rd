@@ -17,6 +17,8 @@ For an organized list of datasets, functions, classes and methods, use
 
 For an alphabetical list and for the package description, use \code{library(help = "uom.dat")}
 
+For package news information, use \code{news(package = "uom.dat")}
+
 For information on how to cite the package, use \code{citation("uom.dat")}
 }
 \author{
