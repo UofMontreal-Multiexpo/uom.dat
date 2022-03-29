@@ -2804,13 +2804,13 @@ test_that("reduce_sets reduces sets of references", {
                 s3 = c(b = 3, b = 7, b = 1, c = 1, c = 4))
   references_vector = c(a = 3, b = 1, c = 2)
   
-  # 'references' as a vector
+  # 'values' as a list and 'references' as a vector
   expect_identical(reduce_sets(values = values,
                                references = references_vector,
                                FUN = max)$references,
                    references_vector)
   
-  # 'references' as a list
+  # 'values' as a list and 'references' as a list
   expect_equal(reduce_sets(values = values,
                            references = list(c(1, 3, 3),
                                              c(3),
@@ -2819,6 +2819,22 @@ test_that("reduce_sets reduces sets of references", {
                list(c(1, 3),
                     c(3),
                     c(1, 2)))
+  
+  # 'values' as a vector
+  expect_equal(reduce_sets(values = c(b = 2, a = 2, b = 3, a = 1, a = 0),
+                           references = c(2, 1, 2, 1, 1),
+                           FUN = max)$references,
+               c(2, 1))
+  
+  # 'values' as a matrix
+  expect_equal(
+    reduce_sets(
+      values = matrix(c(2,2,1,0, 1,1,3,2, 0,1,1,0),
+                      nrow = 3, byrow = TRUE, dimnames = list(NULL, c("a","b","a","c"))),
+      references = c(1, 2, 1, 3),
+      FUN = max)$references,
+    c(1, 2, 3)
+  )
 })
 
 

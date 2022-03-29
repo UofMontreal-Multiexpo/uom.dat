@@ -10,8 +10,8 @@ reduce_sets(values, references = NULL, FUN, ignore_zero = TRUE, ...)
 \item{values}{Numeric named vector or matrix, or list of numeric named vectors.
 Sets of values to reduce.}
 
-\item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
-\code{values}.}
+\item{references}{Optional. Numeric vector or list of numeric vectors. Reference values associated
+with the \code{values}.}
 
 \item{FUN}{Function to apply on each subset of values corresponding to each different name to reduce
 it to a single value.}
@@ -36,15 +36,20 @@ of them, for each different name found in the set of values. This results in set
 only one value per different name found in the original sets, instead of several ones.
 }
 \details{
-If \code{values} and \code{references} are two lists, \code{references} must be a list of vectors having the same
-lengths as those present in \code{values} so that \code{values} and \code{references} can be matched.
+If \code{values} is a vector, the reference values are directly associated with these values.
 
-If \code{references} is not a list, it is not processed and is returned as is. Otherwise, it is assumed
-that the same reference values are given for same value names in one set of values of the argument
-\code{values}.
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each
+row. Therefore, there must be one reference value for each column of the matrix.
+
+If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
+if \code{references} is a vector, it is not processed and is returned as is. Otherwise \code{references} must
+be a list of vectors having the same lengths as those present in \code{values} so that \code{values} and
+\code{references} can be matched.
+
+It is assumed that the same reference values are given for same value names of the argument \code{values}.
 
 The components of each resulting set of values are ordered in the order in which the names are found
-in the original set.
+in the original set. This is also the case for the references.
 }
 \examples{
 ## Reduce a set of values given as a vector

@@ -3058,20 +3058,25 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
 #'  only one value per different name found in the original sets, instead of several ones.
 #' 
 #' @details
-#' If `values` and `references` are two lists, `references` must be a list of vectors having the same
-#'  lengths as those present in `values` so that `values` and `references` can be matched.
+#' If `values` is a vector, the reference values are directly associated with these values.
 #' 
-#' If `references` is not a list, it is not processed and is returned as is. Otherwise, it is assumed
-#'  that the same reference values are given for same value names in one set of values of the argument
-#'  `values`.
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each
+#'  row. Therefore, there must be one reference value for each column of the matrix.
+#'  
+#' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
+#'  if `references` is a vector, it is not processed and is returned as is. Otherwise `references` must
+#'  be a list of vectors having the same lengths as those present in `values` so that `values` and
+#'  `references` can be matched.
+#' 
+#' It is assumed that the same reference values are given for same value names of the argument `values`.
 #' 
 #' The components of each resulting set of values are ordered in the order in which the names are found
-#'  in the original set.
+#'  in the original set. This is also the case for the references.
 #'  
 #' @param values Numeric named vector or matrix, or list of numeric named vectors.
 #'  Sets of values to reduce.
-#' @param references Numeric vector or list of numeric vectors. Reference values associated with the
-#'  `values`.
+#' @param references Optional. Numeric vector or list of numeric vectors. Reference values associated
+#'  with the `values`.
 #' @param FUN Function to apply on each subset of values corresponding to each different name to reduce
 #'  it to a single value.
 #' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
@@ -3176,8 +3181,7 @@ reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) 
   if (is.null(references)) return(new_values)
   
   # New references
-  if (!is.list(references)) new_references = references
-  else {
+  if (is.list(references)) { # values and references are lists
     # For each set of values
     new_references = lapply(values, function(v) {
       # Finding the indices of the first elements associated with each name
@@ -3187,6 +3191,16 @@ reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) 
     })
     names(new_references) = names(references)
   }
+  else if (is.matrix(values)) { # values is matrix
+    new_references = references[match(colnames(new_values), colnames(values))]
+  }
+  else if (!is.list(values)) { # values is vector
+    new_references = references[match(names(new_values), names(values))]
+  }
+  else if (is.list(values)) { # values is list and references is vector
+    new_references = references
+  }
+  
   return(list(values = new_values, references = new_references))
 }
 
