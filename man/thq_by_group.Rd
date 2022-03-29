@@ -50,7 +50,7 @@ if \code{references} is a vector, there must be one reference for each name pres
 Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
 so that \code{values} and \code{references} can be matched.
 
-Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
+Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indices
 before searching for the maximum hazard quotients, computing the maximum cumulative ratios, performing
 the classification then build the table. Thus, call the function with the arguments \code{hq} and \code{groups}
 is faster and call it with the arguments \code{thq} and \code{groups} is even faster (if they are already

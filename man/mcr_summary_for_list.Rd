@@ -16,7 +16,7 @@ the \code{values}. See 'Details' to know the way it is associated with \code{val
 \value{
 Data frame containing the main indicators of the MCR approach computed on the given \code{values}:
 \itemize{
-\item \strong{n}: number of values (different from 0).
+\item \strong{n}: number of values different from 0.
 \item \strong{HI}: Hazard Index.
 \item \strong{MCR}: Maximum Cumulative Ratio.
 \item \strong{Reciprocal}: Reciprocal of the maximum cumulative ratio.

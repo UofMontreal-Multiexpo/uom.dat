@@ -29,7 +29,7 @@ is part of a specific class.}
 \item{levels}{Levels to consider in the output tables. If \code{NULL}, only use of those that appear in the
 pairs.}
 
-\item{threshold}{If \code{TRUE}, only values associated with hazard indexes greater than 1 are considered.}
+\item{threshold}{If \code{TRUE}, only values associated with hazard indices greater than 1 are considered.}
 
 \item{alone}{If \code{TRUE}, take into account single top hazard quotients (i.e. sets of values of length
 1). If so, a level named \code{"NULL"} is added for such top hazard quotients.}

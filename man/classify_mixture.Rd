@@ -13,10 +13,10 @@ classify_mixture(hi, mhq, mcr)
 
 \item{references}{Numeric vector. Reference values associated with the \code{values}.}
 
-\item{hi}{Numeric value or vector. \strong{H}azard \strong{i}ndex(es) of the mixture(s) to classify.}
+\item{hi}{Numeric value or vector. \strong{H}azard \strong{i}ndex or indices of the mixture(s) to classify.}
 
 \item{mhq}{Numeric value or vector. \strong{M}aximum \strong{h}azard \strong{q}uotient(s) associated with the hazard
-index(es) \code{hi}.}
+index or indices \code{hi}.}
 
 \item{mcr}{Numeric value or vector. \strong{M}aximum \strong{c}umulative \strong{r}atio(s) associated with \code{hi} and
 \code{mhq}.}
@@ -37,7 +37,7 @@ following situations:
 }
 }
 \details{
-Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
+Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indices
 before searching for the maximum hazard quotients, computing the maximum cumulative ratios then
 classifying the mixtures. Thus, call the function with the arguments \code{hi} and \code{mhq} is faster and
 call it with the argument \code{mcr} is even faster (if they are already computed).

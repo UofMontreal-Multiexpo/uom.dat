@@ -98,8 +98,10 @@ hazard_quotient = function(values, references) {
 #' hazard_index(hq)
 #' @param values Numeric vector or matrix. Values for which the hazard index is to be computed.
 #' @param references Numeric vector. Reference values associated with the `values`.
-#' @param hq Numeric vector or matrix. **H**azard **q**uotients on which to compute the hazard index(es).
-#' @return Numeric value or vector (according to `values` or `hq`) of the computed hazard index(es).
+#' @param hq Numeric vector or matrix. **H**azard **q**uotients on which to compute the hazard index
+#'  or indices.
+#' @return Numeric value or vector (according to `values` or `hq`) of the computed hazard index or
+#'  indices.
 #' 
 #' @author Gauthier Magnin
 #' @references Price PS, Han X (2011).
@@ -243,10 +245,10 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
 #' maximum_cumulative_ratio(hi, mhq)
 #' @param values Numeric vector or matrix. Values for which the maximum cumulative ratio is to be computed.
 #' @param references Numeric vector. Reference values associated with the `values`.
-#' @param hi Numeric value or vector. **H**azard **i**ndex(es) on which to compute the maximum cumulative
-#'  ratio(s).
+#' @param hi Numeric value or vector. **H**azard **i**ndex or indices on which to compute the maximum
+#'  cumulative ratio(s).
 #' @param mhq Numeric value or vector. **M**aximum **h**azard **q**uotient(s) associated with the hazard
-#'  index(es) `hi`.
+#'  index or indices `hi`.
 #' @return Numeric value or vector (according to `values` or `hi` and `mhq`) of the maximum cumulative
 #'  ratio(s).
 #' 
@@ -412,10 +414,10 @@ missed_toxicity = function(values = NULL, references = NULL,
 #' @param values Numeric vector or matrix. Values for which the reciprocal of maximum cumulative ratio
 #'  is to be computed.
 #' @param references Numeric vector. Reference values associated with the `values`.
-#' @param hi Numeric value or vector. **H**azard **i**ndex(es) for which to compute the reciprocal of
-#'  maximum cumulative ratio(s).
+#' @param hi Numeric value or vector. **H**azard **i**ndex or indices for which to compute the reciprocal
+#'  of maximum cumulative ratio(s).
 #' @param mhq Numeric value or vector. **M**aximum **h**azard **q**uotient(s) associated with the hazard
-#'  index(es) `hi`.
+#'  index or indices `hi`.
 #' @param mcr Numeric value or vector. **M**aximum **c**umulative **r**atio(s) on which to compute the
 #'  reciprocal.
 #' @return Numeric value or vector (according to `values`, to `hi` and `mhq` or to `mcr`) of the
@@ -486,10 +488,10 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' top_hazard_quotient(values, references, k = NULL)
 #' top_hazard_quotient(hq, k = NULL)
 #' @param values Numeric named vector or matrix. Values for which the top hazard quotients are to be
-#'  identify.
+#'  identified.
 #' @param references Numeric vector. Reference values associated with the `values`.
 #' @param hq Numeric named vector or matrix. **H**azard **q**uotients whose highest values are to be
-#'  identify.
+#'  identified.
 #' @param k Number of hazard quotients to highlight. Default is the integer part of the maximum cumulative
 #'  ratio computed from `values` and `references` or from `hq`.
 #' @return Vector or list of vectors (according to `values` or `hq`) of the `k` highest hazard quotients.
@@ -553,7 +555,7 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 #'  * Group IIIB: the potential risk is driven by multiple components.
 #' 
 #' @details
-#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indices
 #'  before searching for the maximum hazard quotients, computing the maximum cumulative ratios then
 #'  classifying the mixtures. Thus, call the function with the arguments `hi` and `mhq` is faster and
 #'  call it with the argument `mcr` is even faster (if they are already computed).
@@ -597,9 +599,9 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 #' classify_mixture(hi, mhq, mcr)
 #' @param values Numeric vector or matrix. Values of the mixture(s) to classify.
 #' @param references Numeric vector. Reference values associated with the `values`.
-#' @param hi Numeric value or vector. **H**azard **i**ndex(es) of the mixture(s) to classify.
+#' @param hi Numeric value or vector. **H**azard **i**ndex or indices of the mixture(s) to classify.
 #' @param mhq Numeric value or vector. **M**aximum **h**azard **q**uotient(s) associated with the hazard
-#'  index(es) `hi`.
+#'  index or indices `hi`.
 #' @param mcr Numeric value or vector. **M**aximum **c**umulative **r**atio(s) associated with `hi` and
 #'  `mhq`.
 #' @return Character value or vector (according to `values` or `hi` and `mhq`) of the groups assigned to
@@ -707,7 +709,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  `values`. See 'Details' to know the way it is associated with `values`.
 #' @return List if `values` is a vector; data frame otherwise.
 #'  Contains the main indicators of the MCR approach computed on the given `values`:
-#'  * **n**: number of values (different from 0).
+#'  * **n**: number of values different from 0.
 #'  * **HI**: Hazard Index.
 #'  * **MCR**: Maximum Cumulative Ratio.
 #'  * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
@@ -843,7 +845,7 @@ mcr_summary = function(values, references) {
 #' @param references Numeric named vector or list of numeric vectors. Reference values associated with
 #'  the `values`. See 'Details' to know the way it is associated with `values`.
 #' @return Data frame containing the main indicators of the MCR approach computed on the given `values`:
-#'  * **n**: number of values (different from 0).
+#'  * **n**: number of values different from 0.
 #'  * **HI**: Hazard Index.
 #'  * **MCR**: Maximum Cumulative Ratio.
 #'  * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
@@ -922,7 +924,7 @@ mcr_summary_for_list = function(values, references) {
 #'  Points that are on the boundary between the regions of the groups IIIA and IIIB belong to the
 #'  group IIIB.
 #' 
-#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indices
 #'  before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios
 #'  then plot the chart. Thus, call the function with the arguments `hi`, `mcr` and `thq` is faster
 #'  (if they are already computed).
@@ -986,10 +988,10 @@ mcr_summary_for_list = function(values, references) {
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
 #' @param hi Numeric vector. **H**azard **i**ndexes for which the chart is to be plotted.
-#' @param mcr Numeric vector. **M**aximum **c**umulative **r**atios associated with the hazard indexes
+#' @param mcr Numeric vector. **M**aximum **c**umulative **r**atios associated with the hazard indices
 #'  `hi`.
 #' @param thq Numeric named vector or list of numeric named vectors. **T**op **h**azard **q**uotients
-#'  associated with the hazard indexes `hi`. If list, only the first named value of each element of the
+#'  associated with the hazard indices `hi`. If list, only the first named value of each element of the
 #'  list is considered.
 #' @param thq_col Character named vector. Colors to assign to the **t**op **h**azard **q**uotients
 #'  elements.
@@ -1436,7 +1438,7 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' 
 #' Values and hazard quotients equal to 0 are ignored.
 #' 
-#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indices
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
 #' 
@@ -1476,12 +1478,12 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
 #'  pairs.
-#' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
+#' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indices greater
 #'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added as combination with such top hazard quotients.
 #' @return
-#' `NULL` if (1) `alone = FALSE` and no set of `values` (or `hq`) has more than one element different
+#' `NULL` if (1) `alone = FALSE` and no set of `values` (or of `hq`) has more than one element different
 #'   from 0
 #'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
 #'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
@@ -1597,7 +1599,7 @@ thq_pairs = function(values = NULL, references = NULL,
 #' Top Hazard Quotient pairs, in list
 #' 
 #' Identify the top two hazard quotients pairs for which the associated hazard
-#'  indexes are greater than 1.
+#'  indices are greater than 1.
 #' 
 #' @details
 #' The reference values can be a vector of named values or a list.
@@ -1607,7 +1609,7 @@ thq_pairs = function(values = NULL, references = NULL,
 #' 
 #' Values and hazard quotients equal to 0 are ignored.
 #'  
-#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indices
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
 #' 
@@ -1645,12 +1647,12 @@ thq_pairs = function(values = NULL, references = NULL,
 #' @param hq List of numeric named vectors. **H**azard **q**uotients for which the top two pairs are
 #'  to be identified.
 #' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
-#' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
+#' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indices greater
 #'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added as combination with such top hazard quotients.
 #' @return
-#' `NULL` if (1) `alone = FALSE` and no set of `values` (or `hq`) has more than one element different
+#' `NULL` if (1) `alone = FALSE` and no set of `values` (or of `hq`) has more than one element different
 #'   from 0
 #'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
 #'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
@@ -1737,7 +1739,7 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' Top Hazard Quotient pairs, in matrix
 #' 
 #' Identify the top two hazard quotients pairs for which the associated hazard
-#'  indexes are greater than 1.
+#'  indices are greater than 1.
 #' 
 #' @details
 #' The reference values are applied once on each set of values, i.e. on each row.
@@ -1745,7 +1747,7 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' 
 #' Values and hazard quotients equal to 0 are ignored.
 #' 
-#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indices
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
 #' 
@@ -1783,12 +1785,12 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' @param hq Numeric named matrix. **H**azard **q**uotients for which the top two pairs are to be
 #'  identified.
 #' @param hi Numeric vector. **H**azard **i**ndexes associated with the hazard quotients `hq`.
-#' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indexes greater
+#' @param threshold If `TRUE`, only values or hazard quotients associated with hazard indices greater
 #'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added as combination with such top hazard quotients.
 #' @return
-#' `NULL` if (1) `alone = FALSE` and no set of `values` (or `hq`) has more than one element different
+#' `NULL` if (1) `alone = FALSE` and no set of `values` (or of `hq`) has more than one element different
 #'   from 0
 #'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
 #'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
@@ -1858,7 +1860,7 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
 #' 
-#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indexes
+#' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indices
 #'  before searching for the maximum hazard quotients, computing the maximum cumulative ratios, performing
 #'  the classification then build the table. Thus, call the function with the arguments `hq` and `groups`
 #'  is faster and call it with the arguments `thq` and `groups` is even faster (if they are already
@@ -2190,7 +2192,7 @@ validate_classes = function(classes) {
 #' @return Data frame or list of data frames (according to `values`) containing the main indicators of
 #'  the MCR approach, computed on the given `values` and for each class encountered (or for all classes,
 #'  if `all_classes` is `TRUE`):
-#' * **n**: number of values (different from 0).
+#' * **n**: number of values different from 0.
 #' * **HI**: Hazard Index.
 #' * **MCR**: Maximum Cumulative Ratio.
 #' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
@@ -2546,7 +2548,7 @@ mcr_chart_by_class = function(values, references, classes,
 #'  is part of a specific class.
 #' @param levels Levels to consider in the output tables. If `NULL`, only use of those that appear in the
 #'  pairs.
-#' @param threshold If `TRUE`, only values associated with hazard indexes greater than 1 are considered.
+#' @param threshold If `TRUE`, only values associated with hazard indices greater than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added for such top hazard quotients.
 #' @return List whose length corresponds to the number of classes encountered, containing for each class:

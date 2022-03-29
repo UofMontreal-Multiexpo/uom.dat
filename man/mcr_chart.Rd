@@ -32,11 +32,11 @@ chart is to be plotted.}
 
 \item{hi}{Numeric vector. \strong{H}azard \strong{i}ndexes for which the chart is to be plotted.}
 
-\item{mcr}{Numeric vector. \strong{M}aximum \strong{c}umulative \strong{r}atios associated with the hazard indexes
+\item{mcr}{Numeric vector. \strong{M}aximum \strong{c}umulative \strong{r}atios associated with the hazard indices
 \code{hi}.}
 
 \item{thq}{Numeric named vector or list of numeric named vectors. \strong{T}op \strong{h}azard \strong{q}uotients
-associated with the hazard indexes \code{hi}. If list, only the first named value of each element of the
+associated with the hazard indices \code{hi}. If list, only the first named value of each element of the
 list is considered.}
 
 \item{thq_col}{Character named vector. Colors to assign to the \strong{t}op \strong{h}azard \strong{q}uotients
@@ -97,7 +97,7 @@ Points that are on the boundaries of the region of the group II belong to this g
 Points that are on the boundary between the regions of the groups IIIA and IIIB belong to the
 group IIIB.
 
-Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indexes
+Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indices
 before searching for the top and maximum hazard quotients, computing the maximum cumulative ratios
 then plot the chart. Thus, call the function with the arguments \code{hi}, \code{mcr} and \code{thq} is faster
 (if they are already computed).

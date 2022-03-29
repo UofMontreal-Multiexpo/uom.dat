@@ -14,11 +14,11 @@ is to be computed.}
 
 \item{references}{Numeric vector. Reference values associated with the \code{values}.}
 
-\item{hi}{Numeric value or vector. \strong{H}azard \strong{i}ndex(es) for which to compute the reciprocal of
-maximum cumulative ratio(s).}
+\item{hi}{Numeric value or vector. \strong{H}azard \strong{i}ndex or indices for which to compute the reciprocal
+of maximum cumulative ratio(s).}
 
 \item{mhq}{Numeric value or vector. \strong{M}aximum \strong{h}azard \strong{q}uotient(s) associated with the hazard
-index(es) \code{hi}.}
+index or indices \code{hi}.}
 
 \item{mcr}{Numeric value or vector. \strong{M}aximum \strong{c}umulative \strong{r}atio(s) on which to compute the
 reciprocal.}

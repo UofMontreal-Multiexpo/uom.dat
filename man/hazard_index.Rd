@@ -12,10 +12,12 @@ hazard_index(hq)
 
 \item{references}{Numeric vector. Reference values associated with the \code{values}.}
 
-\item{hq}{Numeric vector or matrix. \strong{H}azard \strong{q}uotients on which to compute the hazard index(es).}
+\item{hq}{Numeric vector or matrix. \strong{H}azard \strong{q}uotients on which to compute the hazard index
+or indices.}
 }
 \value{
-Numeric value or vector (according to \code{values} or \code{hq}) of the computed hazard index(es).
+Numeric value or vector (according to \code{values} or \code{hq}) of the computed hazard index or
+indices.
 }
 \description{
 Compute the hazard index as the sum of hazard quotients (i.e. the sum of ratios between values and

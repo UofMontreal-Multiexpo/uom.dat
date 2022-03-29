@@ -12,11 +12,11 @@ maximum_cumulative_ratio(hi, mhq)
 
 \item{references}{Numeric vector. Reference values associated with the \code{values}.}
 
-\item{hi}{Numeric value or vector. \strong{H}azard \strong{i}ndex(es) on which to compute the maximum cumulative
-ratio(s).}
+\item{hi}{Numeric value or vector. \strong{H}azard \strong{i}ndex or indices on which to compute the maximum
+cumulative ratio(s).}
 
 \item{mhq}{Numeric value or vector. \strong{M}aximum \strong{h}azard \strong{q}uotient(s) associated with the hazard
-index(es) \code{hi}.}
+index or indices \code{hi}.}
 }
 \value{
 Numeric value or vector (according to \code{values} or \code{hi} and \code{mhq}) of the maximum cumulative

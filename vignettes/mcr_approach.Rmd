@@ -754,7 +754,7 @@ names(concentration_values) <- paste0("S", 1:14)
 
 ### 4.2.1. Components of the sets
 
-Having our list of values which are concentration values for specific substances, we can call `coerce_list` to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one set of values and each column refers to one name found in the values of the list.
+Having our list of values which are concentration values for specific substances, we can call `coerce_list` to know which substances are present in which sets of values by coercing the list to a binary matrix. Each line refers to one set of values and each column refers to one name found in the values of the list.
 ```{r}
 # Just look at some columns
 coerce_list(concentration_values,

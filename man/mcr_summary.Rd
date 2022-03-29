@@ -17,7 +17,7 @@ Values whose indicators of the MCR approach are to be computed.}
 List if \code{values} is a vector; data frame otherwise.
 Contains the main indicators of the MCR approach computed on the given \code{values}:
 \itemize{
-\item \strong{n}: number of values (different from 0).
+\item \strong{n}: number of values different from 0.
 \item \strong{HI}: Hazard Index.
 \item \strong{MCR}: Maximum Cumulative Ratio.
 \item \strong{Reciprocal}: Reciprocal of the maximum cumulative ratio.

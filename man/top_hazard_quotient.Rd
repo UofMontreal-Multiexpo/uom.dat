@@ -9,12 +9,12 @@ top_hazard_quotient(hq, k = NULL)
 }
 \arguments{
 \item{values}{Numeric named vector or matrix. Values for which the top hazard quotients are to be
-identify.}
+identified.}
 
 \item{references}{Numeric vector. Reference values associated with the \code{values}.}
 
 \item{hq}{Numeric named vector or matrix. \strong{H}azard \strong{q}uotients whose highest values are to be
-identify.}
+identified.}
 
 \item{k}{Number of hazard quotients to highlight. Default is the integer part of the maximum cumulative
 ratio computed from \code{values} and \code{references} or from \code{hq}.}

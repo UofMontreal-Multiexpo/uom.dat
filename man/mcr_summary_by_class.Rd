@@ -27,7 +27,7 @@ Data frame or list of data frames (according to \code{values}) containing the ma
 the MCR approach, computed on the given \code{values} and for each class encountered (or for all classes,
 if \code{all_classes} is \code{TRUE}):
 \itemize{
-\item \strong{n}: number of values (different from 0).
+\item \strong{n}: number of values different from 0.
 \item \strong{HI}: Hazard Index.
 \item \strong{MCR}: Maximum Cumulative Ratio.
 \item \strong{Reciprocal}: Reciprocal of the maximum cumulative ratio.

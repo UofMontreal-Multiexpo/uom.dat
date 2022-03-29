@@ -1720,7 +1720,7 @@ This document describes the Maximum Cumulative Ratio approach by providing an ex
 <span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(concentration_values) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;S&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>)</span></code></pre></div>
 <div id="components-of-the-sets" class="section level3">
 <h3>4.2.1. Components of the sets</h3>
-<p>Having our list of values which are concentration values for specific substances, we can call <code>coerce_list</code> to know which substances are presents in which sets of values by coercing the list to a binary matrix. Each line refers to one set of values and each column refers to one name found in the values of the list.</p>
+<p>Having our list of values which are concentration values for specific substances, we can call <code>coerce_list</code> to know which substances are present in which sets of values by coercing the list to a binary matrix. Each line refers to one set of values and each column refers to one name found in the values of the list.</p>
 <div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just look at some columns</span></span>
 <span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coerce_list</span>(concentration_values,</span>
 <span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">to =</span> <span class="st">&quot;logical matrix&quot;</span>,</span>
