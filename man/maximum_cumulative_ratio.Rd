@@ -35,11 +35,11 @@ Arguments \code{values} and \code{references} are used to compute the hazard quo
 before searching for the maximum hazard quotient then computing the maximum cumulative ratio.
 Thus, call the function with the arguments \code{hi} and \code{mhq} is faster (if they are already computed).
 
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 If \code{values} is a matrix (or \code{hi} and \code{mhq} are vectors larger than 1), one maximum cumulative ratio
-is computed for each column (or value, respectively).
+is computed for each row (or value, respectively).
 
 \loadmathjax
 The maximum cumulative ratio of the vector \eqn{i} is given by:
@@ -66,9 +66,13 @@ function call.
 maximum_cumulative_ratio(c(1,2,3,4,5), c(1,2,3,4,5))
 maximum_cumulative_ratio(hi = hazard_index(c(1,2,3,4,5), c(1,2,3,4,5)),
                          mhq = maximum_hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5)))
-maximum_cumulative_ratio(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                                         ncol = 2),
-                         references = c(1,2,3,4,5))
+
+maximum_cumulative_ratio(
+  values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+                  nrow = 2, byrow = TRUE,
+                  dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+  references = c(1,2,3,4,5)
+)
 
 }
 \references{

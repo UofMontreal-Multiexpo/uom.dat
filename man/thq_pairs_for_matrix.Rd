@@ -43,8 +43,8 @@ Identify the top two hazard quotients pairs for which the associated hazard
 indexes are greater than 1.
 }
 \details{
-The reference values are applied once on each column (i.e. it must have one reference value for each
-row of the matrix).
+The reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 Values and hazard quotients equal to 0 are ignored.
 

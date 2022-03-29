@@ -34,7 +34,7 @@ naming and structure criteria.
 The criteria about naming and structure are the following:
 \itemize{
 \item If \code{values} is a vector, its values must be named.
-\item If \code{values} is a matrix, its rows must be named.
+\item If \code{values} is a matrix, its columns must be named.
 \item If \code{values} is a list, it must contain vectors of named values.
 \item If \code{values} and \code{references} are two lists, lengths of the elements of these lists must match.
 \item If \code{values} is a list and \code{references} is a vector, the values of the latter must be named.

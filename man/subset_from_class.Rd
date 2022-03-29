@@ -34,7 +34,7 @@ If not, list containing:
 Extract from values and references those corresponding to one specific class.
 }
 \details{
-If \code{values} is a matrix, it must have one reference value for each row.
+If \code{values} is a matrix, it must have one reference value for each column.
 
 If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
 if \code{references} is a vector, there must be one reference for each name present in \code{values}.
@@ -53,18 +53,20 @@ classes <- list(A = c("C5", "C6", "C8"),
                 E = c("C2", "C4", "C5", "C7", "C8"))
 
 ## Subsets with values as a matrix
-subset_from_class(values = matrix(c(0.1,0.2,0.3,0.4,0.5,
-                                    0.6,0.7,0.8,0.9,1.),
-                                  ncol = 2,
-                                  dimnames = list(LETTERS[1:5], c("V1", "V2"))),
-                  references = c(1,2,3,4,5),
-                  classes = classes,
-                  class_name = "C8")
+subset_from_class(
+  values = matrix(c(0.1,0.2,0.3,0.4,0.5,
+                    0.6,0.7,0.8,0.9,1.),
+                  nrow = 2, byrow = 2,
+                  dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+  references = c(1,2,3,4,5),
+  classes = classes,
+  class_name = "C8"
+)
 
 ## Subsets with values as a list
-v <- list(V1 = c(A = 0.1, D = 0.5),
-          V2 = c(D = 0.2),
-          V3 = c(A = 0.3, C = 0.4))
+v <- list(set.1 = c(A = 0.1, D = 0.5),
+          set.2 = c(D = 0.2),
+          set.3 = c(A = 0.3, C = 0.4))
 
 subset_from_class(values = v,
                   classes = classes,

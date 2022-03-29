@@ -42,11 +42,11 @@ before searching for the maximum hazard quotients, computing the maximum cumulat
 classifying the mixtures. Thus, call the function with the arguments \code{hi} and \code{mhq} is faster and
 call it with the argument \code{mcr} is even faster (if they are already computed).
 
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 If \code{values} is a matrix (or \code{hi}, \code{mhq} and \code{mcr} are vectors larger than 1), one class is assigned
-for each column (or each value, respectively).
+for each row (or each value, respectively).
 
 \loadmathjax
 The mixtures are assigned to the groups according the following conditions:
@@ -81,9 +81,13 @@ the function call.
 classify_mixture(c(1,2,3,4,5), c(1,2,3,4,5))
 classify_mixture(hi = hazard_index(c(1,2,3,0.5), c(1,2,3,0.5)),
                  mhq = maximum_hazard_quotient(c(1,2,3,0.5), c(1,2,3,0.5)))
-classify_mixture(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-                                 ncol = 3),
-                 references = c(1,2,3,0.5))
+
+classify_mixture(
+  values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+                  nrow = 3, byrow = TRUE,
+                  dimnames = list(c("set.1", "set.2", "set.3"), LETTERS[1:4])),
+  references = c(1,2,3,0.5)
+)
 
 }
 \references{

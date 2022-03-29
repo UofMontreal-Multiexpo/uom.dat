@@ -45,8 +45,8 @@ corresponding to this class are considered.
 \details{
 If \code{values} is a vector, the reference values are directly associated with these values.
 
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
 if \code{references} is a vector, there must be one reference for each name present in \code{values}.
@@ -105,28 +105,30 @@ mcr_summary_by_class(values = c(A = 1, B = 2, C = 3, D = 4),
                      classes)
 
 ## MCR summary by class on matrices
-mcr_summary_by_class(values = matrix(c(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.),
-                                     ncol = 2,
-                                     dimnames = list(LETTERS[1:5],
-                                                     c("V1", "V2"))),
-                     references = c(1,2,3,4,5),
-                     classes)
-mcr_summary_by_class(values = matrix(c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9),
-                                     ncol = 2,
-                                     dimnames = list(LETTERS[1:4],
-                                                     c("V1", "V2"))),
-                     references = c(1,2,3,4),
-                     classes)
+mcr_summary_by_class(
+  values = matrix(c(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.),
+                  nrow = 2, byrow = TRUE,
+                  dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+  references = c(1,2,3,4,5),
+  classes
+)
+mcr_summary_by_class(
+  values = matrix(c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9),
+                  nrow = 2, byrow = TRUE,
+                  dimnames = list(c("set.1", "set.2"), LETTERS[1:4])),
+  references = c(1,2,3,4),
+  classes
+)
 
 ## MCR summary by class on lists
-mcr_summary_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
-                                   V2 = c(A = 0.2),
-                                   V3 = c(B = 0.3, C = 0.4)),
+mcr_summary_by_class(values = list(set.1 = c(A = 0.1, B = 0.5),
+                                   set.2 = c(A = 0.2),
+                                   set.3 = c(B = 0.3, C = 0.4)),
                      references = c(A = 1, B = 2, C = 3),
                      classes)
-mcr_summary_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
-                                   V2 = c(A = 0.2),
-                                   V3 = c(B = 0.3, C = 0.4)),
+mcr_summary_by_class(values = list(set.1 = c(A = 0.1, B = 0.5),
+                                   set.2 = c(A = 0.2),
+                                   set.3 = c(B = 0.3, C = 0.4)),
                      references = list(c(1, 2),
                                        1,
                                        c(2, 3)),

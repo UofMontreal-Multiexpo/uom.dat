@@ -39,8 +39,8 @@ situations:
 }
 }
 \details{
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
 if \code{references} is a vector, there must be one reference for each name present in \code{values}.
@@ -79,11 +79,12 @@ If several values are equal to the maximum hazard quotient, the name retained as
 quotient is the first one considering the given order.
 }
 \examples{
-## Creating a matrix of 5*50 values, one reference value for each of the 5
+## Creating a matrix of 50*50 values, one reference value for each of the 5
 ## elements (A, B, C, D and E) and association of classes (C1 to C8) with
 ## these elements.
 v <- matrix(sample(seq(0.1, 2.1, by = 0.1), 250, replace = TRUE),
-            ncol = 50, dimnames = list(LETTERS[1:5]))
+            nrow = 50, byrow = TRUE,
+            dimnames = list(paste0("set.", 1:50), LETTERS[1:5]))
 r <- sample(seq(1,5), 5, replace = TRUE)
 classes <- list(A = c("C5", "C6", "C8"),
                 B = "C8",
@@ -96,16 +97,16 @@ thq_by_group_by_class(v, r, classes)
 thq_by_group_by_class(v, r, classes, levels = names(classes))
 
 ## Building contingency table from list
-thq_by_group_by_class(values = list(V1 = c(A = 1, B = 5),
-                                    V2 = c(A = 2),
-                                    V3 = c(B = 3, C = 4)),
+thq_by_group_by_class(values = list(set.1 = c(A = 1, B = 5),
+                                    set.2 = c(A = 2),
+                                    set.3 = c(B = 3, C = 4)),
                       references = list(c(1, 2),
                                         1,
                                         c(2, 3)),
                       classes)
-thq_by_group_by_class(values = list(V1 = c(A = 1, B = 5),
-                                    V2 = c(A = 2),
-                                    V3 = c(B = 3, C = 4)),
+thq_by_group_by_class(values = list(set.1 = c(A = 1, B = 5),
+                                    set.2 = c(A = 2),
+                                    set.3 = c(B = 3, C = 4)),
                       references = c(A = 1, B = 2, C = 3),
                       classes,
                       levels = LETTERS[1:3])

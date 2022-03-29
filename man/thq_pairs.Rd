@@ -48,8 +48,8 @@ Build a contingency table of the counts of each combination of the top two hazar
 which the associated hazard index is greater than 1.
 }
 \details{
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
 if \code{references} is a vector, there must be one reference for each name present in \code{values}.
@@ -81,51 +81,44 @@ Due to the multiple possible usages, all arguments except \code{values} and \cod
 named in the function call.
 }
 \examples{
-thq_pairs(values = matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                          ncol = 2, dimnames = list(LETTERS[1:5])),
-          references = c(1,2,3,4,5))
-thq_pairs(hq = hazard_quotient(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                                      ncol = 2, dimnames = list(LETTERS[1:5])),
-                               c(1,2,3,4,5)),
-          hi = hazard_index(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                                   ncol = 2, dimnames = list(LETTERS[1:5])),
-                            c(1,2,3,4,5)))
+
+v1 <- matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+             nrow = 2, byrow = TRUE,
+             dimnames = list(c("set.1", "set.2"), LETTERS[1:5]))
+r1 <- c(1,2,3,4,5)
+
+thq_pairs(v1, r1)
+thq_pairs(hq = hazard_quotient(v1, r1),
+          hi = hazard_index(v1, r1))
 
 ## With and without levels parameter
-thq_pairs(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-                          ncol = 3, dimnames = list(LETTERS[1:4])),
-          references = c(1, 2, 3, .5),
-          levels = LETTERS[1:4])
-thq_pairs(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-                          ncol = 3, dimnames = list(LETTERS[1:4])),
-          references = c(1,2,3,0.5))
+v2 <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+             nrow = 3, byrow = TRUE,
+             dimnames = list(paste0("set.", 1:3), LETTERS[1:4]))
+r2 <- c(1,2,3,0.5)
+thq_pairs(v2, r2, levels = LETTERS[1:4])
+thq_pairs(v2, r2)
 
 ## NULL because all HI are lower than or equal to 1
-thq_pairs(values = matrix(c(.1, .2, .3, .4),
-                          ncol = 2, dimnames = list(c("A","B"))),
-          references = c(5,5))
-hazard_index(values = matrix(c(.1, .2, .3, .4),
-                             ncol = 2, dimnames = list(c("A","B"))),
-             references = c(5,5))
-thq_pairs(values = matrix(c(.1, .2, .3, .4),
-                          ncol = 2, dimnames = list(c("A","B"))),
-          references = c(5,5),
-          threshold = FALSE)
+v3 <- matrix(c(.1, .2, .3, .4),
+             nrow = 2, byrow = TRUE,
+             dimnames = list(c("set.1", "set.2"), c("A","B")))
+r3 <- c(5,5)
+thq_pairs(v3, r3)
+hazard_index(v3, r3)
+thq_pairs(v3, r3, threshold = FALSE)
 
 ## Building contingency table from a list
-thq_pairs(values = list(c(A = 0.5, B = 0.5),
-                        c(A = 1),
-                        c(B = 0.5, C = 0.5)),
+v4 <- list(set.1 = c(A = 0.5, B = 0.5),
+           set.2 = c(A = 1),
+           set.3 = c(B = 0.5, C = 0.5))
+thq_pairs(values = v4,
           references = list(c(0.3, 0.6),
                             0.3,
                             c(0.6, 1)))
-thq_pairs(values = list(c(A = 0.5, B = 0.5),
-                        c(A = 1),
-                        c(B = 0.5, C = 0.5)),
+thq_pairs(values = v4,
           references = c(A = 0.3, B = 0.6, C = 1))
-thq_pairs(values = list(c(A = 0.5, B = 0.5),
-                        c(A = 1),
-                        c(B = 0.5, C = 0.5)),
+thq_pairs(values = v4,
           references = c(A = 0.3, B = 0.6, C = 1),
           alone = TRUE)
 

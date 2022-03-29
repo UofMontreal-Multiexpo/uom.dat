@@ -18,8 +18,8 @@ Vector or matrix (according to \code{values}) of computed hazard quotients.
 Compute the hazard quotient as the ratio between a value and a reference value.
 }
 \details{
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 \loadmathjax
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
@@ -29,9 +29,13 @@ where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{reference
 \examples{
 hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5))
 hazard_quotient(c(A = 1, B = 2, C = 3, D = 4, E = 5), c(1,2,3,4,5))
-hazard_quotient(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                                ncol = 2, dimnames = list(LETTERS[1:5])),
-                references = c(1,2,3,4,5))
+
+hazard_quotient(
+  values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+                  nrow = 2, byrow = TRUE,
+                  dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+  references = c(1,2,3,4,5)
+)
 
 }
 \references{

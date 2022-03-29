@@ -22,8 +22,8 @@ library(uom.dat)
 
 ## 2. mcr_chart returns an identical result whatever the chosen usage
 {
-  values_matrix = matrix(c(1,1, 0.5,0.5, 0.5,0.8, 0.9,0.9), nrow = 2,
-                         dimnames = list(letters[1:2], c("s1", "s2", "s3", "s4")))
+  values_matrix = matrix(c(1,1, 0.5,0.5, 0.5,0.8, 0.9,0.9), ncol = 2, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3", "s4"), letters[1:2]))
   values_list = list(s1 = c(a = 1, b = 1),     s2 = c(a = 0.5, c = 0.5),
                      s3 = c(b = 0.5, c = 0.8), s4 = c(a = 0.9, c = 0.9))
   references = c(a = 1, b = 1)
@@ -62,8 +62,8 @@ library(uom.dat)
   values_matrix = matrix(c(1,   1.5, 0,
                            0.5, 0.2, 0,
                            0.5, 0.8, 0,
-                           0.8, 0.8, 0.8), ncol = 4,
-                         dimnames = list(letters[1:3], c("s1", "s2", "s3", "s4")))
+                           0.8, 0.8, 0.8), nrow = 4, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3", "s4"), letters[1:3]))
   references_vector = c(a = 1, b = 1, c = 1)
   
   ## Expectations: 
@@ -82,8 +82,8 @@ library(uom.dat)
   values_matrix = matrix(c(1,   1.5, 0,
                            0.5, 0.2, 0,
                            0.5, 0.8, 0,
-                           0.8, 0.8, 0.8), ncol = 4,
-                         dimnames = list(letters[1:3], c("s1", "s2", "s3", "s4")))
+                           0.8, 0.8, 0.8), nrow = 4, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3", "s4"), letters[1:3]))
   references_vector = c(a = 1, b = 1, c = 1)
   
   ## Expectations:
@@ -124,8 +124,8 @@ library(uom.dat)
   values_matrix = matrix(c(1,   1.5, 0,
                            0.5, 0.2, 0,
                            0.5, 0.8, 0,
-                           0.8, 0.8, 0.8), ncol = 4,
-                         dimnames = list(letters[1:3], c("s1", "s2", "s3", "s4")))
+                           0.8, 0.8, 0.8), nrow = 4, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3", "s4"), letters[1:3]))
   references_vector = c(a = 1, b = 1, c = 1)
   
   ## Expectations:
@@ -165,8 +165,8 @@ library(uom.dat)
   values_matrix = matrix(c(1,   1.5, 0,
                            0.5, 0.2, 0,
                            0.5, 0.8, 0,
-                           0.8, 0.8, 0.8), ncol = 4,
-                         dimnames = list(letters[1:3], c("s1", "s2", "s3", "s4")))
+                           0.8, 0.8, 0.8), nrow = 4, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3", "s4"), letters[1:3]))
   references_vector = c(a = 1, b = 1, c = 1)
   
   ## Expectations:
@@ -190,8 +190,8 @@ library(uom.dat)
   values_matrix = matrix(c(1,   1.5, 0,
                            0.5, 0.2, 0,
                            0.5, 0.8, 0,
-                           0.8, 0.8, 0.8), ncol = 4,
-                         dimnames = list(letters[1:3], c("s1", "s2", "s3", "s4")))
+                           0.8, 0.8, 0.8), nrow = 4, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3", "s4"), letters[1:3]))
   references_vector = c(a = 1, b = 1, c = 1)
   
   ## Expectation: if 'regression' is TRUE, a linear regression is represented with a confidence interval

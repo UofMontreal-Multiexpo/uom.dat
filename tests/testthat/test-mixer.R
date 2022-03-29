@@ -10,8 +10,8 @@ test_that("hazard_quotient returns the right data structure", {
   expect_true(is.vector(hazard_quotient(1:5, 1:5)))
   
   # Matrix -> Matrix
-  expect_true(is.matrix(hazard_quotient(matrix(1:10, ncol = 2), 1:5)))
-  expect_true(is.matrix(hazard_quotient(matrix(1:5,  ncol = 1), 1:5)))
+  expect_true(is.matrix(hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5)))
+  expect_true(is.matrix(hazard_quotient(matrix(1:5,  nrow = 1), 1:5)))
 })
 
 test_that("hazard_quotient returns a named object if the given one is named", {
@@ -20,10 +20,14 @@ test_that("hazard_quotient returns a named object if the given one is named", {
                letters[1:5])
   
   # Matrix
-  expect_equal(rownames(hazard_quotient(matrix(1:10, ncol = 2, dimnames = list(letters[1:5])), 1:5)),
-               letters[1:5])
-  expect_equal(colnames(hazard_quotient(matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5)),
-               c("s1", "s2"))
+  expect_equal(rownames(
+    hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE, dimnames = list(c("s1", "s2"))),
+                    1:5)),
+    c("s1", "s2"))
+  expect_equal(colnames(
+    hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE, dimnames = list(NULL, letters[1:5])),
+                    1:5)),
+    letters[1:5])
 })
 
 test_that("hazard_quotient returns an unnamed object if the given one is unnamed", {
@@ -31,8 +35,8 @@ test_that("hazard_quotient returns an unnamed object if the given one is unnamed
   expect_named(hazard_quotient(1:5, 1:5), NULL)
   
   # Matrix
-  expect_null(rownames(hazard_quotient(matrix(1:10, ncol = 2), 1:5)))
-  expect_null(colnames(hazard_quotient(matrix(1:10, ncol = 2), 1:5)))
+  expect_null(colnames(hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5)))
+  expect_null(rownames(hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5)))
 })
 
 test_that("hazard_quotient computes the hazard quotients", {
@@ -41,10 +45,12 @@ test_that("hazard_quotient computes the hazard quotients", {
   expect_equal(hazard_quotient(1:5, c(1,1,1,1,1)), c(1,2,3,4,5))
   
   # Matrix
-  expect_equal(hazard_quotient(matrix(c(1,2,3,4,5,10,10,9,10,10), ncol = 2), c(1,2,3,4,5)),
-               matrix(c(1,1,1,1,1, 10,5,3,2.5,2), ncol = 2))
-  expect_equal(hazard_quotient(matrix(1:10, ncol = 2), c(1,1,1,1,1)),
-               matrix(c(1,2,3,4,5, 6,7,8,9,10), ncol = 2))
+  expect_equal(hazard_quotient(matrix(c(1,2,3,4,5,10,10,9,10,10), nrow = 2, byrow = TRUE),
+                               c(1,2,3,4,5)),
+               matrix(c(1,1,1,1,1, 10,5,3,2.5,2), nrow = 2, byrow = TRUE))
+  expect_equal(hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE),
+                               c(1,1,1,1,1)),
+               matrix(c(1,2,3,4,5, 6,7,8,9,10), nrow = 2, byrow = TRUE))
 })
 
 
@@ -55,15 +61,15 @@ test_that("hazard_index returns the right number of values", {
   expect_length(hazard_index(1:5, 1:5), 1)
   
   # 'values' as a matrix
-  expect_length(hazard_index(matrix(1:10, ncol = 2), 1:5), 2)
-  expect_length(hazard_index(matrix(1:5,  ncol = 1), 1:5), 1)
+  expect_length(hazard_index(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), 2)
+  expect_length(hazard_index(matrix(1:5,  nrow = 1), 1:5), 1)
   
   # 'hq' as a vector
   expect_length(hazard_index(hq = 1:5), 1)
   
   # 'hq' as a matrix
-  expect_length(hazard_index(hq = matrix(1:10, ncol = 2)), 2)
-  expect_length(hazard_index(hq = matrix(1:5,  ncol = 1)), 1)
+  expect_length(hazard_index(hq = matrix(1:10, nrow = 2, byrow = TRUE)), 2)
+  expect_length(hazard_index(hq = matrix(1:5,  nrow = 1)), 1)
 })
 
 test_that("hazard_index returns an unnamed object if a vector is given", {
@@ -76,19 +82,19 @@ test_that("hazard_index returns an unnamed object if a vector is given", {
 
 test_that("hazard_index returns an unnamed object if an unnamed matrix is given", {
   # 'values' as an unnamed matrix
-  expect_named(hazard_index(matrix(1:10, ncol = 2), 1:5), NULL)
+  expect_named(hazard_index(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), NULL)
   
   # 'hq' as an unnamed matrix
-  expect_named(hazard_index(hq = matrix(1:10, ncol = 2)), NULL)
+  expect_named(hazard_index(hq = matrix(1:10, nrow = 2, byrow = TRUE)), NULL)
 })
 
 test_that("hazard_index returns a named object if a named matrix is given", {
   # 'values' as a named matrix
-  expect_named(hazard_index(matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5),
+  expect_named(hazard_index(matrix(1:10, nrow = 2, byrow = TRUE, dimnames = list(c("s1", "s2"))), 1:5),
                c("s1", "s2"))
   
   # 'hq' as a named matrix
-  expect_named(hazard_index(hq = matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5),
+  expect_named(hazard_index(hq = matrix(1:10, nrow = 2, byrow = TRUE, dimnames = list(c("s1", "s2"))), 1:5),
                c("s1", "s2"))
 })
 
@@ -98,21 +104,25 @@ test_that("hazard_index computes the hazard indexes", {
   expect_equal(hazard_index(1:5, c(1,1,1,1,1)), 15)
   
   # 'values' as a matrix
-  expect_equal(hazard_index(matrix(c(1,2,3,4,5, 10,10,9,10,10),  ncol = 2), 1:5), c(5, 22.5))
-  expect_equal(hazard_index(matrix(1:10, ncol = 2), c(1,1,1,1,1)),                c(15, 40))
+  expect_equal(hazard_index(matrix(c(1,2,3,4,5, 10,10,9,10,10), nrow = 2, byrow = TRUE), 1:5),
+               c(5, 22.5))
+  expect_equal(hazard_index(matrix(1:10, nrow = 2, byrow = TRUE), c(1,1,1,1,1)),
+               c(15, 40))
   
   # 'hq' as a vector
   expect_equal(hazard_index(hq = c(1,1,1,1,1)), 5)
   expect_equal(hazard_index(hq = 1:5),          15)
   
   # 'hq' as a matrix
-  expect_equal(hazard_index(hq = matrix(c(1,2,3,4,5, 10,10,9,10,10),  ncol = 2)), c(15, 49))
-  expect_equal(hazard_index(hq = matrix(1:10, ncol = 2)),                         c(15, 40))
+  expect_equal(hazard_index(hq = matrix(c(1,2,3,4,5, 10,10,9,10,10),  nrow = 2, byrow = TRUE)),
+               c(15, 49))
+  expect_equal(hazard_index(hq = matrix(1:10, nrow = 2, byrow = TRUE)),
+               c(15, 40))
 })
 
 test_that("hazard_index returns an identical result whatever the chosen usage", {
   values_vector = 1:5
-  values_matrix = matrix(1:10, ncol = 2)
+  values_matrix = matrix(1:10, nrow = 2, byrow = TRUE)
   references = 1:5
   
   expect_identical(hazard_index(values_vector, references),
@@ -129,15 +139,15 @@ test_that("maximum_hazard_quotient returns the right number of values", {
   expect_length(maximum_hazard_quotient(1:5, 1:5), 1)
   
   # 'values' as a matrix
-  expect_length(maximum_hazard_quotient(matrix(1:10, ncol = 2), 1:5), 2)
-  expect_length(maximum_hazard_quotient(matrix(1:5,  ncol = 1), 1:5), 1)
+  expect_length(maximum_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), 2)
+  expect_length(maximum_hazard_quotient(matrix(1:5,  nrow = 1), 1:5), 1)
   
   # 'hq' as a vector
   expect_length(maximum_hazard_quotient(hq = 1:5), 1)
   
   # 'hq' as a matrix
-  expect_length(maximum_hazard_quotient(hq = matrix(1:10, ncol = 2)), 2)
-  expect_length(maximum_hazard_quotient(hq = matrix(1:5,  ncol = 1)), 1)
+  expect_length(maximum_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE)), 2)
+  expect_length(maximum_hazard_quotient(hq = matrix(1:5,  nrow = 1)), 1)
   
 })
 
@@ -151,19 +161,23 @@ test_that("maximum_hazard_quotient returns an unnamed object if a vector is give
 
 test_that("maximum_hazard_quotient returns an unnamed object if an unnamed matrix is given", {
   # 'values' as an unnamed matrix
-  expect_named(maximum_hazard_quotient(matrix(1:10, ncol = 2), 1:5), NULL)
+  expect_named(maximum_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), NULL)
   
   # 'hq' as an unnamed matrix
-  expect_named(maximum_hazard_quotient(hq = matrix(1:10, ncol = 2)), NULL)
+  expect_named(maximum_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE)), NULL)
 })
 
 test_that("maximum_hazard_quotient returns a named object if a named matrix is given", {
   # 'values' as a named matrix
-  expect_named(maximum_hazard_quotient(matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5),
+  expect_named(maximum_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE,
+                                              dimnames = list(c("s1", "s2"))),
+                                       1:5),
                c("s1", "s2"))
   
   # 'hq' as a named matrix
-  expect_named(maximum_hazard_quotient(hq = matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5),
+  expect_named(maximum_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE,
+                                                   dimnames = list(c("s1", "s2"))),
+                                       1:5),
                c("s1", "s2"))
 })
 
@@ -173,21 +187,27 @@ test_that("maximum_hazard_quotient find the maximum hazard quotient", {
   expect_equal(maximum_hazard_quotient(1:5, c(1,1,1,1,1)), 5)
   
   # 'values' as a matrix
-  expect_equal(maximum_hazard_quotient(matrix(c(1,2,3,4,5, 10,10,9,10,10),  ncol = 2), 1:5), c(1, 10))
-  expect_equal(maximum_hazard_quotient(matrix(1:10, ncol = 2), c(1,1,1,1,1)),                c(5, 10))
+  expect_equal(maximum_hazard_quotient(matrix(c(1,2,3,4,5, 10,10,9,10,10), nrow = 2, byrow = TRUE),
+                                       1:5),
+               c(1, 10))
+  expect_equal(maximum_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE),
+                                       c(1,1,1,1,1)),
+               c(5, 10))
   
   # 'hq' as a vector
   expect_equal(maximum_hazard_quotient(hq = c(1,1,1,1,1)), 1)
   expect_equal(maximum_hazard_quotient(hq = 1:5),          5)
   
   # 'hq' as a matrix
-  expect_equal(maximum_hazard_quotient(hq = matrix(c(1,2,3,4,5, 10,10,9,10,10),  ncol = 2)), c(5, 10))
-  expect_equal(maximum_hazard_quotient(hq = matrix(1:10, ncol = 2)),                         c(5, 10))
+  expect_equal(maximum_hazard_quotient(hq = matrix(c(1,2,3,4,5, 10,10,9,10,10), nrow = 2, byrow = TRUE)),
+               c(5, 10))
+  expect_equal(maximum_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE)),
+               c(5, 10))
 })
 
 test_that("maximum_hazard_quotient returns an identical result whatever the chosen usage", {
   values_vector = 1:5
-  values_matrix = matrix(1:10, ncol = 2)
+  values_matrix = matrix(1:10, nrow = 2, byrow = TRUE)
   references = 1:5
   
   expect_identical(maximum_hazard_quotient(values_vector, references),
@@ -204,8 +224,8 @@ test_that("maximum_cumulative_ratio returns the right number of values", {
   expect_length(maximum_cumulative_ratio(1:5, 1:5), 1)
   
   # 'values' as a matrix
-  expect_length(maximum_cumulative_ratio(matrix(1:10, ncol = 2), 1:5), 2)
-  expect_length(maximum_cumulative_ratio(matrix(1:5,  ncol = 1), 1:5), 1)
+  expect_length(maximum_cumulative_ratio(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), 2)
+  expect_length(maximum_cumulative_ratio(matrix(1:5,  nrow = 1), 1:5), 1)
   
   # 'hi' and 'mhq'
   expect_length(maximum_cumulative_ratio(hi = 1,   mhq = 1),   1)
@@ -219,12 +239,14 @@ test_that("maximum_cumulative_ratio returns an unnamed object if a vector of val
 
 test_that("maximum_cumulative_ratio returns an unnamed object if an unnamed matrix is given", {
   # 'values' as an unnamed matrix
-  expect_named(maximum_cumulative_ratio(matrix(1:10, ncol = 2), 1:5), NULL)
+  expect_named(maximum_cumulative_ratio(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), NULL)
 })
 
 test_that("maximum_cumulative_ratio returns a named object if a named matrix is given", {
   # 'values' as a named matrix
-  expect_named(maximum_cumulative_ratio(matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5),
+  expect_named(maximum_cumulative_ratio(matrix(1:10, nrow = 2, byrow = TRUE,
+                                               dimnames = list(c("s1", "s2"))),
+                                        1:5),
                c("s1", "s2"))
 })
 
@@ -250,8 +272,12 @@ test_that("maximum_cumulative_ratio computes the maximum cumulative ratio", {
   expect_equal(maximum_cumulative_ratio(1:5, c(1,1,1,1,1)), 3)
   
   # 'values' as a matrix
-  expect_equal(maximum_cumulative_ratio(matrix(c(1,2,3,4,5, 10,10,9,10,10),  ncol = 2), 1:5), c(5, 2.25))
-  expect_equal(maximum_cumulative_ratio(matrix(1:10, ncol = 2), c(1,1,1,1,1)),                c(3, 4))
+  expect_equal(maximum_cumulative_ratio(matrix(c(1,2,3,4,5, 10,10,9,10,10), nrow = 2, byrow = TRUE),
+                                        1:5),
+               c(5, 2.25))
+  expect_equal(maximum_cumulative_ratio(matrix(1:10, nrow = 2, byrow = TRUE),
+                                        c(1,1,1,1,1)),
+               c(3, 4))
   
   # 'hi' and 'mhq'
   expect_equal(maximum_cumulative_ratio(hi = c(1,1,1,1,1), mhq = 1:5), c(1,0.5,1/3,0.25,0.2))
@@ -260,7 +286,7 @@ test_that("maximum_cumulative_ratio computes the maximum cumulative ratio", {
 
 test_that("maximum_cumulative_ratio returns an identical result whatever the chosen usage", {
   values_vector = 1:5
-  values_matrix = matrix(1:10, ncol = 2)
+  values_matrix = matrix(1:10, nrow = 2, byrow = TRUE)
   references = 1:5
   
   expect_identical(maximum_cumulative_ratio(values_vector, references),
@@ -279,8 +305,8 @@ test_that("missed_toxicity returns the right number of values", {
   expect_length(missed_toxicity(1:5, 1:5), 1)
   
   # 'values' as a matrix
-  expect_length(missed_toxicity(matrix(1:10, ncol = 2), 1:5), 2)
-  expect_length(missed_toxicity(matrix(1:5,  ncol = 1), 1:5), 1)
+  expect_length(missed_toxicity(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), 2)
+  expect_length(missed_toxicity(matrix(1:5,  nrow = 1), 1:5), 1)
   
   # 'mcr'
   expect_length(missed_toxicity(mcr = 1),   1)
@@ -294,12 +320,14 @@ test_that("missed_toxicity returns an unnamed object if a vector of values is gi
 
 test_that("missed_toxicity returns an unnamed object if an unnamed matrix is given", {
   # 'values' as an unnamed matrix
-  expect_named(missed_toxicity(matrix(1:10, ncol = 2), 1:5), NULL)
+  expect_named(missed_toxicity(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), NULL)
 })
 
 test_that("missed_toxicity returns a named object if a named matrix is given", {
   # 'values' as a named matrix
-  expect_named(missed_toxicity(matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5),
+  expect_named(missed_toxicity(matrix(1:10, nrow = 2, byrow = TRUE,
+                                      dimnames = list(c("s1", "s2"))),
+                               1:5),
                c("s1", "s2"))
 })
 
@@ -320,8 +348,8 @@ test_that("missed_toxicity computes the missed toxicity", {
   expect_equal(missed_toxicity(1:5, c(1,1,1,1,1)), 2/3)
   
   # 'values' as a matrix
-  expect_equal(missed_toxicity(matrix(c(1,2,3,4,5), ncol = 1), 1:5),  0.8)
-  expect_equal(missed_toxicity(matrix(1:10, ncol = 2), c(1,1,1,1,1)), c(2/3, 0.75))
+  expect_equal(missed_toxicity(matrix(c(1,2,3,4,5), nrow = 1), 1:5),                0.8)
+  expect_equal(missed_toxicity(matrix(1:10, nrow = 2, byrow = TRUE), c(1,1,1,1,1)), c(2/3, 0.75))
   
   # 'mcr'
   expect_equal(missed_toxicity(mcr = 1),   0)
@@ -330,7 +358,7 @@ test_that("missed_toxicity computes the missed toxicity", {
 
 test_that("missed_toxicity returns an identical result whatever the chosen usage", {
   values_vector = 1:5
-  values_matrix = matrix(1:10, ncol = 2)
+  values_matrix = matrix(1:10, nrow = 2, byrow = TRUE)
   references = 1:5
   
   expect_identical(missed_toxicity(values_vector, references),
@@ -350,8 +378,8 @@ test_that("reciprocal_of_mcr returns the right number of values", {
   expect_length(reciprocal_of_mcr(1:5, 1:5), 1)
   
   # 'values' as a matrix
-  expect_length(reciprocal_of_mcr(matrix(1:10, ncol = 2), 1:5), 2)
-  expect_length(reciprocal_of_mcr(matrix(1:5,  ncol = 1), 1:5), 1)
+  expect_length(reciprocal_of_mcr(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), 2)
+  expect_length(reciprocal_of_mcr(matrix(1:5,  nrow = 1), 1:5), 1)
   
   # 'hi' and 'mhq'
   expect_length(reciprocal_of_mcr(hi = 1,   mhq = 1),   1)
@@ -369,12 +397,14 @@ test_that("reciprocal_of_mcr returns an unnamed object if a vector of values is 
 
 test_that("reciprocal_of_mcr returns an unnamed object if a unnamed matrix is given", {
   # 'values' as an unnamed matrix
-  expect_named(reciprocal_of_mcr(matrix(1:10, ncol = 2), 1:5), NULL)
+  expect_named(reciprocal_of_mcr(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), NULL)
 })
 
 test_that("reciprocal_of_mcr returns a named object if a named matrix is given", {
   # 'values' as a named matrix
-  expect_named(reciprocal_of_mcr(matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5),
+  expect_named(reciprocal_of_mcr(matrix(1:10, nrow = 2, byrow = TRUE,
+                                        dimnames = list(c("s1", "s2"))),
+                                 1:5),
                c("s1", "s2"))
 })
 
@@ -411,8 +441,8 @@ test_that("reciprocal_of_mcr computes the reciprocal of the maximum cumulative r
   expect_equal(reciprocal_of_mcr(1:5, c(1,1,1,1,1)), 1/3)
   
   # 'values' as a matrix
-  expect_equal(reciprocal_of_mcr(matrix(c(1,2,3,4,5), ncol = 1), 1:5),  0.2)
-  expect_equal(reciprocal_of_mcr(matrix(1:10, ncol = 2), c(1,1,1,1,1)), c(1/3, 0.25))
+  expect_equal(reciprocal_of_mcr(matrix(c(1,2,3,4,5), nrow = 1), 1:5),                0.2)
+  expect_equal(reciprocal_of_mcr(matrix(1:10, nrow = 2, byrow = TRUE), c(1,1,1,1,1)), c(1/3, 0.25))
   
   # 'hi' and 'mhq'
   expect_equal(reciprocal_of_mcr(hi = c(1,1,1,1,1), mhq = 1:5), c(1,2,3,4,5))
@@ -425,7 +455,7 @@ test_that("reciprocal_of_mcr computes the reciprocal of the maximum cumulative r
 
 test_that("reciprocal_of_mcr returns an identical result whatever the chosen usage", {
   values_vector = 1:5
-  values_matrix = matrix(1:10, ncol = 2)
+  values_matrix = matrix(1:10, nrow = 2, byrow = TRUE)
   references = 1:5
   
   expect_identical(reciprocal_of_mcr(values_vector, references),
@@ -449,15 +479,15 @@ test_that("top_hazard_quotient returns at most as many top hazard quotients as t
   expect_length(top_hazard_quotient(1:5, 1:5, k = 500), 5)
   
   # 'values' as a matrix
-  expect_equal(lengths(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5, k = 500)), c(5,5))
-  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  ncol = 1), 1:5, k = 500)), 5)
+  expect_equal(lengths(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5, k = 500)), c(5,5))
+  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5, k = 500)), 5)
   
   # 'hq' as a vector
   expect_length(top_hazard_quotient(hq = 1:5, k = 500), 5)
   
   # 'hq' as a matrix
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:10, ncol = 2), k = 500)), c(5,5))
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  ncol = 1), k = 500)), 5)
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE), k = 500)), c(5,5))
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  nrow = 1), k = 500)), 5)
 })
 
 test_that("top_hazard_quotient returns, by default, as many top hazard quotients as the integer part of the maximum cumulative ratio", {
@@ -465,27 +495,27 @@ test_that("top_hazard_quotient returns, by default, as many top hazard quotients
   expect_length(top_hazard_quotient(1:5, 1:5), 5)
   
   # 'values' as a matrix
-  expect_equal(lengths(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5)), c(5,2))
-  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  ncol = 1), 1:5)), 5)
+  expect_equal(lengths(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5)), c(5,2))
+  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5)), 5)
   
   # 'hq' as a vector
   expect_length(top_hazard_quotient(hq = 1:5), 3)
   
   # 'hq' as a matrix
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:10, ncol = 2))), c(3,4))
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  ncol = 1))), 3)
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE))), c(3,4))
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  nrow = 1))), 3)
 })
 
 test_that("top_hazard_quotient only allows to find at least 1 top hazard quotient", {
-  expect_error(top_hazard_quotient(1:5, 1:5,                    k = 0), "greater")
-  expect_error(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5, k = -1), "greater")
-  expect_error(top_hazard_quotient(hq = 1:5,                    k = -50), "greater")
-  expect_error(top_hazard_quotient(hq = matrix(1:10, ncol = 2), k = -Inf), "greater")
+  expect_error(top_hazard_quotient(1:5, 1:5,                                  k = 0), "greater")
+  expect_error(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5, k = -1), "greater")
+  expect_error(top_hazard_quotient(hq = 1:5,                                  k = -50), "greater")
+  expect_error(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE), k = -Inf), "greater")
   
-  expect_error(top_hazard_quotient(1:5, 1:5,                    k = 1), NA)
-  expect_error(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5, k = 10), NA)
-  expect_error(top_hazard_quotient(hq = 1:5,                    k = 100), NA)
-  expect_error(top_hazard_quotient(hq = matrix(1:10, ncol = 2), k = Inf), NA)
+  expect_error(top_hazard_quotient(1:5, 1:5,                                  k = 1), NA)
+  expect_error(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5, k = 10), NA)
+  expect_error(top_hazard_quotient(hq = 1:5,                                  k = 100), NA)
+  expect_error(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE), k = Inf), NA)
 })
 
 test_that("top_hazard_quotient returns as many top hazard quotients as requested", {
@@ -493,15 +523,15 @@ test_that("top_hazard_quotient returns as many top hazard quotients as requested
   expect_length(top_hazard_quotient(1:5, 1:5, k = 3), 3)
   
   # 'values' as a matrix
-  expect_equal(lengths(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5, k = 3)), c(3,3))
-  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  ncol = 1), 1:5, k = 3)), 3)
+  expect_equal(lengths(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5, k = 3)), c(3,3))
+  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5, k = 3)), 3)
   
   # 'hq' as a vector
   expect_length(top_hazard_quotient(hq = 1:5, k = 3), 3)
   
   # 'hq' as a matrix
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:10, ncol = 2), k = 3)), c(3,3))
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  ncol = 1))), 3)
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE), k = 3)), c(3,3))
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  nrow = 1))), 3)
 })
 
 test_that("top_hazard_quotient returns the right data structure", {
@@ -510,26 +540,26 @@ test_that("top_hazard_quotient returns the right data structure", {
   expect_false(is.list(top_hazard_quotient(1:5, 1:5)))
   
   # 'values' as a matrix
-  expect_true(is.list(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5)))
-  expect_true(is.list(top_hazard_quotient(matrix(1:5,  ncol = 1), 1:5)))
+  expect_true(is.list(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5)))
+  expect_true(is.list(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5)))
   
   # 'hq' as a vector
   expect_true(is.vector(top_hazard_quotient(hq = 1:5)))
   expect_false(is.list(top_hazard_quotient(hq = 1:5)))
   
   # 'hq' as a matrix
-  expect_true(is.list(top_hazard_quotient(hq = matrix(1:10, ncol = 2))))
-  expect_true(is.list(top_hazard_quotient(hq = matrix(1:5,  ncol = 1))))
+  expect_true(is.list(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE))))
+  expect_true(is.list(top_hazard_quotient(hq = matrix(1:5,  nrow = 1))))
 })
 
 test_that("top_hazard_quotient returns as many sets of top hazard quotients as there are sets of values or of hq", {
   # 'values' as a matrix
-  expect_length(top_hazard_quotient(matrix(1:10, ncol = 2), 1:5), 2)
-  expect_length(top_hazard_quotient(matrix(1:5,  ncol = 1), 1:5), 1)
+  expect_length(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), 2)
+  expect_length(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5), 1)
   
   # 'hq' as a matrix
-  expect_length(top_hazard_quotient(hq = matrix(1:10, ncol = 2)), 2)
-  expect_length(top_hazard_quotient(hq = matrix(1:5,  ncol = 1)), 1)
+  expect_length(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE)), 2)
+  expect_length(top_hazard_quotient(hq = matrix(1:5,  nrow = 1)), 1)
 })
 
 test_that("top_hazard_quotient returns named values if the given values or hq are named", {
@@ -537,28 +567,37 @@ test_that("top_hazard_quotient returns named values if the given values or hq ar
   expect_named(top_hazard_quotient(c(a=1, b=2, c=3, d=4, e=5), 1:5))
   
   # 'values' as a matrix
-  expect_named(unlist(top_hazard_quotient(matrix(1:10, ncol = 2, dimnames = list(letters[1:5])), 1:5)))
-  expect_named(unlist(top_hazard_quotient(matrix(1:5,  ncol = 1, dimnames = list(letters[1:5])), 1:5)))
+  expect_named(unlist(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE,
+                                                 dimnames = list(NULL, letters[1:5])),
+                                          1:5)))
+  expect_named(unlist(top_hazard_quotient(matrix(1:5,  nrow = 1,
+                                                 dimnames = list(NULL, letters[1:5])),
+                                          1:5)))
   
   # 'hq' as a vector
   expect_named(top_hazard_quotient(hq = c(a=1, b=2, c=3, d=4, e=5)))
   
   # 'hq' as a matrix
-  expect_named(unlist(top_hazard_quotient(hq = matrix(1:10, ncol = 2, dimnames = list(letters[1:5])))))
-  expect_named(unlist(top_hazard_quotient(hq = matrix(1:5,  ncol = 1, dimnames = list(letters[1:5])))))
+  expect_named(unlist(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE,
+                                                      dimnames = list(NULL, letters[1:5])))))
+  expect_named(unlist(top_hazard_quotient(hq = matrix(1:5,  nrow = 1,
+                                                      dimnames = list(NULL, letters[1:5])))))
 })
 
 test_that("top_hazard_quotient returns named sets of values if the given values or hq matrix is named", {
   # 'values' as a matrix
-  expect_named(top_hazard_quotient(matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5),
+  expect_named(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE,
+                                          dimnames = list(c("s1", "s2"))),
+                                   1:5),
                c("s1", "s2"))
-  expect_named(top_hazard_quotient(matrix(1:5,  ncol = 1, dimnames = list(NULL, "s1")), 1:5),
+  expect_named(top_hazard_quotient(matrix(1:5,  nrow = 1, dimnames = list("s1")), 1:5),
                "s1")
   
   # 'hq' as a matrix
-  expect_named(top_hazard_quotient(hq = matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2")))),
+  expect_named(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE,
+                                               dimnames = list(c("s1", "s2")))),
                c("s1", "s2"))
-  expect_named(top_hazard_quotient(hq = matrix(1:5,  ncol = 1, dimnames = list(NULL, "s1"))),
+  expect_named(top_hazard_quotient(hq = matrix(1:5,  nrow = 1, dimnames = list("s1"))),
                "s1")
 })
 
@@ -570,15 +609,21 @@ test_that("top_hazard_quotient returns decreasing values", {
   expect_true(is_desc_sorted(top_hazard_quotient(c(a=1, b=2, c=3, d=4, e=5), 1:5)))
   
   # 'values' as a matrix
-  expect_true(are_all_desc_sorted(top_hazard_quotient(matrix(1:10, ncol = 2, dimnames = list(letters[1:5])), 1:5)))
-  expect_true(are_all_desc_sorted(top_hazard_quotient(matrix(1:5,  ncol = 1, dimnames = list(letters[1:5])), 1:5)))
+  expect_true(are_all_desc_sorted(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE,
+                                                             dimnames = list(NULL, letters[1:5])),
+                                                      1:5)))
+  expect_true(are_all_desc_sorted(top_hazard_quotient(matrix(1:5, nrow = 1,
+                                                             dimnames = list(NULL, letters[1:5])),
+                                                      1:5)))
   
   # 'hq' as a vector
   expect_true(is_desc_sorted(top_hazard_quotient(hq = c(a=1, b=2, c=3, d=4, e=5))))
   
   # 'hq' as a matrix
-  expect_true(are_all_desc_sorted(top_hazard_quotient(hq = matrix(1:10, ncol = 2, dimnames = list(letters[1:5])))))
-  expect_true(are_all_desc_sorted(top_hazard_quotient(hq = matrix(1:5,  ncol = 1, dimnames = list(letters[1:5])))))
+  expect_true(are_all_desc_sorted(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE,
+                                                                  dimnames = list(NULL, letters[1:5])))))
+  expect_true(are_all_desc_sorted(top_hazard_quotient(hq = matrix(1:5, nrow = 1,
+                                                                  dimnames = list(NULL, letters[1:5])))))
 })
 
 test_that("top_hazard_quotient finds the top hazard quotients", {
@@ -589,10 +634,12 @@ test_that("top_hazard_quotient finds the top hazard quotients", {
                c(e=5, d=4, c=3))
   
   # 'values' as a matrix
-  expect_equal(top_hazard_quotient(matrix(1:10, ncol = 2, dimnames = list(letters[1:5], c("s1", "s2"))), c(1,1,1,1,1)),
+  expect_equal(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE,
+                                          dimnames = list(c("s1", "s2"), letters[1:5])),
+                                   c(1,1,1,1,1)),
                list(s1 = c(e=5, d=4, c=3),
                     s2 = c(e=10, d=9, c=8, b=7)))
-  expect_equal(top_hazard_quotient(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "s1")), 1:5),
+  expect_equal(top_hazard_quotient(matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5])), 1:5),
                list(s1 = c(a=1, b=1, c=1, d=1, e=1)))
   
   # 'hq' as a vector
@@ -602,16 +649,17 @@ test_that("top_hazard_quotient finds the top hazard quotients", {
                c(e=5, d=4, c=3))
   
   # 'hq' as a matrix
-  expect_equal(top_hazard_quotient(hq = matrix(1:10, ncol = 2, dimnames = list(letters[1:5], c("s1", "s2")))),
+  expect_equal(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE,
+                                               dimnames = list(c("s1", "s2"), letters[1:5]))),
                list(s1 = c(e=5, d=4, c=3),
                     s2 = c(e=10, d=9, c=8, b=7)))
-  expect_equal(top_hazard_quotient(hq = matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "s1"))),
+  expect_equal(top_hazard_quotient(hq = matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5]))),
                list(s1 = c(e=5, d=4, c=3)))
 })
 
 test_that("top_hazard_quotient returns an identical result whatever the chosen usage", {
   values_vector = c(a=1, b=2, c=3, d=4, e=5)
-  values_matrix = matrix(1:10, ncol = 2, dimnames = list(letters[1:5], c("s1", "s2")))
+  values_matrix = matrix(1:10, nrow = 2, byrow = TRUE, dimnames = list(c("s1", "s2"), letters[1:5]))
   references = 1:5
   
   expect_identical(top_hazard_quotient(values_vector, references),
@@ -628,8 +676,8 @@ test_that("classify_mixture returns the right number of values", {
   expect_length(classify_mixture(1:5, 1:5), 1)
   
   # 'values' as a matrix
-  expect_length(classify_mixture(matrix(1:10, ncol = 2), 1:5), 2)
-  expect_length(classify_mixture(matrix(1:5,  ncol = 1), 1:5), 1)
+  expect_length(classify_mixture(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), 2)
+  expect_length(classify_mixture(matrix(1:5,  nrow = 1), 1:5), 1)
   
   # 'hi' and 'mhq'
   expect_length(classify_mixture(hi = 1,   mhq = 1),   1)
@@ -647,12 +695,14 @@ test_that("classify_mixture returns an unnamed object if a vector of values is g
 
 test_that("classify_mixture returns an unnamed object if a unnamed matrix is given", {
   # 'values' as an unnamed matrix
-  expect_named(classify_mixture(matrix(1:10, ncol = 2), 1:5), NULL)
+  expect_named(classify_mixture(matrix(1:10, nrow = 2, byrow = TRUE), 1:5), NULL)
 })
 
 test_that("classify_mixture returns a named object if a named matrix is given", {
   # 'values' as a named matrix
-  expect_named(classify_mixture(matrix(1:10, ncol = 2, dimnames = list(NULL, c("s1", "s2"))), 1:5),
+  expect_named(classify_mixture(matrix(1:10, nrow = 2, byrow = TRUE,
+                                       dimnames = list(c("s1", "s2"))),
+                                1:5),
                c("s1", "s2"))
 })
 
@@ -690,7 +740,7 @@ test_that("classify_mixture returns an named object if named vectors of hi, mhq 
 test_that("classify_mixture classifies into the MIAT groups", {
   # Expected conditions for groups
   # mhq >= 1; mhq < 1 and hi <= 1; mhq < 1, hi > 1 and mcr < 2; mhq < 1, hi > 1 and mcr >= 2
-  # Therefor, limit values must be applied in the following order: mhq, hi, mcr
+  # Therefore, limit values must be applied in the following order: mhq, hi, mcr
   
   # Tests on the limit values (in order of application)
   expect_equal(classify_mixture(mhq = c(2, 1, 0),       hi = c(2, 1, 0),     mcr = c(1, 1, NaN)),
@@ -702,7 +752,7 @@ test_that("classify_mixture classifies into the MIAT groups", {
   expect_equal(classify_mixture(matrix(c(1,   1,
                                          0.5, 0.5,
                                          0.5, 0.8,
-                                         0.9, 0.9), nrow = 2), c(1,1)),
+                                         0.9, 0.9), ncol = 2, byrow = TRUE), c(1,1)),
                c("I","II","IIIA", "IIIB"))
   
   # Test the order of application of these limits
@@ -720,41 +770,41 @@ test_that("classify_mixture returns an identical result whatever the chosen usag
   values_matrix = matrix(c(1,   1,
                            0.5, 0.5,
                            0.5, 0.8,
-                           0.9, 0.9), nrow = 2)
+                           0.9, 0.9), ncol = 2, byrow = TRUE)
   references = c(1,1)
   
   # 'values' as a vector
-  expect_identical(classify_mixture(values_matrix[, 1], references),
-                   classify_mixture(hi  = hazard_index(values_matrix[, 1], references),
-                                    mhq = maximum_hazard_quotient(values_matrix[, 1], references)))
-  expect_identical(classify_mixture(values_matrix[, 1], references),
-                   classify_mixture(hi  = hazard_index(values_matrix[, 1], references),
-                                    mhq = maximum_hazard_quotient(values_matrix[, 1], references),
-                                    mcr = maximum_cumulative_ratio(values_matrix[, 1], references)))
+  expect_identical(classify_mixture(values_matrix[1, ], references),
+                   classify_mixture(hi  = hazard_index(values_matrix[1, ], references),
+                                    mhq = maximum_hazard_quotient(values_matrix[1, ], references)))
+  expect_identical(classify_mixture(values_matrix[1, ], references),
+                   classify_mixture(hi  = hazard_index(values_matrix[1, ], references),
+                                    mhq = maximum_hazard_quotient(values_matrix[1, ], references),
+                                    mcr = maximum_cumulative_ratio(values_matrix[1, ], references)))
   
-  expect_identical(classify_mixture(values_matrix[, 2], references),
-                   classify_mixture(hi  = hazard_index(values_matrix[, 2], references),
-                                    mhq = maximum_hazard_quotient(values_matrix[, 2], references)))
-  expect_identical(classify_mixture(values_matrix[, 2], references),
-                   classify_mixture(hi  = hazard_index(values_matrix[, 2], references),
-                                    mhq = maximum_hazard_quotient(values_matrix[, 2], references),
-                                    mcr = maximum_cumulative_ratio(values_matrix[, 2], references)))
+  expect_identical(classify_mixture(values_matrix[2, ], references),
+                   classify_mixture(hi  = hazard_index(values_matrix[2, ], references),
+                                    mhq = maximum_hazard_quotient(values_matrix[2, ], references)))
+  expect_identical(classify_mixture(values_matrix[2, ], references),
+                   classify_mixture(hi  = hazard_index(values_matrix[2, ], references),
+                                    mhq = maximum_hazard_quotient(values_matrix[2, ], references),
+                                    mcr = maximum_cumulative_ratio(values_matrix[2, ], references)))
   
-  expect_identical(classify_mixture(values_matrix[, 3], references),
-                   classify_mixture(hi  = hazard_index(values_matrix[, 3], references),
-                                    mhq = maximum_hazard_quotient(values_matrix[, 3], references)))
-  expect_identical(classify_mixture(values_matrix[, 3], references),
-                   classify_mixture(hi  = hazard_index(values_matrix[, 3], references),
-                                    mhq = maximum_hazard_quotient(values_matrix[, 3], references),
-                                    mcr = maximum_cumulative_ratio(values_matrix[, 3], references)))
+  expect_identical(classify_mixture(values_matrix[3, ], references),
+                   classify_mixture(hi  = hazard_index(values_matrix[3, ], references),
+                                    mhq = maximum_hazard_quotient(values_matrix[3, ], references)))
+  expect_identical(classify_mixture(values_matrix[3, ], references),
+                   classify_mixture(hi  = hazard_index(values_matrix[3, ], references),
+                                    mhq = maximum_hazard_quotient(values_matrix[3, ], references),
+                                    mcr = maximum_cumulative_ratio(values_matrix[3, ], references)))
   
-  expect_identical(classify_mixture(values_matrix[, 4], references),
-                   classify_mixture(hi  = hazard_index(values_matrix[, 4], references),
-                                    mhq = maximum_hazard_quotient(values_matrix[, 4], references)))
-  expect_identical(classify_mixture(values_matrix[, 4], references),
-                   classify_mixture(hi  = hazard_index(values_matrix[, 4], references),
-                                    mhq = maximum_hazard_quotient(values_matrix[, 4], references),
-                                    mcr = maximum_cumulative_ratio(values_matrix[, 4], references)))
+  expect_identical(classify_mixture(values_matrix[4, ], references),
+                   classify_mixture(hi  = hazard_index(values_matrix[4, ], references),
+                                    mhq = maximum_hazard_quotient(values_matrix[4, ], references)))
+  expect_identical(classify_mixture(values_matrix[4, ], references),
+                   classify_mixture(hi  = hazard_index(values_matrix[4, ], references),
+                                    mhq = maximum_hazard_quotient(values_matrix[4, ], references),
+                                    mcr = maximum_cumulative_ratio(values_matrix[4, ], references)))
   
   # 'values' as a matrix
   expect_identical(classify_mixture(values_matrix, references),
@@ -798,9 +848,12 @@ test_that("mcr_summary returns the right data structure", {
   expect_true(is.list(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5)))
   
   # Matrix (several or a single set of values) -> Data frame
-  expect_true(is.data.frame(mcr_summary(matrix(1:15, ncol = 3,
-                                               dimnames = list(letters[1:5], c("s1", "s2", "s3"))), 1:5)))
-  expect_true(is.data.frame(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "s1")), 1:5)))
+  expect_true(is.data.frame(mcr_summary(matrix(1:15, nrow = 3, byrow = TRUE,
+                                               dimnames = list(c("s1", "s2", "s3"), letters[1:5])),
+                                        1:5)))
+  expect_true(is.data.frame(mcr_summary(matrix(1:5, nrow = 1,
+                                               dimnames = list("s1", letters[1:5])),
+                                        1:5)))
   
   # List (several or a single set of values) -> Data frame
   expect_true(is.data.frame(mcr_summary(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
@@ -816,10 +869,10 @@ test_that("mcr_summary returns a named object", {
   expect_named(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5), colnames)
   
   # 'values' as a matrix
-  expect_equal(colnames(mcr_summary(matrix(1:15, ncol = 3,
-                                           dimnames = list(letters[1:5], c("s1", "s2", "s3"))), 1:5)),
+  expect_equal(colnames(mcr_summary(matrix(1:15, nrow = 3, byrow = TRUE,
+                                           dimnames = list(c("s1", "s2", "s3"), letters[1:5])), 1:5)),
                colnames)
-  expect_equal(colnames(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "s1")), 1:5)),
+  expect_equal(colnames(mcr_summary(matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5])), 1:5)),
                colnames)
   
   # 'values' as a list
@@ -832,10 +885,10 @@ test_that("mcr_summary returns a named object", {
 
 test_that("mcr_summary returns an object whose rows are named if the given sets of values are named", {
   # 'values' as a matrix
-  expect_equal(rownames(mcr_summary(matrix(1:15, ncol = 3,
-                                           dimnames = list(letters[1:5], c("s1", "s2", "s3"))), 1:5)),
+  expect_equal(rownames(mcr_summary(matrix(1:15, nrow = 3, byrow = TRUE,
+                                           dimnames = list(c("s1", "s2", "s3"), letters[1:5])), 1:5)),
                c("s1", "s2", "s3"))
-  expect_equal(rownames(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "s1")), 1:5)),
+  expect_equal(rownames(mcr_summary(matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5])), 1:5)),
                "s1")
   
   # 'values' as a list
@@ -855,14 +908,16 @@ test_that("mcr_summary returns NA THQ if the given values are unnamed or all equ
   expect_true(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5)$THQ))
 
   # 'values' as a matrix
-  expect_true(all_na(mcr_summary(matrix(1:15, ncol = 3,
-                                        dimnames = list(NULL, c("s1", "s2", "s3"))), 1:5)$THQ))
-  expect_false(all_na(mcr_summary(matrix(1:15, ncol = 3,
-                                         dimnames = list(letters[1:5], c("s1", "s2", "s3"))), 1:5)$THQ))
-  expect_true(all_na(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(NULL, "s1")), 1:5)$THQ))
-  expect_false(all_na(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5], "s1")), 1:5)$THQ))
-  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,10, 0,0,0,0,0), ncol = 2,
-                                           dimnames = list(letters[1:5], c("s1", "s2"))),
+  expect_true(all_na(mcr_summary(matrix(1:15, nrow = 3, byrow = TRUE,
+                                        dimnames = list(c("s1", "s2", "s3"))),
+                                 1:5)$THQ))
+  expect_false(all_na(mcr_summary(matrix(1:15, nrow = 3, byrow = TRUE,
+                                         dimnames = list(c("s1", "s2", "s3"), letters[1:5])),
+                                  1:5)$THQ))
+  expect_true(all_na(mcr_summary(matrix(1:5, nrow = 1, dimnames = list("s1")), 1:5)$THQ))
+  expect_false(all_na(mcr_summary(matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5])), 1:5)$THQ))
+  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,10, 0,0,0,0,0), nrow = 2, byrow = TRUE,
+                                           dimnames = list(c("s1", "s2"), letters[1:5])),
                            references = 1:5)$THQ,
                c("e", NA_character_))
 
@@ -886,8 +941,8 @@ test_that("mcr_summary does not count values equal to 0", {
                4)
   
   # 'values' as a matrix
-  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,5, 0,4,0,8,10, 3,6,9,12,15), ncol = 3,
-                                           dimnames = list(letters[1:5], c("s1", "s2", "s3"))),
+  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,5, 0,4,0,8,10, 3,6,9,12,15), nrow = 3, byrow = TRUE,
+                                           dimnames = list(c("s1", "s2", "s3"), letters[1:5])),
                            references = 1:5)$n,
                c(4, 3, 5))
   
@@ -904,8 +959,8 @@ test_that("mcr_summary computes the indicators of the MCR approach", {
                     Group = "I", THQ = "a", MHQ = 1, Missed = 0.8))
   
   # 'values' as a matrix
-  expect_equal(mcr_summary(matrix(c(1,2,3,4,5, 2,4,6,8,10, 3,6,9,12,15), ncol = 3,
-                                  dimnames = list(letters[1:5])), 1:5),
+  expect_equal(mcr_summary(matrix(c(1,2,3,4,5, 2,4,6,8,10, 3,6,9,12,15), nrow = 3, byrow = TRUE,
+                                  dimnames = list(NULL, letters[1:5])), 1:5),
                data.frame(n = c(5,5,5),
                           HI = c(5, 10, 15),
                           MCR = c(5, 5, 5),
@@ -914,7 +969,7 @@ test_that("mcr_summary computes the indicators of the MCR approach", {
                           THQ = c("a", "a", "a"),
                           MHQ = c(1, 2, 3),
                           Missed = c(0.8, 0.8, 0.8)))
-  expect_equal(mcr_summary(matrix(1:5, ncol = 1, dimnames = list(letters[1:5])), 1:5),
+  expect_equal(mcr_summary(matrix(1:5, nrow = 1, dimnames = list(NULL, letters[1:5])), 1:5),
                data.frame(n = 5, HI = 5, MCR = 5, Reciprocal = 0.2,
                           Group = "I", THQ = "a", MHQ = 1, Missed = 0.8))
 
@@ -978,11 +1033,11 @@ test_that("mcr_chart requires values to be named", {
   mcr = c(2, 2, 1.625, 2)
   
   # 'values' as a matrix
-  expect_error(mcr_chart(values = matrix(c(1,1, 0.5,0.5, 0.5,0.8, 0.9,0.9), nrow = 2),
+  expect_error(mcr_chart(values = matrix(c(1,1, 0.5,0.5, 0.5,0.8, 0.9,0.9), ncol = 2, byrow = TRUE),
                          references = references_1),
                "name")
-  expect_error(mcr_chart(values = matrix(c(1,1, 0.5,0.5, 0.5,0.8, 0.9,0.9), nrow = 2,
-                                         dimnames = list(letters[1:2])),
+  expect_error(mcr_chart(values = matrix(c(1,1, 0.5,0.5, 0.5,0.8, 0.9,0.9), ncol = 2, byrow = TRUE,
+                                         dimnames = list(NULL, letters[1:2])),
                          references = references_1),
                NA)
   
@@ -1071,10 +1126,11 @@ test_that("thq_pairs requires references to have named values if they are a vect
 
 test_that("thq_pairs requires values to be named", {
   # 'values' as a matrix
-  expect_error(thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+  expect_error(thq_pairs(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE),
                          references = c(a = 1, b = 1)),
                "name")
-  expect_error(thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+  expect_error(thq_pairs(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE,
+                                         dimnames = list(NULL, letters[1:2])),
                          references = c(a = 1, b = 1)),
                NA)
   
@@ -1091,10 +1147,11 @@ test_that("thq_pairs requires values to be named", {
                NA)
   
   # 'hq' as a matrix
-  expect_error(thq_pairs(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+  expect_error(thq_pairs(hq = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE),
                          hi = c(1, 2, 1)),
                "name")
-  expect_error(thq_pairs(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+  expect_error(thq_pairs(hq = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE,
+                                     dimnames = list(NULL, letters[1:2])),
                          hi = c(1, 2, 1)),
                NA)
   
@@ -1114,7 +1171,8 @@ test_that("thq_pairs requires values to be named", {
 test_that("thq_pairs returns a symmetric matrix", {
   # 'values' as a matrix
   expect_true(isSymmetric.matrix(
-    thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+    thq_pairs(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE,
+                              dimnames = list(NULL, letters[1:2])),
               references = c(a = 1, b = 1))
   ))
   
@@ -1135,31 +1193,37 @@ test_that("thq_pairs returns NULL in 3 cases", {
   
   # 'values' as a matrix
   # Case 1
-  expect_null(thq_pairs(values = matrix(c(1,0, 1,0, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+  expect_null(thq_pairs(values = matrix(c(1,0, 1,0, 0,1), nrow = 3, byrow = TRUE,
+                                        dimnames = list(NULL, letters[1:2])),
                         references = c(a = 1, b = 1),
                         threshold = FALSE, alone = FALSE))
   expect_false(is.null(
-    thq_pairs(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+    thq_pairs(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE,
+                              dimnames = list(NULL, letters[1:2])),
               references = c(a = 1, b = 1),
               threshold = FALSE, alone = FALSE)
   ))
   
   # Case 2
-  expect_null(thq_pairs(values = matrix(c(1,0, 1,0, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+  expect_null(thq_pairs(values = matrix(c(1,0, 1,0, 0,1), nrow = 3, byrow = TRUE,
+                                        dimnames = list(NULL, letters[1:2])),
                         references = c(a = 1, b = 1),
                         threshold = TRUE, alone = TRUE))
   expect_false(is.null(
-    thq_pairs(values = matrix(c(2,0, 1,1, 0,2), ncol = 3, dimnames = list(letters[1:2])),
+    thq_pairs(values = matrix(c(2,0, 1,1, 0,2), nrow = 3, byrow = TRUE,
+                              dimnames = list(NULL, letters[1:2])),
               references = c(a = 1, b = 1),
               threshold = TRUE, alone = TRUE)
   ))
   
   # Case 3
-  expect_null(thq_pairs(values = matrix(c(2,0, 0.5,0.5, 0,2), ncol = 3, dimnames = list(letters[1:2])),
+  expect_null(thq_pairs(values = matrix(c(2,0, 0.5,0.5, 0,2), nrow = 3, byrow = TRUE,
+                                        dimnames = list(NULL, letters[1:2])),
                         references = c(a = 1, b = 1),
                         threshold = TRUE, alone = FALSE))
   expect_false(is.null(
-    thq_pairs(values = matrix(c(2,0, 1,1, 0,2), ncol = 3, dimnames = list(letters[1:2])),
+    thq_pairs(values = matrix(c(2,0, 1,1, 0,2), nrow = 3, byrow = TRUE,
+                              dimnames = list(NULL, letters[1:2])),
               references = c(a = 1, b = 1),
               threshold = TRUE, alone = FALSE)
   ))
@@ -1211,10 +1275,11 @@ test_that("thq_pairs returns NULL in 3 cases", {
 test_that("thq_pairs ignores values equal to 0", {
   # 'values' as a matrix
   expect_equal(
-    thq_pairs(values = matrix(c(1,0,1, 0,1,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3])),
+    thq_pairs(values = matrix(c(1,0,1, 0,1,0, 0,0,1), nrow = 3, byrow = TRUE,
+                              dimnames = list(NULL, letters[1:3])),
               references = c(a = 1, b = 1, c = 1),
               threshold = FALSE, alone = TRUE),
-    as.table(matrix(c(0,0,1,0, 0,0,0,1, 1,0,0,1, 0,1,1,0), ncol = 4,
+    as.table(matrix(c(0,0,1,0, 0,0,0,1, 1,0,0,1, 0,1,1,0), nrow = 4, byrow = TRUE,
                     dimnames = list(c(letters[1:3], "NULL"), c(letters[1:3], "NULL"))))
   )
   
@@ -1225,7 +1290,7 @@ test_that("thq_pairs ignores values equal to 0", {
                             c(c = 1, d = 0)),
               references = c(a = 1, b = 1, c = 1, d = 1),
               threshold = FALSE, alone = TRUE),
-    as.table(matrix(c(0,0,1,0, 0,0,0,1, 1,0,0,1, 0,1,1,0), ncol = 4,
+    as.table(matrix(c(0,0,1,0, 0,0,0,1, 1,0,0,1, 0,1,1,0), nrow = 4, byrow = TRUE,
                     dimnames = list(c(letters[1:3], "NULL"), c(letters[1:3], "NULL"))))
   )
 })
@@ -1239,7 +1304,8 @@ test_that("thq_pairs return has one additional ending row and column if alone is
   # Case 1
   expect_equal(
     unique(nth_values(dimnames(
-      thq_pairs(values = matrix(c(1,0,0, 1,0,1, 0,1,0), ncol = 3, dimnames = list(c("a","b","z"))),
+      thq_pairs(values = matrix(c(1,0,0, 1,0,1, 0,1,0), nrow = 3, byrow = TRUE,
+                                dimnames = list(NULL, c("a","b","z"))),
                 references = c(a = 1, b = 1, z = 1),
                 threshold = FALSE, alone = TRUE)
     ), n = "last")),
@@ -1248,7 +1314,8 @@ test_that("thq_pairs return has one additional ending row and column if alone is
   # Case 2
   expect_equal(
     unique(nth_values(dimnames(
-      thq_pairs(values = matrix(c(1,1,0, 1,0,1, 0,1,1), ncol = 3, dimnames = list(c("a","b","z"))),
+      thq_pairs(values = matrix(c(1,1,0, 1,0,1, 0,1,1), nrow = 3, byrow = TRUE,
+                                dimnames = list(NULL, c("a","b","z"))),
                 references = c(a = 1, b = 1, z = 1),
                 threshold = FALSE, alone = TRUE)
       ), n = "last")),
@@ -1279,7 +1346,8 @@ test_that("thq_pairs return has one additional ending row and column if alone is
 })
 
 test_that("thq_pairs ignores or considers value names according to the argument levels", {
-  values_matrix = matrix(c(1,0,1, 1,0,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3]))
+  values_matrix = matrix(c(1,0,1, 1,0,0, 0,0,1), nrow = 3, byrow = TRUE,
+                         dimnames = list(NULL, letters[1:3]))
   values_list = list(c(a = 1, b = 0.5, c = 1),
                      c(a = 2),
                      c(c = 2))
@@ -1294,8 +1362,8 @@ test_that("thq_pairs ignores or considers value names according to the argument 
   )
   expect_equal(
     rownames(thq_pairs(values = values_matrix,
-            references = references,
-            levels = c("a", "b", "c"))),
+                       references = references,
+                       levels = c("a", "b", "c"))),
     c("a", "b", "c")
   )
   
@@ -1317,7 +1385,8 @@ test_that("thq_pairs ignores or considers value names according to the argument 
 test_that("thq_pairs counts the top hazard quotients pairs", {
   
   # Argument levels
-  values_matrix = matrix(c(1,0,1, 1,0,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3]))
+  values_matrix = matrix(c(1,0,1, 1,0,0, 0,0,1), nrow = 3, byrow = TRUE,
+                         dimnames = list(NULL, letters[1:3]))
   values_list = list(c(a = 1, b = 0.5, c = 1),
                      c(a = 2),
                      c(c = 2))
@@ -1327,14 +1396,14 @@ test_that("thq_pairs counts the top hazard quotients pairs", {
     thq_pairs(values = values_matrix,
               references = references,
               levels = NULL),
-    as.table(matrix(c(0,1, 1,0), ncol = 2,
+    as.table(matrix(c(0,1, 1,0), nrow = 2, byrow = TRUE,
                     dimnames = list(c("a","c"), c("a","c"))))
   )
   expect_equal(
     thq_pairs(values = values_matrix,
               references = references,
               levels = c("a", "b", "c")),
-    as.table(matrix(c(0,0,1, 0,0,0, 1,0,0), ncol = 3,
+    as.table(matrix(c(0,0,1, 0,0,0, 1,0,0), nrow = 3, byrow = TRUE,
                     dimnames = list(letters[1:3], letters[1:3])))
   )
   
@@ -1342,30 +1411,31 @@ test_that("thq_pairs counts the top hazard quotients pairs", {
     thq_pairs(values = values_list,
               references = references,
               levels = NULL),
-    as.table(matrix(c(0,1, 1,0), ncol = 2,
+    as.table(matrix(c(0,1, 1,0), nrow = 2, byrow = TRUE,
                     dimnames = list(c("a","c"), c("a","c"))))
   )
   expect_equal(
     thq_pairs(values = values_list,
               references = references,
               levels = c("a", "b", "c")),
-    as.table(matrix(c(0,0,1, 0,0,0, 1,0,0), ncol = 3,
+    as.table(matrix(c(0,0,1, 0,0,0, 1,0,0), nrow = 3, byrow = TRUE,
                     dimnames = list(letters[1:3], letters[1:3])))
   )
   
   
   # Arguments threshold and alone, on the following matrix (and an equivalent list):
-  #    s1 s2 s3
-  # a 0.5  0  2
-  # b 0.5  2  0
+  #      a   b
+  # s1 0.5 0.5
+  # s2 0.0 2.0
+  # s3 2.0 0.0
   # If threshold = T and alone = F: NULL
-  # If threshold = F and alone = F: set 1 si considered (ab = 1)
+  # If threshold = F and alone = F: set 1 is considered (ab = 1)
   # If threshold = T and alone = T: sets 2 and 3 are considered (aNULL = 1, bNULL = 1)
   # If threshold = F and alone = T: sets 1, 2 and 3 are considered (ab = 1, aNULL = 1, bNULL = 1)
   values_matrix = matrix(c(0.5,0.5,
                            0,  2,
-                           2,  0),
-                           ncol = 3, dimnames = list(letters[1:2], c("s1", "s2", "s3")))
+                           2,  0), nrow = 3, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3"), letters[1:2]))
   values_list = list(c(a = 0.5, b = 0.5),
                      c(b = 2),
                      c(a = 2))
@@ -1379,19 +1449,19 @@ test_that("thq_pairs counts the top hazard quotients pairs", {
   expect_equal(
     thq_pairs(values = values_matrix, references = references,
               threshold = FALSE, alone = FALSE),
-    as.table(matrix(c(0,1, 1,0), ncol = 2,
+    as.table(matrix(c(0,1, 1,0), nrow = 2, byrow = TRUE,
                     dimnames = list(letters[1:2], letters[1:2])))
   )
   expect_equal(
     thq_pairs(values = values_matrix, references = references,
               threshold = TRUE, alone = TRUE),
-    as.table(matrix(c(0,0,1, 0,0,1, 1,1,0), ncol = 3,
+    as.table(matrix(c(0,0,1, 0,0,1, 1,1,0), nrow = 3, byrow = TRUE,
                     dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
   )
   expect_equal(
     thq_pairs(values = values_matrix, references = references,
               threshold = FALSE, alone = TRUE),
-    as.table(matrix(c(0,1,1, 1,0,1, 1,1,0), ncol = 3,
+    as.table(matrix(c(0,1,1, 1,0,1, 1,1,0), nrow = 3, byrow = TRUE,
                     dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
   )
   
@@ -1403,19 +1473,19 @@ test_that("thq_pairs counts the top hazard quotients pairs", {
   expect_equal(
     thq_pairs(values = values_list, references = references,
               threshold = FALSE, alone = FALSE),
-    as.table(matrix(c(0,1, 1,0), ncol = 2,
+    as.table(matrix(c(0,1, 1,0), nrow = 2, byrow = TRUE,
                     dimnames = list(letters[1:2], letters[1:2])))
   )
   expect_equal(
     thq_pairs(values = values_list, references = references,
               threshold = TRUE, alone = TRUE),
-    as.table(matrix(c(0,0,1, 0,0,1, 1,1,0), ncol = 3,
+    as.table(matrix(c(0,0,1, 0,0,1, 1,1,0), nrow = 3, byrow = TRUE,
                     dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
   )
   expect_equal(
     thq_pairs(values = values_list, references = references,
               threshold = FALSE, alone = TRUE),
-    as.table(matrix(c(0,1,1, 1,0,1, 1,1,0), ncol = 3,
+    as.table(matrix(c(0,1,1, 1,0,1, 1,1,0), nrow = 3, byrow = TRUE,
                     dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
   )
   
@@ -1423,20 +1493,20 @@ test_that("thq_pairs counts the top hazard quotients pairs", {
   # Matrix having only one value per set
   expect_equal(
     thq_pairs(values = matrix(c(1,1,1,1,1),
-                              ncol = 5, dimnames = list("a")),
+                              nrow = 5, dimnames = list(NULL, "a")),
               references = c(a = 1),
               threshold = FALSE, alone = TRUE),
-    as.table(matrix(c(0,5, 5,0), ncol = 2,
+    as.table(matrix(c(0,5, 5,0), nrow = 2, byrow = TRUE,
                     dimnames = list(c("a", "NULL"), c("a", "NULL"))))
   )
   
   # Matrix having only one set of values
   expect_equal(
     thq_pairs(values = matrix(c(1, 1),
-                              ncol = 1, dimnames = list(letters[1:2])),
+                              nrow = 1, dimnames = list(NULL, letters[1:2])),
               references = c(a = 1, b = 1),
               threshold = FALSE, alone = TRUE),
-    as.table(matrix(c(0,1,0, 1,0,0, 0,0,0), ncol = 3,
+    as.table(matrix(c(0,1,0, 1,0,0, 0,0,0), nrow = 3, byrow = TRUE,
                     dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
   )
   
@@ -1448,7 +1518,7 @@ test_that("thq_pairs counts the top hazard quotients pairs", {
                             c(c = 1)),
               references = c(a = 1, b = 1, c = 1),
               threshold = FALSE, alone = TRUE),
-    as.table(matrix(c(0,0,0,1, 0,0,0,1, 0,0,0,1, 1,1,1,0), ncol = 4,
+    as.table(matrix(c(0,0,0,1, 0,0,0,1, 0,0,0,1, 1,1,1,0), nrow = 4, byrow = TRUE,
                     dimnames = list(c(letters[1:3], "NULL"), c(letters[1:3], "NULL"))))
   )
   
@@ -1457,7 +1527,7 @@ test_that("thq_pairs counts the top hazard quotients pairs", {
     thq_pairs(values = list(c(a = 1, b = 1)),
               references = c(a = 1, b = 1),
               threshold = FALSE, alone = TRUE),
-    as.table(matrix(c(0,1,0, 1,0,0, 0,0,0), ncol = 3,
+    as.table(matrix(c(0,1,0, 1,0,0, 0,0,0), nrow = 3, byrow = TRUE,
                     dimnames = list(c(letters[1:2], "NULL"), c(letters[1:2], "NULL"))))
   )
   
@@ -1486,7 +1556,8 @@ test_that("thq_pairs returns an identical result whatever the structure of refer
 test_that("thq_pairs returns an identical result whatever the chosen usage", {
   values_matrix = matrix(c(1,2,1,2,1,
                            2,1,1,1,2,
-                           0,1,2,1,1), ncol = 3, dimnames = list(letters[1:5], c("s1", "s2", "s3")))
+                           0,1,2,1,1), nrow = 3, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3"), letters[1:5]))
   values_list = list(s1 = c(a=1, b=2, c=1, d=2, e=1),
                      s2 = c(a=2, b=1, c=1, d=1, e=2),
                      s3 = c(a=0, b=1, c=2, d=1, e=1))
@@ -1496,8 +1567,8 @@ test_that("thq_pairs returns an identical result whatever the chosen usage", {
                    thq_pairs(hq = hazard_quotient(values_matrix, references),
                              hi = hazard_index(values_matrix, references)))
   expect_identical(thq_pairs(values_list, references),
-                   thq_pairs(hq = sapply(values_list, hazard_quotient, references),
-                             hi = sapply(values_list, hazard_index, references)))
+                   thq_pairs(hq = t(sapply(values_list, hazard_quotient, references)),
+                             hi = t(t(sapply(values_list, hazard_index, references)))))
 })
 
 
@@ -1523,10 +1594,11 @@ test_that("thq_by_group requires references to have named values if they are a v
 
 test_that("thq_by_group requires values to be named", {
   # 'values' as a matrix
-  expect_error(thq_by_group(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+  expect_error(thq_by_group(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE),
                             references = c(a = 1, b = 1)),
                "name")
-  expect_error(thq_by_group(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+  expect_error(thq_by_group(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE,
+                                            dimnames = list(NULL, letters[1:2])),
                             references = c(a = 1, b = 1)),
                NA)
   
@@ -1543,10 +1615,11 @@ test_that("thq_by_group requires values to be named", {
                NA)
   
   # 'hq' as a matrix
-  expect_error(thq_by_group(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+  expect_error(thq_by_group(hq = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE),
                             groups = c("I", "I", "I")),
                "name")
-  expect_error(thq_by_group(hq = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+  expect_error(thq_by_group(hq = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE,
+                                        dimnames = list(NULL, letters[1:2])),
                             groups = c("I", "I", "I")),
                NA)
   
@@ -1584,7 +1657,8 @@ test_that("thq_by_group requires values to be named", {
 })
 
 test_that("thq_by_group ignores or considers value names according to the argument levels", {
-  values_matrix = matrix(c(1,1,0, 1,0,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3]))
+  values_matrix = matrix(c(1,1,0, 1,0,0, 0,0,1), nrow = 3, byrow = TRUE,
+                         dimnames = list(NULL, letters[1:3]))
   values_list = list(c(a = 1, b = 1),
                      c(a = 1),
                      c(c = 1))
@@ -1622,7 +1696,7 @@ test_that("thq_by_group ignores or considers value names according to the argume
 test_that("thq_by_group counts the top hazard quotients by group", {
   
   values_matrix = matrix(c(1,2,0,0, 0,1,0,2, 0.5,0,0,3.2, 0.9,1.8,0,0),
-                         ncol = 4, dimnames = list(letters[1:4]))
+                         nrow = 4, byrow = TRUE, dimnames = list(NULL, letters[1:4]))
   values_list = list(c(a=1, b=2, c=0.1), c(b=1, d=2), c(a=0.5, d=3.2), c(a=0.9, a=0.9))
   references = c(a=1, b=2, c=10, d=4)
   
@@ -1641,7 +1715,8 @@ test_that("thq_by_group counts the top hazard quotients by group", {
   
   
   # Argument levels
-  values_matrix = matrix(c(1,1,0, 1,0,0, 0,0,1), ncol = 3, dimnames = list(letters[1:3]))
+  values_matrix = matrix(c(1,1,0, 1,0,0, 0,0,1), nrow = 3, byrow = TRUE,
+                         dimnames = list(NULL, letters[1:3]))
   values_list = list(c(a = 1, b = 1),
                      c(a = 1),
                      c(c = 1))
@@ -1680,14 +1755,14 @@ test_that("thq_by_group counts the top hazard quotients by group", {
   
   # Matrix having only one value per set
   expect_equal(
-    thq_by_group(values = matrix(c(1,1,1,1,1), ncol = 5, dimnames = list("a")),
+    thq_by_group(values = matrix(c(1,1,1,1,1), nrow = 5, dimnames = list(NULL, "a")),
                  references = c(a = 1)),
     as.table(matrix(c(5,0,0,0), ncol = 4, dimnames = list("a", c("I","II","IIIA","IIIB"))))
   )
   
   # Matrix having only one set of values
   expect_equal(
-    thq_by_group(values = matrix(c(1, 1), ncol = 1, dimnames = list(letters[1:2])),
+    thq_by_group(values = matrix(c(1, 1), nrow = 1, dimnames = list(NULL, letters[1:2])),
               references = c(a = 1, b = 1)),
     as.table(matrix(c(1,0,0,0), ncol = 4, dimnames = list("a", c("I","II","IIIA","IIIB"))))
   )
@@ -1721,7 +1796,7 @@ test_that("thq_by_group returns an identical result whatever the structure of re
 
 test_that("thq_by_group returns an identical result whatever the chosen usage", {
   values_matrix = matrix(c(1,2,0, 0,1,2, 0.5,0,3.2, 0.9,1.8,0),
-                         ncol = 4, dimnames = list(letters[1:3]))
+                         nrow = 4, byrow = TRUE, dimnames = list(NULL, letters[1:3]))
   values_list = list(s1 = c(a=1, b=2), s2 = c(b=1, c=2), s3 = c(a=0.5, c=3.2), s4 = c(a=0.9, a=0.9))
   references_vector = c(a=1, b=2, c=4)
   references_list = list(c(1,2), c(2,4), c(1,4), c(1,1))
@@ -1808,13 +1883,13 @@ test_that("mcr_summary_by_class requires values to be named", {
                NA)
   
   # 'values' as a matrix
-  expect_error(mcr_summary_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
-                                                    dimnames = list(NULL, c("s1", "s2"))),
+  expect_error(mcr_summary_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                                    dimnames = list(c("s1", "s2"))),
                                     references = references,
                                     classes = classes),
                "name")
-  expect_error(mcr_summary_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
-                                                    dimnames = list(letters[1:4], c("s1", "s2"))),
+  expect_error(mcr_summary_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                                    dimnames = list(c("s1", "s2"), letters[1:4])),
                                     references = references,
                                     classes = classes),
                NA)
@@ -1836,7 +1911,8 @@ test_that("mcr_summary_by_class returns the right data structure", {
                  C = c("C5"),
                  D = c("C1", "C2", "C3", "C4", "C5"))
   references = c(A = 1, B = 2, C = 3, D = 4)
-  values_matrix = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2, dimnames = list(LETTERS[1:4], c("s1", "s2")))
+  values_matrix = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                         dimnames = list(c("s1", "s2"), LETTERS[1:4]))
   values_list = list(s1 = c(A = 1, B = 2, C = 3, D = 4),
                      s2 = c(A = 1, B = 2, C = 3, D = 4),
                      s3 = c(A = 1, B = 2, C = 3, D = 4))
@@ -1874,8 +1950,8 @@ test_that("mcr_summary_by_class returns as many variables as there are sets of v
   references = c(A = 1, B = 2, C = 3, D = 4)
   
   # 'values' as a matrix
-  expect_length(mcr_summary_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
-                                                     dimnames = list(LETTERS[1:4], c("s1", "s2"))),
+  expect_length(mcr_summary_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                                     dimnames = list(c("s1", "s2"), LETTERS[1:4])),
                                      references = references,
                                      classes = classes),
                 2)
@@ -1896,7 +1972,8 @@ test_that("mcr_summary_by_class does not count values equal to 0", {
                  D = c("C1", "C2", "C3", "C4", "C5"))
   references = c(A = 1, B = 2, C = 3, D = 4)
   values_vector = c(A = 1, B = 0, C = 3, D = 0)
-  values_matrix = matrix(c(1,0,3,0, 1,2,3,4), ncol = 2, dimnames = list(LETTERS[1:4], c("s1", "s2")))
+  values_matrix = matrix(c(1,0,3,0, 1,2,3,4), nrow = 2, byrow = TRUE,
+                         dimnames = list(c("s1", "s2"), LETTERS[1:4]))
   values_list = list(s1 = c(A = 1, C = 3, D = 0),
                      s2 = c(A = 1, B = 2, C = 3, D = 4),
                      s3 = c(A = 0, C = 2))
@@ -1955,8 +2032,8 @@ test_that("mcr_summary_by_class returns data frames containing as many rows as c
                                          classes = classes,
                                          all_classes = FALSE)),
                3)
-  expect_equal(sapply(mcr_summary_by_class(values = matrix(c(1,0,3,0, 1,2,3,4), ncol = 2,
-                                                           dimnames = list(LETTERS[1:4], c("s1", "s2"))),
+  expect_equal(sapply(mcr_summary_by_class(values = matrix(c(1,0,3,0, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                                           dimnames = list(c("s1", "s2"), LETTERS[1:4])),
                                            references = references,
                                            classes = classes,
                                            all_classes = FALSE),
@@ -1976,8 +2053,8 @@ test_that("mcr_summary_by_class returns data frames containing as many rows as c
                                          classes = classes,
                                          all_classes = TRUE)),
                5)
-  expect_equal(sapply(mcr_summary_by_class(values = matrix(c(1,0,3,0, 1,2,3,4), ncol = 2,
-                                                           dimnames = list(LETTERS[1:4], c("s1", "s2"))),
+  expect_equal(sapply(mcr_summary_by_class(values = matrix(c(1,0,3,0, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                                           dimnames = list(c("s1", "s2"), LETTERS[1:4])),
                                            references = references,
                                            classes = classes,
                                            all_classes = TRUE),
@@ -2011,8 +2088,8 @@ test_that("mcr_summary_by_class returns NULL if values do not belong to any clas
                                    classes = classes))
   
   # 'values' as a matrix
-  expect_null(mcr_summary_by_class(values = matrix(c(0,0,0,0,5, 1,2,3,4,5), ncol = 2,
-                                                   dimnames = list(LETTERS[1:5], c("s1", "s2"))),
+  expect_null(mcr_summary_by_class(values = matrix(c(0,0,0,0,5, 1,2,3,4,5), nrow = 2, byrow = TRUE,
+                                                   dimnames = list(c("s1", "s2"), LETTERS[1:5])),
                                    references = references,
                                    classes = classes)$s1)
   
@@ -2032,8 +2109,8 @@ test_that("mcr_summary_by_class returns named objects", {
                  C = c("C5"),
                  D = c("C1", "C2", "C3", "C4", "C5"))
   references = c(A = 1, B = 2, C = 3, D = 4)
-  values_matrix = matrix(c(1,0,3,0, 1,2,3,4), ncol = 2,
-                         dimnames = list(LETTERS[1:4], c("s1", "s2")))
+  values_matrix = matrix(c(1,0,3,0, 1,2,3,4), nrow = 2, byrow = TRUE,
+                         dimnames = list(c("s1", "s2"), LETTERS[1:4]))
   values_list = list(s1 = c(A = 1, C = 3),
                      s2 = c(A = 1, B = 2, C = 3, D = 4))
   
@@ -2141,14 +2218,14 @@ test_that("mcr_chart_by_class requires values to be named", {
   
   # 'values' as a matrix
   expect_error(suppressMessages(suppressWarnings(
-    mcr_chart_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
-                                       dimnames = list(NULL, c("s1", "s2"))),
+    mcr_chart_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                       dimnames = list(c("s1", "s2"))),
                        references = references,
                        classes = classes))),
     "name")
   expect_error(suppressMessages(suppressWarnings(
-    mcr_chart_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
-                                       dimnames = list(letters[1:4], c("s1", "s2"))),
+    mcr_chart_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                       dimnames = list(c("s1", "s2"), letters[1:4])),
                        references = references,
                        classes = classes))),
     NA)
@@ -2302,13 +2379,13 @@ test_that("thq_pairs_by_class requires values to be named", {
   references = c(A = 1, B = 2, C = 3, D = 4)
   
   # 'values' as a matrix
-  expect_error(thq_pairs_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
-                                                  dimnames = list(NULL, c("s1", "s2"))),
+  expect_error(thq_pairs_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                                  dimnames = list(c("s1", "s2"))),
                                   references = references,
                                   classes = classes),
                "name")
-  expect_error(thq_pairs_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
-                                                  dimnames = list(letters[1:4], c("s1", "s2"))),
+  expect_error(thq_pairs_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                                  dimnames = list(c("s1", "s2"), letters[1:4])),
                                   references = references,
                                   classes = classes),
                NA)
@@ -2420,13 +2497,13 @@ test_that("thq_by_group_by_class requires values to be named", {
   references = c(A = 1, B = 2, C = 3, D = 4)
   
   # 'values' as a matrix
-  expect_error(thq_by_group_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
-                                                     dimnames = list(NULL, c("s1", "s2"))),
+  expect_error(thq_by_group_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                                     dimnames = list(c("s1", "s2"))),
                                      references = references,
                                      classes = classes),
                "name")
-  expect_error(thq_by_group_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), ncol = 2,
-                                                     dimnames = list(letters[1:4], c("s1", "s2"))),
+  expect_error(thq_by_group_by_class(values = matrix(c(1,2,3,4, 1,2,3,4), nrow = 2, byrow = TRUE,
+                                                     dimnames = list(c("s1", "s2"), letters[1:4])),
                                      references = references,
                                      classes = classes),
                NA)
@@ -2593,11 +2670,12 @@ test_that("reduce_sets requires values to be named", {
                NA)
   
   # 'values' as a matrix
-  expect_error(reduce_sets(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+  expect_error(reduce_sets(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE),
                            references = c(a = 1, b = 1),
                            FUN = max),
                "name")
-  expect_error(reduce_sets(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+  expect_error(reduce_sets(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE,
+                                           dimnames = list(NULL, letters[1:2])),
                            references = c(a = 1, b = 1),
                            FUN = max),
                NA)
@@ -2652,7 +2730,7 @@ test_that("reduce_sets returns an additional variable if references are given", 
 test_that("reduce_sets ignores values equal to 0 according to the argument ignore_zero", {
   values_vector = c(b = 2, a = 2, b = 3, a = 1, a = 0)
   values_matrix = matrix(c(2,2,1,0, 1,1,3,2, 0,1,1,0),
-                         ncol = 3, dimnames = list(c("a","b","a","c")))
+                         nrow = 3, byrow = TRUE, dimnames = list(NULL, c("a","b","a","c")))
   values_list = list(s1 = c(b = 1, a = 1, a = 3, b = 0),
                      s2 = c(a = 2, c = 0),
                      s3 = c(b = 3, b = 7, b = 1, c = 1, c = 4))
@@ -2668,10 +2746,10 @@ test_that("reduce_sets ignores values equal to 0 according to the argument ignor
   # 'values' as a matrix
   expect_equal(reduce_sets(values = values_matrix, FUN = min, ignore_zero = TRUE),
                matrix(c(1,2,0, 1,1,2, 1,1,0),
-                      ncol = 3, dimnames = list(c("a","b","c"))))
+                      nrow = 3, byrow = TRUE, dimnames = list(NULL, c("a","b","c"))))
   expect_equal(reduce_sets(values = values_matrix, FUN = min, ignore_zero = FALSE),
                matrix(c(1,2,0, 1,1,2, 0,1,0),
-                      ncol = 3, dimnames = list(c("a","b","c"))))
+                      nrow = 3, byrow = TRUE, dimnames = list(NULL, c("a","b","c"))))
   
   # 'values' as a list
   expect_equal(reduce_sets(values = values_list, FUN = min, ignore_zero = TRUE),
@@ -2688,7 +2766,7 @@ test_that("reduce_sets ignores values equal to 0 according to the argument ignor
 test_that("reduce_sets reduces sets of values", {
   values_vector = c(b = 2, a = 2, b = 3, a = 1)
   values_matrix = matrix(c(2,2,1,0, 1,1,3,2, 0,1,1,0),
-                         ncol = 3, dimnames = list(c("a","b","a","c")))
+                         nrow = 3, byrow = TRUE, dimnames = list(NULL, c("a","b","a","c")))
   values_list = list(s1 = c(b = 1, a = 1, a = 3),
                      s2 = c(a = 2),
                      s3 = c(b = 3, b = 7, b = 1, c = 1, c = 4))
@@ -2704,10 +2782,10 @@ test_that("reduce_sets reduces sets of values", {
   # 'values' as a matrix
   expect_equal(reduce_sets(values = values_matrix, FUN = max),
                matrix(c(2,2,0, 3,1,2, 1,1,0),
-                      ncol = 3, dimnames = list(c("a","b","c"))))
+                      nrow = 3, byrow = TRUE, dimnames = list(NULL, c("a","b","c"))))
   expect_equal(reduce_sets(values = values_matrix, FUN = fun_b, b = 1),
                matrix(c(4,5,0, 5,3,5, 3,3,0),
-                      ncol = 3, dimnames = list(c("a","b","c"))))
+                      nrow = 3, byrow = TRUE, dimnames = list(NULL, c("a","b","c"))))
   
   # 'values' as a list
   expect_equal(reduce_sets(values = values_list, FUN = max),
@@ -2782,12 +2860,13 @@ test_that("subset_from_class requires values to be named", {
   classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"))
   
   # 'values' as a matrix
-  expect_error(subset_from_class(values = matrix(c(1,0, 1,1, 0,1), ncol = 3),
+  expect_error(subset_from_class(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE),
                                  references = c(a = 1, b = 1),
                                  classes = classes_list,
                                  class_name = "C3"),
                "name")
-  expect_error(subset_from_class(values = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2])),
+  expect_error(subset_from_class(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE,
+                                                 dimnames = list(NULL, letters[1:2])),
                                  references = c(a = 1, b = 1),
                                  classes = classes_list,
                                  class_name = "C3"),
@@ -2807,7 +2886,8 @@ test_that("subset_from_class requires values to be named", {
 })
 
 test_that("subset_from_class returns an additional variable if references are given", {
-  values_matrix = matrix(c(1,0, 1,1, 0,1), ncol = 3, dimnames = list(letters[1:2]))
+  values_matrix = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE,
+                         dimnames = list(NULL, letters[1:2]))
   values_list = list(c(a = 1, a = 1), c(b = 1, b = 1), c(a = 1, b = 1))
   classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"))
   
@@ -2855,7 +2935,7 @@ test_that("subset_from_class returns an additional variable if references are gi
 test_that("subset_from_class extracts the subset of values corresponding to the given class", {
   classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"), d = "C5")
   values_matrix = matrix(c(1,1,1, 1,0,0, 1,1,0),
-                         ncol = 3, dimnames = list(letters[1:3], c("s1", "s2", "s3")))
+                         nrow = 3, byrow = TRUE, dimnames = list(c("s1", "s2", "s3"), letters[1:3]))
   values_list = list(s1 = c(a = 1, b = 1, c = 1),
                      s2 = c(a = 1),
                      s3 = c(a = 1, b = 1))
@@ -2865,17 +2945,17 @@ test_that("subset_from_class extracts the subset of values corresponding to the 
                                  classes = classes_list,
                                  class_name = "C3"),
                matrix(c(1,1, 0,0, 1,0),
-                      ncol = 3, dimnames = list(c("b", "c"), c("s1", "s2", "s3"))))
+                      nrow = 3, byrow = TRUE, dimnames = list(c("s1", "s2", "s3"), c("b", "c"))))
   expect_equal(subset_from_class(values = values_matrix,
                                  classes = classes_list,
                                  class_name = "C4"),
                matrix(c(1,0,0),
-                      ncol = 3, dimnames = list("c", c("s1", "s2", "s3"))))
+                      nrow = 3, byrow = TRUE, dimnames = list(c("s1", "s2", "s3"), "c")))
   expect_equal(subset_from_class(values = values_matrix,
                                  classes = classes_list,
                                  class_name = "C5"),
                matrix(numeric(0),
-                      nrow = 0, ncol = ncol(values_matrix), dimnames = list(NULL, c("s1", "s2", "s3"))))
+                      ncol = 0, nrow = nrow(values_matrix), dimnames = list(c("s1", "s2", "s3"))))
   
   # 'values' as a list
   expect_equal(subset_from_class(values = values_list,

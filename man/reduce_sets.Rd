@@ -55,17 +55,20 @@ reduce_sets(values = c(C = 1, C = 5, C = 4, B = 2, A = 1, A = 3),
 
 ## Reduce sets of values given as a matrix
 v <- matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
-            ncol = 10, dimnames = list(c("A", "B", "A", "C", "C")))
+            nrow = 10, byrow = TRUE,
+            dimnames = list(paste0("set.", 1:10), c("A", "B", "A", "C", "C")))
 reduce_sets(values = v, FUN = mean)
 
 ## Reduce sets of values and associated reference values given as lists
-reduce_sets(values = list(c(A = 0.1, A = 0.3, B = 0.5),
-                          c(A = 0.2),
-                          c(B = 0.3, B = 0.4, B = 0.7, C = 0.4, C = 0.1)),
-            references = list(c(1, 1, 2),
-                              1,
-                              c(2, 2, 2, 3, 3)),
-            FUN = median)
+reduce_sets(
+  values = list(set.1 = c(A = 0.1, A = 0.3, B = 0.5),
+                set.2 = c(A = 0.2),
+                set.3 = c(B = 0.3, B = 0.4, B = 0.7, C = 0.4, C = 0.1)),
+  references = list(c(1, 1, 2),
+                    1,
+                    c(2, 2, 2, 3, 3)),
+  FUN = median
+)
 
 }
 \author{

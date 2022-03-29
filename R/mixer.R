@@ -9,8 +9,8 @@ NULL
 #' Compute the hazard quotient as the ratio between a value and a reference value.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' \loadmathjax
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
@@ -31,9 +31,13 @@ NULL
 #' @examples
 #' hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5))
 #' hazard_quotient(c(A = 1, B = 2, C = 3, D = 4, E = 5), c(1,2,3,4,5))
-#' hazard_quotient(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                 ncol = 2, dimnames = list(LETTERS[1:5])),
-#'                 references = c(1,2,3,4,5))
+#' 
+#' hazard_quotient(
+#'   values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                   nrow = 2, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+#'   references = c(1,2,3,4,5)
+#' )
 #' 
 #' @md
 #' @export
@@ -41,21 +45,23 @@ hazard_quotient = function(values, references) {
   
   if (is.vector(values) && length(values) != length(references))
     stop("values and references must be the same length.")
-  if (is.matrix(values) && nrow(values) != length(references))
-    stop("Length of references must be equal to the number of rows of values.")
+  if (is.matrix(values) && ncol(values) != length(references))
+    stop("Length of references must be equal to the number of columns of values.")
   
   # Distinction between vector and matrix cases
   if (is.vector(values)) return(values / references)
   if (is.matrix(values)) {
-    hq = apply(values, 2, function(column) column / references)
+    hq = apply(values, 1, function(row) row / references)
     
-    # Case where the matrix contains only one set of values, the result of apply is a vector
+    # Case where the matrix contains sets of only one value, the result of apply is a vector
     if (is.vector(hq)) {
-      hq = matrix(hq, nrow = 1)
-      rownames(hq) = rownames(values)
+      hq = matrix(hq, ncol = 1)
+      colnames(hq) = colnames(values)
+    } else {
+      hq = t(hq)
     }
     
-    colnames(hq) = colnames(values)
+    rownames(hq) = rownames(values)
     return(hq)
   }
 }
@@ -70,10 +76,10 @@ hazard_quotient = function(values, references) {
 #' Arguments `values` and `references` are used to compute the hazard quotients before computing the
 #'  hazard index. Thus, call the function with the argument `hq` is faster (if it is already computed).
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
-#' If `values` or `hq` is a matrix, one hazard index is computed on each column.
+#' If `values` or `hq` is a matrix, one hazard index is computed for each row.
 #' 
 #' \loadmathjax
 #' The hazard index of the vector \eqn{i} is given by:
@@ -105,8 +111,13 @@ hazard_quotient = function(values, references) {
 #' @examples
 #' hazard_index(c(1,2,3,4,5), c(1,2,3,4,5))
 #' hazard_index(hq = hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5)))
-#' hazard_index(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1), ncol = 2),
-#'              references = c(1,2,3,4,5))
+#' 
+#' hazard_index(
+#'   values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                   nrow = 2, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+#'   references = c(1,2,3,4,5)
+#' )
 #' 
 #' @md
 #' @export
@@ -117,7 +128,7 @@ hazard_index = function(values = NULL, references = NULL,
   
   # Distinction between vector and matrix cases
   if (is.vector(hq)) return(sum(hq))
-  if (is.matrix(hq)) return(colSums(hq))
+  if (is.matrix(hq)) return(rowSums(hq))
 }
 
 
@@ -130,10 +141,10 @@ hazard_index = function(values = NULL, references = NULL,
 #'  the maximum hazard quotient. Thus, call the function with the argument `hq` is faster (if it is
 #'  already computed).
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
-#' If `values` or `hq` is a matrix, one maximum hazard quotient is searched for each column.
+#' If `values` or `hq` is a matrix, one maximum hazard quotient is searched for each row.
 #' 
 #' \loadmathjax
 #' The maximum hazard quotient of the vector \eqn{i} is given by:
@@ -165,9 +176,13 @@ hazard_index = function(values = NULL, references = NULL,
 #' @examples
 #' maximum_hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5))
 #' maximum_hazard_quotient(hq = hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5)))
-#' maximum_hazard_quotient(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                         ncol = 2),
-#'                         references = c(1,2,3,4,5))
+#' 
+#' maximum_hazard_quotient(
+#'   values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                   nrow = 2, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+#'   references = c(1,2,3,4,5)
+#' )
 #' 
 #' @md
 #' @export
@@ -178,7 +193,7 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
   
   # Distinction between vector and matrix cases
   if (is.vector(hq)) return(max(hq))
-  if (is.matrix(hq)) return(apply(hq, 2, "max"))
+  if (is.matrix(hq)) return(apply(hq, 1, "max"))
 }
 
 
@@ -196,11 +211,11 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
 #'  before searching for the maximum hazard quotient then computing the maximum cumulative ratio.
 #'  Thus, call the function with the arguments `hi` and `mhq` is faster (if they are already computed).
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a matrix (or `hi` and `mhq` are vectors larger than 1), one maximum cumulative ratio
-#'  is computed for each column (or value, respectively).
+#'  is computed for each row (or value, respectively).
 #' 
 #' \loadmathjax
 #' The maximum cumulative ratio of the vector \eqn{i} is given by:
@@ -246,9 +261,13 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
 #' maximum_cumulative_ratio(c(1,2,3,4,5), c(1,2,3,4,5))
 #' maximum_cumulative_ratio(hi = hazard_index(c(1,2,3,4,5), c(1,2,3,4,5)),
 #'                          mhq = maximum_hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5)))
-#' maximum_cumulative_ratio(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                          ncol = 2),
-#'                          references = c(1,2,3,4,5))
+#' 
+#' maximum_cumulative_ratio(
+#'   values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                   nrow = 2, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+#'   references = c(1,2,3,4,5)
+#' )
 #' 
 #' @md
 #' @export
@@ -273,11 +292,11 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
 #'  computing the missed toxicity. Thus, call the function with the argument `mcr` is faster (if it is
 #'  already computed).
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a matrix (or `mcr` is a vector larger than 1), one missed toxicity value is computed
-#'  for each column (or value, respectively).
+#'  for each row (or value, respectively).
 #' 
 #' \loadmathjax
 #' The missed toxicity of the vector \eqn{i} is given by:
@@ -322,8 +341,13 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
 #' @examples
 #' missed_toxicity(c(1,2,3,4,5), c(1,2,3,4,5))
 #' missed_toxicity(mcr = maximum_cumulative_ratio(c(1,2,3,4,5), c(1,2,3,4,5)))
-#' missed_toxicity(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1), ncol = 2),
-#'                 references = c(1,2,3,4,5))
+#' 
+#' missed_toxicity(
+#'   values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                   nrow = 2, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+#'   references = c(1,2,3,4,5)
+#' )
 #' 
 #' @md
 #' @export
@@ -349,11 +373,11 @@ missed_toxicity = function(values = NULL, references = NULL,
 #'  computing the reciprocal. Thus, call the function with the arguments `hi` and `mhq` is faster and
 #'  call it with the argument `mcr` is even faster (if they are already computed).
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a matrix (or `hi` and `mhq` are vectors larger than 1, or `mcr` is such a vector),
-#' one reciprocal of maximum cumulative ratio is computed for each column (or value, respectively).
+#' one reciprocal of maximum cumulative ratio is computed for each row (or value, respectively).
 #' 
 #' \loadmathjax
 #' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
@@ -409,9 +433,13 @@ missed_toxicity = function(values = NULL, references = NULL,
 #' reciprocal_of_mcr(hi = hazard_index(c(1,2,3,4,5), c(1,2,3,4,5)),
 #'                   mhq = maximum_hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5)))
 #' reciprocal_of_mcr(mcr = maximum_cumulative_ratio(c(1,2,3,4,5), c(1,2,3,4,5)))
-#' reciprocal_of_mcr(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                   ncol = 2),
-#'                   references = c(1,2,3,4,5))
+#' 
+#' reciprocal_of_mcr(
+#'   values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                   nrow = 2, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+#'   references = c(1,2,3,4,5)
+#' )
 #' 
 #' @md
 #' @export
@@ -436,10 +464,10 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' Arguments `values` and `references` are used to compute the hazard quotients before identifying the
 #'  highest ones. Thus, call the function with the argument `hq` is faster (if it is already computed).
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
-#' If `values` or `hq` is a matrix, `k` hazard quotients are highlight for each column.
+#' If `values` or `hq` is a matrix, `k` hazard quotients are highlight for each row.
 #' 
 #' If the number of hazard quotients that are greater than or equal to the \eqn{k-th} greater hazard
 #'  quotient is greater than `k`, only the first `k` values are considered and in the order given.
@@ -479,9 +507,13 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' top_hazard_quotient(hq = hazard_quotient(c(A = 1, B = 2, C = 3, D = 4, E = 5),
 #'                                          c(5,4,3,2,1)),
 #'                     k = 3)
-#' top_hazard_quotient(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                     ncol = 2, dimnames = list(LETTERS[1:5])),
-#'                     references = c(1,2,3,4,5))
+#' 
+#' top_hazard_quotient(
+#'   values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'                   nrow = 2, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+#'   references = c(1,2,3,4,5)
+#' )
 #' 
 #' @md
 #' @export
@@ -493,7 +525,7 @@ top_hazard_quotient = function(values = NULL, references = NULL,
   if (is.null(hq)) hq = hazard_quotient(values, references)
   
   if (is.matrix(hq)) {
-    thq_list = apply(hq, 2, function(column) list(top_hazard_quotient(hq = column, k = k)))
+    thq_list = apply(hq, 1, function(row) list(top_hazard_quotient(hq = row, k = k)))
     return(lapply(thq_list, "[[", 1))
   }
   
@@ -526,11 +558,11 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 #'  classifying the mixtures. Thus, call the function with the arguments `hi` and `mhq` is faster and
 #'  call it with the argument `mcr` is even faster (if they are already computed).
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a matrix (or `hi`, `mhq` and `mcr` are vectors larger than 1), one class is assigned
-#'  for each column (or each value, respectively).
+#'  for each row (or each value, respectively).
 #' 
 #' \loadmathjax
 #' The mixtures are assigned to the groups according the following conditions:
@@ -590,9 +622,13 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 #' classify_mixture(c(1,2,3,4,5), c(1,2,3,4,5))
 #' classify_mixture(hi = hazard_index(c(1,2,3,0.5), c(1,2,3,0.5)),
 #'                  mhq = maximum_hazard_quotient(c(1,2,3,0.5), c(1,2,3,0.5)))
-#' classify_mixture(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                                  ncol = 3),
-#'                  references = c(1,2,3,0.5))
+#' 
+#' classify_mixture(
+#'   values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+#'                   nrow = 3, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2", "set.3"), LETTERS[1:4])),
+#'   references = c(1,2,3,0.5)
+#' )
 #' 
 #' @md
 #' @export
@@ -627,8 +663,8 @@ classify_mixture = function(values = NULL, references = NULL,
 #' @details
 #' If `values` is a vector, the reference values are directly associated with these values.
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #'  
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -702,18 +738,21 @@ classify_mixture = function(values = NULL, references = NULL,
 #' @examples
 #' ## MCR summary on vectors and matrices
 #' mcr_summary(c(A = 1, B = 2, C = 3, D = 4, E = 5), c(1,2,3,4,5))
-#' mcr_summary(values = matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
-#'                             ncol = 10, dimnames = list(LETTERS[1:5])),
-#'             references = sample(seq(1,5), 5, replace = TRUE))
+#' mcr_summary(
+#'   values = matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
+#'                   nrow = 10, byrow = TRUE,
+#'                   dimnames = list(paste0("set.", 1:10), LETTERS[1:5])),
+#'   references = sample(seq(1,5), 5, replace = TRUE)
+#' )
 #' 
 #' ## MCR summary on lists
-#' mcr_summary(values = list(c(A = 0.1, B = 0.5),
-#'                           c(A = 0.2),
-#'                           c(B = 0.3, C = 0.4)),
+#' mcr_summary(values = list(set.1 = c(A = 0.1, B = 0.5),
+#'                           set.2 = c(A = 0.2),
+#'                           set.3 = c(B = 0.3, C = 0.4)),
 #'             references = c(A = 1, B = 2, C = 3))
-#' mcr_summary(values = list(c(A = 0.1, B = 0.5),
-#'                           c(A = 0.2),
-#'                           c(B = 0.3, C = 0.4)),
+#' mcr_summary(values = list(set.1 = c(A = 0.1, B = 0.5),
+#'                           set.2 = c(A = 0.2),
+#'                           set.3 = c(B = 0.3, C = 0.4)),
 #'             references = list(c(1, 2),
 #'                               1,
 #'                               c(2, 3)))
@@ -746,8 +785,8 @@ mcr_summary = function(values, references) {
   }
   
   # Matrix case
-  n = apply(values, 2, function(v) sum(v != 0))
-  if (is_named(values)[1]) {
+  n = apply(values, 1, function(v) sum(v != 0))
+  if (is_named(values)[2]) {
     thq = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1))))
     thq[n == 0] = NA_character_
   } else thq = NA_character_
@@ -860,8 +899,8 @@ mcr_summary_for_list = function(values, references) {
 #'  quotients and the associated MIAT groups.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -987,10 +1026,11 @@ mcr_summary_for_list = function(values, references) {
 #'          [`top_hazard_quotient`], [`classify_mixture`].
 #' 
 #' @examples
-#' ## Creating a matrix of 5*50 values and one reference value for each of the 5
+#' ## Creating a matrix of 50*5 values and one reference value for each of the 5
 #' ## elements (A, B, C, D and E).
 #' v <- matrix(sample(seq(0.1, 1.1, by = 0.1), 250, replace = TRUE),
-#'             ncol = 50, dimnames = list(LETTERS[1:5]))
+#'             nrow = 50, byrow = TRUE,
+#'             dimnames = list(paste0("set.", 1:50), LETTERS[1:5]))
 #' r <- sample(seq(1,5), 5, replace = TRUE)
 #' 
 #' mcr_chart(v, r, regions = TRUE)
@@ -1016,14 +1056,14 @@ mcr_summary_for_list = function(values, references) {
 #'           log_transform = FALSE)
 #' 
 #' ## MCR chart on list
-#' mcr_chart(values = list(c(A = 0.1, B = 0.5),
-#'                         c(A = 0.2),
-#'                         c(B = 0.3, C = 0.4)),
+#' mcr_chart(values = list(set.1 = c(A = 0.1, B = 0.5),
+#'                         set.2 = c(A = 0.2),
+#'                         set.3 = c(B = 0.3, C = 0.4)),
 #'           references = c(A = 1, B = 2, C = 3),
 #'           log_transform = TRUE)
-#' mcr_chart(values = list(c(A = 0.1, B = 0.5),
-#'                         c(A = 0.2),
-#'                         c(B = 0.3, C = 0.4)),
+#' mcr_chart(values = list(set.1 = c(A = 0.1, B = 0.5),
+#'                         set.2 = c(A = 0.2),
+#'                         set.3 = c(B = 0.3, C = 0.4)),
 #'           references = list(c(1, 2),
 #'                             1,
 #'                             c(2, 3)),
@@ -1071,7 +1111,7 @@ mcr_chart = function(values = NULL, references = NULL,
   } else { # Case where values is a matrix or is not given
     
     # Checking that data structures are named
-    if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
+    if (!is.null(values) && !is_named(values)[2]) stop("Columns of values must be named.")
     if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || (!is.list(thq) && !is_named(thq))))
       stop("thq must be a vector of named numeric values or a list of such vectors.")
     
@@ -1386,8 +1426,8 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  which the associated hazard index is greater than 1.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -1457,51 +1497,44 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @seealso [`thq_by_group`], [`top_hazard_quotient`], [`hazard_quotient`], [`hazard_index`].
 #' 
 #' @examples
-#' thq_pairs(values = matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                           ncol = 2, dimnames = list(LETTERS[1:5])),
-#'           references = c(1,2,3,4,5))
-#' thq_pairs(hq = hazard_quotient(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                       ncol = 2, dimnames = list(LETTERS[1:5])),
-#'                                c(1,2,3,4,5)),
-#'           hi = hazard_index(matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-#'                                    ncol = 2, dimnames = list(LETTERS[1:5])),
-#'                             c(1,2,3,4,5)))
+#' 
+#' v1 <- matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+#'              nrow = 2, byrow = TRUE,
+#'              dimnames = list(c("set.1", "set.2"), LETTERS[1:5]))
+#' r1 <- c(1,2,3,4,5)
+#' 
+#' thq_pairs(v1, r1)
+#' thq_pairs(hq = hazard_quotient(v1, r1),
+#'           hi = hazard_index(v1, r1))
 #' 
 #' ## With and without levels parameter
-#' thq_pairs(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                           ncol = 3, dimnames = list(LETTERS[1:4])),
-#'           references = c(1, 2, 3, .5),
-#'           levels = LETTERS[1:4])
-#' thq_pairs(values = matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'                           ncol = 3, dimnames = list(LETTERS[1:4])),
-#'           references = c(1,2,3,0.5))
+#' v2 <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
+#'              nrow = 3, byrow = TRUE,
+#'              dimnames = list(paste0("set.", 1:3), LETTERS[1:4]))
+#' r2 <- c(1,2,3,0.5)
+#' thq_pairs(v2, r2, levels = LETTERS[1:4])
+#' thq_pairs(v2, r2)
 #' 
 #' ## NULL because all HI are lower than or equal to 1
-#' thq_pairs(values = matrix(c(.1, .2, .3, .4),
-#'                           ncol = 2, dimnames = list(c("A","B"))),
-#'           references = c(5,5))
-#' hazard_index(values = matrix(c(.1, .2, .3, .4),
-#'                              ncol = 2, dimnames = list(c("A","B"))),
-#'              references = c(5,5))
-#' thq_pairs(values = matrix(c(.1, .2, .3, .4),
-#'                           ncol = 2, dimnames = list(c("A","B"))),
-#'           references = c(5,5),
-#'           threshold = FALSE)
+#' v3 <- matrix(c(.1, .2, .3, .4),
+#'              nrow = 2, byrow = TRUE,
+#'              dimnames = list(c("set.1", "set.2"), c("A","B")))
+#' r3 <- c(5,5)
+#' thq_pairs(v3, r3)
+#' hazard_index(v3, r3)
+#' thq_pairs(v3, r3, threshold = FALSE)
 #' 
 #' ## Building contingency table from a list
-#' thq_pairs(values = list(c(A = 0.5, B = 0.5),
-#'                         c(A = 1),
-#'                         c(B = 0.5, C = 0.5)),
+#' v4 <- list(set.1 = c(A = 0.5, B = 0.5),
+#'            set.2 = c(A = 1),
+#'            set.3 = c(B = 0.5, C = 0.5))
+#' thq_pairs(values = v4,
 #'           references = list(c(0.3, 0.6),
 #'                             0.3,
 #'                             c(0.6, 1)))
-#' thq_pairs(values = list(c(A = 0.5, B = 0.5),
-#'                         c(A = 1),
-#'                         c(B = 0.5, C = 0.5)),
+#' thq_pairs(values = v4,
 #'           references = c(A = 0.3, B = 0.6, C = 1))
-#' thq_pairs(values = list(c(A = 0.5, B = 0.5),
-#'                         c(A = 1),
-#'                         c(B = 0.5, C = 0.5)),
+#' thq_pairs(values = v4,
 #'           references = c(A = 0.3, B = 0.6, C = 1),
 #'           alone = TRUE)
 #' 
@@ -1707,8 +1740,8 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #'  indexes are greater than 1.
 #' 
 #' @details
-#' The reference values are applied once on each column (i.e. it must have one reference value for each
-#'  row of the matrix).
+#' The reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' Values and hazard quotients equal to 0 are ignored.
 #' 
@@ -1774,33 +1807,33 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
                                 threshold = TRUE, alone = FALSE) {
   
   # Checking that data structures are named
-  if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
-  if (!is.null(hq) && !is_named(hq)[1]) stop("Rows of hq must be named.")
+  if (!is.null(values) && !is_named(values)[2]) stop("Columns of values must be named.")
+  if (!is.null(hq) && !is_named(hq)[2]) stop("Columns of hq must be named.")
   
   # Computation of the indicators needed
   if (is.null(hq)) hq = hazard_quotient(values, references)
   if (is.null(hi)) hi = hazard_index(hq = hq)
   
   # Exctraction of the HQ to use, according to the criteria on HI and on length of the sets of values
-  hq_to_use = hq[, (!threshold | hi > 1) & (alone | apply(hq, 2, function(x) sum(x != 0) != 1)),
+  hq_to_use = hq[(!threshold | hi > 1) & (alone | apply(hq, 1, function(x) sum(x != 0) != 1)), ,
                  drop = FALSE]
   
   # If no HI is greater than 2 or no vector contain more than one value
-  if (ncol(hq_to_use) == 0) return(NULL)
+  if (nrow(hq_to_use) == 0) return(NULL)
   
   # When a single value, pair with "NULL"
   if (alone) {
-    index_alone = apply(hq_to_use, 2, function(x) sum(x != 0) == 1)
-    hq_to_use = rbind(hq_to_use, "NULL" = ifelse(index_alone, 1, 0))
+    index_alone = apply(hq_to_use, 1, function(x) sum(x != 0) == 1)
+    hq_to_use = cbind(hq_to_use, "NULL" = ifelse(index_alone, 1, 0))
   }
   
   # Searching for the Top 2 HQ
-  if (ncol(hq_to_use) == 1) {
+  if (nrow(hq_to_use) == 1) {
     # If a single set of values meets the criteria (HI > 1 and/or length > 1)
-    thq = names(top_hazard_quotient(hq = hq_to_use[, 1], k = 2))
+    thq = names(top_hazard_quotient(hq = hq_to_use[1, ], k = 2))
   } else {
     # If several sets of values meet the criteria (HI > 1 and/or length > 1)
-    thq = apply(hq_to_use, 2, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
+    thq = apply(hq_to_use, 1, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
   }
   
   return(thq)
@@ -1817,8 +1850,8 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #'  * Group IIIB: the potential risk is driven by multiple components.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -1891,7 +1924,8 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #' ## Creating a matrix of 4*3 values and one reference value for each of the 4
 #' ## elements (A, B, C, and D).
 #' v <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-#'             ncol = 3, dimnames = list(LETTERS[1:4]))
+#'             nrow = 3, byrow = TRUE,
+#'             dimnames = list(paste0("set.", 1:3), LETTERS[1:4]))
 #' r <- c(1, 2, 3, 0.5)
 #' 
 #' ## Without levels parameter and with the different usages
@@ -1977,8 +2011,8 @@ thq_by_group = function(values = NULL, references = NULL,
     } else { # Case where values or hq is a matrix, or neither of the two is given
       
       # Checking that data structures are named
-      if (!is.null(values) && !is_named(values)[1]) stop("Rows of values must be named.")
-      if (!is.null(hq) && !is_named(hq)[1]) stop("Rows of hq must be named.")
+      if (!is.null(values) && !is_named(values)[2]) stop("Columns of values must be named.")
+      if (!is.null(hq) && !is_named(hq)[2]) stop("Columns of hq must be named.")
       
       # Computation of the indicators needed
       if (is.null(thq)) {
@@ -2016,7 +2050,7 @@ thq_by_group = function(values = NULL, references = NULL,
 #' @details
 #' The criteria about naming and structure are the following:
 #' * If `values` is a vector, its values must be named.
-#' * If `values` is a matrix, its rows must be named.
+#' * If `values` is a matrix, its columns must be named.
 #' * If `values` is a list, it must contain vectors of named values.
 #' * If `values` and `references` are two lists, lengths of the elements of these lists must match.
 #' * If `values` is a list and `references` is a vector, the values of the latter must be named.
@@ -2060,7 +2094,7 @@ check_data_for_mcr_by_class = function(values, references = NULL, vector = TRUE,
         stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
     }
   }
-  else if (matrix && is.matrix(values) && !is_named(values)[1]) stop("If values is a matrix, its rows must be named.")
+  else if (matrix && is.matrix(values) && !is_named(values)[2]) stop("If values is a matrix, its columns must be named.")
   else if (vector && is.vector(values) && !is_named(values)) stop("If values is a vector, it must have named numeric values.")
 }
 
@@ -2101,8 +2135,8 @@ validate_classes = function(classes) {
 #' @details
 #' If `values` is a vector, the reference values are directly associated with these values.
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #'  
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -2195,28 +2229,30 @@ validate_classes = function(classes) {
 #'                      classes)
 #' 
 #' ## MCR summary by class on matrices
-#' mcr_summary_by_class(values = matrix(c(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.),
-#'                                      ncol = 2,
-#'                                      dimnames = list(LETTERS[1:5],
-#'                                                      c("V1", "V2"))),
-#'                      references = c(1,2,3,4,5),
-#'                      classes)
-#' mcr_summary_by_class(values = matrix(c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9),
-#'                                      ncol = 2,
-#'                                      dimnames = list(LETTERS[1:4],
-#'                                                      c("V1", "V2"))),
-#'                      references = c(1,2,3,4),
-#'                      classes)
+#' mcr_summary_by_class(
+#'   values = matrix(c(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.),
+#'                   nrow = 2, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+#'   references = c(1,2,3,4,5),
+#'   classes
+#' )
+#' mcr_summary_by_class(
+#'   values = matrix(c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9),
+#'                   nrow = 2, byrow = TRUE,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:4])),
+#'   references = c(1,2,3,4),
+#'   classes
+#' )
 #' 
 #' ## MCR summary by class on lists
-#' mcr_summary_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
-#'                                    V2 = c(A = 0.2),
-#'                                    V3 = c(B = 0.3, C = 0.4)),
+#' mcr_summary_by_class(values = list(set.1 = c(A = 0.1, B = 0.5),
+#'                                    set.2 = c(A = 0.2),
+#'                                    set.3 = c(B = 0.3, C = 0.4)),
 #'                      references = c(A = 1, B = 2, C = 3),
 #'                      classes)
-#' mcr_summary_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
-#'                                    V2 = c(A = 0.2),
-#'                                    V3 = c(B = 0.3, C = 0.4)),
+#' mcr_summary_by_class(values = list(set.1 = c(A = 0.1, B = 0.5),
+#'                                    set.2 = c(A = 0.2),
+#'                                    set.3 = c(B = 0.3, C = 0.4)),
 #'                      references = list(c(1, 2),
 #'                                        1,
 #'                                        c(2, 3)),
@@ -2247,7 +2283,7 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
   # Case of a matrix of values
   if (is.matrix(values)) {
     # For each set of values, computation of the MCR indicators for each class
-    return(apply(values, 2, function(v) mcr_summary_by_class(v, references, classes, all_classes)))
+    return(apply(values, 1, function(v) mcr_summary_by_class(v, references, classes, all_classes)))
   }
   
   # Case of a single vector of values
@@ -2288,8 +2324,8 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
 #'  is created from the subset of values corresponding to this class.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -2373,11 +2409,12 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
 #'  [`top_hazard_quotient`], [`classify_mixture`].
 #' 
 #' @examples
-#' ## Creating a matrix of 5*50 values and one reference value for each of the 5
+#' ## Creating a matrix of 50*5 values and one reference value for each of the 5
 #' ## elements (A, B, C, D and E) and association of classes (C1 to C8) with
 #' ## these elements.
 #' v <- matrix(sample(seq(0.1, 1.1, by = 0.1), 250, replace = TRUE),
-#'             ncol = 50, dimnames = list(LETTERS[1:5]))
+#'             nrow = 50, byrow = TRUE,
+#'             dimnames = list(paste0("set.", 1:50), LETTERS[1:5]))
 #' r <- sample(seq(1,5), 5, replace = TRUE)
 #' classes <- list(A = c("C5", "C6", "C8"),
 #'                 B = "C8",
@@ -2396,9 +2433,9 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
 #' plot(charts2$C3)
 #' 
 #' ## MCR charts on lists
-#' charts3 <- mcr_chart_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
-#'                                             V2 = c(A = 0.2),
-#'                                             V3 = c(B = 0.3, C = 0.4)),
+#' charts3 <- mcr_chart_by_class(values = list(set.1 = c(A = 0.1, B = 0.5),
+#'                                             set.2 = c(A = 0.2),
+#'                                             set.3 = c(B = 0.3, C = 0.4)),
 #'                               references = list(c(1, 2),
 #'                                                 1,
 #'                                                 c(2, 3)),
@@ -2407,9 +2444,9 @@ mcr_summary_by_class = function(values, references, classes, all_classes = FALSE
 #' View(charts3)
 #' plot(charts3$C8)
 #' 
-#' charts4 <- mcr_chart_by_class(values = list(V1 = c(A = 0.1, B = 0.5),
-#'                                             V2 = c(A = 0.2),
-#'                                             V3 = c(B = 0.3, C = 0.4)),
+#' charts4 <- mcr_chart_by_class(values = list(set.1 = c(A = 0.1, B = 0.5),
+#'                                             set.2 = c(A = 0.2),
+#'                                             set.3 = c(B = 0.3, C = 0.4)),
 #'                               references = c(A = 1, B = 2, C = 3),
 #'                               classes,
 #'                               log_transform = FALSE)
@@ -2440,7 +2477,7 @@ mcr_chart_by_class = function(values, references, classes,
     
     # NA if the class is not represented (different case if values is a list or a matrix)
     if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
-        (is.matrix(values) && nrow(new_vr[["values"]]) == 0)) return(NA)
+        (is.matrix(values) && ncol(new_vr[["values"]]) == 0)) return(NA)
     
     # Catch warning without interrupting the execution of the instruction
     withCallingHandlers(return(mcr_chart(new_vr[["values"]], new_vr[["references"]],
@@ -2471,8 +2508,8 @@ mcr_chart_by_class = function(values, references, classes,
 #'  table is built from the subset of values corresponding to this class.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -2531,11 +2568,12 @@ mcr_chart_by_class = function(values, references, classes,
 #' Specific indicators: [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
 #' @examples
-#' ## Creating a matrix of 5*50 values, one reference value for each of the 5
+#' ## Creating a matrix of 50*5 values, one reference value for each of the 5
 #' ## elements (A, B, C, D and E) and association of classes (C1 to C8) with
 #' ## these elements.
 #' v <- matrix(sample(seq(0.1, 2.1, by = 0.1), 250, replace = TRUE),
-#'             ncol = 50, dimnames = list(LETTERS[1:5]))
+#'             nrow = 50, byrow = TRUE,
+#'             dimnames = list(paste0("set.", 1:50), LETTERS[1:5]))
 #' r <- sample(seq(1,5), 5, replace = TRUE)
 #' classes <- list(A = c("C5", "C6", "C8"),
 #'                 B = "C8",
@@ -2548,31 +2586,31 @@ mcr_chart_by_class = function(values, references, classes,
 #' thq_pairs_by_class(v, r, classes, levels = names(classes))
 #' 
 #' ## Building contingency table from list
-#' thq_pairs_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                  V2 = c(A = 2),
-#'                                  V3 = c(B = 3, C = 4)),
+#' thq_pairs_by_class(values = list(set.1 = c(A = 1, B = 5),
+#'                                  set.2 = c(A = 2),
+#'                                  set.3 = c(B = 3, C = 4)),
 #'                    references = list(c(1, 2),
 #'                                      1,
 #'                                      c(2, 3)),
 #'                    classes)
-#' thq_pairs_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                  V2 = c(A = 2),
-#'                                  V3 = c(B = 3, C = 4)),
+#' thq_pairs_by_class(values = list(set.1 = c(A = 1, B = 5),
+#'                                  set.2 = c(A = 2),
+#'                                  set.3 = c(B = 3, C = 4)),
 #'                    references = c(A = 1, B = 2, C = 3),
 #'                    classes,
 #'                    levels = LETTERS[1:3])
 #' 
 #' # Use of the parameters alone and threshold
-#' thq_pairs_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                  V2 = c(A = 2),
-#'                                  V3 = c(B = 3, C = 4)),
+#' thq_pairs_by_class(values = list(set.1 = c(A = 1, B = 5),
+#'                                  set.2 = c(A = 2),
+#'                                  set.3 = c(B = 3, C = 4)),
 #'                    references = c(A = 1, B = 2, C = 3),
 #'                    classes,
 #'                    levels = LETTERS[1:3],
 #'                    alone = TRUE)
-#' thq_pairs_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                  V2 = c(A = 2),
-#'                                  V3 = c(B = 3, C = 4)),
+#' thq_pairs_by_class(values = list(set.1 = c(A = 1, B = 5),
+#'                                  set.2 = c(A = 2),
+#'                                  set.3 = c(B = 3, C = 4)),
 #'                    references = c(A = 1, B = 2, C = 3),
 #'                    classes,
 #'                    levels = LETTERS[1:3],
@@ -2596,7 +2634,7 @@ thq_pairs_by_class = function(values, references, classes,
     
     # NA if the class is not represented (different case if values is a list or a matrix)
     if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
-        (is.matrix(values) && nrow(new_vr[["values"]]) == 0)) return(NA)
+        (is.matrix(values) && ncol(new_vr[["values"]]) == 0)) return(NA)
     
     # Return of a list to prevent tables from merging into a single matrix
     # (if levels is used and there is no NA)
@@ -2622,8 +2660,8 @@ thq_pairs_by_class = function(values, references, classes,
 #'  * Group IIIB: the potential risk is driven by multiple components.
 #' 
 #' @details
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -2686,11 +2724,12 @@ thq_pairs_by_class = function(values, references, classes,
 #' Specific indicators: [`classify_mixture`], [`top_hazard_quotient`], [`hazard_quotient`].
 #' 
 #' @examples
-#' ## Creating a matrix of 5*50 values, one reference value for each of the 5
+#' ## Creating a matrix of 50*50 values, one reference value for each of the 5
 #' ## elements (A, B, C, D and E) and association of classes (C1 to C8) with
 #' ## these elements.
 #' v <- matrix(sample(seq(0.1, 2.1, by = 0.1), 250, replace = TRUE),
-#'             ncol = 50, dimnames = list(LETTERS[1:5]))
+#'             nrow = 50, byrow = TRUE,
+#'             dimnames = list(paste0("set.", 1:50), LETTERS[1:5]))
 #' r <- sample(seq(1,5), 5, replace = TRUE)
 #' classes <- list(A = c("C5", "C6", "C8"),
 #'                 B = "C8",
@@ -2703,16 +2742,16 @@ thq_pairs_by_class = function(values, references, classes,
 #' thq_by_group_by_class(v, r, classes, levels = names(classes))
 #' 
 #' ## Building contingency table from list
-#' thq_by_group_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                     V2 = c(A = 2),
-#'                                     V3 = c(B = 3, C = 4)),
+#' thq_by_group_by_class(values = list(set.1 = c(A = 1, B = 5),
+#'                                     set.2 = c(A = 2),
+#'                                     set.3 = c(B = 3, C = 4)),
 #'                       references = list(c(1, 2),
 #'                                         1,
 #'                                         c(2, 3)),
 #'                       classes)
-#' thq_by_group_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                     V2 = c(A = 2),
-#'                                     V3 = c(B = 3, C = 4)),
+#' thq_by_group_by_class(values = list(set.1 = c(A = 1, B = 5),
+#'                                     set.2 = c(A = 2),
+#'                                     set.3 = c(B = 3, C = 4)),
 #'                       references = c(A = 1, B = 2, C = 3),
 #'                       classes,
 #'                       levels = LETTERS[1:3])
@@ -2735,7 +2774,7 @@ thq_by_group_by_class = function(values, references, classes,
     
     # NA if the class is not represented (different case if values is a list or a matrix)
     if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
-        (is.matrix(values) && nrow(new_vr[["values"]]) == 0)) return(NA)
+        (is.matrix(values) && ncol(new_vr[["values"]]) == 0)) return(NA)
     
     # Return of a list to prevent tables from merging into a single matrix
     # (if levels is used and there is no NA)
@@ -2757,8 +2796,8 @@ thq_by_group_by_class = function(values, references, classes,
 #' @details
 #' If `values` is a vector, the reference values are directly associated with these values.
 #' 
-#' If `values` is a matrix, the reference values are applied once on each column (i.e. it must have one
-#'  reference value for each row of the matrix).
+#' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+#'  Therefore, there must be one reference value for each column of the matrix.
 #'  
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -2791,11 +2830,12 @@ thq_by_group_by_class = function(values, references, classes,
 #'          [`thq_by_group_by_class`].
 #' 
 #' @examples
-#' ## Creating a matrix of 5*50 values, one reference value for each of the 5
+#' ## Creating a matrix of 50*5 values, one reference value for each of the 5
 #' ## elements (A, B, C, D and E) and association of classes (C1 to C8) with
 #' ## these elements.
 #' v <- matrix(sample(seq(0.1, 2.1, by = 0.1), 250, replace = TRUE),
-#'             ncol = 50, dimnames = list(LETTERS[1:5]))
+#'             nrow = 50, byrow = TRUE,
+#'             dimnames = list(paste0("set.", 1:50), LETTERS[1:5]))
 #' r <- sample(seq(1,5), 5, replace = TRUE)
 #' classes <- list(A = c("C5", "C6", "C8"),
 #'                 B = "C8",
@@ -2814,18 +2854,18 @@ thq_by_group_by_class = function(values, references, classes,
 #'                       regression = TRUE,
 #'                       log_transform = FALSE)$C8
 #' 
-#' mcr_approach_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                     V2 = c(A = 2),
-#'                                     V3 = c(B = 3, C = 4)),
+#' mcr_approach_by_class(values = list(set.1 = c(A = 1, B = 5),
+#'                                     set.2 = c(A = 2),
+#'                                     set.3 = c(B = 3, C = 4)),
 #'                       references = list(c(1, 2),
 #'                                         1,
 #'                                         c(2, 3)),
 #'                       classes,
 #'                       FUN = "thq_pairs", levels = names(classes))
 #' 
-#' mcr_approach_by_class(values = list(V1 = c(A = 1, B = 5),
-#'                                     V2 = c(A = 2),
-#'                                     V3 = c(B = 3, C = 4)),
+#' mcr_approach_by_class(values = list(set.1 = c(A = 1, B = 5),
+#'                                     set.2 = c(A = 2),
+#'                                     set.3 = c(B = 3, C = 4)),
 #'                       references = c(A = 1, B = 2, C = 3),
 #'                       classes,
 #'                       FUN = "thq_by_group", levels = names(classes))
@@ -2854,7 +2894,7 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 #' Extract from values and references those corresponding to one specific class.
 #' 
 #' @details
-#' If `values` is a matrix, it must have one reference value for each row.
+#' If `values` is a matrix, it must have one reference value for each column.
 #' 
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
@@ -2899,18 +2939,20 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 #'                 E = c("C2", "C4", "C5", "C7", "C8"))
 #' 
 #' ## Subsets with values as a matrix
-#' subset_from_class(values = matrix(c(0.1,0.2,0.3,0.4,0.5,
-#'                                     0.6,0.7,0.8,0.9,1.),
-#'                                   ncol = 2,
-#'                                   dimnames = list(LETTERS[1:5], c("V1", "V2"))),
-#'                   references = c(1,2,3,4,5),
-#'                   classes = classes,
-#'                   class_name = "C8")
+#' subset_from_class(
+#'   values = matrix(c(0.1,0.2,0.3,0.4,0.5,
+#'                     0.6,0.7,0.8,0.9,1.),
+#'                   nrow = 2, byrow = 2,
+#'                   dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+#'   references = c(1,2,3,4,5),
+#'   classes = classes,
+#'   class_name = "C8"
+#' )
 #' 
 #' ## Subsets with values as a list
-#' v <- list(V1 = c(A = 0.1, D = 0.5),
-#'           V2 = c(D = 0.2),
-#'           V3 = c(A = 0.3, C = 0.4))
+#' v <- list(set.1 = c(A = 0.1, D = 0.5),
+#'           set.2 = c(D = 0.2),
+#'           set.3 = c(A = 0.3, C = 0.4))
 #' 
 #' subset_from_class(values = v,
 #'                   classes = classes,
@@ -2989,15 +3031,16 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
     
     # Extraction of the values corresponding to the class
     # and removal of the NA values (when names assocaited with the class are not part of the values)
-    indices = match(items_in_class, rownames(values))
-    values_class = values[indices[!is.na(indices)], ]
+    indices = match(items_in_class, colnames(values))
+    values_class = values[, indices[!is.na(indices)]]
     
     if (!is.null(references)) references_class = references[indices[!is.na(indices)]]
     
-    # Convert back to matrix if there was only one row
+    # Convert back to matrix if there was only one column
     if (is.vector(values_class)) {
-      values_class = t(values_class)
-      rownames(values_class) = rownames(values)[indices[!is.na(indices)]]
+      values_class = matrix(values_class, ncol = 1)
+      colnames(values_class) = colnames(values)[indices[!is.na(indices)]]
+      rownames(values_class) = rownames(values)
     }
   }
   
@@ -3051,17 +3094,20 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
 #' 
 #' ## Reduce sets of values given as a matrix
 #' v <- matrix(sample(seq(0.1, 1, by = 0.1), 50, replace = TRUE),
-#'             ncol = 10, dimnames = list(c("A", "B", "A", "C", "C")))
+#'             nrow = 10, byrow = TRUE,
+#'             dimnames = list(paste0("set.", 1:10), c("A", "B", "A", "C", "C")))
 #' reduce_sets(values = v, FUN = mean)
 #' 
 #' ## Reduce sets of values and associated reference values given as lists
-#' reduce_sets(values = list(c(A = 0.1, A = 0.3, B = 0.5),
-#'                           c(A = 0.2),
-#'                           c(B = 0.3, B = 0.4, B = 0.7, C = 0.4, C = 0.1)),
-#'             references = list(c(1, 1, 2),
-#'                               1,
-#'                               c(2, 2, 2, 3, 3)),
-#'             FUN = median)
+#' reduce_sets(
+#'   values = list(set.1 = c(A = 0.1, A = 0.3, B = 0.5),
+#'                 set.2 = c(A = 0.2),
+#'                 set.3 = c(B = 0.3, B = 0.4, B = 0.7, C = 0.4, C = 0.1)),
+#'   references = list(c(1, 1, 2),
+#'                     1,
+#'                     c(2, 2, 2, 3, 3)),
+#'   FUN = median
+#' )
 #' 
 #' @md
 #' @export
@@ -3072,7 +3118,7 @@ reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) 
     if (!is_named(values)[2]) stop("If values is a list, it must contain vectors of named numeric values.")
   }
   else if (is.vector(values) && !is_named(values)) stop("If values is a vector, it must have named numeric values.")
-  else if (is.matrix(values) && !is_named(values)[1]) stop("If values is a matrix, its rows must be named.")
+  else if (is.matrix(values) && !is_named(values)[2]) stop("If values is a matrix, its columns must be named.")
   
   # Verifications relating to the references
   if (is.list(references)) {
@@ -3116,12 +3162,12 @@ reduce_sets = function(values, references = NULL, FUN, ignore_zero = TRUE, ...) 
     } else FUN_to_apply = FUN
     
     # For each subset of the matrix corresponding to each name
-    new_values = t(sapply(unique(rownames(values)), function(name) {
-      # Application of the function to each column
-      rows = which(rownames(values) == name)
-      if (length(rows) == 1) return(sapply(values[rows, ], FUN_to_apply, ...))
-      return(apply(values[rows, ], 2, FUN_to_apply, ...))
-    }))
+    new_values = sapply(unique(colnames(values)), function(name) {
+      # Application of the function to each row
+      cols = which(colnames(values) == name)
+      if (length(cols) == 1) return(sapply(values[, cols], FUN_to_apply, ...))
+      return(apply(values[, cols], 1, FUN_to_apply, ...))
+    })
   }
   
   # Return if references is not given

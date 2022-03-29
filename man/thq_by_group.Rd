@@ -42,8 +42,8 @@ top hazard quotient with the associated MIAT group. The groups describe the foll
 }
 }
 \details{
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
 if \code{references} is a vector, there must be one reference for each name present in \code{values}.
@@ -92,7 +92,8 @@ explicitly named in the function call.
 ## Creating a matrix of 4*3 values and one reference value for each of the 4
 ## elements (A, B, C, and D).
 v <- matrix(c(.1, .2, 1, .4, .5, .6, .7, .8, 3, 1, 1, 1),
-            ncol = 3, dimnames = list(LETTERS[1:4]))
+            nrow = 3, byrow = TRUE,
+            dimnames = list(paste0("set.", 1:3), LETTERS[1:4]))
 r <- c(1, 2, 3, 0.5)
 
 ## Without levels parameter and with the different usages

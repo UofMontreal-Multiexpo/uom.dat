@@ -25,10 +25,10 @@ Arguments \code{values} and \code{references} are used to compute the hazard quo
 the maximum hazard quotient. Thus, call the function with the argument \code{hq} is faster (if it is
 already computed).
 
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
-If \code{values} or \code{hq} is a matrix, one maximum hazard quotient is searched for each column.
+If \code{values} or \code{hq} is a matrix, one maximum hazard quotient is searched for each row.
 
 \loadmathjax
 The maximum hazard quotient of the vector \eqn{i} is given by:
@@ -45,9 +45,13 @@ Due to the multiple possible usages, the argument \code{hq} must be explicitly n
 \examples{
 maximum_hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5))
 maximum_hazard_quotient(hq = hazard_quotient(c(1,2,3,4,5), c(1,2,3,4,5)))
-maximum_hazard_quotient(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
-                                        ncol = 2),
-                        references = c(1,2,3,4,5))
+
+maximum_hazard_quotient(
+  values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+                  nrow = 2, byrow = TRUE,
+                  dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+  references = c(1,2,3,4,5)
+)
 
 }
 \references{

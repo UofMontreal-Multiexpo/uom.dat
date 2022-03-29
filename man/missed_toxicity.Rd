@@ -28,11 +28,11 @@ before searching for the maximum hazard quotient, computing the maximum cumulati
 computing the missed toxicity. Thus, call the function with the argument \code{mcr} is faster (if it is
 already computed).
 
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 If \code{values} is a matrix (or \code{mcr} is a vector larger than 1), one missed toxicity value is computed
-for each column (or value, respectively).
+for each row (or value, respectively).
 
 \loadmathjax
 The missed toxicity of the vector \eqn{i} is given by:
@@ -61,8 +61,13 @@ Due to the multiple possible usages, the argument \code{mcr} must be explicitly 
 \examples{
 missed_toxicity(c(1,2,3,4,5), c(1,2,3,4,5))
 missed_toxicity(mcr = maximum_cumulative_ratio(c(1,2,3,4,5), c(1,2,3,4,5)))
-missed_toxicity(values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1), ncol = 2),
-                references = c(1,2,3,4,5))
+
+missed_toxicity(
+  values = matrix(c(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
+                  nrow = 2, byrow = TRUE,
+                  dimnames = list(c("set.1", "set.2"), LETTERS[1:5])),
+  references = c(1,2,3,4,5)
+)
 
 }
 \references{

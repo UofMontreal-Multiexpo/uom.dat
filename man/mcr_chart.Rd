@@ -74,8 +74,8 @@ percentage of the reciprocal of the maximum cumulative ratio, the elements produ
 quotients and the associated MIAT groups.
 }
 \details{
-If \code{values} is a matrix, the reference values are applied once on each column (i.e. it must have one
-reference value for each row of the matrix).
+If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
+Therefore, there must be one reference value for each column of the matrix.
 
 If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
 if \code{references} is a vector, there must be one reference for each name present in \code{values}.
@@ -140,10 +140,11 @@ Due to the multiple possible usages, all arguments except \code{values} and \cod
 named in the function call.
 }
 \examples{
-## Creating a matrix of 5*50 values and one reference value for each of the 5
+## Creating a matrix of 50*5 values and one reference value for each of the 5
 ## elements (A, B, C, D and E).
 v <- matrix(sample(seq(0.1, 1.1, by = 0.1), 250, replace = TRUE),
-            ncol = 50, dimnames = list(LETTERS[1:5]))
+            nrow = 50, byrow = TRUE,
+            dimnames = list(paste0("set.", 1:50), LETTERS[1:5]))
 r <- sample(seq(1,5), 5, replace = TRUE)
 
 mcr_chart(v, r, regions = TRUE)
@@ -169,14 +170,14 @@ mcr_chart(hi = hazard_index(v, r),
           log_transform = FALSE)
 
 ## MCR chart on list
-mcr_chart(values = list(c(A = 0.1, B = 0.5),
-                        c(A = 0.2),
-                        c(B = 0.3, C = 0.4)),
+mcr_chart(values = list(set.1 = c(A = 0.1, B = 0.5),
+                        set.2 = c(A = 0.2),
+                        set.3 = c(B = 0.3, C = 0.4)),
           references = c(A = 1, B = 2, C = 3),
           log_transform = TRUE)
-mcr_chart(values = list(c(A = 0.1, B = 0.5),
-                        c(A = 0.2),
-                        c(B = 0.3, C = 0.4)),
+mcr_chart(values = list(set.1 = c(A = 0.1, B = 0.5),
+                        set.2 = c(A = 0.2),
+                        set.3 = c(B = 0.3, C = 0.4)),
           references = list(c(1, 2),
                             1,
                             c(2, 3)),
