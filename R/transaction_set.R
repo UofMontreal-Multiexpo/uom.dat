@@ -1298,7 +1298,7 @@ function(object, identifiers = "original",
   if (length(object) == 0) stop("No items to plot (object does not contain any transactions).")
   check_param(identifiers, values = c("original", "new"))
   
-  # Preparation of the variables to the graph plotting function
+  # Preparation of the variables for the graph plotting function
   vars = prepare_itemset_chart(object, identifiers, length_one, under, over)
   
   # Plotting of the graph (in the active device or in a PDF file)
