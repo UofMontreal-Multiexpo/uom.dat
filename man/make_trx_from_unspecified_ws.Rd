@@ -27,17 +27,19 @@ ie. vector of names of variables contained in \code{measures} whose different co
 form the different work situations.}
 
 \item{additional}{Names of information to keep when creating transactions (in addition to those given
-by \code{keys}): vector included in \code{colnames(measures)}.}
+by the argument \code{keys}): vector included in \code{colnames(measures)}.}
 
 \item{unique_values}{logical or character.
 \itemize{
 \item If \code{TRUE}, simplification of the values associated with the variables defined in
-\code{additional} in order to remove duplicates within each resulting transaction.
+\code{additional} or in \code{keys} in order to remove duplicates within each resulting transaction.
 \item If \code{FALSE}, keep the duplicates and the correspondence between the values of these variables
 for the same sample (as many values as there are samples).
 \item Otherwise, vector of variable names included in \code{colnames(measures)} for which the removal of
 duplicates must be performed.
-}}
+}
+
+Duplicates in the first variable specified in \code{keys} are necessarily removed in all cases.}
 }
 \value{
 List of transactions identified. Each transaction is a list containing:

@@ -457,10 +457,10 @@ subsets <- subset_from_class(values = concentration_values,
 
 ## ----results="hold"-----------------------------------------------------------
 cat("Number of values of each set of concentration values:\n")
-sapply(concentration_values, length)
+lengths(concentration_values)
 
 cat("\nNumber of values related to the ninth class :\n")
-sapply(subsets[["values"]], length)
+lengths(subsets[["values"]])
 
 ## ----results="hold"-----------------------------------------------------------
 cat("Values of the sixth set of concentration values:\n")

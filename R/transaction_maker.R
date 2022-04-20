@@ -14,8 +14,8 @@ NULL
 #' @param data Data frame containing a set of data to be grouped.
 #' @param by Variable names included in `colnames(data)` used to group the data.
 #'  Each combination of values of these variables generates one transaction.
-#' @param additional Names of information to keep when creating transactions: vector included in
-#'  `colnames(data)`.
+#' @param additional Names of information to keep when creating transactions (in additional to those given
+#'  by the argument `by`): vector included in `colnames(data)`.
 #' @param unique_values logical or character.
 #'  * If `TRUE`, simplification of the values associated with the variables defined in `additional`
 #'    in order to remove duplicates within each resulting transaction.
@@ -133,14 +133,16 @@ make_transactions = function(data, by, additional = NULL, unique_values = TRUE,
 #'  i.e. vector of names of variables contained in `measures` whose different combinations of
 #'  values form the different work situations not described in `work_situations`.
 #' @param additional Names of information to keep when creating transactions (in addition to those given
-#'  by `keys`): vector included in `colnames(measures)`.
+#'  by the argument `keys`): vector included in `colnames(measures)`.
 #' @param unique_values logical or character.
 #'  * If `TRUE`, simplification of the values associated with the variables defined in
-#'    `additional` in order to remove duplicates within each resulting transaction.
+#'    `additional` or in `keys` in order to remove duplicates within each resulting transaction.
 #'  * If `FALSE`, keep the duplicates and the correspondence between the values of these variables
 #'    for the same sample (as many values as there are samples).
 #'  * Otherwise, vector of variable names included in `colnames(measures)` for which the removal of
 #'    duplicates must be performed.
+#'  
+#'  Duplicates in the first variable specified in `keys` are necessarily removed in all cases.
 #' @return S4 object of class `TransactionSet` containing the list of transactions identified.
 #'  Each transaction is a list containing:
 #'  * The codes identifying the substances grouped together.

@@ -45,9 +45,9 @@ library(uom.dat)
 
 ## 1.1. Effective values
 
-Foremost, we will create a list of transactions as presented in the document [Transaction sets](./transaction_sets.html) using the dataset `oedb_sample`. For short, these transactions will simply group data from this dataset accessible in the package.
+Foremost, we will create a list of effective values. This will be a list of numeric named vectors.
 
-Note that this step is not necessary. The `TransactionSet` structure will only be used as an intermediary to get values to analyze for the examples.
+The following creates a list of transactions as presented in the document [Transaction sets](./transaction_sets.html) using the dataset `oedb_sample`. For short, these transactions will simply group data from this dataset accessible in the package. Note that this step is not necessary. The `TransactionSet` structure will only be used as an intermediary to get values to analyze for the examples.
 
 ```{r}
 # Creation of specific transactions
@@ -113,6 +113,8 @@ class_names
 
 ## 1.3. Reference values
 
+Finally, we must have references values. This will be a numeric named vector.
+
 The dataset `substances_information` also contains the reference value of each substance in the variable `LIMIT`. However, some of the substances have no value for this variable. We will therefore set an arbitrary limit value for these variables without reference:
 ```{r}
 # First, let's check that the value we are going to assign will be unique to substances
@@ -157,7 +159,7 @@ reference_values[1:4]
 
 ### 2.1.1. Compute a summary of the indicators
 
-The indicators of the MCR approach (short for Maximum Cumulative Ratio approach) can be computed using only one function: `mcr_summary`.
+The indicators of the MCR approach (short for Maximum Cumulative Ratio approach) can be computed using a single function: `mcr_summary`.
 
 ```{r}
 cat("Number of sets of values:",
@@ -313,7 +315,7 @@ The grey region is the one in which no point can be plotted because the maximum 
 
 #### ggplot2
 
-By the way, the chart being plotted with the `ggplot2` package, it can be modified or completed afterwards using the ggplot2 `last_plot` function or the returned object.
+The chart being plotted with the `ggplot2` package, it can be modified or completed afterwards using the ggplot2 `last_plot` function or the returned object.
 We can for example change the limits:
 ```{r warning=FALSE}
 # Loading the package
@@ -592,7 +594,7 @@ mcr_approach_by_class(values = concentration_values,
 
 ## 4.1. Classification management
 
-For this section, we will use a simpler classification system assigning classes C1 to C8 to elements A, B, C, D and E:
+For this section, we will use a simple classification system assigning classes C1 to C8 to elements A, B, C, D and E:
 ```{r}
 classification_1 <- list(A = c("C5", "C6", "C8"),
                          B = "C8",
@@ -605,7 +607,7 @@ classification_1
 
 ### 4.1.1. Listing and counting classes
 
-Two functions allow to perform set operation on such a list: `union_on_list` and `intersect_on_list`. The former will allow us to identify the list of classes involved by two or more elements. The latter will allow us to identify the common classes between two or more elements. The specified indices can be either numbers or names.
+Two functions allow to perform set operation on such a list: `union_on_list` and `intersect_on_list`. The former allows to identify the list of classes involved by two or more elements. The latter allows to identify the common classes between two or more elements. The specified indices can be either numbers or names.
 
 ```{r}
 # Union with no other argument: identify all classes involved by all elements
@@ -629,7 +631,7 @@ intersect_on_list(classification_1,
                   indices = c(1, 3))
 ```
 
-Another function allows to build a frequency table of the counts of each class: `table_on_list`. In this case too, specified indices can be either numbers or names. But another argument (`with_zero`) allows to add in the table classes of the list that were not encountered at any of these indices.
+Another function allows to build a frequency table of the counts of each class: `table_on_list`. In this case too, specified indices can be either numbers or names. But another argument (`with_zero`) allows to add in the table classes of the list that are not encountered at any of these indices.
 
 ```{r}
 # Overall table
@@ -745,7 +747,7 @@ coerce_to_list(classification_3)
 
 ## 4.2. Value management
 
-Before starting this section, we will name the sets of concentration values to better identify them:
+Before starting this section, we will name the sets of concentration values created in section [1.1. Effective values](#effective-values) to better identify them:
 ```{r}
 # Naming the sets of concentration values: S1 to S14
 names(concentration_values) <- paste0("S", 1:14)
@@ -799,10 +801,10 @@ The output of this function is a list containing two subsets: `values`, the subs
 Before looking at the subsets related to the chosen class, we can compare their lengths to those of the complete sets of values.
 ```{r results="hold"}
 cat("Number of values of each set of concentration values:\n")
-sapply(concentration_values, length)
+lengths(concentration_values)
 
 cat("\nNumber of values related to the ninth class :\n")
-sapply(subsets[["values"]], length)
+lengths(subsets[["values"]])
 ```
 We can see that only 8 sets of concentration values contain substances related to the class of interest.
 

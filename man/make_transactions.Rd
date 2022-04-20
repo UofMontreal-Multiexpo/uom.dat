@@ -19,8 +19,8 @@ make_transactions(
 \item{by}{Variable names included in \code{colnames(data)} used to group the data.
 Each combination of values of these variables generates one transaction.}
 
-\item{additional}{Names of information to keep when creating transactions: vector included in
-\code{colnames(data)}.}
+\item{additional}{Names of information to keep when creating transactions (in additional to those given
+by the argument \code{by}): vector included in \code{colnames(data)}.}
 
 \item{unique_values}{logical or character.
 \itemize{

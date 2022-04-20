@@ -272,7 +272,7 @@ print(trx_subset_10)
 
 # Length of each extracted transaction
 cat("\nNumber of items of each transaction:\n")
-sapply(trx_subset_10["CODE"], length)
+lengths(trx_subset_10["CODE"])
 
 ## -----------------------------------------------------------------------------
 # Simple transactions
@@ -282,7 +282,7 @@ print(trx_subset_11)
 
 # Length of each extracted transaction
 cat("\nNumber of items of each transaction:\n")
-sapply(trx_subset_11["CODE"], length)
+lengths(trx_subset_11["CODE"])
 
 ## -----------------------------------------------------------------------------
 cat("Transaction itemsets of 'trx_object_1':\n")

@@ -50,12 +50,12 @@ Let's begin by describing `TS_instance`, the example object of class `Transactio
 print(TS_instance)
 ```
 
-This transaction set is composed of 14 transactions. These transactions are lists in which the itemsets are stored in the element list named `"CODE"` referred as the **item key** and temporal data are stored in the element list named `"YEAR"` referred as the **year key**. These temporal data indicate when the transactions were made. Further data are associated with a transaction, accessible by the names `JOB.TITLE`, `JOB.TASK` and `SAMPLE.ID`.
+Every `TransactionSet` object has 4 attributes: `data`, `names`, `item_key` and `year_key`. This transaction set is composed of 14 transactions. These transactions are lists in which the itemsets are stored in the list element named `"CODE"` referred as the **item key** and temporal data are stored in the list element named `"YEAR"` referred as the **year key**. These temporal data indicate when the transactions were made. Further data are associated with a transaction, accessible by the names `JOB.TITLE`, `JOB.TASK` and `SAMPLE.ID`.
 
 Actually, these names will correspond to the dataset used and the data selected when calling the function in charge of the construction of the transaction set. To give some context, since the example data come from an occupational exposure database:
 
-* element named `"SAMPLE.ID"` refers to identifiers of atmospheric samples in specific workplaces;
-* elements named `"JOB.TITLE"` and `"JOB.TASK"` refers to the job title and task of the people working in these workplaces;
+* the element named `"SAMPLE.ID"` refers to identifiers of atmospheric samples in specific workplaces;
+* the elements named `"JOB.TITLE"` and `"JOB.TASK"` refer to the job title and task of the people working in these workplaces;
 * `"YEAR"` refers to the year in which the samples were made;
 * `"CODE"` refers to chemical substance identifiers actually observed in the workplaces.
 
@@ -154,7 +154,7 @@ As for the arguments:
 * `data` is the dataset to work with;
 * `by` defines which variable of the data frame to use to aggregate the data;
 * `additional` defines which variables of the data frame are data to consider and aggregate;
-* `unique_values` defines if duplicate values in aggregations must be removed;
+* `unique_values` defines if duplicate values in aggregations must be removed (can also be a character vector identifying variables);
 * `item_key` and `year_key` define which variables correspond to items and to temporal data.
 
 #### Function make_OE_transactions
@@ -185,7 +185,7 @@ key_variables <- c("ID", "CODE", "YEAR")
 There are three ways to group data with the function `make_OE_transactions`.
 
 * One transaction corresponds to the samples of one inspection in one of the work situations described previously (parameter `mode = 2`).
-* One transaction corresponds to the samples of one inspection for one any combination of values of the variables used to identify one work situation (parameter `mode = 3`).
+* One transaction corresponds to the samples of one inspection for one any combination of values of the variables used to identify one work situation (parameter `mode = 3`). This gives a similar result as calling the function `make_transactions`, which should be faster.
 * One transaction can be either a set of samples of one inspection for one of the described work situations or for one any combination of values (parameter `mode = 1`).
 
 The three following examples use the dataset `oedb_sample` accessible in the package.
@@ -455,6 +455,9 @@ print(trx_subset_9)
 ### 2.2.2. Search by complexity
 
 The methods `get_complex_trx` and `get_simple_trx` are relating to the itemset lengths. In other words, they are relating to the number of items forming the transactions. Complex transactions are transactions having more than one item. Simple transactions are transactions having only one item.
+
+Remember that duplicate items are ignored only if the argument `unique_values` was used when creating the transaction set.
+
 ```{r}
 # Complex transactions
 trx_subset_10 <- get_complex_trx(TS_instance)
@@ -463,7 +466,7 @@ print(trx_subset_10)
 
 # Length of each extracted transaction
 cat("\nNumber of items of each transaction:\n")
-sapply(trx_subset_10["CODE"], length)
+lengths(trx_subset_10["CODE"])
 ```
 
 ```{r}
@@ -474,7 +477,7 @@ print(trx_subset_11)
 
 # Length of each extracted transaction
 cat("\nNumber of items of each transaction:\n")
-sapply(trx_subset_11["CODE"], length)
+lengths(trx_subset_11["CODE"])
 ```
 
 
@@ -517,7 +520,7 @@ cat("Proportion of complex transactions in 'TS_instance':",
 
 ### 3.1.2. Occurrences and co-occurrences between items
 
-Co-occurrences between items in the transactions can be counted using the method `co_occurrence_matrix`. The resulting matrix contains the numbers of transactions containing each existing pair of items. The diagonal of the matrix is the number of transactions containing each single item.
+Co-occurrences between items in transactions can be counted using the method `co_occurrence_matrix`. The resulting matrix contains the numbers of transactions containing each existing pair of items. The diagonal of the matrix is the number of transactions containing each single item.
 
 ```{r}
 cat("Transaction itemsets of 'trx_object_1':\n")
@@ -618,7 +621,7 @@ co_occurrence_chart(TS_instance,
 
 #### ggplot2
 
-By the way, the chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed afterwards using the ggplot2 `last_plot` fuction or the returned object. We can for example change the plot limits to make truncated labels more visible.
+The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed afterwards using the ggplot2 `last_plot` function or the returned object. We can for example change the plot limits to make truncated labels more visible.
 ```{r warning=FALSE}
 # Loading the package
 library(ggplot2)
