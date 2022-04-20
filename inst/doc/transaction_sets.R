@@ -367,7 +367,7 @@ co_occurrence_chart(TS_instance,
                     edge_looseness = 0,
                     edge_alpha = 0.5)
 
-## ----echo=FALSE, out.extra="class='border_none'"------------------------------
+## ----echo=FALSE, out.extra="class='border-none'"------------------------------
 old_par <- par(mar = c(0, 4.1, 0, 2.1))
 RColorBrewer::display.brewer.all(type = "seq")
 par(old_par)

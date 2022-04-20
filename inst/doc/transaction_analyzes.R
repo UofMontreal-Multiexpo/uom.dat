@@ -524,7 +524,7 @@ co_occurrence_chart(TA_instance,
                     edge_looseness = 0,
                     edge_alpha = 0.5)
 
-## ----echo=FALSE, out.extra="class='border_none'"------------------------------
+## ----echo=FALSE, out.extra="class='border-none'"------------------------------
 old_par <- graphics::par(mar = c(0, 4.1, 0, 2.1))
 RColorBrewer::display.brewer.all(type = "seq")
 graphics::par(old_par)
@@ -1010,7 +1010,7 @@ rules_chart(TA_instance,
             edge_alpha = 0.5
             )$graph
 
-## ----echo=FALSE, out.extra="class='border_none'"------------------------------
+## ----echo=FALSE, out.extra="class='border-none'"------------------------------
 old_par_1 <- graphics::par(mar = c(0, 4.1, 0, 2.1))
 
 ## Creation of the palettes
@@ -1046,7 +1046,7 @@ graphics::text(x = rep(-0.1, nrow(palettes)),
 graphics::par(old_par_1)
 graphics::par(old_par_2)
 
-## ----echo=FALSE, out.extra="class='border_none'"------------------------------
+## ----echo=FALSE, out.extra="class='border-none'"------------------------------
 old_par <- graphics::par(mar = c(0, 4.1, 0, 2.1))
 RColorBrewer::display.brewer.all(type = "seq")
 graphics::par(old_par)

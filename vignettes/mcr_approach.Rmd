@@ -8,7 +8,7 @@ output:
     toc_depth: 3
     css: 
      - !expr system.file("rmarkdown/templates/html_vignette/resources/vignette.css", package = "rmarkdown")
-     - styles.css
+     - style.css
     df_print: kable
     fig_width: 7
     fig_height: 4.5
@@ -32,7 +32,7 @@ This approach proposes a set of indicators. The main one (the maximum cumulative
 Nevertheless, as the indicators of the Maximum Cumulative Ratio approach are based only on **effective values** and **reference values**, they can be applied to other fields and situations in which we would like to know the importance of the **cumulative aspect** compared to the **individual aspect**.
 
 
-<p id="plan_announcement">This document describes the Maximum Cumulative Ratio approach by providing an example of application to occupational co-exposure data. The first section prepares the data that are used in other sections. The second one applies the approach to these data, computing indicators and plotting graphs. The third section proposes to apply this approach by considering a classification of the substances the data are from. Finally, the last one presents some computations and formatting of a classification system in general, and additional transformations on the structure containing the values being analyzed.</p>
+<p id="plan-announcement">This document describes the Maximum Cumulative Ratio approach by providing an example of application to occupational co-exposure data. The first section prepares the data that are used in other sections. The second one applies the approach to these data, computing indicators and plotting graphs. The third section proposes to apply this approach by considering a classification of the substances the data are from. Finally, the last one presents some computations and formatting of a classification system in general, and additional transformations on the structure containing the values being analyzed.</p>
 
 
 ```{r message=FALSE}

@@ -8,7 +8,7 @@ output:
     toc_depth: 3
     css: 
      - !expr system.file("rmarkdown/templates/html_vignette/resources/vignette.css", package = "rmarkdown")
-     - styles.css
+     - style.css
     df_print: kable
     fig_width: 7
     fig_height: 4.5
@@ -30,7 +30,7 @@ Initially introduced in the field of data mining for market basket analysis, the
 Nevertheless, this data mining approach can be applied to many other domains, such as the one in which certain of the examples we will use fall: health. Occupational health and safety research institutes use databases of exposure to chemicals in workplaces for the purpose of prevention of occupational accidents and diseases.
 
 
-<p id="plan_announcement">This document presents basic processing of transactions (more complex analyzes of transactions are presented in the document [Transaction analyzes](./transaction_analyzes.html)). The first section describes the structure of an object of class `TransactionSet` and how to create such objects. The second one presents methods to search for data in the transactions and to search for specific transactions. The third section proposes computations on transactions and plots. Finally, the last one presents how to save transactions and coercion possibilities.</p>
+<p id="plan-announcement">This document presents basic processing of transactions (more complex analyzes of transactions are presented in the document [Transaction analyzes](./transaction_analyzes.html)). The first section describes the structure of an object of class `TransactionSet` and how to create such objects. The second one presents methods to search for data in the transactions and to search for specific transactions. The third section proposes computations on transactions and plots. Finally, the last one presents how to save transactions and coercion possibilities.</p>
 
 
 ```{r message=FALSE}
@@ -64,7 +64,7 @@ Here is what we can see by calling the function `View`.
 View(TS_instance)
 ```
 <center>
-![](./transaction_sets/view_TS_instance.png){class=border_none}
+![](./transaction_sets/view_TS_instance.png){class=border-none}
 </center>
 
 We can see the 14 transactions in the attribute `data`. The second one:
@@ -645,7 +645,7 @@ Note that the RStudio graphics device may not be able to plot edges with transpa
 #### Palette
 
 Two arguments are relating to the palette used for coloring the edges. The first one allows to specify the sequential palette: `palette`. Here is the list of available palettes.
-```{r echo=FALSE, out.extra="class='border_none'"}
+```{r echo=FALSE, out.extra="class='border-none'"}
 old_par <- par(mar = c(0, 4.1, 0, 2.1))
 RColorBrewer::display.brewer.all(type = "seq")
 par(old_par)

@@ -8,7 +8,7 @@ output:
     toc_depth: 3
     css: 
      - !expr system.file("rmarkdown/templates/html_vignette/resources/vignette.css", package = "rmarkdown")
-     - styles.css
+     - style.css
     df_print: kable
     fig_width: 7
     fig_height: 4.5
@@ -30,7 +30,7 @@ In data mining, **transaction** analysis allows to find **frequent itemsets** an
 This document is the continuation of the one titled [Transaction sets](./transaction_sets.html) detailing the construction of objects of class `TransactionSet` and basic processing of transactions. It presents more analyzes to apply on transactions. The proposed examples are again in the field of occupational exposure to chemicals.
 
 
-<p id="plan_announcement">The first section describes the structure of an object of class `TransactionAnalyzer` and how to create such objects. The second one presents methods to search specific entities contained in such objects. The third section presents how to extract associations rules. The fourth one proposes plots about the entities created by a `TransactionAnalyzer` object. The fifth section proposes some computations. Finally, the last one presents how to save the different entities and how to extend the use of `TransactionAnalyzer` with another package.</p>
+<p id="plan-announcement">The first section describes the structure of an object of class `TransactionAnalyzer` and how to create such objects. The second one presents methods to search specific entities contained in such objects. The third section presents how to extract associations rules. The fourth one proposes plots about the entities created by a `TransactionAnalyzer` object. The fifth section proposes some computations. Finally, the last one presents how to save the different entities and how to extend the use of `TransactionAnalyzer` with another package.</p>
 
 
 ```{r message=FALSE}
@@ -182,7 +182,7 @@ Here is what we can see by calling the functions `View` and `print` on `TA_insta
 View(TA_instance)
 ```
 <center>
-![](./transaction_analyzes/view_TA_instance.png){class=border_none}
+![](./transaction_analyzes/view_TA_instance.png){class=border-none}
 </center>
 
 ```{r}
@@ -1213,7 +1213,7 @@ Note that the RStudio graphics device may not be able to plot edges with transpa
 #### Palette
 
 Two arguments are relating to the palette used for coloring the edges. The first one allows to specify the palette: `palette`. Here is the list of available palettes.
-```{r echo=FALSE, out.extra="class='border_none'"}
+```{r echo=FALSE, out.extra="class='border-none'"}
 old_par <- graphics::par(mar = c(0, 4.1, 0, 2.1))
 RColorBrewer::display.brewer.all(type = "seq")
 graphics::par(old_par)
@@ -2001,7 +2001,7 @@ Two arguments are relating to the palette used for coloring the edges. The first
 
 Here is the list of available palettes if `display` refers to the confidence.
 
-```{r echo=FALSE, out.extra="class='border_none'"}
+```{r echo=FALSE, out.extra="class='border-none'"}
 old_par_1 <- graphics::par(mar = c(0, 4.1, 0, 2.1))
 
 ## Creation of the palettes
@@ -2040,7 +2040,7 @@ graphics::par(old_par_2)
 
 Here is the list of available palettes if `display` refers to the support or the lift.
 
-```{r echo=FALSE, out.extra="class='border_none'"}
+```{r echo=FALSE, out.extra="class='border-none'"}
 old_par <- graphics::par(mar = c(0, 4.1, 0, 2.1))
 RColorBrewer::display.brewer.all(type = "seq")
 graphics::par(old_par)
