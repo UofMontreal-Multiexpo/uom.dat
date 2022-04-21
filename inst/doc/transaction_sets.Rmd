@@ -152,9 +152,9 @@ Note that `factor`s are coerced to `character`s in order to reduce the memory sp
 As for the arguments:
 
 * `data` is the dataset to work with;
-* `by` defines which variable of the data frame to use to aggregate the data;
+* `by` defines which variables of the data frame to use to aggregate the data;
 * `additional` defines which variables of the data frame are data to consider and aggregate;
-* `unique_values` defines if duplicate values in aggregations must be removed (can also be a character vector identifying variables);
+* `unique_values` defines if duplicate values in aggregations must be removed (for all or specific variables);
 * `item_key` and `year_key` define which variables correspond to items and to temporal data.
 
 #### Function make_OE_transactions

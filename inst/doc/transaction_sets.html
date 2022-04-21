@@ -334,7 +334,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Transaction sets</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2022-04-20</h4>
+<h4 class="date">Last update: 2022-04-21</h4>
 
 
 <div id="TOC">
@@ -685,13 +685,12 @@ the factor variables would be duplicated in each list.</p>
 <p>As for the arguments:</p>
 <ul>
 <li><code>data</code> is the dataset to work with;</li>
-<li><code>by</code> defines which variable of the data frame to use to
+<li><code>by</code> defines which variables of the data frame to use to
 aggregate the data;</li>
 <li><code>additional</code> defines which variables of the data frame
 are data to consider and aggregate;</li>
 <li><code>unique_values</code> defines if duplicate values in
-aggregations must be removed (can also be a character vector identifying
-variables);</li>
+aggregations must be removed (for all or specific variables);</li>
 <li><code>item_key</code> and <code>year_key</code> define which
 variables correspond to items and to temporal data.</li>
 </ul>
