@@ -7,8 +7,8 @@
 subset_from_class(values, references = NULL, classes, class_name)
 }
 \arguments{
-\item{values}{Numeric named matrix or list of numeric named vectors. Values from which to extract a
-subset according to one specific class.}
+\item{values}{Numeric named vector or matrix, or list of numeric named vectors.
+Values from which to extract a subset according to one specific class.}
 
 \item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
 \code{values}. See 'Details' to know the way it is associated with \code{values}.}
@@ -34,6 +34,8 @@ If not, list containing:
 Extract from values and references those corresponding to one specific class.
 }
 \details{
+If \code{values} is a vector, it must have one reference value for each value of the vector.
+
 If \code{values} is a matrix, it must have one reference value for each column.
 
 If \code{values} is a list, the reference values can be a vector of named values or a list. In this case,
@@ -51,6 +53,11 @@ classes <- list(A = c("C5", "C6", "C8"),
                 C = c("C3", "C8"),
                 D = c("C1", "C3", "C4", "C6"),
                 E = c("C2", "C4", "C5", "C7", "C8"))
+
+## Subsets with values as a vector
+subset_from_class(values = c(A = 1, B = 2, C = 3, D = 4, E = 5),
+                  classes = classes,
+                  class_name = "C8")
 
 ## Subsets with values as a matrix
 subset_from_class(

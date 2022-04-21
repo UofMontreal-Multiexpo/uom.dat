@@ -2905,6 +2905,18 @@ test_that("subset_from_class requires references to be named if they are a vecto
 test_that("subset_from_class requires values to be named", {
   classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"))
   
+  # 'values' as a vector
+  expect_error(subset_from_class(values = c(1, 1),
+                                 references = c(a = 1, b = 1),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               "name")
+  expect_error(subset_from_class(values = c(a = 1, b = 1),
+                                 references = c(a = 1, b = 1),
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               NA)
+  
   # 'values' as a matrix
   expect_error(subset_from_class(values = matrix(c(1,0, 1,1, 0,1), nrow = 3, byrow = TRUE),
                                  references = c(a = 1, b = 1),
@@ -2980,11 +2992,26 @@ test_that("subset_from_class returns an additional variable if references are gi
 
 test_that("subset_from_class extracts the subset of values corresponding to the given class", {
   classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"), d = "C5")
+  values_vector = c(a = 1, b = 1, c = 1)
   values_matrix = matrix(c(1,1,1, 1,0,0, 1,1,0),
                          nrow = 3, byrow = TRUE, dimnames = list(c("s1", "s2", "s3"), letters[1:3]))
   values_list = list(s1 = c(a = 1, b = 1, c = 1),
                      s2 = c(a = 1),
                      s3 = c(a = 1, b = 1))
+  
+  # 'values' as a vector
+  expect_equal(subset_from_class(values = values_vector,
+                                 classes = classes_list,
+                                 class_name = "C3"),
+               c(b = 1, c = 1))
+  expect_equal(subset_from_class(values = values_vector,
+                                 classes = classes_list,
+                                 class_name = "C4"),
+               c(c = 1))
+  expect_equal(subset_from_class(values = values_vector,
+                                 classes = classes_list,
+                                 class_name = "C5"),
+               setNames(numeric(0), character(0)))
   
   # 'values' as a matrix
   expect_equal(subset_from_class(values = values_matrix,

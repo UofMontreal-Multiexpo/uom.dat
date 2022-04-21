@@ -2896,6 +2896,8 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 #' Extract from values and references those corresponding to one specific class.
 #' 
 #' @details
+#' If `values` is a vector, it must have one reference value for each value of the vector.
+#' 
 #' If `values` is a matrix, it must have one reference value for each column.
 #' 
 #' If `values` is a list, the reference values can be a vector of named values or a list. In this case,
@@ -2906,8 +2908,8 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
 #'  function with such a matrix is slightly faster.
 #' 
-#' @param values Numeric named matrix or list of numeric named vectors. Values from which to extract a
-#'  subset according to one specific class.
+#' @param values Numeric named vector or matrix, or list of numeric named vectors.
+#'  Values from which to extract a subset according to one specific class.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
 #' @param classes List or logical matrix associating the `values` names with classes.
@@ -2939,6 +2941,11 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 #'                 C = c("C3", "C8"),
 #'                 D = c("C1", "C3", "C4", "C6"),
 #'                 E = c("C2", "C4", "C5", "C7", "C8"))
+#' 
+#' ## Subsets with values as a vector
+#' subset_from_class(values = c(A = 1, B = 2, C = 3, D = 4, E = 5),
+#'                   classes = classes,
+#'                   class_name = "C8")
 #' 
 #' ## Subsets with values as a matrix
 #' subset_from_class(
@@ -2977,7 +2984,7 @@ mcr_approach_by_class = function(values, references, classes, FUN, ...) {
 subset_from_class = function(values, references = NULL, classes, class_name) {
   
   # Checking data naming and use of classes as a logical matrix
-  check_data_for_mcr_by_class(values, references, vector = FALSE)
+  check_data_for_mcr_by_class(values, references)
   classes = validate_classes(classes)
   
   # Names of the elements corresponding to the class
@@ -3044,6 +3051,16 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
       colnames(values_class) = colnames(values)[indices[!is.na(indices)]]
       rownames(values_class) = rownames(values)
     }
+  }
+  # Case of a vector of values
+  else {
+    
+    # Extraction of the values corresponding to the class
+    # and removal of the NA values (when names assocaited with the class are not part of the values)
+    indices = match(items_in_class, names(values))
+    values_class = values[indices[!is.na(indices)]]
+    
+    if (!is.null(references)) references_class = references[indices[!is.na(indices)]]
   }
   
   if (is.null(references)) return(values_class)
