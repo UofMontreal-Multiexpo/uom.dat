@@ -1832,7 +1832,7 @@ test_that("thq_by_group returns an identical result whatever the chosen usage", 
 
 ##### mcr_summary_by_class #####
 
-test_that("mcr_summary_by_class that references have the same sizes as values if they are two lists", {
+test_that("mcr_summary_by_class requires that references have the same sizes as values if they are two lists", {
   classes = list(A = c("C2", "C4", "C5"),
                  B = c("C3", "C4", "C5"),
                  C = c("C5"),
