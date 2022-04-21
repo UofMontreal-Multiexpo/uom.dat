@@ -2070,35 +2070,65 @@ test_that("mcr_summary_by_class returns data frames containing as many rows as c
   
 })
 
-test_that("mcr_summary_by_class returns NULL if values do not belong to any class", {
+test_that("mcr_summary_by_class returns or does not return NULL if values do not belong to any class", {
   classes = list(A = c("C2", "C4", "C5"),
                  B = c("C3", "C4", "C5"),
                  C = c("C5"),
                  D = c("C1", "C2", "C3", "C4", "C5"),
                  E = character(0))
   references = c(A = 1, B = 2, C = 3, D = 4, E = 5)
+  values_matrix = matrix(c(0,0,0,0,5, 1,2,3,4,5), nrow = 2, byrow = TRUE,
+                         dimnames = list(c("s1", "s2"), LETTERS[1:5]))
+  values_list = list(s1 = c(E = 5),
+                     s2 = c(A = 1, B = 2, C = 3, D = 4, E = 5),
+                     s3 = c(A = 0, E = 5))
   
   
+  ## 'all_classes' is FALSE
   # 'values' as a vector
   expect_null(mcr_summary_by_class(values = c(E = 5),
                                    references = references["E"],
-                                   classes = classes))
+                                   classes = classes,
+                                   all_classes = FALSE))
   expect_null(mcr_summary_by_class(values = c(A = 0, E = 5),
                                    references = references[c("A", "E")],
-                                   classes = classes))
+                                   classes = classes,
+                                   all_classes = FALSE))
   
   # 'values' as a matrix
-  expect_null(mcr_summary_by_class(values = matrix(c(0,0,0,0,5, 1,2,3,4,5), nrow = 2, byrow = TRUE,
-                                                   dimnames = list(c("s1", "s2"), LETTERS[1:5])),
+  expect_null(mcr_summary_by_class(values = values_matrix,
                                    references = references,
-                                   classes = classes)$s1)
+                                   classes = classes,
+                                   all_classes = FALSE)$s1)
   
   # 'values' as a list
-  expect_null(unlist(mcr_summary_by_class(values = list(s1 = c(E = 5),
-                                                        s2 = c(A = 1, B = 2, C = 3, D = 4, E = 5),
-                                                        s3 = c(A = 0, E = 5)),
+  expect_null(unlist(mcr_summary_by_class(values = values_list,
                                           references = references,
-                                          classes = classes)[c("s1", "s3")]))
+                                          classes = classes,
+                                          all_classes = FALSE)[c("s1", "s3")]))
+  
+  ## 'all_classes' is TRUE
+  # 'values' as a vector
+  expect_false(is.null(mcr_summary_by_class(values = c(E = 5),
+                                            references = references["E"],
+                                            classes = classes,
+                                            all_classes = TRUE)))
+  expect_false(is.null(mcr_summary_by_class(values = c(A = 0, E = 5),
+                                            references = references[c("A", "E")],
+                                            classes = classes,
+                                            all_classes = TRUE)))
+  
+  # 'values' as a matrix
+  expect_false(is.null(mcr_summary_by_class(values = values_matrix,
+                                            references = references,
+                                            classes = classes,
+                                            all_classes = TRUE)$s1))
+  
+  # 'values' as a list
+  expect_false(is.null(mcr_summary_by_class(values = values_list,
+                                            references = references,
+                                            classes = classes,
+                                            all_classes = TRUE)[c("s1", "s3")]))
 })
 
 test_that("mcr_summary_by_class returns named objects", {
