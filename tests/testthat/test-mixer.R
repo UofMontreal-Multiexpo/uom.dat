@@ -3046,6 +3046,35 @@ test_that("subset_from_class extracts the subset of values corresponding to the 
                stats::setNames(list(), character(0)))
 })
 
+test_that("subset_from_class does not ignore duplicate value names", {
+  classes_list = list(a = c("C1","C2"), b = c("C2","C3"))
+  values_vector = c(a = 1, b = 1, a = 2)
+  values_matrix = matrix(c(1,1,0, 1,1,1),
+                         nrow = 2, byrow = TRUE, dimnames = list(c("s1", "s2"), c("a", "b", "a")))
+  values_list = list(s1 = c(a = 1, b = 1),
+                     s2 = c(a = 1, b = 1, a = 2))
+  
+  # 'values' as a vector
+  expect_equal(subset_from_class(values = values_vector,
+                                 classes = classes_list,
+                                 class_name = "C1"),
+               c(a = 1, a = 2))
+  
+  # 'values' as a matrix
+  expect_equal(subset_from_class(values = values_matrix,
+                                 classes = classes_list,
+                                 class_name = "C1"),
+               matrix(c(1,0, 1,1),
+                      nrow = 2, byrow = TRUE, dimnames = list(c("s1", "s2"), c("a", "a"))))
+  
+  # 'values' as a list
+  expect_equal(subset_from_class(values = values_list,
+                                 classes = classes_list,
+                                 class_name = "C1"),
+               list(s1 = c(a = 1),
+                    s2 = c(a = 1, a = 2)))
+})
+
 test_that("subset_from_class extracts the subset of references corresponding to the given class", {
   classes_list = list(a = c("C1","C2"), b = c("C2","C3"), c = c("C3", "C4"), d = "C5")
   values_list = list(s1 = c(a = 1, b = 1, c = 1),

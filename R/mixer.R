@@ -3039,16 +3039,15 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
   else if (is.matrix(values)) {
     
     # Extraction of the values corresponding to the class
-    # and removal of the NA values (when names assocaited with the class are not part of the values)
-    indices = match(items_in_class, colnames(values))
-    values_class = values[, indices[!is.na(indices)]]
+    indices = which(colnames(values) %in% items_in_class)
+    values_class = values[, indices]
     
-    if (!is.null(references)) references_class = references[indices[!is.na(indices)]]
+    if (!is.null(references)) references_class = references[indices]
     
     # Convert back to matrix if there was only one column
     if (is.vector(values_class)) {
       values_class = matrix(values_class, ncol = 1)
-      colnames(values_class) = colnames(values)[indices[!is.na(indices)]]
+      colnames(values_class) = colnames(values)[indices]
       rownames(values_class) = rownames(values)
     }
   }
@@ -3056,11 +3055,10 @@ subset_from_class = function(values, references = NULL, classes, class_name) {
   else {
     
     # Extraction of the values corresponding to the class
-    # and removal of the NA values (when names assocaited with the class are not part of the values)
-    indices = match(items_in_class, names(values))
-    values_class = values[indices[!is.na(indices)]]
+    indices = which(names(values) %in% items_in_class)
+    values_class = values[indices]
     
-    if (!is.null(references)) references_class = references[indices[!is.na(indices)]]
+    if (!is.null(references)) references_class = references[indices]
   }
   
   if (is.null(references)) return(values_class)
