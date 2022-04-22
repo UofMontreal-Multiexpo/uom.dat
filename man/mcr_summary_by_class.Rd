@@ -8,7 +8,7 @@ mcr_summary_by_class(
   values,
   references,
   classes,
-  by_set = TRUE,
+  by_set = FALSE,
   all_classes = FALSE
 )
 }

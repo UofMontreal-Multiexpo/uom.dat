@@ -335,7 +335,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Maximum cumulative ratio approach and
 classification management</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2022-04-20</h4>
+<h4 class="date">Last update: 2022-04-22</h4>
 
 
 <div id="TOC">
@@ -515,9 +515,12 @@ have the same length as the list of transactions (14 elements).</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>concentration_values <span class="ot">&lt;-</span> <span class="fu">lapply</span>(transactions[<span class="st">&quot;data&quot;</span>],</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                               <span class="cf">function</span>(trx) <span class="fu">setNames</span>(trx<span class="sc">$</span>CONCENTRATION, trx<span class="sc">$</span>NAME))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s print the second element of the new list,</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># corresponding to the second element of the previous list of transactions</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>concentration_values[[<span class="dv">2</span>]]</span></code></pre></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Naming the sets of values: S1 to S14</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(concentration_values) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;S&quot;</span>, <span class="fu">seq_along</span>(concentration_values))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s print the second element of the new list,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># corresponding to the second element of the previous list of transactions</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>concentration_values[[<span class="dv">2</span>]]</span></code></pre></div>
 <pre><code>## Formaldéhyde Formaldéhyde      Benzène 
 ##        0.007        0.004        0.050</code></pre>
 <p>The analysis will be carried out on these sets of concentration
@@ -684,17 +687,19 @@ Ratio approach) can be computed using a single function:
 <div class="kable-table">
 <table>
 <colgroup>
+<col width="3%" />
 <col width="2%" />
 <col width="10%" />
 <col width="8%" />
 <col width="10%" />
 <col width="5%" />
-<col width="41%" />
+<col width="39%" />
 <col width="10%" />
 <col width="9%" />
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left"></th>
 <th align="right">n</th>
 <th align="right">HI</th>
 <th align="right">MCR</th>
@@ -707,6 +712,7 @@ Ratio approach) can be computed using a single function:
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">S1</td>
 <td align="right">24</td>
 <td align="right">0.2320246</td>
 <td align="right">7.927506</td>
@@ -717,6 +723,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.8738569</td>
 </tr>
 <tr class="even">
+<td align="left">S2</td>
 <td align="right">3</td>
 <td align="right">0.0334174</td>
 <td align="right">2.172131</td>
@@ -727,6 +734,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.5396226</td>
 </tr>
 <tr class="odd">
+<td align="left">S3</td>
 <td align="right">21</td>
 <td align="right">16.9290200</td>
 <td align="right">3.111952</td>
@@ -737,6 +745,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.6786583</td>
 </tr>
 <tr class="even">
+<td align="left">S4</td>
 <td align="right">4</td>
 <td align="right">2.4571429</td>
 <td align="right">2.047619</td>
@@ -747,6 +756,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.5116279</td>
 </tr>
 <tr class="odd">
+<td align="left">S5</td>
 <td align="right">1</td>
 <td align="right">0.6290000</td>
 <td align="right">1.000000</td>
@@ -757,6 +767,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
+<td align="left">S6</td>
 <td align="right">3</td>
 <td align="right">1.4598755</td>
 <td align="right">1.064493</td>
@@ -767,6 +778,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.0605853</td>
 </tr>
 <tr class="odd">
+<td align="left">S7</td>
 <td align="right">10</td>
 <td align="right">0.7795714</td>
 <td align="right">2.547619</td>
@@ -777,6 +789,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.6074766</td>
 </tr>
 <tr class="even">
+<td align="left">S8</td>
 <td align="right">15</td>
 <td align="right">20.0747508</td>
 <td align="right">1.103008</td>
@@ -787,6 +800,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.0933885</td>
 </tr>
 <tr class="odd">
+<td align="left">S9</td>
 <td align="right">30</td>
 <td align="right">33.0336045</td>
 <td align="right">3.451787</td>
@@ -797,6 +811,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.7102950</td>
 </tr>
 <tr class="even">
+<td align="left">S10</td>
 <td align="right">6</td>
 <td align="right">0.0800000</td>
 <td align="right">5.333333</td>
@@ -807,6 +822,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.8125000</td>
 </tr>
 <tr class="odd">
+<td align="left">S11</td>
 <td align="right">6</td>
 <td align="right">5.0122857</td>
 <td align="right">1.518874</td>
@@ -817,6 +833,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.3416177</td>
 </tr>
 <tr class="even">
+<td align="left">S12</td>
 <td align="right">5</td>
 <td align="right">0.1755714</td>
 <td align="right">1.340240</td>
@@ -827,6 +844,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.2538649</td>
 </tr>
 <tr class="odd">
+<td align="left">S13</td>
 <td align="right">2</td>
 <td align="right">0.9700000</td>
 <td align="right">1.293333</td>
@@ -837,6 +855,7 @@ Ratio approach) can be computed using a single function:
 <td align="right">0.2268041</td>
 </tr>
 <tr class="even">
+<td align="left">S14</td>
 <td align="right">1</td>
 <td align="right">0.1050000</td>
 <td align="right">1.000000</td>
@@ -1472,15 +1491,8 @@ Classification</a>, we will use the classification present in the
 variable <code>TOXICITY</code> of the dataset
 <code>substances_information</code>. It associates classes with
 substances and looks like that:</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>classification[<span class="dv">349</span><span class="sc">:</span><span class="dv">353</span>]</span></code></pre></div>
-<pre><code>## $`Acrylate de méthyle`
-## [1] &quot;Atteintes oculaires&quot;                          
-## [2] &quot;Atteintes oculaires&quot;                          
-## [3] &quot;Atteintes des voies respiratoires supérieures&quot;
-## [4] &quot;Atteintes cutanées&quot;                           
-## [5] &quot;Sensibilisants&quot;                               
-## 
-## $`Acrylate de n-butyle`
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>classification[<span class="dv">350</span><span class="sc">:</span><span class="dv">352</span>]</span></code></pre></div>
+<pre><code>## $`Acrylate de n-butyle`
 ## [1] &quot;Atteintes oculaires&quot;                          
 ## [2] &quot;Atteintes des voies respiratoires supérieures&quot;
 ## [3] &quot;Atteintes cutanées&quot;                           
@@ -1490,10 +1502,7 @@ substances and looks like that:</p>
 ## NULL
 ## 
 ## $`Acétate d&#39;isopentyle`
-## [1] &quot;Atteintes des voies respiratoires supérieures&quot;
-## 
-## $`Acétate d&#39;isopropyle`
-## NULL</code></pre>
+## [1] &quot;Atteintes des voies respiratoires supérieures&quot;</code></pre>
 <p>Apply the MCR approach according to a classification means apply it
 depending on the different classes associated with the values. In other
 words, indicators will be computed for each subset of values related to
@@ -1502,37 +1511,65 @@ a specific class, and for each class. For that, we can call the function
 classification and the function of the approach we want to apply.</p>
 <div id="mcr-summary-according-to-classes" class="section level2">
 <h2>3.1. MCR summary according to classes</h2>
-<p>Concerning the summary of the indicators, for each element of the
-argument <code>values</code>, a summary is given for subsets of values
-related to each class:</p>
+<p>Concerning the summary of the indicators, for each class encountered,
+summaries are given for the sets of values relating to the class:</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the summary for each class</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>summaries <span class="ot">&lt;-</span> <span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">references =</span> reference_values,</span>
 <span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">classes =</span> classification,</span>
 <span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">FUN =</span> mcr_summary)</span>
 <span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of summaries:&quot;</span>, <span class="fu">length</span>(summaries))</span></code></pre></div>
-<pre><code>## Number of summaries: 14</code></pre>
-<p>As we have 14 sets of values, the output list has a length of 14.</p>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of classes encountered:&quot;</span>, <span class="fu">length</span>(summaries))</span></code></pre></div>
+<pre><code>## Number of classes encountered: 15</code></pre>
+<p>The resulting list has a length of 15, which mean that the analyzed
+values are related to 15 different classes.</p>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just look at few examples:</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summaries of the sets of concentration values 4 to 6</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>summaries[<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>]</span></code></pre></div>
-<pre><code>## [[4]]
-## NULL
-## 
-## [[5]]</code></pre>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summaries of the 6th and 7th classes</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>summaries[<span class="dv">6</span><span class="sc">:</span><span class="dv">7</span>]</span></code></pre></div>
+<pre><code>## $`Atteintes du système immunitaire`</code></pre>
 <div class="kable-table">
-<table style="width:100%;">
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">HI</th>
+<th align="right">MCR</th>
+<th align="right">Reciprocal</th>
+<th align="left">Group</th>
+<th align="left">THQ</th>
+<th align="right">MHQ</th>
+<th align="right">Missed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">S2</td>
+<td align="right">1</td>
+<td align="right">0.0153846</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">II</td>
+<td align="left">Benzène</td>
+<td align="right">0.0153846</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre><code>## $`Atteintes du système nerveux central`</code></pre>
+<div class="kable-table">
+<table>
 <colgroup>
-<col width="51%" />
-<col width="2%" />
-<col width="7%" />
-<col width="6%" />
-<col width="7%" />
-<col width="4%" />
 <col width="5%" />
-<col width="7%" />
-<col width="7%" />
+<col width="4%" />
+<col width="14%" />
+<col width="12%" />
+<col width="14%" />
+<col width="8%" />
+<col width="13%" />
+<col width="13%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1549,29 +1586,29 @@ related to each class:</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Atteintes cutanées</td>
-<td align="right">1</td>
-<td align="right">0.0520833</td>
-<td align="right">1.000000</td>
-<td align="right">1.0000000</td>
+<td align="left">S1</td>
+<td align="right">8</td>
+<td align="right">0.0205263</td>
+<td align="right">1.147059</td>
+<td align="right">0.8717949</td>
 <td align="left">II</td>
-<td align="left">Toluène</td>
-<td align="right">0.0520833</td>
-<td align="right">0.0000000</td>
+<td align="left">Ethanol</td>
+<td align="right">0.0178947</td>
+<td align="right">0.1282051</td>
 </tr>
 <tr class="even">
-<td align="left">Atteintes du système auditif</td>
-<td align="right">1</td>
-<td align="right">0.0520833</td>
-<td align="right">1.000000</td>
-<td align="right">1.0000000</td>
-<td align="left">II</td>
-<td align="left">Toluène</td>
-<td align="right">0.0520833</td>
-<td align="right">0.0000000</td>
+<td align="left">S3</td>
+<td align="right">21</td>
+<td align="right">16.9290200</td>
+<td align="right">3.111952</td>
+<td align="right">0.3213417</td>
+<td align="left">I</td>
+<td align="left">Styrène</td>
+<td align="right">5.4400000</td>
+<td align="right">0.6786583</td>
 </tr>
 <tr class="odd">
-<td align="left">Atteintes du système nerveux central</td>
+<td align="left">S6</td>
 <td align="right">2</td>
 <td align="right">0.0884470</td>
 <td align="right">1.698182</td>
@@ -1582,142 +1619,63 @@ related to each class:</p>
 <td align="right">0.4111349</td>
 </tr>
 <tr class="even">
-<td align="left">Atteintes du système nerveux périphérique</td>
-<td align="right">1</td>
-<td align="right">0.0363636</td>
-<td align="right">1.000000</td>
-<td align="right">1.0000000</td>
-<td align="left">II</td>
-<td align="left">Acétone</td>
-<td align="right">0.0363636</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">Atteintes oculaires</td>
-<td align="right">1</td>
-<td align="right">0.0363636</td>
-<td align="right">1.000000</td>
-<td align="right">1.0000000</td>
-<td align="left">II</td>
-<td align="left">Acétone</td>
-<td align="right">0.0363636</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">Atteintes sur le développement du fœtus, de l’embryon
-et/ou de l’enfant</td>
-<td align="right">1</td>
-<td align="right">0.0520833</td>
-<td align="right">1.000000</td>
-<td align="right">1.0000000</td>
-<td align="left">II</td>
-<td align="left">Toluène</td>
-<td align="right">0.0520833</td>
-<td align="right">0.0000000</td>
-</tr>
-</tbody>
-</table>
-</div>
-<pre><code>## [[6]]</code></pre>
-<div class="kable-table">
-<table style="width:100%;">
-<colgroup>
-<col width="51%" />
-<col width="2%" />
-<col width="7%" />
-<col width="6%" />
-<col width="7%" />
-<col width="4%" />
-<col width="5%" />
-<col width="7%" />
-<col width="7%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left"></th>
-<th align="right">n</th>
-<th align="right">HI</th>
-<th align="right">MCR</th>
-<th align="right">Reciprocal</th>
-<th align="left">Group</th>
-<th align="left">THQ</th>
-<th align="right">MHQ</th>
-<th align="right">Missed</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Atteintes cutanées</td>
-<td align="right">1</td>
-<td align="right">0.0520833</td>
-<td align="right">1.000000</td>
-<td align="right">1.0000000</td>
-<td align="left">II</td>
-<td align="left">Toluène</td>
-<td align="right">0.0520833</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">Atteintes du système auditif</td>
-<td align="right">1</td>
-<td align="right">0.0520833</td>
-<td align="right">1.000000</td>
-<td align="right">1.0000000</td>
-<td align="left">II</td>
-<td align="left">Toluène</td>
-<td align="right">0.0520833</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">Atteintes du système nerveux central</td>
+<td align="left">S7</td>
 <td align="right">2</td>
-<td align="right">0.0884470</td>
-<td align="right">1.698182</td>
-<td align="right">0.5888651</td>
+<td align="right">0.0220000</td>
+<td align="right">1.833333</td>
+<td align="right">0.5454545</td>
 <td align="left">II</td>
-<td align="left">Toluène</td>
-<td align="right">0.0520833</td>
-<td align="right">0.4111349</td>
-</tr>
-<tr class="even">
-<td align="left">Atteintes du système nerveux périphérique</td>
-<td align="right">1</td>
-<td align="right">0.0363636</td>
-<td align="right">1.000000</td>
-<td align="right">1.0000000</td>
-<td align="left">II</td>
-<td align="left">Acétone</td>
-<td align="right">0.0363636</td>
-<td align="right">0.0000000</td>
+<td align="left">Manganèse</td>
+<td align="right">0.0120000</td>
+<td align="right">0.4545455</td>
 </tr>
 <tr class="odd">
-<td align="left">Atteintes oculaires</td>
+<td align="left">S8</td>
 <td align="right">1</td>
-<td align="right">0.0363636</td>
+<td align="right">1.3133333</td>
 <td align="right">1.000000</td>
 <td align="right">1.0000000</td>
-<td align="left">II</td>
-<td align="left">Acétone</td>
-<td align="right">0.0363636</td>
+<td align="left">I</td>
+<td align="left">Butanone</td>
+<td align="right">1.3133333</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
-<td align="left">Atteintes sur le développement du fœtus, de l’embryon
-et/ou de l’enfant</td>
+<td align="left">S9</td>
+<td align="right">30</td>
+<td align="right">33.0336045</td>
+<td align="right">3.451787</td>
+<td align="right">0.2897050</td>
+<td align="left">I</td>
+<td align="left">Styrène</td>
+<td align="right">9.5700000</td>
+<td align="right">0.7102950</td>
+</tr>
+<tr class="odd">
+<td align="left">S11</td>
 <td align="right">1</td>
-<td align="right">0.0520833</td>
+<td align="right">0.4100000</td>
 <td align="right">1.000000</td>
 <td align="right">1.0000000</td>
 <td align="left">II</td>
-<td align="left">Toluène</td>
-<td align="right">0.0520833</td>
+<td align="left">Manganèse</td>
+<td align="right">0.4100000</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">S12</td>
+<td align="right">1</td>
+<td align="right">0.0170000</td>
+<td align="right">1.000000</td>
+<td align="right">1.0000000</td>
+<td align="left">II</td>
+<td align="left">Manganèse</td>
+<td align="right">0.0170000</td>
 <td align="right">0.0000000</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><code>NULL</code> results correspond to sets of values not belonging
-to any class.</p>
 <p>Note that functions presented in section <a href="#compute-a-specific-indicator">2.1.3. Compute a specific
 indicator</a> cannot be used via this function. However, specific
 indicators can be easily extracted from the data frames returned by the
@@ -1725,8 +1683,8 @@ use of <code>mcr_summary</code>.</p>
 </div>
 <div id="scatter-plots-according-to-classes" class="section level2">
 <h2>3.2. Scatter plots according to classes</h2>
-<p>Concerning the scatter plot, one chart is built for each class
-encountered and the result is a list.</p>
+<p>Concerning the scatter plot, one chart is built for each class and
+the result is a list.</p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make one chart for each class</span></span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>charts <span class="ot">&lt;-</span> <span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">references =</span> reference_values,</span>
@@ -2140,11 +2098,6 @@ structure to be similar to the first one presented:</p>
 </div>
 <div id="value-management" class="section level2">
 <h2>4.2. Value management</h2>
-<p>Before starting this section, we will name the sets of concentration
-values created in section <a href="#effective-values">1.1. Effective
-values</a> to better identify them:</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Naming the sets of concentration values: S1 to S14</span></span>
-<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(concentration_values) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;S&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>)</span></code></pre></div>
 <div id="components-of-the-sets" class="section level3">
 <h3>4.2.1. Components of the sets</h3>
 <p>Having our list of values which are concentration values for specific
@@ -2152,10 +2105,10 @@ substances, we can call <code>coerce_list</code> to know which
 substances are present in which sets of values by coercing the list to a
 binary matrix. Each line refers to one set of values and each column
 refers to one name found in the values of the list.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just look at some columns</span></span>
-<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coerce_list</span>(concentration_values,</span>
-<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">to =</span> <span class="st">&quot;logical matrix&quot;</span>,</span>
-<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">by_name =</span> <span class="cn">TRUE</span>)[, <span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">12</span><span class="sc">:</span><span class="dv">14</span>,<span class="dv">23</span><span class="sc">:</span><span class="dv">25</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just look at some columns</span></span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coerce_list</span>(concentration_values,</span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">to =</span> <span class="st">&quot;logical matrix&quot;</span>,</span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">by_name =</span> <span class="cn">TRUE</span>)[, <span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">12</span><span class="sc">:</span><span class="dv">14</span>,<span class="dv">23</span><span class="sc">:</span><span class="dv">25</span>)]</span></code></pre></div>
 <pre><code>##     Acétone Aluminium Butanone Cuivre Ethanol   Fer Styrène Toluène  Zinc
 ## S1    FALSE     FALSE    FALSE  FALSE    TRUE FALSE   FALSE   FALSE FALSE
 ## S2    FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
@@ -2178,8 +2131,8 @@ the names of the values instead of the values themselves.</p>
 <h3>4.2.2. Reduction of sets of values</h3>
 <p>In the list of sets of values, some of these sets contains several
 values for the same component name, like in the following:</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the 2nd and 4th sets of values</span></span>
-<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>concentration_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the 2nd and 4th sets of values</span></span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>concentration_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
 <pre><code>## $S2
 ## Formaldéhyde Formaldéhyde      Benzène 
 ##        0.007        0.004        0.050 
@@ -2200,12 +2153,12 @@ function is given as argument <code>FUN</code> and can be any function
 taking a numeric vector as input and returning one single value. It can
 be a custom function or a base function like <code>min</code>,
 <code>max</code>, <code>median</code>, etc.</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reduce the sets of values by taking the minimum value associated with each name</span></span>
-<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>new_values <span class="ot">&lt;-</span> <span class="fu">reduce_sets</span>(concentration_values,</span>
-<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">FUN =</span> min)</span>
-<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the new 2nd and 4th sets of values</span></span>
-<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>new_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reduce the sets of values by taking the minimum value associated with each name</span></span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>new_values <span class="ot">&lt;-</span> <span class="fu">reduce_sets</span>(concentration_values,</span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">FUN =</span> min)</span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the new 2nd and 4th sets of values</span></span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>new_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
 <pre><code>## $S2
 ## Formaldéhyde      Benzène 
 ##        0.004        0.050 
@@ -2221,11 +2174,11 @@ related to a specific class. For that, we will use the function
 <code>subset_from_class</code> and choose one from the set of class
 names (defined in section <a href="#classification">1.2.
 Classification</a>):</p>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction of the subsets for the ninth class</span></span>
-<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a>subsets <span class="ot">&lt;-</span> <span class="fu">subset_from_class</span>(<span class="at">values =</span> concentration_values,</span>
-<span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">references =</span> reference_values,</span>
-<span id="cb124-4"><a href="#cb124-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">classes =</span> classification,</span>
-<span id="cb124-5"><a href="#cb124-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">class_name =</span> class_names[<span class="dv">9</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction of the subsets for the ninth class</span></span>
+<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>subsets <span class="ot">&lt;-</span> <span class="fu">subset_from_class</span>(<span class="at">values =</span> concentration_values,</span>
+<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">references =</span> reference_values,</span>
+<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">classes =</span> classification,</span>
+<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">class_name =</span> class_names[<span class="dv">9</span>])</span></code></pre></div>
 <p>The output of this function is a list containing two subsets:
 <code>values</code>, the subset of <code>concentration_values</code>
 corresponding to the class <code>class_name</code>;
@@ -2233,11 +2186,11 @@ corresponding to the class <code>class_name</code>;
 corresponding to this same class.</p>
 <p>Before looking at the subsets related to the chosen class, we can
 compare their lengths to those of the complete sets of values.</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of values of each set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(concentration_values)</span>
-<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Number of values related to the ninth class :</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(subsets[[<span class="st">&quot;values&quot;</span>]])</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of values of each set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(concentration_values)</span>
+<span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb124-4"><a href="#cb124-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Number of values related to the ninth class :</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb124-5"><a href="#cb124-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(subsets[[<span class="st">&quot;values&quot;</span>]])</span></code></pre></div>
 <pre><code>## Number of values of each set of concentration values:
 ##  S1  S2  S3  S4  S5  S6  S7  S8  S9 S10 S11 S12 S13 S14 
 ##  24   3  21   4   1   3  10  15  30   6   6   5   2   1 
@@ -2249,11 +2202,11 @@ compare their lengths to those of the complete sets of values.</p>
 substances related to the class of interest.</p>
 <p>Let’s take a look at the values from the 6th set, in which only two
 of the three values were kept:</p>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Values of the sixth set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a>concentration_values<span class="sc">$</span>S6</span>
-<span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb127-4"><a href="#cb127-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Values of the sixth set of concentration values related to the ninth class:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb127-5"><a href="#cb127-5" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;values&quot;</span>]]<span class="sc">$</span>S6</span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Values of the sixth set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>concentration_values<span class="sc">$</span>S6</span>
+<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Values of the sixth set of concentration values related to the ninth class:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb126-5"><a href="#cb126-5" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;values&quot;</span>]]<span class="sc">$</span>S6</span></code></pre></div>
 <pre><code>## Values of the sixth set of concentration values:
 ##                                    Acétone 
 ##                                         44 
@@ -2267,7 +2220,7 @@ of the three values were kept:</p>
 ##      44       4</code></pre>
 <p>To finish, we can look at the subset of references, which will also
 give the set of substances related to the class:</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;references&quot;</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;references&quot;</span>]]</span></code></pre></div>
 <pre><code>##               Ethanol               Acétone              Butanone 
 ##                1900.0                1210.0                 600.0 
 ## 1-Méthoxypropane-2-ol               Styrène               Toluène 

@@ -2070,12 +2070,14 @@ test_that("mcr_summary_by_class does not count values equal to 0", {
   # 'values' as a matrix
   expect_equal(sapply(mcr_summary_by_class(values = values_matrix,
                                            references = references,
-                                           classes = classes),
+                                           classes = classes,
+                                           by_set = TRUE),
                       nrow),
                c(s1 = 3, s2 = 5))
   expect_equal(lapply(mcr_summary_by_class(values = values_matrix,
                                            references = references,
                                            classes = classes,
+                                           by_set = TRUE,
                                            all_classes = TRUE),
                       "[[", "n"),
                list(s1 = c(0, 1, 0, 1, 2),
@@ -2084,12 +2086,14 @@ test_that("mcr_summary_by_class does not count values equal to 0", {
   # 'values' as a list
   expect_equal(sapply(mcr_summary_by_class(values = values_list,
                                            references = references,
-                                           classes = classes),
+                                           classes = classes,
+                                           by_set = TRUE),
                       nrow),
                c(s1 = 3, s2 = 5, s3 = 1))
   expect_equal(lapply(mcr_summary_by_class(values = values_list,
                                            references = references,
                                            classes = classes,
+                                           by_set = TRUE,
                                            all_classes = TRUE),
                       "[[", "n"),
                list(s1 = c(0, 1, 0, 1, 2),

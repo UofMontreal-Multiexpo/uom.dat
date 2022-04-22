@@ -2281,7 +2281,7 @@ validate_classes = function(classes) {
 #' @md
 #' @export
 mcr_summary_by_class = function(values, references, classes,
-                                by_set = TRUE, all_classes = FALSE) {
+                                by_set = FALSE, all_classes = FALSE) {
   
   # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references)

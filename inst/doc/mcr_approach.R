@@ -29,6 +29,9 @@ transactions[[2]]
 concentration_values <- lapply(transactions["data"],
                                function(trx) setNames(trx$CONCENTRATION, trx$NAME))
 
+# Naming the sets of values: S1 to S14
+names(concentration_values) <- paste0("S", seq_along(concentration_values))
+
 # Let's print the second element of the new list,
 # corresponding to the second element of the previous list of transactions
 concentration_values[[2]]
@@ -242,7 +245,7 @@ names(list_of_summaries) <- groups
 list_of_summaries
 
 ## -----------------------------------------------------------------------------
-classification[349:353]
+classification[350:352]
 
 ## -----------------------------------------------------------------------------
 # Make the summary for each class
@@ -251,25 +254,21 @@ summaries <- mcr_approach_by_class(values = concentration_values,
                                    classes = classification,
                                    FUN = mcr_summary)
 
-cat("Number of summaries:", length(summaries))
+cat("Number of classes encountered:", length(summaries))
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  # Just look at few examples:
-#  # summaries of the sets of concentration values 4 to 6
-#  summaries[4:6]
+#  # summaries of the 6th and 7th classes
+#  summaries[6:7]
 
 ## ----echo=FALSE, results="hold"-----------------------------------------------
 # Beautify the display because knitkr::table is not call in a list (even if list of data frames)
 
 # Unfortunatly, loop does not seem to be compatible with the knitr::kable specific data.frame print
-s <- 4
-cat("[[", s, "]]\n", sep = "") ; s <- s + 1
-summaries[[s]] ; cat("\n")
-cat("[[", s, "]]\n", sep = "") ; s <- s + 1
-summaries[[s]]
-cat("[[", s, "]]\n", sep = "")
-summaries[[s]]
-
+s <- 6
+cat("$`", names(summaries)[s], "`\n", sep = "") ; summaries[[s]]
+s <- s + 1
+cat("$`", names(summaries)[s], "`\n", sep = "") ; summaries[[s]]
 
 ## -----------------------------------------------------------------------------
 # Make one chart for each class
@@ -425,10 +424,6 @@ classification_3
 
 ## -----------------------------------------------------------------------------
 coerce_to_list(classification_3)
-
-## -----------------------------------------------------------------------------
-# Naming the sets of concentration values: S1 to S14
-names(concentration_values) <- paste0("S", 1:14)
 
 ## -----------------------------------------------------------------------------
 # Just look at some columns

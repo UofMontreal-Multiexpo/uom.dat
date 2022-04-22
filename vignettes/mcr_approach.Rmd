@@ -79,6 +79,9 @@ Now we will separate the concentration values and name them with the substances 
 concentration_values <- lapply(transactions["data"],
                                function(trx) setNames(trx$CONCENTRATION, trx$NAME))
 
+# Naming the sets of values: S1 to S14
+names(concentration_values) <- paste0("S", seq_along(concentration_values))
+
 # Let's print the second element of the new list,
 # corresponding to the second element of the previous list of transactions
 concentration_values[[2]]
@@ -485,7 +488,7 @@ list_of_summaries
 
 As described in section [1.2. Classification](#classification), we will use the classification present in the variable `TOXICITY` of the dataset `substances_information`. It associates classes with substances and looks like that:
 ```{r}
-classification[349:353]
+classification[350:352]
 ```
 
 Apply the MCR approach according to a classification means apply it depending on the different classes associated with the values. In other words, indicators will be computed for each subset of values related to a specific class, and for each class.
@@ -494,7 +497,7 @@ For that, we can call the function `mcr_approach_by_class` with the values, the 
 
 ## 3.1. MCR summary according to classes
 
-Concerning the summary of the indicators, for each element of the argument `values`, a summary is given for subsets of values related to each class:
+Concerning the summary of the indicators, for each class encountered, summaries are given for the sets of values relating to the class:
 ```{r}
 # Make the summary for each class
 summaries <- mcr_approach_by_class(values = concentration_values,
@@ -502,36 +505,32 @@ summaries <- mcr_approach_by_class(values = concentration_values,
                                    classes = classification,
                                    FUN = mcr_summary)
 
-cat("Number of summaries:", length(summaries))
+cat("Number of classes encountered:", length(summaries))
 ```
-As we have 14 sets of values, the output list has a length of 14. 
+
+The resulting list has a length of 15, which mean that the analyzed values are related to 15 different classes.
 
 ```{r eval=FALSE}
 # Just look at few examples:
-# summaries of the sets of concentration values 4 to 6
-summaries[4:6]
+# summaries of the 6th and 7th classes
+summaries[6:7]
 ```
 ```{r echo=FALSE, results="hold"}
 # Beautify the display because knitkr::table is not call in a list (even if list of data frames)
 
 # Unfortunatly, loop does not seem to be compatible with the knitr::kable specific data.frame print
-s <- 4
-cat("[[", s, "]]\n", sep = "") ; s <- s + 1
-summaries[[s]] ; cat("\n")
-cat("[[", s, "]]\n", sep = "") ; s <- s + 1
-summaries[[s]]
-cat("[[", s, "]]\n", sep = "")
-summaries[[s]]
-
+s <- 6
+cat("$`", names(summaries)[s], "`\n", sep = "") ; summaries[[s]]
+s <- s + 1
+cat("$`", names(summaries)[s], "`\n", sep = "") ; summaries[[s]]
 ```
-`NULL` results correspond to sets of values not belonging to any class.
 
 Note that functions presented in section [2.1.3. Compute a specific indicator](#compute-a-specific-indicator) cannot be used via this function. However, specific indicators can be easily extracted from the data frames returned by the use of `mcr_summary`.
 
 
 ## 3.2. Scatter plots according to classes
 
-Concerning the scatter plot, one chart is built for each class encountered and the result is a list.
+Concerning the scatter plot, one chart is built for each class and the result is a list.
 ```{r}
 # Make one chart for each class
 charts <- mcr_approach_by_class(values = concentration_values,
@@ -746,13 +745,6 @@ coerce_to_list(classification_3)
 
 
 ## 4.2. Value management
-
-Before starting this section, we will name the sets of concentration values created in section [1.1. Effective values](#effective-values) to better identify them:
-```{r}
-# Naming the sets of concentration values: S1 to S14
-names(concentration_values) <- paste0("S", 1:14)
-```
-
 
 ### 4.2.1. Components of the sets
 
