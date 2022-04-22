@@ -766,20 +766,29 @@ mcr_summary = function(values, references) {
   # Specific case in which values is a list
   if (is.list(values)) return(mcr_summary_for_list(values, references))
   
+  # Summary of unusable values
+  unusable_summary = list(n = 0, HI = NA_real_, MCR = NA_real_, Reciprocal = NA_real_,
+                          Group = NA_character_, THQ = NA_character_,
+                          MHQ = NA_real_, Missed = NA_real_)
+  
+  # Unusable vector of values
+  if (is.vector(values) && (length(values) == 0 || all(values == 0))) {
+    return(unusable_summary)
+  }
+  
   # Computations of the indicators
-  hq = hazard_quotient(values, references)
-  hi = hazard_index(hq = hq)
+  hq  = hazard_quotient(values, references)
+  hi  = hazard_index(hq = hq)
   mhq = maximum_hazard_quotient(hq = hq)
   mcr = maximum_cumulative_ratio(hi = hi, mhq = mhq)
-  mt = missed_toxicity(mcr = mcr)
+  mt  = missed_toxicity(mcr = mcr)
   
-  rmcr = reciprocal_of_mcr(mcr = mcr)
+  rmcr   = reciprocal_of_mcr(mcr = mcr)
   groups = classify_mixture(hi = hi, mhq = mhq, mcr = mcr)
   
   # Distinction between vector and matrix cases
   if (is.vector(values)) {
-    if (is_named(values) && !all(values == 0)) thq = names(top_hazard_quotient(hq = hq, k = 1))
-    else thq = NA_character_
+    thq = if (is_named(values)) names(top_hazard_quotient(hq = hq, k = 1)) else NA_character_
     
     return(list(n = sum(values != 0),
                 HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
@@ -790,8 +799,15 @@ mcr_summary = function(values, references) {
   n = apply(values, 1, function(v) sum(v != 0))
   if (is_named(values)[2]) {
     thq = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1))))
-    thq[n == 0] = NA_character_
   } else thq = NA_character_
+  
+  hi[n == 0] = unusable_summary$HI
+  mcr[n == 0] = unusable_summary$MCR
+  rmcr[n == 0] = unusable_summary$Reciprocal
+  groups[n == 0] = unusable_summary$Group
+  thq[n == 0] = unusable_summary$THQ
+  mhq[n == 0] = unusable_summary$MHQ
+  mt[n == 0] = unusable_summary$Missed
   
   return(data.frame(n = n, HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
                     THQ = thq, MHQ = mhq, Missed = mt,
