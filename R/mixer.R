@@ -2203,19 +2203,21 @@ validate_classes = function(classes) {
 #'  If logical matrix, its columns are named according to the classes and the row names
 #'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
 #'  is part of a specific class.
+#' @param by_set `TRUE` or `FALSE` whether to group results by set of values or by class.
+#'  Always `TRUE` if values is a vector.
 #' @param all_classes Logical indicating whether all classes must be considered for each set of values
-#'  or only those that are actually associated with the set of values.
+#'  or only those that are actually associated with the set of values. Ignored if `by_set` is `FALSE`.
 #' @return Data frame or list of data frames (according to `values`) containing the main indicators of
 #'  the MCR approach, computed on the given `values` and for each class encountered (or for all classes,
 #'  if `all_classes` is `TRUE`):
-#' * **n**: number of values different from 0.
-#' * **HI**: Hazard Index.
-#' * **MCR**: Maximum Cumulative Ratio.
-#' * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
-#' * **Group**: MIAT group.
-#' * **THQ**: Top Hazard Quotient.
-#' * **MHQ**: Maximum Hazard Quotient.
-#' * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
+#'  * **n**: number of values different from 0.
+#'  * **HI**: Hazard Index.
+#'  * **MCR**: Maximum Cumulative Ratio.
+#'  * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
+#'  * **Group**: MIAT group.
+#'  * **THQ**: Top Hazard Quotient.
+#'  * **MHQ**: Maximum Hazard Quotient.
+#'  * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
 #' 
 #' @author Gauthier Magnin
 #' @inherit mcr_summary references
@@ -2240,7 +2242,7 @@ validate_classes = function(classes) {
 #' 
 #' ## MCR summary by class on vectors
 #' mcr_summary_by_class(values = c(A = 1, B = 2, C = 3, D = 4, E = 5),
-#'                      references = c(1,2,3,4,5),
+#'                      references = c(1, 2, 3, 4, 5),
 #'                      classes = classes)
 #' mcr_summary_by_class(values = c(A = 1, B = 2, C = 3, D = 4),
 #'                      references = c(1, 2, 3, 4),
@@ -2278,59 +2280,75 @@ validate_classes = function(classes) {
 #' 
 #' @md
 #' @export
-mcr_summary_by_class = function(values, references, classes, all_classes = FALSE) {
+mcr_summary_by_class = function(values, references, classes,
+                                by_set = TRUE, all_classes = FALSE) {
   
   # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references)
   classes = validate_classes(classes)
   
+  # Force by_set to TRUE if values is a vector
+  if (is.vector(values) && !is.list(values)) by_set = TRUE
   
-  # Case of a list of values
-  if (is.list(values)) {
-    # For each set of values, computation of the MCR indicators for each class
-    # Different case if references is a list or a vector
-    if (is.list(references)) {
-      to_return = lapply(seq_along(values),
-                         function(i) mcr_summary_by_class(values[[i]], references[[i]],
-                                                          classes, all_classes))
-      return(stats::setNames(to_return, names(values)))
+  # Computation of one data frame for each set of values
+  if (by_set) {
+    
+    # Case of a list of values
+    if (is.list(values)) {
+      # For each set of values, computation of the MCR indicators for each class
+      # Different case if references is a list or a vector
+      if (is.list(references)) {
+        to_return = lapply(seq_along(values),
+                           function(i) mcr_summary_by_class(values[[i]], references[[i]],
+                                                            classes, by_set, all_classes))
+        return(stats::setNames(to_return, names(values)))
+      }
+      return(lapply(values, function(v) mcr_summary_by_class(v, references[names(v)],
+                                                             classes, by_set, all_classes)))
     }
-    return(lapply(values, function(v) mcr_summary_by_class(v, references[names(v)], classes, all_classes)))
-  }
-  
-  # Case of a matrix of values
-  if (is.matrix(values)) {
-    # For each set of values, computation of the MCR indicators for each class
-    return(apply(values, 1, function(v) mcr_summary_by_class(v, references, classes, all_classes)))
-  }
-  
-  # Case of a single vector of values
-  if (is.vector(values)) {
-    # For each class, computation of the MCR indicators of the corresponding values and references
-    summary = apply(classes, 2, function(column) {
-      # Extraction of the values corresponding to the class
-      indices = match(rownames(classes)[column], names(values))
-      v = values[indices]
-      r = references[indices]
+    
+    # Case of a matrix of values
+    if (is.matrix(values)) {
+      # For each set of values, computation of the MCR indicators for each class
+      return(apply(values, 1, function(v) mcr_summary_by_class(v, references,
+                                                               classes, by_set, all_classes)))
+    }
+    
+    # Case of a single vector of values
+    if (is.vector(values)) {
+      # For each class, computation of the MCR indicators of the corresponding values and references
+      summaries = apply(classes, 2, function(column) {
+        new_vr = subset_from_class(values, references, classes, colnames(classes)[parent.frame()$i[]])
+        return(mcr_summary(new_vr[["values"]], new_vr[["references"]]))
+      })
       
-      # Removal of NA (when names associated with the current class are not part of the values)
-      v = v[!is.na(v)]
-      if (length(v) == 0) return(list(n = 0, HI = NA_real_, MCR = NA_real_, Reciprocal = NA_real_,
-                                      Group = NA_character_, THQ = NA_character_,
-                                      MHQ = NA_real_, Missed = NA_real_))
-      return(mcr_summary(v, r[!is.na(r)]))
-    })
-    
-    if (!all_classes) {
-      # Removal of classes for which there is no value
-      summary = summary[sapply(summary, "[[", "n") != 0]
-      # NULL if the values are not associated with any class
-      if (length(summary) == 0) return(NULL)
+      if (!all_classes) {
+        # Removal of classes for which there is no value
+        summaries = summaries[sapply(summaries, "[[", "n") != 0]
+        
+        # Return NULL if the values are not associated with any class
+        if (length(summaries) == 0) return(NULL)
+      }
+      
+      # Turn the list of lists into a data frame
+      return(do.call(rbind.data.frame, summaries))
     }
-    
-    # Turn the list into a data frame
-    return(do.call(rbind.data.frame, summary))
   }
+  
+  # Computation of one data frame for each class
+  summaries = apply(classes, 2, function(column) {
+    
+    # Extraction of the values and references corresponding to the class
+    new_vr = subset_from_class(values, references, classes, colnames(classes)[parent.frame()$i[]])
+    
+    # NA if the class is not represented (different case if values is a list or a matrix)
+    if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
+        (is.matrix(values) && ncol(new_vr[["values"]]) == 0)) return(NA)
+    
+    return(mcr_summary(new_vr[["values"]], new_vr[["references"]]))
+  })
+  
+  return(summaries[!is.na(summaries)])
 }
 
 

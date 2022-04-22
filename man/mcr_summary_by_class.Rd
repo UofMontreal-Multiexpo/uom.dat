@@ -4,7 +4,13 @@
 \alias{mcr_summary_by_class}
 \title{Summary by class of indicators of the MCR approach}
 \usage{
-mcr_summary_by_class(values, references, classes, all_classes = FALSE)
+mcr_summary_by_class(
+  values,
+  references,
+  classes,
+  by_set = TRUE,
+  all_classes = FALSE
+)
 }
 \arguments{
 \item{values}{Numeric named vector or matrix, or list of numeric named vectors.
@@ -19,8 +25,11 @@ If logical matrix, its columns are named according to the classes and the row na
 contain the names associated with the \code{values}. A \code{TRUE} value indicates that a specific name
 is part of a specific class.}
 
+\item{by_set}{\code{TRUE} or \code{FALSE} whether to group results by set of values or by class.
+Always \code{TRUE} if values is a vector.}
+
 \item{all_classes}{Logical indicating whether all classes must be considered for each set of values
-or only those that are actually associated with the set of values.}
+or only those that are actually associated with the set of values. Ignored if \code{by_set} is \code{FALSE}.}
 }
 \value{
 Data frame or list of data frames (according to \code{values}) containing the main indicators of
@@ -98,7 +107,7 @@ classes <- list(A = c("C5", "C6", "C8"),
 
 ## MCR summary by class on vectors
 mcr_summary_by_class(values = c(A = 1, B = 2, C = 3, D = 4, E = 5),
-                     references = c(1,2,3,4,5),
+                     references = c(1, 2, 3, 4, 5),
                      classes = classes)
 mcr_summary_by_class(values = c(A = 1, B = 2, C = 3, D = 4),
                      references = c(1, 2, 3, 4),
