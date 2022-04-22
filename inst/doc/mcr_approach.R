@@ -23,17 +23,13 @@ transactions <- make_OE_transactions(
 print(transactions)
 
 ## -----------------------------------------------------------------------------
-transactions[[2]]
-
-## -----------------------------------------------------------------------------
 concentration_values <- lapply(transactions["data"],
                                function(trx) setNames(trx$CONCENTRATION, trx$NAME))
 
 # Naming the sets of values: S1 to S14
 names(concentration_values) <- paste0("S", seq_along(concentration_values))
 
-# Let's print the second element of the new list,
-# corresponding to the second element of the previous list of transactions
+# Let's take a look at one set of values
 concentration_values[[2]]
 
 ## -----------------------------------------------------------------------------

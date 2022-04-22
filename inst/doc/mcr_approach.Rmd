@@ -47,7 +47,7 @@ library(uom.dat)
 
 Foremost, we will create a list of effective values. This will be a list of numeric named vectors.
 
-The following creates a list of transactions as presented in the document [Transaction sets](./transaction_sets.html) using the dataset `oedb_sample`. For short, these transactions will simply group data from this dataset accessible in the package. Note that this step is not necessary. The `TransactionSet` structure will only be used as an intermediary to get values to analyze for the examples.
+The following creates a list of transactions as presented in the document [Transaction sets](./transaction_sets.html) using the dataset `oedb_sample`. For short, these transactions will simply group data from this dataset accessible in the package. Note that this step is not necessary: the `TransactionSet` structure will only be used as an intermediary to get values to analyze for the examples.
 
 ```{r}
 # Creation of specific transactions
@@ -67,14 +67,10 @@ transactions <- make_OE_transactions(
 print(transactions)
 ```
 
-A transaction contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession for which the environment has been sampled. A transaction looks like that:
-```{r}
-transactions[[2]]
-```
+These transactions contain names, concentrations and identifiers of chemicals, identifiers and year of the sampling and extra information about the profession for which the environment has been sampled.
 
-Here we can see a transaction composed by 3 samples having the `SAMPLE.ID`s 18, 1 and 21 corresponding to the substances having the `CODE`s 57 and 77. The concentration values for these samples are respectively 0.007, 0.004 and 0.05.
+The following separates the concentration values and name them with the substances they correspond to. The resulting list of named values will have the same length as the list of transactions: 14 elements.
 
-Now we will separate the concentration values and name them with the substances they correspond to. The resulting list of named values will have the same length as the list of transactions (14 elements).
 ```{r}
 concentration_values <- lapply(transactions["data"],
                                function(trx) setNames(trx$CONCENTRATION, trx$NAME))
@@ -82,14 +78,13 @@ concentration_values <- lapply(transactions["data"],
 # Naming the sets of values: S1 to S14
 names(concentration_values) <- paste0("S", seq_along(concentration_values))
 
-# Let's print the second element of the new list,
-# corresponding to the second element of the previous list of transactions
+# Let's take a look at one set of values
 concentration_values[[2]]
 ```
 
 The analysis will be carried out on these sets of concentration values.
 
-Note that several values can correspond to the same component name. As we can see from the printed set of values, two values correspond to a chemical substance named "Formaldéhyde" and the last value corresponds to another one named "Benzène". In such a case, if we want to perform the analysis considering a single value for each different name, we need to format the data. One way to do so is presented further in section [4.2.2. Reduction of sets of values](#reduction-of-sets-of-values).
+Note that several values can correspond to the same component name. As we can see from the previous printed set of values, two values correspond to a chemical substance named "Formaldéhyde" and the last value corresponds to another one named "Benzène". In such a case, if we want to perform the analysis considering a single value for each different name, we need to format the data. One way to do so is presented further in section [4.2.2. Reduction of sets of values](#reduction-of-sets-of-values).
 
 
 
