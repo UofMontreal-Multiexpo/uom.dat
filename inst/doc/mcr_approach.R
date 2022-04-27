@@ -244,7 +244,7 @@ list_of_summaries
 classification[350:352]
 
 ## -----------------------------------------------------------------------------
-# Make the summary for each class
+# Make the summary for each class and each set of values
 summaries <- mcr_approach_by_class(values = concentration_values,
                                    references = reference_values,
                                    classes = classification,
@@ -265,6 +265,18 @@ s <- 6
 cat("$`", names(summaries)[s], "`\n", sep = "") ; summaries[[s]]
 s <- s + 1
 cat("$`", names(summaries)[s], "`\n", sep = "") ; summaries[[s]]
+
+## -----------------------------------------------------------------------------
+# Make the summary for each set of values and each class
+summaries_2 <- mcr_approach_by_class(values = concentration_values,
+                                     references = reference_values,
+                                     classes = classification,
+                                     FUN = mcr_summary,
+                                     by_set = TRUE,
+                                     all_classes = TRUE)
+
+# Look at one example: the 11th set of values
+summaries_2[["S11"]]
 
 ## -----------------------------------------------------------------------------
 # Make one chart for each class

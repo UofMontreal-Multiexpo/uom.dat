@@ -335,7 +335,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Maximum cumulative ratio approach and
 classification management</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2022-04-22</h4>
+<h4 class="date">Last update: 2022-04-27</h4>
 
 
 <div id="TOC">
@@ -1171,9 +1171,9 @@ associated MIAT group, using the function
 ## Méthacrylate de méthyle                    0  1    0    0
 ## Poussières inhalables                      0  4    0    0
 ## Styrène                                    2  0    0    0</code></pre>
-<p>For both functions, a <code>levels</code> parameter can be used to
-get the complete table, i.e. with component names that do not produce
-any top hazard quotient:</p>
+<p>For both functions, the argument <code>levels</code> can be used to
+get the full table, i.e. with component names that do not produce any
+top hazard quotient:</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>table_levels <span class="ot">&lt;-</span> <span class="fu">names</span>(reference_values)[<span class="sc">-</span><span class="dv">19</span>]</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># For readability of the example, intentional removal of the 19th name which is quite long</span></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1206,7 +1206,7 @@ any top hazard quotient:</p>
 ## Toluène                                    0  0    0    0
 ## Zinc                                       0  0    0    0</code></pre>
 <p>For the first of the two functions (<code>thq_pairs</code>), two
-other parameters exists:</p>
+other arguments exists:</p>
 <ul>
 <li><code>threshold</code>, allowing to disable the condition over the
 hazard index so that top hazard quotients associated with hazard index
@@ -1480,11 +1480,15 @@ words, indicators will be computed for each subset of values related to
 a specific class, and for each class. For that, we can call the function
 <code>mcr_approach_by_class</code> with the values, the references, the
 classification and the function of the approach we want to apply.</p>
+<p>Note that functions presented in section <a href="#compute-a-specific-indicator">2.1.3. Compute a specific
+indicator</a> cannot be used via <code>mcr_approach_by_class</code>.
+However, specific indicators can be easily extracted from the data
+frames returned by the use of <code>mcr_summary</code>.</p>
 <div id="mcr-summary-according-to-classes" class="section level2">
 <h2>3.1. MCR summary according to classes</h2>
 <p>Concerning the summary of the indicators, for each class encountered,
 summaries are given for the sets of values relating to the class:</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the summary for each class</span></span>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the summary for each class and each set of values</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>summaries <span class="ot">&lt;-</span> <span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">references =</span> reference_values,</span>
 <span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">classes =</span> classification,</span>
@@ -1647,20 +1651,296 @@ values are related to 15 different classes.</p>
 </tbody>
 </table>
 </div>
-<p>Note that functions presented in section <a href="#compute-a-specific-indicator">2.1.3. Compute a specific
-indicator</a> cannot be used via this function. However, specific
-indicators can be easily extracted from the data frames returned by the
-use of <code>mcr_summary</code>.</p>
+<p>Two other arguments can be used:</p>
+<ul>
+<li><code>by_set</code>, allowing to group the results by set of values
+instead of by class.</li>
+<li><code>all_classes</code>, allowing to also get summaries of classes
+that are not related to a set of values. Only if <code>by_set</code> is
+<code>TRUE</code>.</li>
+</ul>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the summary for each set of values and each class</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>summaries_2 <span class="ot">&lt;-</span> <span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">references =</span> reference_values,</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">classes =</span> classification,</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">FUN =</span> mcr_summary,</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">by_set =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">all_classes =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at one example: the 11th set of values</span></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>summaries_2[[<span class="st">&quot;S11&quot;</span>]]</span></code></pre></div>
+<div class="kable-table">
+<table>
+<colgroup>
+<col width="48%" />
+<col width="2%" />
+<col width="4%" />
+<col width="6%" />
+<col width="7%" />
+<col width="4%" />
+<col width="17%" />
+<col width="3%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">HI</th>
+<th align="right">MCR</th>
+<th align="right">Reciprocal</th>
+<th align="left">Group</th>
+<th align="left">THQ</th>
+<th align="right">MHQ</th>
+<th align="right">Missed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Atteintes cardio-vasculaires</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Atteintes cutanées</td>
+<td align="right">2</td>
+<td align="right">3.630</td>
+<td align="right">1.100000</td>
+<td align="right">0.9090909</td>
+<td align="left">I</td>
+<td align="left">Chrome VI et ses composés</td>
+<td align="right">3.30</td>
+<td align="right">0.0909091</td>
+</tr>
+<tr class="odd">
+<td align="left">Atteintes des voies respiratoires inférieures</td>
+<td align="right">4</td>
+<td align="right">4.464</td>
+<td align="right">1.352727</td>
+<td align="right">0.7392473</td>
+<td align="left">I</td>
+<td align="left">Chrome VI et ses composés</td>
+<td align="right">3.30</td>
+<td align="right">0.2607527</td>
+</tr>
+<tr class="even">
+<td align="left">Atteintes des voies respiratoires supérieures</td>
+<td align="right">3</td>
+<td align="right">4.054</td>
+<td align="right">1.228485</td>
+<td align="right">0.8140109</td>
+<td align="left">I</td>
+<td align="left">Chrome VI et ses composés</td>
+<td align="right">3.30</td>
+<td align="right">0.1859891</td>
+</tr>
+<tr class="odd">
+<td align="left">Atteintes du système auditif</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Atteintes du système hématopoïétique</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Atteintes du système immunitaire</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Atteintes du système nerveux autonome</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Atteintes du système nerveux central</td>
+<td align="right">1</td>
+<td align="right">0.410</td>
+<td align="right">1.000000</td>
+<td align="right">1.0000000</td>
+<td align="left">II</td>
+<td align="left">Manganèse</td>
+<td align="right">0.41</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">Atteintes du système nerveux périphérique</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Atteintes du système reproducteur féminin</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Atteintes du système reproducteur masculin</td>
+<td align="right">3</td>
+<td align="right">4.040</td>
+<td align="right">1.224242</td>
+<td align="right">0.8168317</td>
+<td align="left">I</td>
+<td align="left">Chrome VI et ses composés</td>
+<td align="right">3.30</td>
+<td align="right">0.1831683</td>
+</tr>
+<tr class="odd">
+<td align="left">Atteintes hépatiques</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Atteintes oculaires</td>
+<td align="right">2</td>
+<td align="right">3.630</td>
+<td align="right">1.100000</td>
+<td align="right">0.9090909</td>
+<td align="left">I</td>
+<td align="left">Chrome VI et ses composés</td>
+<td align="right">3.30</td>
+<td align="right">0.0909091</td>
+</tr>
+<tr class="odd">
+<td align="left">Atteintes osseuses et dentaires</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Atteintes rénales et de l’appareil urinaire</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Atteintes sur le développement du fœtus, de l’embryon
+et/ou de l’enfant</td>
+<td align="right">2</td>
+<td align="right">3.630</td>
+<td align="right">1.100000</td>
+<td align="right">0.9090909</td>
+<td align="left">I</td>
+<td align="left">Chrome VI et ses composés</td>
+<td align="right">3.30</td>
+<td align="right">0.0909091</td>
+</tr>
+<tr class="even">
+<td align="left">Effets cancérogènes et/ou mutagènes</td>
+<td align="right">3</td>
+<td align="right">4.054</td>
+<td align="right">1.228485</td>
+<td align="right">0.8140109</td>
+<td align="left">I</td>
+<td align="left">Chrome VI et ses composés</td>
+<td align="right">3.30</td>
+<td align="right">0.1859891</td>
+</tr>
+<tr class="odd">
+<td align="left">Perturbateur endocrinien</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Perturbation du transport de l’oxygène</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Sensibilisants</td>
+<td align="right">3</td>
+<td align="right">4.054</td>
+<td align="right">1.228485</td>
+<td align="right">0.8140109</td>
+<td align="left">I</td>
+<td align="left">Chrome VI et ses composés</td>
+<td align="right">3.30</td>
+<td align="right">0.1859891</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="scatter-plots-according-to-classes" class="section level2">
 <h2>3.2. Scatter plots according to classes</h2>
 <p>Concerning the scatter plot, one chart is built for each class and
 the result is a list.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make one chart for each class</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>charts <span class="ot">&lt;-</span> <span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">references =</span> reference_values,</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">classes =</span> classification,</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">FUN =</span> mcr_chart)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make one chart for each class</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>charts <span class="ot">&lt;-</span> <span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">references =</span> reference_values,</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">classes =</span> classification,</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">FUN =</span> mcr_chart)</span></code></pre></div>
 <pre><code>## Warning in mcr_chart(new_vr[[&quot;values&quot;]], new_vr[[&quot;references&quot;]], thq_col =
 ## thq_col, : 2 points have not been plotted because their MCR values are equal to
 ## 1. Use log_transform = FALSE to see all points.</code></pre>
@@ -1707,38 +1987,38 @@ the result is a list.</p>
 <pre><code>## Warnings messages in chart plotting for classes &quot;Atteintes cutanées&quot;, &quot;Atteintes des voies respiratoires inférieures&quot;, &quot;Atteintes des voies respiratoires supérieures&quot;, &quot;Atteintes du système auditif&quot;, &quot;Atteintes du système hématopoïétique&quot;, &quot;Atteintes du système immunitaire&quot;, &quot;Atteintes du système nerveux central&quot;, &quot;Atteintes du système nerveux périphérique&quot;, &quot;Atteintes du système reproducteur masculin&quot;, &quot;Atteintes oculaires&quot;, &quot;Atteintes sur le développement du fœtus, de l’embryon et/ou de l’enfant&quot;, &quot;Effets cancérogènes et/ou mutagènes&quot;, &quot;Sensibilisants&quot;:</code></pre>
 <p>At most one warning message can be printed by class. These messages
 must be read with regard to the stated subset of classes.</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of charts (i.e. number of classes encountered):&quot;</span>, <span class="fu">length</span>(charts))</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of charts (i.e. number of classes encountered):&quot;</span>, <span class="fu">length</span>(charts))</span></code></pre></div>
 <pre><code>## Number of charts (i.e. number of classes encountered): 15</code></pre>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot some of these charts</span></span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>charts[[<span class="dv">1</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot some of these charts</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>charts[[<span class="dv">1</span>]]</span></code></pre></div>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAGwCAMAAABB3CfxAAABaFBMVEUAAAAAADUAADoAAF4AAGYAOmYAOpAAXqgAZrYAsPYAv30zMzM1AAA1ADU6AAA6ADo6AGY6OmY6OpA6ZpA6ZrY6kJA6kNtNTU1NTW5NTY5NbqtNjsheADVeqKheqOtmAABmADpmAGZmOgBmOjpmOpBmZgBmZjpmZmZmZrZmtrZmtv9uTU1uTW5uTY5ubo5ubqtuq8huq+SENQCEhF6EyeuOTU2OTW6OTY6Obk2ObquOyP+QOgCQOjqQOmaQZgCQZpCQkDqQkGaQkLaQtpCQ27aQ29uQ2/+jpQCo6+urbk2rbm6rbo6rjk2ryKur5OSr5P+2ZgC2Zjq2kDq2tma225C22/+2/7a2/9u2///Ijk3I/8jI///bkDrbkGbbkJDb25Db/7bb/9vb///kq27k/8jk///na/PrqF7ryYTr66jr68nr6+v4dm3/tmb/yI7/25D/27b/29v/5Kv//7b//8j//9v//+T///8JR/3zAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAenklEQVR4nO2dj3/bxnmHMU1T5biVNa8THburnC5tFiWZy66KNynp4iWTZ2ed2NVbxZhbVzHysigUN0oU/v3dez8AvMQPgsABOBDf52OTBPgSoMHHL+4OdzjPB8BhvKa/AABZQFDgNBAUOA0EBU4DQYHTQFDgNFULehdUTMU/YNNULujC8mXOzzUVl/d4rL7f7C3n3V4sEIKWA4Lm2zIETQGCcioTdMmGIWgKEJRTXQa1EwdBLQNB7cZBUMtA0HzbhaApQNB64iBoQSwKOvvotXy+Oew9vDArIahk6WGGoCnYE/Sq97YU9PbFkT9+ZNZCUAkELYo1QYcPfq0y6M3T10EybZ+gFZVBIWhR7J/iZ08u/JuPT/VKCJpvqxA0BfuCXj2EoItxELQwyKActIM6hn1BUQatMg6CFkdbefui3+JaPAR1DMuC0t9Wt4NWIWiebULQFKq8kiT7014Cr8qNQ9BytC2DVhCX6xAjg6YAQTPiRp7gIMf2pvdO1J/5scc/A0FLUk7Q2Qf6+qav60hDKn7SxU5D2wSNHI/58eaZ70+8veXbiwhK0ZPQ0MucRxiCplBK0JvDI3+sK0TyUvzsycWw7189CkNaLOiE/BRpdOt86fYWBFWPOg6ClqKUoJE2eXUpXqg57t++PA1D2itoxLLp7mfe5hmdvreljOLhB0LHZ56n5c0QNOcBhqAp2BJUtzJRBh1HEmiLBb3eD87T051tsm5b/g0E3SFnt1XAwik+TLpoBy1J+VP8g4igVAb9+ulXh72+CWmvoErEHc/bEC4e6DO+eAgFPdBB8UqSKhxU8f0g6EqIStLPX0YFFYz74/46XIs3GVSZp9OiWZCn+JMgaCGDXu8HKRSClqR0MxNdepeEl+KHR2ExtL2CmoJkAUFN/cq3f2UKgq4CJcqgxKkFHff9NmfQSNxIWRYIunGScIrfjcRA0Aool0GvetTuqdTUj1RvanEZNBo3UO2gW+fSSVNJut7fE89/lFVJCmvxHk7xJcGVpIy4ib4qpKpCuplJVpze/5FqZlJ+xipJQSsTBC0LBOXkPyXrCvySrUHQkkBQDgR1DAjKsSsomplKA0E56FHvGBCUY1NQb4X9QtAUICgHgjoGBOVYFNRbZb8QNAUIWlkcBLUBBK0sDoLaAIJWFedVsl8Iapm2CWqvDApBrQBBOWgHdQwIyoGgjgFBORDUMSAox5agZjsQtCQQlANBHQOCciwJGmwGgpYEglYSB0FtAUEriYOgtoCgVcSFRxWClgSCctDM5BgQlANBHQOCcqwIGtkIBC0JBOVAUMeAoBwbgka3AUFLAkE5ENQxICgHgjoGBLUexw4pBC0JBLUeB0FtAkHbFQdBLXO3ymkAK6DSaQurAIKWo20ZFFeSHAOCckoLurABCFoSCMqBoI4BQTllBV38PAQtCQTlQFDHgKAcCOoYENRqXOxwQtCSQNB2xUFQy0BQu3EQ1DJtExQN9Y4BQTmlBE34MAQtCQTlQFDHgKCcMoImfRaClgSCciCoY0BQDgR1DAjKKSFo4kchaEkgqLU4CFoFELRdcRDUMhDUbhwEtUzbBMWVJMeAoJzigiZ/EoKWBIJyIKhjQFBOYUFTPghBSwJBORDUMSAoB4I6BgTlFBU07XMQtCQQ1E4cBK0ICGolLvUwQtCSQNB2xUFQy7RNUFxJcgwIyikmaPqnIGhJICinkKAZH4KgJbEm6M1h7+GFfDXu9Xpvv9arIWiB7a0SCEHzcfviyB8/ki+HR5H1ELTA9lYJhKD5uHn62p99RHnz9uVpZD0ELbC9VQIhaD5mTy78m49JTXGu7/WCJNoFQbM+A0FLYkvQq4dG0NmHp5Es2jZBi8RB0Aqxn0ElQTm0C4LWGQdBCxKWQSUQtKI4CFqQ2xd9XYunk/3tl51qZqoxDoIWRbWDUhId93oPgnN9BwTN/AgELQmuJHFWFzT7ExC0JFUKepdoeqrAFVl9KsSGJ0+EoOVY+wy65APIoCWBoBwI6hgFBZ19oK8W0TV4QvcVGdKjWUesu6DL4iFoSYoJSk3ydMWIui4Fno4fUXP9sO9fPQoj2yboqnEQtGKKCSoVpMb42V//rRRUt9OL9eM+6y2y7oLWHQdBc0NZ9Pblv6jTub7SKTPoOJJAIajlOAiaF7p0ROlSCWr6iogy6NdPvzrs9U1Y2wTFlSTHKCrozWFf5s1blkHp5bg/7ofdRtZc0KXhELQkhWvx5CUN7ujJbBn2FRGvhkft7W4HQR2jmKDKT0Jn0LCvyFi86EwGXR4NQUtSTFCVOklNEpRSpxkzJ8/1nSmDQtDKwZUkzkqC5giGoCWBoBwI6hgQtHhcnmMHQUsCQdsVB0EtA0HtxkFQy7RNUFxJcgwIyllB0FyhELQkEJQDQR0DgnLyC5ovshlB58eeYjvp3ev9A3qabJ4t310YNKLtHSTF/O+/+dN7J0mrLQBBOU0J+ubNm7w75qRm0CRnFEUEnR9vnYtt7iQYn7Kj9P2vBATlNCTomzd5DW1I0AH5GXw0z44gaCVxaycone23aemZ5ynJooJOd8R5e0890QncLO9+5m2eXe97G8+UoIGYo61zuWF6UJumj+yZRdrkvc/FmgO5Wm0vsVyQFwhaMC7ngWta0Pnxtvw73dk8o2ciFFS+GikH6V2zLE/l1/t74q96M8i2090zI2iwabGsF6W/O+L/AW1DraZyQRlDIagbcVWVQaVZE1LuIEiqIjNKNs/+7zwIlCdxsyyj5UdHi4KKN7WgwaaViXJRGG72JFfv5ihFZANB2xW3sqCybqOt0qkzWgadCFE3KNCYKJdl9Eh+dDdd0Mimxd+Rsn7PvC2fBykNCfmBoJy8x6OpK052Bb3e39Dn4Ym01CzHBA3LoJtnaYLqEi4TVKbrPJWxVCAoZ+0EJfGCUzyzTayVjlGI8tM3y8pZfQqXW6MCgChlXu9vBwYGm9aneLWJRUGTa/75gaCcdRM0u5JEUk13Nk5MPSZYVvl2O6gkiW2IF6KeLh6p8jQ/3ggqSbQ5WUkSDhu5xQOtlnqXa2+CoJycx8NrSxmUNTPp4mCkDCrKiBtf7B8MZPFR2KmX1WcjzUy+Kp16qiFpx/Pef2yamaiguW2amUyJgR7E6rCIWxgIylkfQTmWms1FIbRUq+bqQFBO1YKmNSe1RtC6gaCcigVNbZCHoClA0FrjGhO0tUDQWuMg6KpA0HrjmiqDthYmqLlaZXH7bRM0139Yrw2XOteE8Ae53jdmjko2XUWpStA7d+5Y3Z4BgjpG8INcvxO5YsoWSlGRoHfuaEObENSrYL8QNIWWlkEhqAGClgOC2o2DoJa5W9EEa8LPSrabZ964hueW40DQcqxhLd6rYr/IoCmElSQ9DkB1WLFG2wR1Pa67ggad/u0CQe3GdVlQM/bZKhDUblzlgk7stYFbAWVQzvLj4VWy31oFVcPgUzp2TkqOcrMMBOWsnaDfffddbJ0cm9SSDngQlLNugn73XYKhUtD5Jyd6yOX0/q8onw7kzcbYqtJjMssDQTndEXR6/9wf7PkjGlC3p8ZzkrN8lVpqEgjKWXo8vGr2W6+gsgy6dX79+IS6XZCv0tnRns9X6aW8360KIChn3QRNL4POjw9k2/fGiRGUcipfpZfyfrcqyCFoqSb8dRPUvN8aQZNQN3AYHOjkqG2kE7zPVzWcPYnFH2RkuS20bYK6HmdPUDp9D2RJU9s4kt2B2Sq9VGAX1oCg7Yqz2w5Kt2Y40eny3+WJci+66kwHNEkOQTt1inc9rtOXOom0DFo0s7ZN0CVl0OBtCFoTeWvxEJS/DUFrAoJyIKhjQFBO9vEI34WgNQFBORDUMZJ+kP9MqKtDUP4uBK2JyA+ib3gf3FSXAUGr3S8ETSH8QUZ0j+g9uifuQk9WtIM6FNddQUlOf7L1r57dS0kQ1G5cdwWVNy6f7li9c5i/ZoJGzv8QtCYWBbXsZ+sEzSyDQtD6WRDU+jgVCGo3DoJa3v46CRp9D4JaJX3C2RyCXu+XqDdBULtxlgSdyCEfOSd7nR+TPdP7v49GW5gnNsIgdXKbXLe+UXN/F6KwoElDFZLi8m4vZ9zaCfr8+fP4SnkTmYHql5wD2ZV5tDetTtB0co9JGhUbnFJU0MTBXgmgoT47/PnzBEOpM71MjNPdn1Kz9/RPf0ITy1Jmmn/yTCSjiUxIwZhjGqw0/+QkmOrTM9EyFatpuD09d7LObqqnc2yb1+98JjXi8bFPR1hl0Jycr3FFIKjdOCuCBqM49OhiWQJUozvUvJ7bZryHGnNMo5WEpFpQPTBZLtCgJYpR68ySKhWIrcW2ScVFOQWjfCPt01EiP4gshcopQS3SNkFdj7MjqNFAj+yQgzuEHiKzkovylg6PTyJjjsU5XvzRToYDk00uNuv0ku9H9F3YpnBMvNRvpH06SiioaQMdWL2VRNvKoBlxLLm2RdDEMiidstWLUFD6K9RhMgVjjqf3//DJibEuHJjsy+qJOpWriWR3gg+c680vbJMkHBzoN9I+HSU86oPtxRcrcXPYe3ix8MpvXy1+7QRNIlIGzcqg4Zjj+aev7p9H0qIfrSTpc3W45Gdk0McnkQya9ukovJlJBRVJobcvjvzxI/6KaJug6WVQ/k6rBWW1eC2oKYOGMkXHHI/e2wucDAcmK6H0LXLEk1lSZVAREdsmzUEfj1/8dBRbgt48fe3PPnrNXhEQ1G6c/XZQI6ipcYeCRsYcq0ngg1r8xompMQ+CejiFDlJq8ZEM+rNoLT7t0xF4byZJQtdPNZB6j1RPYfbkwr/5+JS9Sjp+ELRcXMuvJCVXhLJg/UHlc2hqwED+RxKWpufWq4dGy/AV4Zygb731VlYcBK2UMoJqDRMubJpzPrVlpdGWDPrWW9mGpgq68AYErYnocZcn8nhF36TU+XFGZ+a2lEELC1pyv7biOi1oCqb6NN39bfop/vZFP6jF9x2uxUPQlrGCoNn1e9X6SanT7XbQJWXQxr/fqoEQNFq/X60J/y7R9FSBK6I7dMVfNf3F0oCgYeIMU2l+nMugBeMWjxMyaE1E2kHT+4OaZqYCfULbJmjaf1gI2hDhgY8PiA+Rl/MLdSJZE0FjqyFoTbAjP8hwlDPu9Xpvv473EBnSI12NN0BQu3HdFlSd6PM4OpQKxnqIzJ5cDPv+1aMw0HVBRwuTAqYKOr13ov7ID+1B0JqI/yCxfvMJo5VuX8orRbHWeaHmuK/fVLgtqPq3TiIDrlIrjRFB58fvbf5TLd8vR2DHBBUZNHnkEe9BIk7ovd5R/PqmzKDjSAJ1XFDdPhH5x+URdLL5aufHtXy/HIFdEjTVTn9R0NmHp5RF4z1ERBn066dfHfb6JtJpQSP9Yqa7n3l09zR5hz/VuYx0fOaZy7sRQQdbfzj+Xh3fL09gMUF1dztNXSM0ixCtxWeN2kzogzc8SuwhMu6P++52FmFEGnZlR5j58falHOFlBN0hZ7flUQoFvd7f80d/nPMnbVzQxCtnpsNy3p02SK52UD9F0KQeIuLV8CgshjotqBJxRw6xoYGN4ox/SQ+hoPpmFkxQKhdMv5+zuaNpQRP7HsSHfLySA4s/D4cfO0OxW4DTGf32y9dJPUTG4kXbMmhQuNw6vwwWzDMFMUFpzNb8Fzmv+jopaDjs2Aj6Ozmw+Pd6+HHDExwzCt6jftzrPThN6iEiz/VtK4NGBPWWCqobNXJmGTcFjQ87lgOL5eC55ic4ZoRjkqJfKv4N1/MW4HoUQSDoxokXP8WLXy0qqPrMN6l3u7L5/XIEFimDJgw7lgOL9eSHTU9wzAgzqPhm+piP+Bdc51uAD1Q76Na5buDc9qhSRNWg+fFGUEmig2QE/cdjmX6+Pc53Gmxc0CQShh2LAqi6dYhL2ZNYvNSpBsfZw3FBZXuLF9zXTzczyYrT+49VM5OqxAeCfq5S5+UoX5ZxUtCgFk+mitck5sjTtw5pfoJjxir3ZiqC64Iuwo5Hxu1SW36p07SDjjzvz9VtbOjfaoYfO3SGh6ALdETQ9hATVJ7z8nZqWg4EtRvXeUHpDhAL176WNOFn0zZBk+KSzjIQtCYWD/71u/LWOp9GTczqyrwMCGo3DoI+jmVQIn9X5gXWQNDEYjoErYncZdC8XZkXaJugCTZC0CZx9RbgEDRnIATVZHUWzQCC2o3rvKDJXSEK2umvg6DJ/4UhaE3EDn/QkSAkuytzNu0XtJ79QtAU4j/IaLEq1Kl2UAjqGLjUyYGgjgFBl8WhDNoo0cMfdvy01+UfgtqN67Sgqpvg9f7ePGdv3BxAULtx1gVNnwi7LHa2zDOo3OJk86zQTDSJtE3QmI4pZaBWC6omG1BTCg7UqJbMofHhm7EwNVV3IglbLjAAH4Jy1k7QO3fuxNZN7/3ZuX/9l1HtKhA0YcslBQ1O8YWHyMWBoHbjVhX0zp0EQ6e7Pzvxp++pIXJqJPwrNTG3HOxyoLvV0yzdPz2g4cjU457eYDNxy6g/+clBOG13bC7vyJYHZkMrjrvnx1+P0Mk53iYPENRunCVBf3vg/8fnwYzblOfUxNzUmY2G0MnZtGmY/ESspuHI+g02S7ccvkTuBdN2x+byDrdsNrTquHs0M3HWrR00RdBXP5x/+kppp6bWNhMe+34417Yc5Pnu+W9O2BvhwHl6FCqHK+JzeYdbNhtaddw9BOWsm6DJZdDd3/39f/0V2RJMrR0IKifMjM6m/cW755E3gs/o98WpO1wRn8s73LLZ0Krj7vkPMrI96hiCWo6zU4vfPfvNM3niDqbWNnlu/yCs2MhHmueYvRGmP5NBgxXxubwj6psNrTjuPrmSZI+2CboYlyZs2wWdyOwWTq0dmfd4eu9Ezab9igTVw5H1G+FnaDthGVRPwh2byzsiqBnXvOK4++RmpgL/6BQgqN04W4Jqc4KptV+ZPOeZirkyWA5PC9+gPuvhwPn5cRgsl2NzeUe2bDa04rh7CJodt5aCrsL0h81uCKd4zqKQXRfUWotj0Q1VXklqeqrAFfEyFx2kU51FKqDlGTT18HQlgzYOBOVAUMcIb2Bb5i6g6bRc0Nr2C0FTQAblQFDHgKAcCOoYEDQzDmXQpoGgmXEQtGkgaGYcBG0aCMpBM5NjQFCOl7FU5X4haAoQlNNdQScuze0RAkE53RCUrspsBmM8NBOHZugMgaCctWsHffPmTWyd7Fc52jp3eZ54AwTlrJugb94kGKom7Hr8xb6nhxWH03BP7//KjDt2Y1JuCMrphKDzYzXmgoZ+yNHA4TTcepCwO5NyQ9CMuIyD02pB5Q0QNk6io4H9cJywX2BwcHVA0Iy4NRA0sQwqUUPggmHF4Thhv8Dg4OqAoBlx6yBoEqq+PjiIjAb2w3HCRQYHVwcE5XipC9Xut1ZBZS1enMXZLMfBOOEig4OrA4JyvJTXVe+3/nZQNSj4zIwG1sOBjaDOTMoNQTndEDSCtWHFFQFBOV0T1OKNDKsBgnLWrR209UBQDgR1DAjKgaCOAUHT47pQBnUeCJoeB0EdAIKmx0FQB4CgnK41MzkPBOV4iS+r3y8ETQGCciCoY0BQDgR1DAjKQTuoY1gT9Oaw9/BCvhr3er23X+vVENRuHAQtyO2LI3/8SL4cHkXWQ1C7cRC0IDdPX/uzjyhv3r48jaxvm6CROJRBXcCWoLMnF/7Nx6SmONf3ekEShaB24yBoQa4eGkFnH55GsigEtRsHQQsw7PUehRlUrTIptG2Cegmv6tgvBE3BfhlUAkErioOgBbl90de1eDrZ337Z/mYmCOoElttBKYmOe70HwbkegtqNg6AWuUs0PVXgirg/9+ECELQc7c2g9e4XGTQFCMqBoI5RTFC63E6t8bcvTHFTX4of0iNd9jS0TdAgbsmBgaA1UTyDUm19eCSfgkvxsycXw75/9SiMgqB24yBoXqhVnho/9ZJqBhVqjvvsYjwEtRsHQfNCjZ6zJ/+sT/H6QpLMoONIAm2doF7sRT37haApFBVUXtacfXAk1QwvxYsy6NdPvzrs9U0cBLUbB0FzIoue4QX4yKX4cX/cD6/KQ1C7cRA0J0PKkTd/F/SxCy7Fi1fDo/b2ZoKgjlFQUG3g0Jziw0vxY/FiHTJozfuFoCkUFFQbeHNIo48odZohSfJcvw5l0Jr3C0FTwJUkDgR1DAiaHLfsuEDQmoCgyXEQ1BEgaHIcBHUECMrxFp7r2i8ETQGCcjz2VN9+IWgKEJQDQR0DgnIgqGNAUA7aQR0DgnIgqGNAUA4EdQwImhiHMqgrQNDEOAjqChA0MQ6CugIE5aCZyTEgKAeCOgYE5UBQx4CgHAjqGBCUg3ZQx4CgHAjqGBCUA0EdA4ImxS0/KhC0JiBoUhwEdQYImhQHQZ0BgnK8yGOd+4WgKUBQDgR1DAjKgaCOAUE5ENQxICgH7aCOAUE5ENQxICgHgjpG5YI2PVVgIVo0ISIELUfbMiga6h0DgibFQVBngKAcNDM5BgTleMFDvfuFoClAUA4EdQwIyoGgjgFBOWgHdQwIyoGgjgFBORDUMSBoQhzKoO4AQRPiIKg7QNCEOAjqDhCUg2Ymx4CgHAjqGBCUA0EdA4JyIKhjQFAO2kEdA4JyIKhjQFAOBHUMCJoQhzKoO0DQhDgI6g4QNCEOgroDBOWgmckxICjH8/MdEwhaExCUA0EdA4JyIKhjQFAO2kEdA4JyIKhjQFAOBHUMCBqPQxnUISBoPA6COgQEjcdBUIewKOjso9fy+eaw9/DCrEwQdOQJDpZsjH6H6b0T8Wd5XB6cbmbKdUQIcTggaFGuem9LQW9fHPnjR2ZtTND58eaZ70+8veytdUhQeUQulx4RAoIWZ/jg1yqD3jx9HSTTBEEn5KdIGlvnmZvrkKDyiFwuPSIEBC2DtnL25MK/+fhUr1w8ft8eB4liuvuZt3k2P/a8bXnotZHPPE/8VN0RdC6PiIzLPCIyAIKWQAt69TBL0P/ZD8pa051t+nm25d/g59ihX2i7UUFtbm953LU8IkrQrCMiAyBoEYa9HpU5c2XQb+Rh3/G8DXHkD/T5TTyEP8dB8Dt0Q1D1L//+0iOiYyFoYWZ5yqAmgxr5JnTyMgvmWSSV7ghqMuiyI0KxELQM2srbF/2MWrwpg7oqaP3toKYMCkETsSwo/c1uBx2pWnzwc2ycJJzQds/aIOjz589t7HekavHLjgiFQlDrxBvqB6oddOtc/gKmSnC9vyeeNxqvJK0g6PPnOQzNs9+BagddckQICGqVu0R88r7/pusmP768/OYHvxRL3/7C874nnr8R1YS/+NEvv/nB36jlSxmgYmrEu8w9EaIU1MpOVzkii5+FoOVY9Vq8SZlNXeteoR3UWgbNjls4iSCD2mWNBbVVBl0SB0GLMPtAXnkP60N6xZCW6Wq8YZ0FtblfCJpCMUFvDo/88cOLsF+IXjF7cjHs+1ePwsi2dbdDj3rHKCaovloUtsnrFULNcf/25WkYCUHtxkHQXGgfw6ua4YphfxxJoBDUchwEzYU8oz84DfuF6BVUBv366VeHvb6JbJug9V9JWi0OguZD1Il+/jKSQfUKejXuj/vpnUUgaLk4CJobUQDl/UJoST4Oj8JiKAS1GwdBc0EZUhQ1w34heoVPCdRvcwZ1r5lpSSAETeSqJxtAVTsoJVG9QtWWWlwG9XIeEghaE65dSWo6DoI6BgTlQFDHgKActIM6BgTlQFDHgKAcCOoYlQsKKqbiH7BpqhZ0EdvHs2vbW/uMuQgEbdf2ICgALgFBgdNAUOA0EBQ4DQQFTlOzoLMPer2j5WGrbDHoj1oedtMeK9j8dn4Vh8956hWU+onOPjxdHpgbc+NxG/Cbl9vA5rfzqzh87lOvoHJA8tBiDghuPG4DPkDAAla/nV/B4WsB9ZdBw972VrBoFL/1rp1N2j3F+9YPn/PULigNE7GJRQX4zcutYF1Q24fPeeoTVN0o/ObQ1gHmNx63QQsyqL3D1xZqr8XbLkFZVMB6GbSCWny3CqB+3YJWcIAtKsBvXm4Fu4J20M+aBR33CKtHuUvtoBUcPufBlSTgNBAUOA0EBU4DQYHTQFDgNBAUOA0EBU7TSUGXzl83Pz7Qs2OqOQmvHy/5AKgKCJrEaNtngqoZXkEDQNAEKGFyQUVKreWbgUU6K+j82PNohtbrfW/jczWXcMBI5EsuKFJoU3RV0Oicwtf7m0xQOYP7gqBLSwWgGroq6EROCr55Jp9HXFDppsisEi2o9hXUTWcFpVO2eB7J590kQVkGlVkV1A8ENYJevyMeBt7GCQR1ic4KunESnuLpYeLRw9a5+JMkKE7xDdFVQRcrSfN/mH965o/2ZCIdoJLkDF0VlDUzPaM0KgU9kE+TeDPTCM1MzdBJQReRBdJIBo1f2URDfVN0XVAqi9Kp3jepU8o62l4MQwJtiK4L6o88daqXgqpafDxhorNIY3ReUOA2EBQ4DQQFTgNBgdNAUOA0EBQ4DQQFTgNBgdNAUOA0EBQ4zf8Dq+MixfqUqoEAAAAASUVORK5CYII=" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>charts[[<span class="dv">12</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>charts[[<span class="dv">12</span>]]</span></code></pre></div>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAGwCAMAAABB3CfxAAABNVBMVEUAAAAAADoAAGYAOpAAXqgAZrYAv8QzMzM1AAA1ADU6AAA6ADo6AGY6OmY6OpA6ZrY6kNtNTU1NTW5NTY5NbqtNjsheADVeqKheqOtmAABmADpmAGZmOgBmOpBmZgBmZjpmZmZmtrZmtv9uTU1uTW5uTY5ubo5ubqtuq8huq+SENQCEhF6EyeuOTU2OTW6OTY6Obk2ObquOyP+QOgCQOjqQOmaQZgCQkDqQkGaQkLaQtpCQ27aQ29uQ2/+rbk2rbm6rbo6rjk2ryKur5OSr5P+2ZgC2Zjq2kDq2tma225C22/+2///Ijk3I/8jI///bkDrbkJDb25Db/9vb///kq27k/8jk///rqF7ryYTr68nr6+v4dm3/tmb/yI7/25D/27b/29v/5Kv//7b//8j//9v//+T////r+uyDAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAcp0lEQVR4nO2dC3/bWF6GlZS0bFqGqNOwpMNeSGfoetlMIZlhyi5phyUBlnhi2HhCaR2Dc9H3/wicc3R0v1iWXsl/We/za3xRXktK8vTcpCM5HiGCcda9A4SUQUGJaCgoEQ0FJaKhoEQ0FJSIpm1Bn5CWafkPuG5aF7Tm9j4KyuXt87r2LxOkoM3YBEEl5SgoGAqKzVFQMP0XNH+PKWhHUNAluYIdpqAdQUHLc0X7S0E7omtBpYhXMVf466GgHQEUdPHVpXm+O3JfXAcLKSg2R0Frc+N+bgR9eHfsTfeDpf0WtPi3Q0E7Aibo+Pnv/RL07s1lWJj2vw0qLUdB62OtXLy+9u6+PrMLKSg2R0HrYwW9eUFB28tR0PpsWAlavqcUtCPwgm5IG3TJjlLQjsAL+vBuVNKL74ugy/aTgnYEWFD9VToO2hNBl+4mBe2INo8kmfNpP/YRZ907UB0K2ox+D9TLy7EEBYMRdOIoDpfnvPnTU//f/YmT+Ix08ShoAc0EXbyyxzc920ca6+anPtgZgGiD3p9sX3jezNlbkvMSgur0LDRUungUtIBGgt4dHXtT2yEyh+IXr6/HI+9mP4ogBJ1pP1Ux+uiqPOdlBPUfc3Jl2620ixS0IxoJGhuT9w/FKzWno4f3Z1EEIGhkmTd/9p2zfaGr7x0jo+d90Dq+dRwrL0DQantIQTsCJagdZdIl6DRWgCIEvT0IW5Lz3R1t3Y75CgXd1c7u+IFUFR8WuhS0pzSv4p/HBNVt0B/f/HDkjoIIQFAj4nzXcbaUi4e2xlcPkaCHNpTtJPmNA28FUSruIAXtiMadpF+9jwuqmI6mI+ix+KAE9c2zxWLw5oN9tqFUCXp7EBShFLSnNB5m0ofeDdGh+PFx1AwFtkFrCBr0r+T3ziloAc2qeFVQhi1OK+h05JWVoHX+YBPfslDQrdOcKv5ZLENBN4dmJeiNq8c9fTXto+43lbRBa/3Bzv1x0EdXxsmgk3R7sOfd/3qrrJNUa5hJdI6CgsEcSZrZo0J+V8gOM5mO009f+sNMvp+ZTtJe/voKcCioODZgXrztwDdfn7PadteSo6BgeiSos+J215KjoGD6I6iz6nbXkqOgYHpzwrKzpu2umKOgYHojaE9yFBQMBcXmKCgYCorNUVAw/ZjyEf0WZO5fSZCCNqMXgsZ+CSL3ryxIQZvRB0HjvwOJ+1capKDN6EEbNLFLFFQYFDS5RxRUGBS0XzkKCoaCYnMUFIx0QdP7Q0GFMXBBM7tDQYUxbEGze0NBhTHscVAKKp5BC5rzw4vavypBCtoM0YL2MEdBwchug/YvR0HByBVU1m22KWgBgxVU2G22KWgBFLTj7TbMUVAwUgWVdh94CloABe12u01zFBSMUEHF3QeeghYwzHFQefeBp6AFDFPQ/uYoKBgKis1RUDDpWyH26CaD/YCCNkNgJ6l0F1iCCmN4gpbvAQUVxuAEXbIDFFQYQxN02fYpqDAGJujSzVNQYQxM0N7nKCgYjoNicxQUjChBK/ywFFQYQxK0ys9KQYUxoDZopU1TUGFQ0Na3C81RUDByBK22ZQoqjOEIuhk5CgqGgmJzFBQMBcXmKCgYCorNUVAwIsZBe3AfeApawBAE7cN94CloARS0ve22kaOgYAS0QR3w+taao6Bg1i+oA17fenMUFAwFxeYoKJj1C7pZOQoKhoJicxQUDAXF5igoGAqKzVFQMOsdB41+OuniUdACNlrQ2A8nXTwKWgAFbWG7LeYoKJh1tkHj25IuHgUtgILit9tmjoKCYS8em6Ogdbk7cl9cm1dT13U/v7SLKSg2R0Fr8vDu2Jvum5fj49jytQma2pB08ShoAShB795ceouvdLn58P4stnxdgqa3I108CloAStDF62vv7mutpqrrXTcsRCkoNkdBa3LzIhB08eVZrBRd0zho5seSLh4FLQBfghrCduh6BM3+VNLFo6AF4NugBgraUo6C1uTh3cj24nVl//A9h5nayVHQuvjjoLoQnbru87Cup6DYHAUFsw5B87YhXTwKWkCbgj7RpO7c18GtEId1t0UK2ozuS9D8LUgvGVmCFkBB+5WjoNVYvLJHi/QxeI09V2SsH4Nlms4FLdiAdPEoaAH1BNVD8vqIkT51KfR0uq+H68cj72Y/SnY9Dlr080gXj4IWUE9Qo6AejF/8zd8ZQe04vVo+HSXOFulY0MIfR7p4FLSA+m1QXYo+vP8Xvzq3RzpNCTqNFaAirm63STkKWhV96EgXl76gwbkiqg3645sfjtxREONAPTZHQStydzQy5eZDogTVL6ej6Sg6baRTQUtWLl08ClpA7V689lJP7nBNaRmdK6JejY+LT7drU9CydUsXj4IWUE9Q30+NLUGjc0Wm6sWaSlAKuoHUE9QvOrWaWlBddAZz5kxdv542aOmqpYtHQQvYnCNJ5WuWLh4FLYCC9itHQcFwHBSbo6BgKCg2R0HBUFBsjoKC4ZEkbI6CgulG0OVrlS4eBS1gIwStsFLp4lHQAihov3IUFEwXglZZ57qEevz4MXR9FBTMwAV9/LiioRS0gA0QtNIqKWhP2YBxUAq6yWyAoKJzbIM2hIL2K0dBwfBIEjZHQcG0LejQhKegYFoW1JEuFAVtCAXtV46CgmlXUEe8UBS0IRR0xZwdN6KgHdFrQZ3uRQlG3iloR/R5HNQBr69KjoJ2TJ8FXUeOgnYMBV0xxzZotyQEnTiGPeD6eSQJmxuwoLcHgZkTZ+sUtf72BHUq5qqurx+54Qp6+8VFtDTxphGtCepUzFVdX09ywxW0JSgoNkdBwbQlaLAe6UJR0Ia0Lmjqxmig28AN625yZVDQZrRUgoarkV7isQRtSNRJOnACtlE9JG8Dx0HXnBuuoJ43QYoZQEGxuSEL6p0/uoKvn4Jic4MWtA3aaIPG1yFdKArakB4KmliFdKEoaEMoaL9yFBQMXtDkGqQLRUEb0jtBUyuQLhQFbQgF7VeOgmZpNITP80GxucELOgGPhXIcFJujoBRUdK6aoPcntsrbyfvu7cGhfppVqQ+jkJlucZiX+d//8OZPs6e4q8UAKggKreKlCyA9V70EzXPGp46g9ydajPlujvEFGyre/kpULUHrlqzYNmj209KF2hRB7WFw+9EqG2pJ0CIoqIzcyoLq2n5Hv3vrOPZvGBN0vmsmSZonXYEH7599p2pLVXVuvfUFDcVUHpgV6wd/1foje8Fbvcqnv1VLDs1if3257YKq9ErQnA9LF2rdgt6f7Jiv+e72hX7WRIKaV/YsNv3d4L2pym8P9tSX/82wtJ0/uwgEDVet3tu3xt9dpYpeh79YtwuaGEpB+5VbVVBj1kwrdxgWqkGnYvvi/67CoKnEg/cmbT46SQuqvmkFDVftm2jeKsODLZnFzxqfwdknQfM+K12otQtq+jbWKlt0xtugMyWqmWQemGjem7T5k1vFcgWNrVp9BRdVCL5tns8LBhKqk/dH/88c7SUIylxOsJGgtwdbth6eGUuD9xlBozbo9kWRoNaQhKCmuG50InxMGGt70OxIQkFl5FYWVIsXVvEJ29RS45iO+H56wXvfWVuFm7XpBoBqZd4e7IQGhqu2Vby92kdK0Pyef3UiYSa6Fb2ny/jU+jgOKiiH7SRpqea7W6dBPyZ875e3O1FpdX+iXqh+unrUnaf7k62wk6RXZzpJyuFAbvWgFxu9m403hYJqOdX/oH9zsIeScILml73ShVq3oIlhJtscjLVBVa259buDw3NT/Cg77Xv/s7FhJs9vnfpllB47+uuXwTCTrnp3gmGmoMWgH9TiqIlbm9isTl0H7EKvHOZRUCnH4kHD5qqibTSquTppQcF+4tqgBR+ULtTGCdo1KUHhPwYFxeYoKHj9KEGLPiddKCmC9pYKgt4eNOg3UVBsbsiCFg8m+Qf+a8FxUGxuuIIuY1JvvICCYnMUtAQzWLsiFBSbG7KgphXqnzmNg0eSsLkBCxqMgZ5DL3IHEbSk2JUuFAVtSPS3P99Jv1iJuyP3xXXqlYcRtKxZIF0oCtqQ5DCTodJclTQP74696X7ylQbRBqWgJUEKWo27N5fe4qvLxCsNQNDSj0gXioI2JHk2kyHn1E9/UtWed144Grp4fe3dfX2WeKWhoNjccAUNrwAemRpybkZAlaXFZevNi0DL6JWmuaDln5AuFAVtSPyMenvWf6YADer83Gn7lvZKUApaGtwMQYtnfjqJVO7ppUGRen9ScjJzi21Q5sqC9QTVJxKrP2a1WZf3J9qe+Wf/FU8DJmzGOC88y7TS1e38T8+f/XtxFf/wbhT24kfgXjxzJcFlgn769Cm70DTnzh9dVbRssmce5u0JWswKgpb37/3RT110wsdBmSsJLhH006ccQ29f+tOVDufPfm6uJ/Jnf2WuI6KnHX3zVvWGZ+bkoHBC5vyzK/WN03DOnROkTVHsz4d37CRmq4ieLnLqZdZ5+8V3po5O5jOfjlFB0Fj/frUh/Cea1J377AlTlV/xnodLqCPoLGiq6aOHM30xEFUEnZuX/gS7HVNAqiX+X1zJqSW1gvqL/Tf6ttg64y8L3vmtArW2zDp1D8fMhTLfKPp0nCpV7iz8X7H6fJSGJejS3ZNe4oksQWeBBtoyfTEb9aT1UCWrdlF/qZe6nLX3ZVd1/GQvcNJfHL2Jltl3nhfTN7VOpZB6ab9R9Ok4sXHQ4vNBg2GmGueENmyDUtBlwTptUF1l+y8iQfWXUichU9hnnn/2x2+CC9nYxbY4VR1rvyr3Z3Tuhh+4sqtPrVNLeH5ov1H06TiRAdkJ8RFmFbVOImkm6PK0dKHWLmgesTZoWQn6RfgHv//2D59dxYpFL95JsnV19M4rKUFfnsZK0KJPx0kocF75UnlT13U/v8yeITLWj/pofAAFxeYww0zxXrwVNGiDRjLZJf4HfrkXOukv9t/o7+svf1nwzm+DqkRmnfpiENl8+tNxUgroir6Ko2OjYOYMkcXr6/HIu9mPgvHfX/FFpFPMn55+0NdOccyHShsW0oWSKWh8HDQQNOhxR4L6PXGDfzWGsBe/dRqcvX4e9sO3TsN3XroXHytBfxHvxRd9Oka2jMqcN58zW+nhvTlSlBmdV2pOR/ab6d+fv95Kk5sCQU/1p35Z2rSQLpRQQddFfkeojGwJmj/zKHkGiarQXfc4e3zTlKDTWAEa+/35YwFOlauQxQSdbf+h9Pqn0oWioAmaCVpop5cWdPHlmS5Fs2eIqDboj29+OHJHQTL8/dnRVL09/wLT4UWDgouhRdeojgl6/uiPJ2Wjr9KFoqANiffiy2Zt5hR84+PcM0Smo+ko52QRO4iqf7/mpJP4BaT9i/pGl1+zgjqn5kpqk7I6XrpQFLQhlcZBvQJB884QUa/Gx1EzNPz92cuVmyG08ALTs+hyqPFrVPuCOuqNf6H/kjpeulAUtCH1LgGua/SH7y/zzhCZqhdlJWhwadPEpX9TlwCOBD23ZW0h0oWioA2peY36qes+P8s7Q8TU9WVt0JUEtQMIJXW8dKEoaEOiOUlfxCxIvDE0vwS435SMBI1dQDqq4u3xMy2oTvqfKavjpQtFQRsSlaCqtAoulJ/sLqEuAX7uj4PaO0FFF5D2Lyid6SQpQf/pxJ4aU1zHSxeKgjYkfajTnxyHI/77m9kjScHV0/0LSNsLSsevUa0FdU71Lcv8/zKT4vEF6UJR0Iascm2mOlQ+Fp+68qN0UShoR1DQfuUo6MypekpHJSgoNjd4QfVZJ6kZUUuG8Mupe0Y9J9dVDMIEnTW7XUxbpEW4/Zk5ne/buIllpzIvo6agjnRR+i2oHpjZvkjNzJw1vKtmO2QEfZkpQTXVT2VOQUGxuZUFffz4cWaZf9ftyrOO10rlNmjVU5lT1Duj3hEvSl8Effw4x1D/BOWXvztwtn9+qK/IEE07nn/2D+bv3PQesDBkXgKcglYO1hE0uIy2EnW25832gmnHejaxPxE5mnK8bioLWnayaAkUFJuDCGrqyS0zTVP1Of7VzNCMzSbWi6Mpx2sm0wbNPT2jpp1eTUEd+aL0RdDcNqhBn//w7OL+m9/9zLRFY7OJzQUWGt8FFkRGmHDOdET5qczl8NpM2BykF+/31/3p6Xq+ZjDt2AtnyssoPTVZYTK3s4WOg1LQZjmIoKYXr2pxY+NTe0WGaDaxvexNdgrwOhBzqDOFdFF6Laipz+3UYT3kHUw79pulnq3xRdTwnQta4Q/hVMxVXd9G5eBHkuZ/3nAFLRMXNDrxEzfAQEGxObSgJWcyyiBRgk78yzzslc4CWo3VBXUq5qqub7Nygz5ZxM4Imm1f1LoTTS6rt0Ep6EpBCtoMCorNDVrQsIqvPUUuy8qC2oB0UShoRySFsbOGgC1nCorNDVxQPBwHxeYoKBgKis0NXNAJetYxBQXnhi1o2EnCseo4aLA/0kWhoB2RP8yEWz8FxeYo6HoFDXdHuigUtCO6ruKXtEEp6KrBQQnaRicpdee+Jbc25J0PV2VYguJhCYrNDbwExbOaoNF3pYtCQTsiuoBtk6uAFsNxUGxuuIK2BAXF5igoGAqKzVFQMCuNg8Z2RrooFLQjKGi/chQUzCqCxvdFuigUtCMktUEpaI0gBW0GBcXmKCgYCorNUVAwKwia+JZ0UShoRwgSNIF0UShoR1DQfuUoKBgKis1RUDDVx0GTeyJdFAraERS0XzkKCqayoKkdkS4KBe0IMW1QClovSEGbQUGxOQoKhoJicxQUTFVB08uli0JBO0KKoGmki0JBO4KC9itHQcFQUGyOgoKpOA6a2Q3polDQjqCg/cpRUDDVBM3uhXRRKGhHyGiDUlAKWgAF7VeOgoKhoNgcBQVTSdCchdJFoaAdIULQHKSLQkE7Aibo3ZH74tq8mrqu+/mlXUxBsTkKWpOHd8fedN+8HB/HllNQbI6C1uTuzaW3+EqXmw/vz2LLK42Dsg1KQYtACbp4fe3dfa3VVHW964aFKAXF5ihoTW5eBIIuvjyLlaJVBM3bB+miUNCOQAg6dt39qAT1FwVFaJU2KAWloIXg26AGCtpSjoLW5OHdyPbidWX/8P0Kw0y5uyBdFAraEeBxUF2ITl33eVjXU1BsjoICeaJJ3bmP9zoEQ0GbwYF6bI4lKBgKis1R0Erow+16NP7hXdDctIfix/pRH/YMWD4Omr8H0kWhoB1RvwTVvfXxsXkKD8UvXl+PR97NfpSioNgcBa2KHpXXg5/2nT8MqtScjhIH4ykoNkdBq6IHPRev/9lW8fZAkilBp7ECtEIblIKukqOgFTGHNRevjo2a0aF41Qb98c0PR+4oyC0VtGAHpItCQTuirqCm6RkdgI8dip+OpqPoqDwFxeYoaEXGuoy8+/vwHLvwULx6NT4uPpuJgjbLUdBqWAPHQRUfHYqfqherlKAFSBeFgnZETUGtgXdHevaRLjqDKUmmrl+lDVqAdFEoaEfwSFK/chQUzLJx0KLtSxeFgnYEBe1XjoKCoaDYHAUFs6wNSkFXy1FQMEsELdy8dFEoaEdQ0H7lKCgYCorNUVAwHAfF5igoGAqKzVFQMBQUm6OgYMrHQYu3Ll0UCtoRFLRfOQoKhoJicxQUTHkblIKumqOgYEoFLdm4dFEoaEdQ0H7lKCgYCorNUVAwHAfF5igoGAqKzVFQMBQUm6OgYMrGQcu2LV0UCtoRFLRfOQoKhoJicxQUTFkblIKunqOgYEoELd20dFEoaEdQ0H7lKCgYCorNUVAwHAfF5igoGAqKzVFQMBQUm6OgYNK3QozBuyIioKDNKBmoZyepRo4lKBgKis1RUDAcZsLmKCiYYkHLtyxdFAraERS0XzkKCoaCYnMUFAzHQbE5CgqGgmJzFBQMBcXmKCiYwnHQJRuWLgoF7QgK2q8cBQVDQbE5CgqmsA1KQWvlKCgYCorNUVAwFBSbo6BgKCg2R0HBcBwUm6OgYCgoNkdBwVBQbI6CgikaB122XemiUNCOoKD9ylFQMBQUm6OgYIraoBS0Xo6CgqGg2BwFBUNBsTkKCoaCYnMUFAzHQbE5CgqGgmJzFBQMBcXmKCgYjoNicxQUDAXF5igoGAqKzVHQ+iy+ujTPd0fui+tgIYeZKjBxFIcVgvOnpxS0Ljfu50bQh3fH3nQ/WFog6NLNihYKm7s/2b7wPs6cveVRClqf8fPf+yXo3ZvLsDCloBVyM+Wnyk0eXS2NUtAmWCsXr6+9u6/P7EIKuoz7k70gN3/2nbN9cX/iODtGRvMwf/rWcay8FLQJVtCbFxUEXYpcodC524PDIDff3dHC7pivUNBd7eyOyVLQWoxdV7c5VylBlyJXKHTOF/FPHWdLuXhoa3z1EAl6aEMUtBmLFdqgS5ErFDoXlKCmNlcaznR1HrwJnv0QBW2EtfLh3aikF/+x4mblCoXOBW1QCpoLWFD9VToO2pagnz59gq6vw9zE78WHgm6d5lTxzy50lILC6UjQT5+WGCpYUO/cHwd9dGWcDDpJtwd76nmLnaT2eKJJ3bnPSTzBMIKC19kd/62PJP3lx48ffvIb9e5/fu04f6KeP6iO00//4jcffvK3/vuPQSABBW1Gfidp+VaHVIKW52wHvihIQZvRkaB9boMuyVHQOixemSPvUX/ILhjr9/pofEBXgm5ujoLW4O7o2Ju+uI7OC7ELFq+vxyPvZj9KchwUm6OglbBHi6IxebtAqTkdPbw/i5IUFJujoJWwPkZHNaMF49E0VoBSUHCOglbC1OjPz6LzQuwC3Qb98c0PR+4oSOaPg7INWjdHQauh+kS/eh8rQe0C/Wo6mo6KTxahoM1yFLQyqgGaPC9EvzOP4+OoGUpBsTkKWgldQqqmZnReiF3g6QLUKytBOczULEdBq3HjmgFQfxxUF6J2gd9bKmmDUtBmOQoKhoJicxQUDAXF5igoGI6DYnMUFAwFxeYoKBgKis1RUDBPSMu0/AdcN20Lmgb9+xza+ja+xExDQfu1PgpKiCQoKBENBSWioaBENBSUiKYrQaP5n4kr4wDWN3Vde23nZuRewRywPtD+LV65rj9ZFrWD/aAjQaP5n8krhDdfnzc+XpKtRv4VzJuvD7R/+gzbxZf6LFvUDvaEjgSNzr1PnoXffH2JOaT1KbiCefP1gfbPTOU2roN2sC90JGhm/idsfarCC+q+hqvMu/5u8/XB9s+D/gJ7Q0eCRvM/k1cIb74+Xe9BSqncK5g3Xx9s/8wEGw+4g/2g9yWoAdHOa6kENSD27+7In0fDErQN2muDGoCCwpp4YEEXr+w62AZtg2j+Z/IK4c3Xp2u8h+9xQmH2z0s0GQD7F/qJ28F+0O04aOYK4YD1TV33OaLCy72COWB9mP3To6mqs4XcwX7AI0lENBSUiIaCEtFQUCIaCkpEQ0GJaCgoEc0gBU3dOCPL/cmhvTumf0/C25dLPkDagoLmMdnxEoL6d3gla4CC5qALzKSgqkjtZM9ImsEKen/iOPoOrbcHztZv/XsJh0xUeZkUlEXouhiqoPF7Ct8ebCcENXdwTwm6tFVA2mGogs60k+rBPE+Sgho3VclqsIJaX0nXDFZQXWWr54l5fpYnaKIENaUq6R4KGgh6+4V6OHe2TimoJAYr6NZpVMXrh5mjHx5dqX95grKKXxNDFTTdSbr/x/tvL7zJnilIz9lJEsNQBU0MM73VxagR9NA8zbLDTBMOM62HQQqaxjRIYyVo9sgmB+rXxdAF1W1RXdV7QdFpZJ3spGMsQNfE0AX1Jo5f1RtB/V58tsDkySJrY/CCEtlQUCIaCkpEQ0GJaCgoEQ0FJaKhoEQ0FJSIhoIS0VBQIpr/B6jAQQ0zNQBKAAAAAElFTkSuQmCC" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>charts[[<span class="st">&quot;Sensibilisants&quot;</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>charts[[<span class="st">&quot;Sensibilisants&quot;</span>]]</span></code></pre></div>
 <p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
 <p>Of course, additional arguments related to the function
 <code>FUN</code> can be used. For example:</p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add further arguments (regions and log_transform)</span></span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>charts <span class="ot">&lt;-</span> <span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
-<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">references =</span> reference_values,</span>
-<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">classes =</span> classification,</span>
-<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">FUN =</span> mcr_chart,</span>
-<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">regions =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">log_transform =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at the chart of the second class (and add the class name as a title with ggplot2)</span></span>
-<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>charts[[<span class="dv">2</span>]] <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="fu">names</span>(charts)[<span class="dv">2</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add further arguments (regions and log_transform)</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>charts <span class="ot">&lt;-</span> <span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">references =</span> reference_values,</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">classes =</span> classification,</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">FUN =</span> mcr_chart,</span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">regions =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">log_transform =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at the chart of the second class (and add the class name as a title with ggplot2)</span></span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a>charts[[<span class="dv">2</span>]] <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="fu">names</span>(charts)[<span class="dv">2</span>])</span></code></pre></div>
 <p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
 </div>
 <div id="contingency-tables-according-to-classes" class="section level2">
 <h2>3.3. Contingency tables according to classes</h2>
 <p>Finally, contingency tables can also be built for each class. The
 first one:</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build one contingency table for each class and look at some of them</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">references =</span> reference_values,</span>
-<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">classes =</span> classification,</span>
-<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">FUN =</span> thq_pairs)[<span class="dv">10</span><span class="sc">:</span><span class="dv">12</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build one contingency table for each class and look at some of them</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">references =</span> reference_values,</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">classes =</span> classification,</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">FUN =</span> thq_pairs)[<span class="dv">10</span><span class="sc">:</span><span class="dv">12</span>]</span></code></pre></div>
 <pre><code>## $`Atteintes hépatiques`
 ## NULL
 ## 
@@ -1757,11 +2037,11 @@ first one:</p>
 can be built because the subsets of values don’t contain more than one
 component or don’t have hazard index greater than 1.</p>
 <p>The second contingency table:</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build one contingency table for each class and look at some of them</span></span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
-<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">references =</span> reference_values,</span>
-<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">classes =</span> classification,</span>
-<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">FUN =</span> thq_by_group)[<span class="dv">10</span><span class="sc">:</span><span class="dv">12</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build one contingency table for each class and look at some of them</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcr_approach_by_class</span>(<span class="at">values =</span> concentration_values,</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">references =</span> reference_values,</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">classes =</span> classification,</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">FUN =</span> thq_by_group)[<span class="dv">10</span><span class="sc">:</span><span class="dv">12</span>]</span></code></pre></div>
 <pre><code>## $`Atteintes hépatiques`
 ##                       I II IIIA IIIB
 ## 1-Méthoxypropane-2-ol 0  2    0    0
@@ -1781,6 +2061,9 @@ component or don’t have hazard index greater than 1.</p>
 ## Chrome VI et ses composés 1  1    0    0
 ## Styrène                   2  0    0    0
 ## Toluène                   0  1    0    0</code></pre>
+<p>Additional arguments related to the functions <code>thq_pairs</code>
+and <code>thq_by_group</code> can also be used when calling
+<code>mcr_approach_by_class</code>.</p>
 </div>
 </div>
 <div id="data-management" class="section level1">
@@ -1789,12 +2072,12 @@ component or don’t have hazard index greater than 1.</p>
 <h2>4.1. Classification management</h2>
 <p>For this section, we will use a simple classification system
 assigning classes C1 to C8 to elements A, B, C, D and E:</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>classification_1 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">A =</span> <span class="fu">c</span>(<span class="st">&quot;C5&quot;</span>, <span class="st">&quot;C6&quot;</span>, <span class="st">&quot;C8&quot;</span>),</span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">B =</span> <span class="st">&quot;C8&quot;</span>,</span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C =</span> <span class="fu">c</span>(<span class="st">&quot;C3&quot;</span>, <span class="st">&quot;C8&quot;</span>),</span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">D =</span> <span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C3&quot;</span>, <span class="st">&quot;C4&quot;</span>, <span class="st">&quot;C6&quot;</span>),</span>
-<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">E =</span> <span class="fu">c</span>(<span class="st">&quot;C2&quot;</span>, <span class="st">&quot;C4&quot;</span>, <span class="st">&quot;C5&quot;</span>, <span class="st">&quot;C7&quot;</span>, <span class="st">&quot;C8&quot;</span>))</span>
-<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>classification_1</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>classification_1 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">A =</span> <span class="fu">c</span>(<span class="st">&quot;C5&quot;</span>, <span class="st">&quot;C6&quot;</span>, <span class="st">&quot;C8&quot;</span>),</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">B =</span> <span class="st">&quot;C8&quot;</span>,</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C =</span> <span class="fu">c</span>(<span class="st">&quot;C3&quot;</span>, <span class="st">&quot;C8&quot;</span>),</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">D =</span> <span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C3&quot;</span>, <span class="st">&quot;C4&quot;</span>, <span class="st">&quot;C6&quot;</span>),</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">E =</span> <span class="fu">c</span>(<span class="st">&quot;C2&quot;</span>, <span class="st">&quot;C4&quot;</span>, <span class="st">&quot;C5&quot;</span>, <span class="st">&quot;C7&quot;</span>, <span class="st">&quot;C8&quot;</span>))</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>classification_1</span></code></pre></div>
 <pre><code>## $A
 ## [1] &quot;C5&quot; &quot;C6&quot; &quot;C8&quot;
 ## 
@@ -1817,51 +2100,51 @@ former allows to identify the list of classes involved by two or more
 elements. The latter allows to identify the common classes between two
 or more elements. The specified indices can be either numbers or
 names.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Union with no other argument: identify all classes involved by all elements</span></span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">union_on_list</span>(classification_1)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Union with no other argument: identify all classes involved by all elements</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="fu">union_on_list</span>(classification_1)</span></code></pre></div>
 <pre><code>## [1] &quot;C1&quot; &quot;C2&quot; &quot;C3&quot; &quot;C4&quot; &quot;C5&quot; &quot;C6&quot; &quot;C7&quot; &quot;C8&quot;</code></pre>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Union with a set of indices: identify classes involved by specific elements</span></span>
-<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">union_on_list</span>(classification_1,</span>
-<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">indices =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Union with a set of indices: identify classes involved by specific elements</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="fu">union_on_list</span>(classification_1,</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">indices =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;C3&quot; &quot;C5&quot; &quot;C6&quot; &quot;C8&quot;</code></pre>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intersection with no other argument: identify the common classes between all elements</span></span>
-<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">intersect_on_list</span>(classification_1)</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intersection with no other argument: identify the common classes between all elements</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">intersect_on_list</span>(classification_1)</span></code></pre></div>
 <pre><code>## character(0)</code></pre>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intersection with a set of indices: identify the common classes between specific elements</span></span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">intersect_on_list</span>(classification_1,</span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">indices =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intersection with a set of indices: identify the common classes between specific elements</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">intersect_on_list</span>(classification_1,</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">indices =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;C8&quot;</code></pre>
 <p>Another function allows to build a frequency table of the counts of
 each class: <code>table_on_list</code>. In this case too, specified
 indices can be either numbers or names. But another argument
 (<code>with_zero</code>) allows to add in the table classes of the list
 that are not encountered at any of these indices.</p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Overall table</span></span>
-<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Overall table</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1)</span></code></pre></div>
 <pre><code>## C1 C2 C3 C4 C5 C6 C7 C8 
 ##  1  1  2  2  2  2  1  4</code></pre>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Table of classes encountered at specific indices</span></span>
-<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1,</span>
-<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">indices =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Table of classes encountered at specific indices</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1,</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">indices =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div>
 <pre><code>## C3 C5 C6 C8 
 ##  1  1  1  3</code></pre>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Table of classes encountered for specific elements, showing all classes</span></span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1,</span>
-<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">indices =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>),</span>
-<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">with_zero =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Table of classes encountered for specific elements, showing all classes</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1,</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">indices =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>),</span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">with_zero =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## C1 C2 C3 C4 C5 C6 C7 C8 
 ##  0  0  1  0  1  1  0  3</code></pre>
 <p>Moreover, we can ask for several frequency tables using a matrix or a
 list of indices. In this case, if <code>with_zero</code> is set to
 <code>TRUE</code>, the result is simplified into a single matrix.</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preparing three vectors of indices in a matrix</span></span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>indices_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>,</span>
-<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;D&quot;</span>,</span>
-<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;E&quot;</span>),</span>
-<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">nrow =</span> <span class="dv">3</span>,</span>
-<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Building of tables</span></span>
-<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1, indices_matrix)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preparing three vectors of indices in a matrix</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>indices_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>,</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;D&quot;</span>,</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;E&quot;</span>),</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">nrow =</span> <span class="dv">3</span>,</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Building of tables</span></span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1, indices_matrix)</span></code></pre></div>
 <pre><code>## [[1]]
 ## C3 C5 C6 C8 
 ##  1  1  1  3 
@@ -1873,23 +2156,23 @@ list of indices. In this case, if <code>with_zero</code> is set to
 ## [[3]]
 ## C2 C3 C4 C5 C7 C8 
 ##  1  1  1  1  1  3</code></pre>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding names to the three vectors of indices</span></span>
-<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(indices_matrix) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;v1&quot;</span>, <span class="st">&quot;v2&quot;</span>, <span class="st">&quot;v3&quot;</span>)</span>
-<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Building of tables</span></span>
-<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1,</span>
-<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>              indices_matrix,</span>
-<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">with_zero =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding names to the three vectors of indices</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(indices_matrix) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;v1&quot;</span>, <span class="st">&quot;v2&quot;</span>, <span class="st">&quot;v3&quot;</span>)</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Building of tables</span></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1,</span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>              indices_matrix,</span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">with_zero =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##    C1 C2 C3 C4 C5 C6 C7 C8
 ## v1  0  0  1  0  1  1  0  3
 ## v2  1  0  1  1  1  2  0  2
 ## v3  0  1  1  1  1  0  1  3</code></pre>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preparing three vectors of indices in a list</span></span>
-<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>indices_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>),</span>
-<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>),</span>
-<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;A&quot;</span>)</span>
-<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Building of tables</span></span>
-<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1, indices_list)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preparing three vectors of indices in a list</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>indices_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>),</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>),</span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;A&quot;</span>)</span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Building of tables</span></span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1, indices_list)</span></code></pre></div>
 <pre><code>## [[1]]
 ## C3 C5 C6 C8 
 ##  1  1  1  3 
@@ -1901,10 +2184,10 @@ list of indices. In this case, if <code>with_zero</code> is set to
 ## [[3]]
 ## C5 C6 C8 
 ##  1  1  1</code></pre>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Building of tables of all classes</span></span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1,</span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>              indices_list,</span>
-<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">with_zero =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Building of tables of all classes</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table_on_list</span>(classification_1,</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>              indices_list,</span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">with_zero =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##      C1 C2 C3 C4 C5 C6 C7 C8
 ## [1,]  0  0  1  0  1  1  0  3
 ## [2,]  0  0  0  0  1  1  0  2
@@ -1916,8 +2199,8 @@ list of indices. In this case, if <code>with_zero</code> is set to
 can use the function <code>coerce_list</code>. In such a matrix,
 <code>TRUE</code> indicates that a specific element is part of a
 specific class.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>classification_matrix <span class="ot">&lt;-</span> <span class="fu">coerce_list</span>(classification_1, <span class="at">to =</span> <span class="st">&quot;logical matrix&quot;</span>)</span>
-<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>classification_matrix</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>classification_matrix <span class="ot">&lt;-</span> <span class="fu">coerce_list</span>(classification_1, <span class="at">to =</span> <span class="st">&quot;logical matrix&quot;</span>)</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>classification_matrix</span></code></pre></div>
 <pre><code>##      C1    C2    C3    C4    C5    C6    C7    C8
 ## A FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE  TRUE
 ## B FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
@@ -1926,8 +2209,8 @@ specific class.</p>
 ## E FALSE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE</code></pre>
 <p>Conversely, we can use the function <code>coerce_to_list</code> to
 turn a classification matrix into a list:</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>classification_list <span class="ot">&lt;-</span> <span class="fu">coerce_to_list</span>(classification_matrix)</span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>classification_list</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>classification_list <span class="ot">&lt;-</span> <span class="fu">coerce_to_list</span>(classification_matrix)</span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>classification_list</span></code></pre></div>
 <pre><code>## $A
 ## [1] &quot;C5&quot; &quot;C6&quot; &quot;C8&quot;
 ## 
@@ -1944,15 +2227,15 @@ turn a classification matrix into a list:</p>
 ## [1] &quot;C2&quot; &quot;C4&quot; &quot;C5&quot; &quot;C7&quot; &quot;C8&quot;</code></pre>
 <p>However, if the initial structure is a list in which classes are the
 names and elements are the values, as in the following…</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>classification_2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">C1 =</span> <span class="st">&quot;D&quot;</span>,</span>
-<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C2 =</span> <span class="st">&quot;E&quot;</span>,</span>
-<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C3 =</span> <span class="fu">c</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>),</span>
-<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C4 =</span> <span class="fu">c</span>(<span class="st">&quot;D&quot;</span>, <span class="st">&quot;E&quot;</span>),</span>
-<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C5 =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;E&quot;</span>),</span>
-<span id="cb105-6"><a href="#cb105-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C6 =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;D&quot;</span>),</span>
-<span id="cb105-7"><a href="#cb105-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C7 =</span> <span class="st">&quot;E&quot;</span>,</span>
-<span id="cb105-8"><a href="#cb105-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C8 =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;E&quot;</span>))</span>
-<span id="cb105-9"><a href="#cb105-9" aria-hidden="true" tabindex="-1"></a>classification_2</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>classification_2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">C1 =</span> <span class="st">&quot;D&quot;</span>,</span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C2 =</span> <span class="st">&quot;E&quot;</span>,</span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C3 =</span> <span class="fu">c</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>),</span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C4 =</span> <span class="fu">c</span>(<span class="st">&quot;D&quot;</span>, <span class="st">&quot;E&quot;</span>),</span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C5 =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;E&quot;</span>),</span>
+<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C6 =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;D&quot;</span>),</span>
+<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C7 =</span> <span class="st">&quot;E&quot;</span>,</span>
+<span id="cb106-8"><a href="#cb106-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">C8 =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;E&quot;</span>))</span>
+<span id="cb106-9"><a href="#cb106-9" aria-hidden="true" tabindex="-1"></a>classification_2</span></code></pre></div>
 <pre><code>## $C1
 ## [1] &quot;D&quot;
 ## 
@@ -1978,7 +2261,7 @@ names and elements are the values, as in the following…</p>
 ## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;E&quot;</code></pre>
 <p>… we can use the function <code>invert_list</code> to get the
 structure to be similar to the first one presented:</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">invert_list</span>(classification_2)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">invert_list</span>(classification_2)</span></code></pre></div>
 <pre><code>## $A
 ## [1] &quot;C5&quot; &quot;C6&quot; &quot;C8&quot;
 ## 
@@ -1996,7 +2279,7 @@ structure to be similar to the first one presented:</p>
 <p>In the same way, we can go from a structure listing the classes to
 which each element belongs to, to a structure listing the elements
 belonging to each of the classes:</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">invert_list</span>(classification_1)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">invert_list</span>(classification_1)</span></code></pre></div>
 <pre><code>## $C1
 ## [1] &quot;D&quot;
 ## 
@@ -2023,15 +2306,15 @@ belonging to each of the classes:</p>
 <p>Finally, if we have a data frame or a matrix in which two columns
 define the associations between the elements and the classes as in the
 following…</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>classification_3 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">3</span>), <span class="st">&quot;B&quot;</span>, <span class="fu">rep</span>(<span class="st">&quot;C&quot;</span>, <span class="dv">2</span>), <span class="fu">rep</span>(<span class="st">&quot;D&quot;</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">&quot;E&quot;</span>, <span class="dv">5</span>),</span>
-<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C5&quot;</span>, <span class="st">&quot;C6&quot;</span>, <span class="st">&quot;C8&quot;</span>,</span>
-<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C8&quot;</span>,</span>
-<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C3&quot;</span>, <span class="st">&quot;C8&quot;</span>,</span>
-<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C3&quot;</span>, <span class="st">&quot;C4&quot;</span>, <span class="st">&quot;C6&quot;</span>,</span>
-<span id="cb111-6"><a href="#cb111-6" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C2&quot;</span>, <span class="st">&quot;C4&quot;</span>, <span class="st">&quot;C5&quot;</span>, <span class="st">&quot;C7&quot;</span>, <span class="st">&quot;C8&quot;</span>),</span>
-<span id="cb111-7"><a href="#cb111-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb111-8"><a href="#cb111-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">&quot;element&quot;</span>, <span class="st">&quot;class&quot;</span>)))</span>
-<span id="cb111-9"><a href="#cb111-9" aria-hidden="true" tabindex="-1"></a>classification_3</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>classification_3 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">3</span>), <span class="st">&quot;B&quot;</span>, <span class="fu">rep</span>(<span class="st">&quot;C&quot;</span>, <span class="dv">2</span>), <span class="fu">rep</span>(<span class="st">&quot;D&quot;</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">&quot;E&quot;</span>, <span class="dv">5</span>),</span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C5&quot;</span>, <span class="st">&quot;C6&quot;</span>, <span class="st">&quot;C8&quot;</span>,</span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C8&quot;</span>,</span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C3&quot;</span>, <span class="st">&quot;C8&quot;</span>,</span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C3&quot;</span>, <span class="st">&quot;C4&quot;</span>, <span class="st">&quot;C6&quot;</span>,</span>
+<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;C2&quot;</span>, <span class="st">&quot;C4&quot;</span>, <span class="st">&quot;C5&quot;</span>, <span class="st">&quot;C7&quot;</span>, <span class="st">&quot;C8&quot;</span>),</span>
+<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb112-8"><a href="#cb112-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">&quot;element&quot;</span>, <span class="st">&quot;class&quot;</span>)))</span>
+<span id="cb112-9"><a href="#cb112-9" aria-hidden="true" tabindex="-1"></a>classification_3</span></code></pre></div>
 <pre><code>##       element class
 ##  [1,] &quot;A&quot;     &quot;C5&quot; 
 ##  [2,] &quot;A&quot;     &quot;C6&quot; 
@@ -2050,7 +2333,7 @@ following…</p>
 ## [15,] &quot;E&quot;     &quot;C8&quot;</code></pre>
 <p>… we can also use the function <code>coerce_to_list</code> to get the
 structure to be similar to the first one presented:</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coerce_to_list</span>(classification_3)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coerce_to_list</span>(classification_3)</span></code></pre></div>
 <pre><code>## $A
 ## [1] &quot;C5&quot; &quot;C6&quot; &quot;C8&quot;
 ## 
@@ -2076,10 +2359,10 @@ substances, we can call <code>coerce_list</code> to know which
 substances are present in which sets of values by coercing the list to a
 binary matrix. Each line refers to one set of values and each column
 refers to one name found in the values of the list.</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just look at some columns</span></span>
-<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coerce_list</span>(concentration_values,</span>
-<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">to =</span> <span class="st">&quot;logical matrix&quot;</span>,</span>
-<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">by_name =</span> <span class="cn">TRUE</span>)[, <span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">12</span><span class="sc">:</span><span class="dv">14</span>,<span class="dv">23</span><span class="sc">:</span><span class="dv">25</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just look at some columns</span></span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coerce_list</span>(concentration_values,</span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">to =</span> <span class="st">&quot;logical matrix&quot;</span>,</span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">by_name =</span> <span class="cn">TRUE</span>)[, <span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">12</span><span class="sc">:</span><span class="dv">14</span>,<span class="dv">23</span><span class="sc">:</span><span class="dv">25</span>)]</span></code></pre></div>
 <pre><code>##     Acétone Aluminium Butanone Cuivre Ethanol   Fer Styrène Toluène  Zinc
 ## S1    FALSE     FALSE    FALSE  FALSE    TRUE FALSE   FALSE   FALSE FALSE
 ## S2    FALSE     FALSE    FALSE  FALSE   FALSE FALSE   FALSE   FALSE FALSE
@@ -2102,8 +2385,8 @@ the names of the values instead of the values themselves.</p>
 <h3>4.2.2. Reduction of sets of values</h3>
 <p>In the list of sets of values, some of these sets contains several
 values for the same component name, like in the following:</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the 2nd and 4th sets of values</span></span>
-<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>concentration_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the 2nd and 4th sets of values</span></span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>concentration_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
 <pre><code>## $S2
 ## Formaldéhyde Formaldéhyde      Benzène 
 ##        0.007        0.004        0.050 
@@ -2124,12 +2407,12 @@ function is given as argument <code>FUN</code> and can be any function
 taking a numeric vector as input and returning one single value. It can
 be a custom function or a base function like <code>min</code>,
 <code>max</code>, <code>median</code>, etc.</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reduce the sets of values by taking the minimum value associated with each name</span></span>
-<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>new_values <span class="ot">&lt;-</span> <span class="fu">reduce_sets</span>(concentration_values,</span>
-<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">FUN =</span> min)</span>
-<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the new 2nd and 4th sets of values</span></span>
-<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a>new_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reduce the sets of values by taking the minimum value associated with each name</span></span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>new_values <span class="ot">&lt;-</span> <span class="fu">reduce_sets</span>(concentration_values,</span>
+<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">FUN =</span> min)</span>
+<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s look at the new 2nd and 4th sets of values</span></span>
+<span id="cb120-6"><a href="#cb120-6" aria-hidden="true" tabindex="-1"></a>new_values[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)]</span></code></pre></div>
 <pre><code>## $S2
 ## Formaldéhyde      Benzène 
 ##        0.004        0.050 
@@ -2145,11 +2428,11 @@ related to a specific class. For that, we will use the function
 <code>subset_from_class</code> and choose one from the set of class
 names (defined in section <a href="#classification">1.2.
 Classification</a>):</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction of the subsets for the ninth class</span></span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>subsets <span class="ot">&lt;-</span> <span class="fu">subset_from_class</span>(<span class="at">values =</span> concentration_values,</span>
-<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">references =</span> reference_values,</span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">classes =</span> classification,</span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">class_name =</span> class_names[<span class="dv">9</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction of the subsets for the ninth class</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>subsets <span class="ot">&lt;-</span> <span class="fu">subset_from_class</span>(<span class="at">values =</span> concentration_values,</span>
+<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">references =</span> reference_values,</span>
+<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">classes =</span> classification,</span>
+<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">class_name =</span> class_names[<span class="dv">9</span>])</span></code></pre></div>
 <p>The output of this function is a list containing two subsets:
 <code>values</code>, the subset of <code>concentration_values</code>
 corresponding to the class <code>class_name</code>;
@@ -2157,11 +2440,11 @@ corresponding to the class <code>class_name</code>;
 corresponding to this same class.</p>
 <p>Before looking at the subsets related to the chosen class, we can
 compare their lengths to those of the complete sets of values.</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of values of each set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(concentration_values)</span>
-<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Number of values related to the ninth class :</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(subsets[[<span class="st">&quot;values&quot;</span>]])</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of values of each set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(concentration_values)</span>
+<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Number of values related to the ninth class :</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(subsets[[<span class="st">&quot;values&quot;</span>]])</span></code></pre></div>
 <pre><code>## Number of values of each set of concentration values:
 ##  S1  S2  S3  S4  S5  S6  S7  S8  S9 S10 S11 S12 S13 S14 
 ##  24   3  21   4   1   3  10  15  30   6   6   5   2   1 
@@ -2173,11 +2456,11 @@ compare their lengths to those of the complete sets of values.</p>
 substances related to the class of interest.</p>
 <p>Let’s take a look at the values from the 6th set, in which only two
 of the three values were kept:</p>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Values of the sixth set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a>concentration_values<span class="sc">$</span>S6</span>
-<span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb124-4"><a href="#cb124-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Values of the sixth set of concentration values related to the ninth class:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb124-5"><a href="#cb124-5" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;values&quot;</span>]]<span class="sc">$</span>S6</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Values of the sixth set of concentration values:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>concentration_values<span class="sc">$</span>S6</span>
+<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Values of the sixth set of concentration values related to the ninth class:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;values&quot;</span>]]<span class="sc">$</span>S6</span></code></pre></div>
 <pre><code>## Values of the sixth set of concentration values:
 ##                                    Acétone 
 ##                                         44 
@@ -2191,7 +2474,7 @@ of the three values were kept:</p>
 ##      44       4</code></pre>
 <p>To finish, we can look at the subset of references, which will also
 give the set of substances related to the class:</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;references&quot;</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>subsets[[<span class="st">&quot;references&quot;</span>]]</span></code></pre></div>
 <pre><code>##               Ethanol               Acétone              Butanone 
 ##                1900.0                1210.0                 600.0 
 ## 1-Méthoxypropane-2-ol               Styrène               Toluène 

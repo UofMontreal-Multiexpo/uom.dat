@@ -394,7 +394,7 @@ thq_by_group(values = concentration_values,
              references = reference_values)
 ```
 
-For both functions, a `levels` parameter can be used to get the complete table, i.e. with component names that do not produce any top hazard quotient:
+For both functions, the argument `levels` can be used to get the full table, i.e. with component names that do not produce any top hazard quotient:
 ```{r}
 table_levels <- names(reference_values)[-19]
 # For readability of the example, intentional removal of the 19th name which is quite long
@@ -404,7 +404,7 @@ thq_by_group(values = concentration_values,
              levels = sort(table_levels))
 ```
 
-For the first of the two functions (`thq_pairs`), two other parameters exists:
+For the first of the two functions (`thq_pairs`), two other arguments exists:
 
 * `threshold`, allowing to disable the condition over the hazard index so that top hazard quotients associated with hazard index less than or equal to $1$ are taken into account.
 * `alone`, to also consider single top hazard quotients (i.e. top hazard quotients from sets of one single value). The resulting top hazard quotients are associated with a level named `"NULL"`.
@@ -489,12 +489,14 @@ classification[350:352]
 Apply the MCR approach according to a classification means apply it depending on the different classes associated with the values. In other words, indicators will be computed for each subset of values related to a specific class, and for each class.
 For that, we can call the function `mcr_approach_by_class` with the values, the references, the classification and the function of the approach we want to apply.
 
+Note that functions presented in section [2.1.3. Compute a specific indicator](#compute-a-specific-indicator) cannot be used via `mcr_approach_by_class`. However, specific indicators can be easily extracted from the data frames returned by the use of `mcr_summary`.
+
 
 ## 3.1. MCR summary according to classes
 
 Concerning the summary of the indicators, for each class encountered, summaries are given for the sets of values relating to the class:
 ```{r}
-# Make the summary for each class
+# Make the summary for each class and each set of values
 summaries <- mcr_approach_by_class(values = concentration_values,
                                    references = reference_values,
                                    classes = classification,
@@ -520,7 +522,23 @@ s <- s + 1
 cat("$`", names(summaries)[s], "`\n", sep = "") ; summaries[[s]]
 ```
 
-Note that functions presented in section [2.1.3. Compute a specific indicator](#compute-a-specific-indicator) cannot be used via this function. However, specific indicators can be easily extracted from the data frames returned by the use of `mcr_summary`.
+Two other arguments can be used:
+
+* `by_set`, allowing to group the results by set of values instead of by class.
+* `all_classes`, allowing to also get summaries of classes that are not related to a set of values. Only if `by_set` is `TRUE`.
+
+```{r}
+# Make the summary for each set of values and each class
+summaries_2 <- mcr_approach_by_class(values = concentration_values,
+                                     references = reference_values,
+                                     classes = classification,
+                                     FUN = mcr_summary,
+                                     by_set = TRUE,
+                                     all_classes = TRUE)
+
+# Look at one example: the 11th set of values
+summaries_2[["S11"]]
+```
 
 
 ## 3.2. Scatter plots according to classes
@@ -581,6 +599,8 @@ mcr_approach_by_class(values = concentration_values,
                       classes = classification,
                       FUN = thq_by_group)[10:12]
 ```
+
+Additional arguments related to the functions `thq_pairs` and `thq_by_group` can also be used when calling `mcr_approach_by_class`.
 
 
 
