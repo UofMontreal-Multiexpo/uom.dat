@@ -27,10 +27,24 @@ A personal access token provides access to the GitHub API. To get one if you don
 * Click on button "Generate token".
 * Copy the given token.
 
-Then you must run the following instruction using your token as the `auth_token` argument.
+To install the latest version, run the following instruction using your token as the `auth_token` argument.
 ```r
 devtools::install_github("UofMontreal-Multiexpo/uom.dat",
                          auth_token = "my_personal_access_token")
+```
+
+To install the development version, use:
+```r
+devtools::install_github("UofMontreal-Multiexpo/uom.dat",
+                         auth_token = "my_personal_access_token",
+                         ref = "develop")
+```
+
+To install a previous version, run the following instruction replacing `X.X.X` with the desired version number.
+```r
+devtools::install_github("UofMontreal-Multiexpo/uom.dat",
+                         auth_token = "my_personal_access_token",
+                         ref = "vX.X.X")
 ```
 
 ### B. Getting all files then installing
