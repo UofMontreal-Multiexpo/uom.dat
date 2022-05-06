@@ -1,6 +1,6 @@
-# uom.dat 0.1.0
+# uom.dat 0.1.0 (2022-05-06)
 
-* Alpha and beta versions.
+* Initial stable release version.
 
 
 ---
