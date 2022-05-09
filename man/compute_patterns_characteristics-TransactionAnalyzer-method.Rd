@@ -15,12 +15,13 @@ Invisible. Data frame in which each row is an association between a pattern and 
 characteristics.
 }
 \description{
-Compute the characteristics of the patterns (length, frequency, weight, specificity, dynamic status).
+Compute the characteristics of the patterns (length, weight, specificity, dynamic status).
 The resulting data frame is assigned to the attribute \code{patterns} of \code{object}.
 }
 \details{
-The length of a pattern is the number of items composing it. The frequency and the weight of a pattern
-is the number of transactions and the number of nodes containing it, respectively.
+The length of a pattern is the number of items composing it.
+
+The weight of a pattern is the number of nodes containing it.
 
 The specificity of a pattern corresponds to the nature of the pattern of being specific of a
 particular combination or ubiquitous and allowing the formation of numerous combinations (with

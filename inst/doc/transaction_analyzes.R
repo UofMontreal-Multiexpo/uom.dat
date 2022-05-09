@@ -197,10 +197,10 @@ get_nodes(TA_instance,
           condition = "only")
 
 ## -----------------------------------------------------------------------------
-cat("Possibles values for the argument `element` if referring to a node characteristic:\n")
+cat("Possible values for the argument `element` if referring to a node characteristic:\n")
 print(colnames(TA_instance["nodes"])[-1])
 
-cat("\nPossibles values for the argument `element` if referring to a pattern characteristic:\n")
+cat("\nPossible values for the argument `element` if referring to a pattern characteristic:\n")
 print(colnames(TA_instance["patterns"])[-1])
 
 ## -----------------------------------------------------------------------------

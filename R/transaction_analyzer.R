@@ -133,11 +133,12 @@ PATTERN_LINKS = "pattern_links"
 #' @slot nodes_patterns Set of associations between patterns and nodes determining whether a pattern
 #'  is included in a node.
 #' @slot patterns Set of mined patterns and characteristics of these patterns.
-#'  Data frame of 7 variables:
+#'  Data frame of 8 variables:
 #'  \describe{
 #'    \item{\code{pattern}}{Set of items composing the pattern.}
 #'    \item{\code{year}}{Year of appearance of the pattern among the transactions.}
 #'    \item{\code{length}}{Number of items composing the pattern.}
+#'    \item{\code{support}}{Proportion of transactions containing the set of items of the pattern.}
 #'    \item{\code{frequency}}{Number of transactions containing the set of items of the pattern.}
 #'    \item{\code{weight}}{Number of nodes containing the set of items of the pattern.}
 #'    \item{\code{specificity}}{Specificity of the information conveyed by the pattern. It corresponds
@@ -562,21 +563,21 @@ function(object, ...) {
   
   if (!is_init_patterns(object)) {
     # If the patterns have not been computed, only part of the summary
-    return(c(items = length(object@items),
-             categories = ncol(object@items_categories),
+    return(c(items        = length(object@items),
+             categories   = ncol(object@items_categories),
              transactions = length(object@transactions),
-             nodes = if (is_init_nodes(object)) nrow(object@nodes) else NA,
-             patterns = NA))
+             nodes        = if (is_init_nodes(object)) nrow(object@nodes) else NA,
+             patterns     = NA))
   }
   
   summaries = list()
   
   # Summary of pattern characteristics
-  main = cbind("year" = summary(object@patterns$year),
-               "frequency" = summary(object@patterns$frequency),
-               "weight" = summary(object@patterns$weight),
-               "specificity" = summary(object@patterns$specificity))
-  colnames(main) = c("year", "frequency", "weight", "specificity")
+  main = cbind(year        = summary(object@patterns$year),
+               support     = summary(object@patterns$support),
+               frequency   = summary(object@patterns$frequency),
+               weight      = summary(object@patterns$weight),
+               specificity = summary(object@patterns$specificity))
   
   summaries[["patterns"]] = list(main = main)
   summaries[["patterns"]][["length"]] = as.data.frame(table(object@patterns$length))
@@ -585,11 +586,11 @@ function(object, ...) {
   colnames(summaries[["patterns"]][["status"]]) = c("status", "count")
   
   # Length of the main attributes
-  summaries[["count"]] = c(items = length(object@items),
-                           categories = ncol(object@items_categories),
+  summaries[["count"]] = c(items        = length(object@items),
+                           categories   = ncol(object@items_categories),
                            transactions = length(object@transactions),
-                           nodes = nrow(object@nodes),
-                           patterns = nrow(object@patterns))
+                           nodes        = nrow(object@nodes),
+                           patterns     = nrow(object@patterns))
   
   return(summaries)
 })
@@ -1764,9 +1765,9 @@ function(object, entities) {
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
 #' @param arules If \code{TRUE}, patterns are returned as an object of class
 #'  \code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.
-#' @return Invisible. Object of class \code{itemsets} or data frame in which a line is an association
-#'  between a pattern and its frequency in the set of transactions (according to the argument
-#'  \code{arules}).
+#' @return Invisible. Object of class \code{itemsets} or data frame in which a row is an association
+#'  between a pattern and its support and frequency in the set of transactions (according to the
+#'  argument \code{arules}).
 #' 
 #' @author Gauthier Magnin
 #' @aliases list_separate_patterns
@@ -1789,17 +1790,13 @@ function(object, target, count = 1, min_length = 1, max_length = Inf, arules = F
                 maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length),
                 target = target)
   result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
-  res = methods::as(result, "data.frame") # Also contains the support
+  patterns_df = methods::as(result, "data.frame")
   
-  # Extraction of the patterns from the result and conversion to a list of vectors
-  patterns = vector_notation(res$items)
+  # Conversion of the patterns to a list of vectors and renaming columns
+  patterns_df$items = vector_notation(patterns_df$items)
+  colnames(patterns_df) = c("pattern", "support", "frequency")
   
-  # Gathering patterns into a data frame
-  patterns_df = data.frame(pattern = numeric(length(patterns)))
-  patterns_df$pattern = patterns
-  patterns_df$frequency = res$count
-  
-  # Sorting and renaming rows according to the new order of the data frame
+  # Sorting by frequency and renaming rows according to the new order
   patterns_df = patterns_df[order(patterns_df$frequency, decreasing = TRUE), ]
   rownames(patterns_df) = seq(nrow(patterns_df))
   
@@ -1902,12 +1899,13 @@ function(object) {
 
 #' Computation of pattern characteristics
 #' 
-#' Compute the characteristics of the patterns (length, frequency, weight, specificity, dynamic status).
+#' Compute the characteristics of the patterns (length, weight, specificity, dynamic status).
 #' The resulting data frame is assigned to the attribute `patterns` of `object`.
 #' 
 #' @details
-#' The length of a pattern is the number of items composing it. The frequency and the weight of a pattern
-#'  is the number of transactions and the number of nodes containing it, respectively.
+#' The length of a pattern is the number of items composing it.
+#' 
+#' The weight of a pattern is the number of nodes containing it.
 #' 
 #' The specificity of a pattern corresponds to the nature of the pattern of being specific of a
 #'  particular combination or ubiquitous and allowing the formation of numerous combinations (with
@@ -1960,7 +1958,8 @@ function(object) {
   object@patterns$status = dynamic_status(object, object@patterns$pattern)$res$status
   
   # Changing the column order
-  object@patterns = object@patterns[, c("pattern", "year", "length", "frequency", "weight", "specificity", "status")]
+  object@patterns = object@patterns[, c("pattern", "year", "length", "support",
+                                        "frequency", "weight", "specificity", "status")]
   
   # Setting the attribute and return
   assign(object_name, object, envir = parent.frame())
@@ -2456,7 +2455,8 @@ function(object, pc, identifiers = "original", sort = TRUE,
   
   # Patterns and characteristics (and break down of the frequency), ordered by ID (replaced in 1st column)
   pc = cbind(pc, f.complex = frequencies[, "complex"], f.simple = frequencies[, "simple"])
-  return(pc[order(pc$ID), c("ID", "pattern", "year", "length", "frequency", "f.complex", "f.simple",
+  return(pc[order(pc$ID), c("ID", "pattern", "year", "length", "support",
+                            "frequency", "f.complex", "f.simple",
                             "weight", "specificity", "status")])
 })
 
@@ -3487,7 +3487,7 @@ function(object, ID, links) {
 #' Plot a chart of the transaction, node or pattern itemsets. It can be automatically saved as a PDF file.
 #' 
 #' @details
-#' If they are from nodes or patterns, itemsets are sorted according to their lengths increasing) then
+#' If they are from nodes or patterns, itemsets are sorted according to their lengths (increasing) then
 #'  to their frequencies (decreasing). If they are from transactions, they are sorted according to their
 #'  lengths only. When there is equality of these characteristics, itemsets are then taken according to
 #'  the initial order in `tnpc`.
@@ -3526,8 +3526,9 @@ function(object, ID, links) {
 #'  * Identifiers: `"ID"`.
 #'  * One of the elements of the transactions (i.e. one of the values of `tnpc["names"]`), if `tnpc` is
 #'    a `TransactionSet`.
-#'  * One of the characteristics of the nodes or the patterns (`"frequency"`, `"weight"`, `"specificity"`,
-#'    `"year"`, `"status"`), if `tnpc` is a data frame of nodes or patterns and their characteristics.
+#'  * One of the characteristics of the nodes or the patterns (`"support"`, `"frequency"`, `"weight"`,
+#'    `"specificity"`, `"year"`, `"status"`), if `tnpc` is a data frame of nodes or patterns and their
+#'    characteristics.
 #'  
 #'  `"status"` can only be used for the argument `"over"`.
 #'  `NULL` value specifies to display no text.
@@ -5079,8 +5080,8 @@ function(object, nc, category, value, condition) {
 #'  * `"only"`: the pattern must contain only the sought items (any of them).
 #' 
 #' If `element` refers to a characteristic other than status (i.e. is one of `"year"`, `"length"`,
-#'  `"frequency"`, `"weight"`, `"specificity"`), the condition for a pattern to be extracted is a
-#'  comparaison of the `value` according to one of the comparison operators (default is equality).
+#'  `"support"`, `"frequency"`, `"weight"`, `"specificity"`), the condition for a pattern to be extracted
+#'  is a comparison of the `value` according to one of the comparison operators (default is equality).
 #'  If the condition refers to equality or non-equality, several values can be given. If it does not,
 #'  only one value must be given. The argument `condition` must be one of the following.
 #'  * `"EQ"`, `"=="`: **EQ**ual. The value of the characteristic must be equal to that sought.
@@ -5116,9 +5117,9 @@ function(object, nc, category, value, condition) {
 #'  
 #'  `"patterns"` and `"p"` are special values for `object["patterns"]`.
 #' @param element Type of element on which to search.
-#'  One of `"items"`, `"year"`, `"length"`, `"frequency"`, `"weight"`, `"specificity"`, `"status"`
-#'  or the name or number of a category on which to search (numbering according to the order of the
-#'  columns of `object["items_categories"]`).
+#'  One of `"items"`, `"year"`, `"length"`, `"support"`, `"frequency"`, `"weight"`, `"specificity"`,
+#'  `"status"` or the name or number of a category on which to search (numbering according to the order
+#'  of the columns of `object["items_categories"]`).
 #' @param value Sought value(s) for the element specified by the argument `element`.
 #' @param condition Search condition, depending on `element`. See 'Details' section.
 #' @return Subset of the data frame of patterns that match the search criteria.
@@ -5167,14 +5168,16 @@ setMethod(f = "get_patterns",
 function(object, pc, element, value, condition = "default") {
   
   # Verification of the choice of the element on which to perform the search
-  if (!(element %in% c("items", "year", "length", "frequency", "weight", "specificity", "status"))
+  if (!(element %in% c("items", "year", "length", "support",
+                       "frequency", "weight", "specificity", "status"))
       && !check_access_for_category(object, element, NA, stop = FALSE)) {
     
     if (ncol(object@items_categories) == 0)
       stop(paste("There is no category associated with the items. element must be one of \"items\",",
-                 "\"year\", \"length\", \"frequency\", \"weight\", \"specificity\", \"status\"."))
-    stop(paste("element must be one of \"items\", \"year\", \"length\", \"frequency\", \"weight\",",
-               "\"specificity\", \"status\" or a category name or number."))
+                 "\"year\", \"length\", \"support\", \"frequency\", \"weight\", \"specificity\",",
+                 "\"status\"."))
+    stop(paste("element must be one of \"items\", \"year\", \"length\", \"support\", \"frequency\",",
+               "\"weight\", \"specificity\", \"status\" or a category name or number."))
   }
   
   # Call to the specific function
@@ -5184,7 +5187,7 @@ function(object, pc, element, value, condition = "default") {
     else
       return(get_patterns_from_items(object, pc, value, condition))
   }
-  if (element %in% c("year", "length", "frequency", "weight", "specificity")) {
+  if (element %in% c("year", "length", "support", "frequency", "weight", "specificity")) {
     if (condition == "default")
       return(get_patterns_from_characteristic(object, pc, element, value))
     else
@@ -5276,8 +5279,8 @@ function(object, pc, items, condition = "all") {
 #'  
 #'  \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.
 #' @param characteristic Name of the characteristic on which to do the search.
-#'  One of \code{"year"}, \code{"length"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"}
-#'  See \code{\link{get_patterns_from_status}} to search by \code{"status"}.
+#'  One of \code{"year"}, \code{"length"}, \code{"support"}, \code{"frequency"}, \code{"weight"} or
+#'  \code{"specificity"}. See \code{\link{get_patterns_from_status}} to search by \code{"status"}.
 #' @param value Sought value for the characteristic specified by the parameter \code{characteristic}.
 #'  Several values can be given if \code{condition} refers to equality or non-equality.
 #' @param condition Search condition.
@@ -5325,8 +5328,9 @@ function(object, pc, characteristic, value, condition = "EQ") {
   check_init(object, PATTERNS)
   pc = get_tnp(object, pc, PATTERNS)
   
-  if (!(characteristic %in% c("year", "length", "frequency", "weight", "specificity")))
-    stop("characteristic must be one of \"year\", \"length\", \"frequency\", \"weight\", \"specificity\".")
+  if (!(characteristic %in% c("year", "length", "support", "frequency", "weight", "specificity")))
+    stop("characteristic must be one of \"year\", \"length\", \"support\", \"frequency\", ",
+         "\"weight\", \"specificity\".")
   
   operators = c("EQ" = "==", "==" = "==",    "NE" = "!=", "!=" = "!=",
                 "LT" = "<", "<" = "<",       "GT" = ">", ">" = ">",

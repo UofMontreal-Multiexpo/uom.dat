@@ -31,9 +31,9 @@ The default \code{Inf} corresponds to a pattern search without maximum size limi
 \code{\link[arules:itemsets-class]{itemsets}} from the package \code{arules}.}
 }
 \value{
-Invisible. Object of class \code{itemsets} or data frame in which a line is an association
- between a pattern and its frequency in the set of transactions (according to the argument
- \code{arules}).
+Invisible. Object of class \code{itemsets} or data frame in which a row is an association
+ between a pattern and its support and frequency in the set of transactions (according to the
+ argument \code{arules}).
 }
 \description{
 Identify the patterns generated from the transactions.

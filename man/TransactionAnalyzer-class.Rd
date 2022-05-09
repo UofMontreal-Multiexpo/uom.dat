@@ -78,11 +78,12 @@ Data frame of 4 variables:
 is included in a node.}
 
 \item{\code{patterns}}{Set of mined patterns and characteristics of these patterns.
-Data frame of 7 variables:
+Data frame of 8 variables:
 \describe{
   \item{\code{pattern}}{Set of items composing the pattern.}
   \item{\code{year}}{Year of appearance of the pattern among the transactions.}
   \item{\code{length}}{Number of items composing the pattern.}
+  \item{\code{support}}{Proportion of transactions containing the set of items of the pattern.}
   \item{\code{frequency}}{Number of transactions containing the set of items of the pattern.}
   \item{\code{weight}}{Number of nodes containing the set of items of the pattern.}
   \item{\code{specificity}}{Specificity of the information conveyed by the pattern. It corresponds

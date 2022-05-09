@@ -140,10 +140,11 @@ Each object of class `TransactionAnalyzer` has the following attributes.
   <tr>
     <td>`patterns`</td>
     <td align="center">`data.frame`</td>
-    <td>Set of mined patterns and characteristics of these patterns. Data frame containing the following 7 variables.<ul>
+    <td>Set of mined patterns and characteristics of these patterns. Data frame containing the following 8 variables.<ul>
     <li>`pattern`: set of items composing the pattern.</li>
     <li>`year`: year of appearance of the pattern among the transactions.</li>
     <li>`length`: number of items composing the pattern.</li>
+    <li>`support`: proportion of transactions containing the set of items of the pattern.</li>
     <li>`frequency`: number of transactions containing the set of items of the pattern.</li>
     <li>`weight`: number of nodes containing the set of items of the pattern.</li>
     <li>`specificity`: specificity of the information conveyed by the pattern. It corresponds to the nature of a pattern of being specific of a particular combination or ubiquitous and allowing the formation of numerous combinations (with regard to the transactions).</li>
@@ -559,7 +560,7 @@ The argumet `category` must be the name or number of one category associated wit
 Two generic methods allow to extract nodes and patterns from specific values in the related data frames.
 
 * `get_nodes` extracts the nodes relating to specific items, categories or characteristics (length or frequency).
-* `get_patterns` extracts the patterns relating to specific items, categories or characteristics (year, length, frequency, weight, specificity or status).
+* `get_patterns` extracts the patterns relating to specific items, categories or characteristics (year, length, support, frequency, weight, specificity or status).
 
 The methods extract the subset of a data frame containing nodes or patterns satisfying search criteria. This data frame may be the attribute `nodes` or `patterns` of a `TransactionAnalyzer` or a subset of one of them.
 
@@ -623,12 +624,12 @@ In the second last example, a data frame with no row is returned. That means no 
 
 #### Search by characteristic
 
-Here are the possibles values of `element` to extract nodes or patterns according to one of their characteristics.
+Here are the possible values of `element` to extract nodes or patterns according to one of their characteristics.
 ```{r}
-cat("Possibles values for the argument `element` if referring to a node characteristic:\n")
+cat("Possible values for the argument `element` if referring to a node characteristic:\n")
 print(colnames(TA_instance["nodes"])[-1])
 
-cat("\nPossibles values for the argument `element` if referring to a pattern characteristic:\n")
+cat("\nPossible values for the argument `element` if referring to a pattern characteristic:\n")
 print(colnames(TA_instance["patterns"])[-1])
 ```
 

@@ -16,9 +16,9 @@
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{element}{Type of element on which to search.
-One of \code{"items"}, \code{"year"}, \code{"length"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"}, \code{"status"}
-or the name or number of a category on which to search (numbering according to the order of the
-columns of \code{object["items_categories"]}).}
+One of \code{"items"}, \code{"year"}, \code{"length"}, \code{"support"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"},
+\code{"status"} or the name or number of a category on which to search (numbering according to the order
+of the columns of \code{object["items_categories"]}).}
 
 \item{value}{Sought value(s) for the element specified by the argument \code{element}.}
 
@@ -42,8 +42,8 @@ is the presence of the sought items (argument \code{value}). The argument \code{
 }
 
 If \code{element} refers to a characteristic other than status (i.e. is one of \code{"year"}, \code{"length"},
-\code{"frequency"}, \code{"weight"}, \code{"specificity"}), the condition for a pattern to be extracted is a
-comparaison of the \code{value} according to one of the comparison operators (default is equality).
+\code{"support"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"}), the condition for a pattern to be extracted
+is a comparison of the \code{value} according to one of the comparison operators (default is equality).
 If the condition refers to equality or non-equality, several values can be given. If it does not,
 only one value must be given. The argument \code{condition} must be one of the following.
 \itemize{

@@ -22,8 +22,8 @@
 \code{"patterns"} and \code{"p"} are special values for \code{object["patterns"]}.}
 
 \item{characteristic}{Name of the characteristic on which to do the search.
-One of \code{"year"}, \code{"length"}, \code{"frequency"}, \code{"weight"}, \code{"specificity"}
-See \code{\link{get_patterns_from_status}} to search by \code{"status"}.}
+One of \code{"year"}, \code{"length"}, \code{"support"}, \code{"frequency"}, \code{"weight"} or
+\code{"specificity"}. See \code{\link{get_patterns_from_status}} to search by \code{"status"}.}
 
 \item{value}{Sought value for the characteristic specified by the parameter \code{characteristic}.
 Several values can be given if \code{condition} refers to equality or non-equality.}

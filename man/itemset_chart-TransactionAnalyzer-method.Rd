@@ -56,8 +56,9 @@ Can be:
 \item Identifiers: \code{"ID"}.
 \item One of the elements of the transactions (i.e. one of the values of \code{tnpc["names"]}), if \code{tnpc} is
 a \code{TransactionSet}.
-\item One of the characteristics of the nodes or the patterns (\code{"frequency"}, \code{"weight"}, \code{"specificity"},
-\code{"year"}, \code{"status"}), if \code{tnpc} is a data frame of nodes or patterns and their characteristics.
+\item One of the characteristics of the nodes or the patterns (\code{"support"}, \code{"frequency"}, \code{"weight"},
+\code{"specificity"}, \code{"year"}, \code{"status"}), if \code{tnpc} is a data frame of nodes or patterns and their
+characteristics.
 }
 
 \code{"status"} can only be used for the argument \code{"over"}.
@@ -94,7 +95,7 @@ or \code{over} is \code{"ID"}).
 Plot a chart of the transaction, node or pattern itemsets. It can be automatically saved as a PDF file.
 }
 \details{
-If they are from nodes or patterns, itemsets are sorted according to their lengths increasing) then
+If they are from nodes or patterns, itemsets are sorted according to their lengths (increasing) then
 to their frequencies (decreasing). If they are from transactions, they are sorted according to their
 lengths only. When there is equality of these characteristics, itemsets are then taken according to
 the initial order in \code{tnpc}.
