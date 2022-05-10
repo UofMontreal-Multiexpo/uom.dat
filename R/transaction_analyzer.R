@@ -283,8 +283,8 @@ setMethod(f = "initialize",
             
             # Parameters for the search and characterization of patterns
             .Object@parameters = list(target = target,
-                                      count = count,
-                                      min_length = min_length,
+                                      count = as.integer(count),
+                                      min_length = as.integer(min_length),
                                       max_length = max_length,
                                       status_limit = status_limit)
             if (status_limit != 1 && length(unique(unlist(transactions[transactions@year_key]))) == 1) {
@@ -1550,7 +1550,7 @@ function(object) {
   nodes_per_year = object@nodes_per_year
   
   # Computation of total frequnecy for each node (= each separate transaction)
-  nodes_df = data.frame("frequency" = unname(rowSums(nodes_per_year)))
+  nodes_df = data.frame(frequency = as.integer(unname(rowSums(nodes_per_year))))
   nodes_df$node = lapply(strsplit(rownames(nodes_per_year), 'c\\("|", "|")'),
                          function(node) {
                            if (length(node) > 1) { return(node[-1]) }
@@ -1949,7 +1949,7 @@ function(object) {
   object@patterns$length = sapply(object@patterns$pattern, length)
   object@patterns$year = apply(object@patterns_per_year, 1, function(x) {
                                                               # Year of appearance of the pattern
-                                                              as.numeric(names(x[x > 0])[1])
+                                                              as.integer(names(x[x > 0])[1])
                                                             })
   
   # Computation of the specificity and dynamic status of each pattern
@@ -2053,8 +2053,8 @@ setMethod(f = "check_RI_params",
 function(object, end, period) {
   
   # Maximum and minimum years
-  max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
-  min_year = as.numeric(colnames(object@nodes_per_year)[1])
+  max_year = as.integer(rev(colnames(object@nodes_per_year))[1])
+  min_year = as.integer(colnames(object@nodes_per_year)[1])
   
   # Validation of the parameter defining the end of the period on which to perform the computations
   if (is.null(end)) end = max_year
@@ -2062,13 +2062,15 @@ function(object, end, period) {
     stop("end must not be less than the year of the oldest transaction (", min_year, ")",
          " nor greater than the year of the most recent one (", max_year, ").")
   }
+  else end = as.integer(end)
   
   # Validation of the parameter defining the length of the computation period
-  if (is.infinite(period)) period = end - min_year + 1
+  if (is.infinite(period)) period = end - min_year + 1L
   else if (period < 1 || period > end - min_year + 1) {
     stop("period must be greater than 0",
          " and end - period + 1 must not be less than the year of the oldest transaction.")
   }
+  else period = as.integer(period)
   
   return(list(end = end, period = period))
 })
@@ -2227,7 +2229,7 @@ setMethod(f = "compute_xi_threshold",
           signature = "TransactionAnalyzer",
           definition =
 function(object, reporting_indexes) {
-   return(ceiling(1 / sum(reporting_indexes ^ 2)))
+   return(as.integer(ceiling(1 / sum(reporting_indexes ^ 2))))
 })
 
 
@@ -2441,7 +2443,7 @@ function(object, pc, identifiers = "original", sort = TRUE,
   
   # Assigning identifiers to patterns
   if (identifiers == "new") pc$ID = seq(nrow(pc))
-  else pc$ID = as.numeric(rownames(pc))
+  else pc$ID = as.integer(rownames(pc))
   
   # Chart plotting (in the active device or in a PDF file)
   if (!is.null(name)) {
@@ -3622,7 +3624,7 @@ function(object, tnpc, identifiers = "original",
                       max(tnpc$frequency) - tnpc$frequency), ]
     
     # Assigning identifiers to the itemsets
-    tnpc$ID = if (identifiers == "new") seq(nrow(tnpc)) else as.numeric(rownames(tnpc))
+    tnpc$ID = if (identifiers == "new") seq(nrow(tnpc)) else as.integer(rownames(tnpc))
     
     # Itemsets and separate items within the itemsets
     itemsets = tnpc$itemset
