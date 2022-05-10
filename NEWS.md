@@ -15,7 +15,7 @@
     - Attribute `patterns` and all methods returning a data frame of patterns: variable `year`.
     - Method `frequency_by_complexity` and variables `f.complex` and `f.simple` of the method `spectrum_chart`.
     - Variable `ID` of the methods `spectrum_chart` and `itemset_chart`.
-    
+* Class validation (for `TransactionSet` and `TransactionAnalyzer` objects) now goes through the whole process and returns all actual errors instead of being stopped if one is encountered.
 
 
 

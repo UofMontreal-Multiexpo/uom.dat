@@ -59,31 +59,46 @@ setClass(Class = "TransactionSet",
          ))
 
 # Validity
-setValidity(Class = "TransactionSet",
-            method = function(object) {
-              
-              if (length(object@data) != 0) {
-                type_of_data = unique(unlist(lapply(object@data, typeof)))
-                if (length(type_of_data) > 1 || type_of_data != "list")
-                  return("All elements of data must be lists.")
-                
-                names = unique(lapply(object@data, names))
-                if (length(names) != 1)
-                  return("All sub-elements of data must share the same names.")
-                
-                if (any(unlist(names) != object@names))
-                  return("names must be the names shared by the sub-elements of data.")
-              }
-              
-              if (length(object@item_key) != 1 || !is.element(object@item_key, object@names))
-                return("item_key must be one of the names of the sub-elements of data.")
-              
-              if (length(object@year_key) != 1 ||
-                  (!is.element(object@year_key, object@names) && !is.na(object@year_key)))
-                return("year_key must be one of the names of the sub-elements of data or NA.")
-              
-              return(TRUE)
-            })
+setValidity("TransactionSet", function(object) {
+  
+  # Errors that may be returned and booleans indicating which errors to actually return
+  errors = c(
+    E1 = "All elements of data must be lists.",
+    E2 = "All sub-elements of data must share the same names.",
+    E3 = "names must be the names shared by the sub-elements of data.",
+    E4 = "item_key must be one of the names of the sub-elements of data.",
+    E5 = "year_key must be one of the names of the sub-elements of data or NA."
+  )
+  is_relevant = rep(FALSE, length(errors))
+  
+  
+  ## Validation
+  
+  if (length(object@data) != 0) {
+    
+    type_of_data = unique(unlist(lapply(object@data, typeof)))
+    if (length(type_of_data) > 1 || type_of_data != "list") is_relevant[1] = TRUE
+    
+    names = unique(lapply(object@data, names))
+    if (length(names) != 1) is_relevant[2] = TRUE
+    
+    if (any(unlist(names) != object@names)) is_relevant[3] = TRUE
+  }
+  
+  if (length(object@item_key) != 1 || !is.element(object@item_key, object@names)) {
+    is_relevant[4] = TRUE
+  }
+  
+  if (length(object@year_key) != 1 ||
+      (!is.element(object@year_key, object@names) && !is.na(object@year_key))) {
+    is_relevant[5] = TRUE
+  }
+  
+  
+  # Return errors or TRUE
+  if (any(is_relevant)) return(errors[is_relevant])
+  return(TRUE)
+})
 
 # Initializer
 setMethod(f = "initialize",
