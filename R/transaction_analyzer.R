@@ -1561,7 +1561,7 @@ function(object) {
   nodes_df$length = sapply(nodes_df$node, length)
   nodes_df = nodes_df[, c("node", "length", "frequency")]
   
-  # Sort by decreasing length and weight then by alphanumeric order
+  # Sort by decreasing length and frequency then by alphanumeric order
   nodes_df = nodes_df[order(nodes_df$length,
                             nodes_df$frequency,
                             order(order(sapply(nodes_df$node, paste0, collapse = "/"), decreasing = TRUE)),
@@ -2056,7 +2056,7 @@ function(object, end, period) {
   max_year = as.numeric(rev(colnames(object@nodes_per_year))[1])
   min_year = as.numeric(colnames(object@nodes_per_year)[1])
   
-  # Validation of the parameter defining the ned of the perdio on which to perform the computations
+  # Validation of the parameter defining the end of the period on which to perform the computations
   if (is.null(end)) end = max_year
   else if (end > max_year || end < min_year) {
     stop("end must not be less than the year of the oldest transaction (", min_year, ")",
