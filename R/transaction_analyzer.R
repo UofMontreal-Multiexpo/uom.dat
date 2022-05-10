@@ -312,8 +312,8 @@ setMethod(f = "initialize",
             
             # Parameters for the search and characterization of patterns
             .Object@parameters = list(target = target,
-                                      count = as.integer(count),
-                                      min_length = as.integer(min_length),
+                                      count = count,
+                                      min_length = min_length,
                                       max_length = max_length,
                                       status_limit = status_limit)
             if (status_limit != 1 && length(unique(unlist(transactions[transactions@year_key]))) == 1) {
@@ -325,7 +325,9 @@ setMethod(f = "initialize",
             # Validation of the first attributes
             methods::validObject(.Object)
             
-            # Initialization of the remaining attributes
+            # Typecasting and initialization of the remaining attributes
+            .Object@parameters$count = as.integer(count)
+            .Object@parameters$min_length = as.integer(min_length)
             if (init) reset(.Object, from = 1, verbose = verbose)
             
             methods::validObject(.Object)
