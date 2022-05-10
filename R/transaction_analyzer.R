@@ -204,6 +204,8 @@ setClass(Class = "TransactionAnalyzer",
 setValidity("TransactionAnalyzer", function(object) {
   
   # Values that will be used to check the validity
+  parameters = c("target", "count", "min_length", "max_length", "status_limit")
+  target = c("frequent itemsets", "closed frequent itemsets", "maximally frequent itemsets")
   status = c(STATUS_PERSISTENT, STATUS_DECLINING, STATUS_EMERGENT, STATUS_LATENT)
   
   # Errors that may be returned and booleans indicating which errors to actually return
@@ -212,7 +214,8 @@ setValidity("TransactionAnalyzer", function(object) {
     E2  = "Given item identification codes must contain all those existing in the given transactions.",
     E3  = "Transactions must contain itemsets.",
     E4  = "Transactions must contain temporal data.",
-    E5  = "parameters must contain elements target, count, min_length, max_length and status_limit.",
+    E5  = paste0("parameters must contain elements ",
+                 paste(parameters[1:4], collapse = ", "), " and ", parameters[5], "."),
     
     E6  = "target must be a character value.",
     E7  = "count must be a numeric value.",
@@ -220,14 +223,15 @@ setValidity("TransactionAnalyzer", function(object) {
     E9  = "max_length must be a numeric value.",
     E10 = "status_limit must be a numeric value.",
     
-    E11 = "target must be one of \"frequent itemsets\", \"closed frequent itemsets\", \"maximally frequent itemsets\".",
+    E11 = paste0("target must be one of \"", paste(target, collapse = "\", \""), "\"."),
     E12 = "count must be greater than zero.",
     E13 = "min_length must be greater than zero.",
     E14 = "max_length must be greater than or equal to min_length.",
     E15 = "status_limit must be greater than zero.",
     
     E16 = "The categories associated with the items must be factor type.",
-    E17 = paste0("Names of status_colors must contain \"", paste(status[1:3], collapse = "\", \""), "\" and \"", status[4], "\".")
+    E17 = paste0("Names of status_colors must contain \"",
+                 paste(status[1:3], collapse = "\", \""), "\" and \"", status[4], "\".")
   )
   is_relevant = rep(FALSE, length(errors))
   
@@ -235,29 +239,27 @@ setValidity("TransactionAnalyzer", function(object) {
   ## Validation
   
   # Validation of the item coding system
-  if (any(grepl("/|,", object@items))) is_relevant[1] = TRUE
+  if (any(grepl("/|,", object@items)))                                        is_relevant[1] = TRUE
   if (length(setdiff(get_all_items(object@transactions), object@items)) != 0) is_relevant[2] = TRUE
   
   # Validation of the transaction set
-  if (length(object@transactions) == 0) is_relevant[3] = TRUE
+  if (length(object@transactions) == 0)        is_relevant[3] = TRUE
   if (!has_temporal_data(object@transactions)) is_relevant[4] = TRUE
   
   # Validation of the initialization parameters
-  if (!all(c("target", "count", "min_length", "max_length", "status_limit") %in% names(object@parameters)))
-    is_relevant[5] = TRUE
+  if (!all(parameters %in% names(object@parameters))) is_relevant[5] = TRUE
   
-  if (!is.character(object@parameters$target)) is_relevant[6] = TRUE
-  if (!is.numeric(object@parameters$count)) is_relevant[7] = TRUE
-  if (!is.numeric(object@parameters$min_length)) is_relevant[8] = TRUE
-  if (!is.numeric(object@parameters$max_length)) is_relevant[9] = TRUE
+  if (!is.character(object@parameters$target))     is_relevant[6] = TRUE
+  if (!is.numeric(object@parameters$count))        is_relevant[7] = TRUE
+  if (!is.numeric(object@parameters$min_length))   is_relevant[8] = TRUE
+  if (!is.numeric(object@parameters$max_length))   is_relevant[9] = TRUE
   if (!is.numeric(object@parameters$status_limit)) is_relevant[10] = TRUE
   
-  if (!(object@parameters$target %in% c("frequent itemsets", "closed frequent itemsets", "maximally frequent itemsets")))
-    is_relevant[11] = TRUE
-  if (object@parameters$count < 1) is_relevant[12] = TRUE
-  if (object@parameters$min_length < 1) is_relevant[13] = TRUE
+  if (!is.element(object@parameters$target, target))               is_relevant[11] = TRUE
+  if (object@parameters$count < 1)                                 is_relevant[12] = TRUE
+  if (object@parameters$min_length < 1)                            is_relevant[13] = TRUE
   if (object@parameters$max_length < object@parameters$min_length) is_relevant[14] = TRUE
-  if (object@parameters$status_limit < 1) is_relevant[15] = TRUE
+  if (object@parameters$status_limit < 1)                          is_relevant[15] = TRUE
   
   # Validation of the type of the categories associated with the items
   if (!all(sapply(seq_len(ncol(object@items_categories)),
