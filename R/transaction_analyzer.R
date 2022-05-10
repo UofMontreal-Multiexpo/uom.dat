@@ -2041,7 +2041,7 @@ function(object, patterns, frequencies, weights) {
 #' 
 #' @inheritParams compute_reporting_indexes,TransactionAnalyzer-method
 #' @param object S4 object of class \code{TransactionAnalyzer}.
-#' @return List containing the final values of \code{end} and \code{period}.
+#' @return Vector containing the final values of \code{end} and \code{period}.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{compute_reporting_indexes}}, \code{\link{compute_reporting_indexes_limits}}.
@@ -2072,7 +2072,7 @@ function(object, end, period) {
   }
   else period = as.integer(period)
   
-  return(list(end = end, period = period))
+  return(c(end = end, period = period))
 })
 
 
@@ -2120,10 +2120,10 @@ function(object, patterns, end = NULL, period = Inf) {
   
   # Adjusted parameter values
   params = check_RI_params(object, end, period)
-  t1 = params$end
+  t1 = params["end"]
   
   # Period start year = end year - number of years considered + 1
-  t0 = t1 - params$period + 1
+  t0 = t1 - params["period"] + 1
   
   # Frequency of the pattern over the period / sum of the frequencies of all patterns over the period
   p_frequencies = unname(apply(

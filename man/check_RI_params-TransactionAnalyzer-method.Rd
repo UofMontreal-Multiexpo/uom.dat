@@ -22,7 +22,7 @@ period [2011 - 2019].
 oldest transaction and ending in the year \code{end}.}
 }
 \value{
-List containing the final values of \code{end} and \code{period}.
+Vector containing the final values of \code{end} and \code{period}.
 }
 \description{
 Check the validity of the values of the parameters given for the computation of reporting indexes.
