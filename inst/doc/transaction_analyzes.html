@@ -597,8 +597,8 @@ List of parameters for pattern search and characterization:
 <code>target</code>: type of patterns to mine during the analysis.
 </li>
 <li>
-<code>count</code>: minimum number of occurrences that a pattern must
-appear to be kept when mining patterns.
+<code>min_frequency</code>: minimum number of occurrences that a pattern
+must appear to be kept when mining patterns.
 </li>
 <li>
 <code>min_length</code>: minimum number of items that a pattern must
@@ -891,8 +891,8 @@ described in <a href="#attributes">1.1.2. Attributes</a>:</p>
 <ul>
 <li><code>target</code>: type of patterns to mine during the
 analysis.</li>
-<li><code>count</code>: minimum number of occurrences that a pattern
-must appear to be kept when mining patterns.</li>
+<li><code>min_frequency</code>: minimum number of occurrences that a
+pattern must appear to be kept when mining patterns.</li>
 <li><code>min_length</code>: minimum number of items that a pattern must
 have to be kept when mining patterns.</li>
 <li><code>max_length</code>: maximum number of items that a pattern must
@@ -905,7 +905,7 @@ transactions (number of years).</li>
 <ul>
 <li><code>&quot;frequent itemsets&quot;</code>: itemsets appearing in the
 transactions according to an occurrence threshold (defined by the
-parameter <code>count</code>).</li>
+parameter <code>min_frequency</code>).</li>
 <li><code>&quot;closed frequent itemsets&quot;</code>: maximal itemsets of
 equivalence classes. An equivalence class is defined as the set of
 itemsets appearing in the same transactions.</li>
@@ -984,7 +984,7 @@ the datasets <code>oedb_sample</code> and
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>ta_object_1 <span class="ot">&lt;-</span> <span class="fu">transaction.analyzer</span>(trx_object,</span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>                                    items,</span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">target =</span> <span class="st">&quot;closed frequent itemsets&quot;</span>,</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">count =</span> <span class="dv">1</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">min_frequency =</span> <span class="dv">1</span>,</span>
 <span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">min_length =</span> <span class="dv">1</span>,</span>
 <span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">max_length =</span> <span class="cn">Inf</span>,</span>
 <span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">status_limit =</span> <span class="dv">2</span>)</span></code></pre></div>

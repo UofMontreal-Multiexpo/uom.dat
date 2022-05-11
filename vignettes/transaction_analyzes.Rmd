@@ -101,7 +101,7 @@ Each object of class `TransactionAnalyzer` has the following attributes.
     <td align="center">`list`</td>
     <td>List of parameters for pattern search and characterization:<ul>
       <li>`target`: type of patterns to mine during the analysis.</li>
-      <li>`count`: minimum number of occurrences that a pattern must appear to be kept when mining patterns.</li>
+      <li>`min_frequency`: minimum number of occurrences that a pattern must appear to be kept when mining patterns.</li>
       <li>`min_length`: minimum number of items that a pattern must have to be kept when mining patterns.</li>
       <li>`max_length`: maximum number of items that a pattern must have to be kept when mining patterns.</li>
       <li>`status_limit`: time interval for which to characterize the status of the patterns in relation to the total period of transactions (number of years).</li></ul></td>
@@ -218,14 +218,14 @@ While running the function `transaction.analyzer`, the items are automatically l
 The parameters for pattern search and characterization may be given as arguments unless considering default values. They are the same as described in [1.1.2. Attributes](#attributes):
 
 * `target`: type of patterns to mine during the analysis.
-* `count`: minimum number of occurrences that a pattern must appear to be kept when mining patterns.
+* `min_frequency`: minimum number of occurrences that a pattern must appear to be kept when mining patterns.
 * `min_length`: minimum number of items that a pattern must have to be kept when mining patterns.
 * `max_length`: maximum number of items that a pattern must have to be kept when mining patterns.
 * `status_limit`: time interval for which to characterize the status of the patterns in relation to the total period of transactions (number of years).
 
 The type of patterns mined (argument `target`) can be:
 
-* `"frequent itemsets"`: itemsets appearing in the transactions according to an occurrence threshold (defined by the parameter `count`).
+* `"frequent itemsets"`: itemsets appearing in the transactions according to an occurrence threshold (defined by the parameter `min_frequency`).
 * `"closed frequent itemsets"`: maximal itemsets of equivalence classes. An equivalence class is defined as the set of itemsets appearing in the same transactions.
 * `"maximally frequent itemsets"`: frequent itemsets which do not have any frequent superset. Also named as the maximals by inclusion of the frequent itemsets or the positive boundary of the frequent itemsets.
 
@@ -285,7 +285,7 @@ items <- data.frame(item = items_ids,
 ta_object_1 <- transaction.analyzer(trx_object,
                                     items,
                                     target = "closed frequent itemsets",
-                                    count = 1,
+                                    min_frequency = 1,
                                     min_length = 1,
                                     max_length = Inf,
                                     status_limit = 2)

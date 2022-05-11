@@ -38,7 +38,7 @@ items <- data.frame(item = items_ids,
 ta_object_1 <- transaction.analyzer(trx_object,
                                     items,
                                     target = "closed frequent itemsets",
-                                    count = 1,
+                                    min_frequency = 1,
                                     min_length = 1,
                                     max_length = Inf,
                                     status_limit = 2)

@@ -8,7 +8,7 @@ transaction.analyzer(
   transactions,
   items = NULL,
   target = "closed frequent itemsets",
-  count = 1,
+  min_frequency = 1,
   min_length = 1,
   max_length = Inf,
   status_limit = 2,
@@ -36,7 +36,8 @@ category is defined.}
 \item{target}{Type of patterns to mine. One of \code{"frequent itemsets"},
 \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"} (see 'Details').}
 
-\item{count}{Minimum number of occurrences that a pattern must appear to be considered as "frequent".}
+\item{min_frequency}{Minimum number of occurrences that a pattern must appear to be considered as
+frequent.}
 
 \item{min_length}{Minimum number of items that a pattern must have to be kept when mining patterns.}
 
@@ -66,7 +67,7 @@ If items are not specified using the argument \code{items}, they are automatical
 The type of patterns mined can be:
  \itemize{
    \item{\code{"frequent itemsets"}: itemsets appearing in the transactions according to an
-         occurrence threshold defined by the parameter \code{count}.}
+         occurrence threshold defined by the parameter \code{min_frequency}.}
    \item{\code{"closed frequent itemsets"}: maximal itemsets of equivalence classes. An equivalence
          class is defined as the set of itemsets appearing in the same transactions.}
    \item{\code{"maximally frequent itemsets"}: frequent itemsets which do not have any frequent

@@ -8,7 +8,7 @@
 \S4method{list_separate_patterns}{TransactionAnalyzer}(
   object,
   target,
-  count = 1,
+  min_frequency = 1,
   min_length = 1,
   max_length = Inf,
   arules = FALSE
@@ -20,7 +20,7 @@
 \item{target}{Type of patterns to enumerate. One of \code{"frequent itemsets"},
 \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.}
 
-\item{count}{Minimum number of occurrences of a pattern to be considered as frequent.}
+\item{min_frequency}{Minimum number of occurrences of a pattern to be considered as frequent.}
 
 \item{min_length}{Minimum number of items that a pattern must have to be kept when mining patterns.}
 

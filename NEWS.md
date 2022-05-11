@@ -3,6 +3,7 @@
 ## Major changes
 
 * Column `"count"` of association rule data frames has been renamed to `"frequency"` for consistency with nodes and patterns.
+* Parameter `count` of `TransactionAnalyzer` has been renamed `min_frequency` for overall consistency. This concerns both the object attribute and the constructor argument (function `transaction.analyzer`).
 
 ## New features
 

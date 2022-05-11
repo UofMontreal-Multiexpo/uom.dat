@@ -37,7 +37,7 @@ TA_instance[1]
 TA_instance["target"]
 
 TA_instance["target"] <- "maximally frequent itemsets"
-TA_instance["count"] <- 2
+TA_instance["min_frequency"] <- 2
 TA_instance["max_length"] <- 3
 
 }

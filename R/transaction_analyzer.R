@@ -102,8 +102,8 @@ PATTERN_LINKS = "pattern_links"
 #' @slot parameters List of parameters for pattern search and characterization:
 #'  \describe{
 #'    \item{\code{target}}{Type of patterns to mine during the analysis.}
-#'    \item{\code{count}}{Minimum number of occurrences that a pattern must appear to be kept when
-#'                        mining patterns.}
+#'    \item{\code{min_frequency}}{Minimum number of occurrences that a pattern must appear to be kept
+#'                                when mining patterns.}
 #'    \item{\code{min_length}}{Minimum number of items that a pattern must have to be kept when mining
 #'                             patterns.}
 #'    \item{\code{max_length}}{Maximum number of items that a pattern must have to be kept when mining
@@ -204,7 +204,7 @@ setClass(Class = "TransactionAnalyzer",
 setValidity("TransactionAnalyzer", function(object) {
   
   # Values that will be used to check the validity
-  parameters = c("target", "count", "min_length", "max_length", "status_limit")
+  parameters = c("target", "min_frequency", "min_length", "max_length", "status_limit")
   target = c("frequent itemsets", "closed frequent itemsets", "maximally frequent itemsets")
   status = c(STATUS_PERSISTENT, STATUS_DECLINING, STATUS_EMERGENT, STATUS_LATENT)
   
@@ -218,13 +218,13 @@ setValidity("TransactionAnalyzer", function(object) {
                  paste(parameters[1:4], collapse = ", "), " and ", parameters[5], "."),
     
     E6  = "target must be a character value.",
-    E7  = "count must be a numeric value.",
+    E7  = "min_frequency must be a numeric value.",
     E8  = "min_length must be a numeric value.",
     E9  = "max_length must be a numeric value.",
     E10 = "status_limit must be a numeric value.",
     
     E11 = paste0("target must be one of \"", paste(target, collapse = "\", \""), "\"."),
-    E12 = "count must be greater than zero.",
+    E12 = "min_frequency must be greater than zero.",
     E13 = "min_length must be greater than zero.",
     E14 = "max_length must be greater than or equal to min_length.",
     E15 = "status_limit must be greater than zero.",
@@ -249,14 +249,14 @@ setValidity("TransactionAnalyzer", function(object) {
   # Validation of the initialization parameters
   if (!all(parameters %in% names(object@parameters))) is_relevant[5] = TRUE
   
-  if (!is.character(object@parameters$target))     is_relevant[6] = TRUE
-  if (!is.numeric(object@parameters$count))        is_relevant[7] = TRUE
-  if (!is.numeric(object@parameters$min_length))   is_relevant[8] = TRUE
-  if (!is.numeric(object@parameters$max_length))   is_relevant[9] = TRUE
-  if (!is.numeric(object@parameters$status_limit)) is_relevant[10] = TRUE
+  if (!is.character(object@parameters$target))      is_relevant[6] = TRUE
+  if (!is.numeric(object@parameters$min_frequency)) is_relevant[7] = TRUE
+  if (!is.numeric(object@parameters$min_length))    is_relevant[8] = TRUE
+  if (!is.numeric(object@parameters$max_length))    is_relevant[9] = TRUE
+  if (!is.numeric(object@parameters$status_limit))  is_relevant[10] = TRUE
   
   if (!is.element(object@parameters$target, target))               is_relevant[11] = TRUE
-  if (object@parameters$count < 1)                                 is_relevant[12] = TRUE
+  if (object@parameters$min_frequency < 1)                         is_relevant[12] = TRUE
   if (object@parameters$min_length < 1)                            is_relevant[13] = TRUE
   if (object@parameters$max_length < object@parameters$min_length) is_relevant[14] = TRUE
   if (object@parameters$status_limit < 1)                          is_relevant[15] = TRUE
@@ -280,7 +280,7 @@ setValidity("TransactionAnalyzer", function(object) {
 setMethod(f = "initialize",
           signature = "TransactionAnalyzer",
           definition = function(.Object, transactions, items,
-                                target, count, min_length, max_length, status_limit,
+                                target, min_frequency, min_length, max_length, status_limit,
                                 init, verbose) {
             
             .Object@transactions = transactions
@@ -312,7 +312,7 @@ setMethod(f = "initialize",
             
             # Parameters for the search and characterization of patterns
             .Object@parameters = list(target = target,
-                                      count = count,
+                                      min_frequency = min_frequency,
                                       min_length = min_length,
                                       max_length = max_length,
                                       status_limit = status_limit)
@@ -326,7 +326,7 @@ setMethod(f = "initialize",
             methods::validObject(.Object)
             
             # Typecasting and initialization of the remaining attributes
-            .Object@parameters$count = as.integer(count)
+            .Object@parameters$min_frequency = as.integer(min_frequency)
             .Object@parameters$min_length = as.integer(min_length)
             if (init) reset(.Object, from = 1, verbose = verbose)
             
@@ -346,7 +346,7 @@ setMethod(f = "initialize",
 #' The type of patterns mined can be:
 #'  \itemize{
 #'    \item{\code{"frequent itemsets"}: itemsets appearing in the transactions according to an
-#'          occurrence threshold defined by the parameter \code{count}.}
+#'          occurrence threshold defined by the parameter \code{min_frequency}.}
 #'    \item{\code{"closed frequent itemsets"}: maximal itemsets of equivalence classes. An equivalence
 #'          class is defined as the set of itemsets appearing in the same transactions.}
 #'    \item{\code{"maximally frequent itemsets"}: frequent itemsets which do not have any frequent
@@ -405,7 +405,8 @@ setMethod(f = "initialize",
 #'  category is defined.
 #' @param target Type of patterns to mine. One of \code{"frequent itemsets"},
 #'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"} (see 'Details').
-#' @param count Minimum number of occurrences that a pattern must appear to be considered as "frequent".
+#' @param min_frequency Minimum number of occurrences that a pattern must appear to be considered as
+#'  frequent.
 #' @param min_length Minimum number of items that a pattern must have to be kept when mining patterns.
 #' @param max_length Maximum number of items that a pattern must have to be kept when mining patterns.
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
@@ -451,13 +452,13 @@ setMethod(f = "initialize",
 #' 
 #' @export
 transaction.analyzer = function(transactions, items = NULL, target = "closed frequent itemsets",
-                                count = 1, min_length = 1, max_length = Inf, status_limit = 2,
+                                min_frequency = 1, min_length = 1, max_length = Inf, status_limit = 2,
                                 init = TRUE, verbose = TRUE) {
   
   return(methods::new(Class = "TransactionAnalyzer",
                       transactions = transactions, items = items,
-                      target = target, count = count, min_length = min_length, max_length = max_length,
-                      status_limit = status_limit,
+                      target = target, min_frequency = min_frequency, min_length = min_length,
+                      max_length = max_length, status_limit = status_limit,
                       init = init, verbose = verbose))
 }
 
@@ -548,12 +549,14 @@ function(x, ...) {
                         pluralize("link", numbers["pattern_links"]))
       }
       
-      to_show = paste0(to_show,
-                       "\n  ", std_numbers[" "], " ", cap(x@parameters$target),
-                       "\n  ", std_numbers[" "], " Minimum frequency parameter: ", x@parameters$count,
-                       "\n  ", std_numbers[" "], " Length in ", interval(1, Inf),
-                       "\n  ", std_numbers[" "], " Status characterization over ",
-                       x@parameters$status_limit, pluralize(" year", x@parameters$status_limit))
+      to_show = paste0(
+        to_show,
+        "\n  ", std_numbers[" "], " ", cap(x@parameters$target),
+        "\n  ", std_numbers[" "], " Minimum frequency parameter: ", x@parameters$min_frequency,
+        "\n  ", std_numbers[" "], " Length in ", interval(1, Inf),
+        "\n  ", std_numbers[" "], " Status characterization over ",
+        x@parameters$status_limit, pluralize(" year", x@parameters$status_limit)
+      )
     }
   }
   
@@ -668,7 +671,7 @@ setMethod(f = "[",
                    
                    "parameters"        = { return(x@parameters) },
                    "target"            = { return(x@parameters$target) },
-                   "count"             = { return(x@parameters$count) },
+                   "min_frequency"     = { return(x@parameters$min_frequency) },
                    "min_length"        = { return(x@parameters$min_length) },
                    "max_length"        = { return(x@parameters$max_length) },
                    "status_limit"      = { return(x@parameters$status_limit) },
@@ -692,7 +695,7 @@ setMethod(f = "[",
 #' 
 #' @examples
 #' TA_instance["target"] <- "maximally frequent itemsets"
-#' TA_instance["count"] <- 2
+#' TA_instance["min_frequency"] <- 2
 #' TA_instance["max_length"] <- 3
 #' 
 #' @aliases [<-,TransactionAnalyzer-method
@@ -709,7 +712,7 @@ setReplaceMethod(f = "[",
                           
                           "parameters"        = { x@parameters = value },
                           "target"            = { x@parameters$target = value },
-                          "count"             = { x@parameters$count = value },
+                          "min_frequency"     = { x@parameters$min_frequency = value },
                           "min_length"        = { x@parameters$min_length = value },
                           "max_length"        = { x@parameters$max_length = value },
                           "status_limit"      = { x@parameters$status_limit = value },
@@ -780,7 +783,7 @@ setGeneric(name = "search_links", def = function(object, entities){ standardGene
 
 # Computation methods used for the construction of the patterns
 
-setGeneric(name = "list_separate_patterns", def = function(object, target, count = 1, min_length = 1, max_length = Inf, arules = FALSE){ standardGeneric("list_separate_patterns") })
+setGeneric(name = "list_separate_patterns", def = function(object, target, min_frequency = 1, min_length = 1, max_length = Inf, arules = FALSE){ standardGeneric("list_separate_patterns") })
 
 setGeneric(name = "list_patterns_by_node", def = function(object){ standardGeneric("list_patterns_by_node") })
 
@@ -974,7 +977,7 @@ function(object, from = 1, verbose = TRUE) {
     
     # Initialization of the attributes required for the creation of a spectrum
     "\n*** Step 05/10: Mining for itemsets... ",
-    expression(  list_separate_patterns(object, object@parameters$target, object@parameters$count,
+    expression(  list_separate_patterns(object, object@parameters$target, object@parameters$min_frequency,
                                         object@parameters$min_length, object@parameters$max_length)  ),
     "\n*** Step 06/10: Linking nodes to patterns... ",
     expression(  list_patterns_by_node(object)  ),
@@ -1215,7 +1218,7 @@ function(object, verbose = TRUE) {
     cat("*** Step P.1/4: Mining for itemsets... ")
     display_time(arules_p <- list_separate_patterns(object,
                                                     object@parameters$target,
-                                                    object@parameters$count,
+                                                    object@parameters$min_frequency,
                                                     object@parameters$min_length,
                                                     object@parameters$max_length,
                                                     arules = TRUE))
@@ -1232,7 +1235,7 @@ function(object, verbose = TRUE) {
   } else {
     arules_p = list_separate_patterns(object,
                                       object@parameters$target,
-                                      object@parameters$count,
+                                      object@parameters$min_frequency,
                                       object@parameters$min_length,
                                       object@parameters$max_length,
                                       arules = TRUE)
@@ -1790,7 +1793,7 @@ function(object, entities) {
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param target Type of patterns to enumerate. One of \code{"frequent itemsets"},
 #'  \code{"closed frequent itemsets"}, \code{"maximally frequent itemsets"}.
-#' @param count Minimum number of occurrences of a pattern to be considered as frequent.
+#' @param min_frequency Minimum number of occurrences of a pattern to be considered as frequent.
 #' @param min_length Minimum number of items that a pattern must have to be kept when mining patterns.
 #' @param max_length Maximum number of items that a pattern must have to be kept when mining patterns.
 #'  The default \code{Inf} corresponds to a pattern search without maximum size limit.
@@ -1806,7 +1809,7 @@ function(object, entities) {
 setMethod(f = "list_separate_patterns",
           signature = "TransactionAnalyzer",
           definition =
-function(object, target, count = 1, min_length = 1, max_length = Inf, arules = FALSE) {
+function(object, target, min_frequency = 1, min_length = 1, max_length = Inf, arules = FALSE) {
   
   # Name of the object for internal modification in the parent environment
   object_name = deparse(substitute(object))
@@ -1816,7 +1819,7 @@ function(object, target, count = 1, min_length = 1, max_length = Inf, arules = F
   transact = methods::as(object@transactions, "transactions")
   
   # Mining for itemsets
-  params = list(supp   = count / dim(transact)[1],
+  params = list(supp   = min_frequency / dim(transact)[1],
                 minlen = min_length,
                 maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length),
                 target = target)

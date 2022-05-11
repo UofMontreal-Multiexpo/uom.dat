@@ -41,8 +41,8 @@ for each category.}
 \item{\code{parameters}}{List of parameters for pattern search and characterization:
 \describe{
   \item{\code{target}}{Type of patterns to mine during the analysis.}
-  \item{\code{count}}{Minimum number of occurrences that a pattern must appear to be kept when
-                      mining patterns.}
+  \item{\code{min_frequency}}{Minimum number of occurrences that a pattern must appear to be kept
+                              when mining patterns.}
   \item{\code{min_length}}{Minimum number of items that a pattern must have to be kept when mining
                            patterns.}
   \item{\code{max_length}}{Maximum number of items that a pattern must have to be kept when mining
