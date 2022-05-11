@@ -1,5 +1,5 @@
 ## Preparation of the 'TA_instance' dataset.
-## The associated help page need to be updated if the code here is updated.
+## The associated help page needs to be updated if the code here is changed.
 ## 
 ## Required datasets: - oedb_sample
 ##                    - substances_information
