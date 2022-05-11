@@ -4252,6 +4252,10 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
   colnames(rules_df)[c(1,2)] = c("antecedent", "consequent")
   rownames(rules_df) = NULL
   rules_df[, " "] = "=>"
+  
+  # Renaming the column "count" if exists
+  colnames(rules_df)[colnames(rules_df) == "count"] = "frequency"
+  
   return(rules_df[, c(1, ncol(rules_df), seq(2, ncol(rules_df)-1))])
 })
 
@@ -4487,7 +4491,7 @@ function(object, rules = NULL, items = NULL,
     if (is.null(rules)) {
       rules = data.frame(character(0), character(0), character(0),
                          numeric(0), numeric(0), numeric(0), integer(0))
-      colnames(rules) = c("antecedent", " ", "consequent", "support", "confidence", "lift", "count")
+      colnames(rules) = c("antecedent", " ", "consequent", "support", "confidence", "lift", "frequency")
     }
   } else {
     # Items present in the rules given before removal of those of size 2

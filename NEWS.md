@@ -1,5 +1,9 @@
 # uom.dat 0.1.0.9000 (development version)
 
+## Major changes
+
+* Column `"count"` of association rule data frames has been renamed to `"frequency"` for consistency with nodes and patterns.
+
 ## New features
 
 * Pattern supports are now computed and added to pattern data frames as another characteristic.
