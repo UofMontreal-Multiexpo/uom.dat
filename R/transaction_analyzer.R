@@ -4256,10 +4256,23 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
   rownames(rules_df) = NULL
   rules_df[, " "] = "=>"
   
-  # Renaming the column "count" if exists
-  colnames(rules_df)[colnames(rules_df) == "count"] = "frequency"
+  # Renaming the column "count" to "frequency" if exists or compute frequencies; and reorder columns
+  if ("count" %in% colnames(rules_df)) {
+    colnames(rules_df)[colnames(rules_df) == "count"] = "frequency"
+    rules_df = rules_df[, c(1,
+                            ncol(rules_df),
+                            seq(2, ncol(rules_df) - 1))]
+    
+  } else {
+    rules_df$frequency = as.integer(round(rules_df$support * dim(transact)[1]))
+    rules_df = rules_df[, c(1,
+                            ncol(rules_df) - 1,
+                            seq(2, ncol(rules_df) - 3),
+                            ncol(rules_df),
+                            ncol(rules_df) - 2)]
+  }
   
-  return(rules_df[, c(1, ncol(rules_df), seq(2, ncol(rules_df)-1))])
+  return(rules_df)
 })
 
 

@@ -334,7 +334,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Transaction analyzes</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2022-05-11</h4>
+<h4 class="date">Last update: 2022-05-12</h4>
 
 
 <div id="TOC">
@@ -3832,15 +3832,16 @@ defining the minimum confidence rules must have to be extracted (default
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">extract_rules</span>(TA_instance,</span>
 <span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">itemsets =</span> <span class="st">&quot;patterns&quot;</span>)</span></code></pre></div>
 <div class="kable-table">
-<table style="width:100%;">
+<table>
 <colgroup>
-<col width="47%" />
-<col width="3%" />
-<col width="11%" />
+<col width="42%" />
+<col width="2%" />
 <col width="10%" />
-<col width="11%" />
+<col width="9%" />
 <col width="10%" />
-<col width="8%" />
+<col width="9%" />
+<col width="9%" />
+<col width="7%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -3850,6 +3851,7 @@ defining the minimum confidence rules must have to be extracted (default
 <th align="right">support</th>
 <th align="right">confidence</th>
 <th align="right">lift</th>
+<th align="right">frequency</th>
 <th align="right">itemset</th>
 </tr>
 </thead>
@@ -3861,6 +3863,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.2142857</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">3</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
@@ -3870,6 +3873,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.2142857</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">3</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
@@ -3879,6 +3883,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">2</td>
 <td align="right">6</td>
 </tr>
 <tr class="even">
@@ -3888,6 +3893,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">2</td>
 <td align="right">6</td>
 </tr>
 <tr class="odd">
@@ -3897,6 +3903,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">2</td>
 <td align="right">6</td>
 </tr>
 <tr class="even">
@@ -3906,6 +3913,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">2</td>
 <td align="right">7</td>
 </tr>
 <tr class="odd">
@@ -3915,6 +3923,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">2</td>
 <td align="right">7</td>
 </tr>
 <tr class="even">
@@ -3924,6 +3933,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">2</td>
 <td align="right">7</td>
 </tr>
 <tr class="odd">
@@ -3933,6 +3943,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">2</td>
 <td align="right">7</td>
 </tr>
 <tr class="even">
@@ -3942,6 +3953,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">2.800000</td>
+<td align="right">2</td>
 <td align="right">8</td>
 </tr>
 <tr class="odd">
@@ -3951,6 +3963,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">2</td>
 <td align="right">9</td>
 </tr>
 <tr class="even">
@@ -3960,6 +3973,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">2</td>
 <td align="right">9</td>
 </tr>
 <tr class="odd">
@@ -3969,6 +3983,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">1</td>
 <td align="right">12</td>
 </tr>
 <tr class="even">
@@ -3978,6 +3993,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">13</td>
 </tr>
 <tr class="odd">
@@ -3987,6 +4003,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">13</td>
 </tr>
 <tr class="even">
@@ -3996,6 +4013,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">14</td>
 </tr>
 <tr class="odd">
@@ -4005,6 +4023,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">14</td>
 </tr>
 <tr class="even">
@@ -4014,6 +4033,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">14</td>
 </tr>
 <tr class="odd">
@@ -4023,6 +4043,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">15</td>
 </tr>
 <tr class="even">
@@ -4032,6 +4053,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">15</td>
 </tr>
 <tr class="odd">
@@ -4041,6 +4063,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">15</td>
 </tr>
 <tr class="even">
@@ -4050,6 +4073,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">16</td>
 </tr>
 <tr class="odd">
@@ -4059,6 +4083,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">1</td>
 <td align="right">16</td>
 </tr>
 <tr class="even">
@@ -4068,6 +4093,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">16</td>
 </tr>
 <tr class="odd">
@@ -4077,6 +4103,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">2.800000</td>
+<td align="right">1</td>
 <td align="right">16</td>
 </tr>
 <tr class="even">
@@ -4086,6 +4113,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">16</td>
 </tr>
 <tr class="odd">
@@ -4095,6 +4123,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">17</td>
 </tr>
 <tr class="even">
@@ -4104,6 +4133,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">17</td>
 </tr>
 <tr class="odd">
@@ -4113,6 +4143,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">17</td>
 </tr>
 <tr class="even">
@@ -4122,6 +4153,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">1</td>
 <td align="right">17</td>
 </tr>
 <tr class="odd">
@@ -4131,6 +4163,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">18</td>
 </tr>
 <tr class="even">
@@ -4140,6 +4173,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">18</td>
 </tr>
 <tr class="odd">
@@ -4149,6 +4183,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">18</td>
 </tr>
 <tr class="even">
@@ -4158,6 +4193,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">1</td>
 <td align="right">18</td>
 </tr>
 <tr class="odd">
@@ -4167,6 +4203,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">18</td>
 </tr>
 <tr class="even">
@@ -4176,6 +4213,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">18</td>
 </tr>
 <tr class="odd">
@@ -4185,6 +4223,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">18</td>
 </tr>
 <tr class="even">
@@ -4194,6 +4233,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">2.800000</td>
+<td align="right">1</td>
 <td align="right">18</td>
 </tr>
 <tr class="odd">
@@ -4203,6 +4243,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">14.000000</td>
+<td align="right">1</td>
 <td align="right">18</td>
 </tr>
 <tr class="even">
@@ -4212,6 +4253,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">19</td>
 </tr>
 <tr class="odd">
@@ -4221,6 +4263,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">19</td>
 </tr>
 <tr class="even">
@@ -4230,6 +4273,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">1</td>
 <td align="right">19</td>
 </tr>
 <tr class="odd">
@@ -4239,6 +4283,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.0714286</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">1</td>
 <td align="right">19</td>
 </tr>
 </tbody>
@@ -4250,7 +4295,17 @@ defining the minimum confidence rules must have to be extracted (default
 <span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>                                          <span class="fu">c</span>(<span class="st">&quot;25&quot;</span>, <span class="st">&quot;192&quot;</span>, <span class="st">&quot;328&quot;</span>)))</span>
 <span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>rules_2a</span></code></pre></div>
 <div class="kable-table">
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="15%" />
+<col width="4%" />
+<col width="15%" />
+<col width="13%" />
+<col width="15%" />
+<col width="12%" />
+<col width="13%" />
+<col width="10%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">antecedent</th>
@@ -4259,6 +4314,7 @@ defining the minimum confidence rules must have to be extracted (default
 <th align="right">support</th>
 <th align="right">confidence</th>
 <th align="right">lift</th>
+<th align="right">frequency</th>
 <th align="right">itemset</th>
 </tr>
 </thead>
@@ -4270,6 +4326,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.2142857</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">3</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
@@ -4279,6 +4336,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.2142857</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">3</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
@@ -4289,6 +4347,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">1</td>
 <td align="right">4.666667</td>
 <td align="right">2</td>
+<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="left">25 , 328</td>
@@ -4298,6 +4357,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">1</td>
 <td align="right">7.000000</td>
 <td align="right">2</td>
+<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="left">25 , 192</td>
@@ -4306,6 +4366,7 @@ defining the minimum confidence rules must have to be extracted (default
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">2</td>
 <td align="right">2</td>
 </tr>
 </tbody>
@@ -4424,7 +4485,17 @@ mathematical set notation.</p>
 <span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">as_sets =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>rules_2b</span></code></pre></div>
 <div class="kable-table">
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="15%" />
+<col width="4%" />
+<col width="15%" />
+<col width="13%" />
+<col width="15%" />
+<col width="12%" />
+<col width="13%" />
+<col width="10%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">antecedent</th>
@@ -4433,6 +4504,7 @@ mathematical set notation.</p>
 <th align="right">support</th>
 <th align="right">confidence</th>
 <th align="right">lift</th>
+<th align="right">frequency</th>
 <th align="right">itemset</th>
 </tr>
 </thead>
@@ -4444,6 +4516,7 @@ mathematical set notation.</p>
 <td align="right">0.2142857</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">3</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
@@ -4453,6 +4526,7 @@ mathematical set notation.</p>
 <td align="right">0.2142857</td>
 <td align="right">1</td>
 <td align="right">4.666667</td>
+<td align="right">3</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
@@ -4463,6 +4537,7 @@ mathematical set notation.</p>
 <td align="right">1</td>
 <td align="right">4.666667</td>
 <td align="right">2</td>
+<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="left">{25,328}</td>
@@ -4472,6 +4547,7 @@ mathematical set notation.</p>
 <td align="right">1</td>
 <td align="right">7.000000</td>
 <td align="right">2</td>
+<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="left">{25,192}</td>
@@ -4480,6 +4556,7 @@ mathematical set notation.</p>
 <td align="right">0.1428571</td>
 <td align="right">1</td>
 <td align="right">7.000000</td>
+<td align="right">2</td>
 <td align="right">2</td>
 </tr>
 </tbody>

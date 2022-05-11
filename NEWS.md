@@ -8,6 +8,7 @@
 ## New features
 
 * Pattern supports are now computed and added to pattern data frames as another characteristic.
+* Association rule frequencies are now also computed and added to rule data frames when specific itemsets are given for association rule extraction.
 
 ## Minor changes
 
