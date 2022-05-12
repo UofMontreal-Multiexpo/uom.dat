@@ -4105,11 +4105,15 @@ function(object, items = object["items"], category = NULL,
 #'  
 #' Support and confidence indices measure the strength of a rule.
 #'  A rule can be said to be \strong{valid} if its confidence and its support are greater than two
-#'  chosen thresholds. A rule is said to be \strong{exact} if its confidence is \eqn{1}, otherwise the
-#'  rule is \strong{partial}.
+#'  chosen thresholds. Defining minimum support \eqn{s} and confidence \eqn{c} means that the
+#'  union of items in the antecedent and consequent of rules must be present in a minimum of \eqn{s}\%
+#'  of transactions and at least \eqn{c}\% of transactions must satisfy the antecedent. A rule is said
+#'  to be \strong{exact} if its confidence is \eqn{1}, otherwise the rule is \strong{partial}.
+#' 
 #' The lift measures the importance of a rule. A lift greater than \eqn{1} reflects a positive
 #'  correlation between the presences of \eqn{X} and \eqn{Y}, and therefore the significant nature of
 #'  the association.
+#' 
 #' The direction of the rule (i.e. \mjeqn{X \rightarrow Y}{X -> Y} or \mjeqn{Y \rightarrow X}{Y -> X})
 #'  does not impact the support and the lift but does impact the confidence.
 #' 
@@ -4130,9 +4134,6 @@ function(object, items = object["items"], category = NULL,
 #'  These arguments allow to specify minimum confidence (default \code{0.8}) and some
 #'  operating parameters of the rule extraction algorithm.
 #' 
-#' Defining minimum support \eqn{s} and confidence \eqn{c} means that the union of items in the
-#'  antecedent and consequent of rules must be present in a minimum of \eqn{s}\% of transactions
-#'  and at least \eqn{c}\% of transactions must satisfy the antecedent.
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param itemsets If not \code{NULL}, character or list of itemsets for which to extract the

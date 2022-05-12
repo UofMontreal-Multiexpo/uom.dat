@@ -815,9 +815,9 @@ Support and confidence indices measure the strength of a rule. A rule can be sai
 
 The lift measures the importance of a rule. A lift greater than $1$ reflects a positive correlation between the presences of $X$ and $Y$, and therefore the significant nature of the association.
 
-A rule is redundant if a more general rule with the same or higher confidence exists. A rule is more general if it has the same consequent but one or more items removed from the antecedent. In other words, having inferred a dependency $X \rightarrow Y$, any other dependency of the form $X \cup A \rightarrow Y$ is considered redundant.
-
 The direction of the rule (i.e. $X \rightarrow Y$ or its reciprocal $Y \rightarrow X$) does not impact the support and the lift but does impact the confidence.
+
+A rule is redundant if a more general rule with the same or higher confidence exists. A rule is more general if it has the same consequent but one or more items removed from the antecedent. In other words, having inferred a dependency $X \rightarrow Y$, any other dependency of the form $X \cup A \rightarrow Y$ is considered redundant.
 
 
 ## 3.2. Extract association rules

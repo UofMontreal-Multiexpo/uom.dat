@@ -3393,16 +3393,16 @@ the rule is <strong>partial</strong>.</p>
 <p>The lift measures the importance of a rule. A lift greater than <span class="math inline">\(1\)</span> reflects a positive correlation between
 the presences of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, and therefore the significant nature
 of the association.</p>
+<p>The direction of the rule (i.e. <span class="math inline">\(X
+\rightarrow Y\)</span> or its reciprocal <span class="math inline">\(Y
+\rightarrow X\)</span>) does not impact the support and the lift but
+does impact the confidence.</p>
 <p>A rule is redundant if a more general rule with the same or higher
 confidence exists. A rule is more general if it has the same consequent
 but one or more items removed from the antecedent. In other words,
 having inferred a dependency <span class="math inline">\(X \rightarrow
 Y\)</span>, any other dependency of the form <span class="math inline">\(X \cup A \rightarrow Y\)</span> is considered
 redundant.</p>
-<p>The direction of the rule (i.e. <span class="math inline">\(X
-\rightarrow Y\)</span> or its reciprocal <span class="math inline">\(Y
-\rightarrow X\)</span>) does not impact the support and the lift but
-does impact the confidence.</p>
 </div>
 <div id="extract-association-rules" class="section level2">
 <h2>3.2. Extract association rules</h2>
