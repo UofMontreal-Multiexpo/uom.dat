@@ -4097,10 +4097,10 @@ function(object, items = object["items"], category = NULL,
 #'    \item{The \strong{support}: support of the itemset \mjeqn{X \cup Y}{X union Y}, i.e. the
 #'          proportion of transactions containing \mjeqn{X \cup Y}{X union Y} among all transactions.}
 #'    \item{The \strong{confidence}: quotient of the support of \mjeqn{X \cup Y}{X union Y} and the
-#'          support of \eqn{X}, i.e. the proportion of transactions in which the rule is correct
+#'          support of \eqn{X}, i.e. the number of transactions in which the rule is correct
 #'          relative to the number of transactions containing the antecedent \eqn{X}.}
 #'    \item{The \strong{lift}: quotient of the confidence of \mjeqn{X \rightarrow Y}{X -> Y} and the
-#'          support of \eqn{Y}.}
+#'          support of the consequent \eqn{Y}.}
 #'  }
 #'  
 #' Support and confidence indices measure the strength of a rule.
@@ -4157,8 +4157,8 @@ function(object, items = object["items"], category = NULL,
 #' @return Data frame or object of class \code{rules} (according to the argument \code{arules})
 #'  containing the extracted rules and their characteristics.
 #'  
-#'  If \code{itemsets} is not \code{NULL}, the column \code{"itemset"} refers to the index of the
-#'  one from which the rule was generated in the list of patterns (if \code{from = "patterns"})
+#'  If \code{itemsets} is not \code{NULL}, the additional column \code{"itemset"} refers to the index
+#'  of the one from which the rule was generated in the list of patterns (if \code{from = "patterns"})
 #'  or in the given list (otherwise).
 #' 
 #' @author Gauthier Magnin

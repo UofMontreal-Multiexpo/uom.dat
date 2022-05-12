@@ -26,6 +26,7 @@
     - Documentation of the methods `itemset_chart` and `get_trx_from_category` of the class `TransactionAnalyzer` have been corrected.
     - The returns of methods that were supposed to be of type `integer` instead of `numeric` have been changed.
     - Mentions of the method `frequency_by_node_commplexity` have been replaced by `frequency_by_complexity`.
+* The description of the confidence of an association rule has been corrected (in the help page and the vignette).
 
 
 

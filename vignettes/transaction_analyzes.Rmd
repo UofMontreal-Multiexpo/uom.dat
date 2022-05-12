@@ -808,8 +808,8 @@ The data frame of links also containing isolated entities, the new ones can be i
 An **association rule** is an implication of presence between two disjoint itemsets. For two itemsets denoted $X$ and $Y$, an association rule of the form $X \rightarrow Y$ refers to the presence of the itemset $Y$ (the consequent) considering the presence of $X$ (the antecedent). An association rule is characterized by the following indicators.
 
 * The **support**: support of the itemset $X \cup Y$, i.e. the proportion of transactions containing $X \cup Y$ among all transactions.
-* The **confidence**: quotient of the support of $X \cup Y$ and the support of $X$, i.e. the proportion of transactions in which the rule is correct relative to the number of transactions containing the antecedent $X$.
-* The **lift**: quotient of the confidence of $X \rightarrow Y$ and the support of $Y$.
+* The **confidence**: quotient of the support of $X \cup Y$ and the support of $X$, i.e. the number of transactions in which the rule is correct relative to the number of transactions containing the antecedent $X$.
+* The **lift**: quotient of the confidence of $X \rightarrow Y$ and the support of the consequent $Y$.
 
 Support and confidence indices measure the strength of a rule. A rule can be said to be **valid** if its confidence and its support are greater than two chosen thresholds. Defining minimum support $s$ and confidence $c$ means that the union of items in the antecedent and consequent must be present in a minimum of $s\%$ of transactions and at least $c\%$ of transactions must satisfy the antecedent. A rule is said to be **exact** if its confidence is equal to $1$, otherwise the rule is **partial**.
 
