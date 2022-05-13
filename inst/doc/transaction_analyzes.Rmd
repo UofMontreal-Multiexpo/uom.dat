@@ -935,7 +935,8 @@ extract_rules(TA_instance,
               more = TRUE)[, -c(6, 7)]
 ```
 
-### 3.2.4. Further interpretations
+
+## 3.3. Further interpretations
 
 #### Confidence
 
@@ -981,7 +982,7 @@ as.data.frame(
 ```
 
 
-## 3.3. Itemset notations
+## 3.4. Itemset notations
 
 One more argument of the method `extract_rules` changes the notation of the itemsets corresponding to the antecedents and the consequents in the result. If this argument `as_sets` is `FALSE`, the itemsets are returned in simple vector notation. If it is `TRUE`, they are returned as factors using the mathematical set notation.
 
