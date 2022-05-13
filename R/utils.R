@@ -1,7 +1,7 @@
 
 #### Utility functions for display ####
 
-#' Decomposition of a time
+#' Time conversion
 #' 
 #' Convert a period defined in seconds to a character string.
 #' Examples of the format of the returned string: 1d 02h 25m 47s; 01m 05s; 19s.

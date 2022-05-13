@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{dhms}
 \alias{dhms}
-\title{Decomposition of a time}
+\title{Time conversion}
 \usage{
 dhms(t)
 }

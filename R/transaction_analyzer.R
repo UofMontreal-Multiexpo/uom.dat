@@ -1541,7 +1541,7 @@ function(object) {
   nodes_df = as.data.frame(table(trx_df), stringsAsFactors = FALSE)
   nodes_mat = with(nodes_df, tapply(Freq, list(node, year), sum))
   
-  # Redecomposition of the items composing each node to be able to calculate their lengths
+  # Splitting back the items composing each node to be able to calculate their lengths
   nodes = strsplit(rownames(nodes_mat), split = "/")
   
   # Sort by decreasing length and total frequency then by alphanumeric order
