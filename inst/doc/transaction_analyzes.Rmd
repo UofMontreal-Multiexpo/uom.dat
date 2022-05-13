@@ -2084,7 +2084,7 @@ rules_chart(TA_instance,
 
 ## 5.1. Computations on patterns
 
-### 5.1.1. Frequency decomposition
+### 5.1.1. Frequency distribution
 
 The method `frequency_by_complexity` counts for each pattern the numbers of complex transactions and simple transactions containing it. The two arguments are a `TransactionAnalyzer` object and a list of pattern itemsets for which to decompose the frequencies between complex and simple transactions (i.e. transactions having more than one and exactly one item).
 
