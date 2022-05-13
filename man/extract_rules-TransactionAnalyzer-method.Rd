@@ -11,6 +11,7 @@
   pruning = FALSE,
   arules = FALSE,
   as_sets = FALSE,
+  more = FALSE,
   ...
 )
 }
@@ -39,6 +40,9 @@ are defined).}
 vectors. If \code{TRUE}, they will be factors written in mathematical notation (i.e. set notation).
 Ignored if \code{arules} is \code{TRUE}.}
 
+\item{more}{\code{TRUE} or \code{FALSE} whether to compute additional indicators associated with the
+rules. Ignored if \code{arules} is \code{TRUE}. See 'Details'.}
+
 \item{...}{Additional arguments to configure the extraction. See 'Details'.}
 }
 \value{
@@ -64,8 +68,11 @@ Only creates rules with one item in the consequent. The reason is detailed on
  cost.}" \cr
  "\emph{There is no true benefit.}"
 
+\subsection{Main characteristics and redundancy}{
+
 \loadmathjax
-The characteristics of an association rule of the form \mjeqn{X \rightarrow Y}{X -> Y} are:
+The main characteristics of an association rule of the form \mjeqn{X \rightarrow Y}{X -> Y} are
+ the following.
  \itemize{
    \item{The \strong{support}: support of the itemset \mjeqn{X \cup Y}{X union Y}, i.e. the
          proportion of transactions containing \mjeqn{X \cup Y}{X union Y} among all transactions.}
@@ -75,7 +82,7 @@ The characteristics of an association rule of the form \mjeqn{X \rightarrow Y}{X
    \item{The \strong{lift}: quotient of the confidence of \mjeqn{X \rightarrow Y}{X -> Y} and the
          support of the consequent \eqn{Y}.}
  }
- 
+
 Support and confidence indices measure the strength of a rule.
  A rule can be said to be \strong{valid} if its confidence and its support are greater than two
  chosen thresholds. Defining minimum support \eqn{s} and confidence \eqn{c} means that the
@@ -94,6 +101,24 @@ A rule is redundant if a more general rule with the same or higher confidence ex
  general if it has the same consequent but one or more items removed from the antecedent. In other
  words, having inferred a dependency \mjeqn{X \rightarrow Y}{X -> Y}, any other dependency of the
  form \mjeqn{X \cup A \rightarrow Y}{X union A -> Y} is considered redundant.
+}
+
+\subsection{Additional indicators}{
+
+Considering the notation \mjeqn{\overline{X}}{not X} denoting any itemset not containing \eqn{X},
+ the computed additional indocators associated with an association rule of the form
+ \mjeqn{X \rightarrow Y}{X -> Y} are the following.
+ \itemize{
+   \item{The \strong{specificity}: confidence of the rule
+         \mjeqn{\overline{X} \rightarrow \overline{Y}}{not X -> not Y}.}
+   \item{The \strong{accuracy}: sum of the support of the itemset \mjeqn{X \cup Y}{X union Y} and
+         the support of \mjeqn{\overline{X \cup Y}}{not(X union Y)}.}
+   \item{The \strong{added value}: difference between the confidence of the rule
+         \mjeqn{X \rightarrow Y}{X -> Y} and the support of the consequent \eqn{Y}.}
+ }
+}
+
+\subsection{Additional arguments}{
 
 If \code{itemsets = NULL}, additional arguments are \code{parameter}, \code{appearance} and
  \code{control} of function \code{\link[arules:apriori]{apriori}} from the package \code{arules}.
@@ -106,6 +131,7 @@ If \code{itemsets} is \code{"patterns"} or a list, additional arguments are \cod
  \code{\link[arules:ruleInduction]{ruleInduction}} from the package \code{arules}.
  These arguments allow to specify minimum confidence (default \code{0.8}) and some
  operating parameters of the rule extraction algorithm.
+}
 }
 \examples{
 ## Basic rule extraction

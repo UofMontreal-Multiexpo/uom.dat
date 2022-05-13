@@ -344,6 +344,14 @@ extract_rules(TA_instance,
               itemsets = list(c("328", "3180")))
 
 ## -----------------------------------------------------------------------------
+# Exclusion of certain columns not related to the additional indicators for
+# the readability of the example
+extract_rules(TA_instance,
+              itemsets = list(c("931", "3180"),
+                              c("25", "192", "328")),
+              more = TRUE)[, -c(6, 7)]
+
+## -----------------------------------------------------------------------------
 cat("Confidence of the rule '192 => 328':", rules_1[1, "confidence"])
 
 ## -----------------------------------------------------------------------------

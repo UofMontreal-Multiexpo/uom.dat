@@ -839,7 +839,9 @@ setGeneric(name = "category_tree_chart", def = function(object, category = NULL,
 
 # Methods for association rule extraction and visualization
 
-setGeneric(name = "extract_rules", def = function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...){ standardGeneric("extract_rules") })
+setGeneric(name = "extract_rules", def = function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FALSE, more = FALSE, ...){ standardGeneric("extract_rules") })
+
+setGeneric(name = "compute_additional_rule_indicators", def = function(object, rules, transactions = NULL){ standardGeneric("compute_additional_rule_indicators") })
 
 setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameter = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, direction = FALSE, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1, plot = FALSE){ standardGeneric("rules_chart") })
 
@@ -4091,8 +4093,11 @@ function(object, items = object["items"], category = NULL,
 #'  cost.}" \cr
 #'  "\emph{There is no true benefit.}"
 #' 
+#' \subsection{Main characteristics and redundancy}{
+#' 
 #' \loadmathjax
-#' The characteristics of an association rule of the form \mjeqn{X \rightarrow Y}{X -> Y} are:
+#' The main characteristics of an association rule of the form \mjeqn{X \rightarrow Y}{X -> Y} are
+#'  the following.
 #'  \itemize{
 #'    \item{The \strong{support}: support of the itemset \mjeqn{X \cup Y}{X union Y}, i.e. the
 #'          proportion of transactions containing \mjeqn{X \cup Y}{X union Y} among all transactions.}
@@ -4102,7 +4107,7 @@ function(object, items = object["items"], category = NULL,
 #'    \item{The \strong{lift}: quotient of the confidence of \mjeqn{X \rightarrow Y}{X -> Y} and the
 #'          support of the consequent \eqn{Y}.}
 #'  }
-#'  
+#' 
 #' Support and confidence indices measure the strength of a rule.
 #'  A rule can be said to be \strong{valid} if its confidence and its support are greater than two
 #'  chosen thresholds. Defining minimum support \eqn{s} and confidence \eqn{c} means that the
@@ -4121,6 +4126,24 @@ function(object, items = object["items"], category = NULL,
 #'  general if it has the same consequent but one or more items removed from the antecedent. In other
 #'  words, having inferred a dependency \mjeqn{X \rightarrow Y}{X -> Y}, any other dependency of the
 #'  form \mjeqn{X \cup A \rightarrow Y}{X union A -> Y} is considered redundant.
+#' }
+#' 
+#' \subsection{Additional indicators}{
+#' 
+#' Considering the notation \mjeqn{\overline{X}}{not X} denoting any itemset not containing \eqn{X},
+#'  the computed additional indicators associated with an association rule of the form
+#'  \mjeqn{X \rightarrow Y}{X -> Y} are the following.
+#'  \itemize{
+#'    \item{The \strong{specificity}: confidence of the rule
+#'          \mjeqn{\overline{X} \rightarrow \overline{Y}}{not X -> not Y}.}
+#'    \item{The \strong{accuracy}: sum of the support of the itemset \mjeqn{X \cup Y}{X union Y} and
+#'          the support of \mjeqn{\overline{X \cup Y}}{not(X union Y)}.}
+#'    \item{The \strong{added value}: difference between the confidence of the rule
+#'          \mjeqn{X \rightarrow Y}{X -> Y} and the support of the consequent \eqn{Y}.}
+#'  }
+#' }
+#' 
+#' \subsection{Additional arguments}{
 #' 
 #' If \code{itemsets = NULL}, additional arguments are \code{parameter}, \code{appearance} and
 #'  \code{control} of function \code{\link[arules:apriori]{apriori}} from the package \code{arules}.
@@ -4133,7 +4156,7 @@ function(object, items = object["items"], category = NULL,
 #'  \code{\link[arules:ruleInduction]{ruleInduction}} from the package \code{arules}.
 #'  These arguments allow to specify minimum confidence (default \code{0.8}) and some
 #'  operating parameters of the rule extraction algorithm.
-#' 
+#' }
 #' 
 #' @param object S4 object of class \code{TransactionAnalyzer}.
 #' @param itemsets If not \code{NULL}, character or list of itemsets for which to extract the
@@ -4154,6 +4177,8 @@ function(object, items = object["items"], category = NULL,
 #' @param as_sets If \code{FALSE}, antecedents and consequents of the returned rules will be character
 #'  vectors. If \code{TRUE}, they will be factors written in mathematical notation (i.e. set notation).
 #'  Ignored if \code{arules} is \code{TRUE}.
+#' @param more \code{TRUE} or \code{FALSE} whether to compute additional indicators associated with the
+#'  rules. Ignored if \code{arules} is \code{TRUE}. See 'Details'.
 #' @param ... Additional arguments to configure the extraction. See 'Details'.
 #' @return Data frame or object of class \code{rules} (according to the argument \code{arules})
 #'  containing the extracted rules and their characteristics.
@@ -4194,7 +4219,8 @@ function(object, items = object["items"], category = NULL,
 setMethod(f = "extract_rules",
           signature = "TransactionAnalyzer",
           definition =
-function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FALSE, ...) {
+function(object, itemsets = NULL, pruning = FALSE, arules = FALSE,
+         as_sets = FALSE, more = FALSE, ...) {
   
   # Validation of the parameter for choosing the itemsets from which to extract the rules
   if ((!is.null(itemsets) && !is.character(itemsets) && !is.list(itemsets))
@@ -4273,7 +4299,70 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE, as_sets = FAL
                             ncol(rules_df) - 2)]
   }
   
+  # Compute additional indicators
+  if (more) {
+    rules_df = cbind(rules_df, compute_additional_rule_indicators(object, rules, transact))
+    itemset_col = which(colnames(rules_df) == "itemset")
+    rules_df = rules_df[, c(setdiff(seq_len(ncol(rules_df)), itemset_col), itemset_col)]
+  }
+  
   return(rules_df)
+})
+
+
+#' Computation of indicators relating to association rules
+#' 
+#' Compute indicators relating to association rules excluding the main ones (which are support,
+#'  confidence and lift). Compute the specificity, accuracy and added value of each given rule.
+#' 
+#' @details
+#' \loadmathjax
+#' Considering the notation \mjeqn{\overline{X}}{not X} denoting any itemset not containing \eqn{X},
+#'  the computed indicators of an association rule of the form \mjeqn{X \rightarrow Y}{X -> Y} are:
+#'  * The **specificity**: confidence of the rule
+#'    \mjeqn{\overline{X} \rightarrow \overline{Y}}{not X -> not Y}.
+#'  * The **accuracy**: sum of the support of the itemset \mjeqn{X \cup Y}{X union Y} and the
+#'    support of \mjeqn{\overline{X \cup Y}}{not(X union Y)}.
+#'  * The **added value**: difference between the confidence of the rule \mjeqn{X \rightarrow Y}{X -> Y}
+#'    and the support of the consequent \eqn{Y}.
+#' 
+#' As a reminder, the support and the confidence of \mjeqn{X \rightarrow Y}{X -> Y} are defined as
+#'  follows.
+#'  * The **support** of the rule is the support of the itemset \mjeqn{X \cup Y}{X union Y}, i.e. the
+#'    proportion of transactions containing \mjeqn{X \cup Y}{X union Y} among all transactions.
+#'  * The **confidence** of the rule is the quotient of the support of \mjeqn{X \cup Y}{X union Y} and
+#'    the support of \eqn{X}, i.e. the number of transactions in which the rule is correct
+#'    relative to the number of transactions containing the antecedent \eqn{X}.
+#' 
+#' @template method_not_exported
+#' 
+#' @param object S4 object of class `TransactionAnalyzer`.
+#' @param rules Object of class `rules` containing the rules whose indicators are to be computed.
+#' @param transactions Object of class `transactions` used to generate `rules`. Needed if the `rules`
+#'  were generated using the `arules` function `ruleInduction` and not `apriori`.
+#' @return Matrix in which each column is one indicator and rows match the association rules.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`extract_rules`], [`arules::rules`][arules::rules-class],
+#'  [`arules::transactions`][arules::transactions-class].
+#' @aliases compute_additional_rule_indicators
+#' @md
+#' @keywords internal
+setMethod(f = "compute_additional_rule_indicators",
+          signature = "TransactionAnalyzer",
+          definition =
+function(object, rules, transactions = NULL) {
+  
+  measures = arules::interestMeasure(rules, c("table", "addedValue"), transactions)
+  
+  return(matrix(
+    c(
+      measures$table.n00 / (measures$table.n00 + measures$table.n01),   # Specificity
+      (measures$table.n11 + measures$table.n00) / dim(transactions)[1], # Accuracy
+      measures$addedValue                                               # Added value
+    ),
+    ncol = 3, byrow = FALSE, dimnames = list(NULL, c("specificity", "accuracy", "added.value"))
+  ))
 })
 
 
