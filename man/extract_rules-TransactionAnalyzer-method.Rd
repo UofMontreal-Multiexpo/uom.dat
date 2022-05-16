@@ -106,7 +106,7 @@ A rule is redundant if a more general rule with the same or higher confidence ex
 \subsection{Additional indicators}{
 
 Considering the notation \mjeqn{\overline{X}}{not X} denoting any itemset not containing \eqn{X},
- the computed additional indocators associated with an association rule of the form
+ the computed additional indicators associated with an association rule of the form
  \mjeqn{X \rightarrow Y}{X -> Y} are the following.
  \itemize{
    \item{The \strong{specificity}: confidence of the rule

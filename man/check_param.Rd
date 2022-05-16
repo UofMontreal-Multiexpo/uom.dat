@@ -22,7 +22,7 @@ check_param(
 
 \item{values}{Values among which \code{x} must be.}
 
-\item{range}{Two-element numeric vector. Range in which \code{x} must be. Ignored if \code{values} is not \code{NULL}.}
+\item{range}{Length-two numeric vector. Range in which \code{x} must be. Ignored if \code{values} is not \code{NULL}.}
 
 \item{quotes}{If \code{TRUE}, surround in quotes the possible values in the error message.}
 

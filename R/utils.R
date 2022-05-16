@@ -379,7 +379,7 @@ is_named = function(x) {
 #' @param x Parameter to validate.
 #' @param types Types among which `x` must be.
 #' @param values Values among which `x` must be.
-#' @param range Two-element numeric vector. Range in which `x` must be. Ignored if `values` is not `NULL`.
+#' @param range Length-two numeric vector. Range in which `x` must be. Ignored if `values` is not `NULL`.
 #' @param quotes If `TRUE`, surround in quotes the possible values in the error message.
 #' @param stop If `TRUE`, stop the execution and print an error message if the parameter is not valid.
 #'  If `FALSE`, see 'Value' section.
