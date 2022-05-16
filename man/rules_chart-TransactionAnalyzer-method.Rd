@@ -11,7 +11,7 @@
   items = NULL,
   parameter = list(supp = 0.001, conf = 0),
   display = "highest confidence",
-  threshold = 0,
+  threshold = NULL,
   direction = FALSE,
   use_names = TRUE,
   n.cutoff = NULL,
@@ -46,28 +46,39 @@ those present in the given or extracted rules. Any subset of \code{object["items
 association rules to extract. Ignored if \code{rules} is not \code{NULL}. See
 \link[arules:ASparameter-classes]{APparameter} for more.}
 
-\item{display}{Rule characteristic to visualize or to use to choose between one rule and its reciprocal.
-One of \code{"support"}, \code{"lift"}, \code{"highest confidence"}, \code{"lowest confidence"}, \code{"confidence"},
-\code{"supp"}, \code{"hi.conf"}, \code{"lo.conf"}, \code{"conf"}.
+\item{display}{Rule characteristic to visualize. One of the following.
 \describe{
-\item{\code{"support"}, \code{"supp"}}{The support of the two rules existing between two items is represented.}
-\item{\code{"lift"}}{The lift of the two rules existing between two items is represented.}
-\item{\code{"highest confidence"}, \code{"hi.conf"}}{The confidence of the rule having the highest one
-between the two rules existing between two items is represented.}
-\item{\code{"lowest confidence"}, \code{"lo.conf"}}{The confidence of the rule having the lowest one
-between the two rules existing between two items is represented.}
-\item{\code{"confidence"}, \code{"conf"}}{The two confidence values of the two rules existing between two
+\item{\code{"support"} (or \code{"supp"})}{The support of the two rules existing between two items is
+represented.}
+\item{\code{"confidence"} or (\code{"conf"})}{The two confidence values of the two rules existing between two
 items are both represented.}
+\item{\code{"lift"}}{The lift of the two rules existing between two items is represented.}
+\item{\code{"specificity"} (or \code{"spec"})}{The two specifity values of the two rules existing between two
+items are both represented.}
+\item{\code{"accuracy"} (or \code{"accu"})}{The accuracy of the two rules existing between two items is
+represented.}
+\item{\code{"added.value"} (or \code{"adva"})}{The two added values of the two rules existing between two
+items are both represented.}
+}
+For the confidence, the specificy and the added value, this can be preceded by \code{"highest "} or by
+\code{"lowest "} to choose between visualizing a rule or its reciprocal instead of visualizing the two
+rules.
+\describe{
+\item{\code{"highest "} (or \code{"hi."})}{Only the rule having the highest value of the choosen
+characteristic is represented among the two rules existing between two items.}
+\item{\code{"lowest "} (or \code{"lo."})}{Only the rule having the lowest value of the choosen
+characteristic is represented among the two rules existing between two items.}
 }}
 
 \item{threshold}{Threshold from which the characteristic referred by \code{display} must be for a rule to
 be considered.}
 
-\item{direction}{Ignored if \code{display} does not refer to highest or lowest confidence.
+\item{direction}{Ignored if \code{display} does not refer to highest or lowest values.
 If \code{FALSE}, the opacity of the edges representing the rules is set by the argument \code{edge_alpha}.
 If \code{TRUE}, the opacity increases gradually according to the direction of the rule represented.
-Always \code{FALSE} if \code{display} refers to the support or the lift. Always \code{TRUE} if
-\code{display = "confidence"} (or \code{"conf"}).}
+Always \code{FALSE} if \code{display} refers to the support, the lift or the accuracy. Always \code{TRUE} if
+\code{display} refers to the confidence, the specificity or the added value without referring to highest
+or lowest values.}
 
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}
@@ -99,18 +110,22 @@ The closer the value is to 0, the straighter the lines will be.
 The closer the value is to 1, the more the lines will be curved.}
 
 \item{edge_alpha}{Opacity of the lines connecting vertices (from 0 to 1).
-Ignored if \code{display} refers to the confidence and \code{direction} is \code{TRUE}.}
+Ignored if \code{display} refers to the confidence, the specificity or the added value and \code{direction}
+is \code{TRUE}.}
 
 \item{palette}{Name of the palette to use for coloring the edges.
 
-If \code{display} refers to the confidence, one of \code{"category10"}, \code{"red"}, \code{"pink"},
+If \code{display} refers to the confidence or the specificity, one of \code{"category10"}, \code{"red"}, \code{"pink"},
 \code{"purple"}, \code{"deep-purple"}, \code{"indigo"}, \code{"blue"}, \code{"light-blue"}, \code{"cyan"}, \code{"teal"}, \code{"green"},
 \code{"light-green"}, \code{"lime"}, \code{"yellow"}, \code{"amber"}, \code{"orange"}, \code{"deep-orange"}, \code{"brown"}, \code{"grey"},
 \code{"blue-grey"}. Default is \code{"blue"}.
 
-If \code{display} refers to the support or the lift, one of \code{"Blues"}, \code{"BuGn"}, \code{"BuPu"}, \code{"GnBu"},
-\code{"Greens"}, \code{"Greys"}, \code{"Oranges"}, \code{"OrRd"}, \code{"PuBu"}, \code{"PuBuGn"}, \code{"PuRd"}, \code{"Purples"}, \code{"RdPu"},
-\code{"Reds"}, \code{"YlGn"}, \code{"YlGnBu"}, \code{"YlOrBr"}, \code{"YlOrRd"}. Default is \code{"Blues"}.}
+If \code{display} refers to the added value, one of \code{"Spectral"}, \code{"RdYlGn"}, \code{"RdYlBu"}, \code{"RdGy"},
+\code{"RdBu"}, \code{"PuOr"}, \code{"PRGn"}, \code{"PiYG"}, \code{"BrBG"}. Default is \code{"RdBu"}.
+
+If \code{display} refers to the support, the lift or the accuracy, one of \code{"Blues"}, \code{"BuGn"}, \code{"BuPu"},
+\code{"GnBu"}, \code{"Greens"}, \code{"Greys"}, \code{"Oranges"}, \code{"OrRd"}, \code{"PuBu"}, \code{"PuBuGn"}, \code{"PuRd"}, \code{"Purples"},
+\code{"RdPu"}, \code{"Reds"}, \code{"YlGn"}, \code{"YlGnBu"}, \code{"YlOrBr"}, \code{"YlOrRd"}. Default is \code{"Blues"}.}
 
 \item{palette_direction}{Direction in which to use the color palette.
 If \code{1}, colors are in original order: from the lightest to the darkest.
@@ -132,11 +147,12 @@ an item and the consequent is another item.
 \details{
 \loadmathjax
 For an association rule \mjeqn{X \rightarrow Y}{X -> Y}, the reciprocal rule is the rule
-\mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support and lift but may have two
-different confidence values.
+\mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support, lift and accuracy but may
+have two different confidence, specificity and added values.
 
-If \code{display} refers to the selection of rules of highest or lowest confidence and if an association
-rule and its reciprocal have the same confidence, both rules are represented.
+If \code{display} refers to the selection of rules having the highest or lowest specified characteristic
+and if an association rule and its reciprocal have the same value for this characteristic, both
+rules are represented.
 
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
@@ -159,10 +175,10 @@ See attribute \code{categories_colors} of the \code{TransactionAnalyzer} object 
 category values.
 }
 \note{
-If using the RStudio IDE and if the arguments \code{display} refers to the characteristic confidence and
-\code{direction} is \code{TRUE}, edges may not be displayed in the RStudio "Plots" pane. However, they will
-be actually displayed in the "Plot Zoom" window; while exporting the plot; or by using another
-graphics device.
+If using the RStudio IDE and if the argument \code{display} refers to the confidence, the specificity or
+the added value and \code{direction} is \code{TRUE}, edges may not be displayed in the RStudio "Plots" pane.
+However, they will be actually displayed in the "Plot Zoom" window; while exporting the plot; or by
+using another graphics device.
 Moreover, such plotting may take a while.
 }
 \examples{

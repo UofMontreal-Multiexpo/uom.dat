@@ -843,7 +843,7 @@ setGeneric(name = "extract_rules", def = function(object, itemsets = NULL, pruni
 
 setGeneric(name = "compute_additional_rule_indicators", def = function(object, rules, transactions = NULL){ standardGeneric("compute_additional_rule_indicators") })
 
-setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameter = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = 0, direction = FALSE, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1, plot = FALSE){ standardGeneric("rules_chart") })
+setGeneric(name = "rules_chart", def = function(object, rules = NULL, items = NULL, parameter = list(supp = 0.001, conf = 0), display = "highest confidence", threshold = NULL, direction = FALSE, use_names = TRUE, n.cutoff = NULL, category = NULL, c.cutoff = NULL, sort_by = "category", vertex_size = 3, vertex_alpha = 1, vertex_margin = 0.05, label_size = 3, label_margin = 0.05, edge_looseness = 0.8, edge_alpha = 1, palette = "default", palette_direction = 1, plot = FALSE){ standardGeneric("rules_chart") })
 
 
 # Methods for search and save
@@ -4374,11 +4374,12 @@ function(object, rules, transactions = NULL) {
 #' @details
 #' \loadmathjax
 #' For an association rule \mjeqn{X \rightarrow Y}{X -> Y}, the reciprocal rule is the rule
-#'  \mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support and lift but may have two
-#'  different confidence values.
+#'  \mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support, lift and accuracy but may
+#'  have two different confidence, specificity and added values.
 #' 
-#' If `display` refers to the selection of rules of highest or lowest confidence and if an association
-#'  rule and its reciprocal have the same confidence, both rules are represented.
+#' If `display` refers to the selection of rules having the highest or lowest specified characteristic
+#'  and if an association rule and its reciprocal have the same value for this characteristic, both
+#'  rules are represented.
 #' 
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
@@ -4396,10 +4397,10 @@ function(object, rules, transactions = NULL) {
 #' @template default_category_values_colors
 #' 
 #' @note
-#' If using the RStudio IDE and if the arguments `display` refers to the characteristic confidence and
-#'  `direction` is `TRUE`, edges may not be displayed in the RStudio "Plots" pane. However, they will
-#'  be actually displayed in the "Plot Zoom" window; while exporting the plot; or by using another
-#'  graphics device.
+#' If using the RStudio IDE and if the argument `display` refers to the confidence, the specificity or
+#'  the added value and `direction` is `TRUE`, edges may not be displayed in the RStudio "Plots" pane.
+#'  However, they will be actually displayed in the "Plot Zoom" window; while exporting the plot; or by
+#'  using another graphics device.
 #' Moreover, such plotting may take a while.
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
@@ -4413,26 +4414,37 @@ function(object, rules, transactions = NULL) {
 #' @param parameter List of mining parameters specifying minimum support and minimum confidence of
 #'  association rules to extract. Ignored if `rules` is not `NULL`. See
 #'  [APparameter][arules::APparameter] for more.
-#' @param display Rule characteristic to visualize or to use to choose between one rule and its reciprocal.
-#'  One of `"support"`, `"lift"`, `"highest confidence"`, `"lowest confidence"`, `"confidence"`,
-#'  `"supp"`, `"hi.conf"`, `"lo.conf"`, `"conf"`.
+#' @param display Rule characteristic to visualize. One of the following.
 #'  \describe{
-#'    \item{`"support"`, `"supp"`}{The support of the two rules existing between two items is represented.}
-#'    \item{`"lift"`}{The lift of the two rules existing between two items is represented.}
-#'    \item{`"highest confidence"`, `"hi.conf"`}{The confidence of the rule having the highest one
-#'          between the two rules existing between two items is represented.}
-#'    \item{`"lowest confidence"`, `"lo.conf"`}{The confidence of the rule having the lowest one
-#'          between the two rules existing between two items is represented.}
-#'    \item{`"confidence"`, `"conf"`}{The two confidence values of the two rules existing between two
+#'    \item{`"support"` (or `"supp"`)}{The support of the two rules existing between two items is
+#'          represented.}
+#'    \item{`"confidence"` or (`"conf"`)}{The two confidence values of the two rules existing between two
 #'          items are both represented.}
+#'    \item{`"lift"`}{The lift of the two rules existing between two items is represented.}
+#'    \item{`"specificity"` (or `"spec"`)}{The two specifity values of the two rules existing between two
+#'          items are both represented.}
+#'    \item{`"accuracy"` (or `"accu"`)}{The accuracy of the two rules existing between two items is
+#'          represented.}
+#'    \item{`"added.value"` (or `"adva"`)}{The two added values of the two rules existing between two
+#'          items are both represented.}
+#'  }
+#'  For the confidence, the specificy and the added value, this can be preceded by `"highest "` or by
+#'  `"lowest "` to choose between visualizing a rule or its reciprocal instead of visualizing the two
+#'  rules.
+#'  \describe{
+#'    \item{`"highest "` (or `"hi."`)}{Only the rule having the highest value of the choosen
+#'          characteristic is represented among the two rules existing between two items.}
+#'    \item{`"lowest "` (or `"lo."`)}{Only the rule having the lowest value of the choosen
+#'          characteristic is represented among the two rules existing between two items.}
 #'  }
 #' @param threshold Threshold from which the characteristic referred by `display` must be for a rule to
 #'  be considered.
-#' @param direction Ignored if `display` does not refer to highest or lowest confidence.
+#' @param direction Ignored if `display` does not refer to highest or lowest values.
 #'  If `FALSE`, the opacity of the edges representing the rules is set by the argument `edge_alpha`.
 #'  If `TRUE`, the opacity increases gradually according to the direction of the rule represented.
-#'  Always `FALSE` if `display` refers to the support or the lift. Always `TRUE` if
-#'  `display = "confidence"` (or `"conf"`).
+#'  Always `FALSE` if `display` refers to the support, the lift or the accuracy. Always `TRUE` if
+#'  `display` refers to the confidence, the specificity or the added value without referring to highest
+#'  or lowest values.
 #' @param use_names If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
@@ -4452,18 +4464,22 @@ function(object, rules, transactions = NULL) {
 #'  The closer the value is to 0, the straighter the lines will be.
 #'  The closer the value is to 1, the more the lines will be curved.
 #' @param edge_alpha Opacity of the lines connecting vertices (from 0 to 1).
-#'  Ignored if `display` refers to the confidence and `direction` is `TRUE`.
+#'  Ignored if `display` refers to the confidence, the specificity or the added value and `direction`
+#'  is `TRUE`.
 #' @param palette
 #'  Name of the palette to use for coloring the edges.
 #'  
-#'  If `display` refers to the confidence, one of `"category10"`, `"red"`, `"pink"`,
+#'  If `display` refers to the confidence or the specificity, one of `"category10"`, `"red"`, `"pink"`,
 #'  `"purple"`, `"deep-purple"`, `"indigo"`, `"blue"`, `"light-blue"`, `"cyan"`, `"teal"`, `"green"`,
 #'  `"light-green"`, `"lime"`, `"yellow"`, `"amber"`, `"orange"`, `"deep-orange"`, `"brown"`, `"grey"`,
 #'  `"blue-grey"`. Default is `"blue"`.
 #'  
-#'  If `display` refers to the support or the lift, one of `"Blues"`, `"BuGn"`, `"BuPu"`, `"GnBu"`,
-#'  `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`, `"PuBu"`, `"PuBuGn"`, `"PuRd"`, `"Purples"`, `"RdPu"`,
-#'  `"Reds"`, `"YlGn"`, `"YlGnBu"`, `"YlOrBr"`, `"YlOrRd"`. Default is `"Blues"`.
+#'  If `display` refers to the added value, one of `"Spectral"`, `"RdYlGn"`, `"RdYlBu"`, `"RdGy"`,
+#'  `"RdBu"`, `"PuOr"`, `"PRGn"`, `"PiYG"`, `"BrBG"`. Default is `"RdBu"`.
+#'  
+#'  If `display` refers to the support, the lift or the accuracy, one of `"Blues"`, `"BuGn"`, `"BuPu"`,
+#'  `"GnBu"`, `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`, `"PuBu"`, `"PuBuGn"`, `"PuRd"`, `"Purples"`,
+#'  `"RdPu"`, `"Reds"`, `"YlGn"`, `"YlGnBu"`, `"YlOrBr"`, `"YlOrRd"`. Default is `"Blues"`.
 #' @param palette_direction Direction in which to use the color palette.
 #'  If `1`, colors are in original order: from the lightest to the darkest.
 #'  If `-1`, color order is reversed: from the darkest to the lightest.
@@ -4514,7 +4530,7 @@ setMethod(f = "rules_chart",
           definition =
 function(object, rules = NULL, items = NULL,
          parameter = list(supp = 0.001, conf = 0),
-         display = "highest confidence", threshold = 0, direction = FALSE,
+         display = "highest confidence", threshold = NULL, direction = FALSE,
          use_names = TRUE, n.cutoff = NULL,
          category = NULL, c.cutoff = NULL,
          sort_by = "category",
@@ -4524,7 +4540,7 @@ function(object, rules = NULL, items = NULL,
          palette = "default", palette_direction = 1,
          plot = FALSE) {
   
-  # Conversion of factor in rules to character if needed
+  # Conversion of factor values in rules to character values
   a_factor = FALSE
   c_factor = FALSE
   if (!is.null(rules)) {
@@ -4541,7 +4557,7 @@ function(object, rules = NULL, items = NULL,
   
   ## Validation of the parameters
   
-  # Validation of the items provided
+  # Validation of the provided items
   if (!is.null(items)) items = get_items(object, items)
   
   # Validation of the provided rule search parameters
@@ -4555,31 +4571,61 @@ function(object, rules = NULL, items = NULL,
   check_param(sort_by, values = c("category", "item"))
   if (is.null(category) && sort_by == "category") sort_by = "item"
   
-  # Validation of the parameter for choosing the characteristic to display
-  check_param(display, values = c("support", "supp", "confidence", "conf",
-                                  "highest confidence", "hi.conf", "lowest confidence", "lo.conf", "lift"))
-  col_to_display = c(support = "support", supp = "support", confidence = "confidence",
-                     conf = "confidence", "highest confidence" = "confidence", hi.conf = "confidence",
-                     "lowest confidence" = "confidence", lo.conf = "confidence", lift = "lift")[display]
-  if (display == "hi.conf" || display == "highest confidence") operator = ">"
-  else if (display == "lo.conf" || display == "lowest confidence") operator = "<"
-  else operator = NULL
+  # Validate the parameter for choosing the characteristic to display and compute related variables
+  col_to_display = (function(x) {
+    if (grepl("supp", x)) return("support")
+    if (grepl("conf", x)) return("confidence")
+    if (grepl("lift", x)) return("lift")
+    if (grepl("spec", x)) return("specificity")
+    if (grepl("accu", x)) return("accuracy")
+    if (grepl("adva|added", x)) return("added.value")
+    return(x)
+  })(display)
+  
+  check_param(col_to_display, var_name = "display",
+              values = c("support", "confidence", "lift", "specificity", "accuracy", "added.value"),
+              suffix = ", optionally preceded by \"highest\" or \"lowest\"; or one of their abbreviations")
+  
+  if      (grepl("hi", display)) operator = ">"
+  else if (grepl("lo", display)) operator = "<"
+  else                           operator = NULL
+  
+  is_an_additional = (col_to_display %in% c("specificity", "accuracy", "added.value"))
+  has_direction = (col_to_display %in% c("confidence", "specificity", "added.value"))
+  want_direction = (is.null(operator) || direction)
+  is_divergent = col_to_display == "added.value"
+  
+  # Validation of the given rules
+  if (!is.null(rules) && !is.element(col_to_display, colnames(rules))) {
+    stop("rules does not contain the characteristic to be displayed (", col_to_display, ").")
+  }
   
   # Validation of the parameters for choosing the palette
-  if (palette == "default") palette = if (col_to_display == "confidence") "blue" else "Blues"
   check_param(palette_direction, values = c(1, -1), quotes = FALSE)
-  if (col_to_display == "confidence") {
-    check_param(palette,
-                values = c("category10", "red", "pink", "purple", "deep-purple", "indigo", "blue",
-                           "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow",
-                           "amber", "orange", "deep-orange", "brown", "grey", "blue-grey"),
-                prefix = "If display refers to the confidence, ")
+  
+  if (palette == "default") {
+    if (has_direction) palette = if (is_divergent) "RdBu" else "blue"
+    else palette = "Blues"
+  }
+  else if (has_direction) {
+    if (is_divergent) {
+      check_param(palette,
+                  values = c("Spectral", "RdYlGn", "RdYlBu", "RdGy", "RdBu", "PuOr", "PRGn",
+                             "PiYG", "BrBG"),
+                  prefix = "If display refers to the added value, ")
+    } else {
+      check_param(palette,
+                  values = c("category10", "red", "pink", "purple", "deep-purple", "indigo", "blue",
+                             "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow",
+                             "amber", "orange", "deep-orange", "brown", "grey", "blue-grey"),
+                  prefix = "If display refers to the confidence or the specificity, ")
+    }
   } else {
     check_param(palette,
                 values = c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd",
                            "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu",
                            "YlOrBr", "YlOrRd"),
-                prefix = "If display refers to the support or the lift, ")
+                prefix = "If display refers to the support, the lift or the accuracy, ")
   }
   
   
@@ -4587,34 +4633,45 @@ function(object, rules = NULL, items = NULL,
   
   # Computation of rules or removal of irrelevant rules
   if (is.null(rules)) {
-    # Computation of rules without or with specification of items
-    if (is.null(items) || identical(items, object@items)) {
-      rules = extract_rules(object, parameter = parameter)
-    } else {
-      rules = extract_rules(object, parameter = parameter, appearance = list(both = items))
-    }
     
+    args = list(object    = object,
+                parameter = parameter,
+                more      = is_an_additional)
+    
+    # Computation of rules without or with specification of items
+    if (!is.null(items) && !identical(items, object@items)) {
+      args = c(args, appearance = list(list(both = items)))
+    }
+    rules = do.call(extract_rules, args)
+    
+    # Create an empty data frame if no rules could be extracted
     if (is.null(rules)) {
       rules = data.frame(character(0), character(0), character(0),
                          numeric(0), numeric(0), numeric(0), integer(0))
       colnames(rules) = c("antecedent", " ", "consequent", "support", "confidence", "lift", "frequency")
+      
+      if (args$more) {
+        rules = cbind(rules, specificity = numeric(0), accuracy = numeric(0), added.value = numeric(0))
+      }
     }
+    
   } else {
-    # Items present in the rules given before removal of those of size 2
+    # Items present in the rules given before removal of those that are not of size 2
     if (is.null(items)) {
       items_tmp = get_items(object, unique(unlist(rules[, c("antecedent", "consequent")])))
     }
     
     # Removal of rules that are not of size 2
-    rules = rules[sapply(rules[, "antecedent"], length) == 1
-                  & sapply(rules[, "consequent"], length) == 1, ]
+    rules = rules[lengths(rules$antecedent) == 1
+                  & lengths(rules$consequent) == 1, ]
     
     if (!is.null(items)) {
       # Removal of rules relating to items that are not searched
-      rules = rules[rules[, "antecedent"] %in% items
-                    & rules[, "consequent"] %in% items, ]
+      rules = rules[rules$antecedent %in% items
+                    & rules$consequent %in% items, ]
     }
   }
+  
   # Retrieval of items corresponding to the extracted or given rules
   if (is.null(items)) {
     if (nrow(rules) != 0) {
@@ -4625,8 +4682,8 @@ function(object, rules = NULL, items = NULL,
     }
   }
   
-  # Application of the threshold on the characteristic to display
-  rules = rules[rules[, col_to_display] >= threshold, ]
+  # Application of the threshold on the characteristic to be displayed
+  if (!is.null(threshold)) rules = rules[rules[, col_to_display] >= threshold, ]
   
   
   ## Simplification of the rules to consider
@@ -4634,18 +4691,19 @@ function(object, rules = NULL, items = NULL,
   if (nrow(rules) != 0) {
     
     # Simplification of the structure (lists -> vectors)
-    rules[, "antecedent"] = unlist(rules[, "antecedent"])
-    rules[, "consequent"] = unlist(rules[, "consequent"])
+    rules$antecedent = unlist(rules$antecedent)
+    rules$consequent = unlist(rules$consequent)
     
-    # Finding reciprocal rules (A -> B ; B -> A)
+    # Finding reciprocal rules (A -> B; B -> A)
     to_keep = rep(TRUE, nrow(rules))
     dup_from_first = duplicated(t(apply(rules[, c("antecedent", "consequent")], 1, sort)))
     
-    # Keeping the reciprocal rules having a lower or higher confidence (and equivalent)
+    # Keeping the reciprocal rules having a lower or higher directed indicator (and equivalent)
     if (!is.null(operator)) {
-      dup_from_last = duplicated(t(apply(rules[, c("antecedent", "consequent")], 1, sort)), fromLast = TRUE)
+      dup_from_last = duplicated(t(apply(rules[, c("antecedent", "consequent")], 1, sort)),
+                                 fromLast = TRUE)
       
-      # For each duplicate rule, find its duplicate and compare the confidence
+      # For each duplicated rule, find its duplicate and compare the desired indicator
       for (i1 in which(dup_from_first)) {
         
         for (i2 in which(dup_from_last)) {
@@ -4653,11 +4711,14 @@ function(object, rules = NULL, items = NULL,
             break
         }
         
-        if_2.0(rules[i1, "confidence"], operator, rules[i2, "confidence"], expression(to_keep[i2] <- FALSE))
-        if_2.0(rules[i2, "confidence"], operator, rules[i1, "confidence"], expression(to_keep[i1] <- FALSE))
+        if_2.0(rules[i1, col_to_display], operator, rules[i2, col_to_display],
+               expression(to_keep[i2] <- FALSE))
+        
+        if_2.0(rules[i2, col_to_display], operator, rules[i1, col_to_display],
+               expression(to_keep[i1] <- FALSE))
       }
-    } else if (col_to_display == "support" || col_to_display == "lift") {
-      # Removal of the reciprocal rules because correspond to duplicates
+    } else if (!has_direction) {
+      # Ignoring the reciprocal rules because they correspond to duplicates
       to_keep[dup_from_first] = FALSE
     }
   } else {
@@ -4694,7 +4755,7 @@ function(object, rules = NULL, items = NULL,
   # Processing of the category and its legend
   if (!is.null(category)) {
     vertices$group = object@items_categories[vertices$name, category]
-    category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1er = NA
+    category_legend = object@categories_colors[[category]][unique(vertices$group)][-1] # 1st is NA
     category_legend = category_legend[order(names(category_legend))]
     
     names(category_legend) = substr2(names(category_legend), stop = c.cutoff)
@@ -4712,10 +4773,11 @@ function(object, rules = NULL, items = NULL,
   to = to[the_order]
   rules_to_plot = rules[to_keep, ][the_order, ]
   
-  # Discretization of the confidence of the rules (to better distinguish possible double coloring)
-  if (col_to_display == "confidence") {
-    rules_to_plot$confidence = cut(rules_to_plot[, "confidence"],
-                                   breaks = seq(0, 1, 0.1), include.lowest = TRUE)
+  # Discretization of the directed indicator to better distinguish possible double coloring
+  if (has_direction) {
+    rules_to_plot[[col_to_display]] = cut(rules_to_plot[[col_to_display]],
+                                          breaks = if (is_divergent) seq(-1, 1, 0.2) else seq(0, 1, 0.1),
+                                          include.lowest = TRUE)
   }
   
   
@@ -4730,9 +4792,8 @@ function(object, rules = NULL, items = NULL,
         data = ggraph::get_con(from = from, to = to, colors = rules_to_plot[, col_to_display]),
         ggplot2::aes(
           color = colors,
-          alpha = if (col_to_display == "confidence" && (is.null(operator) || direction))
-            ggplot2::after_stat(index) else edge_alpha
-          ),
+          alpha = if (has_direction && want_direction) ggplot2::after_stat(index) else edge_alpha
+        ),
         tension = edge_looseness)
   }
   
@@ -4753,20 +4814,33 @@ function(object, rules = NULL, items = NULL,
     ggplot2::theme_void() +
     ggplot2::coord_fixed()
   
-  if (col_to_display == "confidence") {
-    
-    if (is.null(operator) || direction) {
+  if (has_direction) {
+    if (want_direction) {
       graph = graph + ggraph::scale_edge_alpha("Rule direction",
                                                guide = ggraph::guide_edge_direction(order = 2))
     }
     
-    graph = graph +
-      ggraph::scale_edge_color_manual("Confidence",
-                                      values = stats::setNames(
-                                        if (palette == "category10") ggsci::pal_d3("category10")(10)
-                                        else ggsci::pal_material(palette, reverse = palette_direction == -1)(10),
-                                        levels(rules_to_plot[, "confidence"])),
-                                      guide = ggplot2::guide_legend(order = 1))
+    if (is_divergent) {
+      graph = graph + ggraph::scale_edge_color_brewer(
+        gsub(".", " ", cap(col_to_display), fixed = TRUE),
+        palette = palette,
+        type = "div",
+        direction = palette_direction,
+        breaks = sort(unique((rules_to_plot[[col_to_display]]))),
+        limits = levels(rules_to_plot[[col_to_display]]),
+        guide = ggplot2::guide_legend(order = 1)
+      )
+      
+    } else {
+      graph = graph + ggraph::scale_edge_color_manual(
+        cap(col_to_display),
+        values = stats::setNames(
+          if (palette == "category10") ggsci::pal_d3("category10")(10)
+          else ggsci::pal_material(palette, reverse = palette_direction == -1)(10),
+          levels(rules_to_plot[[col_to_display]])),
+        guide = ggplot2::guide_legend(order = 1)
+      )
+    }
   } else {
     graph = graph + 
       ggraph::scale_edge_color_distiller(cap(col_to_display),
