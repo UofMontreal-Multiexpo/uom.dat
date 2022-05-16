@@ -385,6 +385,7 @@ is_named = function(x) {
 #'  If `FALSE`, see 'Value' section.
 #' @param prefix Text to be prefixed to the message.
 #' @param suffix Text to be suffixed to the message.
+#' @param var_name Name of the parameter to validate.
 #' @return `TRUE` or `FALSE` whether the parameter is valid.
 #' 
 #' @author Gauthier Magnin
@@ -392,10 +393,8 @@ is_named = function(x) {
 #' @keywords internal
 check_param = function(x, types = NULL, values = NULL, range = NULL,
                        quotes = TRUE, stop = TRUE,
-                       prefix = "", suffix = "") {
-  
-  # Name of the variable in the function call
-  var_name = deparse(substitute(x))
+                       prefix = "", suffix = "",
+                       var_name = deparse(substitute(x))) {
   
   # Validation of the variable type
   if (!is.null(types) && !is.element(mode(x), types)) {

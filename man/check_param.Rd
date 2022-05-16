@@ -12,7 +12,8 @@ check_param(
   quotes = TRUE,
   stop = TRUE,
   prefix = "",
-  suffix = ""
+  suffix = "",
+  var_name = deparse(substitute(x))
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ If \code{FALSE}, see 'Value' section.}
 \item{prefix}{Text to be prefixed to the message.}
 
 \item{suffix}{Text to be suffixed to the message.}
+
+\item{var_name}{Name of the parameter to validate.}
 }
 \value{
 \code{TRUE} or \code{FALSE} whether the parameter is valid.
