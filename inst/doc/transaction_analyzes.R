@@ -1018,41 +1018,10 @@ rules_chart(TA_instance,
             edge_alpha = 0.5
             )$graph
 
-## ----echo=FALSE, out.extra="class='border-none'"------------------------------
-old_par_1 <- graphics::par(mar = c(0, 4.1, 0, 2.1))
-
-## Creation of the palettes
-
-palettes <- matrix(character(200), ncol = 10, nrow = 20)
-rownames(palettes) <- c("category10", "red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber", "orange", "deep-orange", "brown", "grey", "blue-grey")
-
-palettes["category10", ] <- ggsci::pal_d3("category10")(10)
-for (palette in rownames(palettes)[-1]) {
-  palettes[palette, ] <- ggsci::pal_material(palette)(10)
-}
-
-
-## Display of the palettes
-
-old_par_2 <- graphics::par(mgp = c(2, 0.25, 0))
-graphics::plot(1, 1,
-               xlim = c(0, ncol(palettes)),
-               ylim = c(0, nrow(palettes)),
-               type = "n", axes = FALSE, bty = "n", xlab = "", ylab = "")
-for (i in seq_len(nrow(palettes))) {
-  graphics::rect(xleft = seq_len(ncol(palettes)) - 1,
-                 ybottom = i - 1,
-                 xright = seq_len(ncol(palettes)),
-                 ytop = i - 0.2,
-                 col = palettes[i, ],
-                 border = "light grey")
-}
-graphics::text(x = rep(-0.1, nrow(palettes)),
-               y = seq_len(nrow(palettes)) - 0.6,
-               labels = rownames(palettes), xpd = TRUE, adj = 1)
-
-graphics::par(old_par_1)
-graphics::par(old_par_2)
+## ----echo=FALSE, out.extra="class='border-none'", fig.height=2.25-------------
+old_par <- graphics::par(mar = c(0, 4.1, 0, 2.1))
+RColorBrewer::display.brewer.all(10, type = "div")
+graphics::par(old_par)
 
 ## ----echo=FALSE, out.extra="class='border-none'"------------------------------
 old_par <- graphics::par(mar = c(0, 4.1, 0, 2.1))

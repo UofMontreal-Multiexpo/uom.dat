@@ -823,6 +823,8 @@ Considering the notation $\overline{X}$ denoting any itemset not containing $X$,
 * The **accuracy**: sum of the support of the itemset $X \cup Y$ and the support of $\overline{X \cup Y}$.
 * The **added value**: difference between the confidence of the rule $X \rightarrow Y$ and the support of the consequent $Y$.
 
+The direction of the rule has no impact on accuracy but on specificity and added value.
+
 
 ## 3.2. Extract association rules
 
@@ -1767,17 +1769,11 @@ Note the use of the value `"vertices"` as the argument `condition` of the method
 
 ## 4.6. Association rule charts
 
-Association rules can be plotted using the method `rules_chart`. In this kind of chart, only rules of length $2$ are plotted, i.e. having one item as antecedent and another one as consequent. The chart is a graph in which vertices are items and edges are association rules. One characteristic of the rules is represented on the edges by coloring them: the support, the lift or the confidence. As the support and the lift from one rule to its reciprocal are equivalent, graphs representing these characteristics are undirected. Conversely, graphs representing confidence are directed.
+Association rules can be plotted using the method `rules_chart`. In this kind of chart, only rules of length $2$ are plotted, i.e. having one item as antecedent and another one as consequent. The chart is a graph in which vertices are items and edges are association rules. One characteristic of the rules is represented on the edges by coloring them. As the support, the lift, the frequency and the accuracy from one rule to its reciprocal are equivalent, graphs representing these characteristics are undirected. Conversely, graphs representing the confidence, the specificity or the added value are directed.
 
-The argument `display` defines which characteristic of the rules to represent on the graph.
+The argument `display` defines which characteristic of the rules to represent on the graph: `"support"`, `"confidence"`, `"lift"`, `"frequency"`, `"specificity"`, `"accuracy"` or `"added.value"`. Concerning the confidence, the specificity and the added value, edges may be divided in two parts using two colors to represent the direction of the rules. The part of the edge corresponding to the consequent of the rule is colored according to the value of the rule. The other part is colored according to the value of the reciprocal rule.
 
-* `"support"` specifies to represent the support of each rule.
-* `"lift"` specifies to represent the lift of each rule.
-* `"confidence"` specifies to represent the confidence of each rule. In this case, edges may be divided in two parts using two colors to represent the direction of the rules. The part of edge corresponding to the consequent of the rule is colored according to the confidence. The other part is colored according to the confidence of the reciprocal rule.
-* `"highest confidence"` specifies to represent the confidences of the rules. Only the one having the highest confidence is represented between a rule and its reciprocal, unless they have the same confidence value.
-* `"lowest confidence"` specifies to represent the confidences of the rules. Only the one having the lowest confidence is represented between a rule and its reciprocal, unless they have the same confidence value.
-
-In the last two cases, the argument `direction` allows to set a gradual opacity to the edges to represent the direction of the displayed rules.
+In directed graph, the value given to the argument `display` can be preceded by `"highest "` or `"lowest "` (e.g. `"highest confidence"`) to choose between visualizing a rule or its reciprocal instead of visualizing both rules. Only the rule having the highest or lowest value of the desired characteristic will be represented among the two rules existing between two items, unless they have the same value. If `display` refers to highest or lowest values, the argument `direction` allows to keep a gradual opacity on the edges to represent the direction of the displayed rules.
 
 All rules of length $2$ are automatically extracted from the transactions of the given `TransactionAnalyzer` object. Finally, like other charts, the values of one category can be taken into account using the argument `category`.
 
@@ -1911,7 +1907,7 @@ rules_chart(TA_instance,
 
 #### ggplot2
 
-By the way, the chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed afterwards using the ggplot2 `last_plot` function or the returned object. We can for example change the plot limits to make truncated labels more visible.
+The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed afterwards using the ggplot2 `last_plot` function or the returned object. We can for example change the plot limits to make truncated labels more visible.
 
 ```{r warning=FALSE, message=FALSE}
 # Loading the package
@@ -2009,7 +2005,7 @@ rules_chart(TA_instance,
             )$graph
 ```
 
-Note that the argument `edge_alpha` can be used only when the argument `display` refers to the support or the lift.
+Note that the argument `edge_alpha` can be used only when the argument `display` refers to undirected characteristics.
 
 Note also that the RStudio graphics device may not be able to plot edges with transparency. In such a case, the edges will be actually displayed in the “Plot Zoom” window of the RStudio IDE; while exporting the plot; or by using another graphics device.
 
@@ -2017,46 +2013,15 @@ Note also that the RStudio graphics device may not be able to plot edges with tr
 
 Two arguments are relating to the palette used for coloring the edges. The first one allows to specify the palette: `palette`. The available palettes depend on the characteristic referred by the argument `display`.
 
-Here is the list of available palettes if `display` refers to the confidence.
+Here is the list of available palettes if `display` refers to the added value.
 
-```{r echo=FALSE, out.extra="class='border-none'"}
-old_par_1 <- graphics::par(mar = c(0, 4.1, 0, 2.1))
-
-## Creation of the palettes
-
-palettes <- matrix(character(200), ncol = 10, nrow = 20)
-rownames(palettes) <- c("category10", "red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber", "orange", "deep-orange", "brown", "grey", "blue-grey")
-
-palettes["category10", ] <- ggsci::pal_d3("category10")(10)
-for (palette in rownames(palettes)[-1]) {
-  palettes[palette, ] <- ggsci::pal_material(palette)(10)
-}
-
-
-## Display of the palettes
-
-old_par_2 <- graphics::par(mgp = c(2, 0.25, 0))
-graphics::plot(1, 1,
-               xlim = c(0, ncol(palettes)),
-               ylim = c(0, nrow(palettes)),
-               type = "n", axes = FALSE, bty = "n", xlab = "", ylab = "")
-for (i in seq_len(nrow(palettes))) {
-  graphics::rect(xleft = seq_len(ncol(palettes)) - 1,
-                 ybottom = i - 1,
-                 xright = seq_len(ncol(palettes)),
-                 ytop = i - 0.2,
-                 col = palettes[i, ],
-                 border = "light grey")
-}
-graphics::text(x = rep(-0.1, nrow(palettes)),
-               y = seq_len(nrow(palettes)) - 0.6,
-               labels = rownames(palettes), xpd = TRUE, adj = 1)
-
-graphics::par(old_par_1)
-graphics::par(old_par_2)
+```{r echo=FALSE, out.extra="class='border-none'", fig.height=2.25}
+old_par <- graphics::par(mar = c(0, 4.1, 0, 2.1))
+RColorBrewer::display.brewer.all(10, type = "div")
+graphics::par(old_par)
 ```
 
-Here is the list of available palettes if `display` refers to the support or the lift.
+Here is the list of available palettes if `display` refers to a characteristic other than the added value.
 
 ```{r echo=FALSE, out.extra="class='border-none'"}
 old_par <- graphics::par(mar = c(0, 4.1, 0, 2.1))
@@ -2064,7 +2029,7 @@ RColorBrewer::display.brewer.all(type = "seq")
 graphics::par(old_par)
 ```
 
-The second palette argument allows to specify the direction: `palette_direction`. It can be $1$: from the lightest to the darkest; or $-1$: from the darkest to the lightest. It can be used whether to highlight higher values or lower values.
+The second palette argument allows to specify the direction: `palette_direction`. It can be $1$: colors are in original order (e.g. from the lightest to the darkest); or $-1$: color order is reversed (e.g. from the darkest to the lightest). It can be used whether to highlight higher values or lower values.
 
 ```{r}
 rules_chart(TA_instance,

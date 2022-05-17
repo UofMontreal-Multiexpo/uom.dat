@@ -4434,9 +4434,9 @@ function(object, rules, transactions = NULL) {
 #'  `"lowest "` to choose between visualizing a rule or its reciprocal instead of visualizing both
 #'  rules.
 #'  \describe{
-#'    \item{`"highest "` (or `"hi."`)}{Only the rule having the highest value of the choosen
+#'    \item{`"highest "` (or `"hi."`)}{Only the rule having the highest value of the desired
 #'          characteristic is represented among the two rules existing between two items.}
-#'    \item{`"lowest "` (or `"lo."`)}{Only the rule having the lowest value of the choosen
+#'    \item{`"lowest "` (or `"lo."`)}{Only the rule having the lowest value of the desired
 #'          characteristic is represented among the two rules existing between two items.}
 #'  }
 #' @param threshold Threshold from which the characteristic referred by `display` must be for a rule to

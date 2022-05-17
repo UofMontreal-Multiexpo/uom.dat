@@ -66,9 +66,9 @@ For the confidence, the specificy and the added value, this can be preceded by \
 \code{"lowest "} to choose between visualizing a rule or its reciprocal instead of visualizing both
 rules.
 \describe{
-\item{\code{"highest "} (or \code{"hi."})}{Only the rule having the highest value of the choosen
+\item{\code{"highest "} (or \code{"hi."})}{Only the rule having the highest value of the desired
 characteristic is represented among the two rules existing between two items.}
-\item{\code{"lowest "} (or \code{"lo."})}{Only the rule having the lowest value of the choosen
+\item{\code{"lowest "} (or \code{"lo."})}{Only the rule having the lowest value of the desired
 characteristic is represented among the two rules existing between two items.}
 }}
 
