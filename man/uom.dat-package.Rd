@@ -6,10 +6,10 @@
 \alias{uom.dat-package}
 \title{uom.dat: University of Montreal - Data Analysis Tools}
 \description{
-R processing, analysis and visualization tools initially designed for processing data from
-    occupational exposure databases, especially for the concept of multiexposure.
-    Main analytical approaches are Frequent Itemset Mining, Spectrosome, Association Rules and Maximum
-    Cumulative Ratio.
+R processing, analysis and visualization tools initially designed
+    for processing data from occupational exposure databases, especially for the
+    concept of multiexposure. Main analytical approaches are Frequent Itemset
+    Mining, Spectrosome, Association Rules and Maximum Cumulative Ratio.
 }
 \details{
 For an organized list of datasets, functions, classes and methods, use
@@ -20,6 +20,14 @@ For an alphabetical list and for the package description, use \code{library(help
 For package news information, use \code{news(package = "uom.dat")}
 
 For information on how to cite the package, use \code{citation("uom.dat")}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/UofMontreal-Multiexpo/uom.dat}
+  \item Report bugs at \url{https://github.com/UofMontreal-Multiexpo/uom.dat/issues}
+}
+
 }
 \author{
 Gauthier Magnin, Delphine Bosson-Rieutort

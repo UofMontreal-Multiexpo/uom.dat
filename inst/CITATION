@@ -1,13 +1,14 @@
 
 title  <- paste("uom.dat:", meta$Title)
-author <- meta$Author
+author <- substr(meta$Author, 1, rev(gregexpr("],\n ", meta$Author)[[1]])[1])
 year   <- sub("-.*", "", meta$Date)
 note   <- sprintf("R package version %s", meta$Version)
+url    <- meta$URL
 
 bibentry(bibtype = "Manual",
          title   = title,
          author  = author,
          year    = year,
          note    = note,
-         url     = "https://github.com/UofMontreal-Multiexpo/uom.dat",
+         url     = url,
          header  = "To cite uom.dat in publications, please use:")

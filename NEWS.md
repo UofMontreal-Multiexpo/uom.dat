@@ -27,6 +27,7 @@
 
 ## Documentation
 
+* The URLs of the package page and where to report bugs have been added to the package help page (accessible using `help(uom.dat)`).
 * Corrections have been applied to the PDF files.
     - Documentation of the methods `itemset_chart` and `get_trx_from_category` of the class `TransactionAnalyzer` have been corrected.
     - The returns of methods that were supposed to be of type `integer` instead of `numeric` have been changed.

@@ -3,20 +3,17 @@ Type: Package
 Title: University of Montreal - Data Analysis Tools
 Version: 0.1.0.9000
 Date: 2022-05-06
-Author@R: c(
-    person("Gauthier", "Magnin", email = "gauthier.magnin@gmail.com", role = c("aut", "cre")),
-    person("Delphine", "Bosson-Rieutort", email = "delphine.bosson-rieutort@umontreal.ca", role = "aut")
-    )
-Author: Gauthier Magnin [aut, cre],
-    Delphine Bosson-Rieutort [aut]
-Maintainer: Gauthier Magnin <gauthier.magnin@gmail.com>
-Description: R processing, analysis and visualization tools initially designed for processing data from
-    occupational exposure databases, especially for the concept of multiexposure.
-    Main analytical approaches are Frequent Itemset Mining, Spectrosome, Association Rules and Maximum
-    Cumulative Ratio.
-License: Undefined
-Encoding: UTF-8
-LazyData: true
+Authors@R: c(
+    person("Gauthier", "Magnin", email = "gauthier.magnin@gmail.com", role = c("aut", "ctr", "cre")),
+    person("Delphine", "Bosson-Rieutort", email = "delphine.bosson-rieutort@umontreal.ca", role = "aut"),
+    person("CHUM - Centre Hospitalier de l'Université de Montréal", role = c("cph", "fnd"))
+  )
+Description: R processing, analysis and visualization tools initially designed
+    for processing data from occupational exposure databases, especially for the
+    concept of multiexposure. Main analytical approaches are Frequent Itemset
+    Mining, Spectrosome, Association Rules and Maximum Cumulative Ratio.
+URL: https://github.com/UofMontreal-Multiexpo/uom.dat
+BugReports: https://github.com/UofMontreal-Multiexpo/uom.dat/issues
 Depends: R (>= 3.5.0)
 Imports:
     arules,
@@ -40,9 +37,12 @@ Suggests:
     mathjaxr,
     rmarkdown,
     tools
+Encoding: UTF-8
+LazyData: true
 RdMacros: mathjaxr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
+Config/testthat/edition: 3
 Collate: 
     'data.R'
     'utils.R'
@@ -53,4 +53,3 @@ Collate:
     'transaction_maker.R'
     'transaction_analyzer.R'
     'uom.dat-package.R'
-Config/testthat/edition: 3
