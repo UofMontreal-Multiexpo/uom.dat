@@ -123,8 +123,8 @@ If \code{display} does not refer to the added value, one of \code{"Blues"}, \cod
 \code{"RdPu"}, \code{"Reds"}, \code{"YlGn"}, \code{"YlGnBu"}, \code{"YlOrBr"}, \code{"YlOrRd"}. Default is \code{"Blues"}.}
 
 \item{palette_direction}{Direction in which to use the color palette.
-If \code{1}, colors are in original order: from the lightest to the darkest.
-If \code{-1}, color order is reversed: from the darkest to the lightest.}
+If \code{1}, colors are in original order (e.g. from the lightest to the darkest).
+If \code{-1}, color order is reversed (e.g. from the darkest to the lightest).}
 
 \item{plot}{If \code{TRUE}, the chart is plotted in the active graphics device before the return.}
 }

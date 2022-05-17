@@ -4476,8 +4476,8 @@ function(object, rules, transactions = NULL) {
 #'  `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`, `"PuBu"`, `"PuBuGn"`, `"PuRd"`, `"Purples"`,
 #'  `"RdPu"`, `"Reds"`, `"YlGn"`, `"YlGnBu"`, `"YlOrBr"`, `"YlOrRd"`. Default is `"Blues"`.
 #' @param palette_direction Direction in which to use the color palette.
-#'  If `1`, colors are in original order: from the lightest to the darkest.
-#'  If `-1`, color order is reversed: from the darkest to the lightest.
+#'  If `1`, colors are in original order (e.g. from the lightest to the darkest).
+#'  If `-1`, color order is reversed (e.g. from the darkest to the lightest).
 #' @param plot If `TRUE`, the chart is plotted in the active graphics device before the return.
 #' @return 
 #'  \describe{
