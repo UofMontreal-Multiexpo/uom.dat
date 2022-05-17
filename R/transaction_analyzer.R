@@ -4374,8 +4374,8 @@ function(object, rules, transactions = NULL) {
 #' @details
 #' \loadmathjax
 #' For an association rule \mjeqn{X \rightarrow Y}{X -> Y}, the reciprocal rule is the rule
-#'  \mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support, lift and accuracy but may
-#'  have two different confidence, specificity and added values.
+#'  \mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support, lift, frequency and
+#'  accuracy but may have two different confidence, specificity and added values.
 #' 
 #' If `display` refers to the selection of rules having the highest or lowest specified characteristic
 #'  and if an association rule and its reciprocal have the same value for this characteristic, both
@@ -4421,6 +4421,8 @@ function(object, rules, transactions = NULL) {
 #'    \item{`"confidence"` or (`"conf"`)}{The two confidence values of the two rules existing between two
 #'          items are both represented.}
 #'    \item{`"lift"`}{The lift of the two rules existing between two items is represented.}
+#'    \item{`"frequency"` (or `"freq"`)}{The frequency of the two rules existing between two items is
+#'          represented.}
 #'    \item{`"specificity"` (or `"spec"`)}{The two specifity values of the two rules existing between two
 #'          items are both represented.}
 #'    \item{`"accuracy"` (or `"accu"`)}{The accuracy of the two rules existing between two items is
@@ -4442,9 +4444,9 @@ function(object, rules, transactions = NULL) {
 #' @param direction Ignored if `display` does not refer to highest or lowest values.
 #'  If `FALSE`, the opacity of the edges representing the rules is set by the argument `edge_alpha`.
 #'  If `TRUE`, the opacity increases gradually according to the direction of the rule represented.
-#'  Always `FALSE` if `display` refers to the support, the lift or the accuracy. Always `TRUE` if
-#'  `display` refers to the confidence, the specificity or the added value without referring to highest
-#'  or lowest values.
+#'  Always `FALSE` if `display` refers to the support, the lift, the frequency or the accuracy.
+#'  Always `TRUE` if `display` refers to the confidence, the specificity or the added value without
+#'  referring to highest or lowest values.
 #' @param use_names If `TRUE`, display item names if they are defined. Display their identification
 #'  codes otherwise.
 #' @param n.cutoff If `use_names = TRUE`, limit number of characters to display concerning the names
@@ -4571,6 +4573,7 @@ function(object, rules = NULL, items = NULL,
     if (grepl("supp", x)) return("support")
     if (grepl("conf", x)) return("confidence")
     if (grepl("lift", x)) return("lift")
+    if (grepl("freq", x)) return("frequency")
     if (grepl("spec", x)) return("specificity")
     if (grepl("accu", x)) return("accuracy")
     if (grepl("adva|added", x)) return("added.value")
@@ -4578,7 +4581,8 @@ function(object, rules = NULL, items = NULL,
   })(display)
   
   check_param(col_to_display, var_name = "display",
-              values = c("support", "confidence", "lift", "specificity", "accuracy", "added.value"),
+              values = c("support", "confidence", "lift", "frequency",
+                         "specificity", "accuracy", "added.value"),
               suffix = ", optionally preceded by \"highest\" or \"lowest\"; or one of their abbreviations")
   
   if      (grepl("hi", display)) operator = ">"
@@ -4815,7 +4819,6 @@ function(object, rules = NULL, items = NULL,
         limits = levels(rules_to_plot[[col_to_display]]),
         guide = ggplot2::guide_legend(order = 1)
       )
-      
     } else {
       # Create a 10 color palette from the specified 9 color palette
       # (by creating a 11 color palette to get a less light first color.

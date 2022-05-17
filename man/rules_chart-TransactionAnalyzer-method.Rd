@@ -53,6 +53,8 @@ represented.}
 \item{\code{"confidence"} or (\code{"conf"})}{The two confidence values of the two rules existing between two
 items are both represented.}
 \item{\code{"lift"}}{The lift of the two rules existing between two items is represented.}
+\item{\code{"frequency"} (or \code{"freq"})}{The frequency of the two rules existing between two items is
+represented.}
 \item{\code{"specificity"} (or \code{"spec"})}{The two specifity values of the two rules existing between two
 items are both represented.}
 \item{\code{"accuracy"} (or \code{"accu"})}{The accuracy of the two rules existing between two items is
@@ -76,9 +78,9 @@ be considered.}
 \item{direction}{Ignored if \code{display} does not refer to highest or lowest values.
 If \code{FALSE}, the opacity of the edges representing the rules is set by the argument \code{edge_alpha}.
 If \code{TRUE}, the opacity increases gradually according to the direction of the rule represented.
-Always \code{FALSE} if \code{display} refers to the support, the lift or the accuracy. Always \code{TRUE} if
-\code{display} refers to the confidence, the specificity or the added value without referring to highest
-or lowest values.}
+Always \code{FALSE} if \code{display} refers to the support, the lift, the frequency or the accuracy.
+Always \code{TRUE} if \code{display} refers to the confidence, the specificity or the added value without
+referring to highest or lowest values.}
 
 \item{use_names}{If \code{TRUE}, display item names if they are defined. Display their identification
 codes otherwise.}
@@ -142,8 +144,8 @@ an item and the consequent is another item.
 \details{
 \loadmathjax
 For an association rule \mjeqn{X \rightarrow Y}{X -> Y}, the reciprocal rule is the rule
-\mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support, lift and accuracy but may
-have two different confidence, specificity and added values.
+\mjeqn{Y \rightarrow X}{Y -> X}. These two rules have the same support, lift, frequency and
+accuracy but may have two different confidence, specificity and added values.
 
 If \code{display} refers to the selection of rules having the highest or lowest specified characteristic
 and if an association rule and its reciprocal have the same value for this characteristic, both

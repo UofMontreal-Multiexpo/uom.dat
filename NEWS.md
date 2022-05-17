@@ -11,6 +11,7 @@
 
 * Pattern supports are now computed and added to pattern data frames as another characteristic.
 * Association rule frequencies are now also computed and added to rule data frames when specific itemsets are given for association rule extraction.
+* Frequencies can now be plotted in the association rule visualization.
 * Additional indicators can be computed and associated with association rules when they are extracted: specificity, accuracy and added value.
 * The new indicators (specificity, accuracy and added value) can be plotted in the association rule visualization. The added value is the only one to use a different set of palettes.
 
