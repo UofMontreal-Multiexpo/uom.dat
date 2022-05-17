@@ -4173,7 +4173,8 @@ function(object, items = object["items"], category = NULL,
 #' @param pruning If \code{TRUE}, remove redundant rules (see 'Details' to know how redundant rules
 #'  are defined).
 #' @param arules If \code{TRUE}, rules are returned as an object of class
-#'  \code{\link[arules:rules-class]{rules}} from the package \code{arules}.
+#'  \code{\link[arules:rules-class]{rules}} from the package \code{arules}. If \code{FALSE}, rules are
+#'  returned as a data frame.
 #' @param as_sets If \code{FALSE}, antecedents and consequents of the returned rules will be character
 #'  vectors. If \code{TRUE}, they will be factors written in mathematical notation (i.e. set notation).
 #'  Ignored if \code{arules} is \code{TRUE}.
