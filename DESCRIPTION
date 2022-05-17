@@ -28,6 +28,7 @@ Imports:
     igraph,
     methods,
     network,
+    RColorBrewer,
     sna,
     stats,
     TeachingDemos,
@@ -37,7 +38,6 @@ Suggests:
     corrplot,
     knitr,
     mathjaxr,
-    RColorBrewer,
     rmarkdown,
     tools
 RdMacros: mathjaxr

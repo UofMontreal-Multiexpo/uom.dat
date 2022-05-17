@@ -4429,7 +4429,7 @@ function(object, rules, transactions = NULL) {
 #'          items are both represented.}
 #'  }
 #'  For the confidence, the specificy and the added value, this can be preceded by `"highest "` or by
-#'  `"lowest "` to choose between visualizing a rule or its reciprocal instead of visualizing the two
+#'  `"lowest "` to choose between visualizing a rule or its reciprocal instead of visualizing both
 #'  rules.
 #'  \describe{
 #'    \item{`"highest "` (or `"hi."`)}{Only the rule having the highest value of the choosen
@@ -4469,16 +4469,11 @@ function(object, rules, transactions = NULL) {
 #' @param palette
 #'  Name of the palette to use for coloring the edges.
 #'  
-#'  If `display` refers to the confidence or the specificity, one of `"category10"`, `"red"`, `"pink"`,
-#'  `"purple"`, `"deep-purple"`, `"indigo"`, `"blue"`, `"light-blue"`, `"cyan"`, `"teal"`, `"green"`,
-#'  `"light-green"`, `"lime"`, `"yellow"`, `"amber"`, `"orange"`, `"deep-orange"`, `"brown"`, `"grey"`,
-#'  `"blue-grey"`. Default is `"blue"`.
-#'  
 #'  If `display` refers to the added value, one of `"Spectral"`, `"RdYlGn"`, `"RdYlBu"`, `"RdGy"`,
 #'  `"RdBu"`, `"PuOr"`, `"PRGn"`, `"PiYG"`, `"BrBG"`. Default is `"RdBu"`.
 #'  
-#'  If `display` refers to the support, the lift or the accuracy, one of `"Blues"`, `"BuGn"`, `"BuPu"`,
-#'  `"GnBu"`, `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`, `"PuBu"`, `"PuBuGn"`, `"PuRd"`, `"Purples"`,
+#'  If `display` does not refer to the added value, one of `"Blues"`, `"BuGn"`, `"BuPu"`, `"GnBu"`,
+#'  `"Greens"`, `"Greys"`, `"Oranges"`, `"OrRd"`, `"PuBu"`, `"PuBuGn"`, `"PuRd"`, `"Purples"`,
 #'  `"RdPu"`, `"Reds"`, `"YlGn"`, `"YlGnBu"`, `"YlOrBr"`, `"YlOrRd"`. Default is `"Blues"`.
 #' @param palette_direction Direction in which to use the color palette.
 #'  If `1`, colors are in original order: from the lightest to the darkest.
@@ -4604,28 +4599,19 @@ function(object, rules = NULL, items = NULL,
   check_param(palette_direction, values = c(1, -1), quotes = FALSE)
   
   if (palette == "default") {
-    if (has_direction) palette = if (is_divergent) "RdBu" else "blue"
-    else palette = "Blues"
+    palette = if (is_divergent) "RdBu" else "Blues"
   }
-  else if (has_direction) {
-    if (is_divergent) {
+  else if (is_divergent) {
       check_param(palette,
                   values = c("Spectral", "RdYlGn", "RdYlBu", "RdGy", "RdBu", "PuOr", "PRGn",
                              "PiYG", "BrBG"),
                   prefix = "If display refers to the added value, ")
-    } else {
-      check_param(palette,
-                  values = c("category10", "red", "pink", "purple", "deep-purple", "indigo", "blue",
-                             "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow",
-                             "amber", "orange", "deep-orange", "brown", "grey", "blue-grey"),
-                  prefix = "If display refers to the confidence or the specificity, ")
-    }
   } else {
     check_param(palette,
                 values = c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd",
                            "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu",
                            "YlOrBr", "YlOrRd"),
-                prefix = "If display refers to the support, the lift or the accuracy, ")
+                prefix = "If display does not refer to the added value, ")
   }
   
   
@@ -4824,7 +4810,6 @@ function(object, rules = NULL, items = NULL,
       graph = graph + ggraph::scale_edge_color_brewer(
         gsub(".", " ", cap(col_to_display), fixed = TRUE),
         palette = palette,
-        type = "div",
         direction = palette_direction,
         breaks = sort(unique((rules_to_plot[[col_to_display]]))),
         limits = levels(rules_to_plot[[col_to_display]]),
@@ -4832,11 +4817,15 @@ function(object, rules = NULL, items = NULL,
       )
       
     } else {
+      # Create a 10 color palette from the specified 9 color palette
+      # (by creating a 11 color palette to get a less light first color.
+      # Otherwise, the first level of the discrete scale can hardly be seen)
+      pal = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(11)[2:11]
+      
       graph = graph + ggraph::scale_edge_color_manual(
         cap(col_to_display),
         values = stats::setNames(
-          if (palette == "category10") ggsci::pal_d3("category10")(10)
-          else ggsci::pal_material(palette, reverse = palette_direction == -1)(10),
+          if (palette_direction == 1) pal else rev(pal),
           levels(rules_to_plot[[col_to_display]])),
         guide = ggplot2::guide_legend(order = 1)
       )

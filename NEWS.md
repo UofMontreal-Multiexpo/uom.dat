@@ -4,13 +4,15 @@
 
 * Column `"count"` of association rule data frames has been renamed to `"frequency"` for consistency with nodes and patterns.
 * Parameter `count` of `TransactionAnalyzer` has been renamed `min_frequency` for overall consistency. This concerns both the object attribute and the constructor argument (function `transaction.analyzer`).
+* Palettes that can be used for coloring confidence values in graphs representing association rules are now the same as for the other characteristics of rules. The previous palettes cannot be used anymore.
+* The `RColorBrewer` package must now be installed for some features to work.
 
 ## New features
 
 * Pattern supports are now computed and added to pattern data frames as another characteristic.
 * Association rule frequencies are now also computed and added to rule data frames when specific itemsets are given for association rule extraction.
 * Additional indicators can be computed and associated with association rules when they are extracted: specificity, accuracy and added value.
-* The new indicators (specificity, accuracy and added value) can be plotted in the association rule visualization.
+* The new indicators (specificity, accuracy and added value) can be plotted in the association rule visualization. The added value is the only one to use a different set of palettes.
 
 ## Minor changes
 

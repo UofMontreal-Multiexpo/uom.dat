@@ -61,7 +61,7 @@ represented.}
 items are both represented.}
 }
 For the confidence, the specificy and the added value, this can be preceded by \code{"highest "} or by
-\code{"lowest "} to choose between visualizing a rule or its reciprocal instead of visualizing the two
+\code{"lowest "} to choose between visualizing a rule or its reciprocal instead of visualizing both
 rules.
 \describe{
 \item{\code{"highest "} (or \code{"hi."})}{Only the rule having the highest value of the choosen
@@ -115,16 +115,11 @@ is \code{TRUE}.}
 
 \item{palette}{Name of the palette to use for coloring the edges.
 
-If \code{display} refers to the confidence or the specificity, one of \code{"category10"}, \code{"red"}, \code{"pink"},
-\code{"purple"}, \code{"deep-purple"}, \code{"indigo"}, \code{"blue"}, \code{"light-blue"}, \code{"cyan"}, \code{"teal"}, \code{"green"},
-\code{"light-green"}, \code{"lime"}, \code{"yellow"}, \code{"amber"}, \code{"orange"}, \code{"deep-orange"}, \code{"brown"}, \code{"grey"},
-\code{"blue-grey"}. Default is \code{"blue"}.
-
 If \code{display} refers to the added value, one of \code{"Spectral"}, \code{"RdYlGn"}, \code{"RdYlBu"}, \code{"RdGy"},
 \code{"RdBu"}, \code{"PuOr"}, \code{"PRGn"}, \code{"PiYG"}, \code{"BrBG"}. Default is \code{"RdBu"}.
 
-If \code{display} refers to the support, the lift or the accuracy, one of \code{"Blues"}, \code{"BuGn"}, \code{"BuPu"},
-\code{"GnBu"}, \code{"Greens"}, \code{"Greys"}, \code{"Oranges"}, \code{"OrRd"}, \code{"PuBu"}, \code{"PuBuGn"}, \code{"PuRd"}, \code{"Purples"},
+If \code{display} does not refer to the added value, one of \code{"Blues"}, \code{"BuGn"}, \code{"BuPu"}, \code{"GnBu"},
+\code{"Greens"}, \code{"Greys"}, \code{"Oranges"}, \code{"OrRd"}, \code{"PuBu"}, \code{"PuBuGn"}, \code{"PuRd"}, \code{"Purples"},
 \code{"RdPu"}, \code{"Reds"}, \code{"YlGn"}, \code{"YlGnBu"}, \code{"YlOrBr"}, \code{"YlOrRd"}. Default is \code{"Blues"}.}
 
 \item{palette_direction}{Direction in which to use the color palette.
