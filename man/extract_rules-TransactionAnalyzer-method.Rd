@@ -117,6 +117,9 @@ Considering the notation \mjeqn{\overline{X}}{not X} denoting any itemset not co
    \item{The \strong{added value}: difference between the confidence of the rule
          \mjeqn{X \rightarrow Y}{X -> Y} and the support of the consequent \eqn{Y}.}
  }
+
+The direction of the rule does not impact the accuracy but does impact the specificity and the
+ added value.
 }
 
 \subsection{Additional arguments}{

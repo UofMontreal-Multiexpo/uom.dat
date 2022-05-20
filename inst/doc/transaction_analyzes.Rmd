@@ -823,7 +823,7 @@ Considering the notation $\overline{X}$ denoting any itemset not containing $X$,
 * The **accuracy**: sum of the support of the itemset $X \cup Y$ and the support of $\overline{X \cup Y}$.
 * The **added value**: difference between the confidence of the rule $X \rightarrow Y$ and the support of the consequent $Y$.
 
-The direction of the rule has no impact on accuracy but on specificity and added value.
+The direction of the rule does not impact the accuracy but does impact the specificity and the added value.
 
 
 ## 3.2. Extract association rules
