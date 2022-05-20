@@ -118,6 +118,9 @@ Considering the notation \mjeqn{\overline{X}}{not X} denoting any itemset not co
          \mjeqn{X \rightarrow Y}{X -> Y} and the support of the consequent \eqn{Y}.}
  }
 
+If the support of the antecedent \eqn{X} is equal to \eqn{1}, the specificity of the rule cannot be
+ computed and is \code{NA}.
+
 The direction of the rule does not impact the accuracy but does impact the specificity and the
  added value.
 }

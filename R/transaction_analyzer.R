@@ -4142,6 +4142,9 @@ function(object, items = object["items"], category = NULL,
 #'          \mjeqn{X \rightarrow Y}{X -> Y} and the support of the consequent \eqn{Y}.}
 #'  }
 #' 
+#' If the support of the antecedent \eqn{X} is equal to \eqn{1}, the specificity of the rule cannot be
+#'  computed and is \code{NA}.
+#' 
 #' The direction of the rule does not impact the accuracy but does impact the specificity and the
 #'  added value.
 #' }
@@ -4329,6 +4332,9 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE,
 #'    support of \mjeqn{\overline{X \cup Y}}{not(X union Y)}.
 #'  * The **added value**: difference between the confidence of the rule \mjeqn{X \rightarrow Y}{X -> Y}
 #'    and the support of the consequent \eqn{Y}.
+#'    
+#' If the support of the antecedent \eqn{X} is equal to \eqn{1}, the specificity of the rule cannot be
+#'  computed and is `NA`.
 #' 
 #' As a reminder, the support and the confidence of \mjeqn{X \rightarrow Y}{X -> Y} are defined as
 #'  follows.
@@ -4359,14 +4365,19 @@ function(object, rules, transactions = NULL) {
   
   measures = arules::interestMeasure(rules, c("table", "addedValue"), transactions)
   
-  return(matrix(
+  indicators = matrix(
     c(
       measures$table.n00 / (measures$table.n00 + measures$table.n01),   # Specificity
       (measures$table.n11 + measures$table.n00) / dim(transactions)[1], # Accuracy
       measures$addedValue                                               # Added value
     ),
     ncol = 3, byrow = FALSE, dimnames = list(NULL, c("specificity", "accuracy", "added.value"))
-  ))
+  )
+  
+  # Computed specificity is NaN if support(antecedent) = 1. Change NaN to NA
+  indicators[is.nan(indicators[, "specificity"]), "specificity"] = NA_real_
+  
+  return(indicators)
 })
 
 
@@ -4384,6 +4395,8 @@ function(object, rules, transactions = NULL) {
 #' If `display` refers to the selection of rules having the highest or lowest specified characteristic
 #'  and if an association rule and its reciprocal have the same value for this characteristic, both
 #'  rules are represented.
+#' 
+#' Rules whose value of the desired characteristic is `NA` are not represented.
 #' 
 #' The chart being plotted with the packages `ggraph` and `ggplot2`, it can be modified or completed
 #'  afterwards using [`ggplot2::last_plot`] or the returned object.
@@ -4675,6 +4688,9 @@ function(object, rules = NULL, items = NULL,
       else items = get_items(object, "items")
     }
   }
+  
+  # Remove rules having NA values for the characteristic
+  rules = rules[!is.na(rules[, col_to_display]), ]
   
   # Application of the threshold on the characteristic to be displayed
   if (!is.null(threshold)) rules = rules[rules[, col_to_display] >= threshold, ]

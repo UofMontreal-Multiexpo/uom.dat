@@ -151,6 +151,8 @@ If \code{display} refers to the selection of rules having the highest or lowest 
 and if an association rule and its reciprocal have the same value for this characteristic, both
 rules are represented.
 
+Rules whose value of the desired characteristic is \code{NA} are not represented.
+
 The chart being plotted with the packages \code{ggraph} and \code{ggplot2}, it can be modified or completed
 afterwards using \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 

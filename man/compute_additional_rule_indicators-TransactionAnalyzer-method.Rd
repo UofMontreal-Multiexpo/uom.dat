@@ -35,6 +35,9 @@ support of \mjeqn{\overline{X \cup Y}}{not(X union Y)}.
 and the support of the consequent \eqn{Y}.
 }
 
+If the support of the antecedent \eqn{X} is equal to \eqn{1}, the specificity of the rule cannot be
+computed and is \code{NA}.
+
 As a reminder, the support and the confidence of \mjeqn{X \rightarrow Y}{X -> Y} are defined as
 follows.
 \itemize{
