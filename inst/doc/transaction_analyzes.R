@@ -349,7 +349,7 @@ extract_rules(TA_instance,
 extract_rules(TA_instance,
               itemsets = list(c("931", "3180"),
                               c("25", "192", "328")),
-              more = TRUE)[, -c(6, 7)]
+              more = TRUE)[, -c(3, 6)]
 
 ## -----------------------------------------------------------------------------
 cat("Confidence of the rule '192 => 328':", rules_1[1, "confidence"])

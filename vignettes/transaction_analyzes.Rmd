@@ -932,7 +932,7 @@ The argument `more` allows the computation of the additional indicators of speci
 extract_rules(TA_instance,
               itemsets = list(c("931", "3180"),
                               c("25", "192", "328")),
-              more = TRUE)[, -c(6, 7)]
+              more = TRUE)[, -c(3, 6)]
 ```
 
 
