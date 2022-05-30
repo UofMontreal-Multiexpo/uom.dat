@@ -4289,16 +4289,13 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE,
   colnames(rules_df)[c(1,2)] = c("antecedent", "consequent")
   rownames(rules_df) = NULL
   
-  # Renaming the column "count" to "frequency" if exists or compute frequencies and reorder columns
+  # Renaming the column "count" to "frequency" if exists or compute frequencies; and reorder columns
   if ("count" %in% colnames(rules_df)) {
     colnames(rules_df)[colnames(rules_df) == "count"] = "frequency"
-    
   } else {
     rules_df$frequency = as.integer(round(rules_df$support * dim(transact)[1]))
-    rules_df = rules_df[, c(seq(1, ncol(rules_df) - 2),
-                            ncol(rules_df),
-                            ncol(rules_df) - 1)]
   }
+  rules_df = rules_df[, c(1, 2, ncol(rules_df), seq(3, ncol(rules_df) - 1))]
   
   # Compute additional indicators
   if (more) {
@@ -4647,8 +4644,8 @@ function(object, rules = NULL, items = NULL,
     
     # Create an empty data frame if no rules could be extracted
     if (is.null(rules)) {
-      rules = data.frame(character(0), character(0), numeric(0), numeric(0), numeric(0), integer(0))
-      colnames(rules) = c("antecedent", "consequent", "support", "confidence", "lift", "frequency")
+      rules = data.frame(character(0), character(0), integer(0), numeric(0), numeric(0), numeric(0))
+      colnames(rules) = c("antecedent", "consequent", "frequency", "support", "confidence", "lift")
       
       if (args$more) {
         rules = cbind(rules, specificity = numeric(0), accuracy = numeric(0), added.value = numeric(0))
