@@ -2,7 +2,8 @@
 
 ## Major changes
 
-* Column `"count"` of association rule data frames has been renamed to `"frequency"` for consistency with nodes and patterns.
+* Column `" "` containing only character strings `"=>"` has been removed from association rule data frames.
+* Column `"count"` of association rule data frames has been renamed `"frequency"` for consistency with nodes and patterns.
 * Parameter `count` of `TransactionAnalyzer` has been renamed `min_frequency` for overall consistency. This concerns both the object attribute and the constructor argument (function `transaction.analyzer`).
 * Palettes that can be used for coloring confidence values in graphs representing association rules are now the same as for the other characteristics of rules. The previous palettes cannot be used anymore.
 * The `RColorBrewer` package must now be installed for some features to work.
