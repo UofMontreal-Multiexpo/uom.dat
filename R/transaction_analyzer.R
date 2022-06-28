@@ -3942,7 +3942,7 @@ function(object, category = NULL, items = object["items"],
 #' 
 #' @param object S4 object of class `TransactionAnalyzer`.
 #' @param items Items for which to plot co-occurrences between pairs.
-#'  Any subset of `object["items"]`.
+#'  Any subset of `object["items"]` containing at least two items.
 #'  
 #'  `"items"` and `"i"` are special values for `object["items"]`.
 #' @param category Name or number of the category to represent on the graph (numbering according to
@@ -4003,7 +4003,8 @@ function(object, items = object["items"], category = NULL,
   check_param(sort_by, values = c("category", "item"))
   if (is.null(category) && sort_by == "category") sort_by = "item"
   items = get_items(object, items)
-  if (length(items) == 0) stop("items must be a subset of the items contained in object.")
+  if (length(items) < 2 )
+    stop("items must be a subset of the items contained in object and contain at least two items.")
   
   # Creation of the hierarchy (tree depths and edges between vertices) 
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)

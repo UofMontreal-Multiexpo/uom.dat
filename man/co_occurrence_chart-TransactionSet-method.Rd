@@ -27,7 +27,7 @@
 \arguments{
 \item{object}{S4 object of class \code{TransactionSet}.}
 
-\item{items}{Items for which to plot co-occurrences between pairs.
+\item{items}{Items for which to plot co-occurrences between pairs. At least two items.
 The default \code{NULL} means to consider each existing item.}
 
 \item{co_occ}{Matrix containing the co-occurrences (or their proportions) for at least the items

@@ -33,7 +33,7 @@
 \item{object}{S4 object of class \code{TransactionAnalyzer}.}
 
 \item{items}{Items for which to plot co-occurrences between pairs.
-Any subset of \code{object["items"]}.
+Any subset of \code{object["items"]} containing at least two items.
 
 \code{"items"} and \code{"i"} are special values for \code{object["items"]}.}
 

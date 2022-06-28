@@ -1427,7 +1427,7 @@ function(object, identifiers, length_one, under, over) {
 #'  window; while exporting the plot; or by using another graphics device.
 #' 
 #' @param object S4 object of class `TransactionSet`.
-#' @param items Items for which to plot co-occurrences between pairs.
+#' @param items Items for which to plot co-occurrences between pairs. At least two items.
 #'  The default `NULL` means to consider each existing item.
 #' @param co_occ Matrix containing the co-occurrences (or their proportions) for at least the items
 #'  specified by the argument `items`. Is computed if `NULL`.
@@ -1474,8 +1474,8 @@ function(object, items = NULL, co_occ = NULL, proportions = FALSE,
   # Validation of the given items
   if (length(object) == 0) stop("No items to plot (object does not contain any transactions).")
   if (is.null(items)) items = get_all_items(object)
-  else if (!all(items %in% get_all_items(object)) || length(items) == 0)
-    stop("items must be NULL or a subset of the items contained in object.")
+  else if (!all(items %in% get_all_items(object)) || length(items) < 2)
+    stop("items must be NULL or a subset of the items contained in object and contain at least two items.")
   
   # Creation of the hierarchy (tree depths and edges between vertices)
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)
