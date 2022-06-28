@@ -4003,6 +4003,7 @@ function(object, items = object["items"], category = NULL,
   check_param(sort_by, values = c("category", "item"))
   if (is.null(category) && sort_by == "category") sort_by = "item"
   items = get_items(object, items)
+  if (length(items) == 0) stop("items must be a subset of the items contained in object.")
   
   # Creation of the hierarchy (tree depths and edges between vertices) 
   hierarchy = data.frame(parent = "root", child = items, stringsAsFactors = FALSE)

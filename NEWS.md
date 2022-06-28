@@ -3,6 +3,7 @@
 ## Fixes
 
 * An unexpected error was occurring when calling the method `co_occurrence_matrix` by giving an object of class `TransactionSet` containing no transactions and a non-empty vector of items. This case now returns a matrix as expected.
+* An unexpected error was occurring when calling the method `co_occurrence_chart` (either from class `TransactionSet` or `TransactionAnalyzer`) by giving an empty vector of items. These cases now generate appropriate error messages.
 
 
 

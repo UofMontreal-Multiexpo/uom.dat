@@ -1474,7 +1474,7 @@ function(object, items = NULL, co_occ = NULL, proportions = FALSE,
   # Validation of the given items
   if (length(object) == 0) stop("No items to plot (object does not contain any transactions).")
   if (is.null(items)) items = get_all_items(object)
-  else if (!all(items %in% get_all_items(object)))
+  else if (!all(items %in% get_all_items(object)) || length(items) == 0)
     stop("items must be NULL or a subset of the items contained in object.")
   
   # Creation of the hierarchy (tree depths and edges between vertices)
