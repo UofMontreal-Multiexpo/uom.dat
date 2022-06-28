@@ -1207,9 +1207,19 @@ setMethod(f = "co_occurrence_matrix",
 function(object, items = NULL, proportions = FALSE) {
   
   if (is.null(items)) items = get_all_items(object)
+  
+  # Empty matrix if no items
   if (length(items) == 0) {
     if (proportions) return(matrix(numeric(0), ncol = 0, nrow = 0))
     return(matrix(integer(0), ncol = 0, nrow = 0))
+  }
+  # Matrix containing only 0s and NAs if no transactions
+  if (length(object) == 0) {
+    co_table = matrix(if (proportions) 0 else 0L,
+                      ncol = length(items), nrow = length(items),
+                      dimnames = list(items, items))
+    diag(co_table) = NA
+    return(co_table)
   }
   
   # Find the transactions containing each item an generate all combinations of pairs
@@ -1241,7 +1251,7 @@ function(object, items = NULL, proportions = FALSE) {
   # Conversion of item identifiers into character for access to the matrix
   pairs = apply(pairs, c(1,2), as.character)
   
-  # Filling of the matrix
+  # Filling the matrix
   for (c in seq_len(ncol(pairs))) {
     co_table[pairs[1, c], pairs[2, c]] = co[c]
     co_table[pairs[2, c], pairs[1, c]] = co[c]

@@ -1,5 +1,9 @@
 # uom.dat 0.2.0.9000 (development version)
 
+## Fixes
+
+* An unexpected error was occurring when calling the method `co_occurrence_matrix` by giving an object of class `TransactionSet` containing no transactions and a non-empty vector of items. This case now returns a matrix as expected.
+
 
 
 # uom.dat 0.2.0 (2022-06-10)
