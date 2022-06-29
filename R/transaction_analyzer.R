@@ -1823,7 +1823,7 @@ function(object, target, min_frequency = 1, min_length = 1, max_length = Inf, ar
   # Mining for itemsets
   params = list(supp   = min_frequency / dim(transact)[1],
                 minlen = min_length,
-                maxlen = ifelse(max_length == Inf, dim(transact)[2], max_length),
+                maxlen = if (max_length == Inf) max(dim(transact)[2], min_length) else max_length,
                 target = target)
   result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
   patterns_df = methods::as(result, "data.frame")
