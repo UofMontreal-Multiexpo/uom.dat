@@ -1936,17 +1936,23 @@ function(object) {
   # Name of the object for internal modification in the parent environment
   object_name = deparse(substitute(object))
   
-  # For each pattern, selection of the associated nodes them sum of their frequencies per year
-  frequencies = lapply(seq_along(object@patterns$pattern), function(p) {
-    nodes_names = rownames(object@nodes_patterns)[object@nodes_patterns[, p]]
-    return(colSums(object@nodes_per_year[nodes_names, , drop = FALSE]))
-  })
-  
-  # Matrix of pattern frequencies per year
-  ppy = t(sapply(frequencies, as.integer))
-  if (ncol(object@nodes_per_year) == 1) ppy = t(ppy)
-  rownames(ppy) = object@patterns$pattern
-  colnames(ppy) = colnames(object@nodes_per_year)
+  if (length(object@patterns$pattern) == 0) {
+    # If no patterns, no rows
+    ppy = matrix(NA_integer_, nrow = 0, ncol = ncol(object@nodes_per_year),
+                 dimnames = list(character(0), colnames(object@nodes_per_year)))
+  } else {
+    # For each pattern, selection of the associated nodes them sum of their frequencies per year
+    frequencies = lapply(seq_along(object@patterns$pattern), function(p) {
+      nodes_names = rownames(object@nodes_patterns)[object@nodes_patterns[, p]]
+      return(colSums(object@nodes_per_year[nodes_names, , drop = FALSE]))
+    })
+    
+    # Matrix of pattern frequencies per year
+    ppy = t(sapply(frequencies, as.integer))
+    if (ncol(object@nodes_per_year) == 1) ppy = t(ppy)
+    rownames(ppy) = object@patterns$pattern
+    colnames(ppy) = colnames(object@nodes_per_year)
+  }
   
   # Setting the attribute and return
   object@patterns_per_year = ppy
