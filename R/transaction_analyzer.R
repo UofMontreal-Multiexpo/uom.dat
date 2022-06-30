@@ -4295,6 +4295,10 @@ function(object, itemsets = NULL, pruning = FALSE, arules = FALSE,
     if ("parameter" %in% names(args) && "target" %in% names(args$parameter)
         && args$parameter$target != "rules") stop("target parameter must be \"rules\"")
     
+    # Prevent arules error if support parameter is greater than 1
+    if ("parameter" %in% names(args) &&
+        any(grepl("su*", names(args$parameter))) && args$parameter$su > 1) return(NULL)
+    
     # Specifying not to display progress
     if (!("control" %in% names(args))) args$control = list(verbose = FALSE)
     else if (!("verbose" %in% names(args$control))) args$control$verbose = FALSE
