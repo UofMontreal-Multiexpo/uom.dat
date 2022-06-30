@@ -1338,7 +1338,7 @@ function(object, part = NULL) {
   check_param(part, types = c("character", "NULL"))
   
   if (is.null(part)) {
-    return(c("n" = is_init_nodes(object), "nl" = is_init_node_links(object),
+    return(c("n" = is_init_nodes(object),    "nl" = is_init_node_links(object),
              "p" = is_init_patterns(object), "pl" = is_init_pattern_links(object)))
   }
   
