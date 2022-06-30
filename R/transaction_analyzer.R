@@ -1403,8 +1403,8 @@ setMethod(f = "is_init_patterns",
           definition =
 function(object) {
   return(nrow(object@nodes_patterns) != 0
-         && nrow(object@patterns) != 0
-         && nrow(object@patterns_per_year) != 0)
+         && ncol(object@patterns) != 0
+         && ncol(object@patterns_per_year) != 0)
 })
 
 #' @rdname specific_is_init-TransactionAnalyzer-method
@@ -1414,8 +1414,8 @@ setMethod(f = "is_init_pattern_links",
           signature = "TransactionAnalyzer",
           definition =
 function(object) {
-  return(nrow(object@p_links) != 0
-         && nrow(object@pattern_links) != 0)
+  return(!is.null(dimnames(object@p_links))
+         && ncol(object@pattern_links) != 0)
 })
 
 
@@ -1644,16 +1644,22 @@ function(object, entities) {
   else if (entities == PATTERNS) to_link = object@patterns$pattern
   else stop("entities must be NODES or PATTERNS.")
   
-  # Counts the number of items in common for each pair of entities to link
-  names(to_link) = sapply(to_link, paste0, collapse = "/")
-  n_intersections = crossprod(table(utils::stack(to_link)))
-  
-  # Naming of columns and rows by the corresponding itemsets
-  dimnames(n_intersections) = NULL
-  colnames(n_intersections) = rownames(n_intersections) = to_link
-  
-  # Memory size reduction
-  class(n_intersections) = "integer"
+  if (length(to_link) == 0) {
+    n_intersections = matrix(NA_integer_, nrow = 0, ncol = 0,
+                             dimnames = list(character(0), character(0)))
+    
+  } else {
+    # Counts the number of items in common for each pair of entities to link
+    names(to_link) = sapply(to_link, paste0, collapse = "/")
+    n_intersections = crossprod(table(utils::stack(to_link)))
+    
+    # Naming of columns and rows by the corresponding itemsets
+    dimnames(n_intersections) = NULL
+    colnames(n_intersections) = rownames(n_intersections) = to_link
+    
+    # Memory size reduction
+    class(n_intersections) = "integer"
+  }
   
   # Setting the attribute and return
   if (entities == NODES) object@n_links = n_intersections
@@ -1828,13 +1834,22 @@ function(object, target, min_frequency = 1, min_length = 1, max_length = Inf, ar
   result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
   patterns_df = methods::as(result, "data.frame")
   
-  # Conversion of the patterns to a list of vectors and renaming columns
-  patterns_df$items = vector_notation(patterns_df$items)
-  colnames(patterns_df) = c("pattern", "support", "frequency")
-  
-  # Sorting by frequency and renaming rows according to the new order
-  patterns_df = patterns_df[order(patterns_df$frequency, decreasing = TRUE), ]
-  rownames(patterns_df) = seq(nrow(patterns_df))
+  if (nrow(patterns_df) != 0) {
+    
+    # Conversion of the patterns to a list of vectors and renaming columns
+    patterns_df$items = vector_notation(patterns_df$items)
+    colnames(patterns_df) = c("pattern", "support", "frequency")
+    
+    # Sorting by frequency and renaming rows according to the new order
+    patterns_df = patterns_df[order(patterns_df$frequency, decreasing = TRUE), ]
+    rownames(patterns_df) = seq(nrow(patterns_df))
+    
+  } else {
+    patterns_df = data.frame(pattern = character(0),
+                             support = numeric(0),
+                             frequency = integer(0))
+    patterns_df$pattern = list()
+  }
   
   # Setting the attribute and return
   object@patterns = patterns_df
@@ -1980,13 +1995,17 @@ function(object) {
   object_name = deparse(substitute(object))
   
   # Association of new characteristics with the patterns
-  object@patterns$weight = sapply(seq_along(object@patterns$pattern),
-                                  function(p) sum(object@nodes_patterns[, p]))
-  object@patterns$length = sapply(object@patterns$pattern, length)
-  object@patterns$year = apply(object@patterns_per_year, 1, function(x) {
-                                                              # Year of appearance of the pattern
-                                                              as.integer(names(x[x > 0])[1])
-                                                            })
+  object@patterns$weight = vapply(seq_along(object@patterns$pattern),
+                                  function(p) sum(object@nodes_patterns[, p]),
+                                  integer(1))
+  object@patterns$length = lengths(object@patterns$pattern)
+  object@patterns$year = vapply(seq_len(nrow(object@patterns_per_year)),
+                                function(i) {
+                                  # Year of appearance of the pattern
+                                  x = object@patterns_per_year[i, ]
+                                  return(as.integer(names(x[x > 0][1])))
+                                },
+                                integer(1))
   
   # Computation of the specificity and dynamic status of each pattern
   object@patterns$specificity = compute_specificity(object, object@patterns$pattern,
@@ -2359,6 +2378,19 @@ function(object, patterns, end = NULL, overall_period = Inf, recent_period = obj
   
   check_init(object, PATTERNS)
   patterns = get_tnp_itemsets(object, patterns, entities = PATTERNS)
+  
+  # If empty list
+  if (length(patterns) == 0) {
+    return(list(res = data.frame(RI.overall = numeric(0),
+                                 is.above.threshold.1 = logical(0),
+                                 RI.recent = numeric(0),
+                                 is.above.threshold.2 = logical(0),
+                                 status = character(0),
+                                 stringsAsFactors = FALSE),
+                thresholds = matrix(NA_real_,
+                                    ncol = 2, nrow = 2,
+                                    dimnames = list(c("xi", "RI"), c("threshold.1", "threshold.2")))))
+  }
   
   # Compputation of the limits and associated thresholds
   ri_limits = compute_reporting_indexes_limits(object, patterns, end, overall_period, recent_period)
