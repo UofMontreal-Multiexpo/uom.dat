@@ -1826,14 +1826,21 @@ function(object, target, min_frequency = 1, min_length = 1, max_length = Inf, ar
   # Conversion of transactions to arules transactions: one row per transaction, one column per item
   transact = methods::as(object@transactions, "transactions")
   
-  # Mining for itemsets
+  # Preparing parameters for mining itemsets
   params = list(supp   = min_frequency / dim(transact)[1],
                 minlen = min_length,
                 maxlen = if (max_length == Inf) max(dim(transact)[2], min_length) else max_length,
                 target = target)
-  result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
-  patterns_df = methods::as(result, "data.frame")
   
+  # Mining for itemsets
+  if (params$supp <= 1) {
+    result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
+    patterns_df = methods::as(result, "data.frame")
+  } else {
+    patterns_df = data.frame()
+  }
+  
+  # Final data frame of patterns (may be empty if no patterns have been extracted)
   if (nrow(patterns_df) != 0) {
     
     # Conversion of the patterns to a list of vectors and renaming columns
