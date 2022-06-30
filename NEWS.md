@@ -9,6 +9,10 @@
 * An error was occurring when calling the method `frequency_by_complexity` (class `TransactionAnalyzer`) by giving a list containing no patterns. This case now returns a matrix as expected.
 * An error was occurring when calling the method `extract_rules` (class `TransactionAnalyzer`) by giving a support mining parameter greater than $1$. This case now returns no rules as expected.
 
+## Documentation
+
+* The help page of the `extract_rules` method (class `TransactionAnalyzer`) now specifies the result in case no rules can be extracted.
+
 
 
 # uom.dat 0.2.0 (2022-06-10)

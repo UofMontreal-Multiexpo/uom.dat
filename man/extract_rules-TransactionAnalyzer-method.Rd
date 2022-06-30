@@ -47,7 +47,8 @@ rules. Ignored if \code{arules} is \code{TRUE}. See 'Details'.}
 \item{...}{Additional arguments to configure the extraction. See 'Details'.}
 }
 \value{
-Data frame or object of class \code{rules} (according to the argument \code{arules})
+\code{NULL} if no rules satisfy the extraction criteria.
+ Otherwise, data frame or object of class \code{rules} (according to the argument \code{arules})
  containing the extracted rules and their characteristics.
  
  If \code{itemsets} is not \code{NULL}, the additional column \code{"itemset"} refers to the index

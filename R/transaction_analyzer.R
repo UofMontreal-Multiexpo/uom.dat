@@ -4239,7 +4239,8 @@ function(object, items = object["items"], category = NULL,
 #' @param more \code{TRUE} or \code{FALSE} whether to compute additional indicators associated with the
 #'  rules. Ignored if \code{arules} is \code{TRUE}. See 'Details'.
 #' @param ... Additional arguments to configure the extraction. See 'Details'.
-#' @return Data frame or object of class \code{rules} (according to the argument \code{arules})
+#' @return \code{NULL} if no rules satisfy the extraction criteria.
+#'  Otherwise, data frame or object of class \code{rules} (according to the argument \code{arules})
 #'  containing the extracted rules and their characteristics.
 #'  
 #'  If \code{itemsets} is not \code{NULL}, the additional column \code{"itemset"} refers to the index
