@@ -6,6 +6,7 @@
 * Unexpected errors were occurring when calling the method `co_occurrence_chart` (either from class `TransactionSet` or `TransactionAnalyzer`) by giving an empty or length-one vector of items. These cases now generate appropriate error messages.
 * An unexpected error was occurring when initializing an object of class `TransactionAnalyzer` by giving no maximum length as mining parameter, if the given minimum length parameter was greater than the number of separate items actually appearing in the transactions.
 * Objects of class `TransactionAnalyzer` can now be fully initialized if no patterns can be extracted according to the mining parameters.
+* An error was occurring when calling the method `frequency_by_complexity` (class `TransactionAnalyzer`) by giving a list containing no elements. This case now returns a matrix as expected.
 
 
 

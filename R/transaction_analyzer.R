@@ -2767,12 +2767,16 @@ setMethod(f = "frequency_by_complexity",
 function(object, patterns) {
   
   patterns = get_tnp_itemsets(object, patterns, entities = PATTERNS)
-  pnc = pattern_node_characteristics(object, patterns)
   
-  frequencies = t(sapply(seq_along(patterns), function(i) {
-    c(sum(pnc$frequencies[[i]][pnc$lengths[[i]] > 1]),
-      sum(pnc$frequencies[[i]][pnc$lengths[[i]] == 1]))
-  }))
+  if (length(patterns) == 0) frequencies = matrix(NA_integer_, nrow = 0, ncol = 2)
+  else {
+    pnc = pattern_node_characteristics(object, patterns)
+    
+    frequencies = t(sapply(seq_along(patterns), function(i) {
+      c(sum(pnc$frequencies[[i]][pnc$lengths[[i]] > 1]),
+        sum(pnc$frequencies[[i]][pnc$lengths[[i]] == 1]))
+    }))
+  }
   
   colnames(frequencies) = c("complex", "simple")
   return(frequencies)
