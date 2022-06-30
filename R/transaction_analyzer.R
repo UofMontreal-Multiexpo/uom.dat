@@ -1832,8 +1832,9 @@ function(object, target, min_frequency = 1, min_length = 1, max_length = Inf, ar
                 maxlen = if (max_length == Inf) max(dim(transact)[2], min_length) else max_length,
                 target = target)
   
-  # Mining for itemsets
+  # Prevent arules error if support parameter is greater than 1
   if (params$supp <= 1) {
+    # Mining for itemsets
     result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
     patterns_df = methods::as(result, "data.frame")
   } else {
