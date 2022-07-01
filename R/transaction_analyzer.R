@@ -4841,9 +4841,11 @@ function(object, rules = NULL, items = NULL,
   
   ## Plotting of the graph
   
+  # Initialization of the graph
   tree = igraph::graph_from_data_frame(hierarchy, vertices = vertices)
   graph = ggraph::ggraph(tree, layout = "dendrogram", circular = TRUE)
   
+  # Edges of the graph
   if (nrow(rules_to_plot) != 0) {
     graph = graph +
       ggraph::geom_conn_bundle(
@@ -4855,6 +4857,7 @@ function(object, rules = NULL, items = NULL,
         tension = edge_looseness)
   }
   
+  # Vertices of the graph
   graph = graph +
     ggraph::geom_node_point(ggplot2::aes(x = x * vertex_coord_multiplier,
                                          y = y * vertex_coord_multiplier,
@@ -4873,11 +4876,14 @@ function(object, rules = NULL, items = NULL,
     ggplot2::coord_fixed()
   
   if (has_direction) {
+    
+    # Direction legend
     if (want_direction) {
       graph = graph + ggraph::scale_edge_alpha("Rule direction",
                                                guide = ggraph::guide_edge_direction(order = 2))
     }
     
+    # Edge color legend
     if (is_divergent) {
       graph = graph + ggraph::scale_edge_color_brewer(
         gsub(".", " ", cap(col_to_display), fixed = TRUE),
@@ -4902,6 +4908,7 @@ function(object, rules = NULL, items = NULL,
       )
     }
   } else {
+    # Edge color legend
     graph = graph + 
       ggraph::scale_edge_color_distiller(cap(col_to_display),
                                          palette = palette, direction = palette_direction,
@@ -4910,6 +4917,7 @@ function(object, rules = NULL, items = NULL,
                                          guide = ggraph::guide_edge_colorbar(order = 1))
   }
   
+  # Category legend
   if (!is.null(category)) {
     category_name = if (is.numeric(category)) colnames(object@items_categories)[category] else category
     graph = graph + ggplot2::scale_color_manual(cap(category_name),
