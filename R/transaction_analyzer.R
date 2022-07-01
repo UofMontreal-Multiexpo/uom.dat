@@ -4731,7 +4731,7 @@ function(object, rules = NULL, items = NULL,
     if (nrow(rules) != 0) {
       items = get_items(object, unique(unlist(rules[, c("antecedent", "consequent")])))
     } else {
-      if (exists("items_tmp")) items = items_tmp
+      if (exists("items_tmp") && length(items_tmp) != 0) items = items_tmp
       else items = get_items(object, "items")
     }
   }

@@ -8,6 +8,7 @@
 * Objects of class `TransactionAnalyzer` can now be fully initialized if no patterns can be extracted according to the mining parameters.
 * An error was occurring when calling the method `frequency_by_complexity` (class `TransactionAnalyzer`) by giving a list containing no patterns. This case now returns a matrix as expected.
 * An error was occurring when calling the method `extract_rules` (class `TransactionAnalyzer`) by giving a support mining parameter greater than 1. This case now returns no rules as expected.
+* An error was occuring when calling the method `rules_chart` (class `TransactionAnalzyer`) by giving a data frame of rules containing no rows and leaving the default value (`NULL`) for the `items` argument. This case now creates a graph without any edges between vertices and plots all items of the given `TransactionAnalyzer` object.
 
 ## Documentation
 
