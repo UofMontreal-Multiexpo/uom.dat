@@ -4571,7 +4571,7 @@ function(object, rules, transactions = NULL) {
 #' rules_chart(TA_instance, items = c(497, 930, 402), category = 1,
 #'             display = "confidence")
 #' rules_chart(TA_instance, items = c(497, 930, 402), category = 1,
-#'             display = "confidence", palette = "category10")
+#'             display = "confidence", palette = "OrRd")
 #' rules_chart(TA_instance, items = c(497, 930, 402), category = 1,
 #'             display = "highest confidence", palette_direction = 1)
 #' rules_chart(TA_instance, items = c(497, 930, 402), category = 1,

@@ -13,6 +13,7 @@
 ## Documentation
 
 * The help page of the `extract_rules` method (class `TransactionAnalyzer`) now specifies the result in case no rules can be extracted.
+* The help page of the `rules_chart` method (class `TransactionAnalyzer`) now only uses valid palettes in examples.
 
 
 
