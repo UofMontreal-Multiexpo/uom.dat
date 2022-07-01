@@ -4890,7 +4890,7 @@ function(object, rules = NULL, items = NULL,
       # Create a 10 color palette from the specified 9 color palette
       # (by creating a 11 color palette to get a less light first color.
       # Otherwise, the first level of the discrete scale can hardly be seen)
-      pal = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(11)[2:11]
+      pal = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, palette))(11)[2:11]
       
       graph = graph + ggraph::scale_edge_color_manual(
         cap(col_to_display),
