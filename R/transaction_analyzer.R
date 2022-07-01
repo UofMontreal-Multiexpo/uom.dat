@@ -4712,7 +4712,8 @@ function(object, rules = NULL, items = NULL,
   } else {
     # Items present in the rules given before removal of those that are not of size 2
     if (is.null(items)) {
-      items_tmp = get_items(object, unique(unlist(rules[, c("antecedent", "consequent")])))
+      items_tmp = unique(unlist(rules[, c("antecedent", "consequent")]))
+      if (!is.null(items_tmp)) items_tmp = get_items(object, items_tmp)
     }
     
     # Removal of rules that are not of size 2
