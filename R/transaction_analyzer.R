@@ -4907,7 +4907,7 @@ function(object, rules = NULL, items = NULL,
         guide = ggplot2::guide_legend(order = 1)
       )
     }
-  } else {
+  } else if (nrow(rules_to_plot) != 0) {
     # Edge color legend
     graph = graph + 
       ggraph::scale_edge_color_distiller(cap(col_to_display),
