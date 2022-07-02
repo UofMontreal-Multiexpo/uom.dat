@@ -1,8 +1,8 @@
 Package: uom.dat
 Type: Package
 Title: University of Montreal - Data Analysis Tools
-Version: 0.2.0.9000
-Date: 2022-06-10
+Version: 0.2.1
+Date: 2022-07-02
 Authors@R: c(
     person("Gauthier", "Magnin", email = "gauthier.magnin@gmail.com", role = c("aut", "ctr", "cre")),
     person("Delphine", "Bosson-Rieutort", email = "delphine.bosson-rieutort@umontreal.ca", role = "aut"),
