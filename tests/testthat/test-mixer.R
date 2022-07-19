@@ -3214,7 +3214,7 @@ test_that("subset_from_class extracts the subset of values corresponding to the 
   expect_equal(subset_from_class(values = values_vector,
                                  classes = classes_list,
                                  class_name = "C5"),
-               setNames(numeric(0), character(0)))
+               stats::setNames(numeric(0), character(0)))
   
   # 'values' as a matrix
   expect_equal(subset_from_class(values = values_matrix,
