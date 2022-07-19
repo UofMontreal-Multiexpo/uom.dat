@@ -33,11 +33,14 @@ highest ones. Thus, call the function with the argument \code{hq} is faster (if 
 If \code{values} is a matrix, the reference values are applied once on each set of values, i.e. on each row.
 Therefore, there must be one reference value for each column of the matrix.
 
-If \code{values} or \code{hq} is a matrix, \code{k} hazard quotients are highlight for each row.
+If \code{values} or \code{hq} is a matrix, \code{k} hazard quotients are highlighted for each row.
 
 If the number of hazard quotients that are greater than or equal to the \eqn{k-th} greater hazard
 quotient is greater than \code{k}, only the first \code{k} values are considered and in the order given.
 For example, if \code{hq = c(D = 5, B = 1, C = 3, A = 3)} and \code{k = 2}, the return is \code{c(D = 5, C = 3)}.
+
+If \code{values} or \code{hq} contains \eqn{0}s and \code{k} implies some of these \eqn{0}s to be considered as
+top hazard quotients, the corresponding values returned are \code{NA}.
 
 \loadmathjax
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:

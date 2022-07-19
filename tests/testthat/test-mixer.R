@@ -477,17 +477,41 @@ test_that("reciprocal_of_mcr returns an identical result whatever the chosen usa
 test_that("top_hazard_quotient returns at most as many top hazard quotients as there are hazard quotients", {
   # 'values' as a vector
   expect_length(top_hazard_quotient(1:5, 1:5, k = 500), 5)
+  expect_length(top_hazard_quotient(rep(0,5), 1:5, k = 500), 5)
   
   # 'values' as a matrix
-  expect_equal(lengths(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5, k = 500)), c(5,5))
+  expect_equal(
+    lengths(top_hazard_quotient(matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE), 1:5, k = 500)),
+    c(5,5,5)
+  )
   expect_equal(lengths(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5, k = 500)), 5)
   
   # 'hq' as a vector
   expect_length(top_hazard_quotient(hq = 1:5, k = 500), 5)
+  expect_length(top_hazard_quotient(hq = rep(0,5), k = 500), 5)
   
   # 'hq' as a matrix
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE), k = 500)), c(5,5))
+  expect_equal(
+    lengths(top_hazard_quotient(hq = matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE), k = 500)),
+    c(5,5,5)
+  )
   expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  nrow = 1), k = 500)), 5)
+})
+
+test_that("top_hazard_quotient returns, by default if all values are equal to 0, a single value", {
+  # 'values' as a vector
+  expect_length(top_hazard_quotient(rep(0,5), 1:5), 1)
+  
+  # 'values' as a matrix
+  expect_equal(lengths(top_hazard_quotient(matrix(rep(0,10), nrow = 2, byrow = TRUE), 1:5)), c(1,1))
+  expect_equal(lengths(top_hazard_quotient(matrix(rep(0,5),  nrow = 1), 1:5)), 1)
+  
+  # 'hq' as a vector
+  expect_length(top_hazard_quotient(hq = rep(0,5)), 1)
+  
+  # 'hq' as a matrix
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(rep(0,10), nrow = 2, byrow = TRUE))), c(1,1))
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(rep(0,5),  nrow = 1))), 1)
 })
 
 test_that("top_hazard_quotient returns, by default, as many top hazard quotients as the integer part of the maximum cumulative ratio", {
@@ -521,17 +545,23 @@ test_that("top_hazard_quotient only allows to find at least 1 top hazard quotien
 test_that("top_hazard_quotient returns as many top hazard quotients as requested", {
   # 'values' as a vector
   expect_length(top_hazard_quotient(1:5, 1:5, k = 3), 3)
+  expect_length(top_hazard_quotient(rep(0,5), 1:5, k = 3), 3)
   
   # 'values' as a matrix
-  expect_equal(lengths(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE), 1:5, k = 3)), c(3,3))
-  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5, k = 3)), 3)
+  expect_equal(lengths(top_hazard_quotient(matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE), 1:5, k = 3)),
+               c(3,3,3))
+  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5, k = 3)),
+               3)
   
   # 'hq' as a vector
   expect_length(top_hazard_quotient(hq = 1:5, k = 3), 3)
+  expect_length(top_hazard_quotient(hq = rep(0,5), k = 3), 3)
   
   # 'hq' as a matrix
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE), k = 3)), c(3,3))
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  nrow = 1))), 3)
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE), k = 3)),
+               c(3,3,3))
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  nrow = 1))),
+               3)
 })
 
 test_that("top_hazard_quotient returns the right data structure", {
@@ -565,9 +595,10 @@ test_that("top_hazard_quotient returns as many sets of top hazard quotients as t
 test_that("top_hazard_quotient returns named values if the given values or hq are named", {
   # 'values' as a vector
   expect_named(top_hazard_quotient(c(a=1, b=2, c=3, d=4, e=5), 1:5))
+  expect_named(top_hazard_quotient(c(a=0, b=0, c=0, d=0, e=0), 1:5))
   
   # 'values' as a matrix
-  expect_named(unlist(top_hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE,
+  expect_named(unlist(top_hazard_quotient(matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE,
                                                  dimnames = list(NULL, letters[1:5])),
                                           1:5)))
   expect_named(unlist(top_hazard_quotient(matrix(1:5,  nrow = 1,
@@ -576,9 +607,10 @@ test_that("top_hazard_quotient returns named values if the given values or hq ar
   
   # 'hq' as a vector
   expect_named(top_hazard_quotient(hq = c(a=1, b=2, c=3, d=4, e=5)))
+  expect_named(top_hazard_quotient(hq = c(a=0, b=0, c=0, d=0, e=0)))
   
   # 'hq' as a matrix
-  expect_named(unlist(top_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE,
+  expect_named(unlist(top_hazard_quotient(hq = matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE,
                                                       dimnames = list(NULL, letters[1:5])))))
   expect_named(unlist(top_hazard_quotient(hq = matrix(1:5,  nrow = 1,
                                                       dimnames = list(NULL, letters[1:5])))))
@@ -655,6 +687,36 @@ test_that("top_hazard_quotient finds the top hazard quotients", {
                     s2 = c(e=10, d=9, c=8, b=7)))
   expect_equal(top_hazard_quotient(hq = matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5]))),
                list(s1 = c(e=5, d=4, c=3)))
+})
+
+test_that("top_hazard_quotient returns NA values instead of values equal to 0", {
+  
+  # 'values' as a vector
+  expect_equal(top_hazard_quotient(c(a=0, b=0, c=0, d=0, e=0), c(1,1,1,1,1), k = 2),
+               stats::setNames(c(NA_real_, NA_real_), c(NA_character_, NA_character_)))
+  expect_equal(top_hazard_quotient(c(a=1, b=0, c=0, d=0, e=0), c(1,1,1,1,1), k = 2),
+               stats::setNames(c(1, NA_real_), c("a", NA_character_)))
+  
+  # 'values' as a matrix
+  expect_equal(top_hazard_quotient(matrix(c(rep(0,9), 1), nrow = 2, byrow = TRUE,
+                                          dimnames = list(c("s1", "s2"), letters[1:5])),
+                                   c(1,1,1,1,1),
+                                   k = 2),
+               list(s1 = stats::setNames(c(NA_real_, NA_real_), c(NA_character_, NA_character_)),
+                    s2 = stats::setNames(c(1, NA_real_), c("e", NA_character_))))
+  
+  # 'hq' as a vector
+  expect_equal(top_hazard_quotient(hq = c(a=0, b=0, c=0, d=0, e=0), k = 2),
+               stats::setNames(c(NA_real_, NA_real_), c(NA_character_, NA_character_)))
+  expect_equal(top_hazard_quotient(hq = c(a=1, b=0, c=0, d=0, e=0), k = 2),
+               stats::setNames(c(1, NA_real_), c("a", NA_character_)))
+  
+  # 'hq' as a matrix
+  expect_equal(top_hazard_quotient(hq = matrix(c(rep(0,9), 1), nrow = 2, byrow = TRUE,
+                                               dimnames = list(c("s1", "s2"), letters[1:5])),
+                                   k = 2),
+               list(s1 = stats::setNames(c(NA_real_, NA_real_), c(NA_character_, NA_character_)),
+                    s2 = stats::setNames(c(1, NA_real_), c("e", NA_character_))))
 })
 
 test_that("top_hazard_quotient returns an identical result whatever the chosen usage", {

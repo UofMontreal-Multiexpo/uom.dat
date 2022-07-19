@@ -1,5 +1,13 @@
 # uom.dat 0.2.1.9000 (development version)
 
+## Minor changes
+
+* The function `top_hazard_quotient` identifying the top hazard quotients now returns `NA` values instead of `0` values.
+
+## Fixes
+
+* An error was occurring when calling the function `top_hazard_quotient` by giving sets of values or of HQ containing only values equal to 0 and using the default value of the argument `k`.
+
 
 
 # uom.dat 0.2.1 (2022-07-02)

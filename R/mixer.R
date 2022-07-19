@@ -469,11 +469,14 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' If `values` is a matrix, the reference values are applied once on each set of values, i.e. on each row.
 #'  Therefore, there must be one reference value for each column of the matrix.
 #' 
-#' If `values` or `hq` is a matrix, `k` hazard quotients are highlight for each row.
+#' If `values` or `hq` is a matrix, `k` hazard quotients are highlighted for each row.
 #' 
 #' If the number of hazard quotients that are greater than or equal to the \eqn{k-th} greater hazard
 #'  quotient is greater than `k`, only the first `k` values are considered and in the order given.
 #'  For example, if `hq = c(D = 5, B = 1, C = 3, A = 3)` and `k = 2`, the return is `c(D = 5, C = 3)`.
+#' 
+#' If `values` or `hq` contains \eqn{0}s and `k` implies some of these \eqn{0}s to be considered as
+#'  top hazard quotients, the corresponding values returned are `NA`.
 #' 
 #' \loadmathjax
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
@@ -526,20 +529,29 @@ top_hazard_quotient = function(values = NULL, references = NULL,
   if (!is.null(k) && k < 1) stop("k must be greater than 0.")
   if (is.null(hq)) hq = hazard_quotient(values, references)
   
+  # Recursive calls if there are several sets of values
   if (is.matrix(hq)) {
     thq_list = apply(hq, 1, function(row) list(top_hazard_quotient(hq = row, k = k)))
     return(lapply(thq_list, "[[", 1))
   }
   
   if (is.null(k)) {
-    # Default value: integer part of the maximum cumulative ratio
-    k = trunc(maximum_cumulative_ratio(hi = hazard_index(hq = hq),
-                                       mhq = maximum_hazard_quotient(hq = hq)))
+    # Default value: integer part of the maximum cumulative ratio, or 1
+    if (all(hq == 0)) k = 1
+    else {
+      k = trunc(maximum_cumulative_ratio(hi = hazard_index(hq = hq),
+                                         mhq = maximum_hazard_quotient(hq = hq)))
+    }
   } else if (k > length(hq)) {
     k = length(hq)
   }
   
-  if (k == 1) return(hq[which.max(hq)])
+  # Turn values equal to 0 into NA values
+  hq[hq == 0] = NA_real_
+  if (is_named(hq)) names(hq)[is.na(hq)] = NA_character_
+  
+  if (all(is.na(hq))) return(hq[seq_len(k)])
+  if (k == 1)         return(hq[which.max(hq)])
   return(sort(hq, decreasing = TRUE)[seq_len(k)])
 }
 
