@@ -47,11 +47,11 @@ another_ta_object@n_links = matrix()
 another_ta_object@node_links = data.frame()
 another_ta_object@nodes_patterns = matrix()
 another_ta_object@patterns_per_year = matrix()
-another_ta_object@p_links = matrix()
+another_ta_object@p_links = matrix(dimnames = list("A","A")) # Dim names to consider it initialized
 
 # object.size(another_ta_object) / 1024
 # sapply(slotNames(another_ta_object), function(n) object.size(another_ta_object[n]))
-# 194.1 KB (RDS: 15 KB)
+# 194.5 KB (RDS: 15 KB)
 
 
 
