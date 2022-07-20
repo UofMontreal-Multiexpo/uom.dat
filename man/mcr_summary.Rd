@@ -41,6 +41,9 @@ if \code{references} is a vector, there must be one reference for each name pres
 Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
 so that \code{values} and \code{references} can be matched.
 
+If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+quotient is the first one considering the given order.
+
 \loadmathjax
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
@@ -69,9 +72,6 @@ The mixtures are assigned to the groups according the following conditions:
 \item Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 \item Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
 }
-
-If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-quotient is the first one considering the given order.
 }
 \examples{
 ## MCR summary on vectors and matrices

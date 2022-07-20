@@ -2173,6 +2173,9 @@ validate_classes = function(classes) {
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
 #' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
+#' 
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
 #'  function with such a matrix is slightly faster.
 #'  
@@ -2202,9 +2205,6 @@ validate_classes = function(classes) {
 #' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
-#' 
-#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order.
 #' 
 #' @param values Numeric named vector or matrix, or list of numeric named vectors.
 #'  Values whose indicators of the MCR approach are to be computed according to classes.
