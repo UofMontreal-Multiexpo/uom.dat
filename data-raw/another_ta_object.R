@@ -27,7 +27,7 @@ other_categories <- data.frame(item = other_substances,
                                stringsAsFactors = FALSE)
 
 another_ta_object <- transaction.analyzer(other_trx, items = other_categories,
-                                          target = "maximally frequent itemsets", count = 100)
+                                          target = "maximally frequent itemsets", min_frequency = 100)
 # [04s] [00s] [03s] [01m 28s] [04s]
 # [03s] [00s] [00s]     [00s] [00s]
 # => 01m 42s
