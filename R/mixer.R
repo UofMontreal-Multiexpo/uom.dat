@@ -1748,7 +1748,7 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
   # When a single value, pair with "NULL"
   if (alone) {
     index_alone = which(sapply(hq_to_use, length) == 1)
-    hq_to_use[index_alone] = lapply(hq_to_use[index_alone], c, "NULL" = 0)
+    hq_to_use[index_alone] = lapply(hq_to_use[index_alone], c, "NULL" = 1)
   }
   
   # Searching for the Top 2 HQ
