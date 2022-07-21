@@ -474,44 +474,80 @@ test_that("reciprocal_of_mcr returns an identical result whatever the chosen usa
 
 ##### top_hazard_quotient #####
 
-test_that("top_hazard_quotient returns at most as many top hazard quotients as there are hazard quotients", {
+test_that("top_hazard_quotient returns at most as many top hazard quotients as hazard quotients considered", {
   # 'values' as a vector
   expect_length(top_hazard_quotient(1:5, 1:5, k = 500), 5)
-  expect_length(top_hazard_quotient(rep(0,5), 1:5, k = 500), 5)
+  expect_length(top_hazard_quotient(rep(0,5), 1:5, k = 500, ignore_zero = FALSE), 5)
+  expect_length(top_hazard_quotient(c(0,0,0,1,1), 1:5, k = 500, ignore_zero = TRUE), 2)
   
   # 'values' as a matrix
   expect_equal(
-    lengths(top_hazard_quotient(matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE), 1:5, k = 500)),
-    c(5,5,5)
+    lengths(top_hazard_quotient(matrix(c(1:5, rep(0,5)), nrow = 2, byrow = TRUE),
+                                references = 1:5, k = 500, ignore_zero = FALSE)),
+    c(5,5)
   )
-  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5, k = 500)), 5)
+  expect_equal(
+    lengths(top_hazard_quotient(matrix(c(1:5, c(0,0,0,1,1)), nrow = 2, byrow = TRUE),
+                                references = 1:5, k = 500, ignore_zero = TRUE)),
+    c(5,2)
+  )
+  expect_equal(lengths(top_hazard_quotient(matrix(1:5, nrow = 1), 1:5, k = 500)), 5)
   
   # 'hq' as a vector
   expect_length(top_hazard_quotient(hq = 1:5, k = 500), 5)
-  expect_length(top_hazard_quotient(hq = rep(0,5), k = 500), 5)
+  expect_length(top_hazard_quotient(hq = rep(0,5), k = 500, ignore_zero = FALSE), 5)
+  expect_length(top_hazard_quotient(hq = c(0,0,0,1,1), k = 500, ignore_zero = TRUE), 2)
   
   # 'hq' as a matrix
   expect_equal(
-    lengths(top_hazard_quotient(hq = matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE), k = 500)),
-    c(5,5,5)
+    lengths(top_hazard_quotient(hq = matrix(c(1:5, rep(0,5)), nrow = 2, byrow = TRUE),
+                                k = 500, ignore_zero = FALSE)),
+    c(5,5)
   )
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  nrow = 1), k = 500)), 5)
+  expect_equal(
+    lengths(top_hazard_quotient(hq = matrix(c(1:5, c(0,0,0,1,1)), nrow = 2, byrow = TRUE),
+                                k = 500, ignore_zero = TRUE)),
+    c(5,2)
+  )
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5, nrow = 1), k = 500)), 5)
 })
 
 test_that("top_hazard_quotient returns, by default if all values are equal to 0, a single value", {
   # 'values' as a vector
-  expect_length(top_hazard_quotient(rep(0,5), 1:5), 1)
+  expect_length(top_hazard_quotient(rep(0,5), 1:5, ignore_zero = TRUE), 1)
+  expect_length(top_hazard_quotient(rep(0,5), 1:5, ignore_zero = FALSE), 1)
   
   # 'values' as a matrix
-  expect_equal(lengths(top_hazard_quotient(matrix(rep(0,10), nrow = 2, byrow = TRUE), 1:5)), c(1,1))
-  expect_equal(lengths(top_hazard_quotient(matrix(rep(0,5),  nrow = 1), 1:5)), 1)
+  expect_equal(lengths(top_hazard_quotient(matrix(rep(0,10), nrow = 2, byrow = TRUE),
+                                           references = 1:5, ignore_zero = TRUE)),
+               c(1,1))
+  expect_equal(lengths(top_hazard_quotient(matrix(rep(0,10), nrow = 2, byrow = TRUE),
+                                           references = 1:5, ignore_zero = FALSE)),
+               c(1,1))
+  expect_equal(lengths(top_hazard_quotient(matrix(rep(0,5), nrow = 1),
+                                           references = 1:5, ignore_zero = TRUE)),
+               1)
+  expect_equal(lengths(top_hazard_quotient(matrix(rep(0,5), nrow = 1),
+                                           references = 1:5, ignore_zero = FALSE)),
+               1)
   
   # 'hq' as a vector
-  expect_length(top_hazard_quotient(hq = rep(0,5)), 1)
+  expect_length(top_hazard_quotient(hq = rep(0,5), ignore_zero = TRUE), 1)
+  expect_length(top_hazard_quotient(hq = rep(0,5), ignore_zero = FALSE), 1)
   
   # 'hq' as a matrix
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(rep(0,10), nrow = 2, byrow = TRUE))), c(1,1))
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(rep(0,5),  nrow = 1))), 1)
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(rep(0,10), nrow = 2, byrow = TRUE),
+                                           ignore_zero = TRUE)),
+               c(1,1))
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(rep(0,10), nrow = 2, byrow = TRUE),
+                                           ignore_zero = FALSE)),
+               c(1,1))
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(rep(0,5), nrow = 1),
+                                           ignore_zero = TRUE)),
+               1)
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(rep(0,5), nrow = 1),
+                                           ignore_zero = FALSE)),
+               1)
 })
 
 test_that("top_hazard_quotient returns, by default, as many top hazard quotients as the integer part of the maximum cumulative ratio", {
@@ -545,22 +581,24 @@ test_that("top_hazard_quotient only allows to find at least 1 top hazard quotien
 test_that("top_hazard_quotient returns as many top hazard quotients as requested", {
   # 'values' as a vector
   expect_length(top_hazard_quotient(1:5, 1:5, k = 3), 3)
-  expect_length(top_hazard_quotient(rep(0,5), 1:5, k = 3), 3)
+  expect_length(top_hazard_quotient(rep(0,5), 1:5, k = 3, ignore_zero = FALSE), 3)
   
   # 'values' as a matrix
-  expect_equal(lengths(top_hazard_quotient(matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE), 1:5, k = 3)),
-               c(3,3,3))
-  expect_equal(lengths(top_hazard_quotient(matrix(1:5,  nrow = 1), 1:5, k = 3)),
+  expect_equal(lengths(top_hazard_quotient(matrix(c(1:5, rep(0,5)), nrow = 2, byrow = TRUE),
+                                           references = 1:5, k = 3, ignore_zero = FALSE)),
+               c(3,3))
+  expect_equal(lengths(top_hazard_quotient(matrix(1:5, nrow = 1), 1:5, k = 3)),
                3)
   
   # 'hq' as a vector
   expect_length(top_hazard_quotient(hq = 1:5, k = 3), 3)
-  expect_length(top_hazard_quotient(hq = rep(0,5), k = 3), 3)
+  expect_length(top_hazard_quotient(hq = rep(0,5), k = 3, ignore_zero = FALSE), 3)
   
   # 'hq' as a matrix
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(c(1:10, rep(0,5)), nrow = 3, byrow = TRUE), k = 3)),
-               c(3,3,3))
-  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5,  nrow = 1))),
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(c(1:5, rep(0,5)), nrow = 2, byrow = TRUE),
+                                           k = 3, ignore_zero = FALSE)),
+               c(3,3))
+  expect_equal(lengths(top_hazard_quotient(hq = matrix(1:5, nrow = 1))),
                3)
 })
 
@@ -687,36 +725,6 @@ test_that("top_hazard_quotient finds the top hazard quotients", {
                     s2 = c(e=10, d=9, c=8, b=7)))
   expect_equal(top_hazard_quotient(hq = matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5]))),
                list(s1 = c(e=5, d=4, c=3)))
-})
-
-test_that("top_hazard_quotient returns NA values instead of values equal to 0", {
-  
-  # 'values' as a vector
-  expect_equal(top_hazard_quotient(c(a=0, b=0, c=0, d=0, e=0), c(1,1,1,1,1), k = 2),
-               stats::setNames(c(NA_real_, NA_real_), c(NA_character_, NA_character_)))
-  expect_equal(top_hazard_quotient(c(a=1, b=0, c=0, d=0, e=0), c(1,1,1,1,1), k = 2),
-               stats::setNames(c(1, NA_real_), c("a", NA_character_)))
-  
-  # 'values' as a matrix
-  expect_equal(top_hazard_quotient(matrix(c(rep(0,9), 1), nrow = 2, byrow = TRUE,
-                                          dimnames = list(c("s1", "s2"), letters[1:5])),
-                                   c(1,1,1,1,1),
-                                   k = 2),
-               list(s1 = stats::setNames(c(NA_real_, NA_real_), c(NA_character_, NA_character_)),
-                    s2 = stats::setNames(c(1, NA_real_), c("e", NA_character_))))
-  
-  # 'hq' as a vector
-  expect_equal(top_hazard_quotient(hq = c(a=0, b=0, c=0, d=0, e=0), k = 2),
-               stats::setNames(c(NA_real_, NA_real_), c(NA_character_, NA_character_)))
-  expect_equal(top_hazard_quotient(hq = c(a=1, b=0, c=0, d=0, e=0), k = 2),
-               stats::setNames(c(1, NA_real_), c("a", NA_character_)))
-  
-  # 'hq' as a matrix
-  expect_equal(top_hazard_quotient(hq = matrix(c(rep(0,9), 1), nrow = 2, byrow = TRUE,
-                                               dimnames = list(c("s1", "s2"), letters[1:5])),
-                                   k = 2),
-               list(s1 = stats::setNames(c(NA_real_, NA_real_), c(NA_character_, NA_character_)),
-                    s2 = stats::setNames(c(1, NA_real_), c("e", NA_character_))))
 })
 
 test_that("top_hazard_quotient returns an identical result whatever the chosen usage", {
@@ -1012,22 +1020,34 @@ test_that("mcr_summary returns NA THQ if the given values are unnamed", {
   expect_false(all_na(mcr_summary(list(s1 = c(a=1, b=2, c=3)), list(c(1, 2, 3)))$THQ))
 })
 
-test_that("mcr_summary returns NA THQ if the given values are all equal to 0", {
+test_that("mcr_summary returns NA THQ if the given values are all equal to 0 and ignore_zero is TRUE", {
   all_na = function(x) all(is.na(x))
   
   # 'values' as a vector
-  expect_true(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5)$THQ))
+  expect_true(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5, ignore_zero = TRUE)$THQ))
+  expect_false(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5, ignore_zero = FALSE)$THQ))
 
   # 'values' as a matrix
   expect_equal(mcr_summary(values = matrix(c(1,2,0,4,10, 0,0,0,0,0), nrow = 2, byrow = TRUE,
                                            dimnames = list(c("s1", "s2"), letters[1:5])),
-                           references = 1:5)$THQ,
+                           references = 1:5,
+                           ignore_zero = TRUE)$THQ,
                c("e", NA_character_))
+  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,10, 0,0,0,0,0), nrow = 2, byrow = TRUE,
+                                           dimnames = list(c("s1", "s2"), letters[1:5])),
+                           references = 1:5,
+                           ignore_zero = FALSE)$THQ,
+               c("e", "a"))
 
   # 'values' as a list
   expect_equal(mcr_summary(values = list(s1 = c(a=1, b=2, c=6), s2 = c(a=0, c=0)),
-                           references = c(a = 1, b = 2, c = 3))$THQ,
+                           references = c(a = 1, b = 2, c = 3),
+                           ignore_zero = TRUE)$THQ,
                c("c", NA_character_))
+  expect_equal(mcr_summary(values = list(s1 = c(a=1, b=2, c=6), s2 = c(a=0, c=0)),
+                           references = c(a = 1, b = 2, c = 3),
+                           ignore_zero = FALSE)$THQ,
+               c("c", "a"))
 })
 
 test_that("mcr_summary differentiates values equal to 0 if ignore_zero is TRUE", {

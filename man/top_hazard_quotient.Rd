@@ -18,6 +18,8 @@ identified.}
 
 \item{k}{Number of hazard quotients to highlight. Default is the integer part of the maximum cumulative
 ratio computed from \code{values} and \code{references} or from \code{hq}.}
+
+\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.}
 }
 \value{
 Vector or list of vectors (according to \code{values} or \code{hq}) of the \code{k} highest hazard quotients.
@@ -39,8 +41,8 @@ If the number of hazard quotients that are greater than or equal to the \eqn{k-t
 quotient is greater than \code{k}, only the first \code{k} values are considered and in the order given.
 For example, if \code{hq = c(D = 5, B = 1, C = 3, A = 3)} and \code{k = 2}, the return is \code{c(D = 5, C = 3)}.
 
-If \code{values} or \code{hq} contains \eqn{0}s and \code{k} implies some of these \eqn{0}s to be considered as
-top hazard quotients, the corresponding values returned are \code{NA}.
+If the given value of \code{k} is greater than the number of values considered, it is lowered to this
+number.
 
 \loadmathjax
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:

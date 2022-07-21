@@ -475,8 +475,8 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #'  quotient is greater than `k`, only the first `k` values are considered and in the order given.
 #'  For example, if `hq = c(D = 5, B = 1, C = 3, A = 3)` and `k = 2`, the return is `c(D = 5, C = 3)`.
 #' 
-#' If `values` or `hq` contains \eqn{0}s and `k` implies some of these \eqn{0}s to be considered as
-#'  top hazard quotients, the corresponding values returned are `NA`.
+#' If the given value of `k` is greater than the number of values considered, it is lowered to this
+#'  number.
 #' 
 #' \loadmathjax
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
@@ -497,6 +497,7 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #'  identified.
 #' @param k Number of hazard quotients to highlight. Default is the integer part of the maximum cumulative
 #'  ratio computed from `values` and `references` or from `hq`.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @return Vector or list of vectors (according to `values` or `hq`) of the `k` highest hazard quotients.
 #' 
 #' @author Gauthier Magnin
@@ -524,34 +525,46 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #' @export
 top_hazard_quotient = function(values = NULL, references = NULL,
                                hq = NULL,
-                               k = NULL) {
+                               k = NULL, ignore_zero = TRUE) {
   
   if (!is.null(k) && k < 1) stop("k must be greater than 0.")
   if (is.null(hq)) hq = hazard_quotient(values, references)
   
   # Recursive calls if there are several sets of values
   if (is.matrix(hq)) {
-    thq_list = apply(hq, 1, function(row) list(top_hazard_quotient(hq = row, k = k)))
+    thq_list = apply(hq, 1, function(row) list(top_hazard_quotient(hq = row,
+                                                                   k = k, ignore_zero = ignore_zero)))
     return(lapply(thq_list, "[[", 1))
   }
   
+  # Count non_zero values
+  nb_not_zero = sum(hq != 0)
+  all_zero    = (nb_not_zero == 0)
+  k_if_all_zero = 1
+  
+  # Checking the value of k
   if (is.null(k)) {
     # Default value: integer part of the maximum cumulative ratio, or 1
-    if (all(hq == 0)) k = 1
+    if (all_zero) k = k_if_all_zero
     else {
       k = trunc(maximum_cumulative_ratio(hi = hazard_index(hq = hq),
                                          mhq = maximum_hazard_quotient(hq = hq)))
     }
+  } else if (ignore_zero && k > nb_not_zero) {
+    k = if (all_zero) k_if_all_zero else nb_not_zero
+    
   } else if (k > length(hq)) {
     k = length(hq)
   }
   
-  # Turn values equal to 0 into NA values
-  hq[hq == 0] = NA_real_
-  if (is_named(hq)) names(hq)[is.na(hq)] = NA_character_
+  # Return NA if all values are zero and are ignored
+  if (ignore_zero && all_zero) {
+    hq[hq == 0] = NA_real_
+    if (is_named(hq)) names(hq)[is.na(hq)] = NA_character_
+    return(hq[seq_len(k)])
+  }
   
-  if (all(is.na(hq))) return(hq[seq_len(k)])
-  if (k == 1)         return(hq[which.max(hq)])
+  if (k == 1) return(hq[which.max(hq)])
   return(sort(hq, decreasing = TRUE)[seq_len(k)])
 }
 
@@ -807,7 +820,8 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
   
   # Vector case
   if (is.vector(values)) {
-    thq = if (is_named(values)) names(top_hazard_quotient(hq = hq, k = 1)) else NA_character_
+    if (is_named(values)) thq = names(top_hazard_quotient(hq = hq, k = 1, ignore_zero = ignore_zero))
+    else thq = NA_character_
     
     # Differentiate number of values equal to and different from zero if 0 are ignored
     return(c(
@@ -820,7 +834,7 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
   
   # Matrix case
   if (is_named(values)[2]) {
-    thq = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1))))
+    thq = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1, ignore_zero = ignore_zero))))
   } else thq = NA_character_
   
   if (ignore_zero) {
