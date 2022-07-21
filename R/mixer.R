@@ -684,6 +684,9 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  if `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
+#' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
 #'  
 #' \loadmathjax
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
@@ -711,9 +714,6 @@ classify_mixture = function(values = NULL, references = NULL,
 #' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
-#' 
-#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order.
 #' 
 #' @param values Numeric vector or matrix, or list of numeric vectors.
 #'  Values whose indicators of the MCR approach are to be computed.
@@ -835,6 +835,9 @@ mcr_summary = function(values, references) {
 #' If `references` is a vector, there must be one reference for each name present in `values`.
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
+#' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
 #'  
 #' \loadmathjax
 #' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
@@ -862,9 +865,6 @@ mcr_summary = function(values, references) {
 #' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
 #' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
 #' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
-#' 
-#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order.
 #' 
 #' @template function_not_exported
 #' 
