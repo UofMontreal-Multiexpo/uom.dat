@@ -3,6 +3,7 @@
 ## Minor changes
 
 * The function `top_hazard_quotient` identifying the top hazard quotients now returns `NA` values instead of `0` values.
+* The functions `mcr_summary` and `mcr_summary_by_class` now have an argument `ignore_zero` to choose between ignoring and considering values equal to 0 instead of always ignoring them. A new column named `n_zero` containing the number of values equal to 0 is added to the resulting data frames if this new argument is set to `TRUE`.
 
 ## Fixes
 

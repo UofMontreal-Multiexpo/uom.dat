@@ -719,9 +719,11 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  Values whose indicators of the MCR approach are to be computed.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @return List if `values` is a vector; data frame otherwise.
 #'  Contains the main indicators of the MCR approach computed on the given `values`:
-#'  * **n**: number of values different from 0.
+#'  * **n**: number of values or number of values different from 0 (according to `ignore_zero`).
+#'  * **n_zero**: number of values equal to 0 (only if `ignore_zero` is `TRUE`).
 #'  * **HI**: Hazard Index.
 #'  * **MCR**: Maximum Cumulative Ratio.
 #'  * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
@@ -773,10 +775,10 @@ classify_mixture = function(values = NULL, references = NULL,
 #' 
 #' @md
 #' @export
-mcr_summary = function(values, references) {
+mcr_summary = function(values, references, ignore_zero = TRUE) {
   
   # Specific case in which values is a list
-  if (is.list(values)) return(mcr_summary_for_list(values, references))
+  if (is.list(values)) return(mcr_summary_for_list(values, references, ignore_zero))
   
   # Summary of unusable values
   unusable_summary = list(n = 0, HI = NA_real_, MCR = NA_real_, Reciprocal = NA_real_,
@@ -784,8 +786,13 @@ mcr_summary = function(values, references) {
                           MHQ = NA_real_, Missed = NA_real_)
   
   # Unusable vector of values
-  if (is.vector(values) && (length(values) == 0 || all(values == 0))) {
-    return(unusable_summary)
+  if (is.vector(values)) {
+    if (ignore_zero && (length(values) == 0 || all(values == 0))) {
+      return(c(unusable_summary[1], n_zero = length(values), unusable_summary[2:8]))
+      
+    } else if (!ignore_zero && length(values) == 0) {
+      return(unusable_summary)
+    }
   }
   
   # Computations of the indicators
@@ -798,30 +805,47 @@ mcr_summary = function(values, references) {
   rmcr   = reciprocal_of_mcr(mcr = mcr)
   groups = classify_mixture(hi = hi, mhq = mhq, mcr = mcr)
   
-  # Distinction between vector and matrix cases
+  # Vector case
   if (is.vector(values)) {
     thq = if (is_named(values)) names(top_hazard_quotient(hq = hq, k = 1)) else NA_character_
     
-    return(list(n = sum(values != 0),
-                HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
-                THQ = thq, MHQ = mhq, Missed = mt))
+    # Differentiate number of values equal to and different from zero if 0 are ignored
+    return(c(
+      if (ignore_zero) list(n = sum(values != 0), n_zero = sum(values == 0))
+      else list(n = length(values)),
+      HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+      THQ = thq, MHQ = mhq, Missed = mt
+    ))
   }
   
   # Matrix case
-  n = apply(values, 1, function(v) sum(v != 0))
   if (is_named(values)[2]) {
     thq = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1))))
   } else thq = NA_character_
   
-  hi[n == 0] = unusable_summary$HI
-  mcr[n == 0] = unusable_summary$MCR
-  rmcr[n == 0] = unusable_summary$Reciprocal
-  groups[n == 0] = unusable_summary$Group
-  thq[n == 0] = unusable_summary$THQ
-  mhq[n == 0] = unusable_summary$MHQ
-  mt[n == 0] = unusable_summary$Missed
+  if (ignore_zero) {
+    # Differentiate number of values equal to and different from zero if 0 are ignored
+    n_considered = apply(values, 1, function(v) sum(v != 0))
+    n_zero       = apply(values, 1, function(v) sum(v == 0))
+    all_zero = (n_considered == 0)
+    
+    # Modify unusable sets of values
+    hi[all_zero]     = unusable_summary$HI
+    mcr[all_zero]    = unusable_summary$MCR
+    rmcr[all_zero]   = unusable_summary$Reciprocal
+    groups[all_zero] = unusable_summary$Group
+    thq[all_zero]    = unusable_summary$THQ
+    mhq[all_zero]    = unusable_summary$MHQ
+    mt[all_zero]     = unusable_summary$Missed
+    
+    return(data.frame(n = n_considered, n_zero = n_zero,
+                      HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+                      THQ = thq, MHQ = mhq, Missed = mt,
+                      stringsAsFactors = FALSE))
+  }
   
-  return(data.frame(n = n, HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
+  return(data.frame(n = apply(values, 1, length),
+                    HI = hi, MCR = mcr, Reciprocal = rmcr, Group = groups,
                     THQ = thq, MHQ = mhq, Missed = mt,
                     stringsAsFactors = FALSE))
 }
@@ -872,8 +896,10 @@ mcr_summary = function(values, references) {
 #'  computed.
 #' @param references Numeric named vector or list of numeric vectors. Reference values associated with
 #'  the `values`. See 'Details' to know the way it is associated with `values`.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @return Data frame containing the main indicators of the MCR approach computed on the given `values`:
-#'  * **n**: number of values different from 0.
+#'  * **n**: number of values or number of values different from 0 (according to `ignore_zero`).
+#'  * **n_zero**: number of values equal to 0 (only if `ignore_zero` is `TRUE`).
 #'  * **HI**: Hazard Index.
 #'  * **MCR**: Maximum Cumulative Ratio.
 #'  * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
@@ -888,7 +914,7 @@ mcr_summary = function(values, references) {
 #' 
 #' @md
 #' @keywords internal
-mcr_summary_for_list = function(values, references) {
+mcr_summary_for_list = function(values, references, ignore_zero) {
   
   # Different case if references is a list or a vector
   if (is.list(references)) {
@@ -896,27 +922,32 @@ mcr_summary_for_list = function(values, references) {
         any(sapply(values, length) != sapply(references, length)))
       stop("If values and references are two lists, their lengths and the ones of their elements must match.")
     
-    summary = t(sapply(seq_len(length(values)), function (i) mcr_summary(values[[i]], references[[i]])))
+    summary = t(sapply(seq_len(length(values)),
+                       function (i) mcr_summary(values[[i]], references[[i]], ignore_zero)))
     
   } else if (is.vector(references)) {
     if (!is_named(references) || !is_named(values)[2])
       stop("If values is a list and references is a vector, both must contained named values.")
     
     summary = t(sapply(seq_len(length(values)),
-                       function (i) mcr_summary(values[[i]], references[names(values[[i]])])))
+                       function (i) mcr_summary(values[[i]], references[names(values[[i]])], ignore_zero)))
     
   } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
   
   # If a single set of values
-  if (nrow(summary) == 1)
+  if (nrow(summary) == 1) {
     return(as.data.frame(summary[1, ], row.names = names(values), stringsAsFactors = FALSE))
+  }
+  
+  if (ignore_zero) columns = c("n", "n_zero", "HI", "MCR", "Reciprocal", "MHQ", "Missed")
+  else             columns = c("n", "HI", "MCR", "Reciprocal", "MHQ", "Missed")
   
   # Convert the matrix to a data.frame (requires to unlist)
   # Unlist in two steps otherwise the factors are transformed into numeric
-  to_return = as.data.frame(apply(summary[, c("n","HI","MCR","Reciprocal","MHQ","Missed")], 2, unlist),
+  to_return = as.data.frame(apply(summary[, columns], 2, unlist),
                             row.names = names(values), stringsAsFactors = FALSE)
   to_return[, "Group"] = unlist(summary[, "Group"])
-  to_return[, "THQ"] = unlist(summary[, "THQ"])
+  to_return[, "THQ"]   = unlist(summary[, "THQ"])
   
   return(to_return[, colnames(summary)])
 }
@@ -2215,6 +2246,7 @@ validate_classes = function(classes) {
 #'  If logical matrix, its columns are named according to the classes and the row names
 #'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
 #'  is part of a specific class.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @param by_set `TRUE` or `FALSE` whether to group results by set of values or by class.
 #'  Always `TRUE` if values is a vector.
 #' @param all_classes Logical indicating whether all classes must be considered for each set of values
@@ -2222,7 +2254,8 @@ validate_classes = function(classes) {
 #' @return Data frame or list of data frames (according to `values`) containing the main indicators of
 #'  the MCR approach, computed on the given `values` and for each class encountered (or for all classes,
 #'  if `all_classes` is `TRUE`):
-#'  * **n**: number of values different from 0.
+#'  * **n**: number of values or number of values different from 0 (according to `ignore_zero`).
+#'  * **n_zero**: number of values equal to 0 (only if `ignore_zero` is `TRUE`).
 #'  * **HI**: Hazard Index.
 #'  * **MCR**: Maximum Cumulative Ratio.
 #'  * **Reciprocal**: Reciprocal of the maximum cumulative ratio.
@@ -2230,6 +2263,9 @@ validate_classes = function(classes) {
 #'  * **THQ**: Top Hazard Quotient.
 #'  * **MHQ**: Maximum Hazard Quotient.
 #'  * **Missed**: Hazard missed if a cumulative risk assessment is not performed.
+#' 
+#' If `by_set` is `TRUE`, `all_classes` is `FALSE` and one of the given sets of values is not
+#'  associated with any class, the result is `NULL` instead of a data frame for this set of values.
 #' 
 #' @author Gauthier Magnin
 #' @inherit mcr_summary references
@@ -2293,6 +2329,7 @@ validate_classes = function(classes) {
 #' @md
 #' @export
 mcr_summary_by_class = function(values, references, classes,
+                                ignore_zero = TRUE,
                                 by_set = FALSE, all_classes = FALSE) {
   
   # Checking data naming and use of classes as a logical matrix
@@ -2311,19 +2348,28 @@ mcr_summary_by_class = function(values, references, classes,
       # Different case if references is a list or a vector
       if (is.list(references)) {
         to_return = lapply(seq_along(values),
-                           function(i) mcr_summary_by_class(values[[i]], references[[i]],
-                                                            classes, by_set, all_classes))
+                           function(i) mcr_summary_by_class(values[[i]], references[[i]], classes,
+                                                            ignore_zero, by_set, all_classes))
         return(stats::setNames(to_return, names(values)))
       }
-      return(lapply(values, function(v) mcr_summary_by_class(v, references[names(v)],
-                                                             classes, by_set, all_classes)))
+      return(lapply(values, function(v) mcr_summary_by_class(v, references[names(v)], classes,
+                                                             ignore_zero, by_set, all_classes)))
     }
     
     # Case of a matrix of values
     if (is.matrix(values)) {
       # For each set of values, computation of the MCR indicators for each class
-      return(apply(values, 1, function(v) mcr_summary_by_class(v, references,
-                                                               classes, by_set, all_classes)))
+      summaries = apply(values, 1, function(v) mcr_summary_by_class(v, references, classes,
+                                                               ignore_zero, by_set, all_classes))
+      
+      # The apply function simplifies a list of NULL values as a single NULL value,
+      # so it is necessary to recreate the list
+      if (is.null(summaries)) {
+        # NULL can only be returned if by_set is TRUE, so there is one value by set
+        summaries = stats::setNames(rep(list(NULL), nrow(values)),
+                                    rownames(values))
+      }
+      return(summaries)
     }
     
     # Case of a single vector of values
@@ -2331,12 +2377,15 @@ mcr_summary_by_class = function(values, references, classes,
       # For each class, computation of the MCR indicators of the corresponding values and references
       summaries = apply(classes, 2, function(column) {
         new_vr = subset_from_class(values, references, classes, colnames(classes)[parent.frame()$i[]])
-        return(mcr_summary(new_vr[["values"]], new_vr[["references"]]))
+        return(mcr_summary(new_vr[["values"]], new_vr[["references"]], ignore_zero))
       })
       
       if (!all_classes) {
         # Removal of classes for which there is no value
-        summaries = summaries[sapply(summaries, "[[", "n") != 0]
+        # summaries = summaries[sapply(summaries, "[[", "n") != 0]
+        if (!ignore_zero) summaries = summaries[sapply(summaries, "[[", "n") != 0]
+        else summaries = summaries[sapply(summaries, "[[", "n") != 0 |
+                                     sapply(summaries, "[[", "n_zero") != 0]
         
         # Return NULL if the values are not associated with any class
         if (length(summaries) == 0) return(NULL)
@@ -2357,7 +2406,7 @@ mcr_summary_by_class = function(values, references, classes,
     if ((is.list(values) && (length(new_vr[["values"]]) == 0 || length(new_vr[["values"]][[1]]) == 0)) ||
         (is.matrix(values) && ncol(new_vr[["values"]]) == 0)) return(NA)
     
-    return(mcr_summary(new_vr[["values"]], new_vr[["references"]]))
+    return(mcr_summary(new_vr[["values"]], new_vr[["references"]], ignore_zero))
   })
   
   return(summaries[!is.na(summaries)])

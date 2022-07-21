@@ -8,6 +8,7 @@ mcr_summary_by_class(
   values,
   references,
   classes,
+  ignore_zero = TRUE,
   by_set = FALSE,
   all_classes = FALSE
 )
@@ -25,6 +26,8 @@ If logical matrix, its columns are named according to the classes and the row na
 contain the names associated with the \code{values}. A \code{TRUE} value indicates that a specific name
 is part of a specific class.}
 
+\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.}
+
 \item{by_set}{\code{TRUE} or \code{FALSE} whether to group results by set of values or by class.
 Always \code{TRUE} if values is a vector.}
 
@@ -36,7 +39,8 @@ Data frame or list of data frames (according to \code{values}) containing the ma
 the MCR approach, computed on the given \code{values} and for each class encountered (or for all classes,
 if \code{all_classes} is \code{TRUE}):
 \itemize{
-\item \strong{n}: number of values different from 0.
+\item \strong{n}: number of values or number of values different from 0 (according to \code{ignore_zero}).
+\item \strong{n_zero}: number of values equal to 0 (only if \code{ignore_zero} is \code{TRUE}).
 \item \strong{HI}: Hazard Index.
 \item \strong{MCR}: Maximum Cumulative Ratio.
 \item \strong{Reciprocal}: Reciprocal of the maximum cumulative ratio.
@@ -45,6 +49,9 @@ if \code{all_classes} is \code{TRUE}):
 \item \strong{MHQ}: Maximum Hazard Quotient.
 \item \strong{Missed}: Hazard missed if a cumulative risk assessment is not performed.
 }
+
+If \code{by_set} is \code{TRUE}, \code{all_classes} is \code{FALSE} and one of the given sets of values is not
+associated with any class, the result is \code{NULL} instead of a data frame for this set of values.
 }
 \description{
 Compute a set of indicators of the MCR approach according to classes, given values and references.

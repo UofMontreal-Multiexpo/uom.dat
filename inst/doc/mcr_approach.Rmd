@@ -167,7 +167,8 @@ cat("Number of sets of values:",
 ```{r}
 # Computing the indicators of the MCR approach
 mcr_summary(values = concentration_values,
-            references = reference_values)
+            references = reference_values,
+            ignore_zero = FALSE)
 ```
 
 We can see that the output data frame has 14 rows: one for each set of values. It has 8 columns: one reminding the number of values and seven others for the seven indicators:
@@ -180,6 +181,8 @@ We can see that the output data frame has 14 rows: one for each set of values. I
 * **THQ**: Top Hazard Quotient.
 * **MHQ**: Maximum Hazard Quotient.
 * **Missed**: Missed toxicity.
+
+The argument `ignore_zero` allows to ignore values equal to $0$. If so, the column named `n` specifies the number of values considered and an additional column named `n_zero` specifies the number of values ignored. Ignoring such values has no impact on the indicators computed on a set of values if at least one of these values is different from $0$.
 
 ### 2.1.2. Definition of the indicators
 
@@ -540,6 +543,8 @@ summaries_2 <- mcr_approach_by_class(values = concentration_values,
 # Look at one example: the 11th set of values
 summaries_2[["S11"]]
 ```
+
+Additional arguments related to the function `mcr_summary` can also be used when calling `mcr_approach_by_class`.
 
 
 ## 3.2. Scatter plots according to classes

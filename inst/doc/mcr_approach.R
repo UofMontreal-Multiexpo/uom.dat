@@ -80,7 +80,8 @@ cat("Number of sets of values:",
 ## -----------------------------------------------------------------------------
 # Computing the indicators of the MCR approach
 mcr_summary(values = concentration_values,
-            references = reference_values)
+            references = reference_values,
+            ignore_zero = FALSE)
 
 ## ----results="hold"-----------------------------------------------------------
 # Extraction of the names related to the second set of concentrations

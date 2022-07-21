@@ -4,7 +4,7 @@
 \alias{mcr_summary}
 \title{Summary of indicators of the MCR approach}
 \usage{
-mcr_summary(values, references)
+mcr_summary(values, references, ignore_zero = TRUE)
 }
 \arguments{
 \item{values}{Numeric vector or matrix, or list of numeric vectors.
@@ -12,12 +12,15 @@ Values whose indicators of the MCR approach are to be computed.}
 
 \item{references}{Numeric vector or list of numeric vectors. Reference values associated with the
 \code{values}. See 'Details' to know the way it is associated with \code{values}.}
+
+\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.}
 }
 \value{
 List if \code{values} is a vector; data frame otherwise.
 Contains the main indicators of the MCR approach computed on the given \code{values}:
 \itemize{
-\item \strong{n}: number of values different from 0.
+\item \strong{n}: number of values or number of values different from 0 (according to \code{ignore_zero}).
+\item \strong{n_zero}: number of values equal to 0 (only if \code{ignore_zero} is \code{TRUE}).
 \item \strong{HI}: Hazard Index.
 \item \strong{MCR}: Maximum Cumulative Ratio.
 \item \strong{Reciprocal}: Reciprocal of the maximum cumulative ratio.

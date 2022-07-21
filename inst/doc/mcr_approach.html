@@ -335,7 +335,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Maximum cumulative ratio approach and
 classification management</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2022-04-27</h4>
+<h4 class="date">Last update: 2022-07-20</h4>
 
 
 <div id="TOC">
@@ -654,7 +654,8 @@ Ratio approach) can be computed using a single function:
 <pre><code>## Number of sets of values: 14</code></pre>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Computing the indicators of the MCR approach</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcr_summary</span>(<span class="at">values =</span> concentration_values,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">references =</span> reference_values)</span></code></pre></div>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">references =</span> reference_values,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ignore_zero =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <div class="kable-table">
 <table>
 <colgroup>
@@ -853,6 +854,12 @@ ratio.</li>
 <li><strong>MHQ</strong>: Maximum Hazard Quotient.</li>
 <li><strong>Missed</strong>: Missed toxicity.</li>
 </ul>
+<p>The argument <code>ignore_zero</code> allows to ignore values equal
+to <span class="math inline">\(0\)</span>. If so, the column named
+<code>n</code> specifies the number of values considered and an additional
+column named <code>n_zero</code> specifies the number of values ignored.
+Ignoring such values has no impact on the indicators computed on a set
+of values if at least one of these values is different from <span class="math inline">\(0\)</span>.</p>
 </div>
 <div id="definition-of-the-indicators" class="section level3">
 <h3>2.1.2. Definition of the indicators</h3>
@@ -997,8 +1004,9 @@ hazard quotients.</li>
 ## [1] &quot;II&quot;</code></pre>
 <p>In the function <code>top_hazard_quotient</code>, the argument
 <code>k</code> defines how many of the highest hazard quotients to look
-for. Default is a number of top hazard quotients equal to the maximum
-cumulative ratio computed from the same values and references.</p>
+for. Default is a number of top hazard quotients equal to the integer
+part of the maximum cumulative ratio computed from the same values and
+references.</p>
 </div>
 </div>
 <div id="scatter-plot" class="section level2">
@@ -1503,11 +1511,24 @@ values are related to 15 different classes.</p>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>summaries[<span class="dv">6</span><span class="sc">:</span><span class="dv">7</span>]</span></code></pre></div>
 <pre><code>## $`Atteintes du système immunitaire`</code></pre>
 <div class="kable-table">
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="4%" />
+<col width="4%" />
+<col width="10%" />
+<col width="14%" />
+<col width="5%" />
+<col width="15%" />
+<col width="8%" />
+<col width="11%" />
+<col width="14%" />
+<col width="10%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left"></th>
 <th align="right">n</th>
+<th align="right">n_zero</th>
 <th align="right">HI</th>
 <th align="right">MCR</th>
 <th align="right">Reciprocal</th>
@@ -1521,6 +1542,7 @@ values are related to 15 different classes.</p>
 <tr class="odd">
 <td align="left">S2</td>
 <td align="right">1</td>
+<td align="right">0</td>
 <td align="right">0.0153846</td>
 <td align="right">1</td>
 <td align="right">1</td>
@@ -1536,20 +1558,22 @@ values are related to 15 different classes.</p>
 <div class="kable-table">
 <table>
 <colgroup>
-<col width="5%" />
 <col width="4%" />
-<col width="14%" />
-<col width="12%" />
-<col width="14%" />
+<col width="3%" />
 <col width="8%" />
 <col width="13%" />
+<col width="11%" />
 <col width="13%" />
-<col width="13%" />
+<col width="7%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="left"></th>
 <th align="right">n</th>
+<th align="right">n_zero</th>
 <th align="right">HI</th>
 <th align="right">MCR</th>
 <th align="right">Reciprocal</th>
@@ -1563,6 +1587,7 @@ values are related to 15 different classes.</p>
 <tr class="odd">
 <td align="left">S1</td>
 <td align="right">8</td>
+<td align="right">0</td>
 <td align="right">0.0205263</td>
 <td align="right">1.147059</td>
 <td align="right">0.8717949</td>
@@ -1574,6 +1599,7 @@ values are related to 15 different classes.</p>
 <tr class="even">
 <td align="left">S3</td>
 <td align="right">21</td>
+<td align="right">0</td>
 <td align="right">16.9290200</td>
 <td align="right">3.111952</td>
 <td align="right">0.3213417</td>
@@ -1585,6 +1611,7 @@ values are related to 15 different classes.</p>
 <tr class="odd">
 <td align="left">S6</td>
 <td align="right">2</td>
+<td align="right">0</td>
 <td align="right">0.0884470</td>
 <td align="right">1.698182</td>
 <td align="right">0.5888651</td>
@@ -1596,6 +1623,7 @@ values are related to 15 different classes.</p>
 <tr class="even">
 <td align="left">S7</td>
 <td align="right">2</td>
+<td align="right">0</td>
 <td align="right">0.0220000</td>
 <td align="right">1.833333</td>
 <td align="right">0.5454545</td>
@@ -1607,6 +1635,7 @@ values are related to 15 different classes.</p>
 <tr class="odd">
 <td align="left">S8</td>
 <td align="right">1</td>
+<td align="right">0</td>
 <td align="right">1.3133333</td>
 <td align="right">1.000000</td>
 <td align="right">1.0000000</td>
@@ -1618,6 +1647,7 @@ values are related to 15 different classes.</p>
 <tr class="even">
 <td align="left">S9</td>
 <td align="right">30</td>
+<td align="right">0</td>
 <td align="right">33.0336045</td>
 <td align="right">3.451787</td>
 <td align="right">0.2897050</td>
@@ -1629,6 +1659,7 @@ values are related to 15 different classes.</p>
 <tr class="odd">
 <td align="left">S11</td>
 <td align="right">1</td>
+<td align="right">0</td>
 <td align="right">0.4100000</td>
 <td align="right">1.000000</td>
 <td align="right">1.0000000</td>
@@ -1640,6 +1671,7 @@ values are related to 15 different classes.</p>
 <tr class="even">
 <td align="left">S12</td>
 <td align="right">1</td>
+<td align="right">0</td>
 <td align="right">0.0170000</td>
 <td align="right">1.000000</td>
 <td align="right">1.0000000</td>
@@ -1672,13 +1704,14 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <div class="kable-table">
 <table>
 <colgroup>
-<col width="48%" />
-<col width="2%" />
+<col width="46%" />
+<col width="1%" />
 <col width="4%" />
-<col width="6%" />
+<col width="3%" />
+<col width="5%" />
 <col width="7%" />
-<col width="4%" />
-<col width="17%" />
+<col width="3%" />
+<col width="16%" />
 <col width="3%" />
 <col width="6%" />
 </colgroup>
@@ -1686,6 +1719,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="header">
 <th align="left"></th>
 <th align="right">n</th>
+<th align="right">n_zero</th>
 <th align="right">HI</th>
 <th align="right">MCR</th>
 <th align="right">Reciprocal</th>
@@ -1699,6 +1733,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="odd">
 <td align="left">Atteintes cardio-vasculaires</td>
 <td align="right">0</td>
+<td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1710,6 +1745,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="even">
 <td align="left">Atteintes cutanées</td>
 <td align="right">2</td>
+<td align="right">0</td>
 <td align="right">3.630</td>
 <td align="right">1.100000</td>
 <td align="right">0.9090909</td>
@@ -1721,6 +1757,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="odd">
 <td align="left">Atteintes des voies respiratoires inférieures</td>
 <td align="right">4</td>
+<td align="right">0</td>
 <td align="right">4.464</td>
 <td align="right">1.352727</td>
 <td align="right">0.7392473</td>
@@ -1732,6 +1769,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="even">
 <td align="left">Atteintes des voies respiratoires supérieures</td>
 <td align="right">3</td>
+<td align="right">0</td>
 <td align="right">4.054</td>
 <td align="right">1.228485</td>
 <td align="right">0.8140109</td>
@@ -1742,6 +1780,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 </tr>
 <tr class="odd">
 <td align="left">Atteintes du système auditif</td>
+<td align="right">0</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1754,6 +1793,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="even">
 <td align="left">Atteintes du système hématopoïétique</td>
 <td align="right">0</td>
+<td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1764,6 +1804,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 </tr>
 <tr class="odd">
 <td align="left">Atteintes du système immunitaire</td>
+<td align="right">0</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1776,6 +1817,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="even">
 <td align="left">Atteintes du système nerveux autonome</td>
 <td align="right">0</td>
+<td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1787,6 +1829,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="odd">
 <td align="left">Atteintes du système nerveux central</td>
 <td align="right">1</td>
+<td align="right">0</td>
 <td align="right">0.410</td>
 <td align="right">1.000000</td>
 <td align="right">1.0000000</td>
@@ -1797,6 +1840,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 </tr>
 <tr class="even">
 <td align="left">Atteintes du système nerveux périphérique</td>
+<td align="right">0</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1809,6 +1853,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="odd">
 <td align="left">Atteintes du système reproducteur féminin</td>
 <td align="right">0</td>
+<td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1820,6 +1865,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="even">
 <td align="left">Atteintes du système reproducteur masculin</td>
 <td align="right">3</td>
+<td align="right">0</td>
 <td align="right">4.040</td>
 <td align="right">1.224242</td>
 <td align="right">0.8168317</td>
@@ -1830,6 +1876,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 </tr>
 <tr class="odd">
 <td align="left">Atteintes hépatiques</td>
+<td align="right">0</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1842,6 +1889,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="even">
 <td align="left">Atteintes oculaires</td>
 <td align="right">2</td>
+<td align="right">0</td>
 <td align="right">3.630</td>
 <td align="right">1.100000</td>
 <td align="right">0.9090909</td>
@@ -1853,6 +1901,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <tr class="odd">
 <td align="left">Atteintes osseuses et dentaires</td>
 <td align="right">0</td>
+<td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1863,6 +1912,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 </tr>
 <tr class="even">
 <td align="left">Atteintes rénales et de l’appareil urinaire</td>
+<td align="right">0</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1876,6 +1926,7 @@ that are not related to a set of values. Only if <code>by_set</code> is
 <td align="left">Atteintes sur le développement du fœtus, de l’embryon
 et/ou de l’enfant</td>
 <td align="right">2</td>
+<td align="right">0</td>
 <td align="right">3.630</td>
 <td align="right">1.100000</td>
 <td align="right">0.9090909</td>
@@ -1887,6 +1938,7 @@ et/ou de l’enfant</td>
 <tr class="even">
 <td align="left">Effets cancérogènes et/ou mutagènes</td>
 <td align="right">3</td>
+<td align="right">0</td>
 <td align="right">4.054</td>
 <td align="right">1.228485</td>
 <td align="right">0.8140109</td>
@@ -1897,6 +1949,7 @@ et/ou de l’enfant</td>
 </tr>
 <tr class="odd">
 <td align="left">Perturbateur endocrinien</td>
+<td align="right">0</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1909,6 +1962,7 @@ et/ou de l’enfant</td>
 <tr class="even">
 <td align="left">Perturbation du transport de l’oxygène</td>
 <td align="right">0</td>
+<td align="right">0</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1920,6 +1974,7 @@ et/ou de l’enfant</td>
 <tr class="odd">
 <td align="left">Sensibilisants</td>
 <td align="right">3</td>
+<td align="right">0</td>
 <td align="right">4.054</td>
 <td align="right">1.228485</td>
 <td align="right">0.8140109</td>
@@ -1931,6 +1986,8 @@ et/ou de l’enfant</td>
 </tbody>
 </table>
 </div>
+<p>Additional arguments related to the function <code>mcr_summary</code>
+can also be used when calling <code>mcr_approach_by_class</code>.</p>
 </div>
 <div id="scatter-plots-according-to-classes" class="section level2">
 <h2>3.2. Scatter plots according to classes</h2>

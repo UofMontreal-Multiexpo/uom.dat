@@ -925,24 +925,49 @@ test_that("mcr_summary returns the right data structure", {
 })
 
 test_that("mcr_summary returns a named object", {
-  colnames = c("n", "HI", "MCR", "Reciprocal", "Group", "THQ", "MHQ", "Missed")
+  col_names = c("n", "n_zero", "HI", "MCR", "Reciprocal", "Group", "THQ", "MHQ", "Missed")
   
   # 'values' as a vector
-  expect_named(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5), colnames)
+  expect_named(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5, ignore_zero = TRUE), col_names)
+  expect_named(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5, ignore_zero = FALSE), col_names[-2])
   
   # 'values' as a matrix
   expect_equal(colnames(mcr_summary(matrix(1:15, nrow = 3, byrow = TRUE,
-                                           dimnames = list(c("s1", "s2", "s3"), letters[1:5])), 1:5)),
-               colnames)
-  expect_equal(colnames(mcr_summary(matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5])), 1:5)),
-               colnames)
+                                           dimnames = list(c("s1", "s2", "s3"), letters[1:5])),
+                                    references = 1:5,
+                                    ignore_zero = TRUE)),
+               col_names)
+  expect_equal(colnames(mcr_summary(matrix(1:15, nrow = 3, byrow = TRUE,
+                                           dimnames = list(c("s1", "s2", "s3"), letters[1:5])),
+                                    references = 1:5,
+                                    ignore_zero = FALSE)),
+               col_names[-2])
+  expect_equal(colnames(mcr_summary(matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5])),
+                                    references = 1:5,
+                                    ignore_zero = TRUE)),
+               col_names)
+  expect_equal(colnames(mcr_summary(matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5])),
+                                    references = 1:5,
+                                    ignore_zero = FALSE)),
+               col_names[-2])
   
   # 'values' as a list
   expect_equal(colnames(mcr_summary(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
-                                    c(a = 1, b = 2, c = 3))),
-               colnames)
-  expect_equal(colnames(mcr_summary(list(s1 = c(a=1, b=2, c=3)), c(a = 1, b = 2, c = 3))),
-               colnames)
+                                    references = c(a = 1, b = 2, c = 3),
+                                    ignore_zero = TRUE)),
+               col_names)
+  expect_equal(colnames(mcr_summary(list(s1 = c(a=1, b=2), s2 = c(a=2), s3 = c(b=3, c=4)),
+                                    references = c(a = 1, b = 2, c = 3),
+                                    ignore_zero = FALSE)),
+               col_names[-2])
+  expect_equal(colnames(mcr_summary(list(s1 = c(a=1, b=2, c=3)),
+                                    references = c(a = 1, b = 2, c = 3),
+                                    ignore_zero = TRUE)),
+               col_names)
+  expect_equal(colnames(mcr_summary(list(s1 = c(a=1, b=2, c=3)),
+                                    references = c(a = 1, b = 2, c = 3),
+                                    ignore_zero = FALSE)),
+               col_names[-2])
 })
 
 test_that("mcr_summary returns an object whose rows are named if the given sets of values are named", {
@@ -961,13 +986,12 @@ test_that("mcr_summary returns an object whose rows are named if the given sets 
                "s1")
 })
 
-test_that("mcr_summary returns NA THQ if the given values are unnamed or all equal to 0", {
+test_that("mcr_summary returns NA THQ if the given values are unnamed", {
   all_na = function(x) all(is.na(x))
   
   # 'values' as a vector
   expect_true(is.na(mcr_summary(c(1, 2, 3, 4, 5), 1:5)$THQ))
   expect_false(is.na(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5)$THQ))
-  expect_true(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5)$THQ))
 
   # 'values' as a matrix
   expect_true(all_na(mcr_summary(matrix(1:15, nrow = 3, byrow = TRUE,
@@ -978,10 +1002,6 @@ test_that("mcr_summary returns NA THQ if the given values are unnamed or all equ
                                   1:5)$THQ))
   expect_true(all_na(mcr_summary(matrix(1:5, nrow = 1, dimnames = list("s1")), 1:5)$THQ))
   expect_false(all_na(mcr_summary(matrix(1:5, nrow = 1, dimnames = list("s1", letters[1:5])), 1:5)$THQ))
-  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,10, 0,0,0,0,0), nrow = 2, byrow = TRUE,
-                                           dimnames = list(c("s1", "s2"), letters[1:5])),
-                           references = 1:5)$THQ,
-               c("e", NA_character_))
 
   # 'values' as a list
   expect_true(all_na(mcr_summary(list(s1 = c(1, 2), s2 = c(2), s3 = c(3, 4)),
@@ -990,40 +1010,69 @@ test_that("mcr_summary returns NA THQ if the given values are unnamed or all equ
                                   list(c(1, 2), 1, c(2, 3)))$THQ))
   expect_true(all_na(mcr_summary(list(s1 = c(1, 2, 3)), list(c(1, 2, 3)))$THQ))
   expect_false(all_na(mcr_summary(list(s1 = c(a=1, b=2, c=3)), list(c(1, 2, 3)))$THQ))
+})
+
+test_that("mcr_summary returns NA THQ if the given values are all equal to 0", {
+  all_na = function(x) all(is.na(x))
+  
+  # 'values' as a vector
+  expect_true(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5)$THQ))
+
+  # 'values' as a matrix
+  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,10, 0,0,0,0,0), nrow = 2, byrow = TRUE,
+                                           dimnames = list(c("s1", "s2"), letters[1:5])),
+                           references = 1:5)$THQ,
+               c("e", NA_character_))
+
+  # 'values' as a list
   expect_equal(mcr_summary(values = list(s1 = c(a=1, b=2, c=6), s2 = c(a=0, c=0)),
                            references = c(a = 1, b = 2, c = 3))$THQ,
                c("c", NA_character_))
 })
 
-test_that("mcr_summary does not count values equal to 0", {
+test_that("mcr_summary differentiates values equal to 0 if ignore_zero is TRUE", {
+  values_vector = c(a=1, b=2, c=0, d=4, e=5)
+  values_matrix = matrix(c(1,2,0,4,5, 0,4,0,8,10, 3,6,9,12,15), nrow = 3, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3"), letters[1:5]))
+  values_list = list(s1 = c(a=1, b=2), s2 = c(a=2, c=0), s3 = c(a=0, b=4, c=6))
+  
   # 'values' as a vector
-  expect_equal(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5)$n,
-               5)
-  expect_equal(mcr_summary(c(a=1, b=2, c=0, d=4, e=5), 1:5)$n,
-               4)
+  expect_equal(mcr_summary(values_vector, 1:5, ignore_zero = FALSE)$n, 5)
+  expect_null(mcr_summary(values_vector, 1:5, ignore_zero = FALSE)$n_zero)
+  expect_equal(mcr_summary(values_vector, 1:5, ignore_zero = TRUE)$n, 4)
+  expect_equal(mcr_summary(values_vector, 1:5, ignore_zero = TRUE)$n_zero, 1)
   
   # 'values' as a matrix
-  expect_equal(mcr_summary(values = matrix(c(1,2,0,4,5, 0,4,0,8,10, 3,6,9,12,15), nrow = 3, byrow = TRUE,
-                                           dimnames = list(c("s1", "s2", "s3"), letters[1:5])),
-                           references = 1:5)$n,
+  expect_equal(mcr_summary(values_matrix, references = 1:5, ignore_zero = FALSE)$n,
+               c(5, 5, 5))
+  expect_null(mcr_summary(values_matrix, references = 1:5, ignore_zero = FALSE)$n_zero)
+  expect_equal(mcr_summary(values_matrix, references = 1:5, ignore_zero = TRUE)$n,
                c(4, 3, 5))
+  expect_equal(mcr_summary(values_matrix, references = 1:5, ignore_zero = TRUE)$n_zero,
+               c(1, 2, 0))
   
   # 'values' as a list
-  expect_equal(mcr_summary(values = list(s1 = c(a=1, b=2), s2 = c(a=2, c=0), s3 = c(a=0, b=4, c=6)),
-                           references = c(a = 1, b = 2, c = 3))$n,
+  expect_equal(mcr_summary(values_list, references = c(a=1, b=2, c=3), ignore_zero = FALSE)$n,
+               c(2, 2, 3))
+  expect_null(mcr_summary(values_list, references = c(a=1, b=2, c=3), ignore_zero = FALSE)$n_zero)
+  expect_equal(mcr_summary(values_list, references = c(a=1, b=2, c=3), ignore_zero = TRUE)$n,
                c(2, 1, 2))
+  expect_equal(mcr_summary(values_list, references = c(a=1, b=2, c=3), ignore_zero = TRUE)$n_zero,
+               c(0, 1, 1))
 })
 
 test_that("mcr_summary computes the indicators of the MCR approach", {
   # 'values' as a vector
-  expect_equal(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5),
+  expect_equal(mcr_summary(c(a=1, b=2, c=3, d=4, e=5), 1:5, ignore_zero = FALSE),
                list(n = 5, HI = 5, MCR = 5, Reciprocal = 0.2,
                     Group = "I", THQ = "a", MHQ = 1, Missed = 0.8))
   
   # 'values' as a matrix
   expect_equal(mcr_summary(matrix(c(1,2,3,4,5, 2,4,6,8,10, 3,6,9,12,15), nrow = 3, byrow = TRUE,
-                                  dimnames = list(NULL, letters[1:5])), 1:5),
-               data.frame(n = c(5,5,5),
+                                  dimnames = list(NULL, letters[1:5])),
+                           references = 1:5,
+                           ignore_zero = FALSE),
+               data.frame(n = c(5, 5, 5),
                           HI = c(5, 10, 15),
                           MCR = c(5, 5, 5),
                           Reciprocal = c(0.2, 0.2, 0.2),
@@ -1031,12 +1080,16 @@ test_that("mcr_summary computes the indicators of the MCR approach", {
                           THQ = c("a", "a", "a"),
                           MHQ = c(1, 2, 3),
                           Missed = c(0.8, 0.8, 0.8)))
-  expect_equal(mcr_summary(matrix(1:5, nrow = 1, dimnames = list(NULL, letters[1:5])), 1:5),
+  expect_equal(mcr_summary(matrix(1:5, nrow = 1, dimnames = list(NULL, letters[1:5])),
+                           references = 1:5,
+                           ignore_zero = FALSE),
                data.frame(n = 5, HI = 5, MCR = 5, Reciprocal = 0.2,
                           Group = "I", THQ = "a", MHQ = 1, Missed = 0.8))
 
   # 'values' as a list
-  expect_equal(mcr_summary(list(c(a=1, b=2), c(a=2), c(b=4, c=6)), c(a = 1, b = 2, c = 3)),
+  expect_equal(mcr_summary(list(c(a=1, b=2), c(a=2), c(b=4, c=6)),
+                           references = c(a = 1, b = 2, c = 3),
+                           ignore_zero = FALSE),
                data.frame(n = c(2, 1, 2),
                           HI = c(2, 2, 4),
                           MCR = c(2, 1, 2),
@@ -1045,7 +1098,9 @@ test_that("mcr_summary computes the indicators of the MCR approach", {
                           THQ = c("a", "a", "b"),
                           MHQ = c(1, 2, 2),
                           Missed = c(0.5, 0, 0.5)))
-  expect_equal(mcr_summary(list(c(a=1, b=2, c=3)), c(a = 1, b = 2, c = 3)),
+  expect_equal(mcr_summary(list(c(a=1, b=2, c=3)),
+                           references = c(a = 1, b = 2, c = 3),
+                           ignore_zero = FALSE),
                data.frame(n = 3, HI = 3, MCR = 3, Reciprocal = 1/3,
                           Group = "I", THQ = "a", MHQ = 1, Missed = 2/3))
 })
@@ -1357,7 +1412,7 @@ test_that("thq_pairs ignores values equal to 0", {
   )
 })
 
-test_that("thq_pairs return has one additional ending row and column if alone is TRUE", {
+test_that("thq_pairs output has one additional ending row and column if alone is TRUE", {
   # Two cases:
   # 1. alone is TRUE and one value name is alphabetically after NULL, there are elements that are alone
   # 2. alone is TRUE and one value name is alphabetically after NULL, but no element is alone
@@ -2105,7 +2160,7 @@ test_that("mcr_summary_by_class returns as many objects as there are classes in 
                 4)
 })
 
-test_that("mcr_summary_by_class does not count values equal to 0", {
+test_that("mcr_summary_by_class differentiates values equal to 0 if ignore_zero is TRUE", {
   classes = list(A = c("C2", "C4", "C5"),
                  B = c("C3", "C4", "C5"),
                  C = c("C5"),
@@ -2119,48 +2174,85 @@ test_that("mcr_summary_by_class does not count values equal to 0", {
                      s3 = c(A = 0, C = 2))
   
   # 'values' as a vector
-  expect_equal(nrow(mcr_summary_by_class(values = values_vector,
-                                         references = references,
-                                         classes = classes)),
-               3)
   expect_equal(mcr_summary_by_class(values = values_vector,
                                     references = references,
                                     classes = classes,
-                                    all_classes = TRUE)$n,
-               c(0, 1, 0, 1, 2))
+                                    ignore_zero = FALSE)$n,
+               c(1,2,2,3,4))
+  expect_null(mcr_summary_by_class(values = values_vector,
+                                   references = references,
+                                   classes = classes,
+                                   ignore_zero = FALSE)$n_zero)
+  expect_equal(mcr_summary_by_class(values = values_vector,
+                                    references = references,
+                                    classes = classes,
+                                    ignore_zero = TRUE)$n,
+               c(0,1,0,1,2))
+  expect_equal(mcr_summary_by_class(values = values_vector,
+                                    references = references,
+                                    classes = classes,
+                                    ignore_zero = TRUE)$n_zero,
+               c(1,1,2,2,2))
   
   # 'values' as a matrix
-  expect_equal(sapply(mcr_summary_by_class(values = values_matrix,
-                                           references = references,
-                                           classes = classes,
-                                           by_set = TRUE),
-                      nrow),
-               c(s1 = 3, s2 = 5))
   expect_equal(lapply(mcr_summary_by_class(values = values_matrix,
                                            references = references,
                                            classes = classes,
-                                           by_set = TRUE,
-                                           all_classes = TRUE),
-                      "[[", "n"),
-               list(s1 = c(0, 1, 0, 1, 2),
-                    s2 = c(1, 2, 2, 3, 4)))
-  
-  # 'values' as a list
-  expect_equal(sapply(mcr_summary_by_class(values = values_list,
+                                           ignore_zero = FALSE,
+                                           by_set = TRUE),
+                      function(s) s$n),
+               list(s1 = c(1,2,2,3,4), s2 = c(1,2,2,3,4)))
+  expect_equal(lapply(mcr_summary_by_class(values = values_matrix,
                                            references = references,
                                            classes = classes,
+                                           ignore_zero = FALSE,
                                            by_set = TRUE),
-                      nrow),
-               c(s1 = 3, s2 = 5, s3 = 1))
+                      function(s) s$n_zero),
+               list(s1 = NULL, s2 = NULL))
+  expect_equal(lapply(mcr_summary_by_class(values = values_matrix,
+                                           references = references,
+                                           classes = classes,
+                                           ignore_zero = TRUE,
+                                           by_set = TRUE),
+                      function(s) s$n),
+               list(s1 = c(0,1,0,1,2), s2 = c(1,2,2,3,4)))
+  expect_equal(lapply(mcr_summary_by_class(values = values_matrix,
+                                           references = references,
+                                           classes = classes,
+                                           ignore_zero = TRUE,
+                                           by_set = TRUE),
+                      function(s) s$n_zero),
+               list(s1 = c(1,1,2,2,2), s2 = c(0,0,0,0,0)))
+  
+  # 'values' as a list
   expect_equal(lapply(mcr_summary_by_class(values = values_list,
                                            references = references,
                                            classes = classes,
-                                           by_set = TRUE,
-                                           all_classes = TRUE),
-                      "[[", "n"),
-               list(s1 = c(0, 1, 0, 1, 2),
-                    s2 = c(1, 2, 2, 3, 4),
-                    s3 = c(0, 0, 0, 0, 1)))
+                                           ignore_zero = FALSE,
+                                           by_set = TRUE),
+                      function(s) s$n),
+               list(s1 = c(1,2,1,2,3), s2 = c(1,2,2,3,4), s3 = c(1,1,2)))
+  expect_equal(lapply(mcr_summary_by_class(values = values_list,
+                                           references = references,
+                                           classes = classes,
+                                           ignore_zero = FALSE,
+                                           by_set = TRUE),
+                      function(s) s$n_zero),
+               list(s1 = NULL, s2 = NULL, s3 = NULL))
+  expect_equal(lapply(mcr_summary_by_class(values = values_list,
+                                           references = references,
+                                           classes = classes,
+                                           ignore_zero = TRUE,
+                                           by_set = TRUE),
+                      function(s) s$n),
+               list(s1 = c(0,1,0,1,2), s2 = c(1,2,2,3,4), s3 = c(0,0,1)))
+  expect_equal(lapply(mcr_summary_by_class(values = values_list,
+                                           references = references,
+                                           classes = classes,
+                                           ignore_zero = TRUE,
+                                           by_set = TRUE),
+                      function(s) s$n_zero),
+               list(s1 = c(1,1,1,1,1), s2 = c(0,0,0,0,0), s3 = c(1,1,1)))
 })
 
 test_that("mcr_summary_by_class returns data frames containing as many rows as classes if by_set is TRUE", {
@@ -2188,7 +2280,7 @@ test_that("mcr_summary_by_class returns data frames containing as many rows as c
                                            by_set = TRUE,
                                            all_classes = FALSE),
                       nrow),
-               c(s1 = 3, s2 = 5))
+               c(s1 = 5, s2 = 5))
   expect_equal(sapply(mcr_summary_by_class(values = values_list,
                                            references = references,
                                            classes = classes,
@@ -2250,14 +2342,14 @@ test_that("mcr_summary_by_class returns NULL if values do not belong to any clas
                  B = c("C3", "C4", "C5"),
                  C = c("C5"),
                  D = c("C1", "C2", "C3", "C4", "C5"),
-                 E = character(0))
-  references = c(A = 1, B = 2, C = 3, D = 4, E = 5)
-  values_matrix = matrix(c(0,0,0,0,5, 1,2,3,4,5), nrow = 2, byrow = TRUE,
-                         dimnames = list(c("s1", "s2"), LETTERS[1:5]))
+                 E = character(0),
+                 F = character(0))
+  references = c(A = 1, B = 2, C = 3, D = 4, E = 5, F = 6)
+  values_matrix = matrix(c(0,6, 5,6), nrow = 2, byrow = TRUE,
+                         dimnames = list(c("s1", "s2"), c("E", "F")))
   values_list = list(s1 = c(E = 5),
                      s2 = c(A = 1, B = 2, C = 3, D = 4, E = 5),
                      s3 = c(A = 0, E = 5))
-  
   
   # 'values' as a vector
   expect_null(mcr_summary_by_class(values = c(E = 5),
@@ -2265,25 +2357,31 @@ test_that("mcr_summary_by_class returns NULL if values do not belong to any clas
                                    classes = classes,
                                    by_set = TRUE,
                                    all_classes = FALSE))
-  expect_null(mcr_summary_by_class(values = c(A = 0, E = 5),
-                                   references = references[c("A", "E")],
-                                   classes = classes,
-                                   by_set = TRUE,
-                                   all_classes = FALSE))
+  expect_false(is.null(mcr_summary_by_class(values = c(A = 0, E = 5),
+                                            references = references[c("A", "E")],
+                                            classes = classes,
+                                            by_set = TRUE,
+                                            all_classes = FALSE)))
   
   # 'values' as a matrix
-  expect_null(mcr_summary_by_class(values = values_matrix,
+  expect_equal(mcr_summary_by_class(values = values_matrix,
+                                    references = references,
+                                    classes = classes,
+                                    by_set = TRUE,
+                                    all_classes = FALSE),
+               list(s1 = NULL, s2 = NULL))
+  
+  # 'values' as a list
+  expect_null(mcr_summary_by_class(values = values_list,
                                    references = references,
                                    classes = classes,
                                    by_set = TRUE,
                                    all_classes = FALSE)$s1)
-  
-  # 'values' as a list
-  expect_null(unlist(mcr_summary_by_class(values = values_list,
-                                          references = references,
-                                          classes = classes,
-                                          by_set = TRUE,
-                                          all_classes = FALSE)[c("s1", "s3")]))
+  expect_false(is.null(mcr_summary_by_class(values = values_list,
+                                            references = references,
+                                            classes = classes,
+                                            by_set = TRUE,
+                                            all_classes = FALSE)$s3))
 })
 
 test_that("mcr_summary_by_class does not return NULL if values do not belong to any class and all_classes is TRUE", {
@@ -2291,10 +2389,11 @@ test_that("mcr_summary_by_class does not return NULL if values do not belong to 
                  B = c("C3", "C4", "C5"),
                  C = c("C5"),
                  D = c("C1", "C2", "C3", "C4", "C5"),
-                 E = character(0))
-  references = c(A = 1, B = 2, C = 3, D = 4, E = 5)
-  values_matrix = matrix(c(0,0,0,0,5, 1,2,3,4,5), nrow = 2, byrow = TRUE,
-                         dimnames = list(c("s1", "s2"), LETTERS[1:5]))
+                 E = character(0),
+                 F = character(0))
+  references = c(A = 1, B = 2, C = 3, D = 4, E = 5, F = 6)
+  values_matrix = matrix(c(0,6, 5,6), nrow = 2, byrow = TRUE,
+                         dimnames = list(c("s1", "s2"), c("E", "F")))
   values_list = list(s1 = c(E = 5),
                      s2 = c(A = 1, B = 2, C = 3, D = 4, E = 5),
                      s3 = c(A = 0, E = 5))
@@ -2324,11 +2423,11 @@ test_that("mcr_summary_by_class does not return NULL if values do not belong to 
                                             references = references,
                                             classes = classes,
                                             by_set = TRUE,
-                                            all_classes = TRUE)[c("s1", "s3")]))
+                                            all_classes = TRUE)$s1))
 })
 
 test_that("mcr_summary_by_class returns named objects", {
-  colnames = c("n", "HI", "MCR", "Reciprocal", "Group", "THQ", "MHQ", "Missed")
+  col_names = c("n", "n_zero", "HI", "MCR", "Reciprocal", "Group", "THQ", "MHQ", "Missed")
   
   classes = list(A = c("C2", "C4", "C5"),
                  B = c("C3", "C4", "C5"),
@@ -2361,7 +2460,7 @@ test_that("mcr_summary_by_class returns named objects", {
                                              classes = classes,
                                              by_set = TRUE,
                                              all_classes = FALSE)),
-               colnames)
+               col_names)
   
   # 'values' as a matrix
   expect_named(mcr_summary_by_class(values = values_matrix,
@@ -2376,7 +2475,7 @@ test_that("mcr_summary_by_class returns named objects", {
                                            by_set = TRUE,
                                            all_classes = FALSE),
                       rownames),
-               list(s1 = c("C2", "C4", "C5"),
+               list(s1 = c("C1", "C2", "C3", "C4", "C5"),
                     s2 = c("C1", "C2", "C3", "C4", "C5")))
   expect_equal(lapply(mcr_summary_by_class(values = values_matrix,
                                            references = references,
@@ -2384,7 +2483,7 @@ test_that("mcr_summary_by_class returns named objects", {
                                            by_set = TRUE,
                                            all_classes = FALSE),
                       colnames),
-               list(s1 = colnames, s2 = colnames))
+               list(s1 = col_names, s2 = col_names))
   
   # 'values' as a list
   expect_named(mcr_summary_by_class(values = values_list,
@@ -2407,7 +2506,7 @@ test_that("mcr_summary_by_class returns named objects", {
                                            by_set = TRUE,
                                            all_classes = FALSE),
                       colnames),
-               list(s1 = colnames, s2 = colnames))
+               list(s1 = col_names, s2 = col_names))
   
   
   ## 'by_set' is FALSE
@@ -2432,7 +2531,7 @@ test_that("mcr_summary_by_class returns named objects", {
                                            classes = classes,
                                            by_set = FALSE),
                       colnames),
-               list(C1 = colnames, C2 = colnames, C3 = colnames, C4 = colnames, C5 = colnames))
+               list(C1 = col_names, C2 = col_names, C3 = col_names, C4 = col_names, C5 = col_names))
   
   # 'values' as a list
   expect_named(mcr_summary_by_class(values = values_list,
@@ -2455,7 +2554,7 @@ test_that("mcr_summary_by_class returns named objects", {
                                            classes = classes,
                                            by_set = FALSE),
                       colnames),
-               list(C1 = colnames, C2 = colnames, C3 = colnames, C4 = colnames, C5 = colnames))
+               list(C1 = col_names, C2 = col_names, C3 = col_names, C4 = col_names, C5 = col_names))
 })
 
 
