@@ -274,7 +274,7 @@ classify_mixture(values = concentration_values[[2]],
                  references = reference_values[substance_names_2])
 ```
 
-In the function `top_hazard_quotient`, the argument `k` defines how many of the highest hazard quotients to look for. Default is a number of top hazard quotients equal to the maximum cumulative ratio computed from the same values and references.
+In the function `top_hazard_quotient`, the argument `k` defines how many of the highest hazard quotients to look for. Default is a number of top hazard quotients equal to the integer part of the maximum cumulative ratio computed from the same values and references.
 
 
 ## 2.2. Scatter plot
@@ -339,6 +339,7 @@ mcr_chart(values = concentration_values,
           references = reference_values,
           thq_col = new_thq_col)
 ```
+
 Note that, if the new set of colors are not named, they are associated with the top hazard quotients in the given order (the first color for the first THQ, and so on). If they are named, colors are explicitly associated with the possible values of the top hazard quotients (in our case, that would be with the substance names).
 
 #### Colors and transparency of the regions
@@ -565,7 +566,7 @@ charts[[12]]
 charts[["Sensibilisants"]]
 ```
 
-Of course, additional arguments related to the function `FUN` can be used. For example:
+Additional arguments related to the function `mcr_chart` can be used. For example:
 ```{r}
 # Add further arguments (regions and log_transform)
 charts <- mcr_approach_by_class(values = concentration_values,
