@@ -4,7 +4,13 @@
 \alias{thq_by_group_by_class}
 \title{Top Hazard Quotients frequency by group and by class}
 \usage{
-thq_by_group_by_class(values, references, classes, levels = NULL)
+thq_by_group_by_class(
+  values,
+  references,
+  classes,
+  levels = NULL,
+  ignore_zero = TRUE
+)
 }
 \arguments{
 \item{values}{Numeric named matrix or list of numeric named vectors. Vectors of values for which the
@@ -21,6 +27,8 @@ is part of a specific class.}
 
 \item{levels}{Levels to consider in the output tables. If \code{NULL}, only use of those that appear in the
 top hazard quotients.}
+
+\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.}
 }
 \value{
 List of contingency tables: frequencies of elements that produce the top hazard quotient with
@@ -50,6 +58,9 @@ so that \code{values} and \code{references} can be matched.
 If \code{classes} is a list, it will be turned into a logical matrix before processing. Thus, call the
 function with such a matrix is slightly faster.
 
+If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+quotient is the first one considering the given order.
+
 \loadmathjax
 The mixtures are assigned to the groups according the following conditions:
 \itemize{
@@ -74,9 +85,6 @@ where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of ha
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
-
-If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-quotient is the first one considering the given order.
 }
 \examples{
 ## Creating a matrix of 50*50 values, one reference value for each of the 5

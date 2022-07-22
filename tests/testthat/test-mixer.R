@@ -1928,6 +1928,60 @@ test_that("thq_by_group requires values to be named", {
                NA)
 })
 
+test_that("thq_by_group ignores values equal to 0 if ignore_zero is TRUE", {
+  values_matrix = matrix(c(1,0,1, 0,0,0, 0,0,1), nrow = 3, byrow = TRUE,
+                         dimnames = list(NULL, letters[1:3]))
+  values_list = list(c(a = 1, b = 1),
+                     c(b = 0),
+                     c(a = 0, c = 1))
+  references = c(a = 1, b = 1, c = 1)
+  
+  # 'values' as a matrix
+  expect_equal(
+    sum(thq_by_group(values = values_matrix,
+                     references = references,
+                     ignore_zero = TRUE)),
+    2
+  )
+  expect_equal(
+    sum(thq_by_group(values = values_matrix,
+                     references = references,
+                     ignore_zero = FALSE)),
+    3
+  )
+  
+  # 'values' as a list
+  expect_equal(
+    sum(thq_by_group(values = values_list,
+                     references = references,
+                     ignore_zero = TRUE)),
+    2
+  )
+  expect_equal(
+    sum(thq_by_group(values = values_list,
+                     references = references,
+                     ignore_zero = FALSE)),
+    3
+  )
+  
+  # Values containing only 0s
+  expect_equal(
+    dim(thq_by_group(values = matrix(rep(0,6), nrow = 2,
+                                     dimnames = list(c("s1", "s2"), letters[1:3])),
+                     references = references,
+                     ignore_zero = TRUE)),
+    c(0, 4)
+  )
+  expect_equal(
+    dim(thq_by_group(values = list(s1 = c(a = 0, b = 0, c = 0),
+                                   s2 = c(b = 0),
+                                   s3 = c(a = 0, c = 0)),
+                     references = references,
+                     ignore_zero = TRUE)),
+    c(0, 4)
+  )
+})
+
 test_that("thq_by_group ignores or considers value names according to the argument levels", {
   values_matrix = matrix(c(1,1,0, 1,0,0, 0,0,1), nrow = 3, byrow = TRUE,
                          dimnames = list(NULL, letters[1:3]))
@@ -1961,6 +2015,23 @@ test_that("thq_by_group ignores or considers value names according to the argume
     rownames(thq_by_group(values = values_list,
                           references = references,
                           levels = c("a", "b", "c"))),
+    c("a", "b", "c")
+  )
+  
+  # Values containing only 0s
+  expect_equal(
+    rownames(thq_by_group(values = matrix(rep(0,6), nrow = 2,
+                                          dimnames = list(c("s1", "s2"), letters[1:3])),
+                          references = references,
+                          ignore_zero = TRUE, levels = c("a", "b", "c"))),
+    c("a", "b", "c")
+  )
+  expect_equal(
+    rownames(thq_by_group(values = list(s1 = c(a = 0, b = 0, c = 0),
+                                   s2 = c(b = 0),
+                                   s3 = c(a = 0, c = 0)),
+                     references = references,
+                     ignore_zero = TRUE, levels = c("a", "b", "c"))),
     c("a", "b", "c")
   )
 })

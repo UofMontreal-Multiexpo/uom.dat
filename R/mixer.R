@@ -1948,6 +1948,9 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #'  is faster and call it with the arguments `thq` and `groups` is even faster (if they are already
 #'  computed).
 #' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the order given.
+#' 
 #' \loadmathjax
 #' The mixtures are assigned to the groups according the following conditions:
 #' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
@@ -1971,17 +1974,14 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
-#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order.
-#' 
 #' @note
 #' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
 #'  named in the function call.
 #' 
 #' @usage
-#' thq_by_group(values, references, levels = NULL)
-#' thq_by_group(hq, groups, levels = NULL)
-#' thq_by_group(thq, groups, levels = NULL)
+#' thq_by_group(values, references, levels = NULL, ignore_zero = TRUE)
+#' thq_by_group(hq, groups, levels = NULL, ignore_zero = TRUE)
+#' thq_by_group(thq, groups, levels = NULL, ignore_zero = TRUE)
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  table is to be built.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -1994,6 +1994,7 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #'  top hazard quotients `thq`.
 #' @param levels Levels to consider in the output table. If `NULL`, only use of those that appear in the
 #'  top hazard quotients.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @return Contingency table. Frequencies of elements that produce the top hazard quotient with their
 #'  associated groups.
 #' 
@@ -2039,7 +2040,8 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 thq_by_group = function(values = NULL, references = NULL,
                         hq = NULL,
                         thq = NULL,
-                        groups = NULL, levels = NULL) {
+                        groups = NULL,
+                        levels = NULL, ignore_zero = TRUE) {
   
   if (!is.null(thq) && ((is.list(thq) && !is_named(thq)[2]) || (!is.list(thq) && !is_named(thq))))
     stop("thq must be a vector of named numeric values or a list of such vectors.")
@@ -2068,10 +2070,15 @@ thq_by_group = function(values = NULL, references = NULL,
             stop("If values and references are two lists, their lengths and the ones of their elements must match.")
           
           # Computation of the indicators needed
-          if (is.null(thq)) thq = sapply(seq_len(length(values)),
-                                         function(i) top_hazard_quotient(values[[i]], references[[i]], k = 1))
-          if (is.null(groups)) groups = sapply(seq_len(length(values)),
-                                               function(i) classify_mixture(values[[i]], references[[i]]))
+          if (is.null(thq)) {
+            thq = sapply(seq_len(length(values)),
+                         function(i) top_hazard_quotient(values[[i]], references[[i]],
+                                                         k = 1, ignore_zero = ignore_zero))
+          }
+          if (is.null(groups)) {
+            groups = sapply(seq_len(length(values)),
+                            function(i) classify_mixture(values[[i]], references[[i]]))
+          }
           
         } else if (is.vector(references)) {
           
@@ -2079,18 +2086,27 @@ thq_by_group = function(values = NULL, references = NULL,
           if (!is_named(references)) stop("If values is a list and references is a vector. Both must contained named values.")
           
           # Computation of the indicators needed
-          if (is.null(thq)) thq = sapply(unname(values),
-                                         function(v) top_hazard_quotient(v, references[names(v)], k = 1))
-          if (is.null(groups)) groups = sapply(values,
-                                               function(v) classify_mixture(v, references[names(v)]))
+          if (is.null(thq)) {
+            thq = sapply(unname(values),
+                         function(v) top_hazard_quotient(v, references[names(v)],
+                                                         k = 1, ignore_zero = ignore_zero))
+          }
+          if (is.null(groups)) {
+            groups = sapply(values, function(v) classify_mixture(v, references[names(v)]))
+          }
           
         } else stop("If values is a list, references must be a named vector or a list having the exact same lengths as values.")
         
       } else if (!is.null(hq)) { # If HQ is given
         # Computation of the indicators needed
-        if (is.null(thq)) thq = sapply(unname(hq), function(hqs) top_hazard_quotient(hq = hqs, k = 1))
-        if (is.null(groups)) groups = sapply(hq, function(hqs) classify_mixture(hi = hazard_index(hq = hqs),
-                                                                                mhq = maximum_hazard_quotient(hq = hqs)))
+        if (is.null(thq)) {
+          thq = sapply(unname(hq),
+                       function(hqs) top_hazard_quotient(hq = hqs, k = 1, ignore_zero = ignore_zero))
+        }
+        if (is.null(groups)) {
+          groups = sapply(hq, function(hqs) classify_mixture(hi = hazard_index(hq = hqs),
+                                                             mhq = maximum_hazard_quotient(hq = hqs)))
+        }
       }
     } else { # Case where values or hq is a matrix, or neither of the two is given
       
@@ -2101,7 +2117,7 @@ thq_by_group = function(values = NULL, references = NULL,
       # Computation of the indicators needed
       if (is.null(thq)) {
         if (is.null(hq)) hq = hazard_quotient(values, references)
-        thq = top_hazard_quotient(hq = hq, k = 1)
+        thq = top_hazard_quotient(hq = hq, k = 1, ignore_zero = ignore_zero)
       }
       if (is.null(groups)) {
         if (is.null(hq)) groups = classify_mixture(values, references)
@@ -2792,6 +2808,9 @@ thq_pairs_by_class = function(values, references, classes,
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
 #'  function with such a matrix is slightly faster.
 #' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order.
+#' 
 #' \loadmathjax
 #' The mixtures are assigned to the groups according the following conditions:
 #' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
@@ -2815,9 +2834,6 @@ thq_pairs_by_class = function(values, references, classes,
 #'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
-#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order.
-#' 
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  tables are to be built, according to classes.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -2829,6 +2845,7 @@ thq_pairs_by_class = function(values, references, classes,
 #'  is part of a specific class.
 #' @param levels Levels to consider in the output tables. If `NULL`, only use of those that appear in the
 #'  top hazard quotients.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @return List of contingency tables: frequencies of elements that produce the top hazard quotient with
 #'  their associated groups. The length of the list corresponds to the number of classes encountered.
 #' 
@@ -2880,7 +2897,7 @@ thq_pairs_by_class = function(values, references, classes,
 #' @md
 #' @export
 thq_by_group_by_class = function(values, references, classes,
-                                 levels = NULL) {
+                                 levels = NULL, ignore_zero = TRUE) {
   
   # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references, vector = FALSE)
@@ -2899,7 +2916,8 @@ thq_by_group_by_class = function(values, references, classes,
     
     # Return of a list to prevent tables from merging into a single matrix
     # (if levels is used and there is no NA)
-    return(list(thq_by_group(new_vr[["values"]], new_vr[["references"]], levels = levels)))
+    return(list(thq_by_group(new_vr[["values"]], new_vr[["references"]],
+                             levels = levels, ignore_zero = ignore_zero)))
   })
   
   # Unlisting is not always to be done
