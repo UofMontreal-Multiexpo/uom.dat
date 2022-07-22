@@ -6,10 +6,12 @@
 \usage{
 thq_pairs_for_list(values, references,
                    threshold = TRUE,
-                   alone = FALSE)
+                   alone = FALSE,
+                   ignore_zero = TRUE)
 thq_pairs_for_list(hq, hi,
                    threshold = TRUE,
-                   alone = FALSE)
+                   alone = FALSE,
+                   ignore_zero = TRUE)
 }
 \arguments{
 \item{values}{List of numeric named vectors. Vectors of values for which the top two hazard
@@ -28,11 +30,13 @@ than 1 are considered.}
 
 \item{alone}{If \code{TRUE}, take into account single top hazard quotients (i.e. sets of values of length
 1). If so, a level named \code{"NULL"} is added as combination with such top hazard quotients.}
+
+\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.}
 }
 \value{
-\code{NULL} if (1) \code{alone = FALSE} and no set of \code{values} (or of \code{hq}) has more than one element different
-from 0
-or (2) \code{threshold = TRUE} and no related hazard index is greater than 1
+\code{NULL} if (1) \code{alone = FALSE} and no set of \code{values} (or of \code{hq}) has more than one element
+considered;
+or (2) \code{threshold = TRUE} and no related hazard index is greater than 1;
 or (3) \code{threshold = TRUE}, \code{alone = FALSE} and no set of values meets the two conditions.
 
 Pairs that produce the top two hazard quotients in the sets of values selected accordingly to the
@@ -47,8 +51,6 @@ The reference values can be a vector of named values or a list.
 If \code{references} is a vector, there must be one reference for each name present in \code{values}.
 Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
 so that \code{values} and \code{references} can be matched.
-
-Values and hazard quotients equal to 0 are ignored.
 
 Arguments \code{values} and \code{references} are used to compute the hazard quotients and the hazard indices
 before identifying the highest hazard quotients then building the contingency table. Thus, call the

@@ -1509,8 +1509,6 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
 #' 
-#' Values and hazard quotients equal to 0 are ignored.
-#' 
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indices
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
@@ -1537,11 +1535,13 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' thq_pairs(values, references,
 #'           levels = NULL,
 #'           threshold = TRUE,
-#'           alone = FALSE)
+#'           alone = FALSE,
+#'           ignore_zero = TRUE)
 #' thq_pairs(hq, hi,
 #'           levels = NULL,
 #'           threshold = TRUE,
-#'           alone = FALSE)
+#'           alone = FALSE,
+#'           ignore_zero = TRUE)
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  top two hazard quotients are to be identified.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -1555,10 +1555,11 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added as combination with such top hazard quotients.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @return
-#' `NULL` if (1) `alone = FALSE` and no set of `values` (or of `hq`) has more than one element different
-#'   from 0
-#'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
+#' `NULL` if (1) `alone = FALSE` and no set of `values` (or of `hq`) has more than one element
+#'   considered;
+#'   or (2) `threshold = TRUE` and no related hazard index is greater than 1;
 #'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
 #' 
 #' Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients,
@@ -1572,7 +1573,6 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @seealso [`thq_by_group`], [`top_hazard_quotient`], [`hazard_quotient`], [`hazard_index`].
 #' 
 #' @examples
-#' 
 #' v1 <- matrix(c(1, .2, .3, .4, .5, .6, .7, .8, .9, 1),
 #'              nrow = 2, byrow = TRUE,
 #'              dimnames = list(c("set.1", "set.2"), LETTERS[1:5]))
@@ -1607,6 +1607,8 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'           references = list(c(0.3, 0.6),
 #'                             0.3,
 #'                             c(0.6, 1)))
+#' 
+#' ## Without and with considering single top hazard quotients
 #' thq_pairs(values = v4,
 #'           references = c(A = 0.3, B = 0.6, C = 1))
 #' thq_pairs(values = v4,
@@ -1617,18 +1619,18 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #' @export
 thq_pairs = function(values = NULL, references = NULL,
                      hq = NULL, hi = NULL,
-                     levels = NULL, threshold = TRUE, alone = FALSE) {
+                     levels = NULL, threshold = TRUE, alone = FALSE, ignore_zero = TRUE) {
   
   # Different case if values or hq is a list or a matrix
   if (is.list(values) || is.list(hq)) {
-    thq = thq_pairs_for_list(values, references, hq, hi, threshold, alone)
+    thq = thq_pairs_for_list(values, references, hq, hi, threshold, alone, ignore_zero)
     
   } else if (is.matrix(values) || is.matrix(hq)) {
-    thq = thq_pairs_for_matrix(values, references, hq, hi, threshold, alone)
+    thq = thq_pairs_for_matrix(values, references, hq, hi, threshold, alone, ignore_zero)
     
   } else {
-    if (!is.null(hq)) stop("hq must be a numeric named matrix or list of numeric named vectors.")
-    if (!is.null(values)) stop("values must be a numeric named matrix or list of numeric named vectors.")
+    if (!is.null(hq)) stop("hq must be a numeric named matrix or a list of numeric named vectors.")
+    if (!is.null(values)) stop("values must be a numeric named matrix or a list of numeric named vectors.")
     stop("One of values or hq must not be NULL.")
   }
   
@@ -1680,8 +1682,6 @@ thq_pairs = function(values = NULL, references = NULL,
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
 #' 
-#' Values and hazard quotients equal to 0 are ignored.
-#'  
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indices
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
@@ -1709,10 +1709,12 @@ thq_pairs = function(values = NULL, references = NULL,
 #' @usage
 #' thq_pairs_for_list(values, references,
 #'                    threshold = TRUE,
-#'                    alone = FALSE)
+#'                    alone = FALSE,
+#'                    ignore_zero = TRUE)
 #' thq_pairs_for_list(hq, hi,
 #'                    threshold = TRUE,
-#'                    alone = FALSE)
+#'                    alone = FALSE,
+#'                    ignore_zero = TRUE)
 #' @param values List of numeric named vectors. Vectors of values for which the top two hazard
 #'  quotients are to be identified.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -1724,10 +1726,11 @@ thq_pairs = function(values = NULL, references = NULL,
 #'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added as combination with such top hazard quotients.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @return
-#' `NULL` if (1) `alone = FALSE` and no set of `values` (or of `hq`) has more than one element different
-#'   from 0
-#'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
+#' `NULL` if (1) `alone = FALSE` and no set of `values` (or of `hq`) has more than one element
+#'   considered;
+#'   or (2) `threshold = TRUE` and no related hazard index is greater than 1;
 #'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
 #' 
 #' Pairs that produce the top two hazard quotients in the sets of values selected accordingly to the
@@ -1741,7 +1744,7 @@ thq_pairs = function(values = NULL, references = NULL,
 #' @keywords internal
 thq_pairs_for_list = function(values = NULL, references = NULL,
                               hq = NULL, hi = NULL,
-                              threshold = TRUE, alone = FALSE) {
+                              threshold = TRUE, alone = FALSE, ignore_zero = TRUE) {
   
   # Checking that data structures are named
   if (!is.null(values) && !is_named(values)[2])
@@ -1782,27 +1785,28 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
   
   
   # Ignore HQ equal to 0
-  hq = lapply(hq, function(x) x[x != 0])
+  if (ignore_zero) hq = lapply(hq, function(x) x[x != 0])
   
   # Extraction of the HQ to use, according to the criteria on HI and on the length of the sets of values
-  hq_to_use = hq[(!threshold | hi > 1) & (alone | sapply(hq, length) != 1)]
+  hq_to_use = hq[(!threshold | hi > 1) & ((alone & lengths(hq) != 0) | (!alone & lengths(hq) > 1))]
   
   # If no HI is greater than 1 or no vector contain more than one value
   if (length(hq_to_use) == 0) return(NULL)
   
   # When a single value, pair with "NULL"
   if (alone) {
-    index_alone = which(sapply(hq_to_use, length) == 1)
+    index_alone = which(lengths(hq_to_use) == 1)
     hq_to_use[index_alone] = lapply(hq_to_use[index_alone], c, "NULL" = 1)
   }
   
   # Searching for the Top 2 HQ
   if (length(hq_to_use) == 1) {
     # If a single set of values meets the criteria (HI > 1 and/or length > 1)
-    thq = names(top_hazard_quotient(hq = hq_to_use[[1]], k = 2))
+    thq = names(top_hazard_quotient(hq = hq_to_use[[1]], k = 2, ignore_zero = ignore_zero))
   } else {
     # If several sets of values meet the criteria (HI > 1 and/or length > 1)
-    thq = sapply(hq_to_use, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
+    thq = sapply(hq_to_use,
+                 function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2, ignore_zero = ignore_zero))))
   }
   
   return(thq)
@@ -1817,8 +1821,6 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' @details
 #' The reference values are applied once on each set of values, i.e. on each row.
 #'  Therefore, there must be one reference value for each column of the matrix.
-#' 
-#' Values and hazard quotients equal to 0 are ignored.
 #' 
 #' Arguments `values` and `references` are used to compute the hazard quotients and the hazard indices
 #'  before identifying the highest hazard quotients then building the contingency table. Thus, call the
@@ -1847,10 +1849,12 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' @usage
 #' thq_pairs_for_matrix(values, references,
 #'                      threshold = TRUE,
-#'                      alone = FALSE)
+#'                      alone = FALSE,
+#'                      ignore_zero = TRUE)
 #' thq_pairs_for_matrix(hq, hi,
 #'                      threshold = TRUE,
-#'                      alone = FALSE)
+#'                      alone = FALSE,
+#'                      ignore_zero = TRUE)
 #' @param values Numeric named matrix. Vectors of values for which the top two hazard quotients are to
 #'  be identified.
 #' @param references Numeric vector. Reference values associated with the `values`. See 'Details' to
@@ -1862,10 +1866,11 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #'  than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added as combination with such top hazard quotients.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
 #' @return
-#' `NULL` if (1) `alone = FALSE` and no set of `values` (or of `hq`) has more than one element different
-#'   from 0
-#'   or (2) `threshold = TRUE` and no related hazard index is greater than 1
+#' `NULL` if (1) `alone = FALSE` and no set of `values` (or of `hq`) has more than one element
+#'   considered;
+#'   or (2) `threshold = TRUE` and no related hazard index is greater than 1;
 #'   or (3) `threshold = TRUE`, `alone = FALSE` and no set of values meets the two conditions.
 #' 
 #' Pairs that produce the top two hazard quotients in the sets of values selected accordingly to the
@@ -1879,7 +1884,7 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' @keywords internal
 thq_pairs_for_matrix = function(values = NULL, references = NULL,
                                 hq = NULL, hi = NULL,
-                                threshold = TRUE, alone = FALSE) {
+                                threshold = TRUE, alone = FALSE, ignore_zero = TRUE) {
   
   # Checking that data structures are named
   if (!is.null(values) && !is_named(values)[2]) stop("Columns of values must be named.")
@@ -1889,26 +1894,30 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
   if (is.null(hq)) hq = hazard_quotient(values, references)
   if (is.null(hi)) hi = hazard_index(hq = hq)
   
-  # Exctraction of the HQ to use, according to the criteria on HI and on length of the sets of values
-  hq_to_use = hq[(!threshold | hi > 1) & (alone | apply(hq, 1, function(x) sum(x != 0) != 1)), ,
-                 drop = FALSE]
+  # Number of values to consider in each set
+  n_considered = if (ignore_zero) apply(hq, 1, function(x) sum(x != 0)) else ncol(hq)
+  n_min = if (alone) 1 else 2
+  
+  # Extraction of the HQ to use, according to the criteria on HI and on length of the sets of values
+  kept_rows = (!threshold | hi > 1) & (n_considered >= n_min)
+  hq_to_use = hq[kept_rows, , drop = FALSE]
   
   # If no HI is greater than 2 or no vector contain more than one value
   if (nrow(hq_to_use) == 0) return(NULL)
   
   # When a single value, pair with "NULL"
   if (alone) {
-    index_alone = apply(hq_to_use, 1, function(x) sum(x != 0) == 1)
-    hq_to_use = cbind(hq_to_use, "NULL" = ifelse(index_alone, 1, 0))
+    hq_to_use = cbind(hq_to_use, "NULL" = ifelse(n_considered[kept_rows] == 1, 1, 0))
   }
   
   # Searching for the Top 2 HQ
   if (nrow(hq_to_use) == 1) {
     # If a single set of values meets the criteria (HI > 1 and/or length > 1)
-    thq = names(top_hazard_quotient(hq = hq_to_use[1, ], k = 2))
+    thq = names(top_hazard_quotient(hq = hq_to_use[1, ], k = 2, ignore_zero = ignore_zero))
   } else {
     # If several sets of values meet the criteria (HI > 1 and/or length > 1)
-    thq = apply(hq_to_use, 1, function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2))))
+    thq = apply(hq_to_use, 1,
+                function(hq) sort(names(top_hazard_quotient(hq = hq, k = 2, ignore_zero = ignore_zero))))
   }
   
   return(thq)
@@ -2627,8 +2636,6 @@ mcr_chart_by_class = function(values, references, classes,
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
 #' 
-#' Values equal to 0 are ignored.
-#'  
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
 #'  function with such a matrix is slightly faster.
 #'  
@@ -2660,11 +2667,13 @@ mcr_chart_by_class = function(values, references, classes,
 #' @param threshold If `TRUE`, only values associated with hazard indices greater than 1 are considered.
 #' @param alone If `TRUE`, take into account single top hazard quotients (i.e. sets of values of length
 #'  1). If so, a level named `"NULL"` is added for such top hazard quotients.
-#' @return List whose length corresponds to the number of classes encountered, containing for each class:
-#' * `NULL` if among the subsets of values corresponding to the class, no one has more than one element
-#'   different from 0 or a hazard index greater than 1 (accordingly to the arguments `threshold` and
-#'   `alone`).
-#' * Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients.
+#' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
+#' @return List whose length corresponds to the number of classes encountered, containing for each
+#'  class:
+#'  * `NULL` if among the subsets of values corresponding to the class, no one has more than one element
+#'    considered or a hazard index greater than 1 (accordingly to the arguments `threshold`, `alone`
+#'    and `ignore_zero`).
+#'  * Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients.
 #' 
 #' @author Gauthier Magnin
 #' @inherit thq_pairs references
@@ -2709,7 +2718,7 @@ mcr_chart_by_class = function(values, references, classes,
 #'                                  set.3 = c(B = 3, C = 4)),
 #'                    references = c(A = 1, B = 2, C = 3),
 #'                    classes,
-#'                    levels = LETTERS[1:3])
+#'                    levels = LETTERS[1:2])
 #' 
 #' # Use of the parameters alone and threshold
 #' thq_pairs_by_class(values = list(set.1 = c(A = 1, B = 5),
@@ -2730,7 +2739,7 @@ mcr_chart_by_class = function(values, references, classes,
 #' @md
 #' @export
 thq_pairs_by_class = function(values, references, classes,
-                              levels = NULL, threshold = TRUE, alone = FALSE) {
+                              levels = NULL, threshold = TRUE, alone = FALSE, ignore_zero = TRUE) {
   
   # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references, vector = FALSE)
@@ -2750,7 +2759,8 @@ thq_pairs_by_class = function(values, references, classes,
     # Return of a list to prevent tables from merging into a single matrix
     # (if levels is used and there is no NA)
     return(list(thq_pairs(new_vr[["values"]], new_vr[["references"]],
-                          levels = levels, threshold = threshold, alone = alone)))
+                          levels = levels, threshold = threshold, alone = alone,
+                          ignore_zero = ignore_zero)))
   })
   
   # Unlisting is not always to be done

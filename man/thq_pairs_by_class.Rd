@@ -10,7 +10,8 @@ thq_pairs_by_class(
   classes,
   levels = NULL,
   threshold = TRUE,
-  alone = FALSE
+  alone = FALSE,
+  ignore_zero = TRUE
 )
 }
 \arguments{
@@ -33,13 +34,16 @@ pairs.}
 
 \item{alone}{If \code{TRUE}, take into account single top hazard quotients (i.e. sets of values of length
 1). If so, a level named \code{"NULL"} is added for such top hazard quotients.}
+
+\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.}
 }
 \value{
-List whose length corresponds to the number of classes encountered, containing for each class:
+List whose length corresponds to the number of classes encountered, containing for each
+class:
 \itemize{
 \item \code{NULL} if among the subsets of values corresponding to the class, no one has more than one element
-different from 0 or a hazard index greater than 1 (accordingly to the arguments \code{threshold} and
-\code{alone}).
+considered or a hazard index greater than 1 (accordingly to the arguments \code{threshold}, \code{alone}
+and \code{ignore_zero}).
 \item Contingency table otherwise. Frequencies of pairs that produce the top two hazard quotients.
 }
 }
@@ -56,8 +60,6 @@ If \code{values} is a list, the reference values can be a vector of named values
 if \code{references} is a vector, there must be one reference for each name present in \code{values}.
 Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
 so that \code{values} and \code{references} can be matched.
-
-Values equal to 0 are ignored.
 
 If \code{classes} is a list, it will be turned into a logical matrix before processing. Thus, call the
 function with such a matrix is slightly faster.
@@ -107,7 +109,7 @@ thq_pairs_by_class(values = list(set.1 = c(A = 1, B = 5),
                                  set.3 = c(B = 3, C = 4)),
                    references = c(A = 1, B = 2, C = 3),
                    classes,
-                   levels = LETTERS[1:3])
+                   levels = LETTERS[1:2])
 
 # Use of the parameters alone and threshold
 thq_pairs_by_class(values = list(set.1 = c(A = 1, B = 5),
