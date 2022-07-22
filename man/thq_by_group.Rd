@@ -85,8 +85,8 @@ If several values are equal to the maximum hazard quotient, the name retained as
 quotient is the first one considering the given order.
 }
 \note{
-Due to the multiple possible usages, the arguments \code{hq}, \code{thq}, \code{groups} and \code{levels} must be
-explicitly named in the function call.
+Due to the multiple possible usages, all arguments except \code{values} and \code{references} must be explicitly
+named in the function call.
 }
 \examples{
 ## Creating a matrix of 4*3 values and one reference value for each of the 4

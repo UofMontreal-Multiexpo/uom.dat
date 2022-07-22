@@ -4,8 +4,8 @@
 \alias{top_hazard_quotient}
 \title{Top Hazard Quotient (THQ)}
 \usage{
-top_hazard_quotient(values, references, k = NULL)
-top_hazard_quotient(hq, k = NULL)
+top_hazard_quotient(values, references, k = NULL, ignore_zero = TRUE)
+top_hazard_quotient(hq, k = NULL, ignore_zero = TRUE)
 }
 \arguments{
 \item{values}{Numeric named vector or matrix. Values for which the top hazard quotients are to be
@@ -50,8 +50,8 @@ The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
 }
 \note{
-Due to the multiple possible usages, the arguments \code{hq} and \code{k} must be explicitly named in the
-function call.
+Due to the multiple possible usages, all arguments except \code{values} and \code{references} must be explicitly
+named in the function call.
 }
 \examples{
 top_hazard_quotient(c(A = 1, B = 2, C = 3, D = 4, E = 5), c(5,4,3,2,1),

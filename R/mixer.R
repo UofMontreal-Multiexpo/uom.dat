@@ -484,12 +484,12 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
 #' 
 #' @note
-#' Due to the multiple possible usages, the arguments `hq` and `k` must be explicitly named in the
-#'  function call.
+#' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
+#'  named in the function call.
 #' 
 #' @usage
-#' top_hazard_quotient(values, references, k = NULL)
-#' top_hazard_quotient(hq, k = NULL)
+#' top_hazard_quotient(values, references, k = NULL, ignore_zero = TRUE)
+#' top_hazard_quotient(hq, k = NULL, ignore_zero = TRUE)
 #' @param values Numeric named vector or matrix. Values for which the top hazard quotients are to be
 #'  identified.
 #' @param references Numeric vector. Reference values associated with the `values`.
@@ -1966,8 +1966,8 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #'  quotient is the first one considering the given order.
 #' 
 #' @note
-#' Due to the multiple possible usages, the arguments `hq`, `thq`, `groups` and `levels` must be
-#'  explicitly named in the function call.
+#' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
+#'  named in the function call.
 #' 
 #' @usage
 #' thq_by_group(values, references, levels = NULL)
