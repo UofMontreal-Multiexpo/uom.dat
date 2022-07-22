@@ -5,13 +5,13 @@
 \title{Top Hazard Quotient pairs, in matrix}
 \usage{
 thq_pairs_for_matrix(values, references,
-                     threshold = TRUE,
-                     alone = FALSE,
-                     ignore_zero = TRUE)
+                     threshold,
+                     alone,
+                     ignore_zero)
 thq_pairs_for_matrix(hq, hi,
-                     threshold = TRUE,
-                     alone = FALSE,
-                     ignore_zero = TRUE)
+                     threshold,
+                     alone,
+                     ignore_zero)
 }
 \arguments{
 \item{values}{Numeric named matrix. Vectors of values for which the top two hazard quotients are to

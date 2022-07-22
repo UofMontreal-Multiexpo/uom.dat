@@ -5,13 +5,13 @@
 \title{Top Hazard Quotient pairs, in list}
 \usage{
 thq_pairs_for_list(values, references,
-                   threshold = TRUE,
-                   alone = FALSE,
-                   ignore_zero = TRUE)
+                   threshold,
+                   alone,
+                   ignore_zero)
 thq_pairs_for_list(hq, hi,
-                   threshold = TRUE,
-                   alone = FALSE,
-                   ignore_zero = TRUE)
+                   threshold,
+                   alone,
+                   ignore_zero)
 }
 \arguments{
 \item{values}{List of numeric named vectors. Vectors of values for which the top two hazard

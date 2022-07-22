@@ -1708,13 +1708,13 @@ thq_pairs = function(values = NULL, references = NULL,
 #' 
 #' @usage
 #' thq_pairs_for_list(values, references,
-#'                    threshold = TRUE,
-#'                    alone = FALSE,
-#'                    ignore_zero = TRUE)
+#'                    threshold,
+#'                    alone,
+#'                    ignore_zero)
 #' thq_pairs_for_list(hq, hi,
-#'                    threshold = TRUE,
-#'                    alone = FALSE,
-#'                    ignore_zero = TRUE)
+#'                    threshold,
+#'                    alone,
+#'                    ignore_zero)
 #' @param values List of numeric named vectors. Vectors of values for which the top two hazard
 #'  quotients are to be identified.
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
@@ -1744,7 +1744,7 @@ thq_pairs = function(values = NULL, references = NULL,
 #' @keywords internal
 thq_pairs_for_list = function(values = NULL, references = NULL,
                               hq = NULL, hi = NULL,
-                              threshold = TRUE, alone = FALSE, ignore_zero = TRUE) {
+                              threshold, alone, ignore_zero) {
   
   # Checking that data structures are named
   if (!is.null(values) && !is_named(values)[2])
@@ -1848,13 +1848,13 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' 
 #' @usage
 #' thq_pairs_for_matrix(values, references,
-#'                      threshold = TRUE,
-#'                      alone = FALSE,
-#'                      ignore_zero = TRUE)
+#'                      threshold,
+#'                      alone,
+#'                      ignore_zero)
 #' thq_pairs_for_matrix(hq, hi,
-#'                      threshold = TRUE,
-#'                      alone = FALSE,
-#'                      ignore_zero = TRUE)
+#'                      threshold,
+#'                      alone,
+#'                      ignore_zero)
 #' @param values Numeric named matrix. Vectors of values for which the top two hazard quotients are to
 #'  be identified.
 #' @param references Numeric vector. Reference values associated with the `values`. See 'Details' to
@@ -1884,7 +1884,7 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #' @keywords internal
 thq_pairs_for_matrix = function(values = NULL, references = NULL,
                                 hq = NULL, hi = NULL,
-                                threshold = TRUE, alone = FALSE, ignore_zero = TRUE) {
+                                threshold, alone, ignore_zero) {
   
   # Checking that data structures are named
   if (!is.null(values) && !is_named(values)[2]) stop("Columns of values must be named.")
