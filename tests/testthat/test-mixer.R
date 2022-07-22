@@ -2992,7 +2992,8 @@ test_that("thq_pairs_by_class returns matrices or NULL objects", {
   
   results = thq_pairs_by_class(values = list(s1 = c(A=1, B=2), s2 = c(A=2), s3 = c(B=3, D=4)),
                                references = references,
-                               classes = classes)
+                               classes = classes,
+                               threshold = TRUE, alone = FALSE, ignore_zero = TRUE)
   
   expect_null(results[[1]])
   expect_null(results[[2]])
