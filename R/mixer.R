@@ -641,7 +641,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  so that `values` and `references` can be matched.
 #' 
 #' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+#'  quotient is the first one considering the given order. If all values are equal to 0, the
 #'  resulting top hazard quotient is `NA`.
 #'  
 #' \loadmathjax
@@ -824,7 +824,7 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
 #'  so that `values` and `references` can be matched.
 #' 
 #' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+#'  quotient is the first one considering the given order. If all values are equal to 0, the
 #'  resulting top hazard quotient is `NA`.
 #'  
 #' \loadmathjax
@@ -943,10 +943,10 @@ mcr_summary_for_list = function(values, references, ignore_zero) {
 #' Color specification can be done using the R predefined color names or hexadecimal values.
 #' 
 #' In the standard version of the chart, the grey area represents the region in which no point can be
-#'  plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does not exist.
-#'  However, in the latter, points having \eqn{MCR} equal to 1 have an ordinate equal to `-Inf` and
+#'  plotted because MCR cannot be lower than 1. In the log version, such a region does not exist.
+#'  However, in the latter, points having MCR equal to 1 have an ordinate equal to `-Inf` and
 #'  therefore cannot be plotted. Moreover, whatever the version, sets of values containing only values
-#'  equal to \eqn{0} (i.e., having \eqn{MCR} values equal to \eqn{0}) are not plotted.
+#'  equal to 0 (i.e., having MCR values equal to 0) are not plotted.
 #' 
 #' Points that are on the boundaries of the region of the group I belong to this group.
 #'  Points that are on the boundaries of the region of the group II belong to this group.
@@ -1335,7 +1335,7 @@ plot_mcr_log_part = function(chart, xlim, ylim,
 #' 
 #' Color specification can be done using the R predefined color names or hexadecimal values.
 #' 
-#' The grey area represents the region in which no point can be plotted because \eqn{MCR} cannot be lower
+#' The grey area represents the region in which no point can be plotted because MCR cannot be lower
 #'  than 1.
 #' 
 #' @template function_not_exported
@@ -2167,7 +2167,7 @@ validate_classes = function(classes) {
 #'  function with such a matrix is slightly faster.
 #' 
 #' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+#'  quotient is the first one considering the given order. If all values are equal to 0, the
 #'  resulting top hazard quotient is `NA`.
 #'  
 #' \loadmathjax
@@ -2403,10 +2403,10 @@ mcr_summary_by_class = function(values, references, classes,
 #' Color specification can be done using the R predefined color names or hexadecimal values.
 #' 
 #' In the standard version of the chart, the grey area represents the region in which no point can be
-#'  plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does not exist.
-#'  However, in the latter, points having \eqn{MCR} equal to 1 have an ordinate equal to `-Inf` and
+#'  plotted because MCR cannot be lower than 1. In the log version, such a region does not exist.
+#'  However, in the latter, points having MCR equal to 1 have an ordinate equal to `-Inf` and
 #'  therefore cannot be plotted. Moreover, whatever the version, sets of values containing only values
-#'  equal to \eqn{0} (i.e., having \eqn{MCR} values equal to \eqn{0}) are not plotted.
+#'  equal to 0 (i.e., having MCR values equal to 0) are not plotted.
 #' 
 #' Points that are on the boundaries of the region of the group I belong to this group.
 #'  Points that are on the boundaries of the region of the group II belong to this group.

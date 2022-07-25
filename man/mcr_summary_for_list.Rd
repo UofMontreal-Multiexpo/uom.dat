@@ -39,7 +39,7 @@ Otherwise, \code{references} is a list of vectors having the same lengths as tho
 so that \code{values} and \code{references} can be matched.
 
 If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+quotient is the first one considering the given order. If all values are equal to 0, the
 resulting top hazard quotient is \code{NA}.
 
 \loadmathjax

@@ -74,7 +74,7 @@ If \code{classes} is a list, it will be turned into a logical matrix before proc
 function with such a matrix is slightly faster.
 
 If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+quotient is the first one considering the given order. If all values are equal to 0, the
 resulting top hazard quotient is \code{NA}.
 
 \loadmathjax
