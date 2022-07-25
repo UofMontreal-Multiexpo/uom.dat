@@ -22,6 +22,7 @@ If \code{values} is a matrix, the reference values are applied once on each set 
 Therefore, there must be one reference value for each column of the matrix.
 
 \loadmathjax
+
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.

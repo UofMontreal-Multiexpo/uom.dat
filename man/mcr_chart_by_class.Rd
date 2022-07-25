@@ -90,6 +90,7 @@ However, in the latter, points having \eqn{MCR} equal to 1 have an ordinate equa
 therefore cannot be plotted and generate a warning message.
 
 \loadmathjax
+
 The mixtures are assigned to the groups according the following conditions:
 \itemize{
 \item Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}

@@ -44,6 +44,7 @@ If \code{values} is a matrix (or \code{hi} and \code{mhq} are vectors larger tha
 one reciprocal of maximum cumulative ratio is computed for each row (or value, respectively).
 
 \loadmathjax
+
 The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
 \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
 where \eqn{MCR}, \eqn{MHQ} and {HI} denotes the maximum cumulative ratio, the maximum hazard

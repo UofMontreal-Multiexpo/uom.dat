@@ -41,6 +41,7 @@ If several values are equal to the maximum hazard quotient, the name retained as
 quotient is the first one considering the given order.
 
 \loadmathjax
+
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.

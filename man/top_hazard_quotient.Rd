@@ -45,6 +45,7 @@ If the given value of \code{k} is greater than the number of values considered, 
 number.
 
 \loadmathjax
+
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.

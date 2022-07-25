@@ -62,6 +62,7 @@ If several values are equal to the maximum hazard quotient, the name retained as
 quotient is the first one considering the given order.
 
 \loadmathjax
+
 The mixtures are assigned to the groups according the following conditions:
 \itemize{
 \item Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}

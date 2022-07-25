@@ -49,6 +49,7 @@ If \code{values} is a matrix (or \code{hi}, \code{mhq} and \code{mcr} are vector
 for each row (or each value, respectively).
 
 \loadmathjax
+
 The mixtures are assigned to the groups according the following conditions:
 \itemize{
 \item Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}

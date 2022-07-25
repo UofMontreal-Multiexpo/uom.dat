@@ -13,9 +13,7 @@ NULL
 #'  Therefore, there must be one reference value for each column of the matrix.
 #' 
 #' \loadmathjax
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_hazard_quotient
 #' 
 #' @param values Numeric vector or matrix. Values for which the hazard quotients are to be computed.
 #' @param references Numeric vector. Reference values associated with the `values`.
@@ -82,13 +80,8 @@ hazard_quotient = function(values, references) {
 #' If `values` or `hq` is a matrix, one hazard index is computed for each row.
 #' 
 #' \loadmathjax
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_hazard_index
+#' @template formula_hazard_quotient
 #' 
 #' @note
 #' Due to the multiple possible usages, the argument `hq` must be explicitly named in the function call.
@@ -149,13 +142,8 @@ hazard_index = function(values = NULL, references = NULL,
 #' If `values` or `hq` is a matrix, one maximum hazard quotient is searched for each row.
 #' 
 #' \loadmathjax
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_maximum_hazard_quotient
+#' @template formula_hazard_quotient
 #' 
 #' @note
 #' Due to the multiple possible usages, the argument `hq` must be explicitly named in the function call.
@@ -220,21 +208,10 @@ maximum_hazard_quotient = function(values = NULL, references = NULL,
 #'  is computed for each row (or value, respectively).
 #' 
 #' \loadmathjax
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_maximum_cumulative_ratio
+#' @template formula_hazard_index
+#' @template formula_maximum_hazard_quotient
+#' @template formula_hazard_quotient
 #' 
 #' @note
 #' Due to the multiple possible usages, the arguments `hi` and `mhq` must be explicitly named in the
@@ -301,25 +278,11 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
 #'  for each row (or value, respectively).
 #' 
 #' \loadmathjax
-#' The missed toxicity of the vector \eqn{i} is given by:
-#'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
-#'  where \eqn{MCR} denotes the maximum cumulative ratio.
-#' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_missed_toxicity
+#' @template formula_maximum_cumulative_ratio
+#' @template formula_hazard_index
+#' @template formula_maximum_hazard_quotient
+#' @template formula_hazard_quotient
 #' 
 #' @note
 #' Due to the multiple possible usages, the argument `mcr` must be explicitly named in the function call.
@@ -382,26 +345,11 @@ missed_toxicity = function(values = NULL, references = NULL,
 #' one reciprocal of maximum cumulative ratio is computed for each row (or value, respectively).
 #' 
 #' \loadmathjax
-#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
-#'  where \eqn{MCR}, \eqn{MHQ} and {HI} denotes the maximum cumulative ratio, the maximum hazard
-#'  quotient and the hazard index respectively.
-#' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_reciprocal_of_mcr
+#' @template formula_maximum_cumulative_ratio
+#' @template formula_hazard_index
+#' @template formula_maximum_hazard_quotient
+#' @template formula_hazard_quotient
 #' 
 #' @note
 #' Due to the multiple possible usages, the arguments `hi`, `mhq` and `mcr` must be explicitly named in
@@ -479,9 +427,7 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
 #'  number.
 #' 
 #' \loadmathjax
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_hazard_quotient
 #' 
 #' @note
 #' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
@@ -592,27 +538,11 @@ top_hazard_quotient = function(values = NULL, references = NULL,
 #'  for each row (or each value, respectively).
 #' 
 #' \loadmathjax
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
-#' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_miat_groups
+#' @template formula_maximum_cumulative_ratio
+#' @template formula_hazard_index
+#' @template formula_maximum_hazard_quotient
+#' @template formula_hazard_quotient
 #' 
 #' @note
 #' Due to the multiple possible usages, the arguments `hi`, `mhq` and `mcr` must be explicitly named in
@@ -702,10 +632,9 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  quotient is the first one considering the given order.
 #'  
 #' \loadmathjax
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_hazard_quotient
 #' 
+#' @details
 #' The maximum hazard quotient of the vector \eqn{i} is given by:
 #'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
 #'  where \eqn{n} denotes the number of hazard quotients.
@@ -722,11 +651,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #' The missed toxicity of the vector \eqn{i} is given by:
 #'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
 #'  
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
+#' @template formula_miat_groups
 #' 
 #' @param values Numeric vector or matrix, or list of numeric vectors.
 #'  Values whose indicators of the MCR approach are to be computed.
@@ -878,10 +803,9 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
 #'  quotient is the first one considering the given order.
 #'  
 #' \loadmathjax
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_hazard_quotient
 #' 
+#' @details
 #' The maximum hazard quotient of the vector \eqn{i} is given by:
 #'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
 #'  where \eqn{n} denotes the number of hazard quotients.
@@ -898,11 +822,7 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
 #' The missed toxicity of the vector \eqn{i} is given by:
 #'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
 #'  
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
+#' @template formula_miat_groups
 #' 
 #' @template function_not_exported
 #' 
@@ -1003,33 +923,14 @@ mcr_summary_for_list = function(values, references, ignore_zero) {
 #'  (if they are already computed).
 #' 
 #' \loadmathjax
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
+#' @template formula_miat_groups
+#' @template formula_maximum_cumulative_ratio
+#' @template formula_reciprocal_of_mcr
+#' @template formula_hazard_index
+#' @template formula_maximum_hazard_quotient
+#' @template formula_hazard_quotient
 #' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
-#'  
-#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
-#'  where \eqn{MCR}, \eqn{MHQ} and {HI} denotes the maximum cumulative ratio, the maximum hazard
-#'  quotient and the hazard index respectively.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
-#' 
+#' @details
 #' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
 #'  quotient is the first one considering the given order.
 #' 
@@ -1514,14 +1415,10 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
 #' 
 #' \loadmathjax
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
+#' @template formula_hazard_index
+#' @template formula_hazard_quotient
 #' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
-#' 
+#' @details
 #' If the number of hazard quotients that are greater than or equal to the second greater hazard
 #'  quotient is greater than 2, only the first two values are considered and in the order given.
 #'  For example, if the hazard quotients are `D = 5`, `B = 1`, `C = 3` and `A = 3`, the top two hazard
@@ -1687,14 +1584,10 @@ thq_pairs = function(values = NULL, references = NULL,
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
 #' 
 #' \loadmathjax
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
+#' @template formula_hazard_index
+#' @template formula_hazard_quotient
 #' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
-#' 
+#' @details
 #' If the number of hazard quotients that are greater than or equal to the second greater hazard
 #'  quotient is greater than 2, only the first two values are considered and in the order given.
 #'  For example, if the hazard quotients are `D = 5`, `B = 1`, `C = 3` and `A = 3`, the top two hazard
@@ -1827,14 +1720,10 @@ thq_pairs_for_list = function(values = NULL, references = NULL,
 #'  function with the arguments `hq` and `hi` is faster (if they are already computed).
 #' 
 #' \loadmathjax
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
+#' @template formula_hazard_index
+#' @template formula_hazard_quotient
 #' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
-#' 
+#' @details
 #' If the number of hazard quotients that are greater than or equal to the second greater hazard
 #'  quotient is greater than 2, only the first two values are considered and in the order given.
 #'  For example, if the hazard quotients are `D = 5`, `B = 1`, `C = 3` and `A = 3`, the top two hazard
@@ -1952,27 +1841,11 @@ thq_pairs_for_matrix = function(values = NULL, references = NULL,
 #'  quotient is the first one considering the order given.
 #' 
 #' \loadmathjax
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
-#' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_miat_groups
+#' @template formula_maximum_cumulative_ratio
+#' @template formula_hazard_index
+#' @template formula_maximum_hazard_quotient
+#' @template formula_hazard_quotient
 #' 
 #' @note
 #' Due to the multiple possible usages, all arguments except `values` and `references` must be explicitly
@@ -2250,10 +2123,9 @@ validate_classes = function(classes) {
 #'  function with such a matrix is slightly faster.
 #'  
 #' \loadmathjax
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_hazard_quotient
 #' 
+#' @details
 #' The maximum hazard quotient of the vector \eqn{i} is given by:
 #'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
 #'  where \eqn{n} denotes the number of hazard quotients.
@@ -2270,11 +2142,7 @@ validate_classes = function(classes) {
 #' The missed toxicity of the vector \eqn{i} is given by:
 #'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
 #'  
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
+#' @template formula_miat_groups
 #' 
 #' @param values Numeric named vector or matrix, or list of numeric named vectors.
 #'  Values whose indicators of the MCR approach are to be computed according to classes.
@@ -2482,33 +2350,14 @@ mcr_summary_by_class = function(values, references, classes,
 #'  therefore cannot be plotted and generate a warning message.
 #' 
 #' \loadmathjax
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
+#' @template formula_miat_groups
+#' @template formula_maximum_cumulative_ratio
+#' @template formula_reciprocal_of_mcr
+#' @template formula_hazard_index
+#' @template formula_maximum_hazard_quotient
+#' @template formula_hazard_quotient
 #' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
-#'  
-#' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
-#'  where \eqn{MCR}, \eqn{MHQ} and {HI} denotes the maximum cumulative ratio, the maximum hazard
-#'  quotient and the hazard index respectively.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
-#' 
+#' @details
 #' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
 #'  quotient is the first one considering the given order.
 #' 
@@ -2656,14 +2505,10 @@ mcr_chart_by_class = function(values, references, classes,
 #'  function with such a matrix is slightly faster.
 #'  
 #' \loadmathjax
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
+#' @template formula_hazard_index
+#' @template formula_hazard_quotient
 #' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
-#' 
+#' @details
 #' If the number of hazard quotients that are greater than or equal to the second greater hazard
 #'  quotient is greater than 2, only the first two values are considered and in the order given.
 #'  For example, if the hazard quotients are `D = 5`, `B = 1`, `C = 3` and `A = 3`, the top two hazard
@@ -2812,27 +2657,11 @@ thq_pairs_by_class = function(values, references, classes,
 #'  quotient is the first one considering the given order.
 #' 
 #' \loadmathjax
-#' The mixtures are assigned to the groups according the following conditions:
-#' * Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}
-#' * Group II: \mjeqn{MHQ_i < 1, HI_i \le 1}{MHQ_i < 1, HI_i <= 1}
-#' * Group IIIA: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i < 2}{MHQ_i < 1, HI_i > 1, MCR_i < 2}
-#' * Group IIIB: \mjeqn{MHQ_i < 1, HI_i > 1, MCR_i \ge 2}{MHQ_i < 1, HI_i > 1, MCR_i >= 2}
-#' 
-#' The maximum cumulative ratio of the vector \eqn{i} is given by:
-#'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
-#'  where \eqn{HI} denotes the hazard index and \eqn{MHQ} denotes the maximum hazard quotient.
-#' 
-#' The hazard index of the vector \eqn{i} is given by:
-#'  \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#'  
-#' The maximum hazard quotient of the vector \eqn{i} is given by:
-#'  \mjdeqn{MHQ_i = HQ_{M,i} = \max_{j \in \lbrace 1,...,n\rbrace} HQ_{i,j}}{MHQ_i = HQ_Mi = max HQ_i}
-#'  where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.
-#' 
-#' The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
-#'  \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
-#'  where \eqn{V} denotes the `values` and \eqn{RV} denotes the `references`.
+#' @template formula_miat_groups
+#' @template formula_maximum_cumulative_ratio
+#' @template formula_hazard_index
+#' @template formula_maximum_hazard_quotient
+#' @template formula_hazard_quotient
 #' 
 #' @param values Numeric named matrix or list of numeric named vectors. Vectors of values for which the
 #'  tables are to be built, according to classes.

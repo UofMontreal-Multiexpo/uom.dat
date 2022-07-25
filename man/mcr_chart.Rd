@@ -103,6 +103,7 @@ then plot the chart. Thus, call the function with the arguments \code{hi}, \code
 (if they are already computed).
 
 \loadmathjax
+
 The mixtures are assigned to the groups according the following conditions:
 \itemize{
 \item Group I: \mjeqn{MHQ_i \ge 1}{MHQ_i >= 1}

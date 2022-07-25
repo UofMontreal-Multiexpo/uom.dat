@@ -33,6 +33,7 @@ Therefore, there must be one reference value for each column of the matrix.
 If \code{values} or \code{hq} is a matrix, one hazard index is computed for each row.
 
 \loadmathjax
+
 The hazard index of the vector \eqn{i} is given by:
 \mjdeqn{HI_i = \sum_{j = 1}^n HQ_{i,j}}{HI_i = sum(HQ_ij) from j = 1 to n}
 where \eqn{HQ} denotes the hazard quotients and \eqn{n} denotes the number of hazard quotients.

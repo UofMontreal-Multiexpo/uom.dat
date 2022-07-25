@@ -35,6 +35,7 @@ If \code{values} is a matrix (or \code{mcr} is a vector larger than 1), one miss
 for each row (or value, respectively).
 
 \loadmathjax
+
 The missed toxicity of the vector \eqn{i} is given by:
 \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
 where \eqn{MCR} denotes the maximum cumulative ratio.

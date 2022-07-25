@@ -76,6 +76,7 @@ If \code{classes} is a list, it will be turned into a logical matrix before proc
 function with such a matrix is slightly faster.
 
 \loadmathjax
+
 The hazard quotient of the value \eqn{j} in the vector \eqn{i} is given by:
 \mjdeqn{HQ_{i,j} = \frac{V_{i,j}}{RV_j}}{HQ_ij = V_ij / RV_j}
 where \eqn{V} denotes the \code{values} and \eqn{RV} denotes the \code{references}.
