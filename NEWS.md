@@ -15,6 +15,7 @@
 ## Fixes
 
 * An error was occurring when calling the function `top_hazard_quotient` by giving sets of values or of HQ containing only values equal to 0 and using the default value of the argument `k`.
+* An error was occurring when calling the function `mcr_chart` by giving sets of values containing only values equal to 0.
 
 
 

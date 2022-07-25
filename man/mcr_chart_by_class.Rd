@@ -80,14 +80,20 @@ If \code{classes} is a list, it will be turned into a logical matrix before proc
 function with such a matrix is slightly faster.
 
 The charts being created with the \code{ggplot2} package, they can be modified or completed afterwards
-using the returned object.
+using the returned objects.
 
 Color specification can be done using the R predefined color names or hexadecimal values.
 
 In the standard version of the chart, the grey area represents the region in which no point can be
 plotted because \eqn{MCR} cannot be lower than 1. In the log version, such a region does not exist.
 However, in the latter, points having \eqn{MCR} equal to 1 have an ordinate equal to \code{-Inf} and
-therefore cannot be plotted and generate a warning message.
+therefore cannot be plotted. Moreover, whatever the version, sets of values containing only values
+equal to \eqn{0} (i.e., having \eqn{MCR} values equal to \eqn{0}) are not plotted.
+
+Points that are on the boundaries of the region of the group I belong to this group.
+Points that are on the boundaries of the region of the group II belong to this group.
+Points that are on the boundary between the regions of the groups IIIA and IIIB belong to the
+group IIIB.
 
 \loadmathjax
 

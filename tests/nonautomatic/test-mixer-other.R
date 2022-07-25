@@ -203,3 +203,16 @@ library(uom.dat)
 }
 
 
+## 9. mcr_chart ignore sets of values containing only values equal to 0
+{
+  values_matrix = matrix(c(0,0,0,
+                           1,2,3), nrow = 2, byrow = TRUE,
+                         dimnames = list(c("s1", "s2"), letters[1:3]))
+  references_vector = c(a = 1, b = 1, c = 1)
+  
+  ## Expectation: plotting a single point although there are two sets of values
+  
+  mcr_chart(values_matrix, references_vector)
+}
+
+

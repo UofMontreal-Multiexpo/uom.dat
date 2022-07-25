@@ -1252,31 +1252,46 @@ test_that("mcr_chart requires values to be named", {
   dev.off()
 })
 
-test_that("mcr_chart generates a warning if some points cannot be plotted", {
+test_that("mcr_chart generates a warning if some points cannot be plotted because of logarithm", {
   pdf(NULL)
   hi = c(1,1,2,2)
   thq = c(a = 1, b = 1, c = 1, a = 1)
   
   expect_warning(mcr_chart(hi = hi, mcr = c(1, 1, 2, 2), thq = thq),
-                 "all points")
+                 "not been plotted")
   expect_warning(mcr_chart(hi = hi, mcr = c(1.5, 1.5, 2, 2), thq = thq),
                  NA)
   
   dev.off()
 })
 
-test_that("mcr_chart returns NULL with a warning if no points can be plotted", {
+test_that("mcr_chart returns NULL with a warning if no points can be plotted because of logarithm", {
   pdf(NULL)
   hi = c(1,1,2,2)
   thq = c(a = 1, b = 1, c = 2, a = 2)
   
-  expect_null(suppressWarnings(mcr_chart(hi = hi, mcr = c(1, 1, 1, 1), thq = thq)))
+  expect_null(suppressWarnings(
+    mcr_chart(hi = hi, mcr = c(1, 1, 1, 1), thq = thq)
+  ))
   expect_false(is.null(mcr_chart(hi = hi, mcr = c(1.5, 1.5, 2, 2), thq = thq)))
   
   expect_warning(mcr_chart(hi = hi, mcr = c(1, 1, 1, 1), thq = thq),
-                 "No point")
+                 "No points can be plotted")
   expect_warning(mcr_chart(hi = hi, mcr = c(1.5, 1.5, 2, 2), thq = thq),
                  NA)
+  dev.off()
+})
+
+test_that("mcr_chart returns NULL with a warning if there is no points to plot", {
+  pdf(NULL)
+  values_matrix = matrix(rep(0,10), nrow = 2, dimnames = list(NULL, letters[1:5]))
+  references = 1:5
+  
+  expect_null(suppressWarnings(
+    mcr_chart(values_matrix, references)
+  ))
+  expect_warning(mcr_chart(values_matrix, references),
+                 "There is no points to plot")
   dev.off()
 })
 
