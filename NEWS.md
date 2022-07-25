@@ -2,9 +2,11 @@
 
 ## New features
 
-* The function `top_hazard_quotient` now has an argument `ignore_zero` to choose between ignoring and considering values equal to 0. It returns `NA` if this new argument is set to `TRUE` and all values are equal to 0.
-* The functions `mcr_summary` and `mcr_summary_by_class` now have an argument `ignore_zero` to choose between ignoring and considering values equal to 0 instead of always ignoring them. A new column named `n_zero` containing the number of values equal to 0 is added to the resulting data frames if this new argument is set to `TRUE`. It is always considered `TRUE` while identifying top hazard quotients.
-* The functions `thq_pairs`, `thq_pairs_by_class`, `thq_by_group` and `thq_by_group_by_class` now have an argument `ignore_zero` to choose between ignoring and considering values equal to 0.
+* The following functions now have an argument `ignore_zero` to choose between ignoring and considering values equal to 0.
+  * `top_hazard_quotient`. It returns `NA` if this new argument is set to `TRUE` and all values are equal to 0.
+  * `mcr_summary` and `mcr_summary_by_class`. They previously always ignored values equal to 0. A new column named `n_zero` containing the number of values equal to 0 is added to the resulting data frames if this new argument is set to `TRUE`. It is always considered `TRUE` while identifying top hazard quotients.
+  * `thq_pairs` and `thq_pairs_by_class`.
+  * `thq_by_group` and `thq_by_group_by_class`.
 
 ## Minor changes
 
