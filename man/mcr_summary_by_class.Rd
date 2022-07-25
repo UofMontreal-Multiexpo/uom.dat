@@ -26,7 +26,8 @@ If logical matrix, its columns are named according to the classes and the row na
 contain the names associated with the \code{values}. A \code{TRUE} value indicates that a specific name
 is part of a specific class.}
 
-\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.}
+\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.
+Always considered \code{TRUE} while identifying top hazard quotients (see Details).}
 
 \item{by_set}{\code{TRUE} or \code{FALSE} whether to group results by set of values or by class.
 Always \code{TRUE} if values is a vector.}
@@ -69,11 +70,12 @@ if \code{references} is a vector, there must be one reference for each name pres
 Otherwise, \code{references} is a list of vectors having the same lengths as those present in \code{values}
 so that \code{values} and \code{references} can be matched.
 
-If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-quotient is the first one considering the given order.
-
 If \code{classes} is a list, it will be turned into a logical matrix before processing. Thus, call the
 function with such a matrix is slightly faster.
+
+If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+resulting top hazard quotient is \code{NA}.
 
 \loadmathjax
 

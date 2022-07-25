@@ -1069,12 +1069,12 @@ test_that("mcr_summary returns NA THQ if the given values are unnamed", {
   expect_false(all_na(mcr_summary(list(s1 = c(a=1, b=2, c=3)), list(c(1, 2, 3)))$THQ))
 })
 
-test_that("mcr_summary returns NA THQ if the given values are all equal to 0 and ignore_zero is TRUE", {
+test_that("mcr_summary returns NA THQ if the given values are all equal to 0, regardless of ignore_zero", {
   all_na = function(x) all(is.na(x))
   
   # 'values' as a vector
   expect_true(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5, ignore_zero = TRUE)$THQ))
-  expect_false(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5, ignore_zero = FALSE)$THQ))
+  expect_true(is.na(mcr_summary(c(a=0, b=0, c=0, d=0, e=0), 1:5, ignore_zero = FALSE)$THQ))
 
   # 'values' as a matrix
   expect_equal(mcr_summary(values = matrix(c(1,2,0,4,10, 0,0,0,0,0), nrow = 2, byrow = TRUE,
@@ -1086,7 +1086,7 @@ test_that("mcr_summary returns NA THQ if the given values are all equal to 0 and
                                            dimnames = list(c("s1", "s2"), letters[1:5])),
                            references = 1:5,
                            ignore_zero = FALSE)$THQ,
-               c("e", "a"))
+               c("e", NA_character_))
 
   # 'values' as a list
   expect_equal(mcr_summary(values = list(s1 = c(a=1, b=2, c=6), s2 = c(a=0, c=0)),
@@ -1096,7 +1096,7 @@ test_that("mcr_summary returns NA THQ if the given values are all equal to 0 and
   expect_equal(mcr_summary(values = list(s1 = c(a=1, b=2, c=6), s2 = c(a=0, c=0)),
                            references = c(a = 1, b = 2, c = 3),
                            ignore_zero = FALSE)$THQ,
-               c("c", "a"))
+               c("c", NA_character_))
 })
 
 test_that("mcr_summary differentiates values equal to 0 if ignore_zero is TRUE", {

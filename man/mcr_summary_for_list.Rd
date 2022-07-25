@@ -13,7 +13,8 @@ computed.}
 \item{references}{Numeric named vector or list of numeric vectors. Reference values associated with
 the \code{values}. See 'Details' to know the way it is associated with \code{values}.}
 
-\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.}
+\item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.
+Always considered \code{TRUE} while identifying top hazard quotients (see Details).}
 }
 \value{
 Data frame containing the main indicators of the MCR approach computed on the given \code{values}:
@@ -38,7 +39,8 @@ Otherwise, \code{references} is a list of vectors having the same lengths as tho
 so that \code{values} and \code{references} can be matched.
 
 If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-quotient is the first one considering the given order.
+quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+resulting top hazard quotient is \code{NA}.
 
 \loadmathjax
 

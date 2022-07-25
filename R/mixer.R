@@ -641,7 +641,8 @@ classify_mixture = function(values = NULL, references = NULL,
 #'  so that `values` and `references` can be matched.
 #' 
 #' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order.
+#'  quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+#'  resulting top hazard quotient is `NA`.
 #'  
 #' \loadmathjax
 #' @template formula_hazard_quotient
@@ -679,6 +680,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
 #' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
+#'  Always considered `TRUE` while identifying top hazard quotients (see Details).
 #' @return List if `values` is a vector; data frame otherwise.
 #'  Contains the main indicators of the MCR approach computed on the given `values`:
 #'  * **n**: number of values or number of values different from 0 (according to `ignore_zero`).
@@ -766,8 +768,9 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
   
   # Vector case
   if (is.vector(values)) {
-    if (is_named(values)) thq = names(top_hazard_quotient(hq = hq, k = 1, ignore_zero = ignore_zero))
-    else thq = NA_character_
+    if (is_named(values)) {
+      thq = names(top_hazard_quotient(hq = hq, k = 1, ignore_zero = TRUE))
+    } else thq = NA_character_
     
     # Differentiate number of values equal to and different from zero if 0 are ignored
     return(c(
@@ -780,7 +783,7 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
   
   # Matrix case
   if (is_named(values)[2]) {
-    thq = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1, ignore_zero = ignore_zero))))
+    thq = names(unlist(unname(top_hazard_quotient(hq = hq, k = 1, ignore_zero = TRUE))))
   } else thq = NA_character_
   
   if (ignore_zero) {
@@ -821,7 +824,8 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
 #'  so that `values` and `references` can be matched.
 #' 
 #' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order.
+#'  quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+#'  resulting top hazard quotient is `NA`.
 #'  
 #' \loadmathjax
 #' @template formula_hazard_quotient
@@ -861,6 +865,7 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
 #' @param references Numeric named vector or list of numeric vectors. Reference values associated with
 #'  the `values`. See 'Details' to know the way it is associated with `values`.
 #' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
+#'  Always considered `TRUE` while identifying top hazard quotients (see Details).
 #' @return Data frame containing the main indicators of the MCR approach computed on the given `values`:
 #'  * **n**: number of values or number of values different from 0 (according to `ignore_zero`).
 #'  * **n_zero**: number of values equal to 0 (only if `ignore_zero` is `TRUE`).
@@ -2146,11 +2151,12 @@ validate_classes = function(classes) {
 #'  Otherwise, `references` is a list of vectors having the same lengths as those present in `values`
 #'  so that `values` and `references` can be matched.
 #' 
-#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
-#'  quotient is the first one considering the given order.
-#' 
 #' If `classes` is a list, it will be turned into a logical matrix before processing. Thus, call the
 #'  function with such a matrix is slightly faster.
+#' 
+#' If several values are equal to the maximum hazard quotient, the name retained as the top hazard
+#'  quotient is the first one considering the given order. If all values are equal to \eqn{0}, the
+#'  resulting top hazard quotient is `NA`.
 #'  
 #' \loadmathjax
 #' @template formula_hazard_quotient
@@ -2193,6 +2199,7 @@ validate_classes = function(classes) {
 #'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
 #'  is part of a specific class.
 #' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
+#'  Always considered `TRUE` while identifying top hazard quotients (see Details).
 #' @param by_set `TRUE` or `FALSE` whether to group results by set of values or by class.
 #'  Always `TRUE` if values is a vector.
 #' @param all_classes Logical indicating whether all classes must be considered for each set of values
