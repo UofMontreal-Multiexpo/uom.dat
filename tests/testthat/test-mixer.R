@@ -51,6 +51,13 @@ test_that("hazard_quotient computes the hazard quotients", {
   expect_equal(hazard_quotient(matrix(1:10, nrow = 2, byrow = TRUE),
                                c(1,1,1,1,1)),
                matrix(c(1,2,3,4,5, 6,7,8,9,10), nrow = 2, byrow = TRUE))
+  
+  # Values containing only 0s
+  expect_equal(hazard_quotient(values = rep(0,5), references = 1:5),
+               c(0,0,0,0,0))
+  expect_equal(hazard_quotient(values = matrix(rep(0,10), nrow = 2),
+                               references = 1:5),
+               matrix(c(0,0,0,0,0, 0,0,0,0,0), nrow = 2, byrow = TRUE))
 })
 
 
@@ -118,6 +125,13 @@ test_that("hazard_index computes the hazard indexes", {
                c(15, 49))
   expect_equal(hazard_index(hq = matrix(1:10, nrow = 2, byrow = TRUE)),
                c(15, 40))
+  
+  # Values containing only 0s
+  expect_equal(hazard_index(values = rep(0,5), references = 1:5),
+               0)
+  expect_equal(hazard_index(values = matrix(rep(0,10), nrow = 2),
+                            references = 1:5),
+               c(0, 0))
 })
 
 test_that("hazard_index returns an identical result whatever the chosen usage", {
@@ -203,6 +217,13 @@ test_that("maximum_hazard_quotient find the maximum hazard quotient", {
                c(5, 10))
   expect_equal(maximum_hazard_quotient(hq = matrix(1:10, nrow = 2, byrow = TRUE)),
                c(5, 10))
+  
+  # Values containing only 0s
+  expect_equal(maximum_hazard_quotient(values = rep(0,5), references = 1:5),
+               0)
+  expect_equal(maximum_hazard_quotient(values = matrix(rep(0,10), nrow = 2),
+                                       references = 1:5),
+               c(0, 0))
 })
 
 test_that("maximum_hazard_quotient returns an identical result whatever the chosen usage", {
@@ -282,6 +303,13 @@ test_that("maximum_cumulative_ratio computes the maximum cumulative ratio", {
   # 'hi' and 'mhq'
   expect_equal(maximum_cumulative_ratio(hi = c(1,1,1,1,1), mhq = 1:5), c(1,0.5,1/3,0.25,0.2))
   expect_equal(maximum_cumulative_ratio(hi = 1:5, mhq = c(1,1,1,1,1)), c(1,2,3,4,5))
+  
+  # Values containing only 0s
+  expect_equal(maximum_cumulative_ratio(values = rep(0,5), references = 1:5),
+               0)
+  expect_equal(maximum_cumulative_ratio(values = matrix(rep(0,10), nrow = 2),
+                                        references = 1:5),
+               c(0, 0))
 })
 
 test_that("maximum_cumulative_ratio returns an identical result whatever the chosen usage", {
@@ -354,6 +382,13 @@ test_that("missed_toxicity computes the missed toxicity", {
   # 'mcr'
   expect_equal(missed_toxicity(mcr = 1),   0)
   expect_equal(missed_toxicity(mcr = 1:5), c(0,0.5,2/3,0.75,0.8))
+  
+  # Values containing only 0s
+  expect_equal(missed_toxicity(values = rep(0,5), references = 1:5),
+               0)
+  expect_equal(missed_toxicity(values = matrix(rep(0,10), nrow = 2),
+                               references = 1:5),
+               c(0, 0))
 })
 
 test_that("missed_toxicity returns an identical result whatever the chosen usage", {
@@ -451,6 +486,13 @@ test_that("reciprocal_of_mcr computes the reciprocal of the maximum cumulative r
   # 'mcr'
   expect_equal(reciprocal_of_mcr(mcr = 1),   1)
   expect_equal(reciprocal_of_mcr(mcr = 1:5), c(1,0.5,1/3,0.25,0.2))
+  
+  # Values containing only 0s
+  expect_equal(reciprocal_of_mcr(values = rep(0,5), references = 1:5),
+               0)
+  expect_equal(reciprocal_of_mcr(values = matrix(rep(0,10), nrow = 2),
+                                 references = 1:5),
+               c(0, 0))
 })
 
 test_that("reciprocal_of_mcr returns an identical result whatever the chosen usage", {
@@ -834,6 +876,13 @@ test_that("classify_mixture classifies into the MIAT groups", {
                c("II","II","IIIB"))
   expect_equal(classify_mixture(mhq = c(1, 0, 0, 0), hi = c(1, 1, 2, 2), mcr = c(1, 1, 1, 2)),
                c("I","II","IIIA", "IIIB"))
+  
+  # Values containing only 0s
+  expect_equal(classify_mixture(values = rep(0,5), references = 1:5),
+               "II")
+  expect_equal(classify_mixture(values = matrix(rep(0,10), nrow = 2),
+                                references = 1:5),
+               c("II", "II"))
 })
 
 test_that("classify_mixture returns an identical result whatever the chosen usage", {

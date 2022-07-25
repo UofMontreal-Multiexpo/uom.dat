@@ -55,12 +55,21 @@ The hazard index of the vector \eqn{i} is given by:
 
 The maximum cumulative ratio of the vector \eqn{i} is given by:
 \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+\cr
+In the specific case where all values of the vector (or the corresponding \eqn{HI} and \eqn{MHQ})
+are equal to \eqn{0}, the resulting \eqn{MCR} is \eqn{0}.
 
 The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
 \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+\cr
+In the specific case where all values of the vector (or the corresponding \eqn{MHQ} and \eqn{HI})
+are equal to \eqn{0}, the resulting reciprocal of \eqn{MCR} is \eqn{0}.
 
 The missed toxicity of the vector \eqn{i} is given by:
 \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
+\cr
+In the specific case where all values of the vector (or the corresponding \eqn{HI} and \eqn{MHQ})
+are equal to \eqn{0}, the resulting missed toxicity is \eqn{0}.
 
 The mixtures are assigned to the groups according the following conditions:
 \itemize{

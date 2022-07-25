@@ -256,7 +256,9 @@ maximum_cumulative_ratio = function(values = NULL, references = NULL,
   if (is.null(hi)) hi = hazard_index(values, references)
   if (is.null(mhq)) mhq = maximum_hazard_quotient(values, references)
   
-  return(hi / mhq)
+  mcr = hi / mhq
+  mcr[is.nan(mcr)] = 0 # Case in which all values are 0
+  return(mcr)
 }
 
 
@@ -320,7 +322,10 @@ missed_toxicity = function(values = NULL, references = NULL,
                            mcr = NULL) {
   
   if (is.null(mcr)) mcr = maximum_cumulative_ratio(values, references)
-  return(1 - 1 / mcr)
+  
+  missed = 1 - 1 / mcr
+  missed[is.infinite(missed)] = 0 # Case in which all values are 0
+  return(missed)
 }
 
 
@@ -397,11 +402,18 @@ reciprocal_of_mcr = function(values = NULL, references = NULL,
                              hi = NULL, mhq = NULL,
                              mcr = NULL) {
   
-  if (!is.null(mcr)) return(1 / mcr)
+  if (!is.null(mcr)) {
+    reciprocal = 1 / mcr
+    reciprocal[is.infinite(reciprocal)] = 0 # Case in which all values are 0
+    return(reciprocal)
+  }
   
   if (is.null(hi)) hi = hazard_index(values, references)
   if (is.null(mhq)) mhq = maximum_hazard_quotient(values, references)
-  return(mhq / hi)
+  
+  reciprocal = mhq / hi
+  reciprocal[is.nan(reciprocal)] = 0 # Case in which all values are 0
+  return(reciprocal)
 }
 
 
@@ -644,12 +656,21 @@ classify_mixture = function(values = NULL, references = NULL,
 #' 
 #' The maximum cumulative ratio of the vector \eqn{i} is given by:
 #'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+#' \cr
+#' In the specific case where all values of the vector (or the corresponding \eqn{HI} and \eqn{MHQ})
+#'  are equal to \eqn{0}, the resulting \eqn{MCR} is \eqn{0}.
 #' 
 #' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
 #'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+#' \cr
+#' In the specific case where all values of the vector (or the corresponding \eqn{MHQ} and \eqn{HI})
+#'  are equal to \eqn{0}, the resulting reciprocal of \eqn{MCR} is \eqn{0}.
 #' 
 #' The missed toxicity of the vector \eqn{i} is given by:
 #'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
+#' \cr
+#' In the specific case where all values of the vector (or the corresponding \eqn{HI} and \eqn{MHQ})
+#'  are equal to \eqn{0}, the resulting missed toxicity is \eqn{0}.
 #'  
 #' @template formula_miat_groups
 #' 
@@ -815,12 +836,21 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
 #' 
 #' The maximum cumulative ratio of the vector \eqn{i} is given by:
 #'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+#' \cr
+#' In the specific case where all values of the vector (or the corresponding \eqn{HI} and \eqn{MHQ})
+#'  are equal to \eqn{0}, the resulting \eqn{MCR} is \eqn{0}.
 #' 
 #' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
 #'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+#' \cr
+#' In the specific case where all values of the vector (or the corresponding \eqn{MHQ} and \eqn{HI})
+#'  are equal to \eqn{0}, the resulting reciprocal of \eqn{MCR} is \eqn{0}.
 #' 
 #' The missed toxicity of the vector \eqn{i} is given by:
 #'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
+#' \cr
+#' In the specific case where all values of the vector (or the corresponding \eqn{HI} and \eqn{MHQ})
+#'  are equal to \eqn{0}, the resulting missed toxicity is \eqn{0}.
 #'  
 #' @template formula_miat_groups
 #' 
@@ -2135,12 +2165,21 @@ validate_classes = function(classes) {
 #' 
 #' The maximum cumulative ratio of the vector \eqn{i} is given by:
 #'  \mjdeqn{MCR_i = \frac{HI_i}{MHQ_i}}{MCR_i = HI_i / MHQ_i}
+#' \cr
+#' In the specific case where all values of the vector (or the corresponding \eqn{HI} and \eqn{MHQ})
+#'  are equal to \eqn{0}, the resulting \eqn{MCR} is \eqn{0}.
 #' 
 #' The reciprocal of the maximum cumulative ratio of the vector \eqn{i} is given by:
 #'  \mjdeqn{Reciprocal~of~MCR_i = \frac{1}{MCR_i} = \frac{MHQ_i}{HI_i}}{Reciprocal of MCR_i = 1 / MCR_i = MHQ_i / HI_i}
+#' \cr
+#' In the specific case where all values of the vector (or the corresponding \eqn{MHQ} and \eqn{HI})
+#'  are equal to \eqn{0}, the resulting reciprocal of \eqn{MCR} is \eqn{0}.
 #' 
 #' The missed toxicity of the vector \eqn{i} is given by:
 #'  \mjdeqn{Missed~toxicity_i = 1 - \frac{1}{MCR_i}}{Missed toxiciy_i = 1 - 1 / MCR_i}
+#' \cr
+#' In the specific case where all values of the vector (or the corresponding \eqn{HI} and \eqn{MHQ})
+#'  are equal to \eqn{0}, the resulting missed toxicity is \eqn{0}.
 #'  
 #' @template formula_miat_groups
 #' 

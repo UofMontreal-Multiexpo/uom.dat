@@ -6,6 +6,10 @@
 * The function `top_hazard_quotient` now has an argument `ignore_zero` to choose between ignoring and considering values equal to 0. It returns `NA` if this new argument is set to `TRUE` and all values are equal to 0.
 * The functions `thq_pairs`, `thq_pairs_by_class`, `thq_by_group` and `thq_by_group_by_class` now have an argument `ignore_zero` to choose between ignoring and considering values equal to 0.
 
+## Minor changes
+
+* The functions `maximum_cumulative_ratio`, `missed_toxicity` and `reciprocal_of_mcr` now return 0 instead of `NaN` if the input values are all equal to 0.
+
 ## Fixes
 
 * An error was occurring when calling the function `top_hazard_quotient` by giving sets of values or of HQ containing only values equal to 0 and using the default value of the argument `k`.
