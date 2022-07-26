@@ -339,120 +339,127 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="TOC">
 <ul>
-<li><a href="#class-transactionanalyzer">1. Class
-TransactionAnalyzer</a>
+<li><a href="#class-transactionanalyzer" id="toc-class-transactionanalyzer">1. Class TransactionAnalyzer</a>
 <ul>
-<li><a href="#structure-of-a-transaction-analyzer">1.1. Structure of a
+<li><a href="#structure-of-a-transaction-analyzer" id="toc-structure-of-a-transaction-analyzer">1.1. Structure of a
 transaction analyzer</a>
 <ul>
-<li><a href="#in-brief">1.1.1. In brief</a></li>
-<li><a href="#attributes">1.1.2. Attributes</a></li>
+<li><a href="#in-brief" id="toc-in-brief">1.1.1. In brief</a></li>
+<li><a href="#attributes" id="toc-attributes">1.1.2. Attributes</a></li>
 </ul></li>
-<li><a href="#transactionanalzyer-example">1.2. TransactionAnalzyer
+<li><a href="#transactionanalzyer-example" id="toc-transactionanalzyer-example">1.2. TransactionAnalzyer
 example</a></li>
-<li><a href="#create-transactionanalyzer-objects">1.3. Create
+<li><a href="#create-transactionanalyzer-objects" id="toc-create-transactionanalyzer-objects">1.3. Create
 TransactionAnalyzer objects</a>
 <ul>
-<li><a href="#function-and-main-arguments">1.3.1. Function and main
+<li><a href="#function-and-main-arguments" id="toc-function-and-main-arguments">1.3.1. Function and main
 arguments</a></li>
-<li><a href="#initialization">1.3.2. Initialization</a></li>
+<li><a href="#initialization" id="toc-initialization">1.3.2.
+Initialization</a></li>
 </ul></li>
-<li><a href="#accessors-and-reset">1.4. Accessors and reset</a></li>
-<li><a href="#definition-of-specificity-and-dynamic-status">1.5.
-Definition of specificity and dynamic status</a>
+<li><a href="#accessors-and-reset" id="toc-accessors-and-reset">1.4.
+Accessors and reset</a></li>
+<li><a href="#definition-of-specificity-and-dynamic-status" id="toc-definition-of-specificity-and-dynamic-status">1.5. Definition of
+specificity and dynamic status</a>
 <ul>
-<li><a href="#pattern-specificity">1.5.1. Pattern specificity</a></li>
-<li><a href="#pattern-dynamic-status">1.5.2. Pattern dynamic
-status</a></li>
+<li><a href="#pattern-specificity" id="toc-pattern-specificity">1.5.1.
+Pattern specificity</a></li>
+<li><a href="#pattern-dynamic-status" id="toc-pattern-dynamic-status">1.5.2. Pattern dynamic status</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#searches">2. Searches</a>
+<li><a href="#searches" id="toc-searches">2. Searches</a>
 <ul>
-<li><a href="#items-itemsets-and-categories">2.1. Items, itemsets and
+<li><a href="#items-itemsets-and-categories" id="toc-items-itemsets-and-categories">2.1. Items, itemsets and
 categories</a>
 <ul>
-<li><a href="#items-names-and-categories">2.1.1. Items, names and
+<li><a href="#items-names-and-categories" id="toc-items-names-and-categories">2.1.1. Items, names and
 categories</a></li>
-<li><a href="#itemsets-names-and-categories">2.1.2. Itemsets, names and
+<li><a href="#itemsets-names-and-categories" id="toc-itemsets-names-and-categories">2.1.2. Itemsets, names and
 categories</a></li>
 </ul></li>
-<li><a href="#search-for-transactions">2.2. Search for
-transactions</a></li>
-<li><a href="#search-for-nodes-or-patterns">2.3. Search for nodes or
+<li><a href="#search-for-transactions" id="toc-search-for-transactions">2.2. Search for transactions</a></li>
+<li><a href="#search-for-nodes-or-patterns" id="toc-search-for-nodes-or-patterns">2.3. Search for nodes or
 patterns</a>
 <ul>
-<li><a href="#search-by-specific-value">2.3.1. Search by specific
+<li><a href="#search-by-specific-value" id="toc-search-by-specific-value">2.3.1. Search by specific
 value</a></li>
-<li><a href="#complex-isolated-and-non-isolated-nodes-and-patterns">2.3.2.
+<li><a href="#complex-isolated-and-non-isolated-nodes-and-patterns" id="toc-complex-isolated-and-non-isolated-nodes-and-patterns">2.3.2.
 Complex, isolated and non-isolated nodes and patterns</a></li>
 </ul></li>
-<li><a href="#search-for-links-between-nodes-or-patterns">2.4. Search
-for links between nodes or patterns</a></li>
+<li><a href="#search-for-links-between-nodes-or-patterns" id="toc-search-for-links-between-nodes-or-patterns">2.4. Search for
+links between nodes or patterns</a></li>
 </ul></li>
-<li><a href="#association-rules-and-itemset-notations">3. Association
-rules and itemset notations</a>
+<li><a href="#association-rules-and-itemset-notations" id="toc-association-rules-and-itemset-notations">3. Association rules
+and itemset notations</a>
 <ul>
-<li><a href="#definitions-about-association-rules">3.1. Definitions
-about association rules</a></li>
-<li><a href="#extract-association-rules">3.2. Extract association
-rules</a>
+<li><a href="#definitions-about-association-rules" id="toc-definitions-about-association-rules">3.1. Definitions about
+association rules</a></li>
+<li><a href="#extract-association-rules" id="toc-extract-association-rules">3.2. Extract association rules</a>
 <ul>
-<li><a href="#all-rules-and-rules-specific-to-items">3.2.1. All rules
-and rules specific to items</a></li>
-<li><a href="#rules-corresponding-to-specific-itemsets">3.2.2. Rules
+<li><a href="#all-rules-and-rules-specific-to-items" id="toc-all-rules-and-rules-specific-to-items">3.2.1. All rules and
+rules specific to items</a></li>
+<li><a href="#rules-corresponding-to-specific-itemsets" id="toc-rules-corresponding-to-specific-itemsets">3.2.2. Rules
 corresponding to specific itemsets</a></li>
-<li><a href="#additional-indicators">3.2.3. Additional
-indicators</a></li>
+<li><a href="#additional-indicators" id="toc-additional-indicators">3.2.3. Additional indicators</a></li>
 </ul></li>
-<li><a href="#further-interpretations">3.3. Further
-interpretations</a></li>
-<li><a href="#itemset-notations">3.4. Itemset notations</a></li>
+<li><a href="#further-interpretations" id="toc-further-interpretations">3.3. Further interpretations</a></li>
+<li><a href="#itemset-notations" id="toc-itemset-notations">3.4. Itemset
+notations</a></li>
 </ul></li>
-<li><a href="#plots">4. Plots</a>
+<li><a href="#plots" id="toc-plots">4. Plots</a>
 <ul>
-<li><a href="#category-charts">4.1. Category charts</a></li>
-<li><a href="#co-occurrence-charts">4.2. Co-occurrence charts</a></li>
-<li><a href="#itemset-charts">4.3. Itemset charts</a></li>
-<li><a href="#spectrum-charts">4.4. Spectrum charts</a></li>
-<li><a href="#spectrosome-charts">4.5. Spectrosome charts</a>
-<ul>
-<li><a href="#method-and-arguments">4.5.1. Method and arguments</a></li>
-<li><a href="#additional-examples">4.5.2. Additional examples</a></li>
-</ul></li>
-<li><a href="#association-rule-charts">4.6. Association rule
+<li><a href="#category-charts" id="toc-category-charts">4.1. Category
 charts</a></li>
-</ul></li>
-<li><a href="#computations">5. Computations</a>
+<li><a href="#co-occurrence-charts" id="toc-co-occurrence-charts">4.2.
+Co-occurrence charts</a></li>
+<li><a href="#itemset-charts" id="toc-itemset-charts">4.3. Itemset
+charts</a></li>
+<li><a href="#spectrum-charts" id="toc-spectrum-charts">4.4. Spectrum
+charts</a></li>
+<li><a href="#spectrosome-charts" id="toc-spectrosome-charts">4.5.
+Spectrosome charts</a>
 <ul>
-<li><a href="#computations-on-patterns">5.1. Computations on
-patterns</a>
+<li><a href="#method-and-arguments" id="toc-method-and-arguments">4.5.1.
+Method and arguments</a></li>
+<li><a href="#additional-examples" id="toc-additional-examples">4.5.2.
+Additional examples</a></li>
+</ul></li>
+<li><a href="#association-rule-charts" id="toc-association-rule-charts">4.6. Association rule charts</a></li>
+</ul></li>
+<li><a href="#computations" id="toc-computations">5. Computations</a>
 <ul>
-<li><a href="#frequency-distribution">5.1.1. Frequency
-distribution</a></li>
-<li><a href="#dynamic-status">5.1.2. Dynamic status</a></li>
-</ul></li>
-<li><a href="#computations-on-graphs">5.2. Computations on graphs</a>
+<li><a href="#computations-on-patterns" id="toc-computations-on-patterns">5.1. Computations on patterns</a>
 <ul>
-<li><a href="#network-density">5.2.1. Network density</a></li>
-<li><a href="#degree-of-a-vertex">5.2.2. Degree of a vertex</a></li>
+<li><a href="#frequency-distribution" id="toc-frequency-distribution">5.1.1. Frequency distribution</a></li>
+<li><a href="#dynamic-status" id="toc-dynamic-status">5.1.2. Dynamic
+status</a></li>
 </ul></li>
-</ul></li>
-<li><a href="#save-and-externalize">6. Save and externalize</a>
+<li><a href="#computations-on-graphs" id="toc-computations-on-graphs">5.2. Computations on graphs</a>
 <ul>
-<li><a href="#export-entities">6.1. Export entities</a></li>
-<li><a href="#package-arules">6.2. Package arules</a></li>
+<li><a href="#network-density" id="toc-network-density">5.2.1. Network
+density</a></li>
+<li><a href="#degree-of-a-vertex" id="toc-degree-of-a-vertex">5.2.2.
+Degree of a vertex</a></li>
 </ul></li>
-<li><a href="#references">References</a></li>
-<li><a href="#list-of-datasets-functions-classes-and-methods">List of
+</ul></li>
+<li><a href="#save-and-externalize" id="toc-save-and-externalize">6.
+Save and externalize</a>
+<ul>
+<li><a href="#export-entities" id="toc-export-entities">6.1. Export
+entities</a></li>
+<li><a href="#package-arules" id="toc-package-arules">6.2. Package
+arules</a></li>
+</ul></li>
+<li><a href="#references" id="toc-references">References</a></li>
+<li><a href="#list-of-datasets-functions-classes-and-methods" id="toc-list-of-datasets-functions-classes-and-methods">List of
 datasets, functions, classes and methods</a>
 <ul>
-<li><a href="#datasets">Datasets</a></li>
-<li><a href="#about-transaction-sets">About transaction sets</a></li>
-<li><a href="#about-transaction-analyzes">About transaction
-analyzes</a></li>
-<li><a href="#about-the-maximum-cumulative-ratio-approach">About the
-maximum cumulative ratio approach</a></li>
-<li><a href="#about-lists">About lists</a></li>
+<li><a href="#datasets" id="toc-datasets">Datasets</a></li>
+<li><a href="#about-transaction-sets" id="toc-about-transaction-sets">About transaction sets</a></li>
+<li><a href="#about-transaction-analyzes" id="toc-about-transaction-analyzes">About transaction analyzes</a></li>
+<li><a href="#about-the-maximum-cumulative-ratio-approach" id="toc-about-the-maximum-cumulative-ratio-approach">About the maximum
+cumulative ratio approach</a></li>
+<li><a href="#about-lists" id="toc-about-lists">About lists</a></li>
 </ul></li>
 </ul>
 </div>
