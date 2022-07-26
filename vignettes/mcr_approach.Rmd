@@ -280,7 +280,7 @@ classify_mixture(values = concentration_values[[2]],
                  references = reference_values[substance_names_2])
 ```
 
-In the function `top_hazard_quotient`, the argument `k` defines how many of the highest hazard quotients to look for. Default is a number of top hazard quotients equal to the integer part of the maximum cumulative ratio computed from the same values and references.
+In the function `top_hazard_quotient`, the argument `k` defines how many of the highest hazard quotients to look for. Default is a number of top hazard quotients equal to the integer part of the maximum cumulative ratio computed from the same values and references. This function also has an argument `ignore_zero` to choose whether to ignore values equal to $0$.
 
 
 ## 2.2. Scatter plot
@@ -304,6 +304,8 @@ mcr_chart(values = concentration_values,
           references = reference_values,
           log_transform = FALSE)
 ```
+
+Note that in both cases, sets of values containing only values equal to $0$ (i.e., having $MCR$ values equal to $0$) are not plotted.
 
 #### Coloring regions
 
@@ -410,6 +412,8 @@ thq_by_group(values = concentration_values,
              references = reference_values,
              levels = sort(table_levels))
 ```
+
+They also have an argument `ignore_zero` to choose whether to ignore values equal to $0$.
 
 For the first of the two functions (`thq_pairs`), two other arguments exists:
 

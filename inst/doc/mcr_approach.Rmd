@@ -217,12 +217,15 @@ $$ Missed~toxicity = 1 - \frac{1}{MCR} $$
 * **Group IIIA**: the majority of the risk offered by the mixture is driven by one component.
 * **Group IIIB**: the potential risk is driven by multiple components.
 
-The vector of values $V$ is assigned to a group according to the following conditions:
+The vector of values $V$ is assigned to a group according to the following conditions.
 
 * Group I: $MHQ \ge 1$
 * Group II: $MHQ < 1, ~ HI \le 1$
 * Group IIIA: $MHQ < 1, ~ HI > 1, ~ MCR < 2$
 * Group IIIB: $MHQ < 1, ~ HI > 1, ~ MCR \ge 2$
+
+
+Given these definitions, in the case of a vector containing only values equal to $0$, all indicators can be considered equal to $0$ and the corresponding top hazard quotient and MIAT group to be `NA` and the group II respectively.
 
 ### 2.1.3. Compute a specific indicator
 
@@ -277,7 +280,7 @@ classify_mixture(values = concentration_values[[2]],
                  references = reference_values[substance_names_2])
 ```
 
-In the function `top_hazard_quotient`, the argument `k` defines how many of the highest hazard quotients to look for. Default is a number of top hazard quotients equal to the integer part of the maximum cumulative ratio computed from the same values and references.
+In the function `top_hazard_quotient`, the argument `k` defines how many of the highest hazard quotients to look for. Default is a number of top hazard quotients equal to the integer part of the maximum cumulative ratio computed from the same values and references. This function also has an argument `ignore_zero` to choose whether to ignore values equal to $0$.
 
 
 ## 2.2. Scatter plot
@@ -301,6 +304,8 @@ mcr_chart(values = concentration_values,
           references = reference_values,
           log_transform = FALSE)
 ```
+
+Note that in both cases, sets of values containing only values equal to $0$ (i.e., having $MCR$ values equal to $0$) are not plotted.
 
 #### Coloring regions
 
@@ -343,7 +348,7 @@ mcr_chart(values = concentration_values,
           thq_col = new_thq_col)
 ```
 
-Note that, if the new set of colors are not named, they are associated with the top hazard quotients in the given order (the first color for the first THQ, and so on). If they are named, colors are explicitly associated with the possible values of the top hazard quotients (in our case, that would be with the substance names).
+Note that, if the new colors are not named, they are associated with the top hazard quotients in the given order (the first color for the first THQ in the legend, and so on). If they are named, colors are explicitly associated with the possible values of the top hazard quotients (in our case, that would be with the substance names).
 
 #### Colors and transparency of the regions
 
@@ -407,6 +412,8 @@ thq_by_group(values = concentration_values,
              references = reference_values,
              levels = sort(table_levels))
 ```
+
+They also have an argument `ignore_zero` to choose whether to ignore values equal to $0$.
 
 For the first of the two functions (`thq_pairs`), two other arguments exists:
 
