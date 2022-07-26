@@ -14,7 +14,7 @@ computed.}
 the \code{values}. See 'Details' to know the way it is associated with \code{values}.}
 
 \item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.
-Always considered \code{TRUE} while identifying top hazard quotients (see Details).}
+Always considered \code{TRUE} while identifying top hazard quotients (see 'Details').}
 }
 \value{
 Data frame containing the main indicators of the MCR approach computed on the given \code{values}:

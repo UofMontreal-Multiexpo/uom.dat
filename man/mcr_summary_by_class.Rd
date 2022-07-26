@@ -27,7 +27,7 @@ contain the names associated with the \code{values}. A \code{TRUE} value indicat
 is part of a specific class.}
 
 \item{ignore_zero}{\code{TRUE} or \code{FALSE} whether to ignore values equal to 0.
-Always considered \code{TRUE} while identifying top hazard quotients (see Details).}
+Always considered \code{TRUE} while identifying top hazard quotients (see 'Details').}
 
 \item{by_set}{\code{TRUE} or \code{FALSE} whether to group results by set of values or by class.
 Always \code{TRUE} if values is a vector.}

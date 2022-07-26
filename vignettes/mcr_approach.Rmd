@@ -346,7 +346,7 @@ mcr_chart(values = concentration_values,
           thq_col = new_thq_col)
 ```
 
-Note that, if the new set of colors are not named, they are associated with the top hazard quotients in the given order (the first color for the first THQ, and so on). If they are named, colors are explicitly associated with the possible values of the top hazard quotients (in our case, that would be with the substance names).
+Note that, if the new colors are not named, they are associated with the top hazard quotients in the given order (the first color for the first THQ in the legend, and so on). If they are named, colors are explicitly associated with the possible values of the top hazard quotients (in our case, that would be with the substance names).
 
 #### Colors and transparency of the regions
 

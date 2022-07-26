@@ -680,7 +680,7 @@ classify_mixture = function(values = NULL, references = NULL,
 #' @param references Numeric vector or list of numeric vectors. Reference values associated with the
 #'  `values`. See 'Details' to know the way it is associated with `values`.
 #' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
-#'  Always considered `TRUE` while identifying top hazard quotients (see Details).
+#'  Always considered `TRUE` while identifying top hazard quotients (see 'Details').
 #' @return List if `values` is a vector; data frame otherwise.
 #'  Contains the main indicators of the MCR approach computed on the given `values`:
 #'  * **n**: number of values or number of values different from 0 (according to `ignore_zero`).
@@ -865,7 +865,7 @@ mcr_summary = function(values, references, ignore_zero = TRUE) {
 #' @param references Numeric named vector or list of numeric vectors. Reference values associated with
 #'  the `values`. See 'Details' to know the way it is associated with `values`.
 #' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
-#'  Always considered `TRUE` while identifying top hazard quotients (see Details).
+#'  Always considered `TRUE` while identifying top hazard quotients (see 'Details').
 #' @return Data frame containing the main indicators of the MCR approach computed on the given `values`:
 #'  * **n**: number of values or number of values different from 0 (according to `ignore_zero`).
 #'  * **n_zero**: number of values equal to 0 (only if `ignore_zero` is `TRUE`).
@@ -2211,7 +2211,7 @@ validate_classes = function(classes) {
 #'  contain the names associated with the `values`. A `TRUE` value indicates that a specific name
 #'  is part of a specific class.
 #' @param ignore_zero `TRUE` or `FALSE` whether to ignore values equal to 0.
-#'  Always considered `TRUE` while identifying top hazard quotients (see Details).
+#'  Always considered `TRUE` while identifying top hazard quotients (see 'Details').
 #' @param by_set `TRUE` or `FALSE` whether to group results by set of values or by class.
 #'  Always `TRUE` if values is a vector.
 #' @param all_classes Logical indicating whether all classes must be considered for each set of values
