@@ -39,8 +39,8 @@ chart is to be plotted.}
 associated with the hazard indices \code{hi}. If list, only the first named value of each element of the
 list is considered.}
 
-\item{thq_col}{Character named vector. Colors to assign to the \strong{t}op \strong{h}azard \strong{q}uotients
-elements.}
+\item{thq_col}{Character vector. Colors to assign to the \strong{t}op \strong{h}azard \strong{q}uotients
+elements. May or may not be named (see 'Details').}
 
 \item{regions}{If \code{TRUE}, the regions corresponding to the MIAT groups are filled with the colors
 defined by \code{regions_col}.}
@@ -86,6 +86,9 @@ The chart being plotted with the \code{ggplot2} package, it can be modified or c
 \code{\link[ggplot2:last_plot]{ggplot2::last_plot}} or the returned object.
 
 Color specification can be done using the R predefined color names or hexadecimal values.
+If \code{thq_col} is not named, colors are associated with the top hazard quotients in the given order
+(the first color for the first THQ in the legend, and so on). If it is named, colors are explicitly
+associated with the possible values of the top hazard quotients.
 
 In the standard version of the chart, the grey area represents the region in which no point can be
 plotted because MCR cannot be lower than 1. In the log version, such a region does not exist.

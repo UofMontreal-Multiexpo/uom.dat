@@ -941,6 +941,9 @@ mcr_summary_for_list = function(values, references, ignore_zero) {
 #'  [`ggplot2::last_plot`] or the returned object.
 #' 
 #' Color specification can be done using the R predefined color names or hexadecimal values.
+#' If `thq_col` is not named, colors are associated with the top hazard quotients in the given order
+#'  (the first color for the first THQ in the legend, and so on). If it is named, colors are explicitly
+#'  associated with the possible values of the top hazard quotients.
 #' 
 #' In the standard version of the chart, the grey area represents the region in which no point can be
 #'  plotted because MCR cannot be lower than 1. In the log version, such a region does not exist.
@@ -1003,8 +1006,8 @@ mcr_summary_for_list = function(values, references, ignore_zero) {
 #' @param thq Numeric named vector or list of numeric named vectors. **T**op **h**azard **q**uotients
 #'  associated with the hazard indices `hi`. If list, only the first named value of each element of the
 #'  list is considered.
-#' @param thq_col Character named vector. Colors to assign to the **t**op **h**azard **q**uotients
-#'  elements.
+#' @param thq_col Character vector. Colors to assign to the **t**op **h**azard **q**uotients
+#'  elements. May or may not be named (see 'Details').
 #' @param regions If `TRUE`, the regions corresponding to the MIAT groups are filled with the colors
 #'  defined by `regions_col`.
 #' @param regions_col Character vector of length 4. Define the colors for the regions of the MIAT groups
@@ -1184,7 +1187,13 @@ mcr_chart = function(values = NULL, references = NULL,
   # Default region colors are colorblind safe and print friendly
   
   # If specific colors have to be associated with the THQ
-  if (!is.null(thq_col)) chart = chart + ggplot2::scale_color_manual(values = thq_col[sort(unique(thq))])
+  if (!is.null(thq_col)) {
+    thq_names = sort(unique(thq))
+    if (is_named(thq_col)) thq_col = thq_col[thq_names]
+    else thq_col = stats::setNames(thq_col[seq_along(thq_names)], thq_names)
+    
+    chart = chart + ggplot2::scale_color_manual(values = thq_col)
+  }
   chart = chart + ggplot2::guides(color = ggplot2::guide_legend(order = 1))
   
   # Linear regression
@@ -2401,6 +2410,9 @@ mcr_summary_by_class = function(values, references, classes,
 #'  using the returned objects.
 #' 
 #' Color specification can be done using the R predefined color names or hexadecimal values.
+#' If `thq_col` is not named, colors are associated with the top hazard quotients in the given order
+#'  (the first color for the first THQ in the legend, and so on). If it is named, colors are explicitly
+#'  associated with the possible values of the top hazard quotients.
 #' 
 #' In the standard version of the chart, the grey area represents the region in which no point can be
 #'  plotted because MCR cannot be lower than 1. In the log version, such a region does not exist.

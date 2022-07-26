@@ -16,6 +16,11 @@
 
 * An error was occurring when calling the function `top_hazard_quotient` by giving sets of values or of HQ containing only values equal to 0 and using the default value of the argument `k`.
 * An error was occurring when calling the function `mcr_chart` by giving sets of values containing only values equal to 0.
+* Unnamed vectors can now be used as argument `thq_col` in the function `mcr_chart`.
+
+## Documentation
+
+* In the vignette about the MCR approach, the THQ color change example now works as described. It uses the given colors instead of using grey for each THQ name.
 
 
 

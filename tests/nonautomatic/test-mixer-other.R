@@ -172,12 +172,19 @@ library(uom.dat)
   ## Expectations:
   ## - Colors are assigned according to the top hazard quotients
   ## - Default colors exist
-  ## - The given order in 'thq_col' does not matter
+  ## - 'thq_col' do not need to be named
+  ## - The given order in a named 'thq_col' does not matter
   ## - Color scale is ordered alphanumerically
   ## - Color scale only displays values related to the actual THQ
   
   mcr_chart(values_matrix, references_vector, log_transform = TRUE,
             thq_col = NULL)
+  
+  mcr_chart(values_matrix, references_vector, log_transform = TRUE,
+            thq_col = c("red", "blue", "green"))
+  mcr_chart(values_matrix, references_vector, log_transform = FALSE,
+            thq_col = c("red", "blue", "green"))
+  
   mcr_chart(values_matrix, references_vector, log_transform = TRUE,
             thq_col = c(b = "red", c = "blue", a = "green"))
   mcr_chart(values_matrix, references_vector, log_transform = FALSE,
