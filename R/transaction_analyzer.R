@@ -2013,13 +2013,18 @@ function(object) {
                                   function(p) sum(object@nodes_patterns[, p]),
                                   integer(1))
   object@patterns$length = lengths(object@patterns$pattern)
-  object@patterns$year = vapply(seq_len(nrow(object@patterns_per_year)),
-                                function(i) {
-                                  # Year of appearance of the pattern
-                                  x = object@patterns_per_year[i, ]
-                                  return(as.integer(names(x[x > 0][1])))
-                                },
-                                integer(1))
+  
+  if (ncol(object@patterns_per_year) == 1 && nrow(object@patterns_per_year) != 0) {
+    object@patterns$year = as.integer(colnames(object@patterns_per_year))
+  } else {
+    object@patterns$year = vapply(seq_len(nrow(object@patterns_per_year)),
+                                  function(i) {
+                                    # Year of appearance of the pattern
+                                    x = object@patterns_per_year[i, ]
+                                    return(as.integer(names(x[x > 0][1])))
+                                  },
+                                  integer(1))
+  }
   
   # Computation of the specificity and dynamic status of each pattern
   object@patterns$specificity = compute_specificity(object, object@patterns$pattern,
