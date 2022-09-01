@@ -1,4 +1,4 @@
-# uom.dat 0.2.1.9000 (development version)
+# uom.dat 0.3.0 (2022-09-01)
 
 ## New features
 
