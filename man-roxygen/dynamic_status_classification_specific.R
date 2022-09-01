@@ -28,10 +28,9 @@
 #' For each one of the two sets of reporting indexes:
 #' * One threshold \mjseqn{\xi} is computed as follows:
 #'   \mjdeqn{\xi = \left\lceil \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil}{xi = ceiling(1 / sum(RI_p(t_1,t_0)^2) for p in P)}
-#' * The patterns are ordered in descending order of their reporting index value and separated by
-#'   this threshold.
-#' * The reporting index of the \mjseqn{\xi}\out{<sup>th</sup>} pattern is the \mjseqn{RI} threshold used to
-#'   classify the patterns.
+#' * The patterns are ordered in descending order of their reporting index value.
+#' * The reporting index of the \mjseqn{\xi}\out{<sup>th</sup>} pattern is selected as the \mjseqn{RI}
+#'   threshold to be used to classify the patterns.
 #' 
 #' The patterns are then classified as follows:
 #' * Patterns for which \mjeqn{RI_{\infty,p}}{RI_inf,p} and \mjeqn{RI_{l,p}}{RI_lp} are greater than or

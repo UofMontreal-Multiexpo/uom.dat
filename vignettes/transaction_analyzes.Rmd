@@ -147,7 +147,7 @@ Each object of class `TransactionAnalyzer` has the following attributes.
     <li>`support`: proportion of transactions containing the set of items of the pattern.</li>
     <li>`frequency`: number of transactions containing the set of items of the pattern.</li>
     <li>`weight`: number of nodes containing the set of items of the pattern.</li>
-    <li>`specificity`: specificity of the information conveyed by the pattern. It corresponds to the nature of a pattern of being specific of a particular combination or ubiquitous and allowing the formation of numerous combinations (with regard to the transactions).</li>
+    <li>`specificity`: specificity of the information conveyed by the pattern.</li>
     <li>`status`: dynamic status of the pattern: persistent, declining, emergent or latent.</li></ul></td>
   </tr>
   <tr>
@@ -401,7 +401,7 @@ For each pattern, two reporting index values are computed and compared to two th
 
 A pattern is:
 
-* **Persistent** when it appears substantially during both the entire period of the transactions and a shorter period defined by the attribute `status_limit`. For instance, if `status_limit` is `2`, this shorter period correspond to the 2 last years of transactions.
+* **Persistent** when it appears substantially during both the entire period of the transactions and a shorter period defined by the attribute `status_limit`. For instance, if `status_limit` is `2`, this shorter period corresponds to the last 2 years of transactions.
 * **Declining** when it appears substantially during the entire period but much less during the shorter period.
 * **Emergent** when it appears insignificantly during the entire period but much more during the shorter period.
 * **Latent** when it appears insignificantly during both the entire period and the shorter period.
@@ -413,21 +413,17 @@ RI_{\infty,p} & = lim_{t_0 \to -\infty} RI_p(t_1,t_0) \\
 RI_{l,p} & = RI_p(t_1, t_1 - l + 1)
 \end{align*}
 $$
-
 where $\infty$ and $l$ refer respectively to the longer and shorter period on which to compute a reporting index, $t_1$ is the year of end of the periods and $RI_p(t_1,t_0)$ is the reporting index of the pattern $p$ given by:
-
 $$RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}$$
-
 where $P$ is the set of patterns, $F_{p,t}$ is the frequency of the pattern $p$ in the transactions of the year $t$, and $t_0$ and $t_1$ are the first and last years defining the period on which to compute the reporting index.
 
 For each one of the two sets of reporting indexes:
 
 * One threshold $\xi$ is computed as follows:
-
 $$\xi = \left\lceil \frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil$$
 
-* The patterns are ordered in descending order of their reporting index value and separated by this threshold.
-* The reporting index of the $\xi$^th^ pattern is the $RI$ threshold used to classify the patterns.
+* The patterns are ordered in descending order of their reporting index value.
+* The reporting index of the $\xi$^th^ pattern is selected as the $RI$ threshold to be used to classify the patterns.
 
 The patterns are then classified as follows:
 

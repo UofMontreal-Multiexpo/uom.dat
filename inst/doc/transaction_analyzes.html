@@ -334,7 +334,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Transaction analyzes</h1>
 <h4 class="author">Gauthier Magnin</h4>
-<h4 class="date">Last update: 2022-05-30</h4>
+<h4 class="date">Last update: 2022-09-01</h4>
 
 
 <div id="TOC">
@@ -745,9 +745,7 @@ pattern.
 </li>
 <li>
 <code>specificity</code>: specificity of the information conveyed by the
-pattern. It corresponds to the nature of a pattern of being specific of
-a particular combination or ubiquitous and allowing the formation of
-numerous combinations (with regard to the transactions).
+pattern.
 </li>
 <li>
 <code>status</code>: dynamic status of the pattern: persistent,
@@ -1524,7 +1522,7 @@ compared to two thresholds in order to define its status.</p>
 both the entire period of the transactions and a shorter period defined
 by the attribute <code>status_limit</code>. For instance, if
 <code>status_limit</code> is <code>2</code>, this shorter period
-correspond to the 2 last years of transactions.</li>
+corresponds to the last 2 years of transactions.</li>
 <li><strong>Declining</strong> when it appears substantially during the
 entire period but much less during the shorter period.</li>
 <li><strong>Emergent</strong> when it appears insignificantly during the
@@ -1538,32 +1536,26 @@ the entire period and the shorter period.</li>
 RI_{\infty,p} &amp; = lim_{t_0 \to -\infty} RI_p(t_1,t_0) \\
 RI_{l,p} &amp; = RI_p(t_1, t_1 - l + 1)
 \end{align*}
-\]</span></p>
-<p>where <span class="math inline">\(\infty\)</span> and <span class="math inline">\(l\)</span> refer respectively to the longer and
+\]</span> where <span class="math inline">\(\infty\)</span> and <span class="math inline">\(l\)</span> refer respectively to the longer and
 shorter period on which to compute a reporting index, <span class="math inline">\(t_1\)</span> is the year of end of the periods and
 <span class="math inline">\(RI_p(t_1,t_0)\)</span> is the reporting
-index of the pattern <span class="math inline">\(p\)</span> given
-by:</p>
-<p><span class="math display">\[RI_p(t_1,t_0) = \frac{\sum_{t =
-t_0}^{t_1} F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1}
-F_{q,t}}\]</span></p>
-<p>where <span class="math inline">\(P\)</span> is the set of patterns,
-<span class="math inline">\(F_{p,t}\)</span> is the frequency of the
-pattern <span class="math inline">\(p\)</span> in the transactions of
-the year <span class="math inline">\(t\)</span>, and <span class="math inline">\(t_0\)</span> and <span class="math inline">\(t_1\)</span> are the first and last years defining
+index of the pattern <span class="math inline">\(p\)</span> given by:
+<span class="math display">\[RI_p(t_1,t_0) = \frac{\sum_{t = t_0}^{t_1}
+F_{p,t}}{\sum_{q \in P} \sum_{t = t_0}^{t_1} F_{q,t}}\]</span> where
+<span class="math inline">\(P\)</span> is the set of patterns, <span class="math inline">\(F_{p,t}\)</span> is the frequency of the pattern
+<span class="math inline">\(p\)</span> in the transactions of the year
+<span class="math inline">\(t\)</span>, and <span class="math inline">\(t_0\)</span> and <span class="math inline">\(t_1\)</span> are the first and last years defining
 the period on which to compute the reporting index.</p>
 <p>For each one of the two sets of reporting indexes:</p>
 <ul>
-<li>One threshold <span class="math inline">\(\xi\)</span> is computed
-as follows:</li>
-</ul>
-<p><span class="math display">\[\xi = \left\lceil \frac{1}{\sum_{p \in
-P} RI_p(t_1,t_0)^2} \right\rceil\]</span></p>
-<ul>
-<li>The patterns are ordered in descending order of their reporting
-index value and separated by this threshold.</li>
-<li>The reporting index of the <span class="math inline">\(\xi\)</span><sup>th</sup> pattern is the <span class="math inline">\(RI\)</span> threshold used to classify the
-patterns.</li>
+<li><p>One threshold <span class="math inline">\(\xi\)</span> is
+computed as follows: <span class="math display">\[\xi = \left\lceil
+\frac{1}{\sum_{p \in P} RI_p(t_1,t_0)^2} \right\rceil\]</span></p></li>
+<li><p>The patterns are ordered in descending order of their reporting
+index value.</p></li>
+<li><p>The reporting index of the <span class="math inline">\(\xi\)</span><sup>th</sup> pattern is selected as
+the <span class="math inline">\(RI\)</span> threshold to be used to
+classify the patterns.</p></li>
 </ul>
 <p>The patterns are then classified as follows:</p>
 <ul>
