@@ -1,5 +1,9 @@
 # uom.dat 0.3.0.9000 (development version)
 
+## Minor changes
+
+* Execution time of steps 4 and 10 of `TransactionAnalyzer` initialization (creating links between nodes or patterns) have been reduced by 20 to 50% (depending on the case).
+
 
 
 # uom.dat 0.3.0 (2022-09-01)

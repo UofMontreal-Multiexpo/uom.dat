@@ -475,3 +475,39 @@ if_2.0 = function(x, operator, y, expr = NULL, alt.expr = NULL) {
 }
 
 
+
+#### Utility functions for computations ####
+
+#' Turn triangular matrix indices into row and column indices
+#' 
+#' Turn indices of a vector into indices of a matrix.
+#' Vector elements match those of the lower triangle of a matrix considered
+#'  row-by-row.
+#' 
+#' @details
+#' Given indices correspond to the following elements in a matrix:\cr
+#'  `1`\cr
+#'  `2  3`\cr
+#'  `4  5  6`\cr
+#'  `7  8  9  10`\cr
+#'  `11 12 13 14 15`\cr
+#'  etc.
+#' 
+#' @template function_not_exported
+#' 
+#' @param indices Indices in a row-by-row flattened lower triangle of a matrix,
+#'  including its diagonal.
+#' @return Two-column matrix containing the row and column indices corresponding
+#'  to `indices` in a matrix.
+#' 
+#' @author Gauthier Magnin
+#' @md
+#' @keywords internal
+tri_to_matrix_indices = function(indices) {
+  row_indices = ceiling(sqrt(2 * indices + 0.25) - 0.5)
+  col_indices = indices - (row_indices - 1) * row_indices / 2
+  
+  return(cbind(as.integer(row_indices), as.integer(col_indices)))
+}
+
+

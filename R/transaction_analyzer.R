@@ -1705,40 +1705,41 @@ function(object, entities) {
   } else stop("entities must be NODES or PATTERNS.")
   
   
-  # Searching for the indices of the entities to link
-  linked_indexes = which(apply(entities_links, 1, function(x) sum(x) != x[parent.frame()$i[]]))
-  names(linked_indexes) = NULL
+  # Count the number of links (using matrix symmetry property)
+  nb_links = (sum(entities_links != 0) - nrow(entities_links)) / 2
   
-  # Matrix of pairs of linked entities
-  if (length(linked_indexes) != 0) {
+  # Pairs of linked entities
+  if (nb_links != 0) {
     
-    # Using matrix symmetry property to count the number of links
-    nb_links = (sum(entities_links != 0) - nrow(entities_links)) / 2
     links = matrix(NA, nrow = nb_links, ncol = ifelse(entities == PATTERNS, 5, 4))
     
-    link_counter = 0
-    loop_index = 0
+    # Find indices of pairs of linked entities
+    # (horizontally unlist the lower triangle of the matrix of link weights;
+    # find weights different from 0; get indices in the matrix; ignore the diagonal)
+    lower_tri_indices = which(t(entities_links)[upper.tri(entities_links, diag = TRUE)] != 0)
+    links_endpoints = tri_to_matrix_indices(lower_tri_indices)
+    links_endpoints = links_endpoints[links_endpoints[, 1] != links_endpoints[, 2], ,
+                                      drop = FALSE]
+    links_endpoints = links_endpoints[order(links_endpoints[, 2]), c(2,1)]
     
-    # Search for links between each pair of entities to be linked
-    for(i in linked_indexes[1:(length(linked_indexes) - 1)]) {
-      loop_index = loop_index + 1
+    # Items in common, for each pair of linked entities
+    links_items = apply(links_endpoints, 1, function(pair_ij) {
+      i = pair_ij[1]
+      j = pair_ij[2]
       
-      for(j in linked_indexes[(loop_index + 1):length(linked_indexes)]) {
-        if (entities_links[i, j] != 0) {
-          # New link identified
-          link_counter = link_counter + 1
-          intersection = to_link[[j]][to_link[[j]] %in% to_link[[i]]]
-          
-          # Entity i, entity j, items in common, nb items in common (, year of appearance of the link)
-          if (entities == PATTERNS) {
-            links[link_counter, ] = c(i, j,
-                                      paste(intersection, collapse = "/"), entities_links[i, j],
-                                      max(object@patterns[i, "year"], object@patterns[j, "year"]))
-          } else {
-            links[link_counter, ] = c(i, j, paste(intersection, collapse = "/"), entities_links[i, j])
-          }
-        }
-      }
+      to_link[[j]][to_link[[j]] %in% to_link[[i]]]
+    })
+    
+    links[, c(1, 2)] = links_endpoints
+    links[, 3] = vapply(links_items,
+                        paste, character(1L),
+                        collapse = "/")
+    links[, 4] = entities_links[links_endpoints]
+    
+    # Add years of appearance of the link between patterns
+    if (entities == PATTERNS) {
+      links[, 5] = apply(links_endpoints, 1,
+                         function(pair_ij) max(object@patterns[pair_ij, "year"]))
     }
   } else {
     # Empty matrix for the following merge (avoids having to test either one)
@@ -1747,13 +1748,13 @@ function(object, entities) {
   
   
   # Search for isolated entities
-  isolated_indexes = which(apply(entities_links, 1,
+  isolated_indices = which(apply(entities_links, 1,
                                  function(x) sum(x) == x[parent.frame()$i[]]))
-  names(isolated_indexes) = NULL
+  names(isolated_indices) = NULL
   
-  # Matrix of isolated elements completing that of pairs of linked elements
-  if (length(isolated_indexes) != 0) {
-    no_links = t(sapply(isolated_indexes, entity = entities,
+  # Data frame of isolated elements completing that of pairs of linked elements
+  if (length(isolated_indices) != 0) {
+    no_links = t(sapply(isolated_indices, entity = entities,
                         function(x, entity) {
                           if (entity == PATTERNS) {
                             return(c(x, x, "", 0, object@patterns[parent.frame()$i[], "year"]))
@@ -1766,17 +1767,16 @@ function(object, entities) {
   }
   
   
-  # Merge the lists into a single data frame
+  # Merge the links into a single data frame
   merged = as.data.frame(rbind(links, no_links), stringsAsFactors = FALSE)
   
   # Assigning column names and restoring types
   if (entities == PATTERNS) {
-    colnames(merged) = c("endpoint.1", "endpoint.2", "items", "weight", "year")
+    colnames(merged)[5] = "year"
     class(merged$year) = "integer"
-  } else {
-    colnames(merged) = c("endpoint.1", "endpoint.2", "items", "weight")
   }
   rownames(merged) = NULL
+  colnames(merged)[1:4] = c("endpoint.1", "endpoint.2", "items", "weight")
   class(merged$endpoint.1) = class(merged$endpoint.2) = class(merged$weight) = "integer"
   
   
