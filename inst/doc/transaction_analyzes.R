@@ -287,6 +287,11 @@ get_non_isolates(TA_instance,
                  TA_instance["nodes"])
 
 ## -----------------------------------------------------------------------------
+# Maximals
+get_maximals(TA_instance,
+             TA_instance["patterns"])
+
+## -----------------------------------------------------------------------------
 # Attribute 'node_links' of the object 'TA_instance'
 TA_instance["node_links"]
 

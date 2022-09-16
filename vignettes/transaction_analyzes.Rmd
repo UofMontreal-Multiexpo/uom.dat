@@ -558,7 +558,7 @@ Two generic methods allow to extract nodes and patterns from specific values in 
 
 The methods extract the subset of a data frame containing nodes or patterns satisfying search criteria. This data frame may be the attribute `nodes` or `patterns` of a `TransactionAnalyzer` or a subset of one of them.
 
-The two methods share the same arguments. Among them, the argument `element` specifies on which element to do the search between `"items"`, the name of one column of the given data frame or the name or number of one category. As for the method `get_trx_from_category`, the category numbering is according to their order in the attributes `items_categories`.
+The two methods share the same arguments. Among them, the argument `element` specifies on which element to do the search between `"items"`, the name of one column of the given data frame or the name or number of one category. As for the method `get_trx_from_category`, the category numbering is according to their order in the attribute `items_categories`.
 
 Before giving details and examples, here are the data frames of nodes and patterns of the transaction analyzer `TA_instance`.
 ```{r}
@@ -713,7 +713,7 @@ get_complexes(TA_instance,
 
 To extract nodes or patterns regarding one category, there are two more arguments.
 
-* `category`: the name or number of the category to consider. The category numbering is according to their order in the attributes `items_categories`.
+* `category`: the name or number of the category to consider. The category numbering is according to their order in the attribute `items_categories`.
 * `condition`: like for the methods `get_nodes` and `get_patterns`, it can have two possibilities.
   * `"items"`: search for nodes or patterns associated with several values of the category.
   * `"links"`: search for nodes or patterns generating links corresponding to several values of the category.
@@ -764,6 +764,18 @@ get_non_isolates(TA_instance,
 ```
 
 Like the previous methods, these can be applied to any subset of a data frame of nodes or of patterns.
+
+### 2.3.3. Maximal patterns
+
+The method `get_maximals` allows to extract patterns that have no superset among the given ones.
+
+```{r}
+# Maximals
+get_maximals(TA_instance,
+             TA_instance["patterns"])
+```
+
+Note that if the `target` parameter was equal to `"maximally frequent itemsets"` at initialization of the `TransactionAnalyzer` object, all its patterns would already be maximals.
 
 
 ## 2.4. Search for links between nodes or patterns

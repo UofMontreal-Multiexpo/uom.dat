@@ -870,6 +870,8 @@ setGeneric(name = "get_patterns_from_status", def = function(object, pc, value, 
 
 setGeneric(name = "get_patterns_from_category", def = function(object, pc, category, value, condition){ standardGeneric("get_patterns_from_category") })
 
+setGeneric(name = "get_maximals", def = function(object, pc){ standardGeneric("get_maximals") })
+
 setGeneric(name = "get_links", def = function(object, nopc){ standardGeneric("get_links") })
 
 setGeneric(name = "get_isolates", def = function(object, nopc){ standardGeneric("get_isolates") })
@@ -5001,8 +5003,8 @@ function(object, nporc, ...) {
 #' About transactions: [`get_trx_from_items`], [`get_trx_from_info`], [`get_complex_trx`],
 #'  [`get_simple_trx`].
 #' 
-#' About nodes and patterns: [`get_nodes`], [`get_patterns`], [`get_complexes`], [`get_isolates`],
-#'  [`get_non_isolates`].
+#' About nodes and patterns: [`get_nodes`], [`get_patterns`], [`get_maximals`], [`get_complexes`],
+#'  [`get_isolates`], [`get_non_isolates`].
 #' 
 #' @examples
 #' get_trx_from_category(TA_instance, TA_instance["transactions"],
@@ -5074,7 +5076,8 @@ function(object, trx, category, value, as_indices = FALSE) {
 #' @return Subset of the data frame of nodes that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_patterns`], [`get_complexes`], [`get_isolates`], [`get_non_isolates`].
+#' @seealso [`get_patterns`], [`get_maximals`], [`get_complexes`], [`get_isolates`],
+#'  [`get_non_isolates`].
 #' 
 #' @examples
 #' ## Search on items
@@ -5415,7 +5418,7 @@ function(object, nc, category, value, condition) {
 #' @return Subset of the data frame of patterns that match the search criteria.
 #' 
 #' @author Gauthier Magnin
-#' @seealso [`get_nodes`], [`get_complexes`], [`get_isolates`], [`get_non_isolates`].
+#' @seealso [`get_nodes`], [`get_maximals`], [`get_complexes`], [`get_isolates`], [`get_non_isolates`].
 #' 
 #' @examples
 #' ## Search on items
@@ -5771,6 +5774,64 @@ function(object, pc, category, value, condition) {
     return(pc[unique(unlist(links[, 1:2])), ])
   }
   stop("condition must be one of \"items\", \"links\", \"vertices\", \"edges\".")
+})
+
+
+#' Search for patterns that are the maximals
+#' 
+#' Extract the patterns that have no superset among the other ones.
+#' 
+#' @note
+#' If the `target` parameter of a `TransactionAnalyzer` object is equal to
+#'  `"maximally frequent itemsets"`, all its patterns are already maximals.
+#' 
+#' @param object S4 object of class `TransactionAnalyzer`.
+#' @param pc Data frame of **p**atterns and their **c**haracteristics. Any
+#'  subset of `object["patterns"]`.
+#'  
+#'  `"patterns"` and `"p"` are special values for `object["patterns"]`.
+#' @return Subset of the data frame of patterns that are the maximals.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`get_nodes`], [`get_patterns`], [`get_complexes`],
+#'  [`get_isolates`], [`get_non_isolates`].
+#' 
+#' @examples
+#' get_maximals(TA_instance, "patterns")
+#' get_maximals(TA_instance, TA_instance["patterns"][1:10, ])
+#' 
+#' @aliases get_maximals
+#' @md
+#' @export
+setMethod(f = "get_maximals",
+          signature = "TransactionAnalyzer",
+          definition =
+function(object, pc) {
+  
+  # Getting patterns
+  check_init(object, PATTERNS)
+  pc = get_tnp(object, pc, PATTERNS)
+  
+  # No computation needed if no patterns or if given patterns are already the maximals
+  if (nrow(pc) == 0 || object@parameters$target == "maximally frequent itemsets") {
+    return(pc)
+  }
+  
+  # Conversion of the given patterns to arules transactions
+  transact = methods::as(arules::encode(pc$pattern, unique(unlist(pc$pattern))),
+                         "transactions")
+  
+  # Preparing parameters for mining maximals itemsets
+  params = list(supp   = 1 / dim(transact)[1],
+                minlen = min(lengths(pc$pattern)),
+                maxlen = dim(transact)[2],
+                target = "maximally frequent itemsets")
+  
+  # Mining for maximals itemsets among the given patterns
+  result = arules::eclat(transact, parameter = params, control = list(verbose = FALSE))
+  maximals = lapply(vector_notation(methods::as(result, "data.frame")$items), sort)
+  
+  return(pc[is.element(lapply(pc$pattern, sort), maximals), ])
 })
 
 

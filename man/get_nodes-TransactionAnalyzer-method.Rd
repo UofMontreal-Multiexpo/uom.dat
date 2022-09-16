@@ -94,7 +94,8 @@ get_nodes(TA_instance, "nodes",
 
 }
 \seealso{
-\code{\link{get_patterns}}, \code{\link{get_complexes}}, \code{\link{get_isolates}}, \code{\link{get_non_isolates}}.
+\code{\link{get_patterns}}, \code{\link{get_maximals}}, \code{\link{get_complexes}}, \code{\link{get_isolates}},
+\code{\link{get_non_isolates}}.
 }
 \author{
 Gauthier Magnin

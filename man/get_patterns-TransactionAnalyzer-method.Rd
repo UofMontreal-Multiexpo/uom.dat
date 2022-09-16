@@ -113,7 +113,7 @@ get_patterns(TA_instance, "patterns",
 
 }
 \seealso{
-\code{\link{get_nodes}}, \code{\link{get_complexes}}, \code{\link{get_isolates}}, \code{\link{get_non_isolates}}.
+\code{\link{get_nodes}}, \code{\link{get_maximals}}, \code{\link{get_complexes}}, \code{\link{get_isolates}}, \code{\link{get_non_isolates}}.
 }
 \author{
 Gauthier Magnin

@@ -44,8 +44,8 @@ get_trx_from_category(TA_instance, TA_instance["transactions"],
 About transactions: \code{\link{get_trx_from_items}}, \code{\link{get_trx_from_info}}, \code{\link{get_complex_trx}},
 \code{\link{get_simple_trx}}.
 
-About nodes and patterns: \code{\link{get_nodes}}, \code{\link{get_patterns}}, \code{\link{get_complexes}}, \code{\link{get_isolates}},
-\code{\link{get_non_isolates}}.
+About nodes and patterns: \code{\link{get_nodes}}, \code{\link{get_patterns}}, \code{\link{get_maximals}}, \code{\link{get_complexes}},
+\code{\link{get_isolates}}, \code{\link{get_non_isolates}}.
 }
 \author{
 Gauthier Magnin
