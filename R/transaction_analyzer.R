@@ -2429,6 +2429,9 @@ function(object, patterns, end = NULL, overall_period = Inf, recent_period = obj
   substantial_overall = ri_limits[, "RI.overall"] >= ri_thresholds["RI.overall"]
   substantial_recent = ri_limits[, "RI.recent"] >= ri_thresholds["RI.recent"]
   
+  # Correct the recent values if no given patterns appear in the recent period
+  if (all(is.na(substantial_recent))) substantial_recent = FALSE
+  
   # Interpretation
   status = character(length(patterns))
   status[( substantial_overall &  substantial_recent)] = STATUS_PERSISTENT

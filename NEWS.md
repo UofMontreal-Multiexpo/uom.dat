@@ -8,6 +8,10 @@
 
 * Execution time of steps 4 and 10 of `TransactionAnalyzer` initialization (creating links between nodes or patterns) have been reduced by 20 to 50% (depending on the case).
 
+## Fixes
+
+* When initializing a `TransactionAnalyzer` object or calling the method `dynamic_status`, no status were defined if all patterns used never appear in the shorter of the two periods used for computation.
+
 
 
 # uom.dat 0.3.0 (2022-09-01)
