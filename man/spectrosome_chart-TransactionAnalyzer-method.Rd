@@ -61,7 +61,7 @@ One of \code{"relative"}, \code{"grouped"}, \code{"absolute"} or a numeric vecto
                            the entity.}
   \item{A single numeric value}{The vertices are all the size defined by this value.}
   \item{A longer numeric vector}{The sizes defined in this vector are directly assigned to the
-                                 nodes of patterns to plot. Is recycled if smaller than the number
+                                 nodes or patterns to plot. Is recycled if smaller than the number
                                  of entities.}
 }}
 

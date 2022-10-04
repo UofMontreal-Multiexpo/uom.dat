@@ -13,7 +13,7 @@ R processing, analysis and visualization tools initially designed
 }
 \details{
 For an organized list of datasets, functions, classes and methods, use
- \code{vignette("list_of_help_pages")}
+ \code{vignette("list_of_help_pages", "uom.dat")}
 
 For an alphabetical list and for the package description, use \code{library(help = "uom.dat")}
 

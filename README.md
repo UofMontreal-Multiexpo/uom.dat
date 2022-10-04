@@ -16,7 +16,7 @@ There are two ways to install the package **uom.dat**.
 
 ### A. Installing with the devtools package
 
-The function `install_github` from the `devtools` package can be used to install the present one. However, as this repository is private, you need a personal access token for this function to work.
+The function `install_github` from the package `remotes` can be used to install this package. However, as this repository is private, you need a personal access token for this to work.
 
 A personal access token provides access to the GitHub API. To get one if you don't already have one:
 
@@ -29,22 +29,22 @@ A personal access token provides access to the GitHub API. To get one if you don
 
 To install the latest version, run the following instruction using your token as the `auth_token` argument.
 ```r
-devtools::install_github("UofMontreal-Multiexpo/uom.dat",
-                         auth_token = "my_personal_access_token")
+remotes::install_github("UofMontreal-Multiexpo/uom.dat",
+                        auth_token = "my_personal_access_token")
 ```
 
 To install the development version, use:
 ```r
-devtools::install_github("UofMontreal-Multiexpo/uom.dat",
-                         auth_token = "my_personal_access_token",
-                         ref = "develop")
+remotes::install_github("UofMontreal-Multiexpo/uom.dat",
+                        auth_token = "my_personal_access_token",
+                        ref = "develop")
 ```
 
 To install a previous version, run the following instruction replacing `X.X.X` with the desired version number.
 ```r
-devtools::install_github("UofMontreal-Multiexpo/uom.dat",
-                         auth_token = "my_personal_access_token",
-                         ref = "vX.X.X")
+remotes::install_github("UofMontreal-Multiexpo/uom.dat",
+                        auth_token = "my_personal_access_token",
+                        ref = "vX.X.X")
 ```
 
 ### B. Getting all files then installing
