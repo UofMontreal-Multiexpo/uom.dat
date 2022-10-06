@@ -984,6 +984,7 @@ mcr_summary_for_list = function(values, references, ignore_zero) {
 #'           regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"),
 #'           regions_alpha = 0.2,
 #'           regions_lab = !regions,
+#'           group_text = "group",
 #'           regression = FALSE,
 #'           log_transform = TRUE,
 #'           plot = TRUE)
@@ -993,6 +994,7 @@ mcr_summary_for_list = function(values, references, ignore_zero) {
 #'           regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"),
 #'           regions_alpha = 0.2,
 #'           regions_lab = !regions,
+#'           group_text = "group",
 #'           regression = FALSE,
 #'           log_transform = TRUE,
 #'           plot = TRUE)
@@ -1016,6 +1018,8 @@ mcr_summary_for_list = function(values, references, ignore_zero) {
 #' @param regions_lab Logical value or vector of length 4. Define if labels for the MIAT groups should
 #'  be displayed (in order: I, II, IIIA, IIIB). `TRUE` and `FALSE` are special values for all `TRUE` or
 #'  all `FALSE`.
+#' @param group_text Since MIAT groups can be considered as risk classes,
+#'  `"group"` or `"class"` to refer to them as "MIAT groups" or as "Risk classes".
 #' @param regression If `TRUE`, the linear regression between the X and Y coordinates of the points
 #'  is represented with 95% confidence interval.
 #' @param log_transform If `TRUE`, the log version of the chart is plotted (i.e.
@@ -1089,8 +1093,11 @@ mcr_summary_for_list = function(values, references, ignore_zero) {
 mcr_chart = function(values = NULL, references = NULL,
                      hi = NULL, mcr = NULL, thq = NULL,
                      thq_col = NULL, regions = FALSE,
-                     regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
-                     regions_lab = !regions, regression = FALSE, log_transform = TRUE, plot = TRUE) {
+                     regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"),
+                     regions_alpha = 0.2, regions_lab = !regions, group_text = "group",
+                     regression = FALSE, log_transform = TRUE, plot = TRUE) {
+  
+  check_param(group_text, values = c("group", "class"))
   
   # Specific case in which values is a list and not a matrix
   if (is.list(values)) {
@@ -1183,7 +1190,7 @@ mcr_chart = function(values = NULL, references = NULL,
   
   # Part of the graph specific to the type log or normal
   fun.chart = if (log_transform) plot_mcr_log_part else plot_mcr_standard_part
-  chart = fun.chart(chart, xlim, ylim, regions, regions_col, regions_alpha, regions_lab)
+  chart = fun.chart(chart, xlim, ylim, regions, regions_col, regions_alpha, regions_lab, group_text)
   # Default region colors are colorblind safe and print friendly
   
   # If specific colors have to be associated with the THQ
@@ -1238,16 +1245,16 @@ mcr_chart = function(values = NULL, references = NULL,
 #' 
 #' @md
 #' @keywords internal
-plot_mcr_log_part = function(chart, xlim, ylim,
-                             regions, regions_col, regions_alpha, regions_lab) {
+plot_mcr_log_part = function(chart, xlim, ylim, regions, regions_col,
+                             regions_alpha, regions_lab, group_text) {
   
-  # Fonction delimiting group I
+  # Function delimiting group I
   fun.mhq_1 = function(x) log10(10^x - 1)
   xmin_fun = 0.001
   xmax_fun = max(xmin_fun, xlim[2]) + 1
   root_fun = stats::uniroot(fun.mhq_1, c(0, 1))$root   # fun.mhq_1(log10(2)) = 0
   
-  # For placement of the label "Group IIIB": maximum abscissa of the curve fun.mhq_1 according to the
+  # For placement of the label "IIIB": maximum abscissa of the curve fun.mhq_1 according to the
   # limit set by ylim (inverse function of fun.mhq_1 := log10(10^y + 1))
   xmax_fun.mhq_1_visible = log10(10^ylim[2] + 1)
   x_to_use = if (xlim[2] <= xmax_fun.mhq_1_visible) xlim[2] else xmax_fun.mhq_1_visible
@@ -1255,6 +1262,7 @@ plot_mcr_log_part = function(chart, xlim, ylim,
   
   # Text relating to the groups
   if (any(regions_lab)) {
+    
     # Verification of displayed areas (non-display of the text of the areas that are not displayed)
     regions_lab = regions_lab & c(
       xlim[2] > 0 && ylim[1] < fun.mhq_1(xlim[2]), # Bottom-right corner below curve f
@@ -1263,16 +1271,20 @@ plot_mcr_log_part = function(chart, xlim, ylim,
       ylim[2] > 0 && xlim[2] > 0 && (xlim[1] < 0 || ylim[2] > fun.mhq_1(xlim[1])) # Top-left corner above f
     )
     
-    chart = chart + ggplot2::annotate(geom = "text",
-                                      x = c(xlim[2], xlim[1], root_fun / 2, x_groupIIIB)[regions_lab],
-                                      y = c(ylim[1], ylim[1], -0.05, ylim[2])[regions_lab],
-                                      hjust = c(1, 0, 0.5, 0.5)[regions_lab],
-                                      vjust = c(0, 0, 0.5, 1)[regions_lab],
-                                      label = c("Group I", "Group II", "Group IIIA", "Group IIIB")[regions_lab])
+    chart = chart + ggplot2::annotate(
+      geom = "text",
+      x = c(xlim[2], xlim[1], root_fun / 2, x_groupIIIB)[regions_lab],
+      y = c(ylim[1], ylim[1], -0.05, ylim[2])[regions_lab],
+      hjust = c(1, 0, 0.5, 0.5)[regions_lab],
+      vjust = c(0, 0, 0.5, 1)[regions_lab],
+      label = paste0(if (group_text == "group") "Group " else "Class ",
+                     c("I", "II", "IIIA", "IIIB"))[regions_lab]
+    )
   }
   
   # Coloring of the regions
   if (regions) {
+    
     # The overlapping order of the polygons is not configurable at the edges
     # (at the bottom and on the right, a polygon does not reach the provided limit)
     chart = chart +
@@ -1298,7 +1310,7 @@ plot_mcr_log_part = function(chart, xlim, ylim,
                             alpha = regions_alpha) +
       # Associated legend
       ggplot2::scale_fill_manual(values = stats::setNames(regions_col, c("I", "II", "IIIA", "IIIB")),
-                                 name = "MIAT groups",
+                                 name = if (group_text == "group") "MIAT groups" else "Risk classes",
                                  guide = ggplot2::guide_legend(override.aes = list(color = "black",
                                                                                    linetype = "longdash")))
   }
@@ -1364,8 +1376,8 @@ plot_mcr_log_part = function(chart, xlim, ylim,
 #' 
 #' @md
 #' @keywords internal
-plot_mcr_standard_part = function(chart, xlim, ylim,
-                                  regions, regions_col, regions_alpha, regions_lab) {
+plot_mcr_standard_part = function(chart, xlim, ylim, regions, regions_col,
+                                  regions_alpha, regions_lab, group_text) {
   
   # Text relating to the groups
   if (any(regions_lab)) {
@@ -1375,17 +1387,19 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
                                   ylim[1] < 2 && xlim[1] < 2 && xlim[2] > 1,
                                   ylim[2] > 2 && xlim[1] < ylim[1] && xlim[2] > 1)
     
-    chart = chart + ggplot2::annotate(geom = "text",
-                                      x = c(xlim[2],
-                                            xlim[1],
-                                            1.5,
-                                            if (xlim[1] >= 1) (min(xlim[2], ylim[2]) + xlim[1]) / 2 + xlim[1]
-                                            else (min(xlim[2], ylim[2]) + 1) / 2
-                                          )[regions_lab],
-                                      y = c(ylim[1] + (ylim[2] - ylim[1]) / 100, ylim[2], 1.95, ylim[2])[regions_lab],
-                                      hjust = c(1, 0, 0.5, 0.5)[regions_lab],
-                                      vjust = c(0, 1, 1, 1)[regions_lab],
-                                      label = c("Group I", "Group II", "Group IIIA", "Group IIIB")[regions_lab])
+    chart = chart + ggplot2::annotate(
+      geom = "text",
+      x = c(
+        xlim[2], xlim[1], 1.5,
+        if (xlim[1] >= 1) (min(xlim[2], ylim[2]) + xlim[1]) / 2 + xlim[1]
+        else (min(xlim[2], ylim[2]) + 1) / 2
+      )[regions_lab],
+      y = c(ylim[1] + (ylim[2] - ylim[1]) / 100, ylim[2], 1.95, ylim[2])[regions_lab],
+      hjust = c(1, 0, 0.5, 0.5)[regions_lab],
+      vjust = c(0, 1, 1, 1)[regions_lab],
+      label = paste0(if (group_text == "group") "Group " else "Class ",
+                     c("I", "II", "IIIA", "IIIB"))[regions_lab]
+    )
   }
   
   # Need to use this limit instead of Inf to correctly plot the boundaries
@@ -1418,7 +1432,7 @@ plot_mcr_standard_part = function(chart, xlim, ylim,
                             alpha = regions_alpha) +
       # Associated legend
       ggplot2::scale_fill_manual(values = stats::setNames(regions_col, c("I", "II", "IIIA", "IIIB")),
-                                 name = "MIAT groups",
+                                 name = if (group_text == "group") "MIAT groups" else "Risk classes",
                                  guide = ggplot2::guide_legend(override.aes = list(color = "black",
                                                                                    linetype = "longdash")))
   }
@@ -2518,8 +2532,9 @@ mcr_summary_by_class = function(values, references, classes,
 #' @export
 mcr_chart_by_class = function(values, references, classes,
                               thq_col = NULL, regions = FALSE,
-                              regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"), regions_alpha = 0.2,
-                              regions_lab = !regions, regression = FALSE, log_transform = TRUE, plot = FALSE) {
+                              regions_col = c("#b3cde3", "#edf8fb", "#8c96c6", "#88419d"),
+                              regions_alpha = 0.2, regions_lab = !regions, group_text = "group",
+                              regression = FALSE, log_transform = TRUE, plot = FALSE) {
   
   # Checking data naming and use of classes as a logical matrix
   check_data_for_mcr_by_class(values, references, vector = FALSE)
@@ -2544,7 +2559,8 @@ mcr_chart_by_class = function(values, references, classes,
     withCallingHandlers(return(mcr_chart(new_vr[["values"]], new_vr[["references"]],
                                          thq_col = thq_col, regions = regions,
                                          regions_col = regions_col, regions_alpha = regions_alpha,
-                                         regions_lab = regions_lab, regression = regression, log_transform = log_transform,
+                                         regions_lab = regions_lab, group_text = group_text,
+                                         regression = regression, log_transform = log_transform,
                                          plot = plot)),
                         warning = function(w) { class_warnings[class] <<- TRUE })
     

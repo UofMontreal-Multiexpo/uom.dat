@@ -11,7 +11,8 @@ plot_mcr_standard_part(
   regions,
   regions_col,
   regions_alpha,
-  regions_lab
+  regions_lab,
+  group_text
 )
 }
 \arguments{
@@ -32,6 +33,9 @@ defined by \code{regions_col}.}
 \item{regions_lab}{Logical value or vector of length 4. Define if labels for the MIAT groups should
 be displayed (in order: I, II, IIIA, IIIB). \code{TRUE} and \code{FALSE} are special values for all \code{TRUE} or
 all \code{FALSE}.}
+
+\item{group_text}{Since MIAT groups can be considered as risk classes,
+\code{"group"} or \code{"class"} to refer to them as "MIAT groups" or as "Risk classes".}
 }
 \value{
 \code{ggplot} object of the chart after plotting the standard part.

@@ -3,6 +3,7 @@
 ## New features
 
 * A method named `get_maximals` has been added to the `TransactionAnalyzer` class. It allows to extract patterns that have no superset among the given ones.
+* An argument named `group_text` has been added to the functions `mcr_chart` and `mcr_chart_by_class`. Since MIAT groups can be considered as risk classes, this argument allows to choose which term to use on the chart.
 
 ## Minor changes
 

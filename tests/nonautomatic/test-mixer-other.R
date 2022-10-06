@@ -223,3 +223,32 @@ library(uom.dat)
 }
 
 
+## 10. mcr_chart displays MIAT group text according to the argument group_text
+{
+  values_matrix = matrix(c(1,   1.5, 0,
+                           0.5, 0.2, 0,
+                           0.5, 0.8, 0,
+                           0.8, 0.8, 0.8), nrow = 4, byrow = TRUE,
+                         dimnames = list(c("s1", "s2", "s3", "s4"), letters[1:3]))
+  references_vector = c(a = 1, b = 1, c = 1)
+  
+  ## Expectations:
+  ## - Labels in chart refer to group or class
+  ## - Legend title refers to group or class
+  
+  mcr_chart(values_matrix, references_vector, log_transform = TRUE,
+            regions_lab = TRUE, regions = TRUE,
+            group_text = "group")
+  mcr_chart(values_matrix, references_vector, log_transform = TRUE,
+            regions_lab = TRUE, regions = TRUE,
+            group_text = "class")
+  
+  mcr_chart(values_matrix, references_vector, log_transform = FALSE,
+            regions_lab = TRUE, regions = TRUE,
+            group_text = "group")
+  mcr_chart(values_matrix, references_vector, log_transform = FALSE,
+            regions_lab = TRUE, regions = TRUE,
+            group_text = "class")
+}
+
+
