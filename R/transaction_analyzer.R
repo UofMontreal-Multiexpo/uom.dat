@@ -1722,12 +1722,13 @@ function(object, entities) {
     links_endpoints = tri_to_matrix_indices(lower_tri_indices)
     links_endpoints = links_endpoints[links_endpoints[, 1] != links_endpoints[, 2], ,
                                       drop = FALSE]
-    links_endpoints = links_endpoints[order(links_endpoints[, 2]), c(2,1)]
+    links_endpoints = links_endpoints[order(links_endpoints[, 2]), c(2,1),
+                                      drop = FALSE]
     
     # Items in common, for each pair of linked entities
-    links_items = apply(links_endpoints, 1, function(pair_ij) {
-      i = pair_ij[1]
-      j = pair_ij[2]
+    links_items = lapply(seq_len(nrow(links_endpoints)), function(row) {
+      i = links_endpoints[row, 1]
+      j = links_endpoints[row, 2]
       
       to_link[[j]][to_link[[j]] %in% to_link[[i]]]
     })
