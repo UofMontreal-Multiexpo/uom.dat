@@ -196,7 +196,7 @@ It is given by:
 $$ MHQ = \max_{i \in \lbrace 1,...,n\rbrace} HQ_i = \max_{i \in \lbrace 1,...,n\rbrace} \frac{V_i}{RV_i} $$
 where $n$ denotes the length of the vector $V$ (i.e. the number of values), $HQ$ denotes the hazard quotients, $V$ the values and $RV$ the reference values.
 
-**Top Hazard Quotient**: named value which produce the highest hazard quotient.
+**Top Hazard Quotient**: named value that produces the highest hazard quotient.
 
 **Maximum Cumulative Ratio**: ratio between a hazard index and a maximum hazard quotient. It represents the magnitude of the hazard that is underestimated by not performing a cumulative risk assessment. It is bounded by $1$ and $n$, the number of components. A value close to $1$ means that one component is responsible for nearly all the toxicity. A value of $n$ means that all components have equal toxicities.
 The maximum cumulative ratio is given by:

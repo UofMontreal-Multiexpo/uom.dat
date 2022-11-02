@@ -152,6 +152,31 @@ cat("New transaction names after reordering:\n")
 print(names(reordered_trx_object["data"]))
 
 ## -----------------------------------------------------------------------------
+# Print the itemsets before removing an item
+cat("Original itemsets:\n")
+print(trx_object_1[trx_object_1["item_key"]])
+
+# Remove item "A"
+trx_object_1b <- remove_items(trx_object_1,
+                              items = "A")
+
+# Print the itemsets after removing item "A"
+cat("\nItemsets after removing all occurrences of item \"A\":\n")
+print(trx_object_1b[trx_object_1b["item_key"]])
+
+## -----------------------------------------------------------------------------
+# The TransactionSet having no longer any occurrences of item "A"
+cat("The TransactionSet after removing item \"A\":\n")
+print(trx_object_1b)
+
+# Remove transactions having no items
+trx_object_1c <- remove_empty_trx(trx_object_1b)
+
+# The TransactionSet without any empty transactions
+cat("\nThe TransactionSet after removing empty transactions:\n")
+print(trx_object_1c)
+
+## -----------------------------------------------------------------------------
 cat("Items contained in the transactions of 'trx_object_1':\n")
 get_all_items(trx_object_1)
 

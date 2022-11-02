@@ -4,6 +4,8 @@
 
 * A method named `get_maximals` has been added to the `TransactionAnalyzer` class. It allows to extract patterns that have no superset among the given ones.
 * An argument named `group_text` has been added to the functions `mcr_chart` and `mcr_chart_by_class`. Since MIAT groups can be considered as risk classes, this argument allows to choose which term to use on the chart.
+* A method named `remove_items` has been added to the `TransactionSet` class. It allows to remove items from transactions.
+* A method named `remove_empty_trx` has been added to the `TransactionSet` class. It allows to remove transactions that have no items.
 
 ## Minor changes
 

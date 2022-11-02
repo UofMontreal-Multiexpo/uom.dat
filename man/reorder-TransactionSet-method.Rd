@@ -25,6 +25,9 @@ reorder(TS_instance, names(TS_instance["data"])[c(2, 1, 3:14)])
 reorder(TS_instance, 14:1)
 
 }
+\seealso{
+\code{\link{subset}}, \code{\link{remove_items}}, \code{\link{remove_empty_trx}}.
+}
 \author{
 Gauthier Magnin
 }

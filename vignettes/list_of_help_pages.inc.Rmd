@@ -25,6 +25,8 @@ Making *TransactionSet* objects:
 * [\[](../html/sub-TransactionSet-ANY-ANY-ANY-method.html), [\[\[](../html/sub-TransactionSet-ANY-ANY-ANY-method.html), [\$](../html/sub-TransactionSet-ANY-ANY-ANY-method.html) and [\[<-](../html/sub-TransactionSet-ANY-ANY-ANY-method.html), [\[\[<-](../html/sub-TransactionSet-ANY-ANY-ANY-method.html), [\$<-](../html/sub-TransactionSet-ANY-ANY-ANY-method.html)
 * [subset](../html/subset-TransactionSet-method.html)
 * [reorder](../html/reorder-TransactionSet-method.html)
+* [remove_items](../html/remove_items-TransactionSet-method.html)
+* [remove_empty_trx](../html/remove_empty_trx-TransactionSet-method.html)
 
 Search in transactions:
 

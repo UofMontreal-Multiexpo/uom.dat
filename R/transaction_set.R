@@ -471,7 +471,9 @@ setAs(from = "TransactionSet",
 # Methods for processing on transactions
 setGeneric(name = "subset")
 setGeneric(name = "reorder")
-setGeneric(name = "export", def = function(object, ...){ standardGeneric("export") })
+setGeneric(name = "remove_items",     def = function(object, ...){ standardGeneric("remove_items") })
+setGeneric(name = "remove_empty_trx", def = function(object, ...){ standardGeneric("remove_empty_trx") })
+setGeneric(name = "export",           def = function(object, ...){ standardGeneric("export") })
 
 # Methods for search in transactions
 setGeneric(name = "get_all_items",       def = function(object){ standardGeneric("get_all_items") })
@@ -506,21 +508,23 @@ setGeneric(name = "get_items",         def = function(object, ...){ standardGene
 
 #' Subsetting Transaction Set
 #' 
-#' Return a `TransactionSet` in which transactions are a subset of the ones of another `TransactionSet`.
+#' Return a `TransactionSet` in which transactions are a subset of those of another `TransactionSet`.
 #' 
 #' @details
 #' If the transactions from `x` are not named and `keep_names = TRUE`, the transactions of the resulting
 #'  object are named according to the indices of the initial transactions.
 #' 
-#' @param x Object of class `TransactionSet` to be subsetted.
+#' @param x S4 object of class `TransactionSet` to be subsetted.
 #' @param indices Numeric vector indicating which transactions from `x["data"]` to keep,
 #'  or logical vector indicating for each transaction whether to keep it.
 #' @param keep_names If `TRUE`, transactions of the returned object keep the names from the initial
 #'  object `x`. If `FALSE`, they are not named.
-#' @return S4 object of class `TransactionSet` having a subset of transactions from `x` (i.e. a subset
-#'  of the attribute `data` from `x`).
+#' @return S4 object of class `TransactionSet` having a subset of transactions from `x` (i.e. having
+#'  a subset of the attribute `data` from `x`).
 #' 
 #' @author Gauthier Magnin
+#' @seealso [`reorder`], [`remove_items`], [`remove_empty_trx`].
+#' 
 #' @examples
 #' subset(TS_instance, c(1, 7, 8, 9))
 #' subset(TS_instance, c(TRUE, rep(FALSE, 12), TRUE))
@@ -568,6 +572,8 @@ function(x, indices, keep_names = TRUE) {
 #'  defined by `permutation`.
 #' 
 #' @author Gauthier Magnin
+#' @seealso [`subset`], [`remove_items`], [`remove_empty_trx`].
+#' 
 #' @examples
 #' reorder(TS_instance, c(2, 1, 3:14))
 #' reorder(TS_instance, names(TS_instance["data"])[c(2, 1, 3:14)])
@@ -589,6 +595,80 @@ function(x, permutation) {
     stop("If permutation is a character vector, all values must be transaction names.")
   
   return(subset(x, permutation, keep_names = is_named(x@data)[1]))
+})
+
+
+#' Remove items in transactions
+#' 
+#' Remove items in the transactions of a `TransactionSet` object.
+#' 
+#' @inherit remove_empty_trx,TransactionSet-method details
+#' 
+#' @param object S4 object of class `TransactionSet`.
+#' @param items Items to be removed from the transactions.
+#' @param remove_empty Logical indicating whether to remove transactions that no
+#'  longer have any items after the removal of the given `items`.
+#' @param keep_names Ignored if `remove_empty` is `FALSE`.
+#'  If `TRUE`, transactions of the returned object keep the names from the
+#'  initial `object`. If `FALSE`, they are not named.
+#' @return S4 object of class `TransactionSet` in which the given `items` no
+#'  longer exist in any transaction.
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`subset`], [`reorder`], [`remove_empty_trx`].
+#' 
+#' @examples
+#' remove_items(TS_instance, 3146, remove_empty = FALSE)
+#' remove_items(TS_instance, 3146, remove_empty = TRUE)
+#' 
+#' @aliases remove_items
+#' @md
+#' @export
+setMethod(f = "remove_items",
+          signature = "TransactionSet",
+          definition =
+function(object, items, remove_empty = FALSE, keep_names = TRUE) {
+  
+  for (i in seq_along(object@data)) {
+    object@data[[i]][[object@item_key]] = setdiff(object@data[[i]][[object@item_key]], items)
+  }
+  
+  if (remove_empty) return(remove_empty_trx(object))
+  return(object)
+})
+
+
+#' Remove empty transactions
+#' 
+#' Return a `TransactionSet` in which transactions are the subset of those
+#'  containing at least one item from another `TransactionSet`.
+#' 
+#' @details
+#' If the transactions from `object` are not named and `keep_names = TRUE`, the
+#'  transactions of the resulting  object are named according to the indices of
+#'  the initial transactions.
+#' 
+#' @param object S4 object of class `TransactionSet` to be subsetted.
+#' @param keep_names If `TRUE`, transactions of the returned object keep the
+#'  names from the initial `object`. If `FALSE`, they are not named.
+#' @return S4 object of class `TransactionSet` having a subset of transactions
+#'  from `object` (i.e. having a subset of the attribute `data` from `object`).
+#' 
+#' @author Gauthier Magnin
+#' @seealso [`subset`], [`reorder`], [`remove_items`].
+#' 
+#' @examples
+#' trx_object <- remove_items(TS_instance, 3146, remove_empty = FALSE)
+#' remove_empty_trx(trx_object)
+#' 
+#' @aliases remove_empty_trx
+#' @md
+#' @export
+setMethod(f = "remove_empty_trx",
+          signature = "TransactionSet",
+          definition =
+function(object, keep_names = TRUE) {
+  return(subset(object, lengths(get_itemsets(object)) != 0, keep_names = keep_names))
 })
 
 
