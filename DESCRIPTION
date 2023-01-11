@@ -36,7 +36,8 @@ Suggests:
     knitr,
     mathjaxr,
     rmarkdown,
-    tools
+    tools,
+    usethis
 Encoding: UTF-8
 LazyData: true
 RdMacros: mathjaxr
