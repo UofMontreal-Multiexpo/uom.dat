@@ -99,8 +99,7 @@ These files can be accessed using `help(package = "uom.dat")` then clicking on "
 ## Authors
 
 * [**Gauthier Magnin**](https://fr.linkedin.com/in/gauthier-magnin) - R programmer analyst.
-
-* **Delphine Bosson-Rieutort** - Assistant professor at University of Montreal School of Public Health (French: *École de Santé Publique de l'Université de Montréal, ESPUM*).
+* [**Delphine Bosson-Rieutort**](https://espum.umontreal.ca/lespum/departement-de-gestion-devaluation-et-de-politique-de-sante/lequipe-du-departement/personnel-enseignant/professeur/in/in30464/sg/Delphine%20Bosson-Rieutort/) - Assistant professor at University of Montreal School of Public Health (French: *École de Santé Publique de l'Université de Montréal, ESPUM*).
 
 
 ## Collaboration

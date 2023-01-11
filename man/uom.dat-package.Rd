@@ -30,7 +30,7 @@ Useful links:
 
 }
 \author{
-Gauthier Magnin, Delphine Bosson-Rieutort
+Gauthier Magnin, Delphine Bosson-Rieutort.
  
  Maintainer: Gauthier Magnin \email{gauthier.magnin@gmail.com}
 }
