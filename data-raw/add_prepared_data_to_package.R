@@ -80,6 +80,6 @@ resave_with_best_compression(c("./data/oedb_sample.RData",
                                "./data/TS_instance.RData",
                                "./data/TA_instance.RData"))
 
-usethis::use_data(another_ta_object, internal = TRUE) # R/sysdata.rda
+usethis::use_data(another_ta_object, internal = TRUE, overwrite = TRUE) # R/sysdata.rda
 
 
