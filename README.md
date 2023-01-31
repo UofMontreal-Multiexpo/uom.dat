@@ -14,7 +14,7 @@ Main analytical approaches are **Frequent Itemset Mining**, **Spectrosome**, **A
 
 There are two ways to install the package **uom.dat**.
 
-### A. Installing with the devtools package
+### A. Installing with the remotes package
 
 The function `install_github` from the package `remotes` can be used to install this package. However, as this repository is private, you need a personal access token for this to work.
 
@@ -60,7 +60,7 @@ remotes::install_github("UofMontreal-Multiexpo/uom.dat",
 If using the RStudio IDE:
 
 3. Open the project file `uom.dat.Rproj`.
-4. In the "Build" menu, click on the "Install and Restart" menu item.
+4. In the "Build" menu, click on the "Install Package" menu item.
 5. Close the project **uom.dat**.
 
 If not using the RStudio IDE:

@@ -31,11 +31,11 @@ Imports:
     TeachingDemos,
     utils
 Suggests:
-    testthat (>= 3.0.0),
     corrplot,
     knitr,
     mathjaxr,
     rmarkdown,
+    testthat (>= 3.0.0),
     tools,
     usethis
 Encoding: UTF-8
