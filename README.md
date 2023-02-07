@@ -36,7 +36,7 @@ remotes::install_github("UofMontreal-Multiexpo/uom.dat",
                         ref = "develop")
 ```
 
-To install a previous version, run the following instruction replacing `X.X.X` with the desired version number.
+To install a previous version, run the following instruction, replacing `X.X.X` with the desired version number.
 ```r
 remotes::install_github("UofMontreal-Multiexpo/uom.dat",
                         auth_token = "my_personal_access_token",
@@ -50,13 +50,13 @@ In addition to the manuals of the package, data, classes and functions (accessib
 
 * An organized list of the datasets, functions, classes and methods, in the file `list_of_help_pages.html`.
 
+* Explanations with illustrated examples about different types of itemsets, in the file `itemset_mining.html`.
+
 * A description of the class `TransactionSet`, the dataset `TS_instance`, and what to do with transactions, in the file `transaction_sets.html`.
 
 * A description of the class `TransactionAnalyzer`, the dataset `TA_instance`, and what to do with transaction analyzers, in the file `transaction_analyzes.html`.
 
 * A description of the Maximum Cumulative Ratio approach by providing an example of application, in the file `mcr_approach.html`. This one also presents the use of functions for classification data management.
-
-* Explanations with illustrated examples about different types of itemsets, in the file `itemset_mining.html`.
 
 * The detail of the data structures used by the `TransactionSet` class (attributes, method parameters and method returns) in the file `types_of_attributes_and_methods_TS.pdf`. 
 
