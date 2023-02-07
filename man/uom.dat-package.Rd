@@ -30,7 +30,17 @@ Useful links:
 
 }
 \author{
-Gauthier Magnin, Delphine Bosson-Rieutort.
- 
- Maintainer: Gauthier Magnin \email{gauthier.magnin@gmail.com}
+\strong{Maintainer}: Jérôme Lavoué \email{jerome.lavoue@umontreal.ca}
+
+Authors:
+\itemize{
+  \item Gauthier Magnin \email{gauthier.magnin@gmail.com} [contractor]
+  \item Delphine Bosson-Rieutort \email{delphine.bosson-rieutort@umontreal.ca}
+}
+
+Other contributors:
+\itemize{
+  \item CHUM - Centre Hospitalier de l'Université de Montréal [copyright holder, funder]
+}
+
 }

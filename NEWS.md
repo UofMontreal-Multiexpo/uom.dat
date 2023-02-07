@@ -1,5 +1,12 @@
 # uom.dat 0.4.0.9000 (development version)
 
+## Documentation
+
+* The package help page has been modified:
+    - The main interlocutor (i.e., the maintainer) has changed.
+    - The copyright holder and funder has been added.
+    - Additional information about authors has been added.
+
 
 
 # uom.dat 0.4.0 (2023-01-11)

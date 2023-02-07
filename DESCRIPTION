@@ -4,8 +4,9 @@ Title: University of Montreal - Data Analysis Tools
 Version: 0.4.0.9000
 Date: 2023-01-11
 Authors@R: c(
-    person("Gauthier", "Magnin", email = "gauthier.magnin@gmail.com", role = c("aut", "ctr", "cre")),
+    person("Gauthier", "Magnin", email = "gauthier.magnin@gmail.com", role = c("aut", "ctr")),
     person("Delphine", "Bosson-Rieutort", email = "delphine.bosson-rieutort@umontreal.ca", role = "aut"),
+    person("Jérôme", "Lavoué", email = "jerome.lavoue@umontreal.ca", role = "cre"),
     person("CHUM - Centre Hospitalier de l'Université de Montréal", role = c("cph", "fnd"))
   )
 Description: R processing, analysis and visualization tools initially designed
