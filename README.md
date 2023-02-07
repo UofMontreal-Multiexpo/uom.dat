@@ -3,7 +3,7 @@
 
 ## Purpose
 
-The development of these tools is part of a research study led by **Jérôme Lavoué** (Professor at [**University of Montreal**](https://recherche.umontreal.ca/english/home/), department of environmental health and occupational health) whose title is "Portrait of multiexposure situations in the workplace in Quebec from occupational exposure databases".
+The development of these tools is part of a research study led by **Jérôme Lavoué** (Professor at [University of Montreal](https://recherche.umontreal.ca/english/home/), department of environmental health and occupational health) whose title is "Portrait of multiexposure situations in the workplace in Quebec from occupational exposure databases".
 
 This package is about **R processing, analysis and visualization tools** initially designed for processing data from occupational exposure databases, especially for the concept of multiexposure.
 
@@ -23,7 +23,7 @@ A personal access token provides access to the GitHub API. To get one if you don
 * Go to <https://github.com/settings/tokens>.
 * Click on button "Generate new token".
 * Fill the "Note" field with something like "Token for private R packages".
-* Check the box "repo" (Full control of private repositories).
+* Check the box "repo" (full control of private repositories).
 * Click on button "Generate token".
 * Copy the given token.
 
@@ -98,8 +98,8 @@ These files can be accessed using `help(package = "uom.dat")` then clicking on "
 
 ## Authors
 
-* [**Gauthier Magnin**](https://fr.linkedin.com/in/gauthier-magnin) - R programmer analyst.
-* [**Delphine Bosson-Rieutort**](https://espum.umontreal.ca/lespum/departement-de-gestion-devaluation-et-de-politique-de-sante/lequipe-du-departement/personnel-enseignant/professeur/in/in30464/sg/Delphine%20Bosson-Rieutort/) - Assistant professor at University of Montreal School of Public Health (French: *École de Santé Publique de l'Université de Montréal, ESPUM*).
+* [Gauthier Magnin](https://fr.linkedin.com/in/gauthier-magnin) - R programmer analyst.
+* [Delphine Bosson-Rieutort](https://espum.umontreal.ca/lespum/departement-de-gestion-devaluation-et-de-politique-de-sante/lequipe-du-departement/personnel-enseignant/professeur/in/in30464/sg/Delphine%20Bosson-Rieutort/) - Assistant professor at University of Montreal School of Public Health (French: *École de Santé Publique de l'Université de Montréal, ESPUM*).
 
 
 ## Collaboration
