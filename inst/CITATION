@@ -1,15 +1,18 @@
 
-# Only persons having the actual author role are considered in the author field
-title  <- paste("uom.dat:", meta$Title)
-author <- substr(meta$Author, 1, rev(gregexpr("],\n ", meta$Author)[[1]])[2])
+title  <- paste0(meta$Package, ": ", meta$Title)
 year   <- sub("-.*", "", meta$Date)
 note   <- sprintf("R package version %s", meta$Version)
 url    <- meta$URL
+header <- sprintf("To cite %s in publications, please use:", meta$Package)
+
+# Consider as authors only persons having the author role
+persons <- eval(parse(text = meta$`Authors@R`))
+authors <- persons[[sapply(persons$role, function(x) "aut" %in% x)]]
 
 bibentry(bibtype = "Manual",
          title   = title,
-         author  = author,
+         author  = authors,
          year    = year,
          note    = note,
          url     = url,
-         header  = "To cite uom.dat in publications, please use:")
+         header  = header)
