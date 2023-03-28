@@ -1,5 +1,9 @@
 # uom.dat 0.4.1.9000 (development version)
 
+## Fixes
+
+* Transactions resulting from function `make_transactions` could sometimes contain unexpected whitespaces in their names. This happened especially when the given values for argument `by` referred to numeric variables.
+
 
 
 # uom.dat 0.4.1 (2023-03-10)

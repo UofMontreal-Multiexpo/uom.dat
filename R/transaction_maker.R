@@ -76,7 +76,7 @@ make_transactions = function(data, by, additional = NULL, unique_values = TRUE,
   colnames(trx) = c(by, additional)
   
   # Naming the rows according to the combinations (values of variables of "by", concatenated by ".")
-  rownames(trx) = if (length(by) == 1) trx[, by] else apply(trx[, by], 1, paste, collapse = ".")
+  rownames(trx) = if (length(by) == 1) trx[, by] else do.call(paste, c(trx[, by], sep = "."))
   
   # Removal of duplicates for specific predefined variables
   if (is.logical(unique_values) && unique_values) unique_values = additional
