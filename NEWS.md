@@ -3,6 +3,9 @@
 ## Fixes
 
 * Transactions resulting from function `make_transactions` could sometimes contain unexpected whitespaces in their names. This happened especially when the given values for argument `by` referred to numeric variables.
+* Execution time to initialize or reset an object of class `TransactionAnalyzer` was abnormally longer in the following cases. This happened especially when the memory usage of the R session was high (i.e., when the total size of all R objects in the global environment was large).
+    - When calling methods `init` and `reset` (class `TransactionAnalyzer`) with value `TRUE` for argument `verbose` rather than `FALSE`.
+    - When calling function `transaction.analyzer` with argument `init` as `TRUE`, and with value `TRUE` for argument `verbose` rather than `FALSE`.
 
 
 

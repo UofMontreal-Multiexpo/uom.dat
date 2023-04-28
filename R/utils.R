@@ -39,18 +39,17 @@ dhms = function(t){
 #'  \code{dhms} function.
 #' Examples of the display format: [1d 02h 25m 47s]; [01m 05s]; [19s].
 #' 
-#' @details
-#' A call to the garbage collector is made beforme timing.
-#' 
 #' @template function_not_exported
 #' 
 #' @param expr Valid \code{R} expression to be timed.
+#' @param gc Logical indicating whether to perform a garbage collection before
+#'  timing.
 #' 
 #' @author Gauthier Magnin
 #' @seealso \code{\link{dhms}}, \code{\link{system.time}}.
 #' @keywords internal
-display_time = function(expr) {
-  t = system.time(expr)
+display_time = function(expr, gc = FALSE) {
+  t = system.time(expr, gcFirst = gc)
   cat(paste0("[", dhms(t[3]), "]"))
 }
 

@@ -4,18 +4,18 @@
 \alias{display_time}
 \title{Print an execution time}
 \usage{
-display_time(expr)
+display_time(expr, gc = FALSE)
 }
 \arguments{
 \item{expr}{Valid \code{R} expression to be timed.}
+
+\item{gc}{Logical indicating whether to perform a garbage collection before
+timing.}
 }
 \description{
 Evaluate an expression and print the elapsed time according to the format defined by the
  \code{dhms} function.
 Examples of the display format: [1d 02h 25m 47s]; [01m 05s]; [19s].
-}
-\details{
-A call to the garbage collector is made beforme timing.
 }
 \note{
 This function is not exported from the package.
