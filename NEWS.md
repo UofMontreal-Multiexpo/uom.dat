@@ -6,6 +6,7 @@
 * Execution time to initialize or reset an object of class `TransactionAnalyzer` was abnormally longer in the following cases. This happened especially when the memory usage of the R session was high (i.e., when the total size of all R objects in the global environment was large).
     - When calling methods `init` and `reset` (class `TransactionAnalyzer`) with value `TRUE` for argument `verbose` rather than `FALSE`.
     - When calling function `transaction.analyzer` with argument `init` as `TRUE`, and with value `TRUE` for argument `verbose` rather than `FALSE`.
+* Objects of class `TransactionAnalyzer` can now be fully initialized when some associated nodes contain several tens of items or long item identifiers.
 
 
 

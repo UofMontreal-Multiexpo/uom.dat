@@ -1587,9 +1587,9 @@ function(object) {
   # Weights of nodes per year
   nodes_per_year = object@nodes_per_year
   
-  # Computation of total frequnecy for each node (= each separate transaction)
+  # Computation of total frequency for each node (= each separate transaction)
   nodes_df = data.frame(frequency = as.integer(unname(rowSums(nodes_per_year))))
-  nodes_df$node = lapply(strsplit(rownames(nodes_per_year), 'c\\("|", "|")'),
+  nodes_df$node = lapply(strsplit(rownames(nodes_per_year), 'c\\("|", "|", \n"|")'),
                          function(node) {
                            if (length(node) > 1) { return(node[-1]) }
                            return(node)
