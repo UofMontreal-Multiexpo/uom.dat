@@ -24,6 +24,7 @@ Imports:
     graphics,
     grDevices,
     igraph,
+    mathjaxr,
     methods,
     network,
     RColorBrewer,
@@ -34,7 +35,6 @@ Imports:
 Suggests:
     corrplot,
     knitr,
-    mathjaxr,
     rmarkdown,
     testthat (>= 3.0.0),
     tools,
