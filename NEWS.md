@@ -4,6 +4,10 @@
 
 * Correct the display of mathematical formulas in help pages by adding `mathjaxr` to the list of packages that need to be installed.
 
+## Documentation
+
+* The help pages of the methods `rules_chart` (class `TransactionAnalyzer`) and `co_occurrence_chart` (classes `TransactionSet` and `TransactionAnalyzer`) now mention issues relating to versions of the package `ggraph`.
+
 
 
 # uom.dat 0.4.2 (2023-06-08)

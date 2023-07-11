@@ -12,6 +12,13 @@ Main analytical approaches are **Frequent Itemset Mining**, **Spectrosome**, **A
 
 ## Installation
 
+> **Warning**
+> 
+> Several versions of the package `ggraph` experience some issues about hierarchical edge bundling charts. Such charts are created in `uom.dat` by the functions `co_occurrence_chart` and `rules_chart`. The correct operation of these functions has been validated with the version 2.0.5 of `ggraph`. Therefore, we recommend the use of this version. To install it, run the following instruction.
+> ```r
+> remotes::install_version("ggraph", version = "2.0.5")
+> ```
+
 The function `install_github` from the package `remotes` can be used to install this package. However, as this repository is private, you need a personal access token for this to work.
 
 A personal access token provides access to the GitHub API. To get one if you don't already have one:

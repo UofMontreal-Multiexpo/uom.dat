@@ -180,6 +180,21 @@ However, they will be actually displayed in the "Plot Zoom" window; while export
 using another graphics device.
 Moreover, such plotting may take a while.
 }
+\section{Warning}{
+
+
+Several versions of the package \code{ggraph} experience some issues about
+hierarchical edge bundling charts.
+Such charts are created by the functions \code{co_occurrence_chart} and
+\code{rules_chart}.
+The correct operation of these functions has been validated with the
+version 2.0.5 of \code{ggraph}. Therefore, we recommend the use of this version.
+To install it, run the following instruction.
+\preformatted{
+remotes::install_version("ggraph", version = "2.0.5")
+}
+}
+
 \examples{
 ## All rules of length 2
 result <- rules_chart(TA_instance, category = "family")

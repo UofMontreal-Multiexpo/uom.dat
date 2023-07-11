@@ -3996,6 +3996,8 @@ function(object, category = NULL, items = object["items"],
 #' 
 #' @template default_category_values_colors
 #' 
+#' @template warning_ggraph
+#' 
 #' @note
 #' If using the RStudio IDE and the value of the argument `edge_alpha` is not \eqn{1}, edges may not
 #'  be displayed in the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom"
@@ -4471,6 +4473,8 @@ function(object, rules, transactions = NULL) {
 #'  to a variable, the graph will be plotted twice.
 #' 
 #' @template default_category_values_colors
+#' 
+#' @template warning_ggraph
 #' 
 #' @note
 #' If using the RStudio IDE and if the argument `display` refers to the confidence, the specificity or

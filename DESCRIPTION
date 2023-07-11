@@ -19,7 +19,7 @@ Depends: R (>= 3.5.0)
 Imports:
     arules,
     ggplot2,
-    ggraph,
+    ggraph (== 2.0.5),
     ggsci,
     graphics,
     grDevices,

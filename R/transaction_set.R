@@ -1501,6 +1501,8 @@ function(object, identifiers, length_one, under, over) {
 #' Items are ordered according to the order they are given. If the default value is given,
 #'  they are ordered alphanumerically.
 #' 
+#' @template warning_ggraph
+#' 
 #' @note
 #' If using the RStudio IDE and the value of the argument `edge_alpha` is not \eqn{1}, edges may not
 #'  be displayed in the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom"

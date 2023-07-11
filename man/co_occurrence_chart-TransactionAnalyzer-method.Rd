@@ -120,6 +120,21 @@ If using the RStudio IDE and the value of the argument \code{edge_alpha} is not 
 be displayed in the RStudio "Plots" pane. However, they will be actually displayed in the "Plot Zoom"
 window; while exporting the plot; or by using another graphics device.
 }
+\section{Warning}{
+
+
+Several versions of the package \code{ggraph} experience some issues about
+hierarchical edge bundling charts.
+Such charts are created by the functions \code{co_occurrence_chart} and
+\code{rules_chart}.
+The correct operation of these functions has been validated with the
+version 2.0.5 of \code{ggraph}. Therefore, we recommend the use of this version.
+To install it, run the following instruction.
+\preformatted{
+remotes::install_version("ggraph", version = "2.0.5")
+}
+}
+
 \examples{
 co_occurrence_chart(TA_instance, category = "family")
 co_occurrence_chart(TA_instance, category = 1, n.cutoff = 20) +
