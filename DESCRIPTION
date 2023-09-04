@@ -13,6 +13,7 @@ Description: R processing, analysis and visualization tools initially designed
     for processing data from occupational exposure databases, especially for the
     concept of multiexposure. Main analytical approaches are Frequent Itemset
     Mining, Spectrosome, Association Rules and Maximum Cumulative Ratio.
+License: MIT + file LICENSE
 URL: https://github.com/UofMontreal-Multiexpo/uom.dat
 BugReports: https://github.com/UofMontreal-Multiexpo/uom.dat/issues
 Depends: R (>= 3.5.0)

@@ -1,5 +1,7 @@
 # uom.dat 0.4.2.9000 (development version)
 
+`uom.dat` is now under the MIT License.
+
 ## Fixes
 
 * Correct the display of mathematical formulas in help pages by adding `mathjaxr` to the list of packages that need to be installed.
