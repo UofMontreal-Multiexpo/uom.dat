@@ -1,6 +1,7 @@
 # uom.dat 0.4.2.9000 (development version)
 
 `uom.dat` is now under the MIT License.
+Its GitHub repository is now publicly available.
 
 ## Fixes
 
