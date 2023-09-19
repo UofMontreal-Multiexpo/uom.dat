@@ -19,8 +19,6 @@ Main analytical approaches are **Frequent Itemset Mining**, **Spectrosome**, **A
 > remotes::install_version("ggraph", version = "2.0.5")
 > ```
 
-The function `install_github` from the package `remotes` can be used to install this package.
-
 To install the latest version, run the following instruction.
 ```r
 remotes::install_github("UofMontreal-Multiexpo/uom.dat")
