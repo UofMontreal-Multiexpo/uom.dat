@@ -39,7 +39,12 @@ remotes::install_github("UofMontreal-Multiexpo/uom.dat",
 
 ## Documentation
 
-In addition to the manuals of the package, data, classes and functions (accessible by the `help` function), the **inst/doc** directory contains:
+The package main page can be accessed using:
+```r
+help("uom.dat")
+```
+
+In addition to the manuals of the package, data, classes and functions accessible by the `help` function, the `inst/doc` directory contains:
 
 * An organized list of the datasets, functions, classes and methods, in the file `list_of_help_pages.html`.
 
