@@ -4,8 +4,8 @@ Title: University of Montreal - Data Analysis Tools
 Version: 1.0.0.9000
 Date: 2023-09-15
 Authors@R: c(
-    person("Gauthier", "Magnin", email = "gauthier.magnin@gmail.com", role = c("aut", "ctr")),
-    person("Delphine", "Bosson-Rieutort", email = "delphine.bosson-rieutort@umontreal.ca", role = "aut"),
+    person("Gauthier", "Magnin", role = c("aut", "ctr")),
+    person("Delphine", "Bosson-Rieutort", role = "aut"),
     person("Jérôme", "Lavoué", email = "jerome.lavoue@umontreal.ca", role = "cre"),
     person("CHUM - Centre Hospitalier de l'Université de Montréal", role = c("cph", "fnd"))
   )
