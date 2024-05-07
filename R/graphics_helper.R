@@ -196,7 +196,7 @@ plot_heb_chart = function(hierarchy, vertices, edges,
   from = match(edges[, 2], vertices$name)
   to = match(edges[, 1], vertices$name)
   
-  # Sorting links so that the darkers ones are above the lighter ones
+  # Sorting links so that the darkest are above the lightest
   the_order = order(if (palette_direction == 1) edges[, 3] else -edges[, 3], from, to)
   from = from[the_order]
   to = to[the_order]
