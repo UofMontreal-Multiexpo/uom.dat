@@ -1,5 +1,9 @@
 # uom.dat 1.0.0.9000 (development version)
 
+## Documentation
+
+* Mentions about `ggraph` issues in the help pages of the methods `rules_chart` (class `TransactionAnalyzer`) and `co_occurrence_chart` (classes `TransactionSet` and `TransactionAnalyzer`) now explain how to check if the installed version of `ggraph` is concerned.
+
 
 
 # uom.dat 1.0.0 (2023-09-15)
