@@ -5,12 +5,15 @@
 \alias{TS_instance}
 \title{Example of a TransactionSet object}
 \format{
-An object of class \code{TransactionSet} containing 14 transactions of 5 elements:
- \describe{
-   \item{CODE}{Codes identifying the items corresponding to the transaction.}
-   \item{YEAR}{Year in which the transaction was made.}
-   \item{JOB.TITLE, JOB.TASK, SAMPLE.ID}{Additional data related to the transaction.}
- }
+An object of class \code{TransactionSet} containing 14 transactions of 5
+elements:
+\describe{
+\item{\code{CODE}}{\emph{Integer}. Codes identifying the items corresponding to the
+transaction.}
+\item{\code{YEAR}}{\emph{Integer}. Year in which the transaction was made.}
+\item{\code{JOB.TITLE}, \code{JOB.TASK}, \code{SAMPLE.ID}}{\emph{Integer}, \emph{character},
+\emph{integer}. Additional data related to the transaction.}
+}
 
 For more about the attributes, see \code{\link{TransactionSet}}.
 }

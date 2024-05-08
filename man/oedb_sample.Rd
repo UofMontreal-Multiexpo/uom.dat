@@ -6,22 +6,26 @@
 \title{Example of occupational exposure data}
 \format{
 A data frame with 131 rows and 9 variables:
- \describe{
-   \item{ID}{Identifier of an inspection in a specific business establishment.}
-   \item{YEAR}{Year of the inspection.}
-   \item{CODE}{Code identifying the substance sampled.}
-   \item{NAME}{Name of the substance sampled.}
-   \item{SAMPLE.ID}{Identifier of the sample. Several samples may refer to the same inspection.}
-   \item{ACTIVITY}{Economic activity of the business establishment inspected.}
-   \item{JOB.TITLE}{Specific profession inspected.}
-   \item{JOB.TASK}{Specific job task inspected.}
-   \item{CONCENTRATION}{Measured concentration value.}
- }
+\describe{
+\item{\code{ID}}{\emph{Character}. Identifier of an inspection in a specific
+business establishment.}
+\item{\code{YEAR}}{\emph{Integer}. Year of the inspection.}
+\item{\code{CODE}}{\emph{Integer}. Code identifying the substance sampled.}
+\item{\code{NAME}}{\emph{Character}. Name of the substance sampled.}
+\item{\code{SAMPLE.ID}}{\emph{Integer}. Identifier of the sample. Several samples
+may refer to the same inspection.}
+\item{\code{ACTIVITY}}{\emph{Character}. Economic activity of the business
+establishment inspected.}
+\item{\code{JOB.TITLE}}{\emph{Integer}. Specific profession inspected.}
+\item{\code{JOB.TASK}}{\emph{Character}. Specific job task inspected.}
+\item{\code{CONCENTRATION}}{\emph{Numeric}. Measured concentration value.}
+}
 }
 \usage{
 oedb_sample
 }
 \description{
-An illustrative dataset containing identified substances in specific situations.
+An illustrative dataset containing identified substances in specific
+situations.
 }
 \keyword{datasets}

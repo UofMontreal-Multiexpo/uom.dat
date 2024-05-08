@@ -5,9 +5,9 @@
 \alias{TA_instance}
 \title{Example of a TransactionAnalyzer object}
 \format{
-An object of class \code{TransactionAnalyzer} created from 14 transactions, 25 items,
- 1 category associated with the items, and generating 12 nodes and 20 patterns by enumeration of the
- closed frequent itemsets.
+An object of class \code{TransactionAnalyzer} created from 14
+transactions, 25 items, 1 category associated with the items, and generating
+12 nodes and 20 patterns by enumeration of the closed frequent itemsets.
 
 For more about the attributes, see \code{\link{TransactionAnalyzer}}.
 }
@@ -19,7 +19,7 @@ An example of an object of class \code{TransactionAnalyzer}.
 }
 \details{
 Here is the way it was created using the datasets \code{\link{oedb_sample}} and
- \code{\link{substances_information}}:
+\code{\link{substances_information}}:
 \preformatted{
 ## Making a list of transactions
 to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")

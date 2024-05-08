@@ -3,6 +3,7 @@
 ## Documentation
 
 * Mentions about `ggraph` issues in the help pages of the methods `rules_chart` (class `TransactionAnalyzer`) and `co_occurrence_chart` (classes `TransactionSet` and `TransactionAnalyzer`) now explain how to check if the installed version of `ggraph` is concerned.
+* In dataset help pages, types are now mentioned for all datasets and all columns of data frames (character, numeric, etc.).
 
 
 

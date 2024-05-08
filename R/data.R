@@ -1,46 +1,54 @@
 
 #' Example of occupational exposure data
 #' 
-#' An illustrative dataset containing identified substances in specific situations.
+#' An illustrative dataset containing identified substances in specific
+#'  situations.
 #' 
 #' @format A data frame with 131 rows and 9 variables:
 #'  \describe{
-#'    \item{ID}{Identifier of an inspection in a specific business establishment.}
-#'    \item{YEAR}{Year of the inspection.}
-#'    \item{CODE}{Code identifying the substance sampled.}
-#'    \item{NAME}{Name of the substance sampled.}
-#'    \item{SAMPLE.ID}{Identifier of the sample. Several samples may refer to the same inspection.}
-#'    \item{ACTIVITY}{Economic activity of the business establishment inspected.}
-#'    \item{JOB.TITLE}{Specific profession inspected.}
-#'    \item{JOB.TASK}{Specific job task inspected.}
-#'    \item{CONCENTRATION}{Measured concentration value.}
+#'    \item{`ID`}{*Character*. Identifier of an inspection in a specific
+#'          business establishment.}
+#'    \item{`YEAR`}{*Integer*. Year of the inspection.}
+#'    \item{`CODE`}{*Integer*. Code identifying the substance sampled.}
+#'    \item{`NAME`}{*Character*. Name of the substance sampled.}
+#'    \item{`SAMPLE.ID`}{*Integer*. Identifier of the sample. Several samples
+#'          may refer to the same inspection.}
+#'    \item{`ACTIVITY`}{*Character*. Economic activity of the business
+#'          establishment inspected.}
+#'    \item{`JOB.TITLE`}{*Integer*. Specific profession inspected.}
+#'    \item{`JOB.TASK`}{*Character*. Specific job task inspected.}
+#'    \item{`CONCENTRATION`}{*Numeric*. Measured concentration value.}
 #'  }
+#' @md
 "oedb_sample"
 
 
 #' Information about substances
 #' 
-#' Information about substances such as family of substances, toxicity classes...
+#' Information about substances such as family of substances, toxicity
+#'  classes...
 #' 
 #' @format A data frame with 1,151 rows and 6 variables:
 #'  \describe{
-#'    \item{CODE}{Unique identifier of a substance.}
-#'    \item{NAME}{Name of the substance corresponding to the code.}
-#'    \item{FAMILY}{Family the substance belongs to.}
-#'    \item{SUBFAMILY}{Subfamily the substance belongs to.}
-#'    \item{TOXICITY}{Toxicity classes associated with the substance.}
-#'    \item{LIMIT}{Exposure limit value.}
+#'    \item{`CODE`}{*Character*. Unique identifier of a substance.}
+#'    \item{`NAME`}{*Character*. Name of the substance corresponding to the
+#'          code.}
+#'    \item{`FAMILY`}{*Character*. Family the substance belongs to.}
+#'    \item{`SUBFAMILY`}{*Character*. Subfamily the substance belongs to.}
+#'    \item{`TOXICITY`}{*List*. Toxicity classes associated with the substance.}
+#'    \item{`LIMIT`}{*Numeric*. Exposure limit value.}
 #'  }
-#' @source Data from the \href{http://en.inrs.fr/}{INRS}.
+#' @source Data from the [INRS](http://en.inrs.fr/).
+#' @md
 "substances_information"
 
 
 #' Example of a TransactionSet object
 #' 
-#' An example of an object of class \code{TransactionSet}.
+#' An example of an object of class `TransactionSet`.
 #' 
 #' @details
-#' Here is the way it was created using the dataset \code{\link{oedb_sample}}:
+#' Here is the way it was created using the dataset [`oedb_sample`]:
 #' \preformatted{
 #' ## Making a list of transactions by grouping data
 #' trx <- make_transactions(oedb_sample,
@@ -53,24 +61,28 @@
 #' TS_instance["names"] <- TS_instance["names"][-1]
 #' }
 #' 
-#' @format An object of class \code{TransactionSet} containing 14 transactions of 5 elements:
+#' @format An object of class `TransactionSet` containing 14 transactions of 5
+#'  elements:
 #'  \describe{
-#'    \item{CODE}{Codes identifying the items corresponding to the transaction.}
-#'    \item{YEAR}{Year in which the transaction was made.}
-#'    \item{JOB.TITLE, JOB.TASK, SAMPLE.ID}{Additional data related to the transaction.}
+#'    \item{`CODE`}{*Integer*. Codes identifying the items corresponding to the
+#'          transaction.}
+#'    \item{`YEAR`}{*Integer*. Year in which the transaction was made.}
+#'    \item{`JOB.TITLE`, `JOB.TASK`, `SAMPLE.ID`}{*Integer*, *character*,
+#'          *integer*. Additional data related to the transaction.}
 #'  }
 #' 
-#' For more about the attributes, see \code{\link{TransactionSet}}.
+#' For more about the attributes, see [`TransactionSet`].
+#' @md
 "TS_instance"
 
 
 #' Example of a TransactionAnalyzer object
 #' 
-#' An example of an object of class \code{TransactionAnalyzer}.
+#' An example of an object of class `TransactionAnalyzer`.
 #' 
 #' @details
-#' Here is the way it was created using the datasets \code{\link{oedb_sample}} and
-#'  \code{\link{substances_information}}:
+#' Here is the way it was created using the datasets [`oedb_sample`] and
+#'  [`substances_information`]:
 #' \preformatted{
 #' ## Making a list of transactions
 #' to_keep <- c("NAME", "ACTIVITY", "JOB.TITLE", "JOB.TASK", "SAMPLE.ID")
@@ -107,11 +119,12 @@
 #' TA_instance <- transaction.analyzer(trx, items)
 #' }
 #' 
-#' @format An object of class \code{TransactionAnalyzer} created from 14 transactions, 25 items,
-#'  1 category associated with the items, and generating 12 nodes and 20 patterns by enumeration of the
-#'  closed frequent itemsets.
+#' @format An object of class `TransactionAnalyzer` created from 14
+#'  transactions, 25 items, 1 category associated with the items, and generating
+#'  12 nodes and 20 patterns by enumeration of the closed frequent itemsets.
 #' 
-#' For more about the attributes, see \code{\link{TransactionAnalyzer}}.
+#' For more about the attributes, see [`TransactionAnalyzer`].
+#' @md
 "TA_instance"
 
 
