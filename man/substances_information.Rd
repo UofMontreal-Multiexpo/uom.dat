@@ -5,7 +5,7 @@
 \alias{substances_information}
 \title{Information about substances}
 \format{
-A data frame with 1,151 rows and 6 variables:
+A data frame with 1,151 rows and 6 columns:
 \describe{
 \item{\code{CODE}}{\emph{Character}. Unique identifier of a substance.}
 \item{\code{NAME}}{\emph{Character}. Name of the substance corresponding to the

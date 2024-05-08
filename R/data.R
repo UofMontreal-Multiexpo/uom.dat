@@ -4,7 +4,7 @@
 #' An illustrative dataset containing identified substances in specific
 #'  situations.
 #' 
-#' @format A data frame with 131 rows and 9 variables:
+#' @format A data frame with 131 rows and 9 columns:
 #'  \describe{
 #'    \item{`ID`}{*Character*. Identifier of an inspection in a specific
 #'          business establishment.}
@@ -28,7 +28,7 @@
 #' Information about substances such as family of substances, toxicity
 #'  classes...
 #' 
-#' @format A data frame with 1,151 rows and 6 variables:
+#' @format A data frame with 1,151 rows and 6 columns:
 #'  \describe{
 #'    \item{`CODE`}{*Character*. Unique identifier of a substance.}
 #'    \item{`NAME`}{*Character*. Name of the substance corresponding to the

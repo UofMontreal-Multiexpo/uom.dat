@@ -5,7 +5,7 @@
 \alias{oedb_sample}
 \title{Example of occupational exposure data}
 \format{
-A data frame with 131 rows and 9 variables:
+A data frame with 131 rows and 9 columns:
 \describe{
 \item{\code{ID}}{\emph{Character}. Identifier of an inspection in a specific
 business establishment.}
