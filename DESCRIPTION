@@ -44,7 +44,7 @@ Encoding: UTF-8
 LazyData: true
 RdMacros: mathjaxr
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.1
 Config/testthat/edition: 3
 Collate: 
     'data.R'
