@@ -73,7 +73,7 @@ These files can be accessed using `help(package = "uom.dat")` then clicking on "
 
 ## Collaboration
 
-* [INRS](http://en.inrs.fr/): The French National Research and Safety Institute for the Prevention of Occupational Accidents and Diseases (French: *Institut National de Recherche et de Sécurité pour la prévention des accidents du travail et des maladies professionnelles, INRS*).
+* [INRS](http://en.inrs.fr/): The French National Research and Safety Institute for the Prevention of Occupational Accidents and Diseases (French: *Institut National de Recherche et de Sécurité pour la prévention des accidents du travail et des maladies professionnelles*).
 
 
 ---
