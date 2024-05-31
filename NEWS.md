@@ -1,4 +1,4 @@
-# uom.dat 1.0.0.9000 (development version)
+# uom.dat 1.0.1 (2024-05-31)
 
 ## Documentation
 
