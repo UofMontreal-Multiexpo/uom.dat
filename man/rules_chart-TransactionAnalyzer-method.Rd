@@ -198,8 +198,8 @@ first instruction in section "4.2. Co-occurrence charts" of the vignette
 titled "Transaction analyzes" and compare the resulting graph with the one
 shown in the document.
 
-The correct operation has been validated with the version 2.0.5 of \code{ggraph}.
-To install it, run the following instruction.
+The correct operation of these functions has been validated with the version
+2.0.5 of \code{ggraph}. To install it, run the following instruction.
 \preformatted{
 remotes::install_version("ggraph", version = "2.0.5")
 }
