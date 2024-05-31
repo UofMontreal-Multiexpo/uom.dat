@@ -1,7 +1,7 @@
 Package: uom.dat
 Type: Package
 Title: University of Montreal - Data Analysis Tools
-Version: 1.0.1
+Version: 1.0.1.9000
 Date: 2024-05-31
 Authors@R: c(
     person("Gauthier", "Magnin", role = c("aut", "ctr")),
