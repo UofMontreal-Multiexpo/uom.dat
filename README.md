@@ -12,8 +12,7 @@ Main analytical approaches are **Frequent Itemset Mining**, **Spectrosome**, **A
 
 ## Installation
 
-> **Warning**
-> 
+> [!WARNING]
 > Several versions of the package `ggraph` experience some issues about hierarchical edge bundling charts. Such charts are created in `uom.dat` by the functions `co_occurrence_chart` and `rules_chart`. Read the associated help pages for more.
 > 
 > Note that some of the newer versions of `ggraph` have the same issues. The correct operation of these functions has been validated with the version 2.0.5. To install it, run the following instruction.
