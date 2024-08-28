@@ -3,11 +3,15 @@
 
 ## Purpose
 
-The development of these tools is part of a research study led by **Jérôme Lavoué** (Professor at [University of Montreal](https://recherche.umontreal.ca/english/home/), department of environmental health and occupational health) whose title is "Portrait of multiexposure situations in the workplace in Quebec from occupational exposure databases".
+This package is about **R processing, analysis and visualization tools**. The main analysis approaches included are **Frequent Itemset Mining**[^1], **Spectrosome**[^2], **Association Rules**[^1] and **Maximum Cumulative Ratio**[^3].
 
-This package is about **R processing, analysis and visualization tools** initially designed for processing data from occupational exposure databases, especially for the concept of multiexposure.
+The development of this package is part of a research study led by **Jérôme Lavoué** (Professor at [University of Montreal](https://recherche.umontreal.ca/english/home/), department of environmental health and occupational health) whose title is "Portrait of multiexposure situations in the workplace in Quebec from occupational exposure databases". The essence of this study is to explore several occupational exposure databases to identify and describe patterns of co-occurrence of chemicals as defined, for example, by the presence of measurements showing detected concentrations for the same occupation within the same company. The work performed led to the creation of several R packages, including `uom.dat` (generic analysis tools), [uom.agents](https://github.com/UofMontreal-Multiexpo/uom.agents) (chemical agent data) and [uom.usis](https://github.com/UofMontreal-Multiexpo/uom.usis) (occupational exposure data).
 
-Main analytical approaches are **Frequent Itemset Mining**, **Spectrosome**, **Association Rules** and **Maximum Cumulative Ratio**.
+Although these tools were created for the study of occupational exposures to chemicals, they can be used in any field.
+
+[^1]: Naulaerts, S., Meysman, P., Bittremieux, W., Vu, T. N., Vanden Berghe, W., Goethals, B., & Laukens, K. (2015). A primer to frequent itemset mining for bioinformatics. *Briefings in Bioinformatics, 16*(2), 216‑231.
+[^2]: Bosson-Rieutort, D., de Gaudemaris, R., & Bicout, D. J. (2018). The spectrosome of occupational health problems. *PLoS ONE, 13*(1), e0190196.
+[^3]: Price, P. S., & Han, X. (2011). Maximum cumulative ratio (MCR) as a tool for assessing the value of performing a cumulative risk assessment. *International Journal of Environmental Research and Public Health, 8*(6), 2212‑2225.
 
 
 ## Installation
@@ -78,6 +82,3 @@ For any inquiries, you can send an email to Jérôme Lavoué at <jerome.lavoue@u
 ## Collaboration
 
 * [INRS](http://en.inrs.fr/): The French National Research and Safety Institute for the Prevention of Occupational Accidents and Diseases (French: *Institut National de Recherche et de Sécurité pour la prévention des accidents du travail et des maladies professionnelles*).
-
-
----

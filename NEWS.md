@@ -1,5 +1,9 @@
 # uom.dat 1.0.1.9000 (development version)
 
+## Documentation
+
+* Slight changes have been applied to the package description (`uom.dat` help page) to be consistent with the new description on the GitHub page.
+
 
 
 # uom.dat 1.0.1 (2024-05-31)

@@ -9,10 +9,10 @@ Authors@R: c(
     person("Jérôme", "Lavoué", email = "jerome.lavoue@umontreal.ca", role = "cre"),
     person("CHUM - Centre Hospitalier de l'Université de Montréal", role = c("cph", "fnd"))
   )
-Description: R processing, analysis and visualization tools initially designed
-    for processing data from occupational exposure databases, especially for the
-    concept of multiexposure. Main analytical approaches are Frequent Itemset
-    Mining, Spectrosome, Association Rules and Maximum Cumulative Ratio.
+Description: Processing, analysis and visualization tools initially designed to
+    process data about occupational exposure to chemical agents. Main analysis
+    approaches are Frequent Itemset Mining, Spectrosome, Association Rules and
+    Maximum Cumulative Ratio.
 License: MIT + file LICENSE
 URL: https://github.com/UofMontreal-Multiexpo/uom.dat
 BugReports: https://github.com/UofMontreal-Multiexpo/uom.dat/issues
