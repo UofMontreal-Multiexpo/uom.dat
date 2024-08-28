@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{standardize_nchar}
 \alias{standardize_nchar}
-\title{Standardize the nuber of characters in strings}
+\title{Standardize the number of characters in strings}
 \usage{
 standardize_nchar(x, at_end = FALSE)
 }

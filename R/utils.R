@@ -98,7 +98,7 @@ pluralize = function(x, var) {
 }
 
 
-#' Standardize the nuber of characters in strings
+#' Standardize the number of characters in strings
 #' 
 #' Add zero, one or multiple spaces at the beginning or the end of each string so that they all have the
 #'  same number of characters.
